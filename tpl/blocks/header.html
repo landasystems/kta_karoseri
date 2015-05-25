@@ -1,0 +1,444 @@
+<!-- navbar header -->
+<div class="navbar-header {{app.settings.navbarHeaderColor}}">
+    <button class="pull-right visible-xs dk" ui-toggle-class="show" data-target=".navbar-collapse">
+        <i class="glyphicon glyphicon-cog"></i>
+    </button>
+    <button class="pull-right visible-xs" ui-toggle-class="off-screen" data-target=".app-aside" ui-scroll="app">
+        <i class="glyphicon glyphicon-align-justify"></i>
+    </button>
+    <!-- brand -->
+    <a href="#/" class="navbar-brand text-lt">
+        <img src="img/logo.png" alt="." style="display: inline">
+        <span class="hidden-folded m-l-xs">{{app.name}}</span>
+    </a>
+    <!-- / brand -->
+</div>
+<!-- / navbar header -->
+
+<!-- navbar collapse -->
+<div class="collapse pos-rlt navbar-collapse box-shadow {{app.settings.navbarCollapseColor}}">
+    <!-- link and dropdown -->
+    <ul class="nav navbar-nav hidden-sm">
+        <li class="dropdown pos-stc" dropdown>
+            <a href class="dropdown-toggle" dropdown-toggle>
+                <span>Data Master</span> 
+                <span class="caret"></span>
+            </a>
+            <div class="dropdown-menu wrapper w-full bg-white">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <ul class="list-unstyled l-h-2x">
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Bagian</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Warna</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Sales</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>User</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-xs-6">
+                                <ul class="list-unstyled l-h-2x">
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Barang</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Jenis Barang</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Customer</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Supplier</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 b-l b-light">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <ul class="list-unstyled l-h-2x">
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Area</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Model</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Kendaraan</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Proses Produksi</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-xs-6">
+                                <ul class="list-unstyled l-h-2x">
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Insentif Produksi</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Jenis Komplain</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 b-l b-light">
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="dropdown pos-stc" dropdown>
+            <a href class="dropdown-toggle" dropdown-toggle>
+                <span>Transaksi</span> 
+                <span class="caret"></span>
+            </a>
+            <div class="dropdown-menu wrapper w-full bg-white">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="m-l-xs m-t-xs m-b-xs font-bold">Engineering</div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <ul class="list-unstyled l-h-2x">
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Bill of Material</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Tambahan Items</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5 b-l b-light">
+                        <div class="m-l-xs m-t-xs m-b-xs font-bold">Sales Support</div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <ul class="list-unstyled l-h-2x">
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Serah Terima Internal</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Pembatalan Chassis </a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Surat Pesanan Karoseri</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Claim Unit</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-xs-6">
+                                <ul class="list-unstyled l-h-2x">
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Rubah Bentuk</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Pengajuan Uji Mutu</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Delivery Unit</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Bukti Serah Terima</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5 b-l b-light">
+                        <div class="m-l-xs m-t-xs m-b-xs font-bold">Logistic</div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <ul class="list-unstyled l-h-2x">
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>SPP Rutin</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>SPP Non Rutin</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Purchase Order</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Bukti Barang Masuk</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-xs-6">
+                                <ul class="list-unstyled l-h-2x">
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Bukti Barang Keluar</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Retur Bukti Barang Keluar</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr style="margin: 10px 0 0px 0;"/>
+                <div class="row">
+                    <div class="col-sm-5 b-l b-light">
+                        <div class="m-l-xs m-t-xs m-b-xs font-bold">PPC</div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <ul class="list-unstyled l-h-2x">
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Work Order Masuk</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Work Order Keluar</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Work In Progress</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Surat Perintah Kerja</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-xs-6">
+                                <ul class="list-unstyled l-h-2x">
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Kartu Pengambilan Bahan</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Checksheet</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Insentif Produksi</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Isi Absensi</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-7 b-l b-light">
+
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="dropdown pos-stc" dropdown>
+            <a href class="dropdown-toggle" dropdown-toggle>
+                <span>Rekap</span> 
+                <span class="caret"></span>
+            </a>
+            <div class="dropdown-menu wrapper w-full bg-white">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <ul class="list-unstyled l-h-2x">
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Supplier</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Barang</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Customer</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Barang Masuk</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Barang Keluar</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Pergerakan Barang</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-xs-6">
+                                <ul class="list-unstyled l-h-2x">
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>SPP</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Purchase Order</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Rubah Bentuk</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Claim Unit</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Insentif Produksi</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Delivery Unit</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 b-l b-light">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <ul class="list-unstyled l-h-2x">
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Bill Of Material</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Chassis In</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>BSTK</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Checksheet</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Produktivitas</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Absensi Borongan</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-xs-6">
+                                <ul class="list-unstyled l-h-2x">
+
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Surat Pesanan</a>
+                                    </li>
+                                    <li>
+                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Pengajuan Uji Mutu</a>
+                                    </li>
+                                    
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-2 b-l b-light">
+                            <div class="m-l-xs m-t-xs m-b-xs font-bold">Work Order</div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <ul class="list-unstyled l-h-2x">
+                                        <li>
+                                            <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>WO Masuk</a>
+                                        </li>
+                                        <li>
+                                            <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>WO Keluar</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="m-l-xs m-t-xs m-b-xs font-bold">Retur Barang</div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <ul class="list-unstyled l-h-2x">
+                                        <li>
+                                            <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Barang Masuk</a>
+                                        </li>
+                                        <li>
+                                            <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Barang Keluar</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 b-l b-light">
+                            <div class="m-l-xs m-t-xs m-b-xs font-bold">Work In Progress</div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <ul class="list-unstyled l-h-2x">
+                                        <li>
+                                            <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>WIP</a>
+                                        </li>
+                                        <li>
+                                            <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Schedule</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="m-l-xs m-t-xs m-b-xs font-bold">Historical Report</div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <ul class="list-unstyled l-h-2x">
+                                        <li>
+                                            <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Insentif Produksi</a>
+                                        </li>
+                                        <li>
+                                            <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Barang</a>
+                                        </li>
+                                        <li>
+                                            <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Unit</a>
+                                        </li>
+                                        <li>
+                                            <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>WIP</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <!-- / link and dropdown -->
+
+    <!-- search form -->
+    <form class="navbar-form navbar-form-sm navbar-left shift" ui-shift="prependTo" target=".navbar-collapse" role="search" ng-controller="TypeaheadDemoCtrl">
+        <div class="form-group">
+            <div class="input-group">
+                <input type="text" ng-model="selected" typeahead="state for state in states | filter:$viewValue | limitTo:8" class="form-control input-sm bg-light no-border rounded padder" placeholder="Pencarian ...">
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-sm bg-light rounded"><i class="fa fa-search"></i></button>
+                </span>
+            </div>
+        </div>
+    </form>
+    <!-- / search form -->
+
+    <!-- nabar right -->
+    <ul class="nav navbar-nav navbar-right">
+        <li class="hidden-xs">
+            <a ui-fullscreen></a>
+        </li>
+        <li class="dropdown" dropdown>
+            <a href class="dropdown-toggle clear" dropdown-toggle>
+                <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
+                    <img src="img/a0.jpg" alt="...">
+                    <i class="on md b-white bottom"></i>
+                </span>
+                <span class="hidden-sm hidden-md">John.Smith</span> <b class="caret"></b>
+            </a>
+            <!-- dropdown -->
+            <ul class="dropdown-menu animated fadeInRight w">
+                <li>
+                    <a ui-sref="app.m.belajar">
+                        Settings
+                    </a>
+                </li>
+                <li>
+                    <a ui-sref="app.page.profile">Profile</a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a ui-sref="access.signin">Logout</a>
+                </li>
+            </ul>
+            <!-- / dropdown -->
+        </li>
+    </ul>
+    <!-- / navbar right -->
+
+</div>
+<!-- / navbar collapse -->
