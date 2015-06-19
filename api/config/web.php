@@ -10,9 +10,9 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'x6tjpI4ZMSaasW0-pamgdcCzrMWcFpgl',
-            'parsers' => [
-                'application/json' => 'yii\web\JsonParser',
-            ]
+//            'parsers' => [
+//                'application/json' => 'yii\web\JsonParser',
+//            ]
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -43,17 +43,13 @@ $config = [
         'db' => require(__DIR__ . '/db.php'),
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'enableStrictParsing' => true,
             'showScriptName' => false,
+            'enableStrictParsing' => false,
             'rules' => [
-                [
-                    'class' => 'yii\rest\UrlRule',
-                    'controller' => ['belajar'],
-                    'extraPatterns' => [
-                        'GET coba' => 'coba'
-                    ],
-                ],
-            ],
+                '<controller:\w+>/<id:\d+>' => '<controller>/view',
+                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+            ]
         ],
     ],
     'params' => $params,
