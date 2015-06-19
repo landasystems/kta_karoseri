@@ -5,19 +5,11 @@ $params = require(__DIR__ . '/params.php');
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    //'bootstrap' => ['log'],
     'components' => [
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'enableStrictParsing' => false,
-            'showScriptName' => false,
-            'rules' => [
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'belajar'],
-            ],
-        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'EclY9SNijghe30dGqQnJH8Pkg7epSNZk',
+            'cookieValidationKey' => 'x6tjpI4ZMSaasW0-pamgdcCzrMWcFpgl',
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser',
             ]
@@ -49,6 +41,20 @@ $config = [
             ],
         ],
         'db' => require(__DIR__ . '/db.php'),
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'enableStrictParsing' => true,
+            'showScriptName' => false,
+            'rules' => [
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => ['belajar'],
+                    'extraPatterns' => [
+                        'GET coba' => 'coba'
+                    ],
+                ],
+            ],
+        ],
     ],
     'params' => $params,
 ];

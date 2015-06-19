@@ -50,7 +50,17 @@ angular.module('app')
                                 })
                                 .state('app.m.belajar', {
                                     url: '/belajar',
-                                    templateUrl: 'tpl/belajar2.html',
+                                    templateUrl: 'tpl/belajar.html',
+                                    resolve: {
+                                        deps: ['uiLoad',
+                                            function (uiLoad) {
+                                                return uiLoad.load('js/controllers/belajar.js');
+                                            }]
+                                    }
+                                })
+                                .state('app.m.belajarDet', {
+                                    url: '/belajar/:id/:id2',
+                                    templateUrl: 'tpl/belajarDet.html',
                                     resolve: {
                                         deps: ['uiLoad',
                                             function (uiLoad) {

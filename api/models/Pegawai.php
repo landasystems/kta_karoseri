@@ -60,21 +60,19 @@ use Yii;
  * @property integer $modified_user_id
  * @property string $bup
  */
-class Pegawai extends \yii\db\ActiveRecord
-{
+class Pegawai extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'pegawai';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['nip', 'nama', 'jenis_kelamin', 'ket_agama', 'pendidikan_id', 'kedudukan_id', 'keterangan', 'status_pernikahan', 'city_id', 'hp', 'golongan_darah', 'bpjs', 'kpe', 'karpeg', 'riwayat_pangkat_id', 'riwayat_gaji_id', 'tmt_golongan', 'riwayat_jabatan_id', 'jabatan_struktural_id', 'jabatan_fu_id', 'jabatan_ft_id', 'nomor_kesehatan', 'tanggal_kesehatan', 'created_user_id', 'modified_user_id'], 'required'],
             [['tanggal_lahir', 'tmt_keterangan_kedudukan', 'tmt_cpns', 'tanggal_sk_cpns', 'tmt_pns', 'tanggal_sk_pns', 'tmt_golongan', 'tmt_pensiun', 'tanggal_kesehatan', 'created', 'modified'], 'safe'],
@@ -94,8 +92,7 @@ class Pegawai extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'ID',
             'nip' => 'Nip',
@@ -151,4 +148,14 @@ class Pegawai extends \yii\db\ActiveRecord
             'bup' => 'Bup',
         ];
     }
+
+    public function fields() {
+        $fields = parent::fields();
+        $fields['fotoUrl'] = function ($model) {
+            return (empty($this->foto)) ? 'img/noimage.jpg' : 'img/avatar/' . $this->foto;
+        };
+
+        return $fields;
+    }
+
 }

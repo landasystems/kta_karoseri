@@ -10,12 +10,14 @@
     </select>
     <table class="table table-bordered">
         <tr>
+            <th>Foto</th>
             <th>Nip</th>
             <th>Nama</th>
         </tr>
         <tr ng-repeat="user in users| filter:pencarian | orderBy:ordering">
+            <td><a href="#/app/master/belajar/{{user.nip}}/{{user.nama}}"><img ng-src="{{user.fotoUrl}}"/></a></td>
             <td>{{user.nip}}</td>
-            <td>{{user.nama}} Tahun</td>
+            <td>{{user.nama}}</td>
         </tr>
     </table>
 </div>

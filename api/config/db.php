@@ -2,6 +2,7 @@
 
 return [
     'class' => 'yii\db\Connection',
+//    'dsn' => 'mysql:host=localhost;dbname=landa2_cms',
     'dsn' => 'mysql:host=localhost;dbname=taro_simpeg',
     'username' => 'root',
     'password' => 'landak',
