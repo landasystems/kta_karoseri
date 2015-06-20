@@ -81,7 +81,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Kode</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" ng-model="form.kd_barang" ng-disabled="is_view" required readonly>
+                                <input type="text" class="form-control" ng-model="form.kd_barang" ng-disabled="is_view" required>
                             </div>
                         </div>
                         <div class="form-group">
@@ -94,7 +94,8 @@
                             <label class="col-sm-2 control-label">Jenis Barang</label>
                             <div class="col-sm-10">
                                 <select class="form-control" ng-model="form.jenis" ng-disabled="is_view" required>
-                                    <option ng-repeat="jenis in mc.jenis_brg">{{jenis.jenis_brg}}</option>
+                                    <option value="">-Pilih Jenis-</option>
+                                    <option ng-repeat="jenis in mc.jenis_brg" value="{{jenis.kd_jenis}}">{{jenis.jenis_brg}}</option>
                                 </select>
                             </div>
                         </div>
@@ -108,6 +109,7 @@
                             <label class="col-sm-2 control-label">Kategori</label>
                             <div class="col-sm-10">
                                 <select ng-model="form.kat" ng-disabled="is_view" class="form-control">
+                                    <option value="">-Pilih Kategori-</option>
                                     <option value="Rutin">Rutin</option>
                                     <option value="Non Rutin">Non Rutin</option>
                                 </select>
@@ -118,32 +120,32 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Max</label>
                             <div class="col-sm-10">
-                                <input type="number" class="form-control" ng-pattern="/^[0-9]+$/" ng-model="form.max" ng-disabled="is_view" required>
+                                <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" ng-model="form.max" ng-disabled="is_view" required>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Min</label>
                             <div class="col-sm-10">
-                                <input type="number" class="form-control" ng-pattern="/^[0-9]+$/" ng-model="form.min" ng-disabled="is_view" required>
+                                <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" ng-model="form.min" ng-disabled="is_view" required>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Saldo</label>
                             <div class="col-sm-10">
-                                <input type="number" class="form-control" ng-pattern="/^[0-9]+$/" ng-model="form.saldo" ng-disabled="is_view" required>
+                                <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" ng-model="form.saldo" ng-disabled="is_view" required>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Qty</label>
                             <div class="col-sm-10">
-                                <input type="number" class="form-control" ng-pattern="/^[0-9]+$/" ng-model="form.qty" ng-disabled="is_view" required>
+                                <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" ng-model="form.qty" ng-disabled="is_view" required>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Umur</label>
                             <div class="col-sm-10">
                                 <div class="input-group m-b">
-                                    <input type="number" class="form-control" ng-pattern="/^[0-9]+$/" ng-model="form.umur" ng-disabled="is_view" required>
+                                    <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" ng-model="form.umur" ng-disabled="is_view" required>
                                     <span class="input-group-addon">Hari</span>
                                 </div>
                             </div>
