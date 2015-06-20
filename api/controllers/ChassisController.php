@@ -121,6 +121,16 @@ class ChassisController extends Controller {
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
     }
+    
+    public function actionKode(){
+        $query = new Query;
+        $query->from('chassis')
+                ->select("*");
+        $command = $query->createCommand();
+        $totalItems = $query->count();
+        $jumlah = $totalItems + 1;
+         echo json_decode(array('status'=>1,'kode'=>$jumlah));
+    }
 
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);

@@ -30,6 +30,7 @@ app.controller('chassisCtrl', function ($scope, Data) {
     $scope.create = function (form) {
         $scope.is_edit = true;
         $scope.is_view = false;
+        $scope.kd_chassis = 11;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
     };
@@ -48,10 +49,12 @@ app.controller('chassisCtrl', function ($scope, Data) {
     $scope.save = function (form) {
         $scope.is_edit = false;
         if (form.id > 0) {
+            
             Data.post('chassis/update/'+ form.kd_chassis, form).then(function (result) {
 
             });
         } else {
+            
             Data.post('chassis/create', form).then(function (result) {
 
             });
