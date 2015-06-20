@@ -31,7 +31,7 @@ class BagianController extends Controller {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
-        } elseif excel(isset($this->actions['*'])) {
+        } elseif (excel(isset($this->actions['*']))) {
             $verbs = $this->actions['*'];
         } else {
             return $event->isValid;
