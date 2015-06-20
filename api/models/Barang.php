@@ -23,30 +23,21 @@ use Yii;
  * @property integer $status
  * @property string $tgl_pakai
  */
-class Barang extends \yii\db\ActiveRecord
-{
+class Barang extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'barang';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['kd_barang'], 'required'],
-            [['harga', 'max', 'min', 'saldo', 'qty'], 'number'],
-            [['umur', 'status'], 'integer'],
-            [['tgl_beli', 'tgl_pakai'], 'safe'],
-            [['kd_barang', 'jenis', 'satuan'], 'string', 'max' => 10],
-            [['nm_barang'], 'string', 'max' => 255],
-            [['kat'], 'string', 'max' => 20],
-            [['foto'], 'string', 'max' => 500],
+            [['kd_barang', 'harga', 'max', 'min', 'saldo', 'qty', 'umur', 'tgl_beli', 'tgl_pakai', 'kd_barang', 'jenis', 'satuan', 'nm_barang', 'kat', 'foto'], 'safe'],
             [['kd_barang'], 'unique']
         ];
     }
@@ -54,8 +45,7 @@ class Barang extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'kd_barang' => 'Kd Barang',
             'nm_barang' => 'Nm Barang',
@@ -74,4 +64,5 @@ class Barang extends \yii\db\ActiveRecord
             'tgl_pakai' => 'Tgl Pakai',
         ];
     }
+
 }

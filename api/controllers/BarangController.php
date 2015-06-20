@@ -67,13 +67,15 @@ class BarangController extends Controller {
 
     public function actionKode() {
         $query = new Query;
-        $query  ->from('barang')
-                ->select("*");
-
+        $query->from('barang')
+                ->select('*')
+                ->orderBy('kd_barang DESC')
+                ->limit(1);
+        
         $command = $query->createCommand();
-        $totalItems = $query->count();
-        $kode = $totalItems + 1;
-
+        $models = $command->query()->read();
+        $kode = $models['kd_barang'] + 1;
+        Yii::error($command->query());
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'kode' => $kode));
