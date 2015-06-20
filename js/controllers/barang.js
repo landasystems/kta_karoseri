@@ -56,7 +56,7 @@ app.controller('barangCtrl', function($scope, Data) {
         $scope.form = form;
     };
     $scope.save = function(form) {
-//        $scope.is_edit = false;
+        $scope.is_edit = false;
         if ($scope.is_create == true) { 
             //skrip tambah
             Data.post('barang/create', form).then(function(result) {
