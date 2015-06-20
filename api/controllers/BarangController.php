@@ -79,7 +79,8 @@ class BarangController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('barang')
+                ->from(['barang','jenis_brg'])
+                ->where('barang.jenis = jenis_brg.kd_jenis')
                 ->orderBy($sort)
                 ->select("*");
 
