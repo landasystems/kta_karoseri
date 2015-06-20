@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Barang;
+use app\models\Chassis;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class BarangController extends Controller {
+class ChassisController extends Controller {
 
     public function behaviors() {
         return [
@@ -22,7 +22,6 @@ class BarangController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'jenis' => ['get'],
                 ],
             ]
         ];
@@ -32,7 +31,7 @@ class BarangController extends Controller {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
-        } elseif (excel(isset($this->actions['*']))) {
+        } elseif (isset($this->actions['*'])) {
             $verbs = $this->actions['*'];
         } else {
             return $event->isValid;
@@ -50,25 +49,12 @@ class BarangController extends Controller {
 
         return true;
     }
-    
-    public function actionJenis(){
-        $query = new Query;
-        $query  ->from('jenis_brg')
-                ->select("*");
-        
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'jenis_brg' => $models));
-    }
 
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_barang ASC";
+        $sort = "kd_chassis ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -93,8 +79,7 @@ class BarangController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from(['barang','jenis_brg'])
-                ->where('barang.jenis = jenis_brg.kd_jenis')
+                ->from('chassis')
                 ->orderBy($sort)
                 ->select("*");
 
@@ -125,7 +110,7 @@ class BarangController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Barang();
+        $model = new Chassis();
         $model->attributes = $params;
 
         if ($model->save()) {
@@ -165,7 +150,7 @@ class BarangController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Barang::findOne($id)) !== null) {
+        if (($model = Chassis::findOne($id)) !== null) {
             return $model;
         } else {
 

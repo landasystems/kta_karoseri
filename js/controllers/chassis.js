@@ -1,12 +1,9 @@
-app.controller('barangCtrl', function($scope, Data) {
-    //init data;
+app.controller('chassisCtrl', function ($scope, Data) {
+    //init data
     var ctrl = this;
     ctrl.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
-    Data.get('barang/getjenis').then(function(data) {
-        $scope.jenis_brg = data.jenis_brg;
-    });
 
     this.callServer = function callServer(tableState) {
         ctrl.isLoading = true;
@@ -22,7 +19,7 @@ app.controller('barangCtrl', function($scope, Data) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('barang', param).then(function(data) {
+        Data.get('chassis', param).then(function (data) {
             ctrl.displayed = data.data;
             tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
         });
@@ -30,60 +27,43 @@ app.controller('barangCtrl', function($scope, Data) {
         ctrl.isLoading = false;
     };
 
-    $scope.create = function(form) {
+    $scope.create = function (form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
     };
-    $scope.update = function(form) {
+    $scope.update = function (form) {
         $scope.is_edit = true;
-        $scope.is_view = false;
-        $scope.formtitle = "Edit Data : " + form.nm_barang;
+        $scope.is_view = false; 
+        $scope.formtitle = "Edit Data : " + form.merk;
         $scope.form = form;
     };
-    $scope.view = function(form) {
+    $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.nm_barang;
+        $scope.formtitle = "Lihat Data : " + form.merk;
         $scope.form = form;
     };
-    $scope.save = function(form) {
+    $scope.save = function (form) {
         $scope.is_edit = false;
         if (form.id > 0) {
-            Data.post('barang/update/' + form.id, form).then(function(result) {
+            Data.post('chassis/update/'+ form.kd_chassis, form).then(function (result) {
 
             });
         } else {
-            Data.post('barang/create', form).then(function(result) {
+            Data.post('chassis/create', form).then(function (result) {
 
             });
         }
     };
-    $scope.cancel = function() {
+    $scope.cancel = function () {
         $scope.is_edit = false;
         $scope.is_view = false;
     };
-
-//    $scope.trash = function(row) {
-//        if (confirm("Apa anda yakin akan MENGHAPUS item ini ?")) {
-////            row.is_deleted = 1;
-//            Data.post('barang/update/' + row.id, row).then(function(result) {
-//                ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
-//            });
-//        }
-//    };
-//    $scope.restore = function(row) {
-//        if (confirm("Apa anda yakin akan MERESTORE item ini ?")) {
-////            row.is_deleted = 0;
-//            Data.post('barang/update/' + row.id, row).then(function(result) {
-//                ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
-//            });
-//        }
-//    };
-    $scope.delete = function(row) {
+    $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('barang/delete/' + row.id).then(function(result) {
+            Data.delete('chassis/delete/' + row.kd_chassis).then(function (result) {
                 ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
             });
         }
