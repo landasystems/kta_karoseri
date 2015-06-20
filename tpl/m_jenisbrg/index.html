@@ -14,17 +14,24 @@
             <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
                 <div class="form-horizontal">
                     <div class="form-group">
-                        <label class="col-sm-1 control-label">Status</label>
+<!--                        <label class="col-sm-1 control-label">Status</label>
                         <div class="col-sm-2">
                             <select stInputEvent="change" st-search="is_deleted" class="form-control">
                                 <option value="0">Aktif</option>
                                 <option value="1">Terhapus</option>
                             </select>
-                        </div>
+                        </div>-->
+                        
                         <label class="col-sm-2 control-label">Kode Jenis</label>
                         <div class="col-sm-3">
                             <input st-search="kd_jenis" class="form-control"/>
                         </div>
+                        
+                        <label class="col-sm-2 control-label">Jenis Barang</label>
+                        <div class="col-sm-3">
+                            <input st-search="jenis_brg" class="form-control"/>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -33,17 +40,18 @@
                     <thead>
                         <tr>
                             <th st-sort="kd_jenis">Kode Jenis</th>
+                            <th st-sort="jenis_brg">Jenis Barang</th>
+                            
                         </tr>
                     </thead>
                     <tbody ng-show="!mc.isLoading">
                         <tr ng-repeat="row in mc.displayed" ng-dblclick="view(row)">
                             <td>{{row.kd_jenis}}</td>
+                            <td>{{row.jenis_brg}}</td>
                             <td>
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)" ng-show="row.is_deleted == 0"></button>
-                                    <button type="button" class="btn btn-danger fa fa-trash-o" ng-click="trash(row);" ng-show="row.is_deleted == 0"></button>
-                                    <button type="button" class="btn btn-info fa fa-recycle" ng-click="restore(row);" ng-show="row.is_deleted == 1"></button>
-                                    <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" ng-show="row.is_deleted == 1"></button>
+                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
+                                    <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);"></button>
                                 </div> 
                             </td>
                         </tr>
@@ -55,7 +63,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="pagination.custom.html">
+                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/block/pagination.custom.html">
                             </td>
                         </tr>
                 </table>		
@@ -76,6 +84,11 @@
                         <label class="col-sm-2 control-label">Kode Jenis</label>
                         <div class="col-sm-4">
                             <input type="text" class="form-control" ng-model="form.kd_jenis" ng-disabled="is_view" required>
+                            
+                        </div>
+                        <label class="col-sm-2 control-label">Jenis Barang</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" ng-model="form.jenis_brg" ng-disabled="is_view" required>
                         </div>
                     </div>
                     <div class="form-group">
