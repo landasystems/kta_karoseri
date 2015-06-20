@@ -1,4 +1,4 @@
-app.controller('rolesCtrl', function ($scope, Data) {
+app.controller('jenisbrgCtrl', function ($scope, Data) {
     //init data
     var ctrl = this;
     ctrl.displayed = [];
@@ -48,11 +48,11 @@ app.controller('rolesCtrl', function ($scope, Data) {
     $scope.save = function (form) {
         $scope.is_edit = false;
         if (form.id > 0) {
-            Data.post('roles/update/'+ form.id, form).then(function (result) {
+            Data.post('jenisbrg/update/'+ form.id, form).then(function (result) {
 
             });
         } else {
-            Data.post('roles/create', form).then(function (result) {
+            Data.post('jenisbrg/create', form).then(function (result) {
 
             });
         }
@@ -65,7 +65,7 @@ app.controller('rolesCtrl', function ($scope, Data) {
     $scope.trash = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS item ini ?")) {
             row.is_deleted = 1;
-            Data.post('roles/update/' + row.id, row).then(function (result) {
+            Data.post('jenisbrg/update/' + row.id, row).then(function (result) {
                 ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
             });
         }
@@ -73,14 +73,14 @@ app.controller('rolesCtrl', function ($scope, Data) {
     $scope.restore = function (row) {
         if (confirm("Apa anda yakin akan MERESTORE item ini ?")) {
             row.is_deleted = 0;
-            Data.post('roles/update/' + row.id, row).then(function (result) {
+            Data.post('jenisbrg/update/' + row.id, row).then(function (result) {
                 ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
             });
         }
     };
     $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('roles/delete/' + row.id).then(function (result) {
+            Data.delete('jenisbrg/delete/' + row.id).then(function (result) {
                 ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
             });
         }
