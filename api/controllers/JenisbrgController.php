@@ -22,6 +22,7 @@ class JenisbrgController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
+                    'kode' => ['get'],
                 ],
             ]
         ];
@@ -120,6 +121,20 @@ class JenisbrgController extends Controller {
             $this->setHeader(400);
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
+    }
+    
+    public function actionKode() {
+        $query = new Query;
+        $query  ->from('jenis_brg')
+                ->select("*");
+
+        $command = $query->createCommand();
+        $totalItems = $query->count();
+        $kode = 'JNS0000'.($totalItems + 1);
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionUpdate($id) {
