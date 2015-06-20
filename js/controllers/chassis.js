@@ -1,4 +1,4 @@
-app.controller('rolesCtrl', function ($scope, Data) {
+app.controller('chassisCtrl', function ($scope, Data) {
     //init data
     var ctrl = this;
     ctrl.displayed = [];
@@ -19,7 +19,7 @@ app.controller('rolesCtrl', function ($scope, Data) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('jenisbrg', param).then(function (data) {
+        Data.get('chassis', param).then(function (data) {
             ctrl.displayed = data.data;
             tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
         });
@@ -36,23 +36,23 @@ app.controller('rolesCtrl', function ($scope, Data) {
     $scope.update = function (form) {
         $scope.is_edit = true;
         $scope.is_view = false; 
-        $scope.formtitle = "Edit Data : " + form.nama;
+        $scope.formtitle = "Edit Data : " + form.merk;
         $scope.form = form;
     };
     $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.nama;
+        $scope.formtitle = "Lihat Data : " + form.merk;
         $scope.form = form;
     };
     $scope.save = function (form) {
         $scope.is_edit = false;
         if (form.id > 0) {
-            Data.post('roles/update/'+ form.id, form).then(function (result) {
+            Data.post('chassis/update/'+ form.kd_chassis, form).then(function (result) {
 
             });
         } else {
-            Data.post('roles/create', form).then(function (result) {
+            Data.post('chassis/create', form).then(function (result) {
 
             });
         }
@@ -61,26 +61,9 @@ app.controller('rolesCtrl', function ($scope, Data) {
         $scope.is_edit = false;
         $scope.is_view = false;
     };
-
-    $scope.trash = function (row) {
-        if (confirm("Apa anda yakin akan MENGHAPUS item ini ?")) {
-            row.is_deleted = 1;
-            Data.post('roles/update/' + row.id, row).then(function (result) {
-                ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
-            });
-        }
-    };
-    $scope.restore = function (row) {
-        if (confirm("Apa anda yakin akan MERESTORE item ini ?")) {
-            row.is_deleted = 0;
-            Data.post('roles/update/' + row.id, row).then(function (result) {
-                ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
-            });
-        }
-    };
     $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('roles/delete/' + row.id).then(function (result) {
+            Data.delete('chassis/delete/' + row.kd_chassis).then(function (result) {
                 ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
             });
         }
