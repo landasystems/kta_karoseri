@@ -14,6 +14,5 @@ angular.module('app', [
     'ui.jq',
     'ui.validate',
     'oc.lazyLoad',
-    'pascalprecht.translate',
-//    'smart-table'
+    'pascalprecht.translate'
 ]);
