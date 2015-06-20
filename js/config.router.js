@@ -6,7 +6,7 @@
 angular.module('app')
         .run(
                 ['$rootScope', '$state', '$stateParams',
-                    function ($rootScope, $state, $stateParams) {
+                    function($rootScope, $state, $stateParams) {
                         $rootScope.$state = $state;
                         $rootScope.$stateParams = $stateParams;
                     }
@@ -14,7 +14,7 @@ angular.module('app')
                 )
         .config(
                 ['$stateProvider', '$urlRouterProvider',
-                    function ($stateProvider, $urlRouterProvider) {
+                    function($stateProvider, $urlRouterProvider) {
 
                         $urlRouterProvider
                                 .otherwise('/app/dashboard');
@@ -29,7 +29,7 @@ angular.module('app')
                                     templateUrl: 'tpl/dashboard.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function ($ocLazyLoad) {
+                                            function($ocLazyLoad) {
 
                                             }]
                                     }
@@ -43,7 +43,7 @@ angular.module('app')
                                     templateUrl: 'tpl/m_product/index.html',
                                     resolve: {
                                         deps: ['uiLoad',
-                                            function (uiLoad) {
+                                            function(uiLoad) {
                                                 return uiLoad.load('js/controllers/productsCtrl.js');
                                             }]
                                     }
@@ -53,7 +53,7 @@ angular.module('app')
                                     templateUrl: 'tpl/belajar.html',
                                     resolve: {
                                         deps: ['uiLoad',
-                                            function (uiLoad) {
+                                            function(uiLoad) {
                                                 return uiLoad.load('js/controllers/belajar.js');
                                             }]
                                     }
@@ -63,7 +63,7 @@ angular.module('app')
                                     templateUrl: 'tpl/belajarDet.html',
                                     resolve: {
                                         deps: ['uiLoad',
-                                            function (uiLoad) {
+                                            function(uiLoad) {
                                                 return uiLoad.load('js/controllers/belajar2.js');
                                             }]
                                     }
@@ -78,7 +78,7 @@ angular.module('app')
                                     templateUrl: 'tpl/page_signin.html',
                                     resolve: {
                                         deps: ['uiLoad',
-                                            function (uiLoad) {
+                                            function(uiLoad) {
                                                 return uiLoad.load(['js/controllers/signin.js']);
                                             }]
                                     }
