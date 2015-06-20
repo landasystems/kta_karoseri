@@ -22,6 +22,7 @@ class BarangController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
+                    'jenis' => ['get'],
                 ],
             ]
         ];
@@ -48,6 +49,19 @@ class BarangController extends Controller {
         }
 
         return true;
+    }
+    
+    public function actionJenis(){
+        $query = new Query;
+        $query  ->from('jenis_brg')
+                ->select("*");
+        
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'jenis_brg' => $models));
     }
 
     public function actionIndex() {
@@ -79,7 +93,8 @@ class BarangController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('barang')
+                ->from(['barang','jenis_brg'])
+                ->where('barang.jenis = jenis_brg.kd_jenis')
                 ->orderBy($sort)
                 ->select("*");
 
