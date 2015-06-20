@@ -10,7 +10,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class BagianController extends Controller {
+class JenisbrgController extends Controller {
 
     public function behaviors() {
         return [
@@ -31,7 +31,7 @@ class BagianController extends Controller {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
-        } elseif excel(isset($this->actions['*'])) {
+        } elseif (excel(isset($this->actions['*']))) {
             $verbs = $this->actions['*'];
         } else {
             return $event->isValid;
@@ -54,7 +54,7 @@ class BagianController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "nama ASC";
+        $sort = "kd_jenis ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -79,7 +79,7 @@ class BagianController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('m_roles')
+                ->from('jenis_brg')
                 ->orderBy($sort)
                 ->select("*");
 
@@ -110,7 +110,7 @@ class BagianController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Roles();
+        $model = new JenisBrg();
         $model->attributes = $params;
 
         if ($model->save()) {
@@ -150,7 +150,7 @@ class BagianController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Roles::findOne($id)) !== null) {
+        if (($model = JenisBrg::findOne($id)) !== null) {
             return $model;
         } else {
 
