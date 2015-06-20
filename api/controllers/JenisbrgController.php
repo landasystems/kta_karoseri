@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Barang;
+use app\models\JenisBrg;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class BarangController extends Controller {
+class JenisbrgController extends Controller {
 
     public function behaviors() {
         return [
@@ -22,7 +22,6 @@ class BarangController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'jenis' => ['get'],
                     'kode' => ['get'],
                 ],
             ]
@@ -52,40 +51,11 @@ class BarangController extends Controller {
         return true;
     }
 
-    public function actionJenis() {
-        $query = new Query;
-        $query->from('jenis_brg')
-                ->select("*");
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'jenis_brg' => $models));
-    }
-
-    public function actionKode() {
-        $query = new Query;
-        $query->from('barang')
-                ->select('*')
-                ->orderBy('kd_barang DESC')
-                ->limit(1);
-        
-        $command = $query->createCommand();
-        $models = $command->query()->read();
-        $kode = $models['kd_barang'] + 1;
-        Yii::error($command->query());
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'kode' => $kode));
-    }
-
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_barang ASC";
+        $sort = "kd_jenis ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -110,8 +80,7 @@ class BarangController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from(['barang', 'jenis_brg'])
-                ->where('barang.jenis = jenis_brg.kd_jenis')
+                ->from('jenis_brg')
                 ->orderBy($sort)
                 ->select("*");
 
@@ -142,7 +111,7 @@ class BarangController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Barang();
+        $model = new JenisBrg();
         $model->attributes = $params;
 
         if ($model->save()) {
@@ -152,6 +121,20 @@ class BarangController extends Controller {
             $this->setHeader(400);
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
+    }
+    
+    public function actionKode() {
+        $query = new Query;
+        $query  ->from('jenis_brg')
+                ->select("*");
+
+        $command = $query->createCommand();
+        $totalItems = $query->count();
+        $kode = 'JNS0000'.($totalItems + 1);
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionUpdate($id) {
@@ -182,7 +165,7 @@ class BarangController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Barang::findOne($id)) !== null) {
+        if (($model = JenisBrg::findOne($id)) !== null) {
             return $model;
         } else {
 
