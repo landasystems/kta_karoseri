@@ -31,59 +31,23 @@ angular.module('app')
                         deps: ['$ocLazyLoad',
                             function($ocLazyLoad) {
 
-                                            }]
-                                    }
-                                })
-                                //master roles
-                                .state('master', {
-                                    url: '/master',
-                                    templateUrl: 'tpl/app.html'
-                                })
-                                .state('master.barang', {
-                                    url: '/master/barang',
-                                    templateUrl: 'tpl/m_barang/index.html',
-                                    resolve: {
-                                        deps: ['$ocLazyLoad',
-                                            function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/barang.js');
-                                            }]
-                                    }
-                                })
-                                .state('master.jenisbrg', {
-                                    url: '/master/jenisbrg',
-                                    templateUrl: 'tpl/m_jenisbrg/index.html',
-                                    resolve: {
-                                        deps: ['$ocLazyLoad',
-                                            function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/jenisbrg.js');
-                                            }]
-                                    }
-                                })
-                                // others
-                                .state('access', {
-                                    url: '/access',
-                                    template: '<div ui-view class="fade-in-right-big smooth"></div>'
-                                })
-                                .state('access.signin', {
-                                    url: '/signin',
-                                    templateUrl: 'tpl/page_signin.html',
-                                    resolve: {
-                                        deps: ['uiLoad',
-                                            function(uiLoad) {
-                                                return uiLoad.load(['js/controllers/signin.js']);
-                                            }]
-                                    }
-                                })
-                                .state('access.404', {
-                                    url: '/404',
-                                    templateUrl: 'tpl/page_404.html'
-                                })
+                            }]
                     }
                 })
                         //master roles
                         .state('master', {
                     url: '/master',
                     templateUrl: 'tpl/app.html'
+                })
+                        .state('master.barang', {
+                    url: '/master/barang',
+                    templateUrl: 'tpl/m_barang/index.html',
+                    resolve: {
+                        deps: ['$ocLazyLoad',
+                            function($ocLazyLoad) {
+                                return $ocLazyLoad.load('js/controllers/barang.js');
+                            }]
+                    }
                 })
                         .state('master.jenisbrg', {
                     url: '/master/jenisbrg',
@@ -95,7 +59,6 @@ angular.module('app')
                             }]
                     }
                 })
-                //kendaraan
                         .state('master.chassis', {
                     url: '/master/chassis',
                     templateUrl: 'tpl/m_chassis/index.html',
@@ -126,5 +89,5 @@ angular.module('app')
                     templateUrl: 'tpl/page_404.html'
                 })
             }
-        ]
-        );
+        ]);
+
