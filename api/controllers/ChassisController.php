@@ -54,7 +54,7 @@ class ChassisController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "nama ASC";
+        $sort = "kd_chassis ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -79,7 +79,7 @@ class ChassisController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('m_roles')
+                ->from('chassis')
                 ->orderBy($sort)
                 ->select("*");
 
