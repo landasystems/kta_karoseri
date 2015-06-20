@@ -64,7 +64,7 @@ app.controller('barangCtrl', function($scope, Data) {
 
     $scope.trash = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS item ini ?")) {
-            row.is_deleted = 1;
+//            row.is_deleted = 1;
             Data.post('barang/update/' + row.id, row).then(function(result) {
                 ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
             });
@@ -72,7 +72,7 @@ app.controller('barangCtrl', function($scope, Data) {
     };
     $scope.restore = function(row) {
         if (confirm("Apa anda yakin akan MERESTORE item ini ?")) {
-            row.is_deleted = 0;
+//            row.is_deleted = 0;
             Data.post('barang/update/' + row.id, row).then(function(result) {
                 ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
             });
