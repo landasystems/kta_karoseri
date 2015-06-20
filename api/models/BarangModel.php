@@ -11,7 +11,7 @@ use Yii;
  * @property string $model
  * @property integer $standard
  */
-class Model extends \yii\db\ActiveRecord
+class BarangModel extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
