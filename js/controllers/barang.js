@@ -4,8 +4,8 @@ app.controller('barangCtrl', function($scope, Data) {
     ctrl.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
-    Data.get('barang/getjenis').then(function(data) {
-        $scope.jenis_brg = data.jenis_brg;
+    Data.get('barang/jenis').then(function(data) {
+        ctrl.jenis_brg = data.jenis_brg;
     });
 
     this.callServer = function callServer(tableState) {
@@ -35,6 +35,9 @@ app.controller('barangCtrl', function($scope, Data) {
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        Data.get('barang/kode').then(function(data) {
+            $scope.form.kd_barang = data.kode;
+        });
     };
     $scope.update = function(form) {
         $scope.is_edit = true;
