@@ -129,7 +129,7 @@ class ChassisController extends Controller {
         $command = $query->createCommand();
         $totalItems = $query->count();
         $jumlah = $totalItems + 1;
-         echo json_decode(array('status'=>1,'kode'=>$jumlah));
+         echo json_decode(array('status'=>1,'kode'=>8));
     }
 
     public function actionUpdate($id) {
