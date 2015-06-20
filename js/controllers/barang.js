@@ -4,6 +4,9 @@ app.controller('barangCtrl', function($scope, Data) {
     ctrl.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
+    Data.get('barang/getjenis').then(function(data) {
+        $scope.jenis_brg = data.jenis_brg;
+    });
 
     this.callServer = function callServer(tableState) {
         ctrl.isLoading = true;
