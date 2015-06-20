@@ -34,37 +34,18 @@ angular.module('app')
                                             }]
                                     }
                                 })
-                                .state('app.m', {
+                                //master roles
+                                .state('master', {
                                     url: '/master',
-                                    template: '<div ui-view class="fade-in"></div>',
+                                    templateUrl: 'tpl/app.html'
                                 })
-                                .state('app.m.product', {
-                                    url: '/product',
-                                    templateUrl: 'tpl/m_product/index.html',
+                                .state('master.jenisbrg', {
+                                    url: '/master/jenisbrg',
+                                    templateUrl: 'tpl/m_jenisbrg/index.html',
                                     resolve: {
-                                        deps: ['uiLoad',
-                                            function(uiLoad) {
-                                                return uiLoad.load('js/controllers/productsCtrl.js');
-                                            }]
-                                    }
-                                })
-                                .state('app.m.belajar', {
-                                    url: '/belajar',
-                                    templateUrl: 'tpl/belajar.html',
-                                    resolve: {
-                                        deps: ['uiLoad',
-                                            function(uiLoad) {
-                                                return uiLoad.load('js/controllers/belajar.js');
-                                            }]
-                                    }
-                                })
-                                .state('app.m.belajarDet', {
-                                    url: '/belajar/:id/:id2',
-                                    templateUrl: 'tpl/belajarDet.html',
-                                    resolve: {
-                                        deps: ['uiLoad',
-                                            function(uiLoad) {
-                                                return uiLoad.load('js/controllers/belajar2.js');
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load('js/controllers/jenisbrg.js');
                                             }]
                                     }
                                 })
