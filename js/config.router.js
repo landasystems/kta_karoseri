@@ -39,6 +39,16 @@ angular.module('app')
                                     url: '/master',
                                     templateUrl: 'tpl/app.html'
                                 })
+                                .state('master.barang', {
+                                    url: '/master/barang',
+                                    templateUrl: 'tpl/m_barang/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load('js/controllers/barang.js');
+                                            }]
+                                    }
+                                })
                                 .state('master.jenisbrg', {
                                     url: '/master/jenisbrg',
                                     templateUrl: 'tpl/m_jenisbrg/index.html',
