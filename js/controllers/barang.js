@@ -4,6 +4,8 @@ app.controller('barangCtrl', function($scope, Data) {
     ctrl.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
+    $scope.is_create = false;
+
     Data.get('barang/jenis').then(function(data) {
         ctrl.jenis_brg = data.jenis_brg;
     });
@@ -31,6 +33,7 @@ app.controller('barangCtrl', function($scope, Data) {
     };
 
     $scope.create = function(form) {
+        $scope.is_create = true;
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
@@ -40,6 +43,7 @@ app.controller('barangCtrl', function($scope, Data) {
         });
     };
     $scope.update = function(form) {
+        $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.nm_barang;
@@ -53,12 +57,14 @@ app.controller('barangCtrl', function($scope, Data) {
     };
     $scope.save = function(form) {
         $scope.is_edit = false;
-        if (form.id > 0) {
-            Data.post('barang/update/' + form.id, form).then(function(result) {
+        if ($scope.is_create == true) { 
+            //skrip tambah
+            Data.post('barang/create', form).then(function(result) {
 
             });
         } else {
-            Data.post('barang/create', form).then(function(result) {
+            //skrip 
+            Data.post('barang/update/' + form.kd_barang, form).then(function(result) {
 
             });
         }
@@ -86,7 +92,7 @@ app.controller('barangCtrl', function($scope, Data) {
 //    };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('barang/delete/' + row.id).then(function(result) {
+            Data.delete('barang/delete/' + row.kd_barang).then(function(result) {
                 ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
             });
         }
