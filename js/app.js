@@ -14,4 +14,5 @@ angular.module('app', [
     'ui.validate',
     'oc.lazyLoad',
     'smart-table',
+    'toaster',
 ]);
