@@ -1,9 +1,10 @@
-app.controller('chassisCtrl', function ($scope, Data) {
+app.controller('chassisCtrl', function($scope, Data) {
     //init data
     var ctrl = this;
     ctrl.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
+    $scope.is_create = false;
 
     this.callServer = function callServer(tableState) {
         ctrl.isLoading = true;
@@ -19,7 +20,7 @@ app.controller('chassisCtrl', function ($scope, Data) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('chassis', param).then(function (data) {
+        Data.get('chassis', param).then(function(data) {
             ctrl.displayed = data.data;
             tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
         });
@@ -27,46 +28,50 @@ app.controller('chassisCtrl', function ($scope, Data) {
         ctrl.isLoading = false;
     };
 
-    $scope.create = function (form) {
+    $scope.create = function(form) {
         $scope.is_edit = true;
         $scope.is_view = false;
-        $scope.kd_chassis = 11;
+        $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        Data.get('chassis/kode').then(function(data) {
+            $scope.form.kd_chassis = "0000" + data.kode;
+        });
     };
-    $scope.update = function (form) {
+    $scope.update = function(form) {
         $scope.is_edit = true;
-        $scope.is_view = false; 
+        $scope.is_view = false;
+        $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.merk;
         $scope.form = form;
     };
-    $scope.view = function (form) {
+    $scope.view = function(form) {
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.merk;
         $scope.form = form;
     };
-    $scope.save = function (form) {
+    $scope.save = function(form) {
         $scope.is_edit = false;
-        if (form.id > 0) {
-            
-            Data.post('chassis/update/'+ form.kd_chassis, form).then(function (result) {
+        if ($scope.is_create == true) {
+            Data.post('chassis/create', form).then(function(result) {
+
 
             });
         } else {
-            
-            Data.post('chassis/create', form).then(function (result) {
+
+            Data.post('chassis/update/' + form.kd_chassis, form).then(function(result) {
 
             });
         }
     };
-    $scope.cancel = function () {
+    $scope.cancel = function() {
         $scope.is_edit = false;
         $scope.is_view = false;
     };
-    $scope.delete = function (row) {
+    $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('chassis/delete/' + row.kd_chassis).then(function (result) {
+            Data.delete('chassis/delete/' + row.kd_chassis).then(function(result) {
                 ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
             });
         }
