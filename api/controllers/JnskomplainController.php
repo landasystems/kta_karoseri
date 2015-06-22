@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Customer;
+use app\models\JenisKomplain;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class CustomerController extends Controller {
+class JnskomplainController extends Controller {
 
     public function behaviors() {
         return [
@@ -22,7 +22,7 @@ class CustomerController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-//                    'kode' => ['get'],
+                    'kode' => ['get'],
                 ],
             ]
         ];
@@ -55,7 +55,7 @@ class CustomerController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_cust ASC";
+        $sort = "kd_jns ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -80,7 +80,7 @@ class CustomerController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('customer')
+                ->from('jenis_komplain')
                 ->orderBy($sort)
                 ->select("*");
 
@@ -111,7 +111,7 @@ class CustomerController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Customer();
+        $model = new JenisKomplain();
         $model->attributes = $params;
 
         if ($model->save()) {
@@ -123,19 +123,19 @@ class CustomerController extends Controller {
         }
     }
     
-//    public function actionKode() {
-//        $query = new Query;
-//        $query  ->from('customer')
-//                ->select("*");
-//
-//        $command = $query->createCommand();
-//        $totalItems = $query->count();
-//        $kode = 'I0000'.($totalItems + 1);
-//
-//        $this->setHeader(200);
-//
-//        echo json_encode(array('status' => 1, 'kode' => $kode));
-//    }
+    public function actionKode() {
+        $query = new Query;
+        $query  ->from('jenis_komplain')
+                ->select("*");
+
+        $command = $query->createCommand();
+        $totalItems = $query->count();
+        $kode = 'JN0000'.($totalItems + 1);
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'kode' => $kode));
+    }
 
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
@@ -165,7 +165,7 @@ class CustomerController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Customer::findOne($id)) !== null) {
+        if (($model = JenisBrg::findOne($id)) !== null) {
             return $model;
         } else {
 

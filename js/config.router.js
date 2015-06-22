@@ -59,6 +59,16 @@ angular.module('app')
                             }]
                     }
                 })
+                        .state('master.customer', {
+                    url: '/master/customer',
+                    templateUrl: 'tpl/m_customer/index.html',
+                    resolve: {
+                        deps: ['$ocLazyLoad',
+                            function($ocLazyLoad) {
+                                return $ocLazyLoad.load('js/controllers/customer.js');
+                            }]
+                    }
+                })
                         .state('master.chassis', {
                     url: '/master/chassis',
                     templateUrl: 'tpl/m_chassis/index.html',

@@ -41,7 +41,7 @@ class Customer extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['kd_cust'], 'required'],
+            [['kd_cust'], 'unique'],
             [['kd_cust'], 'string', 'max' => 8],
             [['nm_customer', 'alamat1', 'alamat2'], 'string', 'max' => 100],
             [['kategori', 'nm_pemilik', 'market', 'provinsi', 'pulau', 'email', 'web', 'cp'], 'string', 'max' => 50],
