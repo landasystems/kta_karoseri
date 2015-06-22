@@ -1,6 +1,7 @@
 app.controller('barangCtrl', function($scope, Data) {
     //init data;
     var ctrl = this;
+    var tableStateRef;
     ctrl.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
@@ -11,6 +12,7 @@ app.controller('barangCtrl', function($scope, Data) {
     });
 
     this.callServer = function callServer(tableState) {
+        tableStateRef = tableState;
         ctrl.isLoading = true;
         var offset = tableState.pagination.start || 0;
         var limit = tableState.pagination.number || 10;
@@ -57,39 +59,21 @@ app.controller('barangCtrl', function($scope, Data) {
     };
     $scope.save = function(form) {
         $scope.is_edit = false;
-        if ($scope.is_create == true) { 
-            //skrip tambah
-            Data.post('barang/create', form).then(function(result) {
-
-            });
-        } else {
-            //skrip 
-            Data.post('barang/update/' + form.kd_barang, form).then(function(result) {
-
-            });
-        }
+        var url = ($scope.is_create == true) ? 'barang/create/' : 'barang/update' + form.kd_barang;
+        Data.post(url, form).then(function(result) {
+            if (result.status == 0) {
+                toaster.pop('error', "Terjadi Kesalahan", result.errors);
+            } else {
+                $scope.is_edit = false;
+                $scope.callServer(tableStateRef); //reload grid ulang
+                toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
+            }
+        });
     };
     $scope.cancel = function() {
         $scope.is_edit = false;
         $scope.is_view = false;
     };
-
-//    $scope.trash = function(row) {
-//        if (confirm("Apa anda yakin akan MENGHAPUS item ini ?")) {
-////            row.is_deleted = 1;
-//            Data.post('barang/update/' + row.id, row).then(function(result) {
-//                ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
-//            });
-//        }
-//    };
-//    $scope.restore = function(row) {
-//        if (confirm("Apa anda yakin akan MERESTORE item ini ?")) {
-////            row.is_deleted = 0;
-//            Data.post('barang/update/' + row.id, row).then(function(result) {
-//                ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
-//            });
-//        }
-//    };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
             Data.delete('barang/delete/' + row.kd_barang).then(function(result) {
