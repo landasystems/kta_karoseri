@@ -22,6 +22,7 @@ class ChassisController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
+                    'kode' => ['get'],
                 ],
             ]
         ];
@@ -120,6 +121,19 @@ class ChassisController extends Controller {
             $this->setHeader(400);
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
+    }
+    
+    public function actionKode(){
+        $query = new Query;
+        $query->from('chassis')
+                ->select("*");
+        $command = $query->createCommand();
+        $totalItems = $query->count();
+        $jumlah = $totalItems + 1;
+        
+        $this->setHeader(200);
+        
+         echo json_encode(array('status'=>1,'kode'=>$jumlah));
     }
 
     public function actionUpdate($id) {
