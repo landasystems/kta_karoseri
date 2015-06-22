@@ -1,13 +1,14 @@
-app.controller('chassisCtrl', function($scope, Data) {
+app.controller('chassisCtrl', function($scope, Data, toaster) {
     //init data
-    var ctrl = this;
-    ctrl.displayed = [];
+    var tableStateRef;
+    $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
 
-    this.callServer = function callServer(tableState) {
-        ctrl.isLoading = true;
+    $cope.callServer = function callServer(tableState) {
+        tableStateRef = tableState;
+        $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
         var limit = tableState.pagination.number || 10;
         var param = {offset: offset, limit: limit};
@@ -52,18 +53,30 @@ app.controller('chassisCtrl', function($scope, Data) {
         $scope.form = form;
     };
     $scope.save = function(form) {
-        $scope.is_edit = false;
-        if ($scope.is_create == true) {
-            Data.post('chassis/create', form).then(function(result) {
+        var url = ($scope.is_create == true) ? 'chassis/update/' + form.kd_chassis : 'chassis/create';
+        Data.post(url, form).then(function(result) {
+            if ($scope.is_create == true) {
+                toaster.pop('error', "Terjadi Kesalahan", result.errors);
+            } else {
+                $scope.is_edit = false;
+                $scope.callServer(tableStateRef); //reload grid ulang
+                toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
+            }
+        });
 
-
-            });
-        } else {
-
-            Data.post('chassis/update/' + form.kd_chassis, form).then(function(result) {
-
-            });
-        }
+        //---------
+//        $scope.is_edit = false;
+//        if ($scope.is_create == true) {
+//            Data.post('chassis/create', form).then(function(result) {
+//
+//
+//            });
+//        } else {
+//
+//            Data.post('chassis/update/' + form.kd_chassis, form).then(function(result) {
+//
+//            });
+//        }
     };
     $scope.cancel = function() {
         $scope.is_edit = false;
