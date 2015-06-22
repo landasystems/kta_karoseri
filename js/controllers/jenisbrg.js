@@ -52,17 +52,21 @@ app.controller('jenisbrgCtrl', function ($scope, Data) {
         $scope.form = form;
     };
     $scope.save = function (form) {
+        var url = ($scope.is_create == true) ? 'jenisbrg/create' : 'jenisbrg/update/'+ form.kd_jenis;
+         Data.post(url, form).then(function (result) {   
+         });
         $scope.is_edit = false;
-        if ($scope.is_create == true) {
-            Data.post('jenisbrg/create', form).then(function (result) {
-
-            });
-        } else {
-            
-            Data.post('jenisbrg/update/'+ form.kd_jenis, form).then(function (result) {
-
-            });
-        }
+        
+//        if ($scope.is_create == true) {
+//            Data.post('jenisbrg/create', form).then(function (result) {
+//
+//            });
+//        } else {
+//            
+//            Data.post('jenisbrg/update/'+ form.kd_jenis, form).then(function (result) {
+//
+//            });
+//        }
     };
     $scope.cancel = function () {
         $scope.is_edit = false;
