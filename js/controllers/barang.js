@@ -1,19 +1,18 @@
-app.controller('barangCtrl', function($scope, Data) {
+app.controller('barangCtrl', function($scope, Data, toaster) {
     //init data;
-    var ctrl = this;
     var tableStateRef;
-    ctrl.displayed = [];
+    $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
 
     Data.get('barang/jenis').then(function(data) {
-        ctrl.jenis_brg = data.jenis_brg;
+        $scope.jenis_brg = data.jenis_brg;
     });
 
-    this.callServer = function callServer(tableState) {
+    $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
-        ctrl.isLoading = true;
+        $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
         var limit = tableState.pagination.number || 10;
         var param = {offset: offset, limit: limit};
@@ -26,12 +25,12 @@ app.controller('barangCtrl', function($scope, Data) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('barang', param).then(function(data) {
-            ctrl.displayed = data.data;
+        Data.get('barang', param).then(function (data) {
+            $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
         });
 
-        ctrl.isLoading = false;
+        $scope.isLoading = false;
     };
 
     $scope.create = function(form) {
@@ -59,7 +58,7 @@ app.controller('barangCtrl', function($scope, Data) {
     };
     $scope.save = function(form) {
         $scope.is_edit = false;
-        var url = ($scope.is_create == true) ? 'barang/create/' : 'barang/update' + form.kd_barang;
+        var url = ($scope.is_create == true) ? 'barang/create/' : 'barang/update/' + form.kd_barang;
         Data.post(url, form).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -77,7 +76,7 @@ app.controller('barangCtrl', function($scope, Data) {
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
             Data.delete('barang/delete/' + row.kd_barang).then(function(result) {
-                ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
+                $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
