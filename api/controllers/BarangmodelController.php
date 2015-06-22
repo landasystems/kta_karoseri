@@ -1,7 +1,7 @@
 <?php
 //namespace app\modules\api\controllers;
 use Yii;
-use app\models\Model;
+use app\models\BarangModel;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -10,7 +10,7 @@ use yii\db\Query;
 /**
  * CityController implements the CRUD actions for City model.
  */
-class ModelController extends Controller
+class BarangmodelController extends Controller
 {
    
     public function behaviors()
@@ -144,10 +144,10 @@ class ModelController extends Controller
     public function actionView($id)
     {
    
-      $model=$this->findModel($id);
-      
-      $this->setHeader(200);
-      echo json_encode(array('status'=>1,'data'=>array_filter($model->attributes)),JSON_PRETTY_PRINT);
+//      $model=$this->findModel($id);
+//      
+//      $this->setHeader(200);
+//      echo json_encode(array('status'=>1,'data'=>array_filter($model->attributes)),JSON_PRETTY_PRINT);
 	
     }
     /**
