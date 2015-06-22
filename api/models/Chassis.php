@@ -30,7 +30,6 @@ class Chassis extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['kd_chassis'], 'required'],
             [['kd_chassis', 'jenis'], 'string', 'max' => 20],
             [['merk', 'tipe'], 'string', 'max' => 30],
             [['wheelbase'], 'string', 'max' => 10],
