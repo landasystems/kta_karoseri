@@ -1,4 +1,26 @@
-app.controller('barangCtrl', function($scope, Data, toaster) {
+app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
+    var nameFile;
+    var uploader = $scope.uploader = new FileUploader({
+        url: 'js/controllers/upload.php?folder=barang',
+        withCredentials: true,
+        queueLimit: 1,
+    });
+
+    uploader.onSuccessItem = function(item, response, status, headers) {
+         console.info('onSuccessItem', fileItem, response, status, headers);
+    };
+
+    // FILTERS
+    uploader.filters.push({
+        name: 'imageFilter',
+        fn: function(item) {
+            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+        }
+    });
+
+    console.info('uploader', uploader);
+
     //init data;
     var tableStateRef;
     $scope.displayed = [];
@@ -25,7 +47,7 @@ app.controller('barangCtrl', function($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('barang', param).then(function (data) {
+        Data.get('barang', param).then(function(data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
         });
@@ -57,7 +79,9 @@ app.controller('barangCtrl', function($scope, Data, toaster) {
         $scope.form = form;
     };
     $scope.save = function(form) {
-        $scope.is_edit = false;
+//        $scope.is_edit = false;
+        $scope.uploader.uploadAll();
+        form.foto = 'asdaa';
         var url = ($scope.is_create == true) ? 'barang/create/' : 'barang/update/' + form.kd_barang;
         Data.post(url, form).then(function(result) {
             if (result.status == 0) {
