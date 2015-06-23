@@ -1,14 +1,10 @@
 app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
+    var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
     var uploader = $scope.uploader = new FileUploader({
-        url: 'js/controllers/upload.php?folder=barang',
-        withCredentials: true,
+        url: 'js/controllers/upload.php?folder=barang&kode=' + kode_unik,
         queueLimit: 1,
+        removeAfterUpload: true
     });
-
-    uploader.onSuccessItem = function(data) {
-       nameFile = data.name;
-    };
-
     // FILTERS
     uploader.filters.push({
         name: 'imageFilter',
@@ -80,9 +76,8 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.form = form;
     };
     $scope.save = function(form) {
-//        $scope.is_edit = false;
         $scope.uploader.uploadAll();
-        form.foto = 'foto';
+        form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
         var url = ($scope.is_create == true) ? 'barang/create/' : 'barang/update/' + form.kd_barang;
         Data.post(url, form).then(function(result) {
             if (result.status == 0) {
