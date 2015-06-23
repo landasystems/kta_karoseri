@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Chassis;
+use app\models\Supplier;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class ChassisController extends Controller {
+class SupplierController extends Controller {
 
     public function behaviors() {
         return [
@@ -55,7 +55,7 @@ class ChassisController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_chassis ASC";
+        $sort = "kd_supplier ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -80,7 +80,7 @@ class ChassisController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('chassis')
+                ->from('supplier')
                 ->orderBy($sort)
                 ->select("*");
 
@@ -111,7 +111,7 @@ class ChassisController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Chassis();
+        $model = new Supplier();
         $model->attributes = $params;
 
         if ($model->save()) {
@@ -124,15 +124,15 @@ class ChassisController extends Controller {
     }
     
     public function actionKode(){
-      $query = new Query;
-        $query->from('barang')
+       $query = new Query;
+        $query->from('supplier')
                 ->select('*')
-                ->orderBy('kd_chassis DESC')
+                ->orderBy('kd_supplier DESC')
                 ->limit(1);
         
         $command = $query->createCommand();
         $models = $command->query()->read();
-        $kode = $models['kd_chassis'] + 1;
+        $kode = $models['kd_supplier'] + 1;
         Yii::error($command->query());
         $this->setHeader(200);
 
@@ -167,7 +167,7 @@ class ChassisController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Chassis::findOne($id)) !== null) {
+        if (($model = Supplier::findOne($id)) !== null) {
             return $model;
         } else {
 

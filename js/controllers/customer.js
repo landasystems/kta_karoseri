@@ -1,4 +1,4 @@
-app.controller('jenisbrgCtrl', function ($scope, Data, toaster) {
+app.controller('customerCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
     $scope.displayed = [];
@@ -21,7 +21,7 @@ app.controller('jenisbrgCtrl', function ($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('jenisbrg', param).then(function (data) {
+        Data.get('customer', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
         });
@@ -35,8 +35,8 @@ app.controller('jenisbrgCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-        Data.get('jenisbrg/kode').then(function(data) {
-            $scope.form.kd_jenis = data.kode;
+        Data.get('custmer/kode').then(function(data) {
+            $scope.form.kd_cust = data.kode;
         });
     };
     $scope.update = function (form) {
@@ -53,7 +53,7 @@ app.controller('jenisbrgCtrl', function ($scope, Data, toaster) {
         $scope.form = form;
     };
     $scope.save = function (form) {
-        var url = ($scope.is_create == true) ? 'jenisbrg/create' : 'jenisbrg/update/'+ form.kd_jenis;
+        var url = ($scope.is_create == true) ? 'customer/create' : 'customer/update/'+ form.kd_jenis;
          Data.post(url, form).then(function (result) {   
              if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -88,7 +88,7 @@ app.controller('jenisbrgCtrl', function ($scope, Data, toaster) {
 //    };
     $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('jenisbrg/delete/' + row.kd_jenis).then(function (result) {
+            Data.delete('customer/delete/' + row.kd_jenis).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }

@@ -1,4 +1,4 @@
-app.controller('chassisCtrl', function($scope, Data, toaster) {
+app.controller('supplierCtrl', function($scope, Data, toaster) {
     //init data
     var tableStateRef;
     $scope.displayed = [];
@@ -21,7 +21,7 @@ app.controller('chassisCtrl', function($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('chassis', param).then(function (data) {
+        Data.get('supplier', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
         });
@@ -35,9 +35,9 @@ app.controller('chassisCtrl', function($scope, Data, toaster) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-        Data.get('chassis/kode').then(function(data) {
-            $scope.form.kd_chassis = "0000" + data.kode;
-        });
+//        Data.get('supplier/kode').then(function(data) {
+//            $scope.form.kd_chassis = "0000" + data.kode;
+//        });
     };
     $scope.update = function(form) {
         $scope.is_edit = true;
@@ -53,7 +53,7 @@ app.controller('chassisCtrl', function($scope, Data, toaster) {
         $scope.form = form;
     };
     $scope.save = function(form) {
-        var url = ($scope.is_create == true) ? 'chassis/create'  : 'chassis/update/' + form.kd_chassis;
+        var url = ($scope.is_create == true) ? 'supplier/create'  : 'supplier/update/' + form.kd_chassis;
         Data.post(url, form).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -84,7 +84,7 @@ app.controller('chassisCtrl', function($scope, Data, toaster) {
     };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('chassis/delete/' + row.kd_chassis).then(function(result) {
+            Data.delete('supplier/delete/' + row.kd_supplier).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }

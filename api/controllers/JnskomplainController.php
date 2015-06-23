@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Chassis;
+use app\models\JenisKomplain;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class ChassisController extends Controller {
+class JnskomplainController extends Controller {
 
     public function behaviors() {
         return [
@@ -32,7 +32,7 @@ class ChassisController extends Controller {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
-        } elseif (isset($this->actions['*'])) {
+        } elseif (excel(isset($this->actions['*']))) {
             $verbs = $this->actions['*'];
         } else {
             return $event->isValid;
@@ -55,7 +55,7 @@ class ChassisController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_chassis ASC";
+        $sort = "kd_jns ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -80,7 +80,7 @@ class ChassisController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('chassis')
+                ->from('jenis_komplain')
                 ->orderBy($sort)
                 ->select("*");
 
@@ -111,7 +111,7 @@ class ChassisController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Chassis();
+        $model = new JenisKomplain();
         $model->attributes = $params;
 
         if ($model->save()) {
@@ -123,17 +123,15 @@ class ChassisController extends Controller {
         }
     }
     
-    public function actionKode(){
-      $query = new Query;
-        $query->from('barang')
-                ->select('*')
-                ->orderBy('kd_chassis DESC')
-                ->limit(1);
-        
+    public function actionKode() {
+        $query = new Query;
+        $query  ->from('jenis_komplain')
+                ->select("*");
+
         $command = $query->createCommand();
-        $models = $command->query()->read();
-        $kode = $models['kd_chassis'] + 1;
-        Yii::error($command->query());
+        $totalItems = $query->count();
+        $kode = 'JN0000'.($totalItems + 1);
+
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'kode' => $kode));
@@ -167,7 +165,7 @@ class ChassisController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Chassis::findOne($id)) !== null) {
+        if (($model = JenisBrg::findOne($id)) !== null) {
             return $model;
         } else {
 
