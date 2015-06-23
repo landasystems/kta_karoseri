@@ -1,9 +1,9 @@
-<div ng-controller="barangCtrl as mc">
+<div ng-controller="barangCtrl">
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n font-thin h3">Data Master - Barang</h1>
     </div>
     <div class="wrapper-md" ng-show="!is_edit">
-        <div class="panel panel-default" st-pipe="mc.callServer" st-table="mc.displayed">
+        <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
             <div class="panel-heading">
                 <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian & Export Data</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
@@ -18,7 +18,7 @@
                         <div class="col-sm-2">
                             <select stInputEvent="change" st-search="jenis_brg" class="form-control">
                                 <option value="">-Pilih Jenis-</option>
-                                <option ng-repeat="jenis in mc.jenis_brg" value="{{jenis.jenis_brg}}">{{jenis.jenis_brg}}</option>
+                                <option ng-repeat="jenis in jenis_brg" value="{{jenis.jenis_brg}}">{{jenis.jenis_brg}}</option>
                             </select>
                         </div>
                         <label class="col-sm-2 control-label">Nama Barang</label>
@@ -41,8 +41,8 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody ng-show="!mc.isLoading">
-                        <tr ng-repeat="row in mc.displayed" ng-dblclick="view(row)">
+                    <tbody ng-show="!isLoading">
+                        <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
                             <td>{{row.kd_barang}}</td>
                             <td>{{row.nm_barang}}</td>
                             <td>{{row.jenis_brg}}</td>
@@ -56,7 +56,7 @@
                             </td>
                         </tr>
                     </tbody>
-                    <tbody ng-show="mc.isLoading">
+                    <tbody ng-show="isLoading">
                         <tr>
                             <td colspan="4" class="text-center">Loading ... </td>
                         </tr>
@@ -77,7 +77,7 @@
             </div>
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation">
-                    <div class="col-md-5 col-sm-12">
+                    <div class="col-md-4 col-sm-12">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Kode</label>
                             <div class="col-sm-10">
@@ -85,17 +85,17 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Nama Barang</label>
+                            <label class="col-sm-2 control-label">Nama</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" ng-model="form.nm_barang" ng-disabled="is_view" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Jenis Barang</label>
+                            <label class="col-sm-2 control-label">Jenis</label>
                             <div class="col-sm-10">
                                 <select class="form-control" ng-model="form.jenis" ng-disabled="is_view" required>
                                     <option value="">-Pilih Jenis-</option>
-                                    <option ng-repeat="jenis in mc.jenis_brg" value="{{jenis.kd_jenis}}">{{jenis.jenis_brg}}</option>
+                                    <option ng-repeat="jenis in jenis_brg" value="{{jenis.kd_jenis}}">{{jenis.jenis_brg}}</option>
                                 </select>
                             </div>
                         </div>
@@ -108,15 +108,12 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Kategori</label>
                             <div class="col-sm-10">
-                                <select ng-model="form.kat" ng-disabled="is_view" class="form-control">
-                                    <option value="">-Pilih Kategori-</option>
-                                    <option value="Rutin">Rutin</option>
-                                    <option value="Non Rutin">Non Rutin</option>
-                                </select>
+                                <label class="btn btn-default" ng-model="form.kat" ng-disabled="is_view" btn-radio="'Rutin'" required>Rutin</label>
+                                <label class="btn btn-default" ng-model="form.kat" ng-disabled="is_view" btn-radio="'Non Rutin'" required>Non Rutin</label>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-5 col-sm-12">
+                    <div class="col-md-4 col-sm-12">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Max</label>
                             <div class="col-sm-10">
@@ -151,8 +148,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2 col-sm-12">
-
+                    <div class="col-md-4 col-sm-12">
+                        <div nv-file-drop="" uploader="uploader" filters="imageFilter">
+                            <div class="col-md-12 bg-auto">    
+                                <div ng-show="uploader.isHTML5" class="m-b-md">
+                                    <img src="img/noimage.jpg" class="img-thumbnail">
+                                    <input type="file" nv-file-select="" uploader="uploader" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <div align="center">

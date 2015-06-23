@@ -6,7 +6,7 @@ app.controller('chassisCtrl', function($scope, Data, toaster) {
     $scope.is_view = false;
     $scope.is_create = false;
 
-    $cope.callServer = function callServer(tableState) {
+      $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
@@ -21,12 +21,12 @@ app.controller('chassisCtrl', function($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('chassis', param).then(function(data) {
-            ctrl.displayed = data.data;
+        Data.get('chassis', param).then(function (data) {
+            $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
         });
 
-        ctrl.isLoading = false;
+        $scope.isLoading = false;
     };
 
     $scope.create = function(form) {
@@ -53,9 +53,9 @@ app.controller('chassisCtrl', function($scope, Data, toaster) {
         $scope.form = form;
     };
     $scope.save = function(form) {
-        var url = ($scope.is_create == true) ? 'chassis/update/' + form.kd_chassis : 'chassis/create';
+        var url = ($scope.is_create == true) ? 'chassis/create'  : 'chassis/update/' + form.kd_chassis;
         Data.post(url, form).then(function(result) {
-            if ($scope.is_create == true) {
+            if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
                 $scope.is_edit = false;
@@ -85,7 +85,7 @@ app.controller('chassisCtrl', function($scope, Data, toaster) {
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
             Data.delete('chassis/delete/' + row.kd_chassis).then(function(result) {
-                ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
+                $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
