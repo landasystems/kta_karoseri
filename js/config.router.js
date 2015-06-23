@@ -49,6 +49,7 @@ angular.module('app')
                             }]
                     }
                 })
+                //jenis barang
                         .state('master.jenisbrg', {
                     url: '/master/jenisbrg',
                     templateUrl: 'tpl/m_jenisbrg/index.html',
@@ -59,6 +60,7 @@ angular.module('app')
                             }]
                     }
                 })
+                // kendaraan
                         .state('master.chassis', {
                     url: '/master/chassis',
                     templateUrl: 'tpl/m_chassis/index.html',
@@ -66,6 +68,28 @@ angular.module('app')
                         deps: ['$ocLazyLoad',
                             function($ocLazyLoad) {
                                 return $ocLazyLoad.load('js/controllers/chassis.js');
+                            }]
+                    }
+                })
+                // supplier
+                       .state('master.supplier', {
+                    url: '/master/supplier',
+                    templateUrl: 'tpl/m_supplier/index.html',
+                    resolve: {
+                        deps: ['$ocLazyLoad',
+                            function($ocLazyLoad) {
+                                return $ocLazyLoad.load('js/controllers/supplier.js');
+                            }]
+                    }
+                })
+                // user
+                       .state('master.pengguna', {
+                    url: '/master/pengguna',
+                    templateUrl: 'tpl/m_user/index.html',
+                    resolve: {
+                        deps: ['$ocLazyLoad',
+                            function($ocLazyLoad) {
+                                return $ocLazyLoad.load('js/controllers/pengguna.js');
                             }]
                     }
                 })

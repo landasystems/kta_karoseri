@@ -1,6 +1,6 @@
-<div ng-app="app" ng-controller="chassisCtrl">
+<div ng-app="app" ng-controller="supplierCtrl">
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n font-thin h3">Data Master - Kendaraan</h1>
+        <h1 class="m-n font-thin h3">Data Master - Supplier</h1>
     </div>
     <div class="wrapper-md" ng-show="!is_edit">
         <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
@@ -16,31 +16,24 @@
                     <div class="form-group">
 
 
-                        <label class="col-sm-2 control-label">Kode Chassis</label>
+                        <label class="col-sm-2 control-label">Kode Supplier</label>
                         <div class="col-sm-3">
-                            <input st-search="kd_chassis" class="form-control"/>
+                            <input st-search="kd_supplier" class="form-control"/>
                         </div>
-                        <label class="col-sm-2 control-label">Merk</label>
+                        <label class="col-sm-2 control-label">Nama</label>
                         <div class="col-sm-3">
-                            <input st-search="merk" class="form-control"/>
+                            <input st-search="nama_supplier" class="form-control"/>
 
                         </div>
-                        
+
                     </div>
                     <div class="form-group">
-                         <label class="col-sm-2 control-label">Merk</label>
+                        <label class="col-sm-2 control-label">Contact Person</label>
                         <div class="col-sm-3">
-                            <input st-search="tipe" class="form-control"/>
+                            <input st-search="cp" class="form-control"/>
 
                         </div>
-                        <label class="col-sm-2 control-label">Kode Chassis</label>
-                        <div class="col-sm-3">
-                            <select  class="form-control m-b" st-search="jenis" >
-                                <option value="">-- Pilih Jenis --</option>
-                                <option value="Mini Bus">Mini Bus</option>
-                                <option value="Small Bus">Small Bus</option>
-                            </select>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -49,21 +42,21 @@
                     <thead>
                         <tr>
                             <th st-sort="kd_chassis">Kode Chassis</th>
-                            <th st-sort="merk">Merk</th>
-                            <th st-sort="tipe">Type</th>
-                            <th st-sort="jenis">Jenis</th>
-                            <th st-sort="wheelbase">WheelBase</th>
-                            <th st-sort="model_chassis">Model Chassis</th>
+                            <th st-sort="nama_supplier">Nama</th>
+                            <th st-sort="cp">Contact Person</th>
+                            <th st-sort="telpon">Telpon</th>
+                            <th st-sort="hp">Hp</th>
+                            <th st-sort="hp">Keterangan</th>
                         </tr>
                     </thead>
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
-                            <td>{{row.kd_chassis}}</td>
-                            <td>{{row.merk}}</td>
-                            <td>{{row.tipe}}</td>
-                            <td>{{row.jenis}}</td>
-                            <td>{{row.wheelbase}}</td>
-                            <td>{{row.model_chassis}}</td>
+                            <td>{{row.kd_supplier}}</td>
+                            <td>{{row.nama_supplier}}</td>
+                            <td>{{row.cp}}</td>
+                            <td>{{row.telp}}</td>
+                            <td>{{row.hp}}</td>
+                            <td>{{row.ket}}</td>
                             <td>
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
                                     <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
@@ -96,48 +89,65 @@
             </div>
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation ">
+
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Kode Chassis</label>
+                        <label class="col-sm-2 control-label">Kode Supplier</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" ng-model="form.kd_chassis" ng-disabled="is_view" required ng-readonly="is_create == false">
+                            <input type="text" class="form-control" ng-model="form.kd_supplier" ng-disabled="is_view" required />
+                        </div>
+                       <label class="col-sm-2 control-label">Hp</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" ng-model="form.hp" ng-disabled="is_view" required >
+                        </div>
+                       
+                    </div>
+                    
+                    <div class="form-group">
+                         <label class="col-sm-2 control-label">Nama</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" ng-model="form.nama_supplier" ng-disabled="is_view" required >
+                        </div>
+                         
+                        <label class="col-sm-2 control-label">Email</label>
+                        <div class="col-sm-4">
+                            <input type="email" class="form-control" ng-model="form.email" ng-disabled="is_view" required >
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Merk</label>
+                        <label class="col-sm-2 control-label">Contact Person</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" ng-model="form.merk" ng-disabled="is_view" required >
+                            <input type="text" class="form-control" ng-model="form.cp" ng-disabled="is_view" required>
+                        </div>
+                        <label class="col-sm-2 control-label">Telpon</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" ng-model="form.telp" ng-disabled="is_view" required>
+                        </div>
+
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Fax</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" ng-model="form.fax" ng-disabled="is_view" required >
+                        </div>
+                        <label class="col-sm-2 control-label">NPWP</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" ng-model="form.npwp" ng-disabled="is_view" required >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                         <label class="col-sm-2 control-label">Alamat</label>
+                        <div class="col-sm-4">
+                            <textarea class="form-control" rows="6" ng-model="form.alamat" ng-disabled="is_view" required ></textarea>
+                           
+                        </div>
+                         <label class="col-sm-2 control-label">Keterangan</label>
+                        <div class="col-sm-4">
+                            <textarea class="form-control" rows="6" ng-model="form.ket" ng-disabled="is_view" required ></textarea>
+                           
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Type</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" ng-model="form.tipe" ng-disabled="is_view" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Jenis</label>
-                        <div class="col-sm-4">
-
-                            <select  class="form-control m-b" ng-model="form.jenis" ng-disabled="is_view" required>
-                                <option value="">-- Pilih Jenis --</option>
-                                <option value="Mini Bus">Mini Bus</option>
-                                <option value="Small Bus">Small Bus</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Wheel Base</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" ng-model="form.wheelbase" ng-disabled="is_view" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Model Chassis</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" ng-model="form.model_chassis" ng-disabled="is_view" required>
-                        </div>
-                    </div>
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-2">
                             <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
