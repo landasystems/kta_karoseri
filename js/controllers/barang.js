@@ -1,13 +1,12 @@
 app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
-    var nameFile;
     var uploader = $scope.uploader = new FileUploader({
         url: 'js/controllers/upload.php?folder=barang',
         withCredentials: true,
         queueLimit: 1,
     });
 
-    uploader.onSuccessItem = function(item, response, status, headers) {
-         console.info('onSuccessItem', fileItem, response, status, headers);
+    uploader.onSuccessItem = function(data) {
+       nameFile = data.name;
     };
 
     // FILTERS
@@ -18,6 +17,8 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
     });
+
+
 
     console.info('uploader', uploader);
 
@@ -81,7 +82,7 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.save = function(form) {
 //        $scope.is_edit = false;
         $scope.uploader.uploadAll();
-        form.foto = 'asdaa';
+        form.foto = 'foto';
         var url = ($scope.is_create == true) ? 'barang/create/' : 'barang/update/' + form.kd_barang;
         Data.post(url, form).then(function(result) {
             if (result.status == 0) {
