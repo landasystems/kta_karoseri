@@ -74,6 +74,16 @@ angular.module('app')
                                             }]
                                     }
                                 })
+                                .state('master.modelkendaraan', {
+                                    url: '/master/modelkendaraan',
+                                    templateUrl: 'tpl/m_modelkendaraan/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function($ocLazyLoad) {
+                                                return $ocLazyLoad.load('js/controllers/modelkendaraan.js');
+                                            }]
+                                    }
+                                })
                                 .state('master.jnskomplain', {
                                     url: '/master/jnskomplain',
                                     templateUrl: 'tpl/m_jnskomplain/index.html',
