@@ -122,15 +122,17 @@ class JnskomplainController extends Controller {
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
     }
+
     
+
     public function actionKode() {
         $query = new Query;
-        $query  ->from('jenis_komplain')
+        $query->from('jenis_komplain')
                 ->select("*");
 
         $command = $query->createCommand();
         $totalItems = $query->count();
-        $kode = 'JN0000'.($totalItems + 1);
+        $kode = 'JN0000' . ($totalItems + 1);
 
         $this->setHeader(200);
 
@@ -165,7 +167,7 @@ class JnskomplainController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = JenisBrg::findOne($id)) !== null) {
+        if (($model = JenisKomplain::findOne($id)) !== null) {
             return $model;
         } else {
 
