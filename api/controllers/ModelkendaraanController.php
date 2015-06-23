@@ -97,8 +97,19 @@ class ModelkendaraanController extends Controller {
         $totalItems = $query->count();
 
         $this->setHeader(200);
+        $data = array();
+        $i=0;
+        foreach ($models as $val) {
+            $data[$i] = $val;
+            if($val['standard'] == "1"){
+                $data[$i]['status_standard'] = "Standard";
+            }else{
+                $data[$i]['status_standard'] = "Tidak Standard";
+            }
+        $i++;
+        }
 
-        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
     public function actionView($id) {
@@ -123,17 +134,31 @@ class ModelkendaraanController extends Controller {
         }
     }
 
-    
-
     public function actionKode() {
         $query = new Query;
         $query->from('model')
-                ->select("*");
+                ->select('*')
+                ->orderBy('kd_model DESC')
+                ->limit(1);
 
         $command = $query->createCommand();
-        $totalItems = $query->count();
-        $kode = 'JN0000' . ($totalItems + 1);
+        $models = $command->query()->read();
+        $kode_mdl = $models['kd_model'] + 1;
 
+        switch (strlen($kode_mdl)) {
+            case 1 : $kode = "0000" . $kode_mdl;
+                break;
+            case 2 : $kode = "000" . $kode_mdl;
+                break;
+            case 3 : $kode = "00" . $kode_mdl;
+                break;
+            case 4 : $kode = "0" . $kode_mdl;
+                break;
+            case 5 : $kode = $kode_mdl;
+                break;
+        }
+
+        Yii::error($command->query());
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'kode' => $kode));
@@ -202,6 +227,5 @@ class ModelkendaraanController extends Controller {
     }
 
 }
-
 ?>
 

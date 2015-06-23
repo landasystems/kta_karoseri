@@ -6,10 +6,6 @@ app.controller('jnskomplainCtrl', function ($scope, Data, toaster) {
     $scope.is_view = false;
     $scope.is_create = false;
 
-Data.get('barang/jenis').then(function(data) {
-        $scope.jenis_brg = data.jenis_brg;
-    });
-
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;

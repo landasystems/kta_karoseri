@@ -11,21 +11,19 @@ use Yii;
  * @property string $model
  * @property integer $standard
  */
-class ModelKendaraan extends \yii\db\ActiveRecord
-{
+class ModelKendaraan extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'model';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['kd_model'], 'required'],
             [['standard'], 'integer'],
@@ -37,12 +35,14 @@ class ModelKendaraan extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'kd_model' => 'Kd Model',
             'model' => 'Model',
             'standard' => 'Standard',
         ];
     }
+
+   
+
 }
