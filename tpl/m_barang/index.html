@@ -161,7 +161,8 @@
                         <div nv-file-drop="" uploader="uploader" filters="imageFilter">
                             <div class="col-md-12 bg-auto">    
                                 <div ng-show="uploader.isHTML5" class="m-b-md">
-                                    <img src="img/noimage.jpg" class="img-thumbnail">
+                                    <img ng-src="js/controllers/uploads/barang/{{form.foto}}" ng-hide="is_create == true" class="img-thumbnail">
+                                    <img src="img/noimage.jpg" class="img-thumbnail" ng-show="is_create == true">
                                     <input type="file" nv-file-select="" uploader="uploader" />
                                 </div>
                             </div>
