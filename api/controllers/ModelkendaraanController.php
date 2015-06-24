@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\JenisKomplain;
+use app\models\ModelKendaraan;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class JnskomplainController extends Controller {
+class ModelkendaraanController extends Controller {
 
     public function behaviors() {
         return [
@@ -55,7 +55,7 @@ class JnskomplainController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_jns ASC";
+        $sort = "kd_model ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -80,7 +80,7 @@ class JnskomplainController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('jenis_komplain')
+                ->from('model')
                 ->orderBy($sort)
                 ->select("*");
 
@@ -97,8 +97,19 @@ class JnskomplainController extends Controller {
         $totalItems = $query->count();
 
         $this->setHeader(200);
+        $data = array();
+        $i=0;
+        foreach ($models as $val) {
+            $data[$i] = $val;
+            if($val['standard'] == "1"){
+                $data[$i]['status_standard'] = "Standard";
+            }else{
+                $data[$i]['status_standard'] = "Tidak Standard";
+            }
+        $i++;
+        }
 
-        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
     public function actionView($id) {
@@ -111,7 +122,7 @@ class JnskomplainController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new JenisKomplain();
+        $model = new ModelKendaraan();
         $model->attributes = $params;
 
         if ($model->save()) {
@@ -123,17 +134,31 @@ class JnskomplainController extends Controller {
         }
     }
 
-    
-
     public function actionKode() {
         $query = new Query;
-        $query->from('jenis_komplain')
-                ->select("*");
+        $query->from('model')
+                ->select('*')
+                ->orderBy('kd_model DESC')
+                ->limit(1);
 
         $command = $query->createCommand();
-        $totalItems = $query->count();
-        $kode = 'JN0000' . ($totalItems + 1);
+        $models = $command->query()->read();
+        $kode_mdl = $models['kd_model'] + 1;
 
+        switch (strlen($kode_mdl)) {
+            case 1 : $kode = "0000" . $kode_mdl;
+                break;
+            case 2 : $kode = "000" . $kode_mdl;
+                break;
+            case 3 : $kode = "00" . $kode_mdl;
+                break;
+            case 4 : $kode = "0" . $kode_mdl;
+                break;
+            case 5 : $kode = $kode_mdl;
+                break;
+        }
+
+        Yii::error($command->query());
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'kode' => $kode));
@@ -167,7 +192,7 @@ class JnskomplainController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = JenisKomplain::findOne($id)) !== null) {
+        if (($model = ModelKendaraan::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -202,5 +227,5 @@ class JnskomplainController extends Controller {
     }
 
 }
-
 ?>
+

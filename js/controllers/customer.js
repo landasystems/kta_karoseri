@@ -35,25 +35,25 @@ app.controller('customerCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-        Data.get('custmer/kode').then(function(data) {
-            $scope.form.kd_cust = data.kode;
-        });
+//        Data.get('custmer/kode').then(function(data) {
+//            $scope.form.kd_cust = data.kode;
+//        });
     };
     $scope.update = function (form) {
         $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = false; 
-        $scope.formtitle = "Edit Data : " + form.jenis_brg;
+        $scope.formtitle = "Edit Data : " + form.kd_cust;
         $scope.form = form;
     };
     $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.jenis_brg;
+        $scope.formtitle = "Lihat Data : " + form.kd_cust;
         $scope.form = form;
     };
     $scope.save = function (form) {
-        var url = ($scope.is_create == true) ? 'customer/create' : 'customer/update/'+ form.kd_jenis;
+        var url = ($scope.is_create == true) ? 'customer/create' : 'customer/update/'+ form.kd_cust;
          Data.post(url, form).then(function (result) {   
              if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -88,7 +88,7 @@ app.controller('customerCtrl', function ($scope, Data, toaster) {
 //    };
     $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('customer/delete/' + row.kd_jenis).then(function (result) {
+            Data.delete('customer/delete/' + row.kd_cust).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
