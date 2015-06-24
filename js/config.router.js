@@ -116,6 +116,25 @@ angular.module('app')
                                             }]
                                     }
                                 })
+                                // BOM
+                                .state('trans', {
+                                    url: '/trans',
+                                    templateUrl: 'tpl/app.html'
+                                })
+                                .state('trans.bom', {
+                                    url: '/bom',
+                                    templateUrl: 'tpl/bom/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['angularFileUpload','ui.select']).then(
+                                                        function() {
+                                                            return $ocLazyLoad.load('js/controllers/bom.js');
+                                                        }
+                                                );
+                                            }]
+                                    }
+                                })
                                 // others
                                 .state('access', {
                                     url: '/access',
