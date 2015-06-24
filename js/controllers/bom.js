@@ -1,7 +1,7 @@
-app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
+app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
     var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
     var uploader = $scope.uploader = new FileUploader({
-        url: 'js/controllers/upload.php?folder=barang&kode=' + kode_unik,
+        url: 'js/controllers/upload.php?folder=bom&kode=' + kode_unik,
         queueLimit: 1,
         removeAfterUpload: true
     });
@@ -13,9 +13,6 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
     });
-
-
-
     console.info('uploader', uploader);
 
     //init data;
@@ -24,9 +21,49 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
+    $scope.detBom = [
+        {
+            bagian: '',
+            kd_barang: '',
+            nama_barang: '',
+            qty: '',
+            keterangan: '',
+        }
+    ],
+            $scope.addDetail = function() {
+                var newDet = {
+                    bagian: '',
+                    kd_barang: '',
+                    nama_barang: '',
+                    qty: '',
+                    keterangan: '',
+                }
+                $scope.detBom.push(newDet);
+            }
 
-    Data.get('barang/jenis').then(function(data) {
-        $scope.jenis_brg = data.jenis_brg;
+    $scope.removeRow = function(paramindex) {
+        var comArr = eval($scope.detBom);
+        if (comArr.length > 1) {
+            $scope.detBom.splice(paramindex, 1);
+        } else {
+            alert("Something gone wrong");
+        }
+    };
+
+    Data.get('bom/chassis').then(function(data) {
+        $scope.chassis = data.chassis;
+    });
+
+    Data.get('bom/model').then(function(data) {
+        $scope.model = data.model;
+    });
+
+    Data.get('bom/barang').then(function(data) {
+        $scope.barang = data.barang;
+    });
+
+    Data.get('bom/bagian').then(function(data) {
+        $scope.bagian = data.bagian;
     });
 
     $scope.callServer = function callServer(tableState) {
@@ -44,7 +81,7 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('barang', param).then(function(data) {
+        Data.get('bom', param).then(function(data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
         });
@@ -58,8 +95,8 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-        Data.get('barang/kode').then(function(data) {
-            $scope.form.kd_barang = data.kode;
+        Data.get('bom/kode').then(function(data) {
+            $scope.form.kd_bom = data.kode;
         });
     };
     $scope.update = function(form) {
@@ -79,7 +116,7 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.save = function(form) {
         $scope.uploader.uploadAll();
         form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
-        var url = ($scope.is_create == true) ? 'barang/create/' : 'barang/update/' + form.kd_barang;
+        var url = ($scope.is_create == true) ? 'bom/create/' : 'bom/update/' + form.kd_barang;
         Data.post(url, form).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
