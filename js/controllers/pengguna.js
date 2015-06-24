@@ -4,9 +4,12 @@ app.controller('penggunaCtrl', function($scope, Data, toaster) {
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
-    $scope.is_create = false;
 
-      $scope.callServer = function callServer(tableState) {
+    Data.get('pengguna/roles').then(function(data) {
+        $scope.roles_id = data.roles;
+    });
+
+    $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
@@ -21,7 +24,7 @@ app.controller('penggunaCtrl', function($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('pengguna', param).then(function (data) {
+        Data.get('pengguna', param).then(function(data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
         });
@@ -32,53 +35,53 @@ app.controller('penggunaCtrl', function($scope, Data, toaster) {
     $scope.create = function(form) {
         $scope.is_edit = true;
         $scope.is_view = false;
-        $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-       
     };
     $scope.update = function(form) {
         $scope.is_edit = true;
         $scope.is_view = false;
-        $scope.is_create = false;
-        $scope.formtitle = "Edit Data : " + form.merk;
+        $scope.formtitle = "Edit Data : " + form.nama;
         $scope.form = form;
     };
     $scope.view = function(form) {
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.merk;
+        $scope.formtitle = "Lihat Data : " + form.nama;
         $scope.form = form;
     };
     $scope.save = function(form) {
-        var url = ($scope.is_create == true) ? 'pengguna/create'  : 'pengguna/update/' + form.id;
+        var url = (form.id > 0) ? 'pengguna/update/' + form.id : 'pengguna/create';
         Data.post(url, form).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
                 $scope.is_edit = false;
                 $scope.callServer(tableStateRef); //reload grid ulang
-                toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
+                toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
             }
         });
-
-        //---------
-//        $scope.is_edit = false;
-//        if ($scope.is_create == true) {
-//            Data.post('chassis/create', form).then(function(result) {
-//
-//
-//            });
-//        } else {
-//
-//            Data.post('chassis/update/' + form.kd_chassis, form).then(function(result) {
-//
-//            });
-//        }
     };
     $scope.cancel = function() {
         $scope.is_edit = false;
         $scope.is_view = false;
+    };
+
+    $scope.trash = function(row) {
+        if (confirm("Apa anda yakin akan MENGHAPUS item ini ?")) {
+            row.is_deleted = 1;
+            Data.post('pengguna/update/' + row.id, row).then(function(result) {
+                $scope.displayed.splice($scope.displayed.indexOf(row), 1);
+            });
+        }
+    };
+    $scope.restore = function(row) {
+        if (confirm("Apa anda yakin akan MERESTORE item ini ?")) {
+            row.is_deleted = 0;
+            Data.post('pengguna/update/' + row.id, row).then(function(result) {
+                $scope.displayed.splice($scope.displayed.indexOf(row), 1);
+            });
+        }
     };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {

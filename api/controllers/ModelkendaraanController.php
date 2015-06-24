@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Pengguna;
+use app\models\ModelKendaraan;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class PenggunaController extends Controller {
+class ModelkendaraanController extends Controller {
 
     public function behaviors() {
         return [
@@ -22,7 +22,7 @@ class PenggunaController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'roles' => ['get'],
+                    'kode' => ['get'],
                 ],
             ]
         ];
@@ -32,7 +32,7 @@ class PenggunaController extends Controller {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
-        } elseif (isset($this->actions['*'])) {
+        } elseif (excel(isset($this->actions['*']))) {
             $verbs = $this->actions['*'];
         } else {
             return $event->isValid;
@@ -55,7 +55,7 @@ class PenggunaController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "m_user.nama ASC";
+        $sort = "kd_model ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -80,17 +80,15 @@ class PenggunaController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-//                ->select('m_user.id as id', 'm_roles.nama as roles')
-                ->from(['m_user','m_roles'])
-                ->where('m_user.roles_id = m_roles.id')
+                ->from('model')
                 ->orderBy($sort)
-                ->select("m_user.id as id, m_roles.nama as roles, m_user.username as username, m_user.is_deleted as is_deleted");
+                ->select("*");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', 'm_user.'.$key, $val]);
+                $query->andFilterWhere(['like', $key, $val]);
             }
         }
 
@@ -99,8 +97,19 @@ class PenggunaController extends Controller {
         $totalItems = $query->count();
 
         $this->setHeader(200);
+        $data = array();
+        $i=0;
+        foreach ($models as $val) {
+            $data[$i] = $val;
+            if($val['standard'] == "1"){
+                $data[$i]['status_standard'] = "Standard";
+            }else{
+                $data[$i]['status_standard'] = "Tidak Standard";
+            }
+        $i++;
+        }
 
-        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
     public function actionView($id) {
@@ -113,7 +122,7 @@ class PenggunaController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Pengguna();
+        $model = new ModelKendaraan();
         $model->attributes = $params;
 
         if ($model->save()) {
@@ -125,17 +134,23 @@ class PenggunaController extends Controller {
         }
     }
 
-    public function actionRoles() {
+    public function actionKode() {
         $query = new Query;
-        $query->from('m_roles')
-                ->select('*');
+        $query->from('model')
+                ->select('*')
+                ->orderBy('kd_model DESC')
+                ->limit(1);
 
         $command = $query->createCommand();
-        $models = $command->queryAll();
+        $models = $command->query()->read();
+        $kode_mdl = ($models['kd_model'] + 1);
+        $jmlkode=strlen($kode_mdl);
+        $kode=substr('00000'.$kode_mdl,$jmlkode);
 
+        Yii::error($command->query());
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'roles' => $models));
+        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionUpdate($id) {
@@ -166,7 +181,7 @@ class PenggunaController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Pengguna::findOne($id)) !== null) {
+        if (($model = ModelKendaraan::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -201,5 +216,5 @@ class PenggunaController extends Controller {
     }
 
 }
-
 ?>
+
