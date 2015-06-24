@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Chassis;
+use app\models\Pengguna;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class ChassisController extends Controller {
+class PenggunaController extends Controller {
 
     public function behaviors() {
         return [
@@ -22,7 +22,7 @@ class ChassisController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'kode' => ['get'],
+                    'roles' => ['get'],
                 ],
             ]
         ];
@@ -55,7 +55,7 @@ class ChassisController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_chassis ASC";
+        $sort = "m_user.nama ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -80,15 +80,17 @@ class ChassisController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('chassis')
+//                ->select('m_user.id as id', 'm_roles.nama as roles')
+                ->from(['m_user','m_roles'])
+                ->where('m_user.roles_id = m_roles.id')
                 ->orderBy($sort)
-                ->select("*");
+                ->select("m_user.id as id, m_roles.nama as roles, m_user.username as username, m_user.is_deleted as is_deleted");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
+                $query->andFilterWhere(['like', 'm_user.'.$key, $val]);
             }
         }
 
@@ -111,7 +113,7 @@ class ChassisController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Chassis();
+        $model = new Pengguna();
         $model->attributes = $params;
 
         if ($model->save()) {
@@ -122,21 +124,18 @@ class ChassisController extends Controller {
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
     }
-    
-    public function actionKode(){
-      $query = new Query;
-        $query->from('barang')
-                ->select('*')
-                ->orderBy('kd_chassis DESC')
-                ->limit(1);
-        
+
+    public function actionRoles() {
+        $query = new Query;
+        $query->from('m_roles')
+                ->select('*');
+
         $command = $query->createCommand();
-        $models = $command->query()->read();
-        $kode = $models['kd_chassis'] + 1;
-        Yii::error($command->query());
+        $models = $command->queryAll();
+
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => $kode));
+        echo json_encode(array('status' => 1, 'roles' => $models));
     }
 
     public function actionUpdate($id) {
@@ -167,7 +166,7 @@ class ChassisController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Chassis::findOne($id)) !== null) {
+        if (($model = Pengguna::findOne($id)) !== null) {
             return $model;
         } else {
 

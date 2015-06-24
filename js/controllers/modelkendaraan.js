@@ -1,33 +1,10 @@
-app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
-    var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
-    var uploader = $scope.uploader = new FileUploader({
-        url: 'js/controllers/upload.php?folder=barang&kode=' + kode_unik,
-        queueLimit: 1,
-        removeAfterUpload: true
-    });
-    // FILTERS
-    uploader.filters.push({
-        name: 'imageFilter',
-        fn: function(item) {
-            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-        }
-    });
-
-
-
-    console.info('uploader', uploader);
-
-    //init data;
+app.controller('modelkendaraanCtrl', function ($scope, Data, toaster) {
+    //init data
     var tableStateRef;
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
-
-    Data.get('barang/jenis').then(function(data) {
-        $scope.jenis_brg = data.jenis_brg;
-    });
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -44,7 +21,7 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('barang', param).then(function(data) {
+        Data.get('modelkendaraan', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
         });
@@ -52,50 +29,66 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.isLoading = false;
     };
 
-    $scope.create = function(form) {
+    $scope.create = function (form) {
         $scope.is_create = true;
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-        Data.get('barang/kode').then(function(data) {
-            $scope.form.kd_barang = data.kode;
+        Data.get('modelkendaraan/kode').then(function(data) {
+            $scope.form.kd_model = data.kode;
         });
     };
-    $scope.update = function(form) {
+    $scope.update = function (form) {
         $scope.is_create = false;
         $scope.is_edit = true;
-        $scope.is_view = false;
-        $scope.formtitle = "Edit Data : " + form.nm_barang;
+        $scope.is_view = false; 
+        $scope.formtitle = "Edit Data : " + form.kd_model;
         $scope.form = form;
     };
-    $scope.view = function(form) {
+    $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.nm_barang;
+        $scope.formtitle = "Lihat Data : " + form.kd_model;
         $scope.form = form;
     };
-    $scope.save = function(form) {
-        $scope.uploader.uploadAll();
-        form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
-        var url = ($scope.is_create == true) ? 'barang/create/' : 'barang/update/' + form.kd_barang;
-        Data.post(url, form).then(function(result) {
-            if (result.status == 0) {
+    $scope.save = function (form) {
+        var url = ($scope.is_create == true) ? 'modelkendaraan/create' : 'modelkendaraan/update/'+ form.kd_model;
+         Data.post(url, form).then(function (result) {   
+             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
                 $scope.is_edit = false;
                 $scope.callServer(tableStateRef); //reload grid ulang
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
             }
-        });
+         });
+        
     };
-    $scope.cancel = function() {
+    $scope.cancel = function () {
         $scope.is_edit = false;
         $scope.is_view = false;
     };
-    $scope.delete = function(row) {
+
+//    $scope.trash = function (row) {
+//        if (confirm("Apa anda yakin akan MENGHAPUS item ini ?")) {
+//            row.is_deleted = 1;
+//            Data.post('jenisbrg/update/' + row.id, row).then(function (result) {
+//                ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
+//            });
+//        }
+//    };
+//    $scope.restore = function (row) {
+//        if (confirm("Apa anda yakin akan MERESTORE item ini ?")) {
+//            row.is_deleted = 0;
+//            Data.post('jenisbrg/update/' + row.id, row).then(function (result) {
+//                ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
+//            });
+//        }
+//    };
+    $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('barang/delete/' + row.kd_barang).then(function(result) {
+            Data.delete('modelkendaraan/delete/' + row.kd_model).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
