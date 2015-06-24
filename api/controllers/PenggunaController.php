@@ -22,7 +22,7 @@ class PenggunaController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'kode' => ['get'],
+                    'roles' => ['get'],
                 ],
             ]
         ];
@@ -55,7 +55,7 @@ class PenggunaController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "id ASC";
+        $sort = "m_user.id ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -80,9 +80,11 @@ class PenggunaController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('m_user')
+//                ->select('m_user.id as id', 'm_roles.nama as roles')
+                ->from(['m_user','m_roles'])
+                ->where('m_user.roles_id = m_roles.id')
                 ->orderBy($sort)
-                ->select("*");
+                ->select("m_user.id as id, m_roles.nama as roles, m_user.username as username");
 
         //filter
         if (isset($params['filter'])) {
@@ -122,21 +124,18 @@ class PenggunaController extends Controller {
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
     }
-    
-    public function actionKode(){
-      $query = new Query;
-        $query->from('barang')
-                ->select('*')
-                ->orderBy('kd_chassis DESC')
-                ->limit(1);
-        
+
+    public function actionRoles() {
+        $query = new Query;
+        $query->from('m_roles')
+                ->select('*');
+
         $command = $query->createCommand();
-        $models = $command->query()->read();
-        $kode = $models['kd_chassis'] + 1;
-        Yii::error($command->query());
+        $models = $command->queryAll();
+
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => $kode));
+        echo json_encode(array('status' => 1, 'roles' => $models));
     }
 
     public function actionUpdate($id) {
