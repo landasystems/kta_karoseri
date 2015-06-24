@@ -6,7 +6,12 @@ app.controller('penggunaCtrl', function($scope, Data, toaster) {
     $scope.is_view = false;
     $scope.is_create = false;
 
-      $scope.callServer = function callServer(tableState) {
+    Data.get('pengguna/roles').then(function(data) {
+        $scope.roles_id = data.roles;
+    });
+
+
+    $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
@@ -21,7 +26,7 @@ app.controller('penggunaCtrl', function($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('pengguna', param).then(function (data) {
+        Data.get('pengguna', param).then(function(data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
         });
@@ -35,7 +40,7 @@ app.controller('penggunaCtrl', function($scope, Data, toaster) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-       
+
     };
     $scope.update = function(form) {
         $scope.is_edit = true;
@@ -51,7 +56,7 @@ app.controller('penggunaCtrl', function($scope, Data, toaster) {
         $scope.form = form;
     };
     $scope.save = function(form) {
-        var url = ($scope.is_create == true) ? 'pengguna/create'  : 'pengguna/update/' + form.id;
+        var url = ($scope.is_create == true) ? 'pengguna/create' : 'pengguna/update/' + form.id;
         Data.post(url, form).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -79,6 +84,22 @@ app.controller('penggunaCtrl', function($scope, Data, toaster) {
     $scope.cancel = function() {
         $scope.is_edit = false;
         $scope.is_view = false;
+    };
+    $scope.trash = function(row) {
+        if (confirm("Apa anda yakin akan MENGHAPUS item ini ?")) {
+            row.is_deleted = 1;
+            Data.post('pengguna/update/' + row.id, row).then(function(result) {
+                $scope.displayed.splice($scope.displayed.indexOf(row), 1);
+            });
+        }
+    };
+    $scope.restore = function(row) {
+        if (confirm("Apa anda yakin akan MERESTORE item ini ?")) {
+            row.is_deleted = 0;
+            Data.post('pengguna/update/' + row.id, row).then(function(result) {
+                $scope.displayed.splice($scope.displayed.indexOf(row), 1);
+            });
+        }
     };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
