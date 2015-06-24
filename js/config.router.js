@@ -126,6 +126,15 @@ angular.module('app')
                                             }]
                                     }
                                 })
+                                .state('master.roles', {
+                                    url: '/master/roles',
+                                    templateUrl: 'tpl/m_roles/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function($ocLazyLoad) {
+                                                return $ocLazyLoad.load('js/controllers/roles.js');
+                                            }]
+                                    }})
                                 // BOM
                                 .state('trans', {
                                     url: '/trans',
@@ -137,7 +146,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['angularFileUpload','ui.select']).then(
+                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select']).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/bom.js');
                                                         }
