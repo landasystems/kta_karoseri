@@ -55,7 +55,7 @@ class PenggunaController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "m_user.id ASC";
+        $sort = "m_user.nama ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -84,13 +84,13 @@ class PenggunaController extends Controller {
                 ->from(['m_user','m_roles'])
                 ->where('m_user.roles_id = m_roles.id')
                 ->orderBy($sort)
-                ->select("m_user.id as id, m_roles.nama as roles, m_user.username as username");
+                ->select("m_user.id as id, m_roles.nama as roles, m_user.username as username, m_user.is_deleted as is_deleted");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
+                $query->andFilterWhere(['like', 'm_user.'.$key, $val]);
             }
         }
 
