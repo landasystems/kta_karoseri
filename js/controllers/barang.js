@@ -70,6 +70,7 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.form = form;
     };
     $scope.view = function(form) {
+        $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.nm_barang;
