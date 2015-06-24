@@ -100,6 +100,7 @@ class CustomerController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
+    
 
     public function actionView($id) {
 

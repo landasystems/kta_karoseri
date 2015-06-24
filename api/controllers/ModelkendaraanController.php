@@ -143,20 +143,9 @@ class ModelkendaraanController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->query()->read();
-        $kode_mdl = $models['kd_model'] + 1;
-
-        switch (strlen($kode_mdl)) {
-            case 1 : $kode = "0000" . $kode_mdl;
-                break;
-            case 2 : $kode = "000" . $kode_mdl;
-                break;
-            case 3 : $kode = "00" . $kode_mdl;
-                break;
-            case 4 : $kode = "0" . $kode_mdl;
-                break;
-            case 5 : $kode = $kode_mdl;
-                break;
-        }
+        $kode_mdl = ($models['kd_model'] + 1);
+        $jmlkode=strlen($kode_mdl);
+        $kode=substr('00000'.$kode_mdl,$jmlkode);
 
         Yii::error($command->query());
         $this->setHeader(200);
