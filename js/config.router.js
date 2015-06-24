@@ -40,7 +40,7 @@ angular.module('app')
                                     templateUrl: 'tpl/app.html'
                                 })
                                 .state('master.barang', {
-                                    url: '/master/barang',
+                                    url: '/barang',
                                     templateUrl: 'tpl/m_barang/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
@@ -55,7 +55,7 @@ angular.module('app')
                                 })
                                 //jenis barang
                                 .state('master.jenisbrg', {
-                                    url: '/master/jenisbrg',
+                                    url: '/jenisbrg',
                                     templateUrl: 'tpl/m_jenisbrg/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
@@ -65,7 +65,7 @@ angular.module('app')
                                     }
                                 })
                                 .state('master.customer', {
-                                    url: '/master/customer',
+                                    url: '/customer',
                                     templateUrl: 'tpl/m_customer/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
@@ -75,7 +75,7 @@ angular.module('app')
                                     }
                                 })
                                 .state('master.modelkendaraan', {
-                                    url: '/master/modelkendaraan',
+                                    url: '/modelkendaraan',
                                     templateUrl: 'tpl/m_modelkendaraan/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
@@ -85,7 +85,7 @@ angular.module('app')
                                     }
                                 })
                                 .state('master.jnskomplain', {
-                                    url: '/master/jnskomplain',
+                                    url: '/jnskomplain',
                                     templateUrl: 'tpl/m_jnskomplain/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
@@ -95,7 +95,7 @@ angular.module('app')
                                     }
                                 })
                                 .state('master.chassis', {
-                                    url: '/master/chassis',
+                                    url: '/chassis',
                                     templateUrl: 'tpl/m_chassis/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
@@ -106,7 +106,7 @@ angular.module('app')
                                 })
                                 // supplier
                                 .state('master.supplier', {
-                                    url: '/master/supplier',
+                                    url: '/supplier',
                                     templateUrl: 'tpl/m_supplier/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
@@ -117,7 +117,7 @@ angular.module('app')
                                 })
                                 // user
                                 .state('master.pengguna', {
-                                    url: '/master/pengguna',
+                                    url: '/pengguna',
                                     templateUrl: 'tpl/m_user/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
