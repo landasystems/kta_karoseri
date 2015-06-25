@@ -55,14 +55,14 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
     });
 
     $scope.gettipe = function(merk) {
-        Data.get('bom/tipe/' + merk).then(function(data) {
+        Data.get('bom/tipe/?merk=' + merk).then(function(data) {
             $scope.tipe_kendaraan = data.nama_tipe;
         });
     };
 
     $scope.getchassis = function(merk, tipe) {
         Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function(data) {
-            $scope.kd_chassis = data.kode;
+            $scope.form.kd_chassis = data.kode;
         });
     };
 
@@ -74,8 +74,9 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.barang = data.barang;
     });
 
-    Data.get('bom/bagian').then(function(data) {
-        $scope.bagian = data.bagian;
+    Data.get('bom/jabatan').then(function(data) {
+        $scope.jabatan = data.jabatan;
+        console.log(data);
     });
 
     $scope.callServer = function callServer(tableState) {
@@ -112,31 +113,41 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.form.kd_bom = data.kode;
         });
     };
-    $scope.update = function(form, detail) {
-        $scope.is_create = false;
-        $scope.is_edit = true;
-        $scope.is_view = false;
-        $scope.formtitle = "Edit Data : " + form.nm_barang;
-        $scope.form = form;
-        $scope.detail = detail;
+    $scope.update = function(kd_bom) {
+        Data.get('bom/view/' + kd_bom).then(function(data) {
+            $scope.form = data.data;
+            $scope.detBom = data.detail;
+
+            $scope.is_create = false;
+            $scope.is_edit = true;
+            $scope.is_view = false;
+            $scope.formtitle = "Edit Data : " + $scope.form.kd_bom;
+        });
     };
-    $scope.view = function(form, detail) {
-        $scope.is_create = false;
-        $scope.is_edit = true;
-        $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.nm_barang;
-        $scope.form = form;
-        $scope.detail = detail;
+    $scope.view = function(kd_bom) {
+        Data.get('bom/view/' + kd_bom).then(function(data) {
+            $scope.form = data.data;
+            $scope.detBom = data.detail;
+
+//            $scope.gettipe($scope.form.merk);
+//            $scope.getchassis($scope.form.merk, $scope.form.tipe);
+//            
+//            $scope.merk = $scope.form.merk;
+//            $scope.tipe = $scope.form.tipe;
+
+            $scope.is_create = false;
+            $scope.is_edit = true;
+            $scope.is_view = true;
+            $scope.formtitle = "Lihat Data : " + $scope.form.kd_bom;
+        });
     };
     $scope.save = function(form, detail) {
-        var data = {
-                bom: form,
-                detailBom: detail,
-            };
-        $scope.uploader.uploadAll();
 //        form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
-//        data.form = form;
-//        data.detail = detail;
+        var data = {
+            bom: form,
+            detailBom: detail,
+        };
+//        $scope.uploader.uploadAll();
         var url = ($scope.is_create == true) ? 'bom/create/' : 'bom/update/' + form.kd_barang;
         Data.post(url, data).then(function(result) {
             if (result.status == 0) {

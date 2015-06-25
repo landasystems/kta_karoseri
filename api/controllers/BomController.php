@@ -3,7 +3,8 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Barang;
+use app\models\Bom;
+use app\models\BomDet;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -25,7 +26,7 @@ class BomController extends Controller {
                     'chassis' => ['get'],
                     'model' => ['get'],
                     'barang' => ['get'],
-                    'bagian' => ['get'],
+                    'jabatan' => ['get'],
                     'kode' => ['get'],
                     'merk' => ['get'],
                     'tipe' => ['get'],
@@ -69,12 +70,12 @@ class BomController extends Controller {
 
         echo json_encode(array('status' => 1, 'merk' => $models));
     }
-    
+
     public function actionTipe() {
         $query = new Query;
         $query->from('chassis')
                 ->select("distinct(tipe)")
-                ->where('merk = "'.$_GET['id'].'"');
+                ->where('merk = "' . $_GET['merk'] . '"');
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -84,9 +85,9 @@ class BomController extends Controller {
         echo json_encode(array('status' => 1, 'nama_tipe' => $models));
     }
 
-    public function actionBagian() {
+    public function actionJabatan() {
         $query = new Query;
-        $query->from('bagian')
+        $query->from('jabatan')
                 ->select("*");
 
         $command = $query->createCommand();
@@ -94,7 +95,7 @@ class BomController extends Controller {
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'bagian' => $models));
+        echo json_encode(array('status' => 1, 'jabatan' => $models));
     }
 
     public function actionBarang() {
@@ -114,7 +115,7 @@ class BomController extends Controller {
         $query = new Query;
         $query->from('chassis')
                 ->select("kd_chassis")
-                ->where('merk="'.$_GET['merk'].'" and tipe="'.$_GET['tipe'].'"');
+                ->where('merk="' . $_GET['merk'] . '" and tipe="' . $_GET['tipe'] . '"');
 
         $command = $query->createCommand();
         $models = $command->query()->read();
@@ -208,26 +209,49 @@ class BomController extends Controller {
     }
 
     public function actionView($id) {
+        $query = new Query;
+        $query  ->from(['trans_standar_bahan', 'chassis'])
+                ->where('trans_standar_bahan.kd_chassis = chassis.kd_chassis and trans_standar_bahan.kd_bom="' . $id . '"')
+                ->select("*");
 
-        $model = $this->findModel($id);
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+
+        $det = BomDet::find()
+                ->where(['kd_bom' => $models['kd_bom']])
+                ->all();
+
+        $detail = array();
+        foreach ($det as $val) {
+            $detail[] = $val->attributes;
+        }
 
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $models, 'detail' => $detail), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        print_r($params);
-//        $model = new Barang();
-//        $model->attributes = $params;
+//        print_r($params);
+        print_r($params['detailBom']);
+        $model = new Bom();
+        $model->attributes = $params['bom'];
 //
-//        if ($model->save()) {
-//            $this->setHeader(200);
-//            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-//        } else {
-//            $this->setHeader(400);
-//            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-//        }
+
+        if ($model->save()) {
+            $detailBom = $params['detailBom'];
+            foreach ($detailBom as $val) {
+                $det = new BomDet();
+                $det->attributes = $val;
+                $det->kd_bom = $model->kd_bom;
+                $det->save();
+            }
+            $this->setHeader(200);
+            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        } else {
+            $this->setHeader(400);
+            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+        }
     }
 
     public function actionUpdate($id) {
@@ -258,7 +282,7 @@ class BomController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Barang::findOne($id)) !== null) {
+        if (($model = Bom::findOne($id)) !== null) {
             return $model;
         } else {
 
