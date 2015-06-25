@@ -154,6 +154,16 @@ angular.module('app')
                                             }]
                                     }
                                 })
+                                // SPK
+                                 .state('trans.spk', {
+                                    url: '/trans/spk',
+                                    templateUrl: 'tpl/m_spk/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function($ocLazyLoad) {
+                                                return $ocLazyLoad.load('js/controllers/spk.js');
+                                            }]
+                                    }})
                                 // others
                                 .state('access', {
                                     url: '/access',
