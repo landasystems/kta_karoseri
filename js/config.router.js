@@ -156,7 +156,7 @@ angular.module('app')
                                 })
                                 // SPK
                                  .state('trans.spk', {
-                                    url: '/trans/spk',
+                                    url: '/spk',
                                     templateUrl: 'tpl/m_spk/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
