@@ -13,7 +13,7 @@
             </div>
             <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
                 <div class="form-horizontal">
-                    <div class="form-group">
+<!--                    <div class="form-group">
                         <label class="col-sm-1 control-label">Jenis</label>
                         <div class="col-sm-4">
                             <select stInputEvent="change" st-search="jenis_brg" class="form-control">
@@ -25,7 +25,7 @@
                         <div class="col-sm-4">
                             <input st-search="nm_barang" class="form-control"/>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
             </div>
 
@@ -42,7 +42,7 @@
                         </tr>
                     </thead>
                     <tbody ng-show="!isLoading">
-                        <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
+                        <tr ng-repeat="row in displayed" ng-dblclick="view(row.kd_bom)">
                             <td>{{row.kd_bom}}</td>
                             <td>{{row.merk}}</td>
                             <td>{{row.tipe}}</td>
@@ -50,7 +50,7 @@
                             <td>{{row.tgl_buat| date}}</td>
                             <td>
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
+                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row.kd_bom)"></button>
                                     <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);"></button>
                                 </div> 
                             </td>
@@ -87,8 +87,9 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Merk</label>
                             <div class="col-sm-8">
-                                <select class="form-control" ui-jq="chosen" ng-change="gettipe(form.merk)" ng-model="form.merk" ng-disabled="is_view" ng-options="obj.merk as obj.merk for obj in merk">
+                                <select class="form-control" ui-jq="chosen" ng-change="gettipe(form.merk)" ng-model="form.merk"  ng-disabled="is_view">
                                     <option value="">-Pilih Merk-</option>
+                                    <option ng-repeat="merkKnd in merk" value="{{merkKnd.merk}}">{{merkKnd.merk}}</option>
                                 </select>
                             </div>
                         </div>
@@ -96,8 +97,9 @@
                             <label class="col-sm-4 control-label">Tipe</label>
                             <div class="col-sm-8">
                                 <input type="hidden" ng-model="form.kd_chassis">
-                                <select class="form-control" ng-change="getchassis(form.merk, form.tipe)" ng-model="form.tipe" ng-disabled="is_view" ng-options="obj.tipe as obj.tipe for obj in tipe_kendaraan">
+                                <select class="form-control" ng-change="getchassis(form.merk, form.tipe)" ng-model="form.tipe" ng-disabled="is_view">
                                     <option value="">-Pilih Tipe-</option>
+                                    <option ng-repeat="tipeKend in tipe_kendaraan" value="{{tipeKend.tipe}}">{{tipeKend.tipe}}</option>
                                 </select>
                             </div>
                         </div>
@@ -112,8 +114,9 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Model</label>
                             <div class="col-sm-8">
-                                <select class="form-control" ui-jq="chosen" ng-model="form.merk" ng-disabled="is_view" ng-options="obj.kd_model as obj.model for obj in model">
-                                    <option value="">-Pilih Merk-</option>
+                                <select ng-disabled="is_view" ui-jq="chosen"  ng-model="form.kd_model">
+                                    <option value="">-Pilih Model-</option>
+                                    <option ng-repeat="modelKend in model" value="{{modelKend.kd_model}}">{{modelKend.model}}</option>
                                 </select>    
                             </div>
                         </div>
@@ -129,9 +132,9 @@
                         <div nv-file-drop="" uploader="uploader" filters="imageFilter">
                             <div class="col-md-12 bg-auto">    
                                 <div ng-show="uploader.isHTML5" class="m-b-md">
-                                    <img ng-src="js/controllers/uploads/barang/{{form.foto}}" ng-hide="is_create == true" class="img-thumbnail">
+                                    <img ng-src="js/controllers/uploads/bom/{{form.foto}}" ng-hide="is_create == true" class="img-thumbnail">
                                     <img src="img/noimage.jpg" class="img-thumbnail" ng-show="is_create == true">
-                                    <input type="file" nv-file-select="" uploader="uploader" />
+                                    <input type="file" nv-file-select="" uploader="uploader" ng-disabled="is_view"/>
                                 </div>
                             </div>
                         </div>
@@ -141,14 +144,14 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Filter Berdasarkan Bagian</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" style="width:300px;">
+                            <input type="text" class="form-control" style="width:300px;" ng-disabled="is_view">
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Bagian</th>
+                                <th>Jabatan</th>
                                 <th>Kode Barang</th>
                                 <th>Qty</th>
                                 <th>Keteragan</th>
@@ -159,20 +162,20 @@
                             <tr ng-repeat="detail in detBom">
                                 <td>
                                     <div class="col-sm-12">
-                                        <select  ui-jq="chosen" ng-model="detail.kd_bagian" ng-disabled="is_view">
-                                            <option value="">-Pilih Bagian-</option>
-                                            <option ng-repeat="bagian in bagian" value="{{bagian.kd_bagian}}">{{bagian.bagian}}</option>
+                                        <select  ng-model="detail.kd_jab" ng-disabled="is_view">
+                                            <option value="">-Pilih Jabatan-</option>
+                                            <option ng-repeat="jabatan in jabatan" value="{{jabatan.kd_jab}}">{{jabatan.nama_jab}}</option>
                                         </select>
                                     </div>
                                 </td>
                                 <td>
-                                    <select ui-jq="chosen" ng-model="detail.kd_barang" ng-disabled="is_view">
+                                    <select   ng-model="detail.kd_barang" ng-disabled="is_view">
                                         <option value="">-Kode Barang-</option>
-                                        <option ng-repeat="barang in barang" value="{{barang.kd_barang}}">{{barang.kd_barang}} - {{barang.nm_barang}}</option>
+                                        <option ng-repeat="barang in barang" value="{{barang.kd_barang}}">{{barang.nm_barang}}</option>
                                     </select>
                                 </td>
-                                <td><input type="text" class="form-control" ng-model="detail.qty"></td>
-                                <td><textarea class="form-control" ng-model="detail.keterangan"></textarea></td>
+                                <td><input type="text" class="form-control" ng-model="detail.qty" ng-disabled="is_view"></td>
+                                <td><textarea class="form-control" ng-model="detail.ket" ng-disabled="is_view"></textarea></td>
                                 <td>
                                     <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-arrows"></i></button>
                                     <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0"><i class="fa fa-trash-o"></i></button>
