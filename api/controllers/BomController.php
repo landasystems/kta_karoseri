@@ -27,6 +27,8 @@ class BomController extends Controller {
                     'barang' => ['get'],
                     'bagian' => ['get'],
                     'kode' => ['get'],
+                    'merk' => ['get'],
+                    'tipe' => ['get'],
                 ],
             ]
         ];
@@ -53,6 +55,33 @@ class BomController extends Controller {
         }
 
         return true;
+    }
+
+    public function actionMerk() {
+        $query = new Query;
+        $query->from('chassis')
+                ->select("distinct(merk)");
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'merk' => $models));
+    }
+    
+    public function actionTipe() {
+        $query = new Query;
+        $query->from('chassis')
+                ->select("distinct(tipe)")
+                ->where('merk = "'.$_GET['id'].'"');
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'nama_tipe' => $models));
     }
 
     public function actionBagian() {
@@ -84,14 +113,16 @@ class BomController extends Controller {
     public function actionChassis() {
         $query = new Query;
         $query->from('chassis')
-                ->select("*");
+                ->select("kd_chassis")
+                ->where('merk="'.$_GET['merk'].'" and tipe="'.$_GET['tipe'].'"');
 
         $command = $query->createCommand();
-        $models = $command->queryAll();
+        $models = $command->query()->read();
+        $kode = $models['kd_chassis'];
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'chassis' => $models));
+        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionModel() {
@@ -154,7 +185,7 @@ class BomController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from(['trans_standar_bahan', 'chassis','model'])
+                ->from(['trans_standar_bahan', 'chassis', 'model'])
                 ->where('trans_standar_bahan.kd_chassis = chassis.kd_chassis and trans_standar_bahan.kd_model=model.kd_model')
                 ->orderBy($sort)
                 ->select("*");
@@ -186,16 +217,17 @@ class BomController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Barang();
-        $model->attributes = $params;
-
-        if ($model->save()) {
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-        } else {
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-        }
+        print_r($params);
+//        $model = new Barang();
+//        $model->attributes = $params;
+//
+//        if ($model->save()) {
+//            $this->setHeader(200);
+//            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+//        } else {
+//            $this->setHeader(400);
+//            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+//        }
     }
 
     public function actionUpdate($id) {

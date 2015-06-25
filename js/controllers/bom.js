@@ -50,9 +50,21 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
         }
     };
 
-    Data.get('bom/chassis').then(function(data) {
-        $scope.chassis = data.chassis;
+    Data.get('bom/merk').then(function(data) {
+        $scope.merk = data.merk;
     });
+
+    $scope.gettipe = function(merk) {
+        Data.get('bom/tipe/' + merk).then(function(data) {
+            $scope.tipe_kendaraan = data.nama_tipe;
+        });
+    };
+
+    $scope.getchassis = function(merk, tipe) {
+        Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function(data) {
+            $scope.kd_chassis = data.kode;
+        });
+    };
 
     Data.get('bom/model').then(function(data) {
         $scope.model = data.model;
@@ -89,35 +101,44 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.isLoading = false;
     };
 
-    $scope.create = function(form) {
+    $scope.create = function(form, detail) {
         $scope.is_create = true;
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.detail = {};
         Data.get('bom/kode').then(function(data) {
             $scope.form.kd_bom = data.kode;
         });
     };
-    $scope.update = function(form) {
+    $scope.update = function(form, detail) {
         $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.nm_barang;
         $scope.form = form;
+        $scope.detail = detail;
     };
-    $scope.view = function(form) {
+    $scope.view = function(form, detail) {
         $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.nm_barang;
         $scope.form = form;
+        $scope.detail = detail;
     };
-    $scope.save = function(form) {
+    $scope.save = function(form, detail) {
+        var data = [{
+                bom: form,
+                detailBom: detail
+            }];
         $scope.uploader.uploadAll();
-        form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
+//        form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
+//        data.form = form;
+//        data.detail = detail;
         var url = ($scope.is_create == true) ? 'bom/create/' : 'bom/update/' + form.kd_barang;
-        Data.post(url, form).then(function(result) {
+        Data.post(url, data).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {

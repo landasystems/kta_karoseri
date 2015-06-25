@@ -87,13 +87,18 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Merk</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" ng-model="form.merk" ng-disabled="is_view" required>
+                                <select class="form-control" ui-jq="chosen" ng-change="gettipe(form.merk)" ng-model="form.merk" ng-disabled="is_view" ng-options="obj.merk as obj.merk for obj in merk">
+                                    <option value="">-Pilih Merk-</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Tipe</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" ng-model="form.tipe" ng-disabled="is_view" required>
+                                <input type="hidden" ng-model="form.kd_chassis">
+                                <select class="form-control" ng-change="getchassis(form.merk, form.tipe)" ng-model="form.tipe" ng-disabled="is_view" ng-options="obj.tipe as obj.tipe for obj in tipe_kendaraan">
+                                    <option value="">-Pilih Tipe-</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -101,26 +106,22 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Tanggal Buat</label>
                             <div class="col-sm-8">
-                                <p class="input-group">
-                                    <input type="text" class="form-control" datepicker-popup ng-model="dt" is-open="opened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                    </span>
-                                    <input type="text" class="form-control" datepicker-popup ng-model="form.tgl_buat" is-open="opened" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-                                </p>
+                                <input type="text" class="form-control" ng-model="form.tgl_buat" ng-disabled="is_view">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Model</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" ng-model="form.model" ng-disabled="is_view" required>
+                                <select class="form-control" ui-jq="chosen" ng-model="form.merk" ng-disabled="is_view" ng-options="obj.kd_model as obj.model for obj in model">
+                                    <option value="">-Pilih Merk-</option>
+                                </select>    
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Jenis</label>
                             <div class="col-sm-8">
-                                <label class="btn btn-default" ng-model="form.jenis" ng-disabled="is_view" btn-radio="'Mini Bus'" required>Small Bus</label>
-                                <label class="btn btn-default" ng-model="form.jenis" ng-disabled="is_view" btn-radio="'Small Bus'" required>Mini Bus</label>
+                                <label class="btn btn-default" ng-model="form.jenis" ng-disabled="is_view" btn-radio="'Mini Bus'">Small Bus</label>
+                                <label class="btn btn-default" ng-model="form.jenis" ng-disabled="is_view" btn-radio="'Small Bus'">Mini Bus</label>
                             </div>
                         </div>
                     </div>
@@ -149,7 +150,6 @@
                             <tr>
                                 <th>Bagian</th>
                                 <th>Kode Barang</th>
-                                <th>Nama Barang</th>
                                 <th>Qty</th>
                                 <th>Keteragan</th>
                                 <th width="15">#</th>
@@ -159,19 +159,18 @@
                             <tr ng-repeat="detail in detBom">
                                 <td>
                                     <div class="col-sm-12">
-                                        <select  ui-jq="chosen" ng-model="detail.kd_bagian" ng-disabled="is_view" required>
+                                        <select  ui-jq="chosen" ng-model="detail.kd_bagian" ng-disabled="is_view">
                                             <option value="">-Pilih Bagian-</option>
                                             <option ng-repeat="bagian in bagian" value="{{bagian.kd_bagian}}">{{bagian.bagian}}</option>
                                         </select>
                                     </div>
                                 </td>
                                 <td>
-                                    <select ui-jq="chosen" ng-model="detail.kd_barang" ng-disabled="is_view" required>
+                                    <select ui-jq="chosen" ng-model="detail.kd_barang" ng-disabled="is_view">
                                         <option value="">-Kode Barang-</option>
-                                        <option ng-repeat="barang in barang" value="{{barang.kd_barang}}">{{barang.nm_barang}}</option>
+                                        <option ng-repeat="barang in barang" value="{{barang.kd_barang}}">{{barang.kd_barang}} - {{barang.nm_barang}}</option>
                                     </select>
                                 </td>
-                                <td><input type="text" class="form-control" ng-model="detail.nama_barang" readonly></td>
                                 <td><input type="text" class="form-control" ng-model="detail.qty"></td>
                                 <td><textarea class="form-control" ng-model="detail.keterangan"></textarea></td>
                                 <td>
@@ -183,7 +182,7 @@
                     </table>
                     <div align="center">
                         <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
-                        <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form)">&nbsp;Simpan Perubahan</button>
+                        <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, detail)">&nbsp;Simpan Perubahan</button>
                     </div>
                 </form>
             </div>

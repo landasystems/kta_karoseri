@@ -145,6 +145,8 @@ angular.module('ui.validate', []).directive('uiValidate', function() {
         }
     };
 });
+
+/* UI JQ*/
 angular.module('ui.jq', ['ui.load']).
   value('uiJqConfig', {}).
   directive('uiJq', ['uiJqConfig', 'JQ_CONFIG', 'uiLoad', '$timeout', function uiJqInjectingFunction(uiJqConfig, JQ_CONFIG, uiLoad, $timeout) {
