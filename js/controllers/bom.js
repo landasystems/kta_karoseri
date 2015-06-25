@@ -76,7 +76,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
 
     Data.get('bom/jabatan').then(function(data) {
         $scope.jabatan = data.jabatan;
-        console.log(data);
     });
 
     $scope.callServer = function callServer(tableState) {
@@ -118,6 +117,11 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.form = data.data;
             $scope.detBom = data.detail;
 
+            console.log($scope.form);
+            Data.get('bom/tipe/?merk=' + $scope.form.merk).then(function(data) {
+                $scope.tipe_kendaraan = data.nama_tipe;
+            });
+
             $scope.is_create = false;
             $scope.is_edit = true;
             $scope.is_view = false;
@@ -129,11 +133,10 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.form = data.data;
             $scope.detBom = data.detail;
 
-//            $scope.gettipe($scope.form.merk);
-//            $scope.getchassis($scope.form.merk, $scope.form.tipe);
-//            
-//            $scope.merk = $scope.form.merk;
-//            $scope.tipe = $scope.form.tipe;
+            console.log($scope.form);
+            Data.get('bom/tipe/?merk=' + $scope.form.merk).then(function(data) {
+                $scope.tipe_kendaraan = data.nama_tipe;
+            });
 
             $scope.is_create = false;
             $scope.is_edit = true;
@@ -165,7 +168,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
     };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('barang/delete/' + row.kd_barang).then(function(result) {
+            Data.delete('bom/delete/' + row.kd_bom).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }

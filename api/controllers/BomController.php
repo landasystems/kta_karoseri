@@ -210,7 +210,7 @@ class BomController extends Controller {
 
     public function actionView($id) {
         $query = new Query;
-        $query  ->from(['trans_standar_bahan', 'chassis'])
+        $query->from(['trans_standar_bahan', 'chassis'])
                 ->where('trans_standar_bahan.kd_chassis = chassis.kd_chassis and trans_standar_bahan.kd_bom="' . $id . '"')
                 ->select("*");
 
@@ -270,6 +270,7 @@ class BomController extends Controller {
 
     public function actionDelete($id) {
         $model = $this->findModel($id);
+        $deleteDetail = BomDet::deleteAll(['kd_bom' => $models['kd_bom']]);
 
         if ($model->delete()) {
             $this->setHeader(200);
