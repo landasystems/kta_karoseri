@@ -129,10 +129,10 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.detail = detail;
     };
     $scope.save = function(form, detail) {
-        var data = [{
+        var data = {
                 bom: form,
-                detailBom: detail
-            }];
+                detailBom: detail,
+            };
         $scope.uploader.uploadAll();
 //        form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
 //        data.form = form;
