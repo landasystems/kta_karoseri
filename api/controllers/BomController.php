@@ -76,14 +76,14 @@ class BomController extends Controller {
         $query = new Query;
         $query->from('chassis')
                 ->select("distinct(tipe)")
-                ->where('merk = "' . $_GET['merk'] . '"');
+                ->where('tipe like "%' . $_GET['kata'] . '%"');
 
         $command = $query->createCommand();
         $models = $command->queryAll();
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'nama_tipe' => $models));
+        echo json_encode(array('status' => 1, 'tipe' => $models));
     }
 
     public function actionJabatan() {

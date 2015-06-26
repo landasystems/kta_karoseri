@@ -1,4 +1,4 @@
-app.controller('bomCtrl', function($scope, $http, Data, toaster, FileUploader) {
+app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
     var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
     var uploader = $scope.uploader = new FileUploader({
         url: 'js/controllers/upload.php?folder=bom&kode=' + kode_unik,
@@ -14,25 +14,44 @@ app.controller('bomCtrl', function($scope, $http, Data, toaster, FileUploader) {
         }
     });
 
+//    $scope.select2Options = {
+//        allowClear: true,
+//        ajax: {
+//            url: "api/web/bom/merk/",
+//            dataType: 'json',
+//            data: function(term) {
+//                return {
+//                    kata: term,
+//                };
+//            },
+//            results: function(data, page) {
+//                return {
+//                    results: data.merk
+//                };
+//            }
+//        },
+//        formatResult: function(object) {
+//            return object.merk;
+//        },
+//        formatSelection: function(object) {
+//            return object.merk;
+//        }
+//    };
 
     $scope.listMerk = {};
     $scope.refreshMerk = function(listMerk) {
-        var params = {listMerk: listMerk, sensor: false};
+        var params = {listMerk: listMerk};
         Data.get('bom/merk/?kata=' + listMerk).then(function(response) {
             $scope.merk = response.merk;
         });
     };
-
-    $scope.people = [
-        {name: 'Adam', email: 'adam@email.com', age: 10},
-        {name: 'Amalie', email: 'amalie@email.com', age: 12},
-        {name: 'Wladimir', email: 'wladimir@email.com', age: 30},
-        {name: 'Samantha', email: 'samantha@email.com', age: 31},
-        {name: 'Estefanía', email: 'estefanía@email.com', age: 16},
-        {name: 'Natasha', email: 'natasha@email.com', age: 54},
-        {name: 'Nicole', email: 'nicole@email.com', age: 43},
-        {name: 'Adrian', email: 'adrian@email.com', age: 21}
-    ];
+    $scope.listType = {};
+    $scope.refreshType = function(listType) {
+        var params = {listType: listType};
+        Data.get('bom/tipe/?kata=' + listType).then(function(response) {
+            $scope.tipe = response.tipe;
+        });
+    };
 
     //init data;
     var tableStateRef;
@@ -71,11 +90,11 @@ app.controller('bomCtrl', function($scope, $http, Data, toaster, FileUploader) {
 //    Data.get('bom/merk').then(function(data) {
 //        $scope.merk = data.merk;
 //    });
-    $scope.gettipe = function(merk) {
-        Data.get('bom/tipe/?merk=' + merk).then(function(data) {
-            $scope.tipe_kendaraan = data.nama_tipe;
-        });
-    };
+//    $scope.gettipe = function(merk) {
+//        Data.get('bom/tipe/?merk=' + merk).then(function(data) {
+//            $scope.tipe_kendaraan = data.nama_tipe;
+//        });
+//    };
     $scope.getchassis = function(merk, tipe) {
         Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function(data) {
             $scope.form.kd_chassis = data.kode;

@@ -84,23 +84,40 @@
                                 <input type="text" class="form-control" ng-model="form.kd_bom" ng-disabled="is_view" ng-readonly="is_create == false" >
                             </div>
                         </div>
-                        <!--                        <div class="form-group">
-                                                    <label class="col-sm-4 control-label">Merk</label>
-                                                    <div class="col-sm-8">
-                                                        <select  class="form-control" ng-change="gettipe(form.merk)" ng-model="form.merk"  ng-disabled="is_view">
-                                                            <option value="">-Pilih Merk-</option>
-                                                            <option ng-repeat="merkKnd in merk" value="{{merkKnd.merk}}">{{merkKnd.merk}}</option>
-                                                        </select>
-                                                    </div>
-                                                </div>-->
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Merk</label>
+                            <div class="col-sm-8">
+                                <ui-select ng-model="form.merk" theme="select2"
+                                           reset-search-input="false"
+                                           style="width:200px;">
+                                    <ui-select-match placeholder="Masukkan Merk">{{$select.selected.merk}}</ui-select-match>
+                                    <ui-select-choices repeat="listMerk in merk track by $index" refresh="refreshMerk($select.search)" refresh-delay="0">
+                                        <div ng-bind-html="listMerk.merk | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <!--                                <select  class="form-control" ng-change="gettipe(form.merk)" ng-model="form.merk"  ng-disabled="is_view">
+                                                                    <option value="">-Pilih Merk-</option>
+                                                                    <option ng-repeat="merkKnd in merk" value="{{merkKnd.merk}}">{{merkKnd.merk}}</option>
+                                                                </select>-->
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Tipe</label>
                             <div class="col-sm-8">
                                 <input type="hidden" ng-model="form.kd_chassis">
-                                <select class="form-control" ng-change="getchassis(form.merk, form.tipe)" ng-model="form.tipe" ng-disabled="is_view">
-                                    <option value="">-Pilih Tipe-</option>
-                                    <option ng-repeat="tipeKend in tipe_kendaraan" value="{{tipeKend.tipe}}">{{tipeKend.tipe}}</option>
-                                </select>
+                                <ui-select ng-model="form.tipe" theme="select2"
+                                           reset-search-input="false"
+                                           style="width:200px;"
+                                           on-select="getchassis(form.merk.merk, form.tipe.tipe)">
+                                    <ui-select-match placeholder="Masukkan Tipe">{{$select.selected.tipe}}</ui-select-match>
+                                    <ui-select-choices repeat="listType in tipe track by $index" refresh="refreshType($select.search)" refresh-delay="0">
+                                        <div ng-bind-html="listType.tipe | highlight: $select.search"></div>
+                                    </ui-select-choices> 
+                                </ui-select>
+                                <!--                                <select class="form-control" ng-change="getchassis(form.merk, form.tipe)" ng-model="form.tipe" ng-disabled="is_view">
+                                                                    <option value="">-Pilih Tipe-</option>
+                                                                    <option ng-repeat="tipeKend in tipe_kendaraan" value="{{tipeKend.tipe}}">{{tipeKend.tipe}}</option>
+                                                                </select>-->
                             </div>
                         </div>
                     </div>
@@ -108,16 +125,25 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Tanggal Buat</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" ng-model="form.tgl_buat" ng-disabled="is_view">
+                                <input type="date" class="form-control" ng-model="form.tgl_buat" ng-disabled="is_view">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Model</label>
                             <div class="col-sm-8">
-                                <select  class="form-control" ng-model="form.kd_model" ng-disabled="is_view">
-                                    <option value="">-Pilih Model-</option>
-                                    <option ng-repeat="modelKend in model" value="{{modelKend.kd_model}}">{{modelKend.model}}</option>
-                                </select>    
+                                <ui-select ng-model="form.tipe" theme="select2"
+                                           reset-search-input="false"
+                                           style="width:200px;"
+                                           on-select="getchassis(form.merk.merk, form.tipe.tipe)">
+                                    <ui-select-match placeholder="Masukkan Tipe">{{$select.selected.tipe}}</ui-select-match>
+                                    <ui-select-choices repeat="listType in tipe track by $index" refresh="refreshType($select.search)" refresh-delay="0">
+                                        <div ng-bind-html="listType.tipe | highlight: $select.search"></div>
+                                    </ui-select-choices> 
+                                </ui-select>
+                                <!--                                <select  class="form-control" ng-model="form.kd_model" ng-disabled="is_view">
+                                                                    <option value="">-Pilih Model-</option>
+                                                                    <option ng-repeat="modelKend in model" value="{{modelKend.kd_model}}">{{modelKend.model}}</option>
+                                                                </select>    -->
                             </div>
                         </div>
                         <div class="form-group">
@@ -148,17 +174,15 @@
                             <input type="text" class="form-control" style="width:300px;" ng-disabled="is_view">
                         </div>
                     </div>
-                    
-                    <ui-select ng-model="listMerk.selected" theme="select2"
-                               ng-disabled="disabled"
-                               reset-search-input="false"
-                               style="width:300px;">
-                        <ui-select-match placeholder="Masukkan Merk">{{$select.selected.merk}}</ui-select-match>
-                        <ui-select-choices repeat="listMerk in merk track by $index" refresh="refreshMerk($select.search)" refresh-delay="0">
-                            <div ng-bind-html="listMerk.merk | highlight: $select.search"></div>
-                        </ui-select-choices>
-                    </ui-select>
-
+                    <!--                    <input type="hidden" id="users" 
+                                               ui-select2="select2Options"
+                                               ng-model="user.name"
+                                               data-placeholder="Pick a user"
+                                               ng-required="true" style="width:300px" />-->
+                    <!--                    <select ui-select2 ng-model="selectedSingle" data-placeholder="-- Select One --">
+                                            <option></option>
+                                            <option ng-repeat="item in items" value="{{item.id}}">{{item.name}}</option>
+                                        </select>-->
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <table class="table table-bordered">
                         <thead>
