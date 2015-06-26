@@ -158,30 +158,30 @@
                             <tr>
                                 <th>Jabatan</th>
                                 <th>Barang</th>
-                                <th>Qty</th>
+                                <th width="25">Qty</th>
                                 <th>Keteragan</th>
                                 <th width="15">#</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="detail in detBom">
-                                <td>
-<!--                                    <input type="hidden" 
+                            <tr ng-repeat="detail in detBom" style="margin:0px;padding:0px;">
+                                <td  style="margin:0px;padding:0px;width:25%">
+                                    <input type="hidden" 
                                            ui-select2="jabatan"
                                            ng-model="detail.kd_jab"
                                            data-placeholder="-Pilih Jabatan-"
-                                           style="width:250px" />-->
+                                           style="width:100%" />
                                 </td>
-                                <td>
+                                <td  style="margin:0px;padding:0px;width:25%">
                                     <input type="hidden" 
                                            ui-select2="barang"
                                            ng-model="detail.kd_barang"
                                            data-placeholder="-Pilih Barang-"
-                                           style="width:250px" />
+                                           style="width:100%" />
                                 </td>
-                                <td><input type="text" class="form-control" ng-model="detail.qty" ng-disabled="is_view"></td>
-                                <td><textarea class="form-control" ng-model="detail.ket" ng-disabled="is_view"></textarea></td>
-                                <td>
+                                <td  style="margin:0px;padding:0px;"><input type="text" class="form-control" ng-model="detail.qty" ng-disabled="is_view"></td>
+                                <td  style="margin:0px;padding:0px;"><input type="text" class="form-control" ng-model="detail.ket" ng-disabled="is_view"></td>
+                                <td  style="margin:0px;padding:0px;">
                                     <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-arrows"></i></button>
                                     <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
                                 </td>
