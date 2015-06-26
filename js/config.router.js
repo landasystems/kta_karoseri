@@ -135,18 +135,19 @@ angular.module('app')
                                                 return $ocLazyLoad.load('js/controllers/roles.js');
                                             }]
                                     }})
-                                // BOM
+                                // Transaksi
                                 .state('trans', {
                                     url: '/trans',
                                     templateUrl: 'tpl/app.html'
                                 })
+                                //BOM
                                 .state('trans.bom', {
                                     url: '/bom',
                                     templateUrl: 'tpl/bom/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select']).then(
+                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select2']).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/bom.js');
                                                         }
@@ -154,14 +155,14 @@ angular.module('app')
                                             }]
                                     }
                                 })
-                                // SPK
-                                 .state('trans.spk', {
-                                    url: '/spk',
-                                    templateUrl: 'tpl/t_spk/index.html',
+                                //BSTK
+                                .state('trans.bstk', {
+                                    url: '/bstk',
+                                    templateUrl: 'tpl/t_bstk/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/spk.js');
+                                                return $ocLazyLoad.load('js/controllers/bstk.js');
                                             }]
                                     }})
                                 // others

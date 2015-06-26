@@ -93,7 +93,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Jenis</label>
                             <div class="col-sm-10">
-                                <select class="form-control" ng-model="form.jenis" ng-disabled="is_view" required>
+                                <select ui-jq="chosen" class="w-md" ng-model="form.jenis" ng-disabled="is_view" required>
                                     <option value="">-Pilih Jenis-</option>
                                     <option ng-repeat="jenis in jenis_brg" value="{{jenis.kd_jenis}}">{{jenis.jenis_brg}}</option>
                                 </select>
