@@ -17,6 +17,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.merk = {
         minimumInputLength: 3,
         allowClear: true,
+        initSelection: function(el, fn) {},
         ajax: {
             url: "api/web/bom/merk/",
             dataType: 'json',
@@ -44,6 +45,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.tipe = {
         minimumInputLength: 3,
         allowClear: true,
+        initSelection: function(el, fn) {},
         ajax: {
             url: "api/web/bom/tipe/",
             dataType: 'json',
@@ -71,6 +73,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.model = {
         minimumInputLength: 3,
         allowClear: true,
+        initSelection: function(el, fn) {},
         ajax: {
             url: "api/web/bom/model/",
             dataType: 'json',
@@ -98,6 +101,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.jabatan = {
         minimumInputLength: 3,
         allowClear: true,
+        initSelection: function(el, fn) {},
         ajax: {
             url: "api/web/bom/jabatan/",
             dataType: 'json',
@@ -125,6 +129,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.barang = {
         minimumInputLength: 3,
         allowClear: true,
+        initSelection: function(el, fn) {},
         ajax: {
             url: "api/web/bom/barang/",
             dataType: 'json',
