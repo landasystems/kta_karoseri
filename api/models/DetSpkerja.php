@@ -5,20 +5,22 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "trans_spkerja".
+ * This is the model class for table "det_spkerja".
  *
  * @property string $no_wo
  * @property string $kd_jab
- * @property integer $status
+ * @property string $kd_ker
+ * @property double $qty
+ * @property integer $no
  */
-class TransSpk extends \yii\db\ActiveRecord
+class DetSpkerja extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'trans_spkerja';
+        return 'det_spkerja';
     }
 
     /**
@@ -27,8 +29,8 @@ class TransSpk extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['status'], 'integer'],
-            [['no_wo'], 'string', 'max' => 10],
+            [['qty'], 'number'],
+            [['no_wo', 'kd_ker'], 'string', 'max' => 10],
             [['kd_jab'], 'string', 'max' => 20]
         ];
     }
@@ -41,7 +43,9 @@ class TransSpk extends \yii\db\ActiveRecord
         return [
             'no_wo' => 'No Wo',
             'kd_jab' => 'Kd Jab',
-            'status' => 'Status',
+            'kd_ker' => 'Kd Ker',
+            'qty' => 'Qty',
+            'no' => 'No',
         ];
     }
 }
