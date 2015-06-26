@@ -61,7 +61,8 @@ class BomController extends Controller {
     public function actionMerk() {
         $query = new Query;
         $query->from('chassis')
-                ->select("distinct(merk)");
+                ->select("distinct(merk)")
+                ->where("merk like '%".$_GET['kata']."%'");
 
         $command = $query->createCommand();
         $models = $command->queryAll();

@@ -84,15 +84,15 @@
                                 <input type="text" class="form-control" ng-model="form.kd_bom" ng-disabled="is_view" ng-readonly="is_create == false" >
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Merk</label>
-                            <div class="col-sm-8">
-                                <select  class="form-control" ng-change="gettipe(form.merk)" ng-model="form.merk"  ng-disabled="is_view">
-                                    <option value="">-Pilih Merk-</option>
-                                    <option ng-repeat="merkKnd in merk" value="{{merkKnd.merk}}">{{merkKnd.merk}}</option>
-                                </select>
-                            </div>
-                        </div>
+                        <!--                        <div class="form-group">
+                                                    <label class="col-sm-4 control-label">Merk</label>
+                                                    <div class="col-sm-8">
+                                                        <select  class="form-control" ng-change="gettipe(form.merk)" ng-model="form.merk"  ng-disabled="is_view">
+                                                            <option value="">-Pilih Merk-</option>
+                                                            <option ng-repeat="merkKnd in merk" value="{{merkKnd.merk}}">{{merkKnd.merk}}</option>
+                                                        </select>
+                                                    </div>
+                                                </div>-->
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Tipe</label>
                             <div class="col-sm-8">
@@ -138,6 +138,7 @@
                                 </div>
                             </div>
                         </div>
+                        <input ui-select2="groupSelectOptions" ng-model="selectedGroup" data-placeholder="Choose LDAP group.."/>
                     </div>                    
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <h5 class="font-bold">- Detail Bill Of Material</h5>
@@ -147,6 +148,17 @@
                             <input type="text" class="form-control" style="width:300px;" ng-disabled="is_view">
                         </div>
                     </div>
+                    
+                    <ui-select ng-model="listMerk.selected" theme="select2"
+                               ng-disabled="disabled"
+                               reset-search-input="false"
+                               style="width:300px;">
+                        <ui-select-match placeholder="Masukkan Merk">{{$select.selected.merk}}</ui-select-match>
+                        <ui-select-choices repeat="listMerk in merk track by $index" refresh="refreshMerk($select.search)" refresh-delay="0">
+                            <div ng-bind-html="listMerk.merk | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <table class="table table-bordered">
                         <thead>
@@ -160,13 +172,13 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="detail in detBom">
-                                <td>{{detail.kd_jab}}
+                                <td>
                                     <select class="form-control" ng-model="detail.kd_jab" ng-disabled="is_view">
                                         <option value="">-Pilih Jabatan-</option>
                                         <option ng-repeat="jabatan in jabatan" value="{{jabatan.kd_jab}}">{{jabatan.nama_jab}}</option>
                                     </select>
                                 </td>
-                                <td>{{detail.kd_barang}}
+                                <td>
                                     <select class="form-control" ng-model="detail.kd_barang" ng-disabled="is_view">
                                         <option value="">-Kode Barang-</option>
                                         <option ng-repeat="barang in barang" value="{{barang.kd_barang}}">{{barang.nm_barang}}</option>

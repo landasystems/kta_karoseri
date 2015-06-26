@@ -1,4 +1,4 @@
-app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
+app.controller('bomCtrl', function($scope, $http, Data, toaster, FileUploader) {
     var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
     var uploader = $scope.uploader = new FileUploader({
         url: 'js/controllers/upload.php?folder=bom&kode=' + kode_unik,
@@ -13,7 +13,26 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
     });
-    console.info('uploader', uploader);
+
+
+    $scope.listMerk = {};
+    $scope.refreshMerk = function(listMerk) {
+        var params = {listMerk: listMerk, sensor: false};
+        Data.get('bom/merk/?kata=' + listMerk).then(function(response) {
+            $scope.merk = response.merk;
+        });
+    };
+
+    $scope.people = [
+        {name: 'Adam', email: 'adam@email.com', age: 10},
+        {name: 'Amalie', email: 'amalie@email.com', age: 12},
+        {name: 'Wladimir', email: 'wladimir@email.com', age: 30},
+        {name: 'Samantha', email: 'samantha@email.com', age: 31},
+        {name: 'Estefanía', email: 'estefanía@email.com', age: 16},
+        {name: 'Natasha', email: 'natasha@email.com', age: 54},
+        {name: 'Nicole', email: 'nicole@email.com', age: 43},
+        {name: 'Adrian', email: 'adrian@email.com', age: 21}
+    ];
 
     //init data;
     var tableStateRef;
@@ -49,42 +68,34 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             alert("Something gone wrong");
         }
     };
-
-    Data.get('bom/merk').then(function(data) {
-        $scope.merk = data.merk;
-    });
-
+//    Data.get('bom/merk').then(function(data) {
+//        $scope.merk = data.merk;
+//    });
     $scope.gettipe = function(merk) {
         Data.get('bom/tipe/?merk=' + merk).then(function(data) {
             $scope.tipe_kendaraan = data.nama_tipe;
         });
     };
-
     $scope.getchassis = function(merk, tipe) {
         Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function(data) {
             $scope.form.kd_chassis = data.kode;
         });
     };
-
     Data.get('bom/model').then(function(data) {
         $scope.model = data.model;
     });
-
     Data.get('bom/barang').then(function(data) {
         $scope.barang = data.barang;
     });
-
     Data.get('bom/jabatan').then(function(data) {
         $scope.jabatan = data.jabatan;
     });
-
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
         var limit = tableState.pagination.number || 10;
         var param = {offset: offset, limit: limit};
-
         if (tableState.sort.predicate) {
             param['sort'] = tableState.sort.predicate;
             param['order'] = tableState.sort.reverse;
@@ -97,10 +108,8 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
         });
-
         $scope.isLoading = false;
     };
-
     $scope.create = function(form, detail) {
         $scope.is_create = true;
         $scope.is_edit = true;
@@ -116,12 +125,10 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
         Data.get('bom/view/' + kd_bom).then(function(data) {
             $scope.form = data.data;
             $scope.detBom = data.detail;
-
             console.log($scope.form);
             Data.get('bom/tipe/?merk=' + $scope.form.merk).then(function(data) {
                 $scope.tipe_kendaraan = data.nama_tipe;
             });
-
             $scope.is_create = false;
             $scope.is_edit = true;
             $scope.is_view = false;
@@ -132,12 +139,10 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
         Data.get('bom/view/' + kd_bom).then(function(data) {
             $scope.form = data.data;
             $scope.detBom = data.detail;
-
             console.log($scope.form);
             Data.get('bom/tipe/?merk=' + $scope.form.merk).then(function(data) {
                 $scope.tipe_kendaraan = data.nama_tipe;
             });
-
             $scope.is_create = false;
             $scope.is_edit = true;
             $scope.is_view = true;
@@ -173,6 +178,4 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             });
         }
     };
-
-
 })
