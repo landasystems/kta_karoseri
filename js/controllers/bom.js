@@ -13,46 +13,123 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
     });
-
-//    $scope.select2Options = {
-//        allowClear: true,
-//        ajax: {
-//            url: "api/web/bom/merk/",
-//            dataType: 'json',
-//            data: function(term) {
-//                return {
-//                    kata: term,
-//                };
-//            },
-//            results: function(data, page) {
-//                return {
-//                    results: data.merk
-//                };
-//            }
-//        },
-//        formatResult: function(object) {
-//            return object.merk;
-//        },
-//        formatSelection: function(object) {
-//            return object.merk;
-//        }
-//    };
-
-    $scope.listMerk = {};
-    $scope.refreshMerk = function(listMerk) {
-        var params = {listMerk: listMerk};
-        Data.get('bom/merk/?kata=' + listMerk).then(function(response) {
-            $scope.merk = response.merk;
-        });
+    $scope.merk = {
+        minimumInputLength: function() {
+            return  3;
+        },
+        allowClear: true,
+        ajax: {
+            url: "api/web/bom/merk/",
+            dataType: 'json',
+            data: function(term) {
+                return {
+                    kata: term,
+                };
+            },
+            results: function(data, page) {
+                return {
+                    results: data.merk
+                };
+            }
+        },
+        formatResult: function(object) {
+            return object.merk;
+        },
+        formatSelection: function(object) {
+            return object.merk;
+        },
+        id: function(data) {
+            return data.merk
+        }
     };
-    $scope.listType = {};
-    $scope.refreshType = function(listType) {
-        var params = {listType: listType};
-        Data.get('bom/tipe/?kata=' + listType).then(function(response) {
-            $scope.tipe = response.tipe;
-        });
+    $scope.tipe = {
+        minimumInputLength: function() {
+            return  3;
+        },
+        allowClear: true,
+        ajax: {
+            url: "api/web/bom/tipe/",
+            dataType: 'json',
+            data: function(term) {
+                return {
+                    kata: term,
+                };
+            },
+            results: function(data, page) {
+                return {
+                    results: data.tipe
+                };
+            }
+        },
+        formatResult: function(object) {
+            return object.tipe;
+        },
+        formatSelection: function(object) {
+            return object.tipe;
+        },
+        id: function(data) {
+            return data.tipe
+        }
     };
-
+    $scope.model = {
+        minimumInputLength: function() {
+            return  3;
+        },
+        allowClear: true,
+        ajax: {
+            url: "api/web/bom/model/",
+            dataType: 'json',
+            data: function(term) {
+                return {
+                    kata: term,
+                };
+            },
+            results: function(data, page) {
+                return {
+                    results: data.model
+                };
+            }
+        },
+        formatResult: function(object) {
+            return object.model;
+        },
+        formatSelection: function(object) {
+            return object.model;
+        },
+        id: function(data) {
+            return data.kd_model
+        }
+    };
+    $scope.jabatan = {
+        minimumInputLength: function() {
+            return  3;
+        },
+        allowClear: true,
+        ajax: {
+            url: "api/web/bom/jabatan/",
+            dataType: 'json',
+            data: function(term) {
+                return {
+                    kata: term,
+                };
+            },
+            results: function(data, page) {
+                return {
+                    results: data.nama_jab,
+                };
+            }
+        },
+        formatResult: function(object) {
+            return object.nama_jab;
+        },
+        formatSelection: function(object) {
+            return object.nama_jab;
+        },
+        id: function(data) {
+            return data.nama_jab;
+        }
+    };
+   
     //init data;
     var tableStateRef;
     $scope.displayed = [];
@@ -87,28 +164,11 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             alert("Something gone wrong");
         }
     };
-//    Data.get('bom/merk').then(function(data) {
-//        $scope.merk = data.merk;
-//    });
-//    $scope.gettipe = function(merk) {
-//        Data.get('bom/tipe/?merk=' + merk).then(function(data) {
-//            $scope.tipe_kendaraan = data.nama_tipe;
-//        });
-//    };
     $scope.getchassis = function(merk, tipe) {
         Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function(data) {
             $scope.form.kd_chassis = data.kode;
         });
     };
-    Data.get('bom/model').then(function(data) {
-        $scope.model = data.model;
-    });
-    Data.get('bom/barang').then(function(data) {
-        $scope.barang = data.barang;
-    });
-    Data.get('bom/jabatan').then(function(data) {
-        $scope.jabatan = data.jabatan;
-    });
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;

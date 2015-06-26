@@ -59,44 +59,51 @@ class BomController extends Controller {
     }
 
     public function actionMerk() {
-        $query = new Query;
-        $query->from('chassis')
-                ->select("distinct(merk)")
-                ->where("merk like '%".$_GET['kata']."%'");
+        if (!empty($_GET['kata'])) {
+            $query = new Query;
+            $query->from('chassis')
+                    ->select("distinct(merk)")
+                    ->where("merk like '%" . $_GET['kata'] . "%'");
 
-        $command = $query->createCommand();
-        $models = $command->queryAll();
+            $command = $query->createCommand();
+            $models = $command->queryAll();
 
-        $this->setHeader(200);
+            $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'merk' => $models));
+            echo json_encode(array('status' => 1, 'merk' => $models));
+        }
     }
 
     public function actionTipe() {
-        $query = new Query;
-        $query->from('chassis')
-                ->select("distinct(tipe)")
-                ->where('tipe like "%' . $_GET['kata'] . '%"');
+        if (!empty($_GET['kata'])) {
+            $query = new Query;
+            $query->from('chassis')
+                    ->select("distinct(tipe)")
+                    ->where('tipe like "%' . $_GET['kata'] . '%"');
 
-        $command = $query->createCommand();
-        $models = $command->queryAll();
+            $command = $query->createCommand();
+            $models = $command->queryAll();
 
-        $this->setHeader(200);
+            $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'tipe' => $models));
+            echo json_encode(array('status' => 1, 'tipe' => $models));
+        }
     }
 
     public function actionJabatan() {
-        $query = new Query;
-        $query->from('jabatan')
-                ->select("*");
+        if (!empty($_GET['kata'])) {
+            $query = new Query;
+            $query->from('jabatan')
+                    ->select("nama_jab")
+                    ->where('nama_jab like "%' . $_GET['kata'] . '%"');
 
-        $command = $query->createCommand();
-        $models = $command->queryAll();
+            $command = $query->createCommand();
+            $models = $command->queryAll();
 
-        $this->setHeader(200);
+            $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'jabatan' => $models));
+            echo json_encode(array('status' => 1, 'nama_jab' => $models));
+        }
     }
 
     public function actionBarang() {
@@ -128,16 +135,19 @@ class BomController extends Controller {
     }
 
     public function actionModel() {
-        $query = new Query;
-        $query->from('model')
-                ->select("*");
+        if (!empty($_GET['kata'])) {
+            $query = new Query;
+            $query->from('model')
+                    ->select("*")
+                    ->where("model like '%" . $_GET['kata'] . "%'");
 
-        $command = $query->createCommand();
-        $models = $command->queryAll();
+            $command = $query->createCommand();
+            $models = $command->queryAll();
 
-        $this->setHeader(200);
+            $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'model' => $models));
+            echo json_encode(array('status' => 1, 'model' => $models));
+        }
     }
 
     public function actionKode() {
@@ -233,11 +243,8 @@ class BomController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-//        print_r($params);
-        print_r($params['detailBom']);
         $model = new Bom();
         $model->attributes = $params['bom'];
-//
 
         if ($model->save()) {
             $detailBom = $params['detailBom'];
