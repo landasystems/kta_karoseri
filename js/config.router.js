@@ -135,11 +135,12 @@ angular.module('app')
                                                 return $ocLazyLoad.load('js/controllers/roles.js');
                                             }]
                                     }})
-                                // BOM
+                                // Transaksi
                                 .state('trans', {
                                     url: '/trans',
                                     templateUrl: 'tpl/app.html'
                                 })
+                                //BOM
                                 .state('trans.bom', {
                                     url: '/bom',
                                     templateUrl: 'tpl/bom/index.html',
@@ -154,6 +155,16 @@ angular.module('app')
                                             }]
                                     }
                                 })
+                                //BSTK
+                                .state('trans.bstk', {
+                                    url: '/bstk',
+                                    templateUrl: 'tpl/t_bstk/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function($ocLazyLoad) {
+                                                return $ocLazyLoad.load('js/controllers/bstk.js');
+                                            }]
+                                    }})
                                 // others
                                 .state('access', {
                                     url: '/access',
