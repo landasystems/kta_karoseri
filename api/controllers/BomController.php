@@ -94,29 +94,31 @@ class BomController extends Controller {
         if (!empty($_GET['kata'])) {
             $query = new Query;
             $query->from('jabatan')
-                    ->select("nama_jab")
+                    ->select("*")
                     ->where('nama_jab like "%' . $_GET['kata'] . '%"');
+
+            $command = $query->createCommand();
+            $models = $command->queryAll();
+            $this->setHeader(200);
+
+            echo json_encode(array('status' => 1, 'jabatan' => $models));
+        }
+    }
+
+    public function actionBarang() {
+        if (!empty($_GET['kata'])) {
+            $query = new Query;
+            $query->from('barang')
+                    ->select("*")
+                    ->where('nm_barang like "%' . $_GET['kata'] . '%"');
 
             $command = $query->createCommand();
             $models = $command->queryAll();
 
             $this->setHeader(200);
 
-            echo json_encode(array('status' => 1, 'nama_jab' => $models));
+             echo json_encode(array('status' => 1, 'barang' => $models));
         }
-    }
-
-    public function actionBarang() {
-        $query = new Query;
-        $query->from('barang')
-                ->select("*");
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'barang' => $models));
     }
 
     public function actionChassis() {

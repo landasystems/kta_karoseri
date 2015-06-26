@@ -14,10 +14,6 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
         }
     });
 
-
-
-    console.info('uploader', uploader);
-
     //init data;
     var tableStateRef;
     $scope.displayed = [];
@@ -93,6 +89,7 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.cancel = function() {
         $scope.is_edit = false;
         $scope.is_view = false;
+        $scope.callServer(tableStateRef);
     };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {

@@ -5,6 +5,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
         queueLimit: 1,
         removeAfterUpload: true
     });
+
     // FILTERS
     uploader.filters.push({
         name: 'imageFilter',
@@ -14,9 +15,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
         }
     });
     $scope.merk = {
-        minimumInputLength: function() {
-            return  3;
-        },
+        minimumInputLength: 3,
         allowClear: true,
         ajax: {
             url: "api/web/bom/merk/",
@@ -43,9 +42,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
         }
     };
     $scope.tipe = {
-        minimumInputLength: function() {
-            return  3;
-        },
+        minimumInputLength: 3,
         allowClear: true,
         ajax: {
             url: "api/web/bom/tipe/",
@@ -72,9 +69,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
         }
     };
     $scope.model = {
-        minimumInputLength: function() {
-            return  3;
-        },
+        minimumInputLength: 3,
         allowClear: true,
         ajax: {
             url: "api/web/bom/model/",
@@ -101,9 +96,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
         }
     };
     $scope.jabatan = {
-        minimumInputLength: function() {
-            return  3;
-        },
+        minimumInputLength: 3,
         allowClear: true,
         ajax: {
             url: "api/web/bom/jabatan/",
@@ -115,7 +108,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             },
             results: function(data, page) {
                 return {
-                    results: data.nama_jab,
+                    results: data.jabatan,
                 };
             }
         },
@@ -126,10 +119,37 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             return object.nama_jab;
         },
         id: function(data) {
-            return data.nama_jab;
+            return data.kd_jab
         }
     };
-   
+    $scope.barang = {
+        minimumInputLength: 3,
+        allowClear: true,
+        ajax: {
+            url: "api/web/bom/barang/",
+            dataType: 'json',
+            data: function(term) {
+                return {
+                    kata: term,
+                };
+            },
+            results: function(data, page) {
+                return {
+                    results: data.barang,
+                };
+            }
+        },
+        formatResult: function(object) {
+            return object.nm_barang;
+        },
+        formatSelection: function(object) {
+            return object.nm_barang;
+        },
+        id: function(data) {
+            return data.kd_barang;
+        }
+    };
+
     //init data;
     var tableStateRef;
     $scope.displayed = [];
@@ -230,11 +250,17 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
     };
     $scope.save = function(form, detail) {
 //        form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
+//        $scope.uploader.uploadAll();
         var data = {
             bom: form,
             detailBom: detail,
         };
-//        $scope.uploader.uploadAll();
+        form.model = form.ks_model.ks_model;
+        
+        detailBom.kd_jab = detail.kd_jab.kd_jab;
+        detailBom.kd_barang = detail.kd_barang.kd_barang;
+       
+        console.log(detailBom.kd_jab);
         var url = ($scope.is_create == true) ? 'bom/create/' : 'bom/update/' + form.kd_barang;
         Data.post(url, data).then(function(result) {
             if (result.status == 0) {
@@ -249,6 +275,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.cancel = function() {
         $scope.is_edit = false;
         $scope.is_view = false;
+        $scope.callServer(tableStateRef);
     };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
