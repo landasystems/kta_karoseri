@@ -11,7 +11,6 @@ angular.module('app', [
     'ui.router',
     'ui.bootstrap',
     'ui.load',
-    'ui.jq',
     'ui.validate',
     'oc.lazyLoad',
     'smart-table',

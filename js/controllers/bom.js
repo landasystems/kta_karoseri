@@ -5,6 +5,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
         queueLimit: 1,
         removeAfterUpload: true
     });
+
     // FILTERS
     uploader.filters.push({
         name: 'imageFilter',
@@ -13,7 +14,141 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
     });
-    console.info('uploader', uploader);
+    $scope.merk = {
+        minimumInputLength: 3,
+        allowClear: true,
+        ajax: {
+            url: "api/web/bom/merk/",
+            dataType: 'json',
+            data: function(term) {
+                return {
+                    kata: term,
+                };
+            },
+            results: function(data, page) {
+                return {
+                    results: data.merk
+                };
+            }
+        },
+        formatResult: function(object) {
+            return object.merk;
+        },
+        formatSelection: function(object) {
+            return object.merk;
+        },
+        id: function(data) {
+            return data.merk
+        }
+    };
+    $scope.tipe = {
+        minimumInputLength: 3,
+        allowClear: true,
+        ajax: {
+            url: "api/web/bom/tipe/",
+            dataType: 'json',
+            data: function(term) {
+                return {
+                    kata: term,
+                };
+            },
+            results: function(data, page) {
+                return {
+                    results: data.tipe
+                };
+            }
+        },
+        formatResult: function(object) {
+            return object.tipe;
+        },
+        formatSelection: function(object) {
+            return object.tipe;
+        },
+        id: function(data) {
+            return data.tipe
+        }
+    };
+    $scope.model = {
+        minimumInputLength: 3,
+        allowClear: true,
+        ajax: {
+            url: "api/web/bom/model/",
+            dataType: 'json',
+            data: function(term) {
+                return {
+                    kata: term,
+                };
+            },
+            results: function(data, page) {
+                return {
+                    results: data.model
+                };
+            }
+        },
+        formatResult: function(object) {
+            return object.model;
+        },
+        formatSelection: function(object) {
+            return object.model;
+        },
+        id: function(data) {
+            return data.kd_model
+        }
+    };
+    $scope.jabatan = {
+        minimumInputLength: 3,
+        allowClear: true,
+        ajax: {
+            url: "api/web/bom/jabatan/",
+            dataType: 'json',
+            data: function(term) {
+                return {
+                    kata: term,
+                };
+            },
+            results: function(data, page) {
+                return {
+                    results: data.jabatan,
+                };
+            }
+        },
+        formatResult: function(object) {
+            return object.nama_jab;
+        },
+        formatSelection: function(object) {
+            return object.nama_jab;
+        },
+        id: function(data) {
+            return data.kd_jab
+        }
+    };
+    $scope.barang = {
+        minimumInputLength: 3,
+        allowClear: true,
+        ajax: {
+            url: "api/web/bom/barang/",
+            dataType: 'json',
+            data: function(term) {
+                return {
+                    kata: term,
+                };
+            },
+            results: function(data, page) {
+                return {
+                    results: data.barang,
+                };
+            }
+        },
+        formatResult: function(object) {
+            return object.nm_barang;
+        },
+        formatSelection: function(object) {
+            return object.nm_barang;
+        },
+        id: function(data) {
+            return data.kd_barang;
+        }
+    };
 
     //init data;
     var tableStateRef;
@@ -49,42 +184,17 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             alert("Something gone wrong");
         }
     };
-
-    Data.get('bom/merk').then(function(data) {
-        $scope.merk = data.merk;
-    });
-
-    $scope.gettipe = function(merk) {
-        Data.get('bom/tipe/' + merk).then(function(data) {
-            $scope.tipe_kendaraan = data.nama_tipe;
-        });
-    };
-
     $scope.getchassis = function(merk, tipe) {
         Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function(data) {
-            $scope.kd_chassis = data.kode;
+            $scope.form.kd_chassis = data.kode;
         });
     };
-
-    Data.get('bom/model').then(function(data) {
-        $scope.model = data.model;
-    });
-
-    Data.get('bom/barang').then(function(data) {
-        $scope.barang = data.barang;
-    });
-
-    Data.get('bom/bagian').then(function(data) {
-        $scope.bagian = data.bagian;
-    });
-
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
         var limit = tableState.pagination.number || 10;
         var param = {offset: offset, limit: limit};
-
         if (tableState.sort.predicate) {
             param['sort'] = tableState.sort.predicate;
             param['order'] = tableState.sort.reverse;
@@ -97,10 +207,8 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
         });
-
         $scope.isLoading = false;
     };
-
     $scope.create = function(form, detail) {
         $scope.is_create = true;
         $scope.is_edit = true;
@@ -112,31 +220,47 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.form.kd_bom = data.kode;
         });
     };
-    $scope.update = function(form, detail) {
-        $scope.is_create = false;
-        $scope.is_edit = true;
-        $scope.is_view = false;
-        $scope.formtitle = "Edit Data : " + form.nm_barang;
-        $scope.form = form;
-        $scope.detail = detail;
+    $scope.update = function(kd_bom) {
+        Data.get('bom/view/' + kd_bom).then(function(data) {
+            $scope.form = data.data;
+            $scope.detBom = data.detail;
+            console.log($scope.form);
+            Data.get('bom/tipe/?merk=' + $scope.form.merk).then(function(data) {
+                $scope.tipe_kendaraan = data.nama_tipe;
+            });
+            $scope.is_create = false;
+            $scope.is_edit = true;
+            $scope.is_view = false;
+            $scope.formtitle = "Edit Data : " + $scope.form.kd_bom;
+        });
     };
-    $scope.view = function(form, detail) {
-        $scope.is_create = false;
-        $scope.is_edit = true;
-        $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.nm_barang;
-        $scope.form = form;
-        $scope.detail = detail;
+    $scope.view = function(kd_bom) {
+        Data.get('bom/view/' + kd_bom).then(function(data) {
+            $scope.form = data.data;
+            $scope.detBom = data.detail;
+            console.log($scope.form);
+            Data.get('bom/tipe/?merk=' + $scope.form.merk).then(function(data) {
+                $scope.tipe_kendaraan = data.nama_tipe;
+            });
+            $scope.is_create = false;
+            $scope.is_edit = true;
+            $scope.is_view = true;
+            $scope.formtitle = "Lihat Data : " + $scope.form.kd_bom;
+        });
     };
     $scope.save = function(form, detail) {
-        var data = {
-                bom: form,
-                detailBom: detail,
-            };
-        $scope.uploader.uploadAll();
 //        form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
-//        data.form = form;
-//        data.detail = detail;
+//        $scope.uploader.uploadAll();
+        var data = {
+            bom: form,
+            detailBom: detail,
+        };
+        form.model = form.ks_model.ks_model;
+        
+        detailBom.kd_jab = detail.kd_jab.kd_jab;
+        detailBom.kd_barang = detail.kd_barang.kd_barang;
+       
+        console.log(detailBom.kd_jab);
         var url = ($scope.is_create == true) ? 'bom/create/' : 'bom/update/' + form.kd_barang;
         Data.post(url, data).then(function(result) {
             if (result.status == 0) {
@@ -151,14 +275,13 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.cancel = function() {
         $scope.is_edit = false;
         $scope.is_view = false;
+        $scope.callServer(tableStateRef);
     };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('barang/delete/' + row.kd_barang).then(function(result) {
+            Data.delete('bom/delete/' + row.kd_bom).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
-
-
 })
