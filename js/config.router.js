@@ -190,6 +190,16 @@ angular.module('app')
                                                 );
                                             }]
                                     }})
+                                //Validasi bom
+                                .state('trans.validasibom', {
+                                    url: '/validasibom',
+                                    templateUrl: 'tpl/t_validasibom/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function($ocLazyLoad) {
+                                                return $ocLazyLoad.load('js/controllers/validasibom.js');
+                                            }]
+                                    }})
                                 // others
                                 .state('access', {
                                     url: '/access',
