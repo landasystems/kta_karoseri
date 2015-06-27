@@ -21,6 +21,11 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.is_view = false;
     $scope.is_create = false;
 
+    $scope.jenis_barang = {
+        minimumInputLength: 3,
+        allowClear: true,
+    }
+
     Data.get('barang/jenis').then(function(data) {
         $scope.jenis_brg = data.jenis_brg;
     });

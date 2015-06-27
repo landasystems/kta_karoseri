@@ -45,7 +45,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load('angularFileUpload').then(
+                                                return $ocLazyLoad.load(['angularFileUpload','ui.select2']).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/barang.js');
                                                         }
@@ -162,7 +162,11 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/bstk.js');
+                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select2']).then(
+                                                        function() {
+                                                            return $ocLazyLoad.load('js/controllers/bstk.js');
+                                                        }
+                                                );
                                             }]
                                     }})
                                 //Validasi bom
