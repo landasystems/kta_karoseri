@@ -5,7 +5,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
         queueLimit: 1,
         removeAfterUpload: true
     });
-
     // FILTERS
     uploader.filters.push({
         name: 'imageFilter',
@@ -14,6 +13,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
     });
+
     $scope.merk = {
         minimumInputLength: 3,
         allowClear: true,
@@ -43,35 +43,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             return data.merk
         }
     };
-    $scope.tipe = {
-        minimumInputLength: 3,
-        allowClear: true,
-        initSelection: function(el, fn) {
-        },
-        ajax: {
-            url: "api/web/bom/tipe/",
-            dataType: 'json',
-            data: function(term) {
-                return {
-                    kata: term,
-                };
-            },
-            results: function(data, page) {
-                return {
-                    results: data.tipe
-                };
-            }
-        },
-        formatResult: function(object) {
-            return object.tipe;
-        },
-        formatSelection: function(object) {
-            return object.tipe;
-        },
-        id: function(data) {
-            return data.tipe
-        }
-    };
+
     $scope.model = {
         minimumInputLength: 3,
         allowClear: true,
@@ -121,13 +93,13 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             }
         },
         formatResult: function(object) {
-            return object.nama_jab;
+            return object.jabatan;
         },
         formatSelection: function(object) {
-            return object.nama_jab;
+            return object.jabatan;
         },
         id: function(data) {
-            return data.kd_jab
+            return data.id_jabatan
         }
     };
     $scope.barang = {
@@ -159,7 +131,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             return data.kd_barang;
         }
     };
-
     //init data;
     var tableStateRef;
     $scope.displayed = [];
@@ -174,18 +145,17 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             qty: '',
             keterangan: '',
         }
-    ],
-            $scope.addDetail = function() {
-                var newDet = {
-                    bagian: '',
-                    kd_barang: '',
-                    nama_barang: '',
-                    qty: '',
-                    keterangan: '',
-                }
-                $scope.detBom.push(newDet);
-            }
-
+    ];
+    $scope.addDetail = function() {
+        var newDet = {
+            bagian: '',
+            kd_barang: '',
+            nama_barang: '',
+            qty: '',
+            keterangan: '',
+        }
+        $scope.detBom.push(newDet);
+    };
     $scope.removeRow = function(paramindex) {
         var comArr = eval($scope.detBom);
         if (comArr.length > 1) {
@@ -193,6 +163,11 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
         } else {
             alert("Something gone wrong");
         }
+    };
+    $scope.getTipe = function(merk) {
+        Data.get('bom/tipe/?merk=' + merk).then(function(data) {
+            $scope.tipe = data.data;
+        });
     };
     $scope.getchassis = function(merk, tipe) {
         Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function(data) {
@@ -258,19 +233,19 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
         });
     };
     $scope.save = function(form, detail) {
-//        form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
-//        $scope.uploader.uploadAll();
-
-        form.model = form.kd_model.kd_model;
-        detail.kd_jab = detail.kd_jab.kd_jab;
-        detail.kd_barang = detail.kd_barang.kd_barang;
-
-        $scope.form.model = form.kd_model.kd_model;
+//        var cekFoto = form.filefoto.length();
+//        if (cekFoto > 0) {
+//            form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
+//            $scope.uploader.uploadAll();
+//        }
+        form.model = form.kd_model;
+        detail.kd_jab = detail.kd_jab;
+        detail.kd_barang = detail.kd_barang;
+        $scope.form.model = form.kd_model;
         var data = {
             bom: form,
             detailBom: detail,
         };
-
         var url = ($scope.is_create == true) ? 'bom/create/' : 'bom/update/' + form.kd_barang;
         Data.post(url, data).then(function(result) {
             if (result.status == 0) {
