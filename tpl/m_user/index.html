@@ -31,7 +31,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Contact Person</label>
+                        <label class="col-sm-2 control-label">Group</label>
                         <div class="col-sm-3">
                             <select class="form-control m-b" st-search="roles_id">
                                 <option value="">-- Pilih Roles --</option>
@@ -56,6 +56,7 @@
                             <th st-sort="nama">ID</th>
                             <th st-sort="nama">Nama</th>
                             <th st-sort="nama">Nama Grup</th>
+                            <th st-sort="nama">Username</th>
                         </tr>
                     </thead>
                     <tbody ng-show="!isLoading">
@@ -63,6 +64,7 @@
                             <td>{{row.id}}</td>
                             <td>{{row.nama}}</td>
                             <td>{{row.roles}}</td>
+                            <td>{{row.username}}</td>
                             <td>
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
                                     <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)" ng-show="row.is_deleted == 0"></button>
@@ -105,7 +107,7 @@
                         </div>
                         <label class="col-sm-2 control-label">Username</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" ng-model="form.user" ng-disabled="is_view" required />
+                            <input type="text" class="form-control" ng-model="form.username" ng-disabled="is_view" required />
                         </div>
                     </div>
                     <div class="form-group">

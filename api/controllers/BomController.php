@@ -75,27 +75,27 @@ class BomController extends Controller {
     }
 
     public function actionTipe() {
-        if (!empty($_GET['kata'])) {
+        if (!empty($_GET['merk'])) {
             $query = new Query;
             $query->from('chassis')
                     ->select("distinct(tipe)")
-                    ->where('tipe like "%' . $_GET['kata'] . '%"');
+                    ->where('merk like "%' . $_GET['merk'] . '%"');
 
             $command = $query->createCommand();
             $models = $command->queryAll();
 
             $this->setHeader(200);
 
-            echo json_encode(array('status' => 1, 'tipe' => $models));
+            echo json_encode(array('status' => 1, 'data' => $models));
         }
     }
 
     public function actionJabatan() {
         if (!empty($_GET['kata'])) {
             $query = new Query;
-            $query->from('jabatan')
+            $query->from('tbl_jabatan')
                     ->select("*")
-                    ->where('nama_jab like "%' . $_GET['kata'] . '%"');
+                    ->where('jabatan like "%' . $_GET['kata'] . '%"');
 
             $command = $query->createCommand();
             $models = $command->queryAll();
