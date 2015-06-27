@@ -65,7 +65,9 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">No. Wo</label>
                         <div class="col-sm-10">
-                            <select ng-change="changed(form)" ui-jq="chosen" ng-options="wo.no_wo as wo.no_wo for wo in list_wo" ng-readonly="is_create == false" class="form-control" ng-model="form.no_wo" ng-disabled="is_view" data-placeholder="pilih no. Wo" required>
+                            <select ng-change="changed(form)" ui-select2 style="width:100%" ng-model="form.no_wo" ng-disabled="is_view" data-placeholder="Pilih no. Wo" required>
+                                <option ng-selected value="{{form.no_wo}}">{{form.no_wo}}</option>
+                                <option ng-repeat="wo in list_wo" value="{{wo.no_wo}}">{{wo.no_wo}}</option>
                             </select>
                         </div>
                     </div>
@@ -84,13 +86,15 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Catatan</label>
                         <div class="col-sm-10">
-                            <textarea ng-model="form.catatan"></textarea>
+                            <textarea ng-model="form.catatan" ng-disabled="is_view" style="width:100%"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Kode Warna</label>
                         <div class="col-sm-10">
-                            <select ng-change="changed(form)" ui-jq="chosen" ng-options="warna.kd_warna as warna.kd_warna for warna in list_warna" class="form-control" ng-model="form.kd_warna" ng-disabled="is_view" data-placeholder="pilih Kode Warna" required>
+                            <select ui-select2 ng-disabled="is_view" style="width:100%" ng-model="form.kd_warna" data-placeholder="-Pilih Kode Warna-" required>
+                                <option value="">-Pilih Kode Warna-</option>
+                                <option ng-repeat="warna in list_warna" value="{{warna.kd_warna}}">{{warna.kd_warna}}</option>
                             </select>
                         </div>
                     </div>

@@ -110,8 +110,10 @@ class BstkController extends Controller {
 
     public function actionNowo() {
         $query = new Query;
-        $query->from('wo_masuk')
-                ->select("no_wo")
+        $query->from('wo_masuk as w')
+                ->join('LEFT JOIN', 'bstk as b', 'w.no_wo = b.no_wo')
+                ->where('b.no_wo IS NULL')
+                ->select("w.no_wo as no_wo")
                 ->orderBy('no_wo');
 
         $command = $query->createCommand();
@@ -164,9 +166,11 @@ class BstkController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
+        $model = Bstk::find()->where('no_wo="'.$params['no_wo'].'"')->one();
+        if(empty($model)){
         $model = new Bstk();
+        }
         $model->attributes = $params;
-
         if ($model->save()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -178,6 +182,7 @@ class BstkController extends Controller {
 
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
+//        $params
         $model = $this->findModel($id);
         $model->attributes = $params;
 

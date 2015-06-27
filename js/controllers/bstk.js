@@ -60,7 +60,7 @@ app.controller('bstkCtrl', function ($scope, Data, toaster) {
         $scope.form = form;
     };
     $scope.save = function (form) {
-        var url = ($scope.is_create == true) ? 'bstk/create' : 'bstk/update/' + form.kd_cust;
+        var url = 'bstk/create' ;
         Data.post(url, form).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
