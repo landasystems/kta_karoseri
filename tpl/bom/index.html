@@ -14,16 +14,18 @@
             <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
                 <div class="form-horizontal">
                     <div class="form-group">
-                        <label class="col-sm-1 control-label">Jenis</label>
-                        <div class="col-sm-4">
-                            <select stInputEvent="change" st-search="jenis_brg" class="form-control">
-                                <option value="">-Pilih Jenis-</option>
-                                <option ng-repeat="jenis in jenis_brg" value="{{jenis.jenis_brg}}">{{jenis.jenis_brg}}</option>
-                            </select>
+                        <label class="col-sm-2 control-label">Kode Bom</label>
+                        <div class="col-sm-3">
+                            <input st-search="kd_bom" class="form-control"/>
                         </div>
-                        <label class="col-sm-4 control-label">Nama Barang</label>
-                        <div class="col-sm-4">
-                            <input st-search="nm_barang" class="form-control"/>
+                        <label class="col-sm-1 control-label">Model</label>
+                        <div class="col-sm-2">
+                            <input type="hidden" 
+                                   ui-select2="model"
+                                   ng-model="form.kd_model"
+                                   data-placeholder="-Pilih Model-"
+                                   st-search="model"
+                                   style="width:250px" />
                         </div>
                     </div>
                 </div>
@@ -33,16 +35,16 @@
                 <table class="table table-striped table-hover" >
                     <thead>
                         <tr>
-                            <th st-sort="kd_bom">Kode</th>
-                            <th st-sort="merk">Nama Barang</th>
-                            <th st-sort="tipe">Jenis</th>
-                            <th st-sort="model">Harga</th>
-                            <th st-sort="tgl_buat">Satuan</th>
+                            <th st-sort="kd_bom">Kode Bom</th>
+                            <th st-sort="merk">Merk</th>
+                            <th st-sort="tipe">Type</th>
+                            <th st-sort="model">Model</th>
+                            <th st-sort="tgl_buat">Tanggal</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody ng-show="!isLoading">
-                        <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
+                        <tr ng-repeat="row in displayed" ng-dblclick="view(row.kd_bom)">
                             <td>{{row.kd_bom}}</td>
                             <td>{{row.merk}}</td>
                             <td>{{row.tipe}}</td>
@@ -50,7 +52,7 @@
                             <td>{{row.tgl_buat| date}}</td>
                             <td>
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
+                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row.kd_bom)"></button>
                                     <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);"></button>
                                 </div> 
                             </td>
@@ -87,13 +89,26 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Merk</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" ng-model="form.merk" ng-disabled="is_view" required>
+                                <input type="hidden"
+                                       ui-select2="merk"
+                                       ng-model="merk_ken"
+                                       ng-change="form.merk = merk_ken.merk;
+                                                   getTipe(merk_ken.merk)"
+                                       data-placeholder="-Pilih Tipe-"
+                                       style="width:250px" />
+                                <input type="hidden" ng-model="form.merk">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Tipe</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" ng-model="form.tipe" ng-disabled="is_view" required>
+                                <input type="hidden" ng-model="form.kd_chassis">
+                                <select ui-select2="tipe" ng-model="tipe_ken" style="width:250px;" ng-change="form.tipe = tipe_ken;
+                                            getchassis(form.merk, tipe_ken)">
+                                    <option value="">-Pilih-</option>
+                                    <option ng-repeat="tipe in tipe">{{tipe.tipe}}</option>
+                                </select>
+                                <input type="hidden" ng-model="form.tipe">
                             </div>
                         </div>
                     </div>
@@ -101,26 +116,26 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Tanggal Buat</label>
                             <div class="col-sm-8">
-                                <p class="input-group">
-                                    <input type="text" class="form-control" datepicker-popup ng-model="dt" is-open="opened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                                    </span>
-                                    <input type="text" class="form-control" datepicker-popup ng-model="form.tgl_buat" is-open="opened" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-                                </p>
+                                <input type="date" class="form-control" ng-model="form.tgl_buat" ng-disabled="is_view">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Model</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" ng-model="form.model" ng-disabled="is_view" required>
+                                <input type="hidden" 
+                                       ui-select2="model"
+                                       ng-model="kd_model"
+                                       ng-change="form.kd_model = kd_model.kd_model"
+                                       data-placeholder="-Pilih Model-"
+                                       style="width:250px" />
+                                <input type="hidden" ng-model="form.kd_model">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Jenis</label>
                             <div class="col-sm-8">
-                                <label class="btn btn-default" ng-model="form.jenis" ng-disabled="is_view" btn-radio="'Mini Bus'" required>Small Bus</label>
-                                <label class="btn btn-default" ng-model="form.jenis" ng-disabled="is_view" btn-radio="'Small Bus'" required>Mini Bus</label>
+                                <label class="btn btn-default" ng-model="form.jenis" ng-disabled="is_view" btn-radio="'Mini Bus'">Small Bus</label>
+                                <label class="btn btn-default" ng-model="form.jenis" ng-disabled="is_view" btn-radio="'Small Bus'">Mini Bus</label>
                             </div>
                         </div>
                     </div>
@@ -128,9 +143,10 @@
                         <div nv-file-drop="" uploader="uploader" filters="imageFilter">
                             <div class="col-md-12 bg-auto">    
                                 <div ng-show="uploader.isHTML5" class="m-b-md">
-                                    <img ng-src="js/controllers/uploads/barang/{{form.foto}}" ng-hide="is_create == true" class="img-thumbnail">
+                                    <img ng-src="js/controllers/uploads/bom/{{form.foto}}" ng-hide="is_create == true" class="img-thumbnail">
                                     <img src="img/noimage.jpg" class="img-thumbnail" ng-show="is_create == true">
-                                    <input type="file" nv-file-select="" uploader="uploader" />
+                                    <input type="file" ng-model="form.filefoto" nv-file-select="" uploader="uploader" ng-disabled="is_view"/>
+                                {{foto}}
                                 </div>
                             </div>
                         </div>
@@ -140,50 +156,52 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Filter Berdasarkan Bagian</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" style="width:300px;">
+                            <input type="text" class="form-control" style="width:300px;" ng-disabled="is_view">
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Bagian</th>
-                                <th>Kode Barang</th>
-                                <th>Nama Barang</th>
-                                <th>Qty</th>
+                                <th>Jabatan</th>
+                                <th>Barang</th>
+                                <th width="25">Qty</th>
                                 <th>Keteragan</th>
                                 <th width="15">#</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="detail in detBom">
-                                <td>
-                                    <div class="col-sm-12">
-                                        <select  ui-jq="chosen" ng-model="detail.kd_bagian" ng-disabled="is_view" required>
-                                            <option value="">-Pilih Bagian-</option>
-                                            <option ng-repeat="bagian in bagian" value="{{bagian.kd_bagian}}">{{bagian.bagian}}</option>
-                                        </select>
-                                    </div>
+                            <tr ng-repeat="detail in detBom" style="margin:0px;padding:0px;">
+                                <td  style="margin:0px;padding:0px;width:25%">
+                                    <input type="hidden" 
+                                           ui-select2="jabatan"
+                                           ng-model="kd_jab"
+                                           ng-change="detail.kd_jab = kd_jab.id_jabatan"
+                                           data-placeholder="-Pilih Jabatan-"
+                                           style="width:100%" />
+                                    <input type="hidden" ng-model="detail.kd_jab" value="{{kd_jab.id_jabatan}}">
                                 </td>
-                                <td>
-                                    <select ui-jq="chosen" ng-model="detail.kd_barang" ng-disabled="is_view" required>
-                                        <option value="">-Kode Barang-</option>
-                                        <option ng-repeat="barang in barang" value="{{barang.kd_barang}}">{{barang.nm_barang}}</option>
-                                    </select>
+                                <td  style="margin:0px;padding:0px;width:25%">
+                                    <input type="hidden" 
+                                           ui-select2="barang"
+                                           ng-model="kd_barang"
+                                           ng-change="detail.kd_barang = kd_barang.kd_barang"
+                                           data-placeholder="-Pilih Barang-"
+                                           style="width:100%" />
+                                    <input type="hidden" ng-model="detail.kd_barang">
                                 </td>
-                                <td><input type="text" class="form-control" ng-model="detail.nama_barang" readonly></td>
-                                <td><input type="text" class="form-control" ng-model="detail.qty"></td>
-                                <td><textarea class="form-control" ng-model="detail.keterangan"></textarea></td>
-                                <td>
-                                    <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-arrows"></i></button>
-                                    <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0"><i class="fa fa-trash-o"></i></button>
+                                <td  style="margin:0px;padding:0px;"><input type="text" class="form-control" ng-model="detail.qty" ng-disabled="is_view"></td>
+                                <td  style="margin:0px;padding:0px;"><input type="text" class="form-control" ng-model="detail.ket" ng-disabled="is_view"></td>
+                                <td  style="margin:0px;padding:0px;">
+                                    <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-arrows"></i></button>
+                                    <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                     <div align="center">
                         <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
-                        <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form)">&nbsp;Simpan Perubahan</button>
+                        <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, detBom)">&nbsp;Simpan Perubahan</button>
                     </div>
                 </form>
             </div>

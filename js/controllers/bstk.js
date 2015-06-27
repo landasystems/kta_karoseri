@@ -1,10 +1,16 @@
-app.controller('customerCtrl', function ($scope, Data, toaster) {
+app.controller('bstkCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
+    Data.get('bstk/nowo').then(function (data) {
+        $scope.list_wo = data.list_wo;
+    });
+    Data.get('bstk/warna').then(function (data) {
+        $scope.list_warna = data.list_warna;
+    });
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -21,9 +27,10 @@ app.controller('customerCtrl', function ($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('customer', param).then(function (data) {
+        Data.get('bstk', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
+//            console.log($scope.displayed);
         });
 
         $scope.isLoading = false;
@@ -42,57 +49,63 @@ app.controller('customerCtrl', function ($scope, Data, toaster) {
     $scope.update = function (form) {
         $scope.is_create = false;
         $scope.is_edit = true;
-        $scope.is_view = false; 
-        $scope.formtitle = "Edit Data : " + form.kd_cust;
+        $scope.is_view = false;
+        $scope.formtitle = "Edit Data : " + form.no_wo;
         $scope.form = form;
     };
     $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.kd_cust;
+        $scope.formtitle = "Lihat Data : " + form.no_wo;
         $scope.form = form;
     };
     $scope.save = function (form) {
-        var url = ($scope.is_create == true) ? 'customer/create' : 'customer/update/'+ form.kd_cust;
-         Data.post(url, form).then(function (result) {   
-             if (result.status == 0) {
+        var url = 'bstk/create' ;
+        Data.post(url, form).then(function (result) {
+            if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
                 $scope.is_edit = false;
                 $scope.callServer(tableStateRef); //reload grid ulang
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
             }
-         });
-        
+        });
+
     };
     $scope.cancel = function () {
         $scope.is_edit = false;
         $scope.is_view = false;
     };
 
-//    $scope.trash = function (row) {
-//        if (confirm("Apa anda yakin akan MENGHAPUS item ini ?")) {
-//            row.is_deleted = 1;
-//            Data.post('jenisbrg/update/' + row.id, row).then(function (result) {
-//                ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
-//            });
-//        }
-//    };
-//    $scope.restore = function (row) {
-//        if (confirm("Apa anda yakin akan MERESTORE item ini ?")) {
-//            row.is_deleted = 0;
-//            Data.post('jenisbrg/update/' + row.id, row).then(function (result) {
-//                ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
-//            });
-//        }
-//    };
+    $scope.trash = function (row) {
+        if (confirm("Apa anda yakin akan MENGHAPUS item ini ?")) {
+            row.is_deleted = 1;
+            Data.post('bstk/update/' + row.id, row).then(function (result) {
+                ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
+            });
+        }
+    };
+    $scope.restore = function (row) {
+        if (confirm("Apa anda yakin akan MERESTORE item ini ?")) {
+            row.is_deleted = 0;
+            Data.post('bstk/update/' + row.id, row).then(function (result) {
+                ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
+            });
+        }
+    };
     $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('customer/delete/' + row.kd_cust).then(function (result) {
+            Data.delete('bstk/delete/' + row.kd_cust).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
-
-
+    $scope.changed = function(form){
+//        alert(wo.no_wo);
+        Data.post('bstk/selected/', form).then(function (result){
+//            console.log(result.selected_spk.merk);
+            $scope.form.merk = result.merk;
+            $scope.form.model = result.model;
+        });
+    };
 })

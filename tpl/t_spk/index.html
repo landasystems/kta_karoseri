@@ -1,0 +1,165 @@
+<div ng-app="app" ng-controller="spkCtrl">
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n font-thin h3">Data Master - Supplier</h1>
+    </div>
+    <div class="wrapper-md" ng-show="!is_edit">
+        <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
+            <div class="panel-heading">
+                <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian & Export Data</button>
+                <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
+                    <button type="button" class="btn btn-default fa fa-file-excel-o" ng-show="!isCollapsed">&nbsp;Export Excel</button>
+                    <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
+                </div> 
+            </div>
+            <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
+                <div class="form-horizontal">
+                    <div class="form-group">
+
+
+                        <label class="col-sm-2 control-label">No Wo</label>
+                        <div class="col-sm-3">
+                            <input st-search="no_wo" class="form-control"/>
+                        </div>
+                        <label class="col-sm-2 control-label">Nama Customer</label>
+                        <div class="col-sm-3">
+                            <input st-search="nm_customer" class="form-control"/>
+
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Model</label>
+                        <div class="col-sm-3">
+                            <input st-search="model" class="form-control"/>
+
+                        </div>
+                        <label class="col-sm-2 control-label">Bagian</label>
+                        <div class="col-sm-3">
+                            <input st-search="jabatan" class="form-control"/>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover" >
+                    <thead>
+                        <tr>
+                            <th st-sort="kd_chassis">NO WO</th>
+                            <th st-sort="nama_supplier">customr</th>
+                            <th st-sort="cp">model</th>
+                            <th st-sort="telpon">bagian</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="!isLoading">
+                        <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
+                            <td>{{row.no_wo}}</td>
+                            <td>{{row.nm_customer}}</td>
+                            <td>{{row.model}}</td>
+                            <td>{{row.jabatan}}</td>
+                            <td>
+                                <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
+                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
+                                    <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" ></button>
+                                </div> 
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-show="isLoading">
+                        <tr>
+                            <td colspan="4" class="text-center">Loading ... </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="6" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html">
+                            </td>
+                        </tr>
+                </table>		
+            </div>
+        </div>
+    </div>
+
+    <!--FORM-->
+
+    <div class="wrapper-md" ng-show="is_edit">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                {{formtitle}} 
+            </div>
+            <div class="panel-body">
+                <form name="landaform" class="form-horizontal form-validation ">
+
+                    <div class="col-md-4 col-sm-12">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">NO WO</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" ui-jq="chosen" ng-change="getcustomer(form)" ng-model="form.no_wo" ng-disabled="is_view" ng-options="obj.no_wo as obj.no_wo for obj in sNowo">
+                                    <option value="">-- NO WO --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Customer</label>
+                            <div class="col-sm-8">
+
+                                <input type="text" class="form-control" ng-model="form.nm_customer" ng-disabled="is_view" ng-readonly="is_create == false" >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Model</label>
+                            <div class="col-sm-8">
+
+                                <input type="text" class="form-control"  ng-model="form.model" ng-disabled="is_view" ng-readonly="is_create == false" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Bagian</label>
+                            <div class="col-sm-8">
+
+                                <input type="text" class="form-control"  ng-model="form.jabatan" ng-disabled="is_view" ng-readonly="is_create == false" >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <div nv-file-drop="" uploader="uploader" filters="imageFilter">
+                            <div class="col-md-12 bg-auto">    
+                                <div ng-show="uploader.isHTML5" class="m-b-md">
+                                    <img ng-src="js/controllers/uploads/spk/{{form.foto}}" ng-hide="is_create == true" class="img-thumbnail">
+                                    <img src="img/noimage.jpg" class="img-thumbnail" ng-show="is_create == true">
+                                    <input type="file" nv-file-select="" uploader="uploader" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>Detail SPK Pekerjaan</td>
+                            <td width="15">#</td>
+                        </tr>
+                        <tr ng-repeat="detail in detKerja">
+                            <td>
+                                <input type="hidden" ng-model="detail.kd_jab">
+                                <input type="hidden" ng-model="detail.jenis">
+                                <input type="text" class="form-control" ng-model="detail.nm_kerja" ng-disabled="is_view" ng-readonly="is_create == false" >
+                            </td>
+                            <td>
+                                <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-arrows"></i></button>
+                                <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0"><i class="fa fa-trash-o"></i></button>
+
+                            </td>
+                        </tr>
+                    </table>
+                    <div align="center">
+                        <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
+                        <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, detKerja)">&nbsp;Simpan Perubahan</button>
+                    </div>	
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

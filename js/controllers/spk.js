@@ -1,12 +1,50 @@
-app.controller('supplierCtrl', function($scope, Data, toaster) {
+app.controller('spkCtrl', function($scope, Data, toaster) {
+
     //init data
     var tableStateRef;
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
+    $scope.detKerja = [{
+            'kd_ker': '',
+            'nm_kerja': '',
+            'kd_jab': '',
+            'jenis': ''
+        }],
+    $scope.addDetail = function() {
+        var newDet = {
+            kd_ker: '',
+            nm_kerja: '',
+            kd_jab: '',
+            jenis: '',
+        }
+        $scope.detKerja.push(newDet);
+    }
+    $scope.removeRow = function(paramindex) {
+        var comArr = eval($scope.detKerja);
+        if (comArr.length > 1) {
+            $scope.detKerja.splice(paramindex, 1);
+        } else {
+            alert("Something gone wrong");
+        }
+    };
 
-      $scope.callServer = function callServer(tableState) {
+    Data.get('spk/nowo').then(function(data) {
+        $scope.sNowo = data.wo
+    });
+    $scope.getcustomer = function(wo) {
+//        alert('asjdfhasjdfkas');
+        Data.post('spk/customer/', wo).then(function(data) {
+            $scope.sCustomer = data.customer;
+            $scope.form.nm_customer = data.customer;
+            $scope.form.model = data.model;
+            $scope.form.jabatan = data.jabatan;
+
+        });
+    };
+
+    $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
@@ -21,7 +59,7 @@ app.controller('supplierCtrl', function($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('supplier', param).then(function (data) {
+        Data.get('spk', param).then(function(data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
         });
@@ -35,25 +73,30 @@ app.controller('supplierCtrl', function($scope, Data, toaster) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-//        Data.get('supplier/kode').then(function(data) {
-//            $scope.form.kd_chassis = "0000" + data.kode;
+        $scope.detail = {};
+//        Data.get('spk/kode').then(function(data) {
+//            $scope.form.kode = data.kode;
 //        });
     };
     $scope.update = function(form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
-        $scope.formtitle = "Edit Data : " + form.merk;
+        $scope.formtitle = "Edit Data : " + form.no_wo;
         $scope.form = form;
     };
     $scope.view = function(form) {
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.merk;
+        $scope.formtitle = "Lihat Data : " + form.no_wo;
         $scope.form = form;
     };
-    $scope.save = function(form) {
-        var url = ($scope.is_create == true) ? 'supplier/create'  : 'supplier/update/' + form.kd_chassis;
+    $scope.save = function(form, detail) {
+        var data = {
+            spk: form,
+            detailSpk: detail,
+        };
+        var url = ($scope.is_create == true) ? 'supplier/create' : 'supplier/update/' + form.kd_chassis;
         Data.post(url, form).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -84,7 +127,7 @@ app.controller('supplierCtrl', function($scope, Data, toaster) {
     };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('supplier/delete/' + row.kd_supplier).then(function(result) {
+            Data.delete('transSpk/delete/' + row.no_wo).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }

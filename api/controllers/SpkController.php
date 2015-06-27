@@ -3,15 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Bom;
-use app\models\BomDet;
+use app\models\Spk;
+use app\models\Kerja;
+use app\models\DetSpkerja;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class BomController extends Controller {
+class SpkController extends Controller {
 
     public function behaviors() {
         return [
@@ -23,13 +24,9 @@ class BomController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'chassis' => ['get'],
-                    'model' => ['get'],
-                    'barang' => ['get'],
-                    'jabatan' => ['get'],
+                    'nowo' => ['get'],
+                    'customer' => ['post'],
                     'kode' => ['get'],
-                    'merk' => ['get'],
-                    'tipe' => ['get'],
                 ],
             ]
         ];
@@ -58,123 +55,67 @@ class BomController extends Controller {
         return true;
     }
 
-    public function actionMerk() {
-        if (!empty($_GET['kata'])) {
-            $query = new Query;
-            $query->from('chassis')
-                    ->select("distinct(merk)")
-                    ->where("merk like '%" . $_GET['kata'] . "%'");
-
-            $command = $query->createCommand();
-            $models = $command->queryAll();
-
-            $this->setHeader(200);
-
-            echo json_encode(array('status' => 1, 'merk' => $models));
-        }
-    }
-
-    public function actionTipe() {
-        if (!empty($_GET['merk'])) {
-            $query = new Query;
-            $query->from('chassis')
-                    ->select("distinct(tipe)")
-                    ->where('merk like "%' . $_GET['merk'] . '%"');
-
-            $command = $query->createCommand();
-            $models = $command->queryAll();
-
-            $this->setHeader(200);
-
-            echo json_encode(array('status' => 1, 'data' => $models));
-        }
-    }
-
-    public function actionJabatan() {
-        if (!empty($_GET['kata'])) {
-            $query = new Query;
-            $query->from('tbl_jabatan')
-                    ->select("*")
-                    ->where('jabatan like "%' . $_GET['kata'] . '%"');
-
-            $command = $query->createCommand();
-            $models = $command->queryAll();
-            $this->setHeader(200);
-
-            echo json_encode(array('status' => 1, 'jabatan' => $models));
-        }
-    }
-
-    public function actionBarang() {
-        if (!empty($_GET['kata'])) {
-            $query = new Query;
-            $query->from('barang')
-                    ->select("*")
-                    ->where('nm_barang like "%' . $_GET['kata'] . '%"');
-
-            $command = $query->createCommand();
-            $models = $command->queryAll();
-
-            $this->setHeader(200);
-
-             echo json_encode(array('status' => 1, 'barang' => $models));
-        }
-    }
-
-    public function actionChassis() {
+    public function actionNowo() {
         $query = new Query;
-        $query->from('chassis')
-                ->select("kd_chassis")
-                ->where('merk="' . $_GET['merk'] . '" and tipe="' . $_GET['tipe'] . '"');
+        $query->from('wo_masuk')
+                ->select("no_wo");
 
         $command = $query->createCommand();
-        $models = $command->query()->read();
-        $kode = $models['kd_chassis'];
+        $models = $command->queryAll();
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => $kode));
+        echo json_encode(array('status' => 1, 'wo' => $models));
     }
 
     public function actionModel() {
-        if (!empty($_GET['kata'])) {
-            $query = new Query;
-            $query->from('model')
-                    ->select("*")
-                    ->where("model like '%" . $_GET['kata'] . "%'");
-
-            $command = $query->createCommand();
-            $models = $command->queryAll();
-
-            $this->setHeader(200);
-
-            echo json_encode(array('status' => 1, 'model' => $models));
-        }
-    }
-
-    public function actionKode() {
         $query = new Query;
-        $query->from('trans_standar_bahan')
-                ->select('*')
-                ->orderBy('kd_bom DESC')
-                ->limit(1);
+        $query->from('wo_masuk')
+                ->select("no_wo");
 
         $command = $query->createCommand();
-        $models = $command->query()->read();
-        $lastKode = substr($models['kd_bom'], -4) + 1;
+        $models = $command->queryAll();
 
-        $kode = 'BOM' . date("y") . substr('0000' . $lastKode, -4);
-        Yii::error($command->query());
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => $kode));
+        echo json_encode(array('status' => 1, 'wo' => $models));
+    }
+
+    public function actionCustomer() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $query = new Query;
+        $query->from(['wo_masuk', 'spk', 'customer', 'model'])
+                ->where('wo_masuk.no_spk = spk.no_spk and spk.kd_customer = customer.kd_cust and spk.kd_model = model.kd_model 
+                    and wo_masuk.no_wo = "' . $params['no_wo'] . '" ')
+                ->select("customer.nm_customer, model.model");
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+
+        $query2 = new Query;
+        $query2->from(['trans_spkerja', 'tbl_jabatan'])
+                ->where('trans_spkerja.kd_jab = tbl_jabatan.id_jabatan  and trans_spkerja.no_wo = "' . $params['no_wo'] . '" ')
+                ->select("jabatan");
+        $command2 = $query2->createCommand();
+        $models2 = $command2->query()->read();
+
+
+
+        $cus = $models['nm_customer'];
+        $model = $models['model'];
+        $jabatan = $models2['jabatan'];
+
+
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'customer' => $cus, 'model' => $model, 'jabatan' => $jabatan));
     }
 
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_bom ASC";
+        $sort = "trans_spkerja.no_wo ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -199,16 +140,25 @@ class BomController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from(['trans_standar_bahan', 'chassis', 'model'])
-                ->where('trans_standar_bahan.kd_chassis = chassis.kd_chassis and trans_standar_bahan.kd_model=model.kd_model')
+                ->from(['trans_spkerja', 'wo_masuk', 'spk', 'model', 'customer', 'tbl_jabatan', 'kerja'])
+                ->where(' trans_spkerja.no_wo = wo_masuk.no_wo and wo_masuk.no_spk = spk.no_spk and spk.kd_customer = customer.kd_cust
+                    and spk.kd_model = model.kd_model and trans_spkerja.kd_jab = kerja.kd_jab and kerja.kd_jab = tbl_jabatan.id_jabatan')
                 ->orderBy($sort)
-                ->select("*");
+                ->select("trans_spkerja.no_wo,customer.nm_customer,model.model,tbl_jabatan.jabatan");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
+                if ($key == 'nm_customer') {
+                    $query->andFilterWhere(['like', 'customer.' . $key, $val]);
+                } elseif ($key == 'model') {
+                    $query->andFilterWhere(['like', 'model.' . $key, $val]);
+                } elseif ($key == 'jabatan') {
+                    $query->andFilterWhere(['like', 'tbl_jabatan.' . $key, $val]);
+                } else {
+                    $query->andFilterWhere(['like', 'trans_spkerja.' . $key, $val]);
+                }
             }
         }
 
@@ -222,40 +172,52 @@ class BomController extends Controller {
     }
 
     public function actionView($id) {
-        $query = new Query;
-        $query->from(['trans_standar_bahan', 'chassis'])
-                ->where('trans_standar_bahan.kd_chassis = chassis.kd_chassis and trans_standar_bahan.kd_bom="' . $id . '"')
-                ->select("*");
 
-        $command = $query->createCommand();
-        $models = $command->query()->read();
-
-        $det = BomDet::find()
-                ->where(['kd_bom' => $models['kd_bom']])
-                ->all();
-
-        $detail = array();
-        foreach ($det as $val) {
-            $detail[] = $val->attributes;
-        }
+        $model = $this->findModel($id);
 
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $models, 'detail' => $detail), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Bom();
-        $model->attributes = $params['bom'];
+        $model = new Spk();
+        print_r($params['detailSpk']);
+        $model->attributes = $params['spk'];
 
         if ($model->save()) {
-            $detailBom = $params['detailBom'];
-            foreach ($detailBom as $val) {
-                $det = new BomDet();
-                $det->attributes = $val;
-                $det->kd_bom = $model->kd_bom;
-                $det->save();
+            // save ke kerja
+            // get jenis kendaraan
+            $query = new Query;
+            $query->from('view_wo_spk')
+                    ->select('jenis')
+                    ->where('no_wo="' . $model->no_wo . '"');
+
+            $command = $query->createCommand();
+            $models = $command->query()->read();
+            $jenis = $models['jenis'];
+
+            //get otomatis kode kerja
+            $kode = new Query;
+            $kode->from('kerja')
+                    ->select('*')
+                    ->orderBy('kd_ker DESC')
+                    ->limit(1);
+
+            $command2 = $kode->createCommand();
+            $models2 = $command2->query()->read();
+            $lastKode = substr($models['kd_ker'], 3) + 1;
+
+            $detail = $params['detailSpk'];
+            foreach ($detail as $data) {
+                $kerja = new Kerja();
+                $kerja->attributes = $val;
+                $kerja->kd_ker =$lastKode;
+                $kerja->kd_jab = $model->kd_jab;
+                $kerja->jenis = $jenis;
             }
+
+
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -280,7 +242,6 @@ class BomController extends Controller {
 
     public function actionDelete($id) {
         $model = $this->findModel($id);
-        $deleteDetail = BomDet::deleteAll(['kd_bom' => $models['kd_bom']]);
 
         if ($model->delete()) {
             $this->setHeader(200);
@@ -293,7 +254,7 @@ class BomController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Bom::findOne($id)) !== null) {
+        if (($model = Spk::findOne($id)) !== null) {
             return $model;
         } else {
 
