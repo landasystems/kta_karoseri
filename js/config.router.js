@@ -238,6 +238,46 @@ angular.module('app')
                                                 return $ocLazyLoad.load('js/controllers/spk.js');
                                             }]
                                     }})
+                                //
+                                .state('trans.bkt-barangkeluar', {
+                                    url: '/bkt-barangkeluar',
+                                    templateUrl: 'tpl/t_bkt-barangkeluar/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load('js/controllers/bkt-barangkeluar.js');
+                                            }]
+                                    }})
+                                 //
+                                .state('trans.bkt-barangmasuk', {
+                                    url: '/bkt-barangmasuk',
+                                    templateUrl: 'tpl/t_bkt-barangmasuk/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load('js/controllers/bkt-barangmasuk.js');
+                                            }]
+                                    }})
+                                 //
+                                .state('trans.bukti-terima', {
+                                    url: '/bukti-terima',
+                                    templateUrl: 'tpl/t_bukti-terima/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load('js/controllers/bkt-bukti-terima.js');
+                                            }]
+                                    }})
+                                 //
+                                .state('trans.pembatalanchasis', {
+                                    url: '/pembatalanchasis',
+                                    templateUrl: 'tpl/t_pembatalanchasis/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load('js/controllers/pembatalanchasis.js');
+                                            }]
+                                    }})
                                 // others
                                 .state('access', {
                                     url: '/access',
