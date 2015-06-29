@@ -271,7 +271,7 @@ angular.module('app')
                                  //
                                 .state('trans.pembatalanchasis', {
                                     url: '/pembatalanchasis',
-                                    templateUrl: 'tpl/t_pembatalanchasis/index.html',
+                                    templateUrl: 'tpl/t_pembatalanchassis/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
