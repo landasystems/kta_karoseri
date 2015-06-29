@@ -210,7 +210,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
         Data.get('bom/view/' + kd_bom).then(function(data) {
             $scope.form = data.data;
             $scope.detBom = data.detail;
-            console.log($scope.form);
+//            console.log($scope.form);
             Data.get('bom/tipe/?merk=' + $scope.form.merk).then(function(data) {
                 $scope.tipe_kendaraan = data.nama_tipe;
             });
@@ -225,7 +225,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
         Data.get('bom/view/' + kd_bom).then(function(data) {
             $scope.form = data.data;
             $scope.detBom = data.detail;
-            console.log($scope.form);
+//            console.log($scope.form);
             Data.get('bom/tipe/?merk=' + $scope.form.merk).then(function(data) {
                 $scope.tipe_kendaraan = data.nama_tipe;
             });
@@ -249,7 +249,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             bom: form,
             detailBom: detail,
         };
-        var url = ($scope.is_create == true) ? 'bom/create/' : 'bom/update/' + form.kd_barang;
+        var url = ($scope.is_create == true) ? 'bom/create/' : 'bom/update/' + form.kd_bom;
         Data.post(url, data).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
