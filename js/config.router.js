@@ -177,22 +177,22 @@ angular.module('app')
                                     }
                                 })
                                 //Rubah Bentuk
-                                    .state('trans.rubah-bentuk', {
+                                .state('trans.rubah-bentuk', {
                                     url: '/rubah-bentuk',
                                     templateUrl: 'tpl/rubah-bentuk/index.html',
-                                        resolve: {
-                                            deps: ['$ocLazyLoad',
-                                                function($ocLazyLoad) {
-                                                        return $ocLazyLoad.load(['ui.select2']).then(
-                                                            function() {
-                                                        return $ocLazyLoad.load('js/controllers/rubahbentuk.js');
-                                                }
-                                            );
-                                    }]
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['ui.select2']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/rubahbentuk.js');
+                                                        }
+                                                );
+                                            }]
                                     }
                                 })
                                 //BSTK
-                                    .state('trans.bstk', {
+                                .state('trans.bstk', {
                                     url: '/bstk',
                                     templateUrl: 'tpl/t_bstk/index.html',
                                     resolve: {
@@ -210,18 +210,38 @@ angular.module('app')
                                     templateUrl: 'tpl/t_sti/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
+                                            function ($ocLazyLoad) {
                                                 return $ocLazyLoad.load(['angularFileUpload', 'ui.select2']).then(
-                                                        function() {
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/sti.js');
                                                         }
                                                 );
                                             }]
                                     }})
+                                //Validasi bom
+                                .state('trans.validasibom', {
+                                    url: '/validasibom',
+                                    templateUrl: 'tpl/t_validasibom/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load('js/controllers/validasibom.js');
+                                            }]
+                                    }})
+                                // SPK
+                                .state('trans.spk', {
+                                    url: '/spk',
+                                    templateUrl: 'tpl/t_spk/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load('js/controllers/spk.js');
+                                            }]
+                                    }})
                                 // others
                                 .state('access', {
-                    url: '/access',
-                template: '<div ui-view class="fade-in-right-big smooth"></div>'
+                                    url: '/access',
+                                    template: '<div ui-view class="fade-in-right-big smooth"></div>'
                                 })
                                 .state('access.signin', {
                                     url: '/signin',
