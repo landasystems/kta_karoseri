@@ -45,7 +45,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['angularFileUpload','ui.select2']).then(
+                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select2']).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/barang.js');
                                                         }
@@ -155,24 +155,39 @@ angular.module('app')
                                             }]
                                     }
                                 })
+                                //Rubah Bentuk
+                                    .state('trans.rubah-bentuk', {
+                                    url: '/rubah-bentuk',
+                                    templateUrl: 'tpl/rubah-bentuk/index.html',
+                                        resolve: {
+                                            deps: ['$ocLazyLoad',
+                                                function($ocLazyLoad) {
+                                                        return $ocLazyLoad.load(['ui.select2']).then(
+                                                            function() {
+                                                        return $ocLazyLoad.load('js/controllers/rubahbentuk.js');
+                                                }
+                                            );
+                                    }]
+                                    }
+                                })
                                 //BSTK
-                                .state('trans.bstk', {
+                                    .state('trans.bstk', {
                                     url: '/bstk',
-                                    templateUrl: 'tpl/t_bstk/index.html',
-                                    resolve: {
-                                        deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select2']).then(
-                                                        function() {
-                                                            return $ocLazyLoad.load('js/controllers/bstk.js');
-                                                        }
-                                                );
-                                            }]
+                                templateUrl: 'tpl/t_bstk/index.html',
+                                resolve: {
+                                    deps: ['$ocLazyLoad',
+                                    function($ocLazyLoad) {
+                                        return $ocLazyLoad.load(['angularFileUpload', 'ui.select2']).then(
+                                            function() {
+                                                return $ocLazyLoad.load('js/controllers/bstk.js');
+                                    }
+                                );
+                                }]
                                     }})
-                                // others
+                                    // others
                                 .state('access', {
-                                    url: '/access',
-                                    template: '<div ui-view class="fade-in-right-big smooth"></div>'
+                    url: '/access',
+                template: '<div ui-view class="fade-in-right-big smooth"></div>'
                                 })
                                 .state('access.signin', {
                                     url: '/signin',
