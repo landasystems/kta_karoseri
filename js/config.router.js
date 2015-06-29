@@ -169,6 +169,19 @@ angular.module('app')
                                                 );
                                             }]
                                     }})
+                                .state('trans.sti', {
+                                    url: '/sti',
+                                    templateUrl: 'tpl/t_sti/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select2']).then(
+                                                        function() {
+                                                            return $ocLazyLoad.load('js/controllers/sti.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
                                 // others
                                 .state('access', {
                                     url: '/access',
