@@ -117,7 +117,7 @@ class BomController extends Controller {
 
             $this->setHeader(200);
 
-             echo json_encode(array('status' => 1, 'barang' => $models));
+            echo json_encode(array('status' => 1, 'barang' => $models));
         }
     }
 
@@ -267,9 +267,17 @@ class BomController extends Controller {
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
-        $model->attributes = $params;
+        $model->attributes = $params['bom'];
 
         if ($model->save()) {
+            $deleteDetail = BomDet::deleteAll(['kd_bom' => $model->kd_bom]);
+            $detailBom = $params['detailBom'];
+            foreach ($detailBom as $val) {
+                $det = new BomDet();
+                $det->attributes = $val;
+                $det->kd_bom = $model->kd_bom;
+                $det->save();
+            }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -280,7 +288,7 @@ class BomController extends Controller {
 
     public function actionDelete($id) {
         $model = $this->findModel($id);
-        $deleteDetail = BomDet::deleteAll(['kd_bom' => $models['kd_bom']]);
+        $deleteDetail = BomDet::deleteAll(['kd_bom' => $id]);
 
         if ($model->delete()) {
             $this->setHeader(200);

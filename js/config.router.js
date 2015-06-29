@@ -6,15 +6,36 @@
 angular.module('app')
         .run(
                 ['$rootScope', '$state', '$stateParams',
-                    function($rootScope, $state, $stateParams) {
+                    function ($rootScope, $state, $stateParams) {
                         $rootScope.$state = $state;
                         $rootScope.$stateParams = $stateParams;
+
+                        //pengecekan login
+                        $rootScope.$on("$stateChangeStart", function (event, toState) {
+                            var globalmenu = ['app.dashboard'];
+                            Data.get('site/session').then(function (results) {
+                                if (typeof results.data.user != "undefined") {
+                                    $rootScope.user = results.data.user;
+                                    if (results.data.user.akses[(toState.name).replace(".", "_")]) { // jika punya hak akses, return true
+
+                                    } else {
+                                        if (globalmenu.indexOf(toState.name) >= 0) { //menu global menu tidak di redirect
+
+                                        } else {
+                                            $state.go("access.forbidden");
+                                        }
+                                    }
+                                } else {
+                                    $state.go("access.signin");
+                                }
+                            });
+                        });
                     }
                 ]
                 )
         .config(
                 ['$stateProvider', '$urlRouterProvider',
-                    function($stateProvider, $urlRouterProvider) {
+                    function ($stateProvider, $urlRouterProvider) {
 
                         $urlRouterProvider
                                 .otherwise('/app/dashboard');
@@ -29,7 +50,7 @@ angular.module('app')
                                     templateUrl: 'tpl/dashboard.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
+                                            function ($ocLazyLoad) {
 
                                             }]
                                     }
@@ -44,9 +65,9 @@ angular.module('app')
                                     templateUrl: 'tpl/m_barang/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['angularFileUpload','ui.select2']).then(
-                                                        function() {
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select2']).then(
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/barang.js');
                                                         }
                                                 );
@@ -59,7 +80,7 @@ angular.module('app')
                                     templateUrl: 'tpl/m_jenisbrg/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
+                                            function ($ocLazyLoad) {
                                                 return $ocLazyLoad.load('js/controllers/jenisbrg.js');
                                             }]
                                     }
@@ -69,7 +90,7 @@ angular.module('app')
                                     templateUrl: 'tpl/m_customer/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
+                                            function ($ocLazyLoad) {
                                                 return $ocLazyLoad.load('js/controllers/customer.js');
                                             }]
                                     }
@@ -79,7 +100,7 @@ angular.module('app')
                                     templateUrl: 'tpl/m_modelkendaraan/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
+                                            function ($ocLazyLoad) {
                                                 return $ocLazyLoad.load('js/controllers/modelkendaraan.js');
                                             }]
                                     }
@@ -89,7 +110,7 @@ angular.module('app')
                                     templateUrl: 'tpl/m_jnskomplain/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
+                                            function ($ocLazyLoad) {
                                                 return $ocLazyLoad.load('js/controllers/jnskomplain.js');
                                             }]
                                     }
@@ -99,7 +120,7 @@ angular.module('app')
                                     templateUrl: 'tpl/m_chassis/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
+                                            function ($ocLazyLoad) {
                                                 return $ocLazyLoad.load('js/controllers/chassis.js');
                                             }]
                                     }
@@ -110,7 +131,7 @@ angular.module('app')
                                     templateUrl: 'tpl/m_supplier/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
+                                            function ($ocLazyLoad) {
                                                 return $ocLazyLoad.load('js/controllers/supplier.js');
                                             }]
                                     }
@@ -121,7 +142,7 @@ angular.module('app')
                                     templateUrl: 'tpl/m_user/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
+                                            function ($ocLazyLoad) {
                                                 return $ocLazyLoad.load('js/controllers/pengguna.js');
                                             }]
                                     }
@@ -131,7 +152,7 @@ angular.module('app')
                                     templateUrl: 'tpl/m_roles/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
+                                            function ($ocLazyLoad) {
                                                 return $ocLazyLoad.load('js/controllers/roles.js');
                                             }]
                                     }})
@@ -146,24 +167,39 @@ angular.module('app')
                                     templateUrl: 'tpl/bom/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
+                                            function ($ocLazyLoad) {
                                                 return $ocLazyLoad.load(['angularFileUpload', 'ui.select2']).then(
-                                                        function() {
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/bom.js');
                                                         }
                                                 );
                                             }]
                                     }
                                 })
+                                //Rubah Bentuk
+                                    .state('trans.rubah-bentuk', {
+                                    url: '/rubah-bentuk',
+                                    templateUrl: 'tpl/rubah-bentuk/index.html',
+                                        resolve: {
+                                            deps: ['$ocLazyLoad',
+                                                function($ocLazyLoad) {
+                                                        return $ocLazyLoad.load(['ui.select2']).then(
+                                                            function() {
+                                                        return $ocLazyLoad.load('js/controllers/rubahbentuk.js');
+                                                }
+                                            );
+                                    }]
+                                    }
+                                })
                                 //BSTK
-                                .state('trans.bstk', {
+                                    .state('trans.bstk', {
                                     url: '/bstk',
                                     templateUrl: 'tpl/t_bstk/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
+                                            function ($ocLazyLoad) {
                                                 return $ocLazyLoad.load(['angularFileUpload', 'ui.select2']).then(
-                                                        function() {
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/bstk.js');
                                                         }
                                                 );
@@ -184,15 +220,15 @@ angular.module('app')
                                     }})
                                 // others
                                 .state('access', {
-                                    url: '/access',
-                                    template: '<div ui-view class="fade-in-right-big smooth"></div>'
+                    url: '/access',
+                template: '<div ui-view class="fade-in-right-big smooth"></div>'
                                 })
                                 .state('access.signin', {
                                     url: '/signin',
                                     templateUrl: 'tpl/page_signin.html',
                                     resolve: {
                                         deps: ['uiLoad',
-                                            function(uiLoad) {
+                                            function (uiLoad) {
                                                 return uiLoad.load(['js/controllers/signin.js']);
                                             }]
                                     }

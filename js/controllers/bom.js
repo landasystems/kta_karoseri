@@ -16,9 +16,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
 
     $scope.merk = {
         minimumInputLength: 3,
-        allowClear: true,
-        initSelection: function(el, fn) {
-        },
+        allowClear: false,
         ajax: {
             url: "api/web/bom/merk/",
             dataType: 'json',
@@ -41,7 +39,11 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
         },
         id: function(data) {
             return data.merk
-        }
+        },
+        initSelection : function(element, callback) {
+            var obj = {id: 1, text: 'whatever value'};
+            callback(obj);
+        },
     };
 
     $scope.model = {
@@ -208,7 +210,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
         Data.get('bom/view/' + kd_bom).then(function(data) {
             $scope.form = data.data;
             $scope.detBom = data.detail;
-            console.log($scope.form);
+//            console.log($scope.form);
             Data.get('bom/tipe/?merk=' + $scope.form.merk).then(function(data) {
                 $scope.tipe_kendaraan = data.nama_tipe;
             });
@@ -217,12 +219,13 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.is_view = false;
             $scope.formtitle = "Edit Data : " + $scope.form.kd_bom;
         });
+        $scope.merk_ken = 'Merk';
     };
     $scope.view = function(kd_bom) {
         Data.get('bom/view/' + kd_bom).then(function(data) {
             $scope.form = data.data;
             $scope.detBom = data.detail;
-            console.log($scope.form);
+//            console.log($scope.form);
             Data.get('bom/tipe/?merk=' + $scope.form.merk).then(function(data) {
                 $scope.tipe_kendaraan = data.nama_tipe;
             });
@@ -246,7 +249,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
             bom: form,
             detailBom: detail,
         };
-        var url = ($scope.is_create == true) ? 'bom/create/' : 'bom/update/' + form.kd_barang;
+        var url = ($scope.is_create == true) ? 'bom/create/' : 'bom/update/' + form.kd_bom;
         Data.post(url, data).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
