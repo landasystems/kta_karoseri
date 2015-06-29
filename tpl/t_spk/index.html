@@ -134,8 +134,7 @@
                                 </div>
                             </div>
                         </div>
-                        <input kendo-auto-complete ng-model="form.nm_kerja" k-data-source="countryNames" style="width: 100%;" />
-        <p class="demo-hint">Your selection: {{nm_kerja}}</p>
+                     
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <table class="table table-bordered">
@@ -147,9 +146,8 @@
                             <td>
                                 <input type="hidden" ng-model="detail.kd_jab">
                                 <input type="hidden" ng-model="detail.jenis">
-                                <!--<input type="text" class="form-control" ng-model="detail.nm_kerja" ng-disabled="is_view" ng-readonly="is_create == false" >-->
-                                 <input kendo-auto-complete ng-model="detail.nm_kerja" k-data-source="countryNames" style="width: 100%;" />
-        <p class="demo-hint">Your selection: {{nm_kerja}}</p>
+                                <input type="text" class="form-control" ng-model="detail.nm_kerja" ng-disabled="is_view" ng-readonly="is_create == false" >
+                                
                             </td>
                             <td>
                                 <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-arrows"></i></button>
