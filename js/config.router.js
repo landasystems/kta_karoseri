@@ -275,7 +275,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/pembatalanchasis.js');
+                                                return $ocLazyLoad.load('js/controllers/pembatalanchassis.js');
                                             }]
                                     }})
                                 // others
