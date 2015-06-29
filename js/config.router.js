@@ -179,6 +179,16 @@ angular.module('app')
                                                 return $ocLazyLoad.load('js/controllers/validasibom.js');
                                             }]
                                     }})
+                                // SPK
+                                .state('trans.spk', {
+                                    url: '/spk',
+                                    templateUrl: 'tpl/t_spk/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function($ocLazyLoad) {
+                                                return $ocLazyLoad.load('js/controllers/spk.js');
+                                            }]
+                                    }})
                                 // others
                                 .state('access', {
                                     url: '/access',
