@@ -1,4 +1,4 @@
-<div ng-controller="validasibomCtrl">
+<div ng-controller="pembatalanchassisCtrl">
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n font-thin h3">Pembatalan Chassis</h1>
     </div>
@@ -45,24 +45,23 @@
                         <thead>
                             <tr>
                                 <th st-sort="nama">#</th>
-                                <th st-sort="nama">Kode Bom</th>
-                                <th st-sort="nama">Merk</th>
-                                <th st-sort="nama">Tipe</th>
-                                <th st-sort="nama">Model</th>
-                                <th st-sort="nama">Tanggal</th>
+                                <th st-sort="kd_titipan">Kode Titipan</th>
+                                <th st-sort="nm_customer">Customer</th>
+                                <th st-sort="merk">Merk</th>
+                                <th st-sort="tipe">Tipe</th>
+                                <th st-sort="kd_model">model</th>
                             </tr>
                         </thead>
                         <tbody ng-show="!isLoading">
-                            <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
+                            <tr ng-repeat="row in displayed">
                                 <td><label class="i-checks">
-                                        <input type="checkbox" ng-model="form.kd_bom[row.kd_bom]" ><i></i> 
+                                        <input type="checkbox" ng-model="form.kd_titipan[row.kd_titipan]" ><i></i> 
                                     </label></td>
-                                <td>{{row.kd_bom}}</td>
+                                <td>{{row.kd_titipan}}</td>
+                                <td>{{row.nm_customer}}</td>
                                 <td>{{row.merk}}</td>
                                 <td>{{row.tipe}}</td>
-                                <td>{{row.model}}</td>
-                                <td>{{row.tgl_buat| date:'dd - MMM - yyyy'}}</td>
-
+                                <td>{{row.kd_model}}</td>
                             </tr>
                         </tbody>
                         <tbody ng-show="isLoading">

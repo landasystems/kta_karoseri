@@ -23,7 +23,7 @@ app.controller('pembatalanchassisCtrl', function($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('validasibom', param).then(function(data) {
+        Data.get('pembatalanchassis', param).then(function(data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
         });
@@ -42,20 +42,20 @@ app.controller('pembatalanchassisCtrl', function($scope, Data, toaster) {
         $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = false;
-        $scope.formtitle = "Edit Data : " + form.kd_bom;
+        $scope.formtitle = "Edit Data : " + form.kd_titipan;
         $scope.form = form;
     };
     $scope.view = function(form) {
         $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.kd_bom;
+        $scope.formtitle = "Lihat Data : " + form.kd_titipan;
         $scope.form = form;
     };
     $scope.save = function(form) {
 //        console.log(form);
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
-            Data.post('validasibom/create/', form).then(function(result) {
+            Data.post('pembatalanchassis/create/', form).then(function(result) {
                 if (result.status == 0) {
                     toaster.pop('error', "Terjadi Kesalahan");
                 } else {
@@ -71,13 +71,13 @@ app.controller('pembatalanchassisCtrl', function($scope, Data, toaster) {
         $scope.is_view = false;
         $scope.callServer(tableStateRef);
     };
-    $scope.delete = function(row) {
-        if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('barang/delete/' + row.kd_barang).then(function(result) {
-                $scope.displayed.splice($scope.displayed.indexOf(row), 1);
-            });
-        }
-    };
+//    $scope.delete = function(row) {
+//        if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
+//            Data.delete('barang/delete/' + row.kd_barang).then(function(result) {
+//                $scope.displayed.splice($scope.displayed.indexOf(row), 1);
+//            });
+//        }
+//    };
 
 
 })
