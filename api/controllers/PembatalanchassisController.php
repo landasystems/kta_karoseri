@@ -54,7 +54,7 @@ class PembatalanchassisController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "trans_standar_bahan.kd_bom ASC";
+        $sort = "trans_standar_bahan.kd_titipan ASC";
         $offset = 0;
         $limit = 20;
         //        Yii::error($params);
@@ -79,23 +79,15 @@ class PembatalanchassisController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from(['serah_terima_in','customer','chassis'])
-                ->where('serah_terima_in.kd_customer = customer.kd_customer and serah_terima_in.chassis = chassis.kd_chassis and serah_terima_in.status = 1')
+                ->from(['serah_terima_in', 'customer', 'chassis'])
+                ->where('serah_terima_in.kd_cust = customer.kd_cust and serah_terima_in.kd_chassis = chassis.kd_chassis and serah_terima_in.status = 1 and serah_terima_in.no_spk = "-"')
                 ->select("*");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                if($key == 'model'){
-                   $query->andFilterWhere(['like', 'model.'.$key, $val]); 
-                }elseif($key == 'merk'){
-                    $query->andFilterWhere(['like', 'chassis.'.$key, $val]);
-                }elseif($key == 'tipe'){
-                     $query->andFilterWhere(['like', 'chassis.'.$key, $val]);
-                }else{
                 $query->andFilterWhere(['like', $key, $val]);
-                }
             }
         }
 
@@ -119,24 +111,13 @@ class PembatalanchassisController extends Controller {
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
         print_r($params);
-        $centang = $params['kd_bom'];
-        
-        foreach($centang as $key => $val){
-            $status = Validasibom::findOne($key);
-            $status->status=1;
-            $status->save();
-            
-        }
-//        $model = new Validasibom();
-//        $model->attributes = $params;
+        $centang = $params['kd_titipan'];
 
-//        if ($status->save()) {
-//            $this->setHeader(200);
-//            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-//        } else {
-//            $this->setHeader(400);
-//            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-//        }
+        foreach ($centang as $key => $val) {
+            $status = Serahterimain::findOne($key);
+            $status->status = 0;
+            $status->save();
+        }
     }
 
     public function actionUpdate($id) {
