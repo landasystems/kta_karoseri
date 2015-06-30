@@ -55,6 +55,25 @@ angular.module('app')
                                             }]
                                     }
                                 })
+                                 // others
+                                .state('access', {
+                                    url: '/access',
+                                    template: '<div ui-view class="fade-in-right-big smooth"></div>'
+                                })
+                                .state('access.signin', {
+                                    url: '/signin',
+                                    templateUrl: 'tpl/page_signin.html',
+                                    resolve: {
+                                        deps: ['uiLoad',
+                                            function (uiLoad) {
+                                                return uiLoad.load(['js/controllers/signin.js']);
+                                            }]
+                                    }
+                                })
+                                .state('access.404', {
+                                    url: '/404',
+                                    templateUrl: 'tpl/page_404.html'
+                                })
                                 //master roles
                                 .state('master', {
                                     url: '/master',
@@ -409,25 +428,7 @@ angular.module('app')
                                                 return $ocLazyLoad.load('js/controllers/w-ordermasuk.js');
                                             }]
                                     }})
-                                // others
-                                .state('access', {
-                                    url: '/access',
-                                    template: '<div ui-view class="fade-in-right-big smooth"></div>'
-                                })
-                                .state('access.signin', {
-                                    url: '/signin',
-                                    templateUrl: 'tpl/page_signin.html',
-                                    resolve: {
-                                        deps: ['uiLoad',
-                                            function (uiLoad) {
-                                                return uiLoad.load(['js/controllers/signin.js']);
-                                            }]
-                                    }
-                                })
-                                .state('access.404', {
-                                    url: '/404',
-                                    templateUrl: 'tpl/page_404.html'
-                                })
+                               
                     }
                 ]);
 
