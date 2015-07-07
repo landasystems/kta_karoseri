@@ -29,7 +29,7 @@ app.controller('bstkCtrl', function ($scope, Data, toaster) {
 
         Data.get('bstk', param).then(function (data) {
             $scope.displayed = data.data;
-            tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
+            tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
 //            console.log($scope.displayed);
         });
 
