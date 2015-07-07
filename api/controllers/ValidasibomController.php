@@ -119,16 +119,24 @@ class ValidasibomController extends Controller {
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
         print_r($params);
-        $model = new Validasibom();
+        $centang = $params['kd_bom'];
+        
+        foreach($centang as $key => $val){
+            $status = Validasibom::findOne($key);
+            $status->status=1;
+            $status->save();
+            
+        }
+//        $model = new Validasibom();
 //        $model->attributes = $params;
 
-        if ($model->save()) {
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-        } else {
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-        }
+//        if ($status->save()) {
+//            $this->setHeader(200);
+//            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+//        } else {
+//            $this->setHeader(400);
+//            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+//        }
     }
 
     public function actionUpdate($id) {

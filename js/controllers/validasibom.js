@@ -7,7 +7,7 @@ app.controller('validasibomCtrl', function($scope, Data, toaster) {
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
-
+    $scope.form = {};
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -54,14 +54,15 @@ app.controller('validasibomCtrl', function($scope, Data, toaster) {
         $scope.form = form;
     };
     $scope.save = function(form) {
+//        console.log(form);
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
             Data.post('validasibom/create/', form).then(function(result) {
                 if (result.status == 0) {
-                    toaster.pop('error', "Terjadi Kesalahan", result.errors);
+                    toaster.pop('error', "Terjadi Kesalahan");
                 } else {
                     $scope.is_edit = false;
                     $scope.callServer(tableStateRef); //reload grid ulang
-                    toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
+                    toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
                 }
             });
         }
