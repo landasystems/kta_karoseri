@@ -22,7 +22,7 @@ app.controller('rolesCtrl', function ($scope, Data, toaster) {
 
         Data.get('roles', param).then(function (data) {
             $scope.displayed = data.data;
-            tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
+            tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
 
         $scope.isLoading = false;
@@ -32,19 +32,33 @@ app.controller('rolesCtrl', function ($scope, Data, toaster) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
-        $scope.form = {};
+        $scope.form = {"akses": {
+                "master_roles": false,
+                "master_user": false,
+                "master_barang": false,
+                "master_jenisbrg": false,
+                "master_customer": false,
+                "master_supplier": false,
+                "master_modelkendaraan": false,
+                "master_chassis": false,
+                "master_jnskomplain": false,
+            }};
+
+        console.log($scope.form);
     };
     $scope.update = function (form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.nama;
         $scope.form = form;
+        $scope.form.akses = JSON.parse($scope.form.akses);
     };
     $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.nama;
         $scope.form = form;
+        $scope.form.akses = JSON.parse($scope.form.akses);
     };
     $scope.save = function (form) {
         var url = (form.id > 0) ? 'roles/update/' + form.id : 'roles/create';
@@ -59,6 +73,9 @@ app.controller('rolesCtrl', function ($scope, Data, toaster) {
         });
     };
     $scope.cancel = function () {
+         if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
+            $scope.callServer(tableStateRef);
+        }
         $scope.is_edit = false;
         $scope.is_view = false;
     };
@@ -87,5 +104,11 @@ app.controller('rolesCtrl', function ($scope, Data, toaster) {
         }
     };
 
+    $scope.checkAll = function (module, valueCheck) {
+        angular.forEach($scope.form.akses, function ($value, $key) {
+            if ($key.indexOf(module) >= 0)
+                $scope.form.akses[$key] = valueCheck;
+        });
+    };
 
 })
