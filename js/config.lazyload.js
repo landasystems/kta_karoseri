@@ -96,6 +96,13 @@ angular.module('app')
                             ]
                         },
                         {
+                            name: 'autocomplete',
+                            files: [
+                                'vendor/modules/angular-autocomplete/autocomplete.js',
+                                'vendor/modules/angular-autocomplete/autocomplete.css'
+                            ]
+                        },
+                        {
                             name: 'textAngular',
                             files: [
                                 'vendor/modules/textAngular/textAngular-sanitize.min.js',

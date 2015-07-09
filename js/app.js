@@ -15,4 +15,5 @@ angular.module('app', [
     'oc.lazyLoad',
     'smart-table',
     'toaster',
+//    'autocomplete',
 ]);
