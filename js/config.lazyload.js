@@ -40,7 +40,7 @@ angular.module('app')
         }
         )
         // oclazyload config
-        .config(['$ocLazyLoadProvider', function($ocLazyLoadProvider) {
+        .config(['$ocLazyLoadProvider', function ($ocLazyLoadProvider) {
                 // We configure ocLazyLoad to use the lib script.js as the async loader
                 $ocLazyLoadProvider.config({
                     debug: false,
@@ -92,6 +92,13 @@ angular.module('app')
                             files: [
                                 'vendor/modules/angularjs-toaster/toaster.js',
                                 'vendor/modules/angularjs-toaster/toaster.css'
+                            ]
+                        },
+                        {
+                            name: 'autocomplete',
+                            files: [
+                                'vendor/modules/angular-autocomplete/autocomplete.js',
+                                'vendor/modules/angular-autocomplete/autocomplete.css'
                             ]
                         },
                         {
