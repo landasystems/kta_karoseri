@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Serahterimain;
+use app\models\RubahBentuk;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class SerahterimainController extends Controller {
+class RubahbentukController extends Controller {
 
     public function behaviors() {
         return [
@@ -19,13 +19,11 @@ class SerahterimainController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
-                    'spk' => ['get'],
-                    'chassis' => ['get'],
-                    'customer' => ['get'],
-                    'warna' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
+                    'kode' => ['get'],
+                    'listwo' => ['get'],
                 ],
             ]
         ];
@@ -35,7 +33,7 @@ class SerahterimainController extends Controller {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
-        } elseif (excel(isset($this->actions['*']))) {
+        } elseif (isset($this->actions['*'])) {
             $verbs = $this->actions['*'];
         } else {
             return $event->isValid;
@@ -53,14 +51,29 @@ class SerahterimainController extends Controller {
         return true;
     }
 
+    public function actionListwo() {
+        if (!empty($_GET['kata'])) {
+            $query = new Query;
+            $query->from('view_wo_spk')
+                    ->select("*")
+                    ->where("no_wo like '%".$_GET['kata']."%'");
+
+            $command = $query->createCommand();
+            $models = $command->queryAll();
+
+            $this->setHeader(200);
+//            print_r($models);
+            echo json_encode(array('status' => 1, 'data' => $models));
+        }
+    }
+
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tgl_terima DESC";
+        $sort = "kd_rubah ASC";
         $offset = 0;
         $limit = 10;
-
         if (isset($params['limit']))
             $limit = $params['limit'];
         if (isset($params['offset']))
@@ -81,18 +94,20 @@ class SerahterimainController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('serah_terima_in as se')
-                ->join('JOIN', 'customer as cu', 'se.kd_cust = cu.kd_cust')
-                ->join('JOIN', 'warna as wa', 'se.kd_warna = wa.kd_warna')
-                ->join('JOIN', 'chassis as ch', 'se.kd_chassis= ch.kd_chassis')
+                ->from('rubah_bentuk as rb')
+                ->join('Left Join', 'view_wo_spk as vws', 'rb.no_wo = vws.no_wo')
                 ->orderBy($sort)
-                ->select("se.*,cu.*,wa.*,ch.*");
+                ->select("*");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
+                if ($key == 'no_wo') {
+                    $query->andFilterWhere(['like', 'rb.no_wo', $val]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+                }
             }
         }
 
@@ -105,42 +120,6 @@ class SerahterimainController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
-    public function actionSpk() {
-        $query = new Query;
-        $query->from('spk')
-                ->select("no_spk");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        echo json_encode(array('status' => 1, 'kd_spk' => $models));
-    }
-
-    public function actionChassis() {
-        $query = new Query;
-        $query->from('chassis')
-                ->select("*");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        echo json_encode(array('status' => 1, 'list_chassis' => $models));
-    }
-
-    public function actionCustomer() {
-        $query = new Query;
-        $query->from('customer')
-                ->select("*");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        echo json_encode(array('status' => 1, 'list_customer' => $models));
-    }
-
-    public function actionWarna() {
-        $query = new Query;
-        $query->from('warna')
-                ->select("*");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        echo json_encode(array('status' => 1, 'list_warna' => $models));
-    }
-
     public function actionView($id) {
 
         $model = $this->findModel($id);
@@ -151,16 +130,8 @@ class SerahterimainController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = Serahterimain::find()->where('kd_titipan="' . $params['kd_titipan'] . '"')->one();
-        if (empty($model)) {
-            $model = new Serahterimain();
-        }
-        Yii::error(date('Y-m-d', strtotime('+1 days', strtotime(substr($params['tgl_terima'], 0, 10)))));
+        $model = new Supplier();
         $model->attributes = $params;
-//        $model->tgl_terima = date('Y-m-d',  strtotime('+1 day',substr($params['tgl_terima'], 0,10)));
-//        $model->serah_terima = date('Y-m-d',  strtotime('+1 day',substr($params['serah_terima'], 0,10)));
-//        $model->tgl_prd = date('Y-m-d',  strtotime('+1 day',substr($params['tgl_prd'], 0,10)));
-//        $model->tgl_pdc = date('Y-m-d',  strtotime('+1 day',substr($params['tgl_pdc'], 0,10)));
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -169,6 +140,22 @@ class SerahterimainController extends Controller {
             $this->setHeader(400);
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
+    }
+
+    public function actionKode() {
+        $query = new Query;
+        $query->from('supplier')
+                ->select('*')
+                ->orderBy('kd_supplier DESC')
+                ->limit(1);
+
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+        $kode = $models['kd_supplier'] + 1;
+        Yii::error($command->query());
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionUpdate($id) {
@@ -199,7 +186,7 @@ class SerahterimainController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Serahterimain::find(array('condition' => 'kd_titipan="' . $id . '"'))->one()) !== null) {
+        if (($model = Supplier::findOne($id)) !== null) {
             return $model;
         } else {
 

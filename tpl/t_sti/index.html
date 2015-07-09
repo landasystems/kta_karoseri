@@ -13,17 +13,18 @@
             </div>
             <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
                 <div class="form-horizontal">
-                    <div class="form-group">
-                        <label class="col-sm-1 control-label">Jenis</label>
-                        <div class="col-sm-2">
-                            <select stInputEvent="change" st-search="jenis_brg" class="form-control">
-                                <option value="">-Pilih Jenis-</option>
-                                <option ng-repeat="jenis in jenis_brg" value="{{jenis.jenis_brg}}">{{jenis.jenis_brg}}</option>
-                            </select>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-3">Kode Titipan</label>
+                            <div class="col-md-9">
+                                <input st-search="kd_titipan" class="form-control"/>
+                            </div>
                         </div>
-                        <label class="col-sm-2 control-label">Nama Barang</label>
-                        <div class="col-sm-3">
-                            <input st-search="nm_barang" class="form-control"/>
+                        <div class="form-group">
+                            <label class="col-md-3">Customer</label>
+                            <div class="col-md-9">
+                                <input st-search="nm_customer" class="form-control"/>
+                            </div>
                         </div>
                     </div>
                 </div>

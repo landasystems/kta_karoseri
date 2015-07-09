@@ -6,6 +6,34 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
     $scope.is_view = false;
     $scope.is_create = false;
 
+    $scope.wo = {
+        minimumInputLength: 3,
+        allowClear: false,
+        ajax: {
+            url: "api/web/rubahbentuk/listwo/",
+            dataType: 'json',
+            data: function(term) {
+                return {
+                    kata: term,
+                };
+            },
+            results: function(data, page) {
+                return {
+                    results: data.data
+                };
+            }
+        },
+        formatResult: function(object) {
+            return object.no_wo;
+        },
+        formatSelection: function(object) {
+            return object.no_wo;
+        },
+        id: function(data) {
+            return data.no_wo;
+        },
+    };
+
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
@@ -21,7 +49,7 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('rubah_bentuk', param).then(function(data) {
+        Data.get('rubahbentuk', param).then(function(data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
         });
