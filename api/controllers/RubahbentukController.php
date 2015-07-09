@@ -56,7 +56,7 @@ class RubahbentukController extends Controller {
             $query = new Query;
             $query->from('view_wo_spk')
                     ->select("*")
-                    ->where("no_wo like '%".$_GET['kata']."%'");
+                    ->where("no_wo like '%" . $_GET['kata'] . "%'");
 
             $command = $query->createCommand();
             $models = $command->queryAll();
@@ -82,6 +82,9 @@ class RubahbentukController extends Controller {
         //sorting
         if (isset($params['sort'])) {
             $sort = $params['sort'];
+            if ($sort == 'no_wo') {
+                $sort = 'rb.no_wo';
+            }
             if (isset($params['order'])) {
                 if ($params['order'] == "false")
                     $sort.=" ASC";
@@ -130,7 +133,7 @@ class RubahbentukController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Supplier();
+        $model = new RubahBentuk();
         $model->attributes = $params;
 
         if ($model->save()) {
@@ -186,7 +189,7 @@ class RubahbentukController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Supplier::findOne($id)) !== null) {
+        if (($model = RubahBentuk::findOne($id)) !== null) {
             return $model;
         } else {
 

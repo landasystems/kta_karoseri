@@ -46,13 +46,12 @@ angular.module('app')
                     debug: false,
                     events: true,
                     modules: [
-                      
                         {
-                            name: 'ngGrid',
+                            name: 'daterangepicker',
                             files: [
-                                'vendor/modules/ng-grid/ng-grid.min.js',
-                                'vendor/modules/ng-grid/ng-grid.min.css',
-                                'vendor/modules/ng-grid/theme.css'
+                                'vendor/modules/angular-daterangepicker/angular-daterangepicker.min.js',
+                                'vendor/modules/angular-daterangepicker/daterangepicker.min.js',
+                                'vendor/modules/angular-daterangepicker/daterangepicker.min.css',
                             ]
                         },
                         {
