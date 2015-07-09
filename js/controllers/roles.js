@@ -41,7 +41,14 @@ app.controller('rolesCtrl', function ($scope, Data, toaster) {
                 "master_supplier": false,
                 "master_modelkendaraan": false,
                 "master_chassis": false,
-                "master_jnskomplain": false,
+                "master_kalender": false,
+                "master_lokasi": false,
+                "master_jabatan": false,
+                "master_section": false,
+                "master_subsection": false,
+                "master_umk": false,
+                "master_departement": false,
+                "master_jnskomplain": false
             }};
 
         console.log($scope.form);
@@ -62,6 +69,7 @@ app.controller('rolesCtrl', function ($scope, Data, toaster) {
     };
     $scope.save = function (form) {
         var url = (form.id > 0) ? 'roles/update/' + form.id : 'roles/create';
+        form.akses = JSON.stringify(form.akses);
         Data.post(url, form).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);

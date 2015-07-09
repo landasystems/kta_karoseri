@@ -1,38 +1,13 @@
-app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
+app.controller('umkCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
     $scope.displayed = [];
-    $scope.is_edit = false;
+    $scope.is_edit = true;
     $scope.is_view = false;
     $scope.is_create = false;
-
-    $scope.wo = {
-        minimumInputLength: 3,
-        allowClear: false,
-        ajax: {
-            url: "api/web/rubahbentuk/listwo/",
-            dataType: 'json',
-            data: function(term) {
-                return {
-                    kata: term,
-                };
-            },
-            results: function(data, page) {
-                return {
-                    results: data.data
-                };
-            }
-        },
-        formatResult: function(object) {
-            return object.no_wo;
-        },
-        formatSelection: function(object) {
-            return object.no_wo;
-        },
-        id: function(data) {
-            return data.no_wo;
-        },
-    };
+    
+        $scope.form.umk='4';
+        $scope.update('UMK001');
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -49,7 +24,7 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('rubahbentuk', param).then(function(data) {
+        Data.get('umk', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
@@ -57,29 +32,33 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
         $scope.isLoading = false;
     };
 
-    $scope.create = function(form) {
+    $scope.create = function (form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.form.umk='1';
+
     };
-    $scope.update = function(form) {
+    $scope.update = function () {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
-        $scope.formtitle = "Edit Data : " + form.merk;
-        $scope.form = form;
+        
+        $scope.form.umk='2';
     };
-    $scope.view = function(form) {
+    $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.merk;
+        $scope.formtitle = "Lihat Data : " + form.no_umk;
         $scope.form = form;
+        
+        $scope.form.umk='3';
     };
-    $scope.save = function(form) {
-        var url = ($scope.is_create == true) ? 'chassis/create' : 'chassis/update/' + form.kd_chassis;
-        Data.post(url, form).then(function(result) {
+    $scope.save = function (form) {
+        var url = ($scope.is_create == true) ? 'umk/create' : 'umk/update/' + form.no_umk;
+        Data.post(url, form).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
@@ -89,27 +68,14 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
             }
         });
 
-        //---------
-//        $scope.is_edit = false;
-//        if ($scope.is_create == true) {
-//            Data.post('chassis/create', form).then(function(result) {
-//
-//
-//            });
-//        } else {
-//
-//            Data.post('chassis/update/' + form.kd_chassis, form).then(function(result) {
-//
-//            });
-//        }
     };
-    $scope.cancel = function() {
+    $scope.cancel = function () {
         $scope.is_edit = false;
         $scope.is_view = false;
     };
-    $scope.delete = function(row) {
+    $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('chassis/delete/' + row.kd_chassis).then(function(result) {
+            Data.delete('lokasikantor/delete/' + row.no_umk).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }

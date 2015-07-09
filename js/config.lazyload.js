@@ -46,6 +46,7 @@ angular.module('app')
                     debug: false,
                     events: true,
                     modules: [
+                      
                         {
                             name: 'ngGrid',
                             files: [
@@ -58,9 +59,9 @@ angular.module('app')
                             name: 'ui.select2',
                             files: [
                                 'vendor/modules/angular-ui-select/select.min.js',
-                                'vendor/modules/angular-ui-select/select.min.css',
                                 'vendor/jquery/select2/select2.css',
-                                'vendor/jquery/select2/select2.min.js'
+                                'vendor/jquery/select2/select2-bootstrap.css',
+                                'vendor/jquery/select2/select2.min.js',
                             ]
                         },
                         {

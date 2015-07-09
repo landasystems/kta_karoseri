@@ -1,4 +1,4 @@
-app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
+app.controller('sectionCtrl', function($scope, Data, toaster) {
     //init data
     var tableStateRef;
     $scope.displayed = [];
@@ -6,35 +6,7 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
     $scope.is_view = false;
     $scope.is_create = false;
 
-    $scope.wo = {
-        minimumInputLength: 3,
-        allowClear: false,
-        ajax: {
-            url: "api/web/rubahbentuk/listwo/",
-            dataType: 'json',
-            data: function(term) {
-                return {
-                    kata: term,
-                };
-            },
-            results: function(data, page) {
-                return {
-                    results: data.data
-                };
-            }
-        },
-        formatResult: function(object) {
-            return object.no_wo;
-        },
-        formatSelection: function(object) {
-            return object.no_wo;
-        },
-        id: function(data) {
-            return data.no_wo;
-        },
-    };
-
-    $scope.callServer = function callServer(tableState) {
+      $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
@@ -49,13 +21,17 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('rubahbentuk', param).then(function(data) {
+        Data.get('section', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
 
         $scope.isLoading = false;
     };
+    
+    Data.get('section/listdepartment').then(function(data) {
+        $scope.listdept = data.data;
+    });
 
     $scope.create = function(form) {
         $scope.is_edit = true;
@@ -63,22 +39,25 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        Data.get('section/kode').then(function(data) {
+            $scope.form.id_section = data.kode;
+        });
     };
     $scope.update = function(form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
-        $scope.formtitle = "Edit Data : " + form.merk;
+        $scope.formtitle = "Edit Data : " + form.id_section;
         $scope.form = form;
     };
     $scope.view = function(form) {
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.merk;
+        $scope.formtitle = "Lihat Data : " + form.id_section;
         $scope.form = form;
     };
     $scope.save = function(form) {
-        var url = ($scope.is_create == true) ? 'chassis/create' : 'chassis/update/' + form.kd_chassis;
+        var url = ($scope.is_create == true) ? 'section/create'  : 'section/update/' + form.id_section;
         Data.post(url, form).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -89,19 +68,6 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
             }
         });
 
-        //---------
-//        $scope.is_edit = false;
-//        if ($scope.is_create == true) {
-//            Data.post('chassis/create', form).then(function(result) {
-//
-//
-//            });
-//        } else {
-//
-//            Data.post('chassis/update/' + form.kd_chassis, form).then(function(result) {
-//
-//            });
-//        }
     };
     $scope.cancel = function() {
         $scope.is_edit = false;
@@ -109,7 +75,7 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
     };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('chassis/delete/' + row.kd_chassis).then(function(result) {
+            Data.delete('section/delete/' + row.id_section).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }

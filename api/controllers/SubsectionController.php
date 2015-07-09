@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Serahterimain;
+use app\models\SubSection;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class SerahterimainController extends Controller {
+class SubsectionController extends Controller {
 
     public function behaviors() {
         return [
@@ -19,13 +19,12 @@ class SerahterimainController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
-                    'spk' => ['get'],
-                    'chassis' => ['get'],
-                    'customer' => ['get'],
-                    'warna' => ['get'],
+                    'excel' => ['get'],
+                    'listsection' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
+                    'kode' => ['get'],
                 ],
             ]
         ];
@@ -42,6 +41,7 @@ class SerahterimainController extends Controller {
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
+//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -53,14 +53,45 @@ class SerahterimainController extends Controller {
         return true;
     }
 
+    public function actionKode() {
+        $query = new Query;
+        $query->from('pekerjaan')
+                ->select('*')
+                ->orderBy('kd_kerja DESC')
+                ->limit(1);
+
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+        $kode_mdl = (substr($models['kd_kerja'], -5) + 1);
+        $kode = substr('00000' . $kode_mdl, strlen($kode_mdl));
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'kode' => 'KR' . $kode));
+    }
+
+    public function actionListsection() {
+        $query = new Query;
+        $query->from('tbl_section')
+                ->select("*")
+                ->orderBy('id_section ASC');
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tgl_terima DESC";
+        $sort = "pekerjaan.kd_kerja ASC";
         $offset = 0;
         $limit = 10;
-
+        //        Yii::error($params);
+        //limit & offset pagination
         if (isset($params['limit']))
             $limit = $params['limit'];
         if (isset($params['offset']))
@@ -81,20 +112,25 @@ class SerahterimainController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('serah_terima_in as se')
-                ->join('JOIN', 'customer as cu', 'se.kd_cust = cu.kd_cust')
-                ->join('JOIN', 'warna as wa', 'se.kd_warna = wa.kd_warna')
-                ->join('JOIN', 'chassis as ch', 'se.kd_chassis= ch.kd_chassis')
+                ->from('pekerjaan')
+                ->join('JOIN', 'tbl_section', 'pekerjaan.id_section = tbl_section.id_section')
                 ->orderBy($sort)
-                ->select("se.*,cu.*,wa.*,ch.*");
+                ->select("pekerjaan.*,tbl_section.section");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
+                if ($key == 'id_sections') {
+                    $query->andFilterWhere(['like', 'pekerjaan.id_section', $val]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+                }
             }
         }
+
+        session_start();
+        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -103,42 +139,6 @@ class SerahterimainController extends Controller {
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
-    }
-
-    public function actionSpk() {
-        $query = new Query;
-        $query->from('spk')
-                ->select("no_spk");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        echo json_encode(array('status' => 1, 'kd_spk' => $models));
-    }
-
-    public function actionChassis() {
-        $query = new Query;
-        $query->from('chassis')
-                ->select("*");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        echo json_encode(array('status' => 1, 'list_chassis' => $models));
-    }
-
-    public function actionCustomer() {
-        $query = new Query;
-        $query->from('customer')
-                ->select("*");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        echo json_encode(array('status' => 1, 'list_customer' => $models));
-    }
-
-    public function actionWarna() {
-        $query = new Query;
-        $query->from('warna')
-                ->select("*");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        echo json_encode(array('status' => 1, 'list_warna' => $models));
     }
 
     public function actionView($id) {
@@ -151,16 +151,9 @@ class SerahterimainController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = Serahterimain::find()->where('kd_titipan="' . $params['kd_titipan'] . '"')->one();
-        if (empty($model)) {
-            $model = new Serahterimain();
-        }
-        Yii::error(date('Y-m-d', strtotime('+1 days', strtotime(substr($params['tgl_terima'], 0, 10)))));
+        $model = new SubSection();
         $model->attributes = $params;
-//        $model->tgl_terima = date('Y-m-d',  strtotime('+1 day',substr($params['tgl_terima'], 0,10)));
-//        $model->serah_terima = date('Y-m-d',  strtotime('+1 day',substr($params['serah_terima'], 0,10)));
-//        $model->tgl_prd = date('Y-m-d',  strtotime('+1 day',substr($params['tgl_prd'], 0,10)));
-//        $model->tgl_pdc = date('Y-m-d',  strtotime('+1 day',substr($params['tgl_pdc'], 0,10)));
+
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -199,7 +192,7 @@ class SerahterimainController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Serahterimain::find(array('condition' => 'kd_titipan="' . $id . '"'))->one()) !== null) {
+        if (($model = SubSection::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -231,6 +224,14 @@ class SerahterimainController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("excel", ['models' => $models]);
     }
 
 }

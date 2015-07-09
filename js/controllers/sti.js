@@ -39,7 +39,7 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
         Data.get('serahterimain', param).then(function (data) {
             $scope.displayed = data.data;
 //            $scope.displayed.tgl_terima = new Date(data.data.tgl_terima);
-            tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
+            tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
 //            console.log($scope.displayed);
         });
 
