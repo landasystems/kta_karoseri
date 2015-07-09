@@ -94,7 +94,9 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.cancel = function() {
         $scope.is_edit = false;
         $scope.is_view = false;
-        $scope.callServer(tableStateRef);
+        if (!$scope.is_view){ //hanya waktu edit cancel, di load table lagi
+            $scope.callServer(tableStateRef);
+        }
     };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
