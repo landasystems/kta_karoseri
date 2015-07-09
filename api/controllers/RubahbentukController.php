@@ -108,6 +108,11 @@ class RubahbentukController extends Controller {
             foreach ($filter as $key => $val) {
                 if ($key == 'no_wo') {
                     $query->andFilterWhere(['like', 'rb.no_wo', $val]);
+                } else if ($key == 'terima') {
+                    $tgl = explode(" - ", $val);
+                    $start = date("Y-m-d", strtotime($tgl[0]));
+                    $end = date("Y-m-d", strtotime($tgl[1]));
+                    $query->andFilterWhere(['between', 'terima', $start, $end]);
                 } else {
                     $query->andFilterWhere(['like', $key, $val]);
                 }

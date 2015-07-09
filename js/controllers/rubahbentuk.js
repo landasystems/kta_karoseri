@@ -6,6 +6,18 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
     $scope.is_view = false;
     $scope.is_create = false;
 
+    $scope.open1 = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened1 = true;
+    };
+
+    $scope.open2 = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened2 = true;
+    };
+
     $scope.wo = {
         minimumInputLength: 3,
         allowClear: false,
