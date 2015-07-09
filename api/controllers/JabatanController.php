@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Umk;
+use app\models\Jabatan;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class UmkController extends Controller {
+class JabatanController extends Controller {
 
     public function behaviors() {
         return [
@@ -19,7 +19,8 @@ class UmkController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
-                    'listdata' => ['get'],
+                    'excel' => ['get'],
+                    'listsubsection' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -52,12 +53,41 @@ class UmkController extends Controller {
         return true;
     }
 
-    
+    public function actionKode() {
+        $query = new Query;
+        $query->from('tbl_jabatan')
+                ->select('*')
+                ->orderBy('id_jabatan DESC')
+                ->limit(1);
+
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+        $kode_mdl = (substr($models['id_jabatan'], -3) + 1);
+        $kode = substr('000' . $kode_mdl, strlen($kode_mdl));
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'kode' => 'JBTN' . $kode));
+    }
+
+    public function actionListsubsection() {
+        $query = new Query;
+        $query->from('pekerjaan')
+                ->select("*")
+                ->orderBy('kd_kerja ASC');
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tbl_umk.no_umk ASC";
+        $sort = "tbl_jabatan.id_jabatan ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -82,12 +112,23 @@ class UmkController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('tbl_umk')
+                ->from('tbl_jabatan')
+                ->join('JOIN', 'pekerjaan', 'tbl_jabatan.krj = pekerjaan.kd_kerja')
                 ->orderBy($sort)
-                ->select("*");
+                ->select("tbl_jabatan.*,pekerjaan.kerja");
 
         //filter
-        
+        if (isset($params['filter'])) {
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+               
+                    $query->andFilterWhere(['like', $key, $val]);
+                
+            }
+        }
+
+        session_start();
+        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -95,7 +136,7 @@ class UmkController extends Controller {
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'dataumk' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
     public function actionView($id) {
@@ -106,13 +147,12 @@ class UmkController extends Controller {
         echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
     }
 
-    
-
-    public function actionUpdate($id) {
+    public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = $this->findModel($id);
+        $model = new Jabatan();
         $model->attributes = $params;
-        Yii::error($params);
+
+
         if ($model->save()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -122,10 +162,35 @@ class UmkController extends Controller {
         }
     }
 
-    
+    public function actionUpdate($id) {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $model = $this->findModel($id);
+        $model->attributes = $params;
+
+        if ($model->save()) {
+            $this->setHeader(200);
+            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        } else {
+            $this->setHeader(400);
+            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+        }
+    }
+
+    public function actionDelete($id) {
+        $model = $this->findModel($id);
+
+        if ($model->delete()) {
+            $this->setHeader(200);
+            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        } else {
+
+            $this->setHeader(400);
+            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+        }
+    }
 
     protected function findModel($id) {
-        if (($model = Umk::findOne($id)) !== null) {
+        if (($model = Jabatan::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -159,14 +224,14 @@ class UmkController extends Controller {
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
-    
-     public function actionExcel() {
+    public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("excel", ['models'=>$models]);
+        return $this->render("excel", ['models' => $models]);
     }
+
 }
 
 ?>

@@ -191,9 +191,11 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-
-                                                return $ocLazyLoad.load('js/controllers/jabatan.js');
-
+                                                return $ocLazyLoad.load(['ui.select2']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/jabatan.js');
+                                                        }
+                                                );
                                             }]
                                     }
                                 })
