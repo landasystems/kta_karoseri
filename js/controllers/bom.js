@@ -192,7 +192,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader) {
 
         Data.get('bom', param).then(function(data) {
             $scope.displayed = data.data;
-            tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
+            tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
         $scope.isLoading = false;
     };

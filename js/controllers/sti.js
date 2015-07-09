@@ -11,6 +11,15 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
     Data.get('serahterimain/spk').then(function (data) {
         $scope.list_spk = data.kd_spk;
     });
+    Data.get('serahterimain/chassis').then(function (data) {
+        $scope.list_chassis = data.list_chassis;
+    });
+    Data.get('serahterimain/customer').then(function (data) {
+        $scope.list_customer = data.list_customer;
+    });
+    Data.get('serahterimain/warna').then(function (data) {
+        $scope.list_warna = data.list_warna;
+    });
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -29,6 +38,7 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
 
         Data.get('serahterimain', param).then(function (data) {
             $scope.displayed = data.data;
+//            $scope.displayed.tgl_terima = new Date(data.data.tgl_terima);
             tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
 //            console.log($scope.displayed);
         });
@@ -80,7 +90,7 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
     $scope.trash = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS item ini ?")) {
             row.is_deleted = 1;
-            Data.post('bstk/update/' + row.id, row).then(function (result) {
+            Data.post('serahterimain/update/' + row.id, row).then(function (result) {
                 ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
             });
         }
@@ -100,12 +110,12 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
             });
         }
     };
-    $scope.changed = function(form){
-//        alert(wo.no_wo);
-        Data.post('serahterimain/selected/', form).then(function (result){
-//            console.log(result.selected_spk.merk);
-            $scope.form.merk = result.merk;
-            $scope.form.model = result.model;
-        });
-    };
-})
+//    $scope.changed = function(form){
+////        alert(wo.no_wo);
+//        Data.post('serahterimain/selected/', form).then(function (result){
+////            console.log(result.selected_spk.merk);
+//            $scope.form.merk = result.merk;
+//            $scope.form.model = result.model;
+//        });
+//    };
+});
