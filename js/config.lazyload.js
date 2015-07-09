@@ -40,19 +40,18 @@ angular.module('app')
         }
         )
         // oclazyload config
-        .config(['$ocLazyLoadProvider', function($ocLazyLoadProvider) {
+        .config(['$ocLazyLoadProvider', function ($ocLazyLoadProvider) {
                 // We configure ocLazyLoad to use the lib script.js as the async loader
                 $ocLazyLoadProvider.config({
                     debug: false,
                     events: true,
                     modules: [
-                      
                         {
-                            name: 'ngGrid',
+                            name: 'daterangepicker',
                             files: [
-                                'vendor/modules/ng-grid/ng-grid.min.js',
-                                'vendor/modules/ng-grid/ng-grid.min.css',
-                                'vendor/modules/ng-grid/theme.css'
+                                'vendor/modules/angular-daterangepicker/angular-daterangepicker.min.js',
+                                'vendor/modules/angular-daterangepicker/daterangepicker.min.js',
+                                'vendor/modules/angular-daterangepicker/daterangepicker.min.css',
                             ]
                         },
                         {
