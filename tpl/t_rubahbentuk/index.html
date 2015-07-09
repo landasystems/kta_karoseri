@@ -55,7 +55,7 @@
                             <th st-sort="jenis">Jenis</th>
                             <th st-sort="merk">Merk</th>
                             <th st-sort="tipe">Type</th>
-                            <th st-sort="tgl_rubah">Tgl Rubah</th>
+                            <th st-sort="tgl">Tgl Rubah</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -102,32 +102,33 @@
                             <div class="col-sm-9">
                                 <input type="text" 
                                        ui-select2="wo"
-                                       ng-model="form.no_wo"
+                                       ng-model="no_wo"
                                        ng-change="
-                                       customer = form.no_wo.nm_customer;
-                                       no_mesin = form.no_wo.no_mesin;
-                                       no_rangka = form.no_wo.no_chassis;
+                                                   form.nm_customer = no_wo.nm_customer;
+                                                   form.no_chassis = no_wo.no_mesin;
+                                                   form.no_mesin = no_wo.no_chassis;
+                                                   form.no_wo = no_wo.no_wo;
                                        "
                                        data-placeholder="-Pilih No Wo-"
-                                       style="width:250px"/>
+                                       class="form-control"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Customer</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" readonly ng-model="customer" ng-disabled="is_view" required placeholder="Nama Customer">
+                                <input type="text" class="form-control" readonly ng-model="form.nm_customer" ng-disabled="is_view" required placeholder="Nama Customer">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">No. Rangka</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" readonly ng-model="no_rangka" ng-disabled="is_view" required placeholder="No. Rangka">
+                                <input type="text" class="form-control" readonly ng-model="form.no_chassis" ng-disabled="is_view" required placeholder="No. Rangka">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">No. Mesin</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" readonly ng-model="no_mesin" ng-disabled="is_view" required placeholder="No. Mesin">
+                                <input type="text" class="form-control" readonly ng-model="form.no_mesin" ng-disabled="is_view" required placeholder="No. Mesin">
                             </div>
                         </div>
                         <div class="form-group">
@@ -159,7 +160,12 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Terima</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" ng-model="form.terima" ng-disabled="is_view" placeholder="Tanggal Terima">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.terima" is-open="opened1" ng-click="open1($event)"/>
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar-o"></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
