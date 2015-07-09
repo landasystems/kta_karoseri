@@ -23,14 +23,14 @@ app.controller('sectionCtrl', function($scope, Data, toaster) {
 
         Data.get('section', param).then(function (data) {
             $scope.displayed = data.data;
-            tableState.pagination.numberOfPages = Math.round(data.totalItems / limit);
+            tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
 
         $scope.isLoading = false;
     };
     
     Data.get('section/listdepartment').then(function(data) {
-        $scope.dept = data.data;
+        $scope.listdept = data.data;
     });
 
     $scope.create = function(form) {

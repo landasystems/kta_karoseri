@@ -171,7 +171,7 @@ angular.module('app')
                                             }]
                                     }
                                 })
-                                 // lokasi
+                                // lokasi
                                 .state('master.lokasi', {
                                     url: '/lokasi-kantor',
                                     templateUrl: 'tpl/m_lokasikantor/index.html',
@@ -184,7 +184,7 @@ angular.module('app')
                                             }]
                                     }
                                 })
-                                 // jabatan
+                                // jabatan
                                 .state('master.jabatan', {
                                     url: '/jabatan',
                                     templateUrl: 'tpl/m_jabatan/index.html',
@@ -197,33 +197,37 @@ angular.module('app')
                                             }]
                                     }
                                 })
-                                 // subsection
-                                .state('aster.subsection', {
+                                // subsection
+                                .state('master.subsection', {
                                     url: '/subsection',
                                     templateUrl: 'tpl/m_subsection/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-
-                                                return $ocLazyLoad.load('js/controllers/subsection.js');
-
+                                                return $ocLazyLoad.load(['ui.select2']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/subsection.js');
+                                                        }
+                                                );
                                             }]
                                     }
                                 })
-                                 // subsection
+                                // subsection
                                 .state('master.section', {
                                     url: '/section',
                                     templateUrl: 'tpl/m_section/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-
-                                                return $ocLazyLoad.load('js/controllers/section.js');
-
+                                                return $ocLazyLoad.load(['ui.select2']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/section.js');
+                                                        }
+                                                );
                                             }]
                                     }
                                 })
-                                 // umk
+                                // umk
                                 .state('master.umk', {
                                     url: '/umk',
                                     templateUrl: 'tpl/m_umk/index.html',
@@ -236,7 +240,7 @@ angular.module('app')
                                             }]
                                     }
                                 })
-                                 // departement
+                                // departement
                                 .state('master.departement', {
                                     url: '/department',
                                     templateUrl: 'tpl/m_department/index.html',
@@ -249,7 +253,7 @@ angular.module('app')
                                             }]
                                     }
                                 })
-                                
+
                                 // user
                                 .state('master.user', {
                                     url: '/pengguna',

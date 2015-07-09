@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Section;
+use app\models\SubSection;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class SectionController extends Controller {
+class SubsectionController extends Controller {
 
     public function behaviors() {
         return [
@@ -20,7 +20,7 @@ class SectionController extends Controller {
                     'index' => ['get'],
                     'view' => ['get'],
                     'excel' => ['get'],
-                    'listdepartment' => ['get'],
+                    'listsection' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -55,25 +55,25 @@ class SectionController extends Controller {
 
     public function actionKode() {
         $query = new Query;
-        $query->from('tbl_section')
+        $query->from('pekerjaan')
                 ->select('*')
-                ->orderBy('id_section DESC')
+                ->orderBy('kd_kerja DESC')
                 ->limit(1);
 
         $command = $query->createCommand();
         $models = $command->query()->read();
-        $kode_mdl = (substr($models['id_section'], -3) + 1);
-        $kode = substr('000' . $kode_mdl, strlen($kode_mdl));
+        $kode_mdl = (substr($models['kd_kerja'], -5) + 1);
+        $kode = substr('00000' . $kode_mdl, strlen($kode_mdl));
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => 'SCT' . $kode));
+        echo json_encode(array('status' => 1, 'kode' => 'KR' . $kode));
     }
-    
-    public function actionListdepartment() {
+
+    public function actionListsection() {
         $query = new Query;
-        $query->from('tbl_department')
+        $query->from('tbl_section')
                 ->select("*")
-                ->orderBy('id_department ASC');
+                ->orderBy('id_section ASC');
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -87,7 +87,7 @@ class SectionController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tbl_section.id_section ASC";
+        $sort = "pekerjaan.kd_kerja ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -112,18 +112,20 @@ class SectionController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('tbl_section')
-                ->join('JOIN','tbl_department','tbl_section.dept = tbl_department.id_department')
+                ->from('pekerjaan')
+                ->join('JOIN', 'tbl_section', 'pekerjaan.id_section = tbl_section.id_section')
                 ->orderBy($sort)
-                ->select("tbl_section.*,tbl_department.department");
+                ->select("pekerjaan.*,tbl_section.section");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                
-                $query->andFilterWhere(['like', 'tbl_section.'.$key, $val]);
-               
+                if ($key == 'id_sections') {
+                    $query->andFilterWhere(['like', 'pekerjaan.id_section', $val]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+                }
             }
         }
 
@@ -149,9 +151,9 @@ class SectionController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Section();
+        $model = new SubSection();
         $model->attributes = $params;
-        
+
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -166,7 +168,7 @@ class SectionController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
-    
+
         if ($model->save()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -190,7 +192,7 @@ class SectionController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Section::findOne($id)) !== null) {
+        if (($model = SubSection::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -224,14 +226,14 @@ class SectionController extends Controller {
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
-    
-     public function actionExcel() {
+    public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("excel", ['models'=>$models]);
+        return $this->render("excel", ['models' => $models]);
     }
+
 }
 
 ?>

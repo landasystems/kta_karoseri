@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Section;
+use app\models\RubahBentuk;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class SectionController extends Controller {
+class RubahbentukController extends Controller {
 
     public function behaviors() {
         return [
@@ -19,12 +19,11 @@ class SectionController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
-                    'excel' => ['get'],
-                    'listdepartment' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
+                    'listwo' => ['get'],
                 ],
             ]
         ];
@@ -34,14 +33,13 @@ class SectionController extends Controller {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
-        } elseif (excel(isset($this->actions['*']))) {
+        } elseif (isset($this->actions['*'])) {
             $verbs = $this->actions['*'];
         } else {
             return $event->isValid;
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
-//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -53,45 +51,29 @@ class SectionController extends Controller {
         return true;
     }
 
-    public function actionKode() {
-        $query = new Query;
-        $query->from('tbl_section')
-                ->select('*')
-                ->orderBy('id_section DESC')
-                ->limit(1);
+    public function actionListwo() {
+        if (!empty($_GET['kata'])) {
+            $query = new Query;
+            $query->from('view_wo_spk')
+                    ->select("*")
+                    ->where("no_wo like '%".$_GET['kata']."%'");
 
-        $command = $query->createCommand();
-        $models = $command->query()->read();
-        $kode_mdl = (substr($models['id_section'], -3) + 1);
-        $kode = substr('000' . $kode_mdl, strlen($kode_mdl));
-        $this->setHeader(200);
+            $command = $query->createCommand();
+            $models = $command->queryAll();
 
-        echo json_encode(array('status' => 1, 'kode' => 'SCT' . $kode));
-    }
-    
-    public function actionListdepartment() {
-        $query = new Query;
-        $query->from('tbl_department')
-                ->select("*")
-                ->orderBy('id_department ASC');
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $models));
+            $this->setHeader(200);
+//            print_r($models);
+            echo json_encode(array('status' => 1, 'data' => $models));
+        }
     }
 
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tbl_section.id_section ASC";
+        $sort = "kd_rubah ASC";
         $offset = 0;
         $limit = 10;
-        //        Yii::error($params);
-        //limit & offset pagination
         if (isset($params['limit']))
             $limit = $params['limit'];
         if (isset($params['offset']))
@@ -112,23 +94,22 @@ class SectionController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('tbl_section')
-                ->join('JOIN','tbl_department','tbl_section.dept = tbl_department.id_department')
+                ->from('rubah_bentuk as rb')
+                ->join('Left Join', 'view_wo_spk as vws', 'rb.no_wo = vws.no_wo')
                 ->orderBy($sort)
-                ->select("tbl_section.*,tbl_department.department");
+                ->select("*");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                
-                $query->andFilterWhere(['like', 'tbl_section.'.$key, $val]);
-               
+                if ($key == 'no_wo') {
+                    $query->andFilterWhere(['like', 'rb.no_wo', $val]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+                }
             }
         }
-
-        session_start();
-        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -149,9 +130,8 @@ class SectionController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Section();
+        $model = new Supplier();
         $model->attributes = $params;
-        
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -162,11 +142,27 @@ class SectionController extends Controller {
         }
     }
 
+    public function actionKode() {
+        $query = new Query;
+        $query->from('supplier')
+                ->select('*')
+                ->orderBy('kd_supplier DESC')
+                ->limit(1);
+
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+        $kode = $models['kd_supplier'] + 1;
+        Yii::error($command->query());
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'kode' => $kode));
+    }
+
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
-    
+
         if ($model->save()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -190,7 +186,7 @@ class SectionController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Section::findOne($id)) !== null) {
+        if (($model = Supplier::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -224,14 +220,6 @@ class SectionController extends Controller {
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
-    
-     public function actionExcel() {
-        session_start();
-        $query = $_SESSION['query'];
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        return $this->render("excel", ['models'=>$models]);
-    }
 }
 
 ?>
