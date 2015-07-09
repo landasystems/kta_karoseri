@@ -56,7 +56,7 @@ class RubahbentukController extends Controller {
             $query = new Query;
             $query->from('view_wo_spk')
                     ->select("*")
-                    ->where("no_wo like '%".$_GET['kata']."%'");
+                    ->where("no_wo like '%" . $_GET['kata'] . "%'");
 
             $command = $query->createCommand();
             $models = $command->queryAll();
@@ -82,6 +82,9 @@ class RubahbentukController extends Controller {
         //sorting
         if (isset($params['sort'])) {
             $sort = $params['sort'];
+            if ($sort == 'no_wo') {
+                $sort = 'rb.no_wo';
+            }
             if (isset($params['order'])) {
                 if ($params['order'] == "false")
                     $sort.=" ASC";
@@ -105,6 +108,11 @@ class RubahbentukController extends Controller {
             foreach ($filter as $key => $val) {
                 if ($key == 'no_wo') {
                     $query->andFilterWhere(['like', 'rb.no_wo', $val]);
+                } else if ($key == 'terima') {
+                    $tgl = explode(" - ", $val);
+                    $start = date("Y-m-d", strtotime($tgl[0]));
+                    $end = date("Y-m-d", strtotime($tgl[1]));
+                    $query->andFilterWhere(['between', 'terima', $start, $end]);
                 } else {
                     $query->andFilterWhere(['like', $key, $val]);
                 }
@@ -130,7 +138,7 @@ class RubahbentukController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Supplier();
+        $model = new RubahBentuk();
         $model->attributes = $params;
 
         if ($model->save()) {
@@ -186,7 +194,7 @@ class RubahbentukController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Supplier::findOne($id)) !== null) {
+        if (($model = RubahBentuk::findOne($id)) !== null) {
             return $model;
         } else {
 
