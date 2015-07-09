@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\TblKalender;
+use app\models\SubSection;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class KalenderController extends Controller {
+class SubsectionController extends Controller {
 
     public function behaviors() {
         return [
@@ -20,6 +20,7 @@ class KalenderController extends Controller {
                     'index' => ['get'],
                     'view' => ['get'],
                     'excel' => ['get'],
+                    'listsection' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -54,25 +55,39 @@ class KalenderController extends Controller {
 
     public function actionKode() {
         $query = new Query;
-        $query->from('tbl_kalender')
+        $query->from('pekerjaan')
                 ->select('*')
-                ->orderBy('no DESC')
+                ->orderBy('kd_kerja DESC')
                 ->limit(1);
 
         $command = $query->createCommand();
         $models = $command->query()->read();
-        $kode_mdl = (substr($models['no'], -5) + 1);
+        $kode_mdl = (substr($models['kd_kerja'], -5) + 1);
         $kode = substr('00000' . $kode_mdl, strlen($kode_mdl));
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => 'K' . $kode));
+        echo json_encode(array('status' => 1, 'kode' => 'KR' . $kode));
+    }
+
+    public function actionListsection() {
+        $query = new Query;
+        $query->from('tbl_section')
+                ->select("*")
+                ->orderBy('id_section ASC');
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tbl_kalender.no ASC";
+        $sort = "pekerjaan.kd_kerja ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -97,21 +112,19 @@ class KalenderController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('tbl_kalender')
+                ->from('pekerjaan')
+                ->join('JOIN', 'tbl_section', 'pekerjaan.id_section = tbl_section.id_section')
                 ->orderBy($sort)
-                ->select("*");
+                ->select("pekerjaan.*,tbl_section.section");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                if($key == 'tgl'){
-                    $value = explode(' - ', $val);
-                    $start = date("Y-m-d", strtotime($value[0]));
-                    $end = date("Y-m-d", strtotime($value[1]));
-                    $query->andFilterWhere(['between', 'tbl_kalender.tgl', $start, $end]);
-                }else{
-                $query->andFilterWhere(['like', 'tbl_kalender.'.$key, $val]);
+                if ($key == 'id_sections') {
+                    $query->andFilterWhere(['like', 'pekerjaan.id_section', $val]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
                 }
             }
         }
@@ -138,10 +151,9 @@ class KalenderController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new TblKalender();
+        $model = new SubSection();
         $model->attributes = $params;
-        $model->tgl = date("Y-m-d", strtotime($params['tgl']));
-        
+
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -156,7 +168,6 @@ class KalenderController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
-        $model->tgl = date("Y-m-d", strtotime($params['tgl']));
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -181,7 +192,7 @@ class KalenderController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = TblKalender::findOne($id)) !== null) {
+        if (($model = SubSection::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -215,14 +226,14 @@ class KalenderController extends Controller {
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
-    
-     public function actionExcel() {
+    public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("excel", ['models'=>$models]);
+        return $this->render("excel", ['models' => $models]);
     }
+
 }
 
 ?>

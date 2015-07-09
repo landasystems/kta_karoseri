@@ -112,9 +112,10 @@ class SectionController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from(['tbl_section','tbl_department'])
+                ->from('tbl_section')
+                ->join('JOIN','tbl_department','tbl_section.dept = tbl_department.id_department')
                 ->orderBy($sort)
-                ->select("*");
+                ->select("tbl_section.*,tbl_department.department");
 
         //filter
         if (isset($params['filter'])) {
