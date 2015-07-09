@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Roles;
+use app\models\Section;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class RolesController extends Controller {
+class SectionController extends Controller {
 
     public function behaviors() {
         return [
@@ -19,9 +19,12 @@ class RolesController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
+                    'excel' => ['get'],
+                    'listdepartment' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
+                    'kode' => ['get'],
                 ],
             ]
         ];
@@ -50,11 +53,41 @@ class RolesController extends Controller {
         return true;
     }
 
+    public function actionKode() {
+        $query = new Query;
+        $query->from('tbl_section')
+                ->select('*')
+                ->orderBy('id_section DESC')
+                ->limit(1);
+
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+        $kode_mdl = (substr($models['id_section'], -3) + 1);
+        $kode = substr('000' . $kode_mdl, strlen($kode_mdl));
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'kode' => 'SCT' . $kode));
+    }
+    
+    public function actionListdepartment() {
+        $query = new Query;
+        $query->from('tbl_department')
+                ->select("*")
+                ->orderBy('id_department ASC');
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "nama ASC";
+        $sort = "tbl_section.id_section ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -79,7 +112,7 @@ class RolesController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('m_roles')
+                ->from(['tbl_section','tbl_department'])
                 ->orderBy($sort)
                 ->select("*");
 
@@ -87,9 +120,14 @@ class RolesController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
+                
+                $query->andFilterWhere(['like', 'tbl_section.'.$key, $val]);
+               
             }
         }
+
+        session_start();
+        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -110,9 +148,9 @@ class RolesController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Roles();
+        $model = new Section();
         $model->attributes = $params;
-//        print_r($params);
+        
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -127,8 +165,7 @@ class RolesController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
-        
-        Yii::error($params);
+    
         if ($model->save()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -152,7 +189,7 @@ class RolesController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Roles::findOne($id)) !== null) {
+        if (($model = Section::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -186,6 +223,14 @@ class RolesController extends Controller {
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
+    
+     public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("excel", ['models'=>$models]);
+    }
 }
 
 ?>

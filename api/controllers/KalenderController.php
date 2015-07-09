@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Roles;
+use app\models\TblKalender;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class RolesController extends Controller {
+class KalenderController extends Controller {
 
     public function behaviors() {
         return [
@@ -19,9 +19,11 @@ class RolesController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
+                    'excel' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
+                    'kode' => ['get'],
                 ],
             ]
         ];
@@ -50,11 +52,27 @@ class RolesController extends Controller {
         return true;
     }
 
+    public function actionKode() {
+        $query = new Query;
+        $query->from('tbl_kalender')
+                ->select('*')
+                ->orderBy('no DESC')
+                ->limit(1);
+
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+        $kode_mdl = (substr($models['no'], -5) + 1);
+        $kode = substr('00000' . $kode_mdl, strlen($kode_mdl));
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'kode' => 'K' . $kode));
+    }
+
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "nama ASC";
+        $sort = "tbl_kalender.no ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -79,7 +97,7 @@ class RolesController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('m_roles')
+                ->from('tbl_kalender')
                 ->orderBy($sort)
                 ->select("*");
 
@@ -87,9 +105,19 @@ class RolesController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
+                if($key == 'tgl'){
+                    $value = explode(' - ', $val);
+                    $start = date("Y-m-d", strtotime($value[0]));
+                    $end = date("Y-m-d", strtotime($value[1]));
+                    $query->andFilterWhere(['between', 'tbl_kalender.tgl', $start, $end]);
+                }else{
+                $query->andFilterWhere(['like', 'tbl_kalender.'.$key, $val]);
+                }
             }
         }
+
+        session_start();
+        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -110,9 +138,10 @@ class RolesController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Roles();
+        $model = new TblKalender();
         $model->attributes = $params;
-//        print_r($params);
+        $model->tgl = date("Y-m-d", strtotime($params['tgl']));
+        
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -127,8 +156,8 @@ class RolesController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
-        
-        Yii::error($params);
+        $model->tgl = date("Y-m-d", strtotime($params['tgl']));
+
         if ($model->save()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -152,7 +181,7 @@ class RolesController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Roles::findOne($id)) !== null) {
+        if (($model = TblKalender::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -186,6 +215,14 @@ class RolesController extends Controller {
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
+    
+     public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("excel", ['models'=>$models]);
+    }
 }
 
 ?>

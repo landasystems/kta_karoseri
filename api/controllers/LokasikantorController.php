@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Roles;
+use app\models\LokasiKantor;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class RolesController extends Controller {
+class LokasikantorController extends Controller {
 
     public function behaviors() {
         return [
@@ -19,9 +19,11 @@ class RolesController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
+                    'excel' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
+                    'kode' => ['get'],
                 ],
             ]
         ];
@@ -50,11 +52,27 @@ class RolesController extends Controller {
         return true;
     }
 
+    public function actionKode() {
+        $query = new Query;
+        $query->from('tbl_lokasi_kantor')
+                ->select('*')
+                ->orderBy('id_lokasi_kantor DESC')
+                ->limit(1);
+
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+        $kode_mdl = (substr($models['id_lokasi_kantor'], -3) + 1);
+        $kode = substr('000' . $kode_mdl, strlen($kode_mdl));
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'kode' => 'LK' . $kode));
+    }
+
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "nama ASC";
+        $sort = "tbl_lokasi_kantor.id_lokasi_kantor ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -79,7 +97,7 @@ class RolesController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('m_roles')
+                ->from('tbl_lokasi_kantor')
                 ->orderBy($sort)
                 ->select("*");
 
@@ -87,9 +105,14 @@ class RolesController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
+                
+                $query->andFilterWhere(['like', 'tbl_lokasi_kantor.'.$key, $val]);
+               
             }
         }
+
+        session_start();
+        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -110,9 +133,9 @@ class RolesController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Roles();
+        $model = new LokasiKantor();
         $model->attributes = $params;
-//        print_r($params);
+        
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -127,7 +150,6 @@ class RolesController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
-        
         Yii::error($params);
         if ($model->save()) {
             $this->setHeader(200);
@@ -152,7 +174,7 @@ class RolesController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Roles::findOne($id)) !== null) {
+        if (($model = LokasiKantor::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -186,6 +208,14 @@ class RolesController extends Controller {
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
+    
+     public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("excel", ['models'=>$models]);
+    }
 }
 
 ?>

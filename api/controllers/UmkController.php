@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Roles;
+use app\models\Umk;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class RolesController extends Controller {
+class UmkController extends Controller {
 
     public function behaviors() {
         return [
@@ -19,9 +19,11 @@ class RolesController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
+                    'excel' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
+                    'kode' => ['get'],
                 ],
             ]
         ];
@@ -50,11 +52,13 @@ class RolesController extends Controller {
         return true;
     }
 
+   
+
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "nama ASC";
+        $sort = "tbl_umk.no_umk ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -79,17 +83,15 @@ class RolesController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('m_roles')
+                ->from('tbl_umk')
                 ->orderBy($sort)
                 ->select("*");
 
         //filter
-        if (isset($params['filter'])) {
-            $filter = (array) json_decode($params['filter']);
-            foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
-            }
-        }
+        
+
+        session_start();
+        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -108,26 +110,12 @@ class RolesController extends Controller {
         echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
     }
 
-    public function actionCreate() {
-        $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Roles();
-        $model->attributes = $params;
-//        print_r($params);
-
-        if ($model->save()) {
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-        } else {
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-        }
-    }
+    
 
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
-        
         Yii::error($params);
         if ($model->save()) {
             $this->setHeader(200);
@@ -138,21 +126,10 @@ class RolesController extends Controller {
         }
     }
 
-    public function actionDelete($id) {
-        $model = $this->findModel($id);
-
-        if ($model->delete()) {
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-        } else {
-
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-        }
-    }
+    
 
     protected function findModel($id) {
-        if (($model = Roles::findOne($id)) !== null) {
+        if (($model = Umk::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -186,6 +163,14 @@ class RolesController extends Controller {
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
+    
+     public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("excel", ['models'=>$models]);
+    }
 }
 
 ?>

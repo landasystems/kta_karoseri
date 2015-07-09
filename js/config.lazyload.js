@@ -46,6 +46,7 @@ angular.module('app')
                     debug: false,
                     events: true,
                     modules: [
+                      
                         {
                             name: 'ngGrid',
                             files: [
