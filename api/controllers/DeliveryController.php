@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\SubSection;
+use app\models\Delivery;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class SubsectionController extends Controller {
+class DeliveryController extends Controller {
 
     public function behaviors() {
         return [
@@ -19,12 +19,11 @@ class SubsectionController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
-                    'excel' => ['get'],
-                    'listsection' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'kode' => ['get'],
+                    'no_wo' => ['post'],
+                    'det_nowo' => ['post'],
                 ],
             ]
         ];
@@ -34,7 +33,7 @@ class SubsectionController extends Controller {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
-        } elseif (excel(isset($this->actions['*']))) {
+        } elseif (isset($this->actions['*'])) {
             $verbs = $this->actions['*'];
         } else {
             return $event->isValid;
@@ -53,41 +52,54 @@ class SubsectionController extends Controller {
         return true;
     }
 
-    public function actionKode() {
+    public function actionNo_wo() {
         $query = new Query;
-        $query->from('pekerjaan')
-                ->select('*')
-                ->orderBy('kd_kerja DESC')
-                ->limit(1);
-
-        $command = $query->createCommand();
-        $models = $command->query()->read();
-        $kode_mdl = (substr($models['kd_kerja'], -5) + 1);
-        $kode = substr('00000' . $kode_mdl, strlen($kode_mdl));
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'kode' => 'KR' . $kode));
-    }
-
-    public function actionListsection() {
-        $query = new Query;
-        $query->from('tbl_section')
-                ->select("*")
-                ->orderBy('id_section ASC');
+        $query->from('wo_masuk')
+                ->select('*');
 
         $command = $query->createCommand();
         $models = $command->queryAll();
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'no_wo' => $models));
+    }
+ 
+
+    public function actionDet_nowo() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $query2 = new Query;
+        $query2->from('wo_masuk')
+                ->where('no_wo = "'.$params['no_wo'].'" ')
+                ->select("no_spk");
+        $command2 = $query2->createCommand();
+        $models2 = $command2->query()->read();
+
+        $query = new Query;
+        $query->from('spk')
+                ->join('JOIN', 'chassis', 'spk.kd_chassis = chassis.kd_chassis')
+                ->join('JOIN', 'model', 'spk.kd_model = model.kd_model')
+                ->join('JOIN', 'tbl_karyawan', 'spk.nik = tbl_karyawan.nik')
+                ->where('spk.no_spk="' . $models2['no_spk'] . '"')
+                ->select('chassis.merk as merk, model.model as model,tbl_karyawan.nama as sales');
+//                ->orderBy('no_wo DESC')
+//                ->limit(1);
+
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+        $smodel = $models['model'];
+        $merk = $models['merk'];
+        $sales = $models['sales'];
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'data' => $models));
+        echo json_encode(array('status' => 1, 'model' => $smodel,'merk'=>$merk,'sales'=>$sales));
     }
 
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "pekerjaan.kd_kerja ASC";
+        $sort = "delivery.no_wo ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -112,25 +124,21 @@ class SubsectionController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('pekerjaan')
-                ->join('JOIN', 'tbl_section', 'pekerjaan.id_section = tbl_section.id_section')
+                ->from('delivery')
+                ->join('JOIN', 'wo_masuk', 'delivery.no_wo = wo_masuk.no_wo')
+                ->join('JOIN', 'spk', 'spk.no_spk = wo_masuk.no_spk')
+                ->join('JOIN', 'chassis', 'chassis.kd_chassis = spk.kd_chassis')
+                ->join('JOIN', 'model', 'model.kd_model = spk.kd_model')
                 ->orderBy($sort)
-                ->select("pekerjaan.*,tbl_section.section");
+                ->select("delivery.*, chassis.merk as merk, model.model as model");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                if ($key == 'id_sections') {
-                    $query->andFilterWhere(['like', 'pekerjaan.id_section', $val]);
-                } else {
-                    $query->andFilterWhere(['like', $key, $val]);
-                }
+                $query->andFilterWhere(['like', $key, $val]);
             }
         }
-
-        session_start();
-        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -151,9 +159,8 @@ class SubsectionController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new SubSection();
+        $model = new Delivery();
         $model->attributes = $params;
-
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -192,7 +199,7 @@ class SubsectionController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = SubSection::findOne($id)) !== null) {
+        if (($model = Delivery::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -224,14 +231,6 @@ class SubsectionController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
-    }
-
-    public function actionExcel() {
-        session_start();
-        $query = $_SESSION['query'];
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        return $this->render("excel", ['models' => $models]);
     }
 
 }

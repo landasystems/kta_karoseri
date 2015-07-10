@@ -430,9 +430,13 @@ angular.module('app')
                                     url: '/deliveryunit',
                                     templateUrl: 'tpl/t_deliveryunit/index.html',
                                     resolve: {
-                                        deps: ['$ocLazyLoad',
+                                       deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/deliveryunit.js');
+                                                return $ocLazyLoad.load('ui.select2').then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/deliveryunit.js');
+                                                        }
+                                                );
                                             }]
                                     }})
                                 //
