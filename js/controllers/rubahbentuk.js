@@ -82,6 +82,7 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.kd_rubah;
         $scope.form = form;
+        $scope.form.no_wo = form.no_wo;
     };
     $scope.view = function(form) {
         $scope.is_edit = true;

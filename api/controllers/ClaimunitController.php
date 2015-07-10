@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\RubahBentuk;
+use app\models\TransClaim;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class RubahbentukController extends Controller {
+class ClaimunitController extends Controller {
 
     public function behaviors() {
         return [
@@ -54,10 +54,10 @@ class RubahbentukController extends Controller {
     public function actionListwo() {
         if (!empty($_GET['kata'])) {
             $query = new Query;
-            $query->from('view_wo_spk')
-                    ->select("*")
-                    ->where("no_wo like '%" . $_GET['kata'] . "%'");
-
+            $query->from('view_wo_spk as vws')
+                    ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
+                    ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
+                    ->select("vws.*, tk.nama as sales");
             $command = $query->createCommand();
             $models = $command->queryAll();
 
