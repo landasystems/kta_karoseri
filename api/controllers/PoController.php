@@ -3,14 +3,15 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\DetClaim;
+use app\models\TransPo;
+use app\models\DetailPo;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class ClaimunitController extends Controller {
+class PoController extends Controller {
 
     public function behaviors() {
         return [
@@ -19,12 +20,11 @@ class ClaimunitController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
+                    'listsubsection' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
-                    'listwo' => ['get'],
-                    'jeniskomplain' => ['get'],
                 ],
             ]
         ];
@@ -34,13 +34,14 @@ class ClaimunitController extends Controller {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
-        } elseif (isset($this->actions['*'])) {
+        } elseif (excel(isset($this->actions['*']))) {
             $verbs = $this->actions['*'];
         } else {
             return $event->isValid;
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
+//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -52,42 +53,31 @@ class ClaimunitController extends Controller {
         return true;
     }
 
-    public function actionJeniskomplain() {
+    public function actionKode() {
         $query = new Query;
-        $query->from('jenis_komplain')
-                ->select("*")
-                ->where('stat="' . $_GET['status'] . '" and bag="' . $_GET['bagian'] . '"');
+        $query->from('trans_po')
+                ->select('*')
+                ->orderBy('nota DESC')
+                ->limit(1);
 
         $command = $query->createCommand();
-        $models = $command->queryAll();
-
+        $models = $command->query()->read();
+        $kode_mdl = (substr($models['id_jabatan'], -6) + 1);
+        $kode = substr('000000' . $kode_mdl, strlen($kode_mdl));
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'data' => $models));
-    }
-
-    public function actionListwo() {
-        if (!empty($_GET['kata'])) {
-            $query = new Query;
-            $query->from('view_wo_spk as vws')
-                    ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
-                    ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                    ->select("vws.*, tk.nama as sales, tk.lokasi_kntr as wilayah");
-            $command = $query->createCommand();
-            $models = $command->queryAll();
-
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => $models));
-        }
+        echo json_encode(array('status' => 1, 'kode' => 'PCH' . $kode));
     }
 
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "dc.tgl ASC";
+        $sort = "trans_po.nota ASC";
         $offset = 0;
         $limit = 10;
+
+        //limit & offset pagination
         if (isset($params['limit']))
             $limit = $params['limit'];
         if (isset($params['offset']))
@@ -96,9 +86,6 @@ class ClaimunitController extends Controller {
         //sorting
         if (isset($params['sort'])) {
             $sort = $params['sort'];
-            if ($sort == 'no_wo') {
-                $sort = 'dc.no_wo';
-            }
             if (isset($params['order'])) {
                 if ($params['order'] == "false")
                     $sort.=" ASC";
@@ -106,43 +93,36 @@ class ClaimunitController extends Controller {
                     $sort.=" DESC";
             }
         }
-
         //create query
         $query = new Query;
         $query->offset($offset)
-                ->limit($limit)
-                ->from('det_claim as dc')
-                ->join('LEFT JOIN', 'jenis_komplain as jk', 'dc.kd_jns = jk.kd_jns')
-                ->join('LEFT JOIN', 'view_wo_spk as vws', 'dc.no_wo = vws.no_wo')
-                ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
-                ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                ->select("vws.*, jk.*, dc.*, tk.nama as sales, tk.lokasi_kntr as wilayah")
-                ->orderBy($sort);
+                ->limit(5)
+                ->from('trans_po')
+                ->join('JOIN', 'detail_po', 'trans_po.nota = detail_po.nota')
+                ->orderBy($sort)
+                ->select("*");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                if ($key == 'no_wo') {
-                    $query->andFilterWhere(['like', 'dc.no_wo', $val]);
-                } else if ($key == 'terima') {
-                    $tgl = explode(" - ", $val);
-                    $start = date("Y-m-d", strtotime($tgl[0]));
-                    $end = date("Y-m-d", strtotime($tgl[1]));
-                    $query->andFilterWhere(['between', 'tgl', $start, $end]);
-                } else {
-                    $query->andFilterWhere(['like', $key, $val]);
-                }
+
+                $query->andFilterWhere(['like', $key, $val]);
             }
         }
 
+//        session_start();
+//        $_SESSION['query'] = $query;
+
         $command = $query->createCommand();
         $models = $command->queryAll();
-        $totalItems = $query->count();
+        $totalItems = 0;
 
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+
+//        echo json_encode(array('status'=>1));
     }
 
     public function actionView($id) {
@@ -155,8 +135,9 @@ class ClaimunitController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new DetClaim();
+        $model = new TransPo();
         $model->attributes = $params;
+
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -195,7 +176,7 @@ class ClaimunitController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = DetClaim::findOne($id)) !== null) {
+        if (($model = TransPo::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -227,6 +208,16 @@ class ClaimunitController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $query->offset("");
+        $query->limit("");
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expmaster/jabatan", ['models' => $models]);
     }
 
 }

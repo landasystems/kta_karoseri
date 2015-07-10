@@ -120,7 +120,7 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
     };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('rubahbentuk/delete/' + row.id).then(function(result) {
+            Data.delete('claimunit/delete/' + row.id).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
