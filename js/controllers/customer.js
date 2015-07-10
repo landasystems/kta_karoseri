@@ -1,6 +1,7 @@
 app.controller('customerCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
+    var paramRef;
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
@@ -20,7 +21,7 @@ app.controller('customerCtrl', function ($scope, Data, toaster) {
         if (tableState.search.predicateObject) {
             param['filter'] = tableState.search.predicateObject;
         }
-
+        paramRef = param;
         Data.get('customer', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
@@ -29,6 +30,11 @@ app.controller('customerCtrl', function ($scope, Data, toaster) {
         $scope.isLoading = false;
     };
 
+    $scope.excel = function () {
+        Data.get('customer', paramRef).then(function (data) {
+            window.location = 'api/web/customer/excel';
+        });
+    }
     $scope.create = function (form) {
         $scope.is_create = true;
         $scope.is_edit = true;
@@ -42,7 +48,7 @@ app.controller('customerCtrl', function ($scope, Data, toaster) {
     $scope.update = function (form) {
         $scope.is_create = false;
         $scope.is_edit = true;
-        $scope.is_view = false; 
+        $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.kd_cust;
         $scope.form = form;
     };
@@ -53,20 +59,20 @@ app.controller('customerCtrl', function ($scope, Data, toaster) {
         $scope.form = form;
     };
     $scope.save = function (form) {
-        var url = ($scope.is_create == true) ? 'customer/create' : 'customer/update/'+ form.kd_cust;
-         Data.post(url, form).then(function (result) {   
-             if (result.status == 0) {
+        var url = ($scope.is_create == true) ? 'customer/create' : 'customer/update/' + form.kd_cust;
+        Data.post(url, form).then(function (result) {
+            if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
                 $scope.is_edit = false;
                 $scope.callServer(tableStateRef); //reload grid ulang
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
             }
-         });
-        
+        });
+
     };
     $scope.cancel = function () {
-        if (!$scope.is_view){ //hanya waktu edit cancel, di load table lagi
+        if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
             $scope.callServer(tableStateRef);
         }
         $scope.is_edit = false;

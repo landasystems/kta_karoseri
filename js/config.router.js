@@ -165,9 +165,11 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-
-                                                return $ocLazyLoad.load('js/controllers/kalender.js');
-
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/kalender.js');
+                                                        }
+                                                );
                                             }]
                                     }
                                 })

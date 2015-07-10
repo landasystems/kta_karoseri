@@ -1,6 +1,7 @@
 app.controller('bstkCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
+    var paramRef;
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
@@ -26,7 +27,7 @@ app.controller('bstkCtrl', function ($scope, Data, toaster) {
         if (tableState.search.predicateObject) {
             param['filter'] = tableState.search.predicateObject;
         }
-
+        paramRef = param;
         Data.get('bstk', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
@@ -35,6 +36,12 @@ app.controller('bstkCtrl', function ($scope, Data, toaster) {
 
         $scope.isLoading = false;
     };
+
+    $scope.excel = function () {
+        Data.get('bstk', paramRef).then(function (data) {
+            window.location = 'api/web/bstk/excel';
+        });
+    }
 
     $scope.create = function (form) {
         $scope.is_create = true;
@@ -60,7 +67,7 @@ app.controller('bstkCtrl', function ($scope, Data, toaster) {
         $scope.form = form;
     };
     $scope.save = function (form) {
-        var url = 'bstk/create' ;
+        var url = 'bstk/create';
         Data.post(url, form).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -73,7 +80,7 @@ app.controller('bstkCtrl', function ($scope, Data, toaster) {
 
     };
     $scope.cancel = function () {
-        if (!$scope.is_view){ //hanya waktu edit cancel, di load table lagi
+        if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
             $scope.callServer(tableStateRef);
         }
         $scope.is_edit = false;
@@ -103,9 +110,9 @@ app.controller('bstkCtrl', function ($scope, Data, toaster) {
             });
         }
     };
-    $scope.changed = function(form){
+    $scope.changed = function (form) {
 //        alert(wo.no_wo);
-        Data.post('bstk/selected/', form).then(function (result){
+        Data.post('bstk/selected/', form).then(function (result) {
 //            console.log(result.selected_spk.merk);
             $scope.form.merk = result.merk;
             $scope.form.model = result.model;

@@ -1,4 +1,4 @@
-app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
+app.controller('barangCtrl', function ($scope, Data, toaster, FileUploader) {
     var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
     var uploader = $scope.uploader = new FileUploader({
         url: 'js/controllers/upload.php?folder=barang&kode=' + kode_unik,
@@ -8,7 +8,7 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
     // FILTERS
     uploader.filters.push({
         name: 'imageFilter',
-        fn: function(item) {
+        fn: function (item) {
             var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
@@ -16,6 +16,7 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
 
     //init data;
     var tableStateRef;
+    var paramRef;
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
@@ -26,7 +27,7 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
         allowClear: true,
     }
 
-    Data.get('barang/jenis').then(function(data) {
+    Data.get('barang/jenis').then(function (data) {
         $scope.jenis_brg = data.jenis_brg;
     });
 
@@ -44,44 +45,49 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
         if (tableState.search.predicateObject) {
             param['filter'] = tableState.search.predicateObject;
         }
-
-        Data.get('barang', param).then(function(data) {
+        paramRef = param;
+        Data.get('barang', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
 
         $scope.isLoading = false;
     };
+    $scope.excel = function () {
+        Data.get('barang', paramRef).then(function (data) {
+            window.location = 'api/web/barang/excel';
+        });
+    }
 
-    $scope.create = function(form) {
+    $scope.create = function (form) {
         $scope.is_create = true;
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-        Data.get('barang/kode').then(function(data) {
+        Data.get('barang/kode').then(function (data) {
             $scope.form.kd_barang = data.kode;
         });
     };
-    $scope.update = function(form) {
+    $scope.update = function (form) {
         $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.nm_barang;
         $scope.form = form;
     };
-    $scope.view = function(form) {
+    $scope.view = function (form) {
         $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.nm_barang;
         $scope.form = form;
     };
-    $scope.save = function(form) {
+    $scope.save = function (form) {
         $scope.uploader.uploadAll();
         form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
         var url = ($scope.is_create == true) ? 'barang/create/' : 'barang/update/' + form.kd_barang;
-        Data.post(url, form).then(function(result) {
+        Data.post(url, form).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
@@ -91,16 +97,16 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
             }
         });
     };
-    $scope.cancel = function() {
+    $scope.cancel = function () {
         $scope.is_edit = false;
         $scope.is_view = false;
-        if (!$scope.is_view){ //hanya waktu edit cancel, di load table lagi
+        if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
             $scope.callServer(tableStateRef);
         }
     };
-    $scope.delete = function(row) {
+    $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('barang/delete/' + row.kd_barang).then(function(result) {
+            Data.delete('barang/delete/' + row.kd_barang).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }

@@ -1,7 +1,8 @@
-app.controller('spkCtrl', function($scope, Data, toaster) {
+app.controller('spkCtrl', function ($scope, Data, toaster) {
 
     //init data
     var tableStateRef;
+    var paramRef;
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
@@ -12,16 +13,16 @@ app.controller('spkCtrl', function($scope, Data, toaster) {
             'kd_jab': '',
             'jenis': ''
         }],
-    $scope.addDetail = function() {
-        var newDet = {
-            kd_ker: '',
-            nm_kerja: '',
-            kd_jab: '',
-            jenis: '',
-        }
-        $scope.detKerja.push(newDet);
-    }
-    $scope.removeRow = function(paramindex) {
+            $scope.addDetail = function () {
+                var newDet = {
+                    kd_ker: '',
+                    nm_kerja: '',
+                    kd_jab: '',
+                    jenis: '',
+                }
+                $scope.detKerja.push(newDet);
+            }
+    $scope.removeRow = function (paramindex) {
         var comArr = eval($scope.detKerja);
         if (comArr.length > 1) {
             $scope.detKerja.splice(paramindex, 1);
@@ -30,12 +31,12 @@ app.controller('spkCtrl', function($scope, Data, toaster) {
         }
     };
 
-    Data.get('spk/nowo').then(function(data) {
+    Data.get('spk/nowo').then(function (data) {
         $scope.sNowo = data.wo
     });
-    $scope.getcustomer = function(wo) {
+    $scope.getcustomer = function (wo) {
 //        alert('asjdfhasjdfkas');
-        Data.post('spk/customer/', wo).then(function(data) {
+        Data.post('spk/customer/', wo).then(function (data) {
             $scope.sCustomer = data.customer;
             $scope.form.nm_customer = data.customer;
             $scope.form.model = data.model;
@@ -43,7 +44,7 @@ app.controller('spkCtrl', function($scope, Data, toaster) {
 
         });
     };
-    
+
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
@@ -58,16 +59,21 @@ app.controller('spkCtrl', function($scope, Data, toaster) {
         if (tableState.search.predicateObject) {
             param['filter'] = tableState.search.predicateObject;
         }
-
-        Data.get('spk', param).then(function(data) {
+        paramRef = param;
+        Data.get('spk', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
 
         $scope.isLoading = false;
     };
+    $scope.excel = function () {
+        Data.get('spk', paramRef).then(function (data) {
+            window.location = 'api/web/spk/excel';
+        });
+    }
 
-    $scope.create = function(form) {
+    $scope.create = function (form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = true;
@@ -78,26 +84,26 @@ app.controller('spkCtrl', function($scope, Data, toaster) {
 //            $scope.form.kode = data.kode;
 //        });
     };
-    $scope.update = function(form) {
+    $scope.update = function (form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.no_wo;
         $scope.form = form;
     };
-    $scope.view = function(form) {
+    $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.no_wo;
         $scope.form = form;
     };
-    $scope.save = function(form, detail) {
+    $scope.save = function (form, detail) {
         var data = {
             spk: form,
             detailSpk: detail,
         };
         var url = ($scope.is_create == true) ? 'supplier/create' : 'supplier/update/' + form.kd_chassis;
-        Data.post(url, form).then(function(result) {
+        Data.post(url, form).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
@@ -121,16 +127,16 @@ app.controller('spkCtrl', function($scope, Data, toaster) {
 //            });
 //        }
     };
-    $scope.cancel = function() {
-        if (!$scope.is_view){ //hanya waktu edit cancel, di load table lagi
+    $scope.cancel = function () {
+        if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
             $scope.callServer(tableStateRef);
         }
         $scope.is_edit = false;
         $scope.is_view = false;
     };
-    $scope.delete = function(row) {
+    $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('transSpk/delete/' + row.no_wo).then(function(result) {
+            Data.delete('transSpk/delete/' + row.no_wo).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }

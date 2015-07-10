@@ -1,12 +1,13 @@
-app.controller('sectionCtrl', function($scope, Data, toaster) {
+app.controller('sectionCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
+    var paramRef;
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
 
-      $scope.callServer = function callServer(tableState) {
+    $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
@@ -20,7 +21,7 @@ app.controller('sectionCtrl', function($scope, Data, toaster) {
         if (tableState.search.predicateObject) {
             param['filter'] = tableState.search.predicateObject;
         }
-
+        paramRef = param;
         Data.get('section', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
@@ -28,37 +29,43 @@ app.controller('sectionCtrl', function($scope, Data, toaster) {
 
         $scope.isLoading = false;
     };
-    
-    Data.get('section/listdepartment').then(function(data) {
+
+    $scope.excel = function () {
+        Data.get('section', paramRef).then(function (data) {
+            window.location = 'api/web/section/excel';
+        });
+    }
+
+    Data.get('section/listdepartment').then(function (data) {
         $scope.listdept = data.data;
     });
 
-    $scope.create = function(form) {
+    $scope.create = function (form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-        Data.get('section/kode').then(function(data) {
+        Data.get('section/kode').then(function (data) {
             $scope.form.id_section = data.kode;
         });
     };
-    $scope.update = function(form) {
+    $scope.update = function (form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.id_section;
         $scope.form = form;
     };
-    $scope.view = function(form) {
+    $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.id_section;
         $scope.form = form;
     };
-    $scope.save = function(form) {
-        var url = ($scope.is_create == true) ? 'section/create'  : 'section/update/' + form.id_section;
-        Data.post(url, form).then(function(result) {
+    $scope.save = function (form) {
+        var url = ($scope.is_create == true) ? 'section/create' : 'section/update/' + form.id_section;
+        Data.post(url, form).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
@@ -69,16 +76,16 @@ app.controller('sectionCtrl', function($scope, Data, toaster) {
         });
 
     };
-    $scope.cancel = function() {
-        if (!$scope.is_view){ //hanya waktu edit cancel, di load table lagi
+    $scope.cancel = function () {
+        if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
             $scope.callServer(tableStateRef);
         }
         $scope.is_edit = false;
         $scope.is_view = false;
     };
-    $scope.delete = function(row) {
+    $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('section/delete/' + row.id_section).then(function(result) {
+            Data.delete('section/delete/' + row.id_section).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
