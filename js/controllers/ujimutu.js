@@ -8,37 +8,7 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
     $scope.is_create = false;
     $scope.is_create = false;
 
-    $scope.detUjimutu = [
-        {
-            id: '',
-            kd_uji: '',
-            bentuk_baru: '',
-            kelas: '',
-            biaya: '',
-        }
-    ];
-    $scope.addDetail = function() {
-        var newDet = [{
-            id: '',
-            kd_uji: '',
-            bentuk_baru: '',
-            kelas: '',
-            biaya: '',
-        }]
-        $scope.detUjimutu.push(newDet);
-
-    };
-     $scope.removeRow = function(paramindex) {
-        var comArr = eval($scope.detUjimutu);
-         
-        if (comArr.length > 1) {
-            $scope.detUjimutu.splice(paramindex, 1);
-            
-        } else {
-            alert("Something gone wrong");
-        }
-        
-    };
+    
      
 
  
@@ -131,7 +101,7 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
     $scope.save = function(form) {
         var data = {
             ujimutu: form,
-            det_ujimutu: detail,
+//            det_ujimutu: detail,
         };
         var url = ($scope.is_create == true) ? 'ujimutu/create' : 'ujimutu/update/' + form.id;
         Data.post(url, data).then(function(result) {
@@ -154,6 +124,37 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
+    };
+    $scope.detUjimutu = [
+        {
+            id: '',
+            kd_uji: '',
+            bentuk_baru: '',
+            kelas: '',
+            biaya: '',
+        }
+    ];
+    $scope.addDetail = function() {
+        var newDet = [{
+            id: '',
+            kd_uji: '',
+            bentuk_baru: '',
+            kelas: '',
+            biaya: '',
+        }]
+        $scope.detUjimutu.push(newDet);
+
+    };
+     $scope.removeRow = function(paramindex) {
+        var comArr = eval($scope.detUjimutu);
+         
+        if (comArr.length > 1) {
+            $scope.detUjimutu.splice(paramindex, 1);
+            
+        } else {
+            alert("Something gone wrong");
+        }
+        
     };
 
 

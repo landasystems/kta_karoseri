@@ -153,10 +153,9 @@
                                 <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" ng-keyup="total()"     ng-model="detail.biaya" ng-disabled="is_view" ng-readonly="is_create == false" >
                             </td>
                             <td >
-                               
-<!--
--->                                <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-plus"></i></button>
-                                <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
+
+                                <button ng-click="addDetail()" class="btn btn-success" ><i class="fa fa-plus"></i></button>
+                                <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0" ><i class="fa fa-trash-o"></i></button>
                             </td>
                         </tr>
                         <tr>
