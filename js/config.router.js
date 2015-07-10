@@ -428,7 +428,7 @@ angular.module('app')
                                     resolve: {
                                        deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load('ui.select2').then(
+                                                return $ocLazyLoad.load(['ui.select2','daterangepicker']).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/deliveryunit.js');
                                                         }
