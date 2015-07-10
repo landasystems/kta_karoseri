@@ -129,7 +129,7 @@ class ClaimunitController extends Controller {
                     $tgl = explode(" - ", $val);
                     $start = date("Y-m-d", strtotime($tgl[0]));
                     $end = date("Y-m-d", strtotime($tgl[1]));
-                    $query->andFilterWhere(['between', 'terima', $start, $end]);
+                    $query->andFilterWhere(['between', 'tgl', $start, $end]);
                 } else {
                     $query->andFilterWhere(['like', $key, $val]);
                 }
