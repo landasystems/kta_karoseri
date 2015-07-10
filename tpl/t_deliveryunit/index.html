@@ -56,7 +56,7 @@
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
                             <td>{{row.no_wo}}</td>
-                            <td>{{row.tgl_delivery}}</td>
+                            <td>{{row.tgl_delivery | date:'dd - MMM - yyyy'}}</td>
                             <td>{{row.no_delivery}}</td>
                             <td>{{row.model}}</td>
                             <td>{{row.sales}}</td>

@@ -52,17 +52,6 @@ class UjimutuController extends Controller {
         return true;
     }
 
-    public function actionNo_wo() {
-        $query = new Query;
-        $query->from('wo_masuk')
-                ->select('*');
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'no_wo' => $models));
-    }
 
     public function actionDet_nowo() {
         if (!empty($_GET['kata'])) {
@@ -141,9 +130,12 @@ class UjimutuController extends Controller {
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new Ujimutu();
-        $model->attributes = $params;
+        $model->attributes = $params['ujimutu'];
 
         if ($model->save()) {
+            foreach($params['det_ujimutu'] as $data){
+                
+            }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {

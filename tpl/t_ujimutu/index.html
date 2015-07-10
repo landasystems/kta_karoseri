@@ -54,9 +54,9 @@
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
                             <td>{{row.kd_uji}}</td>
-                            <td>{{row.tanggal }}</td>
-                            <td>{{row.biaya_admin}}</td>
-                            <td>{{row.total_biaya}}</td>
+                            <td>{{row.tgl | date:'dd - MMM - yyyy'}}</td>
+                            <td>{{row.biaya_admin | currency}}</td>
+                            <td>{{row.total_biaya | currency}}</td>
                             <td>
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
                                     <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
@@ -95,7 +95,7 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Kode Uji</label>
                             <div class="col-sm-5">
-                                <input type="text" class="form-control" ng-model="form.no_delivery" ng-disabled="is_view" placeholder="No Delivery" required>
+                                <input type="text" class="form-control" ng-model="form.kd_uji" ng-disabled="is_view" placeholder="No Delivery" required>
                             </div>
                         </div>
 
@@ -106,7 +106,7 @@
                             <label class="col-sm-4 control-label">Tanggal Delivery</label>
                             <div class="col-sm-5">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_delivery" is-open="opened1" ng-click="open1($event)"/>
+                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl" is-open="opened1" ng-click="open1($event)"/>
                                     <span class="input-group-addon">
                                         <i class="fa fa-calendar-o"></i>
                                     </span>
@@ -141,22 +141,41 @@
                                        class="form-control"/>
                             </td>
                             <td>
-                                <input type="text" class="form-control"    ng-model="detail.merk" ng-disabled="is_view" ng-readonly="is_create == false" required>
+                                <input type="text" class="form-control"    ng-model="detail.merk" ng-disabled="is_view" ng-readonly="is_create == false" >
                             </td>
                             <td>
-                                <input type="text" class="form-control"    ng-model="detail.bentuk_baru" ng-disabled="is_view" ng-readonly="is_create == false" required>
+                                <input type="text" class="form-control"    ng-model="detail.bentuk_baru" ng-disabled="is_view" ng-readonly="is_create == false" >
                             </td>
                             <td>
-                                <input type="text" class="form-control"    ng-model="detail.kelas" ng-disabled="is_view" ng-readonly="is_create == false" required>
+                                <input type="text" class="form-control"    ng-model="detail.kelas" ng-disabled="is_view" ng-readonly="is_create == false" >
                             </td>
                             <td>
-                                <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" ng-keyup="total()"     ng-model="detail.biaya" ng-disabled="is_view" ng-readonly="is_create == false" required>
+                                <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" ng-keyup="total()"     ng-model="detail.biaya" ng-disabled="is_view" ng-readonly="is_create == false" >
                             </td>
                             <td >
-                                
-                                    <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-plus"></i></button>
-                                    <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
-                                </td>
+                               
+<!--
+-->                                <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-plus"></i></button>
+                                <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" align="right"><b>Biaya Administrasi</b></td>
+                            <td colspan="2">
+                                <div class="input-group m-b">
+                                    <span class="input-group-addon">Rp.</span>
+                                    <input type="text" ng-pattern="/^[0-9]+$/" class="form-control" ng-keyup="total()" ng-model="form.biaya_admin" placeholder="Biaya Administrasi" ng-disabled="is_view" style="width:200px">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" align="right"><b>Total Biaya</b></td>
+                            <td colspan="2">
+                                <div class="input-group m-b">
+                                    <span class="input-group-addon">Rp.</span>
+                                    <input type="text" ng-pattern="/^[0-9]+$/" class="form-control" ng-keyup="" ng-model="form.total_biaya" placeholder="Total Biaya" ng-disabled="is_view" style="width:200px">
+                                </div>
+                            </td>
                         </tr>
                     </table>
 
@@ -164,7 +183,7 @@
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <div align="center">
                         <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
-                        <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, detPenjualan)">&nbsp;Simpan Perubahan</button>
+                        <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, detUjimutu)">&nbsp;Simpan Perubahan</button>
                     </div>
 
                 </form>
