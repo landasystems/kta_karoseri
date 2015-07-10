@@ -432,7 +432,7 @@ angular.module('app')
                                     resolve: {
                                        deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select2','daterangepicker']).then(
+                                                return $ocLazyLoad.load(['angularFileUpload','ui.select2','daterangepicker']).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/deliveryunit.js');
                                                         }
@@ -504,9 +504,13 @@ angular.module('app')
                                     url: '/ujimutu',
                                     templateUrl: 'tpl/t_ujimutu/index.html',
                                     resolve: {
-                                        deps: ['$ocLazyLoad',
+                                       deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/ujimutu.js');
+                                                return $ocLazyLoad.load(['ui.select2','daterangepicker']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/ujimutu.js');
+                                                        }
+                                                );
                                             }]
                                     }})
                                 //

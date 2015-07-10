@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\RubahBentuk;
+use app\models\Barang;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class RubahbentukController extends Controller {
+class BarangController extends Controller {
 
     public function behaviors() {
         return [
@@ -22,8 +22,8 @@ class RubahbentukController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'kode' => ['get'],
-                    'listwo' => ['get'],
+                    'no_wo' => ['post'],
+                    'det_nowo' => ['get'],
                 ],
             ]
         ];
@@ -33,13 +33,14 @@ class RubahbentukController extends Controller {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
-        } elseif (isset($this->actions['*'])) {
+        } elseif (excel(isset($this->actions['*']))) {
             $verbs = $this->actions['*'];
         } else {
             return $event->isValid;
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
+//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -51,7 +52,19 @@ class RubahbentukController extends Controller {
         return true;
     }
 
-    public function actionListwo() {
+    public function actionNo_wo() {
+        $query = new Query;
+        $query->from('wo_masuk')
+                ->select('*');
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'no_wo' => $models));
+    }
+
+    public function actionDet_nowo() {
         if (!empty($_GET['kata'])) {
             $query = new Query;
             $query->from('view_wo_spk')
@@ -70,9 +83,11 @@ class RubahbentukController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_rubah ASC";
+        $sort = "id ASC";
         $offset = 0;
         $limit = 10;
+        //        Yii::error($params);
+        //limit & offset pagination
         if (isset($params['limit']))
             $limit = $params['limit'];
         if (isset($params['offset']))
@@ -81,9 +96,6 @@ class RubahbentukController extends Controller {
         //sorting
         if (isset($params['sort'])) {
             $sort = $params['sort'];
-            if ($sort == 'no_wo') {
-                $sort = 'rb.no_wo';
-            }
             if (isset($params['order'])) {
                 if ($params['order'] == "false")
                     $sort.=" ASC";
@@ -96,8 +108,8 @@ class RubahbentukController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('rubah_bentuk as rb')
-                ->join('Left Join', 'view_wo_spk as vws', 'rb.no_wo = vws.no_wo')
+                ->from('trans_uji_mutu')
+//                ->where('barang.jenis = jenis_brg.kd_jenis')
                 ->orderBy($sort)
                 ->select("*");
 
@@ -105,16 +117,7 @@ class RubahbentukController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                if ($key == 'no_wo') {
-                    $query->andFilterWhere(['like', 'rb.no_wo', $val]);
-                } else if ($key == 'terima') {
-                    $tgl = explode(" - ", $val);
-                    $start = date("Y-m-d", strtotime($tgl[0]));
-                    $end = date("Y-m-d", strtotime($tgl[1]));
-                    $query->andFilterWhere(['between', 'terima', $start, $end]);
-                } else {
-                    $query->andFilterWhere(['like', $key, $val]);
-                }
+                $query->andFilterWhere(['like', $key, $val]);
             }
         }
 
@@ -137,7 +140,7 @@ class RubahbentukController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new RubahBentuk();
+        $model = new Barang();
         $model->attributes = $params;
 
         if ($model->save()) {
@@ -147,22 +150,6 @@ class RubahbentukController extends Controller {
             $this->setHeader(400);
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
-    }
-
-    public function actionKode() {
-        $query = new Query;
-        $query->from('supplier')
-                ->select('*')
-                ->orderBy('kd_supplier DESC')
-                ->limit(1);
-
-        $command = $query->createCommand();
-        $models = $command->query()->read();
-        $kode = $models['kd_supplier'] + 1;
-        Yii::error($command->query());
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionUpdate($id) {
@@ -193,7 +180,7 @@ class RubahbentukController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = RubahBentuk::findOne($id)) !== null) {
+        if (($model = Barang::findOne($id)) !== null) {
             return $model;
         } else {
 
