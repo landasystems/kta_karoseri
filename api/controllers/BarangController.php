@@ -19,6 +19,7 @@ class BarangController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
+                    'excel' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -113,7 +114,7 @@ class BarangController extends Controller {
                 ->from(['barang', 'jenis_brg'])
                 ->where('barang.jenis = jenis_brg.kd_jenis')
                 ->orderBy($sort)
-                ->select("*");
+                ->select("barang.*, jenis_brg.jenis_brg");
 
         //filter
         if (isset($params['filter'])) {
@@ -122,6 +123,9 @@ class BarangController extends Controller {
                 $query->andFilterWhere(['like', $key, $val]);
             }
         }
+        
+        session_start();
+        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -214,6 +218,17 @@ class BarangController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+    
+     public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $query->offset("");
+        $query->limit("");
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expmaster/barang", ['models'=>$models]);
+
     }
 
 }

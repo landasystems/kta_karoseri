@@ -7,21 +7,24 @@
                         <div class="panel-heading">
                             <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian & Export Data</button>
                             <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                                <button type="button" class="btn btn-default fa fa-file-excel-o" ng-show="!isCollapsed">&nbsp;Export Excel</button>
+                                <button type="button" class="btn btn-default fa fa-file-excel-o" ng-show="!isCollapsed" ng-click="excel();">&nbsp;Export Excel</button>
                                 <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                             </div> 
                         </div>
                         <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
                             <div class="form-horizontal">
-                                <div class="col-md-6 col-sm-12">
+                                <div class="col-md-12 col-sm-12">
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">No</label>
+                                        <label class="col-sm-1 control-label">No</label>
                                         <div class="col-sm-4">
                                             <input st-search="no" class="form-control"/>
                                         </div>
-                                        <label class="col-sm-2 control-label">Tanggal</label>
-                                        <div class="col-sm-4">
-                                            <input st-search="tgl" class="form-control"/>
+
+                                        <div class="control-group">
+                                            <label class="col-sm-2 control-label">Tanggal</label>
+                                            <div class="col-sm-4">
+                                                <input date-range-picker class="form-control" st-search="tanggal" type="text"  ng-model="tanggals">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -40,7 +43,7 @@
                                 <tbody ng-show="!isLoading">
                                     <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
                                         <td>{{row.no}}</td>
-                                        <td>{{row.tgl | date}}</td>
+                                        <td>{{row.tgl| date}}</td>
                                         <td>{{row.ket}}</td>
                                         <td>
                                             <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
@@ -84,7 +87,12 @@
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">Tanggal</label>
                                         <div class="col-sm-6">
-                                            <input type="text" class="form-control" ng-model="form.tgl" ng-disabled="is_view" required >
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl" is-open="opened1" ng-click="open1($event)"/>
+                                                <span class="input-group-addon">
+                                                    <i class="fa fa-calendar-o"></i>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

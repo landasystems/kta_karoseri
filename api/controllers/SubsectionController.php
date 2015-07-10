@@ -226,12 +226,14 @@ class SubsectionController extends Controller {
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
-    public function actionExcel() {
+     public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
+        $query->offset("");
+        $query->limit("");
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("excel", ['models' => $models]);
+        return $this->render("/expmaster/subsection", ['models' => $models]);
     }
 
 }

@@ -1,6 +1,7 @@
 app.controller('stiCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
+    var paramRef;
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
@@ -20,6 +21,26 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
     Data.get('serahterimain/warna').then(function (data) {
         $scope.list_warna = data.list_warna;
     });
+    $scope.open1 = function ($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened1 = true;
+    };
+    $scope.open2 = function ($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened2 = true;
+    };
+    $scope.open3 = function ($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened3 = true;
+    };
+    $scope.open4 = function ($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened4 = true;
+    };
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -35,7 +56,7 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
         if (tableState.search.predicateObject) {
             param['filter'] = tableState.search.predicateObject;
         }
-
+        paramRef = param;
         Data.get('serahterimain', param).then(function (data) {
             $scope.displayed = data.data;
 //            $scope.displayed.tgl_terima = new Date(data.data.tgl_terima);
@@ -45,6 +66,12 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
 
         $scope.isLoading = false;
     };
+
+    $scope.excel = function () {
+        Data.get('serahterimain', paramRef).then(function (data) {
+            window.location = 'api/web/serahterimain/excel';
+        });
+    }
 
     $scope.create = function (form) {
         $scope.is_create = true;
@@ -70,7 +97,7 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
         $scope.form = form;
     };
     $scope.save = function (form) {
-        var url = 'serahterimain/create' ;
+        var url = 'serahterimain/create';
         Data.post(url, form).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -83,6 +110,9 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
 
     };
     $scope.cancel = function () {
+        if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
+            $scope.callServer(tableStateRef);
+        }
         $scope.is_edit = false;
         $scope.is_view = false;
     };

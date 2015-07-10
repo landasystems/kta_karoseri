@@ -79,114 +79,138 @@
             </div>
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Kode Titipan</label>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" ng-model="form.kd_titipan" ng-readonly="is_create == false" required>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Kode Titipan</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" ng-model="form.kd_titipan" ng-readonly="is_create == false" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Tanggal Terima</label>
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_terima" is-open="opened1" ng-click="open1($event)"/>
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar-o"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">No. SPK</label>
+                            <div class="col-sm-6">
+                                <select ng-change="changed(form)" ui-select2 style="width:100%" ng-model="form.no_spk" ng-disabled="is_view" data-placeholder="Pilih Kode SPK" required>
+                                    <!--<option ng-selected value="{{form.no_wo}}">{{form.no_spk}}</option>-->
+                                    <option ng-repeat="spk in list_spk" value="{{spk.no_spk}}">{{spk.no_spk}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Nama Customer</label>
+                            <div class="col-sm-6">
+                                <select ng-change="changed(form)" ui-select2 style="width:100%" ng-model="form.kd_cust" ng-disabled="is_view" data-placeholder="Pilih Nama Customer" required>
+                                    <!--<option ng-selected value="{{form.no_wo}}">{{form.no_spk}}</option>-->
+                                    <option ng-repeat="cust in list_customer" value="{{cust.kd_cust}}">{{cust.nm_customer}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Alamat</label>
+                            <div class="col-sm-6">
+                                <!--<input type="text" class="form-control" ng-model="form.alamat1" ng-readonly >-->
+                                <textarea class="form-control" ng-model="form.alamat1" ng-readonly="true"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Driver</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" ng-model="form.driver" ng-readonly="is_view" >
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Tanggal Terima</label>
-                        <div class="col-sm-2">
-                            <input type="date" class="form-control" ng-model="form.tgl_terima">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Serah Terima kendaraan</label>
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.serah_terima" is-open="opened2" ng-click="open2($event)"/>
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar-o"></i>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">No. SPK</label>
-                        <div class="col-sm-4">
-                            <select ng-change="changed(form)" ui-select2 style="width:50%" ng-model="form.no_spk" ng-disabled="is_view" data-placeholder="Pilih Kode SPK" required>
-                                <!--<option ng-selected value="{{form.no_wo}}">{{form.no_spk}}</option>-->
-                                <option ng-repeat="spk in list_spk" value="{{spk.no_spk}}">{{spk.no_spk}}</option>
-                            </select>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Diterima PRD</label>
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_prd" is-open="opened3" ng-click="open3($event)"/>
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar-o"></i>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Nama Customer</label>
-                        <div class="col-sm-7">
-                            <select ng-change="changed(form)" ui-select2 style="width:50%" ng-model="form.kd_cust" ng-disabled="is_view" data-placeholder="Pilih Nama Customer" required>
-                                <!--<option ng-selected value="{{form.no_wo}}">{{form.no_spk}}</option>-->
-                                <option ng-repeat="cust in list_customer" value="{{cust.kd_cust}}">{{cust.nm_customer}}</option>
-                            </select>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Diterima PDC</label>
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_pdc" is-open="opened4" ng-click="open4($event)"/>
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar-o"></i>
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Alamat</label>
-                        <div class="col-sm-4">
-                            <!--<input type="text" class="form-control" ng-model="form.alamat1" ng-readonly >-->
-                            <textarea class="form-control" ng-model="form.alamat1" ng-readonly="true"></textarea>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Kode Chassis</label>
+                            <div class="col-sm-6">
+                                <select ng-change="changed(form)" ui-select2 style="width:100%" ng-model="form.kd_chassis" ng-disabled="is_view" data-placeholder="Pilih Kode Chassis" required>
+                                    <!--<option ng-selected value="{{form.no_wo}}">{{form.no_spk}}</option>-->
+                                    <option ng-repeat="chassis in list_chassis" value="{{chassis.kd_chassis}}">{{chassis.kd_chassis}}</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Driver</label>
-                        <div class="col-sm-3">
-                            <input type="text" class="form-control" ng-model="form.driver" ng-readonly="is_view" >
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Merk / Type</label>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" ng-model="form.merk" ng-readonly="true">
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="text" class="form-control" ng-model="form.tipe" ng-readonly="true">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Serah Terima kendaraan</label>
-                        <div class="col-sm-2">
-                            <input type="date" class="form-control" ng-model="form.serah_terima">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Model</label>
+                            <div class="col-sm-6">
+                                <select ng-change="changed(form)" ui-select2 style="width:100%" ng-model="form.kd_model" ng-disabled="is_view" data-placeholder="Pilih Model" required>
+                                    <option value="Chassis Short">Chassis Short</option>
+                                    <option value="Chassis Long">Chassis Long</option>
+                                    <option value="Chassis Cabin">Chassis cabin</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Diterima PRD</label>
-                        <div class="col-sm-2">
-                            <input type="date" class="form-control" ng-model="form.tgl_prd">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">No. Chassis</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" ng-model="form.no_chassis">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Diterima PDC</label>
-                        <div class="col-sm-2">
-                            <input type="date" class="form-control" ng-model="form.tgl_pdc" value="{{form.tgl_pdc| date: 'mm/dd/yyyy'}}">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">No. Mesin</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" ng-model="form.no_mesin">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Kode Chassis</label>
-                        <div class="col-sm-2">
-                            <select ng-change="changed(form)" ui-select2 style="width:100%" ng-model="form.kd_chassis" ng-disabled="is_view" data-placeholder="Pilih Kode Chassis" required>
-                                <!--<option ng-selected value="{{form.no_wo}}">{{form.no_spk}}</option>-->
-                                <option ng-repeat="chassis in list_chassis" value="{{chassis.kd_chassis}}">{{chassis.kd_chassis}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Merk / Type</label>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" ng-model="form.merk" ng-readonly="true">
-                        </div>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" ng-model="form.tipe" ng-readonly="true">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Model</label>
-                        <div class="col-sm-2">
-                            <select ng-change="changed(form)" ui-select2 style="width:100%" ng-model="form.kd_model" ng-disabled="is_view" data-placeholder="Pilih Model" required>
-                                <option value="Chassis Short">Chassis Short</option>
-                                <option value="Chassis Long">Chassis Long</option>
-                                <option value="Chassis Cabin">Chassis cabin</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">No. Chassis</label>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" ng-model="form.no_chassis">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">No. Mesin</label>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" ng-model="form.no_mesin">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Kode Warna</label>
-                        <div class="col-sm-2">
-                            <select ng-change="changed(form)" ui-select2 style="width:100%" ng-model="form.kd_warna" ng-disabled="is_view" data-placeholder="Pilih Warna" required>
-                                <!--<option ng-selected value="{{form.no_wo}}">{{form.no_spk}}</option>-->
-                                <option ng-repeat="warna in list_warna" value="{{warna.kd_warna}}">{{warna.warna}}</option>
-                            </select>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Kode Warna</label>
+                            <div class="col-sm-6">
+                                <select ng-change="changed(form)" ui-select2 style="width:100%" ng-model="form.kd_warna" ng-disabled="is_view" data-placeholder="Pilih Warna" required>
+                                    <!--<option ng-selected value="{{form.no_wo}}">{{form.no_spk}}</option>-->
+                                    <option ng-repeat="warna in list_warna" value="{{warna.kd_warna}}">{{warna.warna}}</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
