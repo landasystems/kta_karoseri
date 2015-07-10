@@ -305,7 +305,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select2']).then(
+                                                return $ocLazyLoad.load(['ui.select2','daterangepicker']).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/rubahbentuk.js');
                                                         }
@@ -422,7 +422,11 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/claimunit.js');
+                                                return $ocLazyLoad.load(['ui.select2','daterangepicker']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/claimunit.js');
+                                                        }
+                                                );
                                             }]
                                     }})
                                 //
@@ -430,9 +434,13 @@ angular.module('app')
                                     url: '/deliveryunit',
                                     templateUrl: 'tpl/t_deliveryunit/index.html',
                                     resolve: {
-                                        deps: ['$ocLazyLoad',
+                                       deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/deliveryunit.js');
+                                                return $ocLazyLoad.load(['ui.select2','daterangepicker']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/deliveryunit.js');
+                                                        }
+                                                );
                                             }]
                                     }})
                                 //

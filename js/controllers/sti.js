@@ -21,6 +21,26 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
     Data.get('serahterimain/warna').then(function (data) {
         $scope.list_warna = data.list_warna;
     });
+    $scope.open1 = function ($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened1 = true;
+    };
+    $scope.open2 = function ($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened2 = true;
+    };
+    $scope.open3 = function ($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened3 = true;
+    };
+    $scope.open4 = function ($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened4 = true;
+    };
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
