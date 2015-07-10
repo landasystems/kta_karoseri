@@ -11,7 +11,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class PurchaseorderController extends Controller {
+class PoController extends Controller {
 
     public function behaviors() {
         return [
@@ -69,8 +69,6 @@ class PurchaseorderController extends Controller {
         echo json_encode(array('status' => 1, 'kode' => 'PCH' . $kode));
     }
 
-   
-
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
@@ -78,7 +76,7 @@ class PurchaseorderController extends Controller {
         $sort = "trans_po.nota ASC";
         $offset = 0;
         $limit = 10;
-        //        Yii::error($params);
+
         //limit & offset pagination
         if (isset($params['limit']))
             $limit = $params['limit'];
@@ -95,36 +93,36 @@ class PurchaseorderController extends Controller {
                     $sort.=" DESC";
             }
         }
-
         //create query
         $query = new Query;
         $query->offset($offset)
-                ->limit($limit)
+                ->limit(5)
                 ->from('trans_po')
-                ->join('JOIN', 'detail_po', 'trans_po.nota = trans_po.nota')
+                ->join('JOIN', 'detail_po', 'trans_po.nota = detail_po.nota')
                 ->orderBy($sort)
-                ->select("trans_po.*");
+                ->select("*");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-               
-                    $query->andFilterWhere(['like', $key, $val]);
-                
+
+                $query->andFilterWhere(['like', $key, $val]);
             }
         }
 
-        session_start();
-        $_SESSION['query'] = $query;
+//        session_start();
+//        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
-        $totalItems = $query->count();
+        $totalItems = 0;
 
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+
+//        echo json_encode(array('status'=>1));
     }
 
     public function actionView($id) {
