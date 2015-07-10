@@ -26,7 +26,7 @@ class Umk extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['no_umk'], 'required'],
+            [['no_umk'], 'unique'],
             [['umk'], 'number'],
             [['no_umk'], 'string', 'max' => 20]
         ];

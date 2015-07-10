@@ -1,6 +1,7 @@
 app.controller('stiCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
+    var paramRef;
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
@@ -55,7 +56,7 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
         if (tableState.search.predicateObject) {
             param['filter'] = tableState.search.predicateObject;
         }
-
+        paramRef = param;
         Data.get('serahterimain', param).then(function (data) {
             $scope.displayed = data.data;
 //            $scope.displayed.tgl_terima = new Date(data.data.tgl_terima);
@@ -65,6 +66,12 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
 
         $scope.isLoading = false;
     };
+
+    $scope.excel = function () {
+        Data.get('serahterimain', paramRef).then(function (data) {
+            window.location = 'api/web/serahterimain/excel';
+        });
+    }
 
     $scope.create = function (form) {
         $scope.is_create = true;
@@ -103,6 +110,9 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
 
     };
     $scope.cancel = function () {
+        if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
+            $scope.callServer(tableStateRef);
+        }
         $scope.is_edit = false;
         $scope.is_view = false;
     };

@@ -19,6 +19,7 @@ class SupplierController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
+                    'excel' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -91,6 +92,9 @@ class SupplierController extends Controller {
                 $query->andFilterWhere(['like', $key, $val]);
             }
         }
+        
+        session_start();
+        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -133,7 +137,6 @@ class SupplierController extends Controller {
         $command = $query->createCommand();
         $models = $command->query()->read();
         $kode = $models['kd_supplier'] + 1;
-        Yii::error($command->query());
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'kode' => $kode));
@@ -199,6 +202,17 @@ class SupplierController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+    
+     public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $query->offset("");
+        $query->limit("");
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expmaster/supplier", ['models'=>$models]);
+
     }
 
 }

@@ -19,6 +19,7 @@ class ModelkendaraanController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
+                    'excel' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -91,6 +92,9 @@ class ModelkendaraanController extends Controller {
                 $query->andFilterWhere(['like', $key, $val]);
             }
         }
+        
+        session_start();
+        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -147,7 +151,6 @@ class ModelkendaraanController extends Controller {
         $jmlkode=strlen($kode_mdl);
         $kode=substr('00000'.$kode_mdl,$jmlkode);
 
-        Yii::error($command->query());
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'kode' => $kode));
@@ -213,6 +216,16 @@ class ModelkendaraanController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+     public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $query->offset("");
+        $query->limit("");
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expmaster/modelkendaraan", ['models'=>$models]);
+
     }
 
 }

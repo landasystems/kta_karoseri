@@ -105,7 +105,7 @@ class KalenderController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                if($key == 'tgl'){
+                if($key == 'tanggal'){
                     $value = explode(' - ', $val);
                     $start = date("Y-m-d", strtotime($value[0]));
                     $end = date("Y-m-d", strtotime($value[1]));
@@ -219,9 +219,11 @@ class KalenderController extends Controller {
      public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
+        $query->offset("");
+        $query->limit("");
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("excel", ['models'=>$models]);
+        return $this->render("/expmaster/kalender", ['models'=>$models]);
     }
 }
 

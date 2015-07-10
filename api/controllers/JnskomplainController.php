@@ -19,6 +19,7 @@ class JnskomplainController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
+                    'excel' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -91,6 +92,9 @@ class JnskomplainController extends Controller {
                 $query->andFilterWhere(['like', $key, $val]);
             }
         }
+        
+        session_start();
+        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -132,11 +136,12 @@ class JnskomplainController extends Controller {
 
         $command = $query->createCommand();
         $totalItems = $query->count();
-        $kode = 'JN0000' . ($totalItems + 1);
+        $kode_mdl = ($totalItems + 1);
+        $kode = substr('00000' . $kode_mdl, strlen($kode_mdl));
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => $kode));
+        echo json_encode(array('status' => 1, 'kode' => 'JN'.$kode));
     }
 
     public function actionUpdate($id) {
@@ -199,6 +204,17 @@ class JnskomplainController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+    
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $query->offset("");
+        $query->limit("");
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expmaster/jeniskomplain", ['models'=>$models]);
+
     }
 
 }
