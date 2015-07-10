@@ -19,6 +19,7 @@ class CustomerController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
+                    'excel' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -92,6 +93,9 @@ class CustomerController extends Controller {
             }
         }
 
+        session_start();
+        $_SESSION['query'] = $query;
+
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
@@ -100,7 +104,6 @@ class CustomerController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
-    
 
     public function actionView($id) {
 
@@ -123,20 +126,6 @@ class CustomerController extends Controller {
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
     }
-    
-//    public function actionKode() {
-//        $query = new Query;
-//        $query  ->from('customer')
-//                ->select("*");
-//
-//        $command = $query->createCommand();
-//        $totalItems = $query->count();
-//        $kode = 'I0000'.($totalItems + 1);
-//
-//        $this->setHeader(200);
-//
-//        echo json_encode(array('status' => 1, 'kode' => $kode));
-//    }
 
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
@@ -198,6 +187,17 @@ class CustomerController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+    
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $query->offset("");
+        $query->limit("");
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expmaster/customer", ['models'=>$models]);
+
     }
 
 }

@@ -19,7 +19,7 @@ class UmkController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
-                    'excel' => ['get'],
+                    'listdata' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -52,8 +52,7 @@ class UmkController extends Controller {
         return true;
     }
 
-   
-
+    
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
@@ -90,16 +89,13 @@ class UmkController extends Controller {
         //filter
         
 
-        session_start();
-        $_SESSION['query'] = $query;
-
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'dataumk' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
     public function actionView($id) {

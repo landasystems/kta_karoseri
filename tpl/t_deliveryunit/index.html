@@ -100,36 +100,57 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">No Wo</label>
                             <div class="col-sm-9">
-                                <select class="form-control" ui-select2="" ui-jq="chosen" ng-change="getno_wo(form)" ng-model="form.no_wo" ng-disabled="is_view" >
+<!--                                <select class="form-control" ui-select2="" ui-jq="chosen" ng-change="getno_wo(form)" ng-model="form.no_wo" ng-disabled="is_view" >
                                     <option ng-repeat="nowo in list_nowo" value="{{nowo.no_wo}}">{{nowo.no_wo}}</option>
-                                </select>
+                                </select>-->
+                                 <input type="text" 
+                                       ui-select2="wo"
+                                       ng-model="form.no_wo"
+                                       ng-change="
+                                                   form.merk = no_wo.merk;
+                                                   form.model = no_wo.model;
+                                                   form.sales = no_wo.sales;
+                                       "
+                                       data-placeholder="-Pilih No Wo-"
+                                       class="form-control"/>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Merk</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" ng-model="form.merk" ng-disabled="is_view" required >
+                                <input type="text" class="form-control" ng-model="form.merk" ng-disabled="is_view" placeholder="Merk">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Type</label>
+                            <label class="col-sm-3 control-label">Model</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" ng-model="form.model" ng-disabled="is_view" required>
+                                <input type="text" class="form-control" ng-model="form.model" ng-disabled="is_view" placeholder="Model">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Sales</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" ng-model="form.sales" ng-disabled="is_view" required>
+                                <input type="text" class="form-control" ng-model="form.sales" ng-disabled="is_view" placeholder="Sales">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-12">
                         <div class="form-group">
+                            <label class="col-sm-3 control-label">Tanggal Delivery</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_delivery" is-open="opened1" ng-click="open1($event)"/>
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar-o"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-3 control-label">No Delivery</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" ng-model="form.no_delivery" ng-disabled="is_view" required>
+                                <input type="text" class="form-control" ng-model="form.no_delivery" ng-disabled="is_view" placeholder="No Delivery" required>
                             </div>
                         </div>
                         <div class="form-group">
@@ -138,6 +159,12 @@
                                      <label class="btn btn-sm btn-success" ng-model="form.tujuan" ng-disabled="is_view" btn-radio="'cabang'"><i class="fa fa-check text-active"></i>Kantor Cabang</label>
                                         <label class="btn btn-sm btn-info" ng-model="form.tujuan" ng-disabled="is_view" btn-radio="'customer'"><i class="fa fa-check text-active"></i> Customer</label>
                                     
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Driver / Exp</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" ng-model="form.driver" ng-disabled="is_view" placeholder="Driver" required>
                             </div>
                         </div>
                     </div>

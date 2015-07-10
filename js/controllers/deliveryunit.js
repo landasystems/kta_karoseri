@@ -10,14 +10,37 @@ app.controller('deliveryCtrl', function($scope, Data, toaster) {
     Data.post('delivery/no_wo').then(function(data) {
         $scope.list_nowo = data.no_wo;
     });
-    $scope.getno_wo = function(wo) {
-      
-        Data.post('delivery/det_nowo/', wo).then(function(data) {
-           $scope.form.model = data.model;
-            $scope.form.merk = data.merk;
-            $scope.form.sales = data.sales;
-
-        });
+    $scope.open1 = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened1 = true;
+    };
+    $scope.wo = {
+        minimumInputLength: 3,
+        allowClear: false,
+        ajax: {
+            url: "api/web/delivery/det_nowo/",
+            dataType: 'json',
+            data: function(term) {
+                return {
+                    kata: term,
+                };
+            },
+            results: function(data, page) {
+                return {
+                    results: data.data
+                };
+            }
+        },
+        formatResult: function(object) {
+            return object.no_wo;
+        },
+        formatSelection: function(object) {
+            return object.no_wo;
+        },
+        id: function(data) {
+            return data.no_wo;
+        },
     };
 
     $scope.callServer = function callServer(tableState) {
@@ -65,7 +88,7 @@ app.controller('deliveryCtrl', function($scope, Data, toaster) {
         $scope.form = form;
     };
     $scope.save = function(form) {
-        var url = ($scope.is_create == true) ? 'chassis/create' : 'chassis/update/' + form.kd_chassis;
+        var url = ($scope.is_create == true) ? 'delivery/create' : 'delivery/update/' + form.kd_chassis;
         Data.post(url, form).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -82,7 +105,7 @@ app.controller('deliveryCtrl', function($scope, Data, toaster) {
     };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('chassis/delete/' + row.kd_chassis).then(function(result) {
+            Data.delete('delivery/delete/' + row.kd_chassis).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }

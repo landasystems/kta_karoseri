@@ -23,7 +23,7 @@ class DeliveryController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'no_wo' => ['post'],
-                    'det_nowo' => ['post'],
+                    'det_nowo' => ['get'],
                 ],
             ]
         ];
@@ -63,36 +63,24 @@ class DeliveryController extends Controller {
 
         echo json_encode(array('status' => 1, 'no_wo' => $models));
     }
- 
 
     public function actionDet_nowo() {
-        $params = json_decode(file_get_contents("php://input"), true);
-        $query2 = new Query;
-        $query2->from('wo_masuk')
-                ->where('no_wo = "'.$params['no_wo'].'" ')
-                ->select("no_spk");
-        $command2 = $query2->createCommand();
-        $models2 = $command2->query()->read();
+        if (!empty($_GET['kata'])) {
+            $query = new Query;
+            $query->from('view_wo_spk as vws')
+                    ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
+                    ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
+                    ->join('LEFT JOIN', 'model', 'vws.kd_model = model.kd_model')
+                    ->where("vws.no_wo like '%" . $_GET['kata'] . "%'")
+                    ->select("vws.*, tk.nama as sales, model.model as model, vws.merk as merk");
 
-        $query = new Query;
-        $query->from('spk')
-                ->join('JOIN', 'chassis', 'spk.kd_chassis = chassis.kd_chassis')
-                ->join('JOIN', 'model', 'spk.kd_model = model.kd_model')
-                ->join('JOIN', 'tbl_karyawan', 'spk.nik = tbl_karyawan.nik')
-                ->where('spk.no_spk="' . $models2['no_spk'] . '"')
-                ->select('chassis.merk as merk, model.model as model,tbl_karyawan.nama as sales');
-//                ->orderBy('no_wo DESC')
-//                ->limit(1);
+            $command = $query->createCommand();
+            $models = $command->queryAll();
 
-        $command = $query->createCommand();
-        $models = $command->query()->read();
-        $smodel = $models['model'];
-        $merk = $models['merk'];
-        $sales = $models['sales'];
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'model' => $smodel,'merk'=>$merk,'sales'=>$sales));
+            $this->setHeader(200);
+//            print_r($models);
+            echo json_encode(array('status' => 1, 'data' => $models));
+        }
     }
 
     public function actionIndex() {
