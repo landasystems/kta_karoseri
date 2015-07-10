@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Barang;
+use app\models\Ujimutu;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class BarangController extends Controller {
+class UjimutuController extends Controller {
 
     public function behaviors() {
         return [
@@ -140,7 +140,7 @@ class BarangController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Barang();
+        $model = new Ujimutu();
         $model->attributes = $params;
 
         if ($model->save()) {
@@ -180,7 +180,7 @@ class BarangController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Barang::findOne($id)) !== null) {
+        if (($model = Ujimutu::findOne($id)) !== null) {
             return $model;
         } else {
 

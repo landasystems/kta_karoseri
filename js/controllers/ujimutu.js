@@ -25,7 +25,6 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
             kelas: '',
             biaya: '',
         }
-        $scope.total();
         $scope.detUjimutu.unshift(newDet);
 
     };
@@ -40,21 +39,9 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
         }
         
     };
-     $scope.total = function() {
-        var total = 0;
-        angular.forEach($scope.detPenjualan, function(detail) {
-            total += detail.biaya;
-        });
-        $scope.form.total_biaya = total;
-//        $scope.form.biaya_admin = total;
-        
-//        $scope.bayar();
+     
 
-    }
-
-    Data.post('ujimutu/no_wo').then(function(data) {
-        $scope.list_nowo = data.no_wo;
-    });
+ 
     $scope.open1 = function($event) {
         $event.preventDefault();
         $event.stopPropagation();
@@ -117,6 +104,15 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+         $scope.detUjimutu = [
+        {
+            id: '',
+            kd_uji: '',
+            bentuk_baru: '',
+            kelas: '',
+            biaya: '',
+        }
+    ];
 
     };
     $scope.update = function(form) {

@@ -129,7 +129,7 @@
                             </tr>
                         </thead>
                         <tr ng-repeate="detail in detUjimutu">
-                            <td>
+                            <td width="18%">
                                 <input type="text" 
                                        ui-select2="wo"
                                        ng-model="no_wo"
@@ -154,7 +154,7 @@
                             </td>
                             <td >
                                 
-                                    <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-plus"></i></button>
+                                    <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-plus"></i></button>
                                     <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
                                 </td>
                         </tr>
