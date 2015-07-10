@@ -30,7 +30,7 @@ class Delivery extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tgl_delivery'], 'safe'],
+            [['tgl_delivery','foto'], 'safe'],
             [['status'], 'integer'],
             [['no_wo'], 'string', 'max' => 10],
             [['no_delivery'], 'string', 'max' => 20],
