@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\DetClaim;
+use app\models\Ujimutu;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class ClaimunitController extends Controller {
+class UjimutuController extends Controller {
 
     public function behaviors() {
         return [
@@ -22,9 +22,8 @@ class ClaimunitController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'kode' => ['get'],
-                    'listwo' => ['get'],
-                    'jeniskomplain' => ['get'],
+                    'no_wo' => ['post'],
+                    'det_nowo' => ['get'],
                 ],
             ]
         ];
@@ -34,13 +33,14 @@ class ClaimunitController extends Controller {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
-        } elseif (isset($this->actions['*'])) {
+        } elseif (excel(isset($this->actions['*']))) {
             $verbs = $this->actions['*'];
         } else {
             return $event->isValid;
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
+//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -52,27 +52,14 @@ class ClaimunitController extends Controller {
         return true;
     }
 
-    public function actionJeniskomplain() {
-        $query = new Query;
-        $query->from('jenis_komplain')
-                ->select("*")
-                ->where('stat="' . $_GET['status'] . '" and bag="' . $_GET['bagian'] . '"');
 
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $models));
-    }
-
-    public function actionListwo() {
+    public function actionDet_nowo() {
         if (!empty($_GET['kata'])) {
             $query = new Query;
-            $query->from('view_wo_spk as vws')
-                    ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
-                    ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                    ->select("vws.*, tk.nama as sales, tk.lokasi_kntr as wilayah");
+            $query->from('view_wo_spk')
+                    ->select("*")
+                    ->where("no_wo like '%" . $_GET['kata'] . "%'");
+
             $command = $query->createCommand();
             $models = $command->queryAll();
 
@@ -85,9 +72,11 @@ class ClaimunitController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "dc.tgl ASC";
+        $sort = "id ASC";
         $offset = 0;
         $limit = 10;
+        //        Yii::error($params);
+        //limit & offset pagination
         if (isset($params['limit']))
             $limit = $params['limit'];
         if (isset($params['offset']))
@@ -96,9 +85,6 @@ class ClaimunitController extends Controller {
         //sorting
         if (isset($params['sort'])) {
             $sort = $params['sort'];
-            if ($sort == 'no_wo') {
-                $sort = 'dc.no_wo';
-            }
             if (isset($params['order'])) {
                 if ($params['order'] == "false")
                     $sort.=" ASC";
@@ -111,28 +97,16 @@ class ClaimunitController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('det_claim as dc')
-                ->join('LEFT JOIN', 'jenis_komplain as jk', 'dc.kd_jns = jk.kd_jns')
-                ->join('LEFT JOIN', 'view_wo_spk as vws', 'dc.no_wo = vws.no_wo')
-                ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
-                ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                ->select("vws.*, jk.*, dc.*, tk.nama as sales, tk.lokasi_kntr as wilayah")
-                ->orderBy($sort);
+                ->from('trans_uji_mutu')
+//                ->where('barang.jenis = jenis_brg.kd_jenis')
+                ->orderBy($sort)
+                ->select("*");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                if ($key == 'no_wo') {
-                    $query->andFilterWhere(['like', 'dc.no_wo', $val]);
-                } else if ($key == 'terima') {
-                    $tgl = explode(" - ", $val);
-                    $start = date("Y-m-d", strtotime($tgl[0]));
-                    $end = date("Y-m-d", strtotime($tgl[1]));
-                    $query->andFilterWhere(['between', 'terima', $start, $end]);
-                } else {
-                    $query->andFilterWhere(['like', $key, $val]);
-                }
+                $query->andFilterWhere(['like', $key, $val]);
             }
         }
 
@@ -155,10 +129,13 @@ class ClaimunitController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new DetClaim();
-        $model->attributes = $params;
+        $model = new Ujimutu();
+        $model->attributes = $params['ujimutu'];
 
         if ($model->save()) {
+            foreach($params['det_ujimutu'] as $data){
+                
+            }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -195,7 +172,7 @@ class ClaimunitController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = DetClaim::findOne($id)) !== null) {
+        if (($model = Ujimutu::findOne($id)) !== null) {
             return $model;
         } else {
 

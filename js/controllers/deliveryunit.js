@@ -1,4 +1,19 @@
-app.controller('deliveryCtrl', function($scope, Data, toaster) {
+app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
+    var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
+    var uploader = $scope.uploader = new FileUploader({
+        url: 'js/controllers/upload.php?folder=delivery&kode=' + kode_unik,
+        queueLimit: 1,
+        removeAfterUpload: true
+    });
+    // FILTERS
+    uploader.filters.push({
+        name: 'imageFilter',
+        fn: function(item) {
+            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+        }
+    });
+    
     //init data
     var tableStateRef;
     $scope.displayed = [];
@@ -88,7 +103,9 @@ app.controller('deliveryCtrl', function($scope, Data, toaster) {
         $scope.form = form;
     };
     $scope.save = function(form) {
-        var url = ($scope.is_create == true) ? 'delivery/create' : 'delivery/update/' + form.kd_chassis;
+         $scope.uploader.uploadAll();
+        form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
+        var url = ($scope.is_create == true) ? 'delivery/create' : 'delivery/update/' + form.id;
         Data.post(url, form).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -105,7 +122,7 @@ app.controller('deliveryCtrl', function($scope, Data, toaster) {
     };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('delivery/delete/' + row.kd_chassis).then(function(result) {
+            Data.delete('delivery/delete/' + row.id).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
