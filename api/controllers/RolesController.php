@@ -112,6 +112,7 @@ class RolesController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new Roles();
         $model->attributes = $params;
+//        print_r($params);
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -126,7 +127,8 @@ class RolesController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
-
+        
+        Yii::error($params);
         if ($model->save()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);

@@ -11,7 +11,24 @@
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>
-
+            <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
+                <div class="form-horizontal">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-3">Kode Titipan</label>
+                            <div class="col-md-9">
+                                <input st-search="kd_titipan" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">Customer</label>
+                            <div class="col-md-9">
+                                <input st-search="nm_customer" class="form-control"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="table-responsive">
                 <table class="table table-striped table-hover" >
                     <thead>

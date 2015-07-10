@@ -42,7 +42,6 @@ class SerahterimainController extends Controller {
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
-//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -61,8 +60,7 @@ class SerahterimainController extends Controller {
         $sort = "tgl_terima DESC";
         $offset = 0;
         $limit = 10;
-        //        Yii::error($params);
-        //limit & offset pagination
+
         if (isset($params['limit']))
             $limit = $params['limit'];
         if (isset($params['offset']))

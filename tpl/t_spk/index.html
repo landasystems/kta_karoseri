@@ -92,11 +92,12 @@
                 <form name="landaform" class="form-horizontal form-validation ">
 
                     <div class="col-md-4 col-sm-12">
+                        
                         <div class="form-group">
                             <label class="col-sm-4 control-label">NO WO</label>
                             <div class="col-sm-8">
-                                <select class="form-control" ui-jq="chosen" ng-change="getcustomer(form)" ng-model="form.no_wo" ng-disabled="is_view" ng-options="obj.no_wo as obj.no_wo for obj in sNowo">
-                                    <option value="">-- NO WO --</option>
+                                <select class="form-control" ui-select2="" ui-jq="chosen" ng-change="getcustomer(form)" ng-model="form.no_wo" ng-disabled="is_view" >
+                                     <option ng-repeat="customer in sNowo" value="{{customer.no_wo}}">{{customer.no_wo}}</option>
                                 </select>
                             </div>
                         </div>
