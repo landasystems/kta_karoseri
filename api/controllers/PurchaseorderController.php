@@ -3,14 +3,15 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Ujimutu;
+use app\models\TransPo;
+use app\models\DetailPo;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class UjimutuController extends Controller {
+class PurchaseorderController extends Controller {
 
     public function behaviors() {
         return [
@@ -19,11 +20,11 @@ class UjimutuController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
+                    'listsubsection' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'no_wo' => ['post'],
-                    'det_nowo' => ['get'],
+                    'kode' => ['get'],
                 ],
             ]
         ];
@@ -52,27 +53,29 @@ class UjimutuController extends Controller {
         return true;
     }
 
+    public function actionKode() {
+        $query = new Query;
+        $query->from('trans_po')
+                ->select('*')
+                ->orderBy('nota DESC')
+                ->limit(1);
 
-    public function actionDet_nowo() {
-        if (!empty($_GET['kata'])) {
-            $query = new Query;
-            $query->from('view_wo_spk')
-                    ->select("*")
-                    ->where("no_wo like '%" . $_GET['kata'] . "%'");
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+        $kode_mdl = (substr($models['id_jabatan'], -6) + 1);
+        $kode = substr('000000' . $kode_mdl, strlen($kode_mdl));
+        $this->setHeader(200);
 
-            $command = $query->createCommand();
-            $models = $command->queryAll();
-
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => $models));
-        }
+        echo json_encode(array('status' => 1, 'kode' => 'PCH' . $kode));
     }
+
+   
 
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "id ASC";
+        $sort = "trans_po.nota ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -97,18 +100,23 @@ class UjimutuController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('trans_uji_mutu')
-//                ->where('barang.jenis = jenis_brg.kd_jenis')
+                ->from('trans_po')
+                ->join('JOIN', 'detail_po', 'trans_po.nota = trans_po.nota')
                 ->orderBy($sort)
-                ->select("*");
+                ->select("trans_po.*");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
+               
+                    $query->andFilterWhere(['like', $key, $val]);
+                
             }
         }
+
+        session_start();
+        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -129,13 +137,11 @@ class UjimutuController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Ujimutu();
-        $model->attributes = $params['ujimutu'];
+        $model = new TransPo();
+        $model->attributes = $params;
+
 
         if ($model->save()) {
-            foreach($params['det_ujimutu'] as $data){
-                
-            }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -172,7 +178,7 @@ class UjimutuController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Ujimutu::findOne($id)) !== null) {
+        if (($model = TransPo::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -204,6 +210,16 @@ class UjimutuController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $query->offset("");
+        $query->limit("");
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expmaster/jabatan", ['models' => $models]);
     }
 
 }

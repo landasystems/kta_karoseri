@@ -18,22 +18,22 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
         }
     ];
     $scope.addDetail = function() {
-        var newDet = {
+        var newDet = [{
             id: '',
             kd_uji: '',
             bentuk_baru: '',
             kelas: '',
             biaya: '',
-        }
-        $scope.detUjimutu.unshift(newDet);
+        }]
+        $scope.detUjimutu.push(newDet);
 
     };
      $scope.removeRow = function(paramindex) {
         var comArr = eval($scope.detUjimutu);
-         $scope.total();
+         
         if (comArr.length > 1) {
             $scope.detUjimutu.splice(paramindex, 1);
-            $scope.total();
+            
         } else {
             alert("Something gone wrong");
         }
@@ -98,7 +98,7 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
         $scope.isLoading = false;
     };
 
-    $scope.create = function(form) {
+    $scope.create = function(form, detail) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = true;
@@ -129,8 +129,12 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
         $scope.form = form;
     };
     $scope.save = function(form) {
+        var data = {
+            ujimutu: form,
+            det_ujimutu: detail,
+        };
         var url = ($scope.is_create == true) ? 'ujimutu/create' : 'ujimutu/update/' + form.id;
-        Data.post(url, form).then(function(result) {
+        Data.post(url, data).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
