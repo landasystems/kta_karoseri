@@ -3,15 +3,15 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Ujimutu;
-use app\models\DetUjimutu;
+use app\models\TransSpp;
+use app\models\DetSpp;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class UjimutuController extends Controller {
+class SppController extends Controller {
 
     public function behaviors() {
         return [
@@ -20,12 +20,11 @@ class UjimutuController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
+                    'excel' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'no_wo' => ['post'],
-                    'det_nowo' => ['get'],
-                    'cari' => ['get'],
+                    'listbarang' => ['get'],
                 ],
             ]
         ];
@@ -54,42 +53,11 @@ class UjimutuController extends Controller {
         return true;
     }
 
-    public function actionDet_nowo() {
-        if (!empty($_GET['kata'])) {
-            $query = new Query;
-            $query->from('view_wo_spk')
-                    ->select("*")
-                    ->where("no_wo like '%" . $_GET['kata'] . "%'");
-
-            $command = $query->createCommand();
-            $models = $command->queryAll();
-
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => $models));
-        }
-    }
-
-    public function actionCari() {
-        $params = $_REQUEST;
-        $query = new Query;
-        $query->from('view_wo_spk as vws')
-        ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
-        ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-        ->join('LEFT JOIN', 'model', 'vws.kd_model = model.kd_model')
-        ->select("vws.*, tk.nama as sales, model.model as model, vws.merk as merk")
-        ->andWhere(['like', 'vws.no_wo', $params['nama']]);
-        
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $models));
-    }
-
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "id ASC";
+        $sort = "tgl_trans DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -114,19 +82,12 @@ class UjimutuController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('trans_uji_mutu')
-//                ->where('barang.jenis = jenis_brg.kd_jenis')
+                ->from('trans_spp')
+//                ->where('no_proyek')
                 ->orderBy($sort)
                 ->select("*");
 
         //filter
-        if (isset($params['filter'])) {
-            $filter = (array) json_decode($params['filter']);
-            foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
-            }
-        }
-
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
@@ -144,55 +105,22 @@ class UjimutuController extends Controller {
         echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
     }
 
-    public function actionCreate() {
-        $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Ujimutu();
-        $model->attributes = $params['ujimutu'];
-
-        if ($model->save()) {
-            foreach ($params['det_ujimutu'] as $data) {
-                $det = new DetUjimutu();
-                $det->attributes = $data;
-                $det->kd_uji = $model->id;
-                $det->save();
-            }
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-        } else {
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-        }
-    }
-
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
-
+//        Yii::error($params);
         if ($model->save()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-        }
-    }
-
-    public function actionDelete($id) {
-        $model = $this->findModel($id);
-
-        if ($model->delete()) {
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-        } else {
-
             $this->setHeader(400);
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
     }
 
     protected function findModel($id) {
-        if (($model = Ujimutu::findOne($id)) !== null) {
+        if (($model = TransSpp::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -224,6 +152,27 @@ class UjimutuController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("excel", ['models' => $models]);
+    }
+
+    public function actionListbarang() {
+        $query = new Query();
+        $query->from('barang')
+                ->select("kd_barang,nm_barang");
+
+        //filter
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models), JSON_PRETTY_PRINT);
     }
 
 }

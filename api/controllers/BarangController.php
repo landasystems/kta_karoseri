@@ -230,6 +230,19 @@ class BarangController extends Controller {
         return $this->render("/expmaster/barang", ['models'=>$models]);
 
     }
+    public function actionCari(){
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('barang')
+                ->select("kd_barang,nm_barang")
+                ->where(['like', 'nm_barang', $params['barang']])
+                ->orWhere(['like','kd_barang',$params['barang']]);
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $models));
+    
+    }
 
 }
 

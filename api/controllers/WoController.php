@@ -3,15 +3,15 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Ujimutu;
-use app\models\DetUjimutu;
+use app\models\TransPo;
+use app\models\DetailPo;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class UjimutuController extends Controller {
+class WoController extends Controller {
 
     public function behaviors() {
         return [
@@ -23,9 +23,8 @@ class UjimutuController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'no_wo' => ['post'],
-                    'det_nowo' => ['get'],
-                    'cari' => ['get'],
+                    'kode' => ['get'],
+                    'wospk' => ['get'],
                 ],
             ]
         ];
@@ -42,7 +41,6 @@ class UjimutuController extends Controller {
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
-//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -54,45 +52,45 @@ class UjimutuController extends Controller {
         return true;
     }
 
-    public function actionDet_nowo() {
-        if (!empty($_GET['kata'])) {
-            $query = new Query;
-            $query->from('view_wo_spk')
-                    ->select("*")
-                    ->where("no_wo like '%" . $_GET['kata'] . "%'");
-
-            $command = $query->createCommand();
-            $models = $command->queryAll();
-
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => $models));
-        }
-    }
-
-    public function actionCari() {
+    public function actionWospk() {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('view_wo_spk as vws')
-        ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
-        ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-        ->join('LEFT JOIN', 'model', 'vws.kd_model = model.kd_model')
-        ->select("vws.*, tk.nama as sales, model.model as model, vws.merk as merk")
-        ->andWhere(['like', 'vws.no_wo', $params['nama']]);
-        
+                ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
+                ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
+                ->select("vws.*, tk.nama as sales, tk.lokasi_kntr as wilayah")
+                ->where(['like', 'vws.no_wo', $params['nama']]);
         $command = $query->createCommand();
         $models = $command->queryAll();
+
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $models));
+    }
+
+    public function actionKode() {
+        $query = new Query;
+        $query->from('trans_po')
+                ->select('*')
+                ->orderBy('nota DESC')
+                ->limit(1);
+
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+        $kode_mdl = (substr($models['id_jabatan'], -6) + 1);
+        $kode = substr('000000' . $kode_mdl, strlen($kode_mdl));
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'kode' => 'PCH' . $kode));
     }
 
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "id ASC";
+        $sort = "trans_po.nota ASC";
         $offset = 0;
         $limit = 10;
-        //        Yii::error($params);
+
         //limit & offset pagination
         if (isset($params['limit']))
             $limit = $params['limit'];
@@ -109,13 +107,12 @@ class UjimutuController extends Controller {
                     $sort.=" DESC";
             }
         }
-
         //create query
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('trans_uji_mutu')
-//                ->where('barang.jenis = jenis_brg.kd_jenis')
+                ->from('trans_po')
+                ->join('JOIN', 'detail_po', 'trans_po.nota = detail_po.nota')
                 ->orderBy($sort)
                 ->select("*");
 
@@ -123,17 +120,25 @@ class UjimutuController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
+
                 $query->andFilterWhere(['like', $key, $val]);
             }
         }
 
+        session_start();
+        $_SESSION['query'] = $query;
+
+//        print_r($_SESSION['query']);
+
         $command = $query->createCommand();
         $models = $command->queryAll();
-        $totalItems = $query->count();
+        $totalItems = 0;
 
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+
+//        echo json_encode(array('status'=>1));
     }
 
     public function actionView($id) {
@@ -146,16 +151,11 @@ class UjimutuController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Ujimutu();
-        $model->attributes = $params['ujimutu'];
+        $model = new TransPo();
+        $model->attributes = $params;
+
 
         if ($model->save()) {
-            foreach ($params['det_ujimutu'] as $data) {
-                $det = new DetUjimutu();
-                $det->attributes = $data;
-                $det->kd_uji = $model->id;
-                $det->save();
-            }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -192,7 +192,7 @@ class UjimutuController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Ujimutu::findOne($id)) !== null) {
+        if (($model = TransPo::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -224,6 +224,16 @@ class UjimutuController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $query->offset("");
+        $query->limit("");
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expmaster/jabatan", ['models' => $models]);
     }
 
 }
