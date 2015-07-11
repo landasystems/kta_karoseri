@@ -20,7 +20,7 @@ class PoController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
-                    'listsubsection' => ['get'],
+                    'listsupplier' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -62,18 +62,19 @@ class PoController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->query()->read();
-        $kode_mdl = (substr($models['id_jabatan'], -6) + 1);
-        $kode = substr('000000' . $kode_mdl, strlen($kode_mdl));
+        $kode_mdl = (substr($models['nota'], -4) + 1);
+        $kode = substr('0000' . $kode_mdl, strlen($kode_mdl));
+        $kode_tahun = substr(date('Y'), -2);
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => 'PCH' . $kode));
+        echo json_encode(array('status' => 1, 'kode' => 'PCH' . $kode_tahun . $kode));
     }
 
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "trans_po.nota ASC";
+        $sort = "trans_po.nota DESC";
         $offset = 0;
         $limit = 10;
 
@@ -111,20 +112,28 @@ class PoController extends Controller {
             }
         }
 
-        session_start();
-        $_SESSION['query'] = $query;
-        
-//        print_r($_SESSION['query']);
 
         $command = $query->createCommand();
         $models = $command->queryAll();
-        $totalItems = 0;
+        $totalItems = $query->count();
 
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
 
-//        echo json_encode(array('status'=>1));
+    public function actionListsupplier() {
+        $query = new Query;
+        $query->from('supplier')
+                ->select("*")
+                ->orderBy('kd_supplier ASC');
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionView($id) {
@@ -210,16 +219,6 @@ class PoController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
-    }
-
-    public function actionExcel() {
-        session_start();
-        $query = $_SESSION['query'];
-        $query->offset("");
-        $query->limit("");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        return $this->render("/expmaster/jabatan", ['models' => $models]);
     }
 
 }

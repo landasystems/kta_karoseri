@@ -24,6 +24,7 @@ class SupplierController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
+                    'cari' => ['get'],
                 ],
             ]
         ];
@@ -103,6 +104,18 @@ class SupplierController extends Controller {
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+    
+    public function actionCari() {
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('supplier')
+                ->select("kd_supplier,nama_supplier")
+                ->andWhere(['like', 'nama_supplier', $params['nama']]);
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionView($id) {
