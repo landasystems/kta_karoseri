@@ -144,18 +144,30 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3 col-sm-12 thumb-wrapper">
-                                <center><h4>Sisa Pengambilan</h4></center>
-                                <center style="margin-top: 10px;"><h1>0</h1></center>
-                            </div>
-                            <div class="col-md-3 col-sm-12 thumb-wrapper">
-                                <center><h4>Stok Sekarang</h4></center>
-                                <center style="margin-top: 10px;"><h1>0</h1></center>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-12 thumb-wrapper">
+                                        <center><h4>Sisa Pengambilan</h4></center>
+                                        <center style="margin-top: 10px;"><h1>0</h1></center>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 thumb-wrapper">
+                                        <center><h4>Stok Sekarang</h4></center>
+                                        <center style="margin-top: 10px;"><h1>0</h1></center>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <br>
+                                    <br>
+                                    <center>
+                                        <button class="btn btn-success btn-rounded" ng-show="lihat_detail == false" ng-click="lihat_detail = true">Tampilkan barang yang sudah diambil</button>
+                                        <button class="btn btn-danger btn-rounded" ng-show="lihat_detail == true" ng-click="lihat_detail = false">Sembunyikan barang yang sudah diambil</button>
+                                    </center>
+                                </div>
                             </div>
                         </div>
                         <br>
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-sm-12" ng-show="lihat_detail == false">
                                 <div class="panel-heading text-muted font-bold">
                                     Detail Barang Keluar
                                 </div>
@@ -163,6 +175,38 @@
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
+                                            <th>Barang</th>
+                                            <th>Jumlah</th>
+                                            <th>Keterangan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                            <ui-select on-select="detail.harga = $item.harga_beli_terakhir" ng-model="detail.produk" theme="bootstrap">
+                                                <ui-select-match>{{$select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices refresh="cariProduk($select.search)" repeat="val in results">
+                                                    {{val.nama}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-sm-12" ng-show="lihat_detail == true">
+                                <div class="panel-heading text-muted font-bold">
+                                    Barang yang sudah diambil
+                                </div>
+                                <br>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Bagian</th>
+                                            <th>Penerima</th>
+                                            <th>Kode</th>
                                             <th>Barang</th>
                                             <th>Jumlah</th>
                                             <th>Keterangan</th>
