@@ -286,11 +286,11 @@ angular.module('app')
                                 //BOM
                                 .state('transaksi.bom', {
                                     url: '/bom',
-                                    templateUrl: 'tpl/bom/index.html',
+                                    templateUrl: 'tpl/t_bom/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select2']).then(
+                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select']).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/bom.js');
                                                         }
@@ -439,7 +439,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select2']).then(
+                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select']).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/deliveryunit.js');
                                                         }
@@ -521,7 +521,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select2']).then(
+                                                return $ocLazyLoad.load(['ui.select']).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/ujimutu.js');
                                                         }

@@ -1,0 +1,22 @@
+<div class="modal-header">
+    <h3 class="modal-title">Silahkan Pilih Bagian</h3>
+</div>
+<div class="modal-body">
+    <div class="input-group">
+        <ui-select ng-model="detail.kd_jab" theme="bootstrap">
+            <ui-select-match>{{$select.selected.jabatan}}</ui-select-match>
+            <ui-select-choices refresh="cariJabatan($select.search)" repeat="val in resultsjabatan">
+                {{val.jabatan}}
+            </ui-select-choices>
+        </ui-select>
+        <span class="input-group-btn">
+            <button ng-click="detail.kd_jab = undefined" class="btn btn-default">
+                <span class="glyphicon glyphicon-trash"></span>
+            </button>
+        </span>
+    </div>
+</div>
+<div class="modal-footer">                  
+    <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+</div>
