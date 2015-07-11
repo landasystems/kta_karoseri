@@ -7,6 +7,7 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
     $scope.is_create = false;
     $scope.jenis_kmp = [];
     $scope.bagian = '-';
+    $scope.lihat_detail = false;
 
     $scope.open1 = function($event) {
         $event.preventDefault();

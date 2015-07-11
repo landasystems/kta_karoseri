@@ -144,18 +144,30 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3 col-sm-12 thumb-wrapper">
-                                <center><h4>Sisa Pengambilan</h4></center>
-                                <center style="margin-top: 10px;"><h1>0</h1></center>
-                            </div>
-                            <div class="col-md-3 col-sm-12 thumb-wrapper">
-                                <center><h4>Stok Sekarang</h4></center>
-                                <center style="margin-top: 10px;"><h1>0</h1></center>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-12 thumb-wrapper">
+                                        <center><h4>Sisa Pengambilan</h4></center>
+                                        <center style="margin-top: 10px;"><h1>0</h1></center>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 thumb-wrapper">
+                                        <center><h4>Stok Sekarang</h4></center>
+                                        <center style="margin-top: 10px;"><h1>0</h1></center>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <br>
+                                    <br>
+                                    <center>
+                                        <button class="btn btn-success btn-rounded" ng-show="lihat_detail == false" ng-click="lihat_detail = true">Tampilkan barang yang sudah diambil</button>
+                                        <button class="btn btn-danger btn-rounded" ng-show="lihat_detail == true" ng-click="lihat_detail = false">Sembunyikan barang yang sudah diambil</button>
+                                    </center>
+                                </div>
                             </div>
                         </div>
                         <br>
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-sm-12" ng-show="lihat_detail == false">
                                 <div class="panel-heading text-muted font-bold">
                                     Detail Barang Keluar
                                 </div>
@@ -163,6 +175,45 @@
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
+                                            <th>Barang</th>
+                                            <th style="width:100px">Jumlah</th>
+                                            <th style="width:400px">Keterangan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="input-group">
+                                                    <ui-select on-select="detail.harga = $item.harga_beli_terakhir" ng-model="detail.produk" theme="bootstrap">
+                                                        <ui-select-match>{{$select.selected.nama}}</ui-select-match>
+                                                        <ui-select-choices refresh="cariProduk($select.search)" repeat="val in results">
+                                                            {{val.nama}}
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <span class="input-group-btn">
+                                                        <button ng-click="detail.produk = undefined" class="btn btn-default">
+                                                            <span class="glyphicon glyphicon-trash"></span>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td><input type="text" ng-model="jumlah" class="form-control"></td>
+                                            <td><input type="text" ng-model="keterangan" class="form-control"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-sm-12" ng-show="lihat_detail == true">
+                                <div class="panel-heading text-muted font-bold">
+                                    Barang yang sudah diambil
+                                </div>
+                                <br>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Bagian</th>
+                                            <th>Penerima</th>
+                                            <th>Kode</th>
                                             <th>Barang</th>
                                             <th>Jumlah</th>
                                             <th>Keterangan</th>

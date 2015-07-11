@@ -55,12 +55,10 @@ angular.module('app')
                             ]
                         },
                         {
-                            name: 'ui.select2',
+                            name: 'ui.select',
                             files: [
                                 'vendor/modules/angular-ui-select/select.min.js',
-                                'vendor/jquery/select2/select2.css',
-                                'vendor/jquery/select2/select2-bootstrap.css',
-                                'vendor/jquery/select2/select2.min.js',
+                                'vendor/modules/angular-ui-select/select.min.css'
                             ]
                         },
                         {

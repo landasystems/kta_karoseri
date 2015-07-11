@@ -96,7 +96,7 @@ class PoController extends Controller {
         //create query
         $query = new Query;
         $query->offset($offset)
-                ->limit(5)
+                ->limit($limit)
                 ->from('trans_po')
                 ->join('JOIN', 'detail_po', 'trans_po.nota = detail_po.nota')
                 ->orderBy($sort)
@@ -111,8 +111,10 @@ class PoController extends Controller {
             }
         }
 
-//        session_start();
-//        $_SESSION['query'] = $query;
+        session_start();
+        $_SESSION['query'] = $query;
+        
+//        print_r($_SESSION['query']);
 
         $command = $query->createCommand();
         $models = $command->queryAll();
