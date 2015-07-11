@@ -54,31 +54,16 @@ class UjimutuController extends Controller {
         return true;
     }
 
-    public function actionDet_nowo() {
-        if (!empty($_GET['kata'])) {
-            $query = new Query;
-            $query->from('view_wo_spk')
-                    ->select("*")
-                    ->where("no_wo like '%" . $_GET['kata'] . "%'");
-
-            $command = $query->createCommand();
-            $models = $command->queryAll();
-
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => $models));
-        }
-    }
-
     public function actionCari() {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('view_wo_spk as vws')
-        ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
-        ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-        ->join('LEFT JOIN', 'model', 'vws.kd_model = model.kd_model')
-        ->select("vws.*, tk.nama as sales, model.model as model, vws.merk as merk")
-        ->andWhere(['like', 'vws.no_wo', $params['nama']]);
-        
+                ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
+                ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
+                ->join('LEFT JOIN', 'model', 'vws.kd_model = model.kd_model')
+                ->select("vws.*, tk.nama as sales, model.model as model, tk.nama as sales")
+                ->andWhere(['like', 'vws.no_wo', $params['nama']]);
+
         $command = $query->createCommand();
         $models = $command->queryAll();
         $this->setHeader(200);
@@ -89,7 +74,7 @@ class UjimutuController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "id ASC";
+        $sort = "kd_uji ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -139,21 +124,41 @@ class UjimutuController extends Controller {
     public function actionView($id) {
 
         $model = $this->findModel($id);
+        $query = new Query;
+        $query->from('det_uji_mutu as det')
+                ->join('JOIN', 'view_wo_spk as vms', 'vms.no_wo = det.no_wo')
+                ->select("det.*, vms.no_wo as no_wo, vms.merk as merk")
+                ->where("det.kd_uji='" . $id . "'");
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        foreach ($models as $key => $val) {
+            $nowo = (isset($val['no_wo'])) ? $val['no_wo'] : '';
+            $merk = (isset($val['merk'])) ? $val['merk'] : '';
+            $detail[$key] = ['kd_uji' => $val['kd_uji'], 'kelas' => $val['kelas'], 'bentuk_baru' => $val['bentuk_baru']
+                , 'biaya' => $val['biaya'], 'merk' => $merk];
+
+
+            $detail[$key]['no_wo'] = ['no_wo' => $nowo];
+        }
 
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes), 'detail' => $detail), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new Ujimutu();
+
         $model->attributes = $params['ujimutu'];
 
         if ($model->save()) {
             foreach ($params['det_ujimutu'] as $data) {
                 $det = new DetUjimutu();
                 $det->attributes = $data;
-                $det->kd_uji = $model->id;
+                $det->kd_uji = $model->kd_uji;
+                $det->no_wo = $data['no_wo']['no_wo'];
                 $det->save();
             }
             $this->setHeader(200);
@@ -167,9 +172,17 @@ class UjimutuController extends Controller {
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
-        $model->attributes = $params;
+        $model->attributes = $params['ujimutu'];
 
         if ($model->save()) {
+            $deleteDetail = DetUjimutu::deleteAll(['kd_uji' => $model->kd_uji]);
+            foreach ($params['det_ujimutu'] as $data) {
+                $det = new DetUjimutu();
+                $det->attributes = $data;
+                $det->kd_uji = $model->kd_uji;
+                $det->no_wo = $data['no_wo']['no_wo'];
+                $det->save();
+            }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -180,7 +193,7 @@ class UjimutuController extends Controller {
 
     public function actionDelete($id) {
         $model = $this->findModel($id);
-
+        $deleteDetail = DetUjimutu::deleteAll(['kd_uji' => $id]);
         if ($model->delete()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);

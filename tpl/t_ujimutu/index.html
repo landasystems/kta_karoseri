@@ -131,8 +131,8 @@
                         <tr ng-repeat="detail in detUjimutu">
                             <td width="18%">
                                 <div class="input-group">
-                                            <ui-select on-select="pilih(detal. $item)" ng-model="detail.no_wo" theme="bootstrap">
-                                                <ui-select-match>{{$select.selected.nama}}</ui-select-match>
+                                            <ui-select on-select="pilih(detail, $item)" ng-model="detail.no_wo" theme="bootstrap">
+                                                <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
                                                 <ui-select-choices refresh="cariProduk($select.search)" repeat="val in results">
                                                     {{val.no_wo}}
                                                 </ui-select-choices>
@@ -145,16 +145,16 @@
                                         </div>
                             </td>
                             <td>
-                                <input type="text" class="form-control"    ng-model="detail.merk" ng-disabled="is_view" ng-readonly="is_create == false" >
+                                <input type="text" class="form-control"    ng-model="detail.merk" ng-disabled="true" >
                             </td>
                             <td>
-                                <input type="text" class="form-control"    ng-model="detail.bentuk_baru" ng-disabled="is_view" ng-readonly="is_create == false" >
+                                <input type="text" class="form-control"    ng-model="detail.bentuk_baru" ng-disabled="is_view" >
                             </td>
                             <td>
-                                <input type="text" class="form-control"    ng-model="detail.kelas" ng-disabled="is_view" ng-readonly="is_create == false" >
+                                <input type="text" class="form-control"    ng-model="detail.kelas" ng-disabled="is_view" >
                             </td>
                             <td>
-                                <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" ng-keyup="total()"     ng-model="detail.biaya" ng-disabled="is_view" ng-readonly="is_create == false" >
+                                <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" ng-keyup="total()" ng-model="detail.biaya" ng-disabled="is_view" >
                             </td>
                             <td >
 

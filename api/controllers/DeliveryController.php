@@ -52,37 +52,6 @@ class DeliveryController extends Controller {
         return true;
     }
 
-    public function actionNo_wo() {
-        $query = new Query;
-        $query->from('wo_masuk')
-                ->select('*');
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'no_wo' => $models));
-    }
-
-    public function actionDet_nowo() {
-        if (!empty($_GET['kata'])) {
-            $query = new Query;
-            $query->from('view_wo_spk as vws')
-                    ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
-                    ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                    ->join('LEFT JOIN', 'model', 'vws.kd_model = model.kd_model')
-                    ->where("vws.no_wo like '%" . $_GET['kata'] . "%'")
-                    ->select("vws.*, tk.nama as sales, model.model as model, vws.merk as merk");
-
-            $command = $query->createCommand();
-            $models = $command->queryAll();
-
-            $this->setHeader(200);
-//            print_r($models);
-            echo json_encode(array('status' => 1, 'data' => $models));
-        }
-    }
-
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
@@ -148,7 +117,26 @@ class DeliveryController extends Controller {
     public function actionView($id) {
 
         $model = $this->findModel($id);
+        $query = new Query;
+        $query->from('view_wo_spk')
+                ->join('LEFT JOIN', 'spk', 'spk.no_spk = view_wo_spk.no_spk')
+                ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
+                ->join('JOIN', 'model', 'model.kd_model = view_wo_spk.kd_model')
+                ->select("view_wo_spk.*, model.model as model, tk.nama as sales")
+                ->where("no_wo='" . $model['no_wo'] . "'");
 
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        foreach ($models as $key => $val) {
+            $nowo = (isset($val['no_wo'])) ? $val['no_wo'] : '';
+            $merk= (isset($val['merk'])) ? $val['merk'] : '';
+            $jancok= (isset($val['model'])) ? $val['model'] : '';
+            $cok= (isset($val['sales'])) ? $val['sales'] : '';
+
+
+            $model['no_wo'] = ['no_wo' => $nowo,'merk'=>$merk,'model'=>$jancok,'sales'=>$cok];
+        }
+        
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
     }
