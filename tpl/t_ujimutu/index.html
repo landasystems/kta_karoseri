@@ -128,17 +128,21 @@
                                 <td>#</td>
                             </tr>
                         </thead>
-                        <tr ng-repeate="detail in detUjimutu">
+                        <tr ng-repeat="detail in detUjimutu">
                             <td width="18%">
-                                <input type="text" 
-                                       ui-select2="wo"
-                                       ng-model="no_wo"
-                                       ng-change="
-                                       detail.merk = no_wo.merk;
-                                       detail.no_wo = no_wo.no_wo;
-                                       "
-                                       data-placeholder="-Pilih No Wo-"
-                                       class="form-control"/>
+                                <div class="input-group">
+                                            <ui-select on-select="pilih(detal. $item)" ng-model="detail.produk" theme="bootstrap">
+                                                <ui-select-match>{{$select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices refresh="cariProduk($select.search)" repeat="val in results">
+                                                    {{val.no_wo}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            <span class="input-group-btn">
+                                                <button ng-click="detail.no_wo = undefined" class="btn btn-default">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </span>
+                                        </div>
                             </td>
                             <td>
                                 <input type="text" class="form-control"    ng-model="detail.merk" ng-disabled="is_view" ng-readonly="is_create == false" >
@@ -154,8 +158,8 @@
                             </td>
                             <td >
 
-                                <button ng-click="addDetail()" class="btn btn-success" ><i class="fa fa-plus"></i></button>
-                                <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0" ><i class="fa fa-trash-o"></i></button>
+                                <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-plus"></i></button>
+                                <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
                             </td>
                         </tr>
                         <tr>
