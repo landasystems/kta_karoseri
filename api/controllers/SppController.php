@@ -3,14 +3,15 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Barang;
+use app\models\TransSpp;
+use app\models\DetSpp;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class BarangController extends Controller {
+class SppController extends Controller {
 
     public function behaviors() {
         return [
@@ -23,8 +24,6 @@ class BarangController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'jenis' => ['get'],
-                    'kode' => ['get'],
                     'listbarang' => ['get'],
                 ],
             ]
@@ -54,55 +53,11 @@ class BarangController extends Controller {
         return true;
     }
 
-    public function actionListbarang() {
-        $param = $_REQUEST;
-        $query = new Query;
-        $query->from('barang')
-                ->select("*")
-                ->where('nm_barang like "%' . $param['nama'] . '%"');
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $models));
-    }
-
-    public function actionJenis() {
-        $query = new Query;
-        $query->from('jenis_brg')
-                ->select("*");
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'jenis_brg' => $models));
-    }
-
-    public function actionKode() {
-        $query = new Query;
-        $query->from('barang')
-                ->select('*')
-                ->orderBy('kd_barang DESC')
-                ->limit(1);
-
-        $command = $query->createCommand();
-        $models = $command->query()->read();
-        $kode = $models['kd_barang'] + 1;
-        Yii::error($command->query());
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'kode' => $kode));
-    }
-
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_barang ASC";
+        $sort = "tgl_trans DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -127,22 +82,12 @@ class BarangController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from(['barang', 'jenis_brg'])
-                ->where('barang.jenis = jenis_brg.kd_jenis')
+                ->from('trans_spp')
+//                ->where('no_proyek')
                 ->orderBy($sort)
-                ->select("barang.*, jenis_brg.jenis_brg");
+                ->select("*");
 
         //filter
-        if (isset($params['filter'])) {
-            $filter = (array) json_decode($params['filter']);
-            foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
-            }
-        }
-
-        session_start();
-        $_SESSION['query'] = $query;
-
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
@@ -160,49 +105,22 @@ class BarangController extends Controller {
         echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
     }
 
-    public function actionCreate() {
-        $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Barang();
-        $model->attributes = $params;
-
-        if ($model->save()) {
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-        } else {
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-        }
-    }
-
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
-
+//        Yii::error($params);
         if ($model->save()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-        }
-    }
-
-    public function actionDelete($id) {
-        $model = $this->findModel($id);
-
-        if ($model->delete()) {
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-        } else {
-
             $this->setHeader(400);
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
     }
 
     protected function findModel($id) {
-        if (($model = Barang::findOne($id)) !== null) {
+        if (($model = TransSpp::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -239,24 +157,22 @@ class BarangController extends Controller {
     public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
-        $query->offset("");
-        $query->limit("");
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expmaster/barang", ['models' => $models]);
+        return $this->render("excel", ['models' => $models]);
     }
-    public function actionCari(){
-        $params = $_REQUEST;
-        $query = new Query;
+
+    public function actionListbarang() {
+        $query = new Query();
         $query->from('barang')
-                ->select("kd_barang,nm_barang")
-                ->where(['like', 'nm_barang', $params['barang']])
-                ->orWhere(['like','kd_barang',$params['barang']]);
+                ->select("kd_barang,nm_barang");
+
+        //filter
         $command = $query->createCommand();
         $models = $command->queryAll();
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $models));
-    
+
+        echo json_encode(array('status' => 1, 'data' => $models), JSON_PRETTY_PRINT);
     }
 
 }

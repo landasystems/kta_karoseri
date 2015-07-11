@@ -482,8 +482,12 @@ angular.module('app')
                                     templateUrl: 'tpl/t_spp-nonrutin/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/spp-nonrutin.js');
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['ui.select', 'daterangepicker']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/spp-nonrutin.js');
+                                                        }
+                                                );
                                             }]
                                     }})
                                 //
