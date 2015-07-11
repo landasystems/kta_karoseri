@@ -131,7 +131,7 @@
                         <tr ng-repeat="detail in detUjimutu">
                             <td width="18%">
                                 <div class="input-group">
-                                            <ui-select on-select="pilih(detal. $item)" ng-model="detail.produk" theme="bootstrap">
+                                            <ui-select on-select="pilih(detal. $item)" ng-model="detail.no_wo" theme="bootstrap">
                                                 <ui-select-match>{{$select.selected.nama}}</ui-select-match>
                                                 <ui-select-choices refresh="cariProduk($select.search)" repeat="val in results">
                                                     {{val.no_wo}}
