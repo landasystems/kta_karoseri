@@ -25,6 +25,7 @@ class BarangController extends Controller {
                     'delete' => ['delete'],
                     'jenis' => ['get'],
                     'kode' => ['get'],
+                    'listbarang' => ['get'],
                 ],
             ]
         ];
@@ -53,6 +54,21 @@ class BarangController extends Controller {
         return true;
     }
 
+    public function actionListbarang() {
+        $param = $_REQUEST;
+        $query = new Query;
+        $query->from('barang')
+                ->select("*")
+                ->where('nm_barang like "%' . $param['nama'] . '%"');
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+
     public function actionJenis() {
         $query = new Query;
         $query->from('jenis_brg')
@@ -72,7 +88,7 @@ class BarangController extends Controller {
                 ->select('*')
                 ->orderBy('kd_barang DESC')
                 ->limit(1);
-        
+
         $command = $query->createCommand();
         $models = $command->query()->read();
         $kode = $models['kd_barang'] + 1;
@@ -123,7 +139,7 @@ class BarangController extends Controller {
                 $query->andFilterWhere(['like', $key, $val]);
             }
         }
-        
+
         session_start();
         $_SESSION['query'] = $query;
 
@@ -219,16 +235,15 @@ class BarangController extends Controller {
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
-    
-     public function actionExcel() {
+
+    public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
         $query->offset("");
         $query->limit("");
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expmaster/barang", ['models'=>$models]);
-
+        return $this->render("/expmaster/barang", ['models' => $models]);
     }
 
 }

@@ -24,6 +24,8 @@ class ChassisController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
+                    'merk' => ['get'],
+                    'tipe' => ['get'],
                 ],
             ]
         ];
@@ -50,6 +52,32 @@ class ChassisController extends Controller {
         }
 
         return true;
+    }
+
+    public function actionMerk() {
+        $query = new Query;
+        $query->from('chassis')
+                ->select("distinct(merk)");
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+    
+    public function actionTipe() {
+        $query = new Query;
+        $query->from('chassis')
+                ->select("distinct(tipe)");
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionIndex() {
@@ -92,7 +120,7 @@ class ChassisController extends Controller {
                 $query->andFilterWhere(['like', $key, $val]);
             }
         }
-        
+
         session_start();
         $_SESSION['query'] = $query;
 
@@ -126,14 +154,14 @@ class ChassisController extends Controller {
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
     }
-    
-    public function actionKode(){
-      $query = new Query;
+
+    public function actionKode() {
+        $query = new Query;
         $query->from('chassis')
                 ->select('*')
                 ->orderBy('kd_chassis DESC')
                 ->limit(1);
-        
+
         $command = $query->createCommand();
         $models = $command->query()->read();
         $kode_mdl = $models['kd_chassis'] + 1;
@@ -204,7 +232,7 @@ class ChassisController extends Controller {
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
-    
+
     public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
@@ -212,8 +240,7 @@ class ChassisController extends Controller {
         $query->limit("");
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expmaster/chassis", ['models'=>$models]);
-
+        return $this->render("/expmaster/chassis", ['models' => $models]);
     }
 
 }
