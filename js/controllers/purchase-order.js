@@ -1,7 +1,7 @@
 app.controller('poCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
-   
+
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
@@ -21,7 +21,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         if (tableState.search.predicateObject) {
             param['filter'] = tableState.search.predicateObject;
         }
-       
+
         Data.get('po', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
@@ -29,40 +29,83 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 
         $scope.isLoading = false;
     };
-    
+
     Data.get('po/listsupplier').then(function (data) {
         $scope.listsupplier = data.data;
     });
-    
-    $scope.cariSupplier = function ($query) {
-        console.log($query);
+
+    $scope.cariSuppiler = function ($query) {
+
         if ($query.length >= 3) {
             Data.get('supplier/cari', {nama: $query}).then(function (data) {
                 $scope.results = data.data;
             });
         }
     }
-    
-    
-    
-    $scope.addDetail = function () {
-        var newDet = {
-            stok_masuk_id: '',
-            produk: '',
-            jumlah: '',
-            harga: '',
+
+    $scope.cariBarang = function ($query) {
+
+        if ($query.length >= 3) {
+            Data.get('barang/cari', {barang: $query}).then(function (data) {
+                $scope.results = data.data;
+            });
         }
-        $scope.detsmasuk.unshift(newDet);
+    }
+
+
+    $scope.addDetail = function () {
+        var newDet = [{
+                nota: '',
+                kode_barang: '',
+                jml: '',
+                harga: '',
+                diterima: '0',
+                ket: '',
+                tgl_pengiriman: ''
+            }]
+        $scope.detsPo.unshift(newDet);
+
     };
 
+//detail
+    $scope.detsPo = [
+        {
+            nota: '',
+            kode_barang: '',
+            jml: '',
+            harga: '',
+            diterima: '0',
+            ket: '',
+            tgl_pengiriman: ''
+        }];
 
+//remove
+    $scope.removeRow = function (paramindex) {
+        var comArr = eval($scope.detsPo);
 
+        if (comArr.length > 1) {
+            $scope.detsPo.splice(paramindex, 1);
+            $scope.subtotal();
+        } else {
+            alert("Something gone wrong");
+        }
+    };
+
+//datepicker
     $scope.open1 = function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
         $scope.opened1 = true;
     };
 
+    $scope.open2 = function ($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened2 = true;
+    };
+
+
+//button
     $scope.create = function (form) {
         $scope.is_edit = true;
         $scope.is_view = false;
@@ -72,6 +115,8 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         Data.get('po/kode').then(function (data) {
             $scope.form.nota = data.kode;
         });
+        $scope.form.tanggal = moment().format('DD-MM-YYYY');
+
     };
     $scope.update = function (form) {
         $scope.is_edit = true;
@@ -113,7 +158,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
             });
         }
     };
-    
+
     $scope.selected = function (id) {
         Data.get('po/view/' + id).then(function (data) {
             $scope.form = data.data;

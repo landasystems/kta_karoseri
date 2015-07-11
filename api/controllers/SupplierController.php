@@ -110,7 +110,7 @@ class SupplierController extends Controller {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('supplier')
-                ->select("kd_supplier,nama_supplier")
+                ->select("kd_supplier, nama_supplier")
                 ->andWhere(['like', 'nama_supplier', $params['nama']]);
         $command = $query->createCommand();
         $models = $command->queryAll();

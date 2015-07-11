@@ -25,6 +25,7 @@ class BarangController extends Controller {
                     'delete' => ['delete'],
                     'jenis' => ['get'],
                     'kode' => ['get'],
+                    'cari' => ['get'],
                 ],
             ]
         ];
@@ -52,7 +53,8 @@ class BarangController extends Controller {
 
         return true;
     }
-
+    
+  
     public function actionJenis() {
         $query = new Query;
         $query->from('jenis_brg')
