@@ -13,7 +13,7 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
     });
-    
+
     //init data
     var tableStateRef;
     $scope.displayed = [];
@@ -22,41 +22,25 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.is_create = false;
     $scope.is_create = false;
 
-    Data.post('delivery/no_wo').then(function(data) {
-        $scope.list_nowo = data.no_wo;
-    });
     $scope.open1 = function($event) {
         $event.preventDefault();
         $event.stopPropagation();
         $scope.opened1 = true;
     };
-    $scope.wo = {
-        minimumInputLength: 3,
-        allowClear: false,
-        ajax: {
-            url: "api/web/delivery/det_nowo/",
-            dataType: 'json',
-            data: function(term) {
-                return {
-                    kata: term,
-                };
-            },
-            results: function(data, page) {
-                return {
-                    results: data.data
-                };
-            }
-        },
-        formatResult: function(object) {
-            return object.no_wo;
-        },
-        formatSelection: function(object) {
-            return object.no_wo;
-        },
-        id: function(data) {
-            return data.no_wo;
-        },
-    };
+
+    $scope.cariProduk = function($query) {
+        if ($query.length >= 3) {
+            Data.get('ujimutu/cari', {nama: $query}).then(function(data) {
+                $scope.results = data.data;
+            });
+        }
+    }
+
+    $scope.pilih = function(form, $item) {
+        form.merk = $item.merk;
+        form.model = $item.model;
+        form.sales = $item.sales;
+    }
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -93,17 +77,19 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
-        $scope.formtitle = "Edit Data : " + form.merk;
+        $scope.formtitle = "Edit Data : " + form.no_wo;
         $scope.form = form;
+        $scope.selected(form.id);
     };
     $scope.view = function(form) {
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.merk;
+        $scope.formtitle = "Lihat Data : " + form.no_wo;
         $scope.form = form;
+         $scope.selected(form.id);
     };
     $scope.save = function(form) {
-         $scope.uploader.uploadAll();
+        $scope.uploader.uploadAll();
         form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
         var url = ($scope.is_create == true) ? 'delivery/create' : 'delivery/update/' + form.id;
         Data.post(url, form).then(function(result) {
@@ -127,6 +113,16 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
             });
         }
     };
+    $scope.selected = function(id) {
+        Data.get('delivery/view/' + id).then(function(data) {
+            $scope.form = data.data;
+            $scope.form.merk = data.data.no_wo.merk;
+            $scope.form.model = data.data.no_wo.model;
+            $scope.form.sales = data.data.no_wo.sales;
+            
+
+        });
+    }
 
 
 })
