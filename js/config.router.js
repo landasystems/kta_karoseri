@@ -165,9 +165,11 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-
-                                                return $ocLazyLoad.load('js/controllers/kalender.js');
-
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/kalender.js');
+                                                        }
+                                                );
                                             }]
                                     }
                                 })
@@ -191,9 +193,11 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-
-                                                return $ocLazyLoad.load('js/controllers/jabatan.js');
-
+                                                return $ocLazyLoad.load(['ui.select2']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/jabatan.js');
+                                                        }
+                                                );
                                             }]
                                     }
                                 })
@@ -432,7 +436,7 @@ angular.module('app')
                                     resolve: {
                                        deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select2','daterangepicker']).then(
+                                                return $ocLazyLoad.load(['angularFileUpload','ui.select2']).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/deliveryunit.js');
                                                         }
@@ -504,9 +508,13 @@ angular.module('app')
                                     url: '/ujimutu',
                                     templateUrl: 'tpl/t_ujimutu/index.html',
                                     resolve: {
-                                        deps: ['$ocLazyLoad',
+                                       deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/ujimutu.js');
+                                                return $ocLazyLoad.load(['ui.select2']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/ujimutu.js');
+                                                        }
+                                                );
                                             }]
                                     }})
                                 //

@@ -19,6 +19,7 @@ class ChassisController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
+                    'excel' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -91,6 +92,9 @@ class ChassisController extends Controller {
                 $query->andFilterWhere(['like', $key, $val]);
             }
         }
+        
+        session_start();
+        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -125,15 +129,15 @@ class ChassisController extends Controller {
     
     public function actionKode(){
       $query = new Query;
-        $query->from('barang')
+        $query->from('chassis')
                 ->select('*')
                 ->orderBy('kd_chassis DESC')
                 ->limit(1);
         
         $command = $query->createCommand();
         $models = $command->query()->read();
-        $kode = $models['kd_chassis'] + 1;
-        Yii::error($command->query());
+        $kode_mdl = $models['kd_chassis'] + 1;
+        $kode = substr('00000' . $kode_mdl, strlen($kode_mdl));
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'kode' => $kode));
@@ -199,6 +203,17 @@ class ChassisController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+    
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $query->offset("");
+        $query->limit("");
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expmaster/chassis", ['models'=>$models]);
+
     }
 
 }

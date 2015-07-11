@@ -87,7 +87,7 @@ class DeliveryController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "delivery.no_wo ASC";
+        $sort = "delivery.id ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -117,13 +117,21 @@ class DeliveryController extends Controller {
                 ->join('JOIN', 'spk', 'spk.no_spk = wo_masuk.no_spk')
                 ->join('JOIN', 'chassis', 'chassis.kd_chassis = spk.kd_chassis')
                 ->join('JOIN', 'model', 'model.kd_model = spk.kd_model')
+                ->join('JOIN', 'tbl_karyawan', 'tbl_karyawan.nik = spk.nik')
                 ->orderBy($sort)
-                ->select("delivery.*, chassis.merk as merk, model.model as model");
+                ->select("delivery.*, chassis.merk as merk, model.model as model, tbl_karyawan.nama as sales");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
+                if ($key == 'nama') {
+                    $query->andFilterWhere(['like', 'tbl_karyawan.' . $key, $val]);
+                } elseif ($key == 'model') {
+                    $query->andFilterWhere(['like', 'model.' . $key, $val]);
+                } elseif ($key == 'merk') {
+                    $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
+                }
                 $query->andFilterWhere(['like', $key, $val]);
             }
         }
@@ -149,6 +157,11 @@ class DeliveryController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new Delivery();
         $model->attributes = $params;
+        if ($model->tujuan == "customer") {
+            $model->status = 1;
+        } else {
+            $model->status = 0;
+        }
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -163,6 +176,11 @@ class DeliveryController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
+        if ($model->tujuan == "customer") {
+            $model->status = 1;
+        } else {
+            $model->status = 0;
+        }
 
         if ($model->save()) {
             $this->setHeader(200);

@@ -1,6 +1,7 @@
 app.controller('jenisbrgCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
+    var paramRef;
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
@@ -20,7 +21,7 @@ app.controller('jenisbrgCtrl', function ($scope, Data, toaster) {
         if (tableState.search.predicateObject) {
             param['filter'] = tableState.search.predicateObject;
         }
-
+        paramRef = param;
         Data.get('jenisbrg', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
@@ -28,6 +29,11 @@ app.controller('jenisbrgCtrl', function ($scope, Data, toaster) {
 
         $scope.isLoading = false;
     };
+    $scope.excel = function () {
+        Data.get('jabatan', paramRef).then(function (data) {
+            window.location = 'api/web/jenisbrg/excel';
+        });
+    }
 
     $scope.create = function (form) {
         $scope.is_create = true;
@@ -35,14 +41,14 @@ app.controller('jenisbrgCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-        Data.get('jenisbrg/kode').then(function(data) {
+        Data.get('jenisbrg/kode').then(function (data) {
             $scope.form.kd_jenis = data.kode;
         });
     };
     $scope.update = function (form) {
         $scope.is_create = false;
         $scope.is_edit = true;
-        $scope.is_view = false; 
+        $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.jenis_brg;
         $scope.form = form;
     };
@@ -53,19 +59,22 @@ app.controller('jenisbrgCtrl', function ($scope, Data, toaster) {
         $scope.form = form;
     };
     $scope.save = function (form) {
-        var url = ($scope.is_create == true) ? 'jenisbrg/create' : 'jenisbrg/update/'+ form.kd_jenis;
-         Data.post(url, form).then(function (result) {   
-             if (result.status == 0) {
+        var url = ($scope.is_create == true) ? 'jenisbrg/create' : 'jenisbrg/update/' + form.kd_jenis;
+        Data.post(url, form).then(function (result) {
+            if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
                 $scope.is_edit = false;
                 $scope.callServer(tableStateRef); //reload grid ulang
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
             }
-         });
-        
+        });
+
     };
     $scope.cancel = function () {
+        if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
+            $scope.callServer(tableStateRef);
+        }
         $scope.is_edit = false;
         $scope.is_view = false;
     };
