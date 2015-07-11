@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Ujimutu;
+use app\models\DetUjimutu;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -24,6 +25,7 @@ class UjimutuController extends Controller {
                     'delete' => ['delete'],
                     'no_wo' => ['post'],
                     'det_nowo' => ['get'],
+                    'cari' => ['get'],
                 ],
             ]
         ];
@@ -52,7 +54,6 @@ class UjimutuController extends Controller {
         return true;
     }
 
-
     public function actionDet_nowo() {
         if (!empty($_GET['kata'])) {
             $query = new Query;
@@ -66,6 +67,22 @@ class UjimutuController extends Controller {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => $models));
         }
+    }
+
+    public function actionCari() {
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('view_wo_spk as vws')
+        ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
+        ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
+        ->join('LEFT JOIN', 'model', 'vws.kd_model = model.kd_model')
+        ->select("vws.*, tk.nama as sales, model.model as model, vws.merk as merk")
+        ->andWhere(['like', 'vws.no_wo', $params['nama']]);
+        
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionIndex() {
@@ -133,8 +150,11 @@ class UjimutuController extends Controller {
         $model->attributes = $params['ujimutu'];
 
         if ($model->save()) {
-            foreach($params['det_ujimutu'] as $data){
-                
+            foreach ($params['det_ujimutu'] as $data) {
+                $det = new DetUjimutu();
+                $det->attributes = $data;
+                $det->kd_uji = $model->id;
+                $det->save();
             }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);

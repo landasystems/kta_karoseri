@@ -7,11 +7,64 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
     $scope.is_view = false;
     $scope.is_create = false;
     $scope.is_create = false;
-
     
-     
+     $scope.cariProduk = function ($query) {
+        if ($query.length >= 3) {
+            Data.get('ujimutu/cari', {nama: $query}).then(function (data) {
+                $scope.results = data.data;
+            });
+        }
+    }
+    
+    $scope.pilih =function(detail, $item){
+        detail.merk = $item.merk
+    }
+    
+    $scope.detUjimutu = [
+        {
+            id: '',
+            kd_uji: '',
+            bentuk_baru: '',
+            kelas: '',
+            biaya: '',
+        }
+    ];
+    $scope.addDetail = function() {
+        var newDet = {
+            id: '',
+            kd_uji: '',
+            bentuk_baru: '',
+            kelas: '',
+            biaya: '',
+        }
+        $scope.total();
+        $scope.detUjimutu.unshift(newDet);
 
- 
+    };
+
+    $scope.removeRow = function(paramindex) {
+        var comArr = eval($scope.detUjimutu);
+        $scope.total();
+        if (comArr.length > 1) {
+            $scope.detUjimutu.splice(paramindex, 1);
+            $scope.total();
+        } else {
+            alert("Something gone wrong");
+        }
+
+    };
+    $scope.total = function() {
+        var total = 0;
+        var biaya_admin = parseInt($scope.form.biaya_admin);
+        angular.forEach($scope.detUjimutu, function(detail) {
+            total += detail.biaya;
+        });
+        $scope.form.total_biaya = total;
+
+    }
+
+
+
     $scope.open1 = function($event) {
         $event.preventDefault();
         $event.stopPropagation();
@@ -74,15 +127,17 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-         $scope.detUjimutu = [
-        {
-            id: '',
-            kd_uji: '',
-            bentuk_baru: '',
-            kelas: '',
-            biaya: '',
-        }
-    ];
+//        $scope.form_total_biaya = 0;
+//        $scope.form.biaya_admin = 0;
+        $scope.detUjimutu = [
+            {
+                id: '',
+                kd_uji: '',
+                bentuk_baru: '',
+                kelas: '',
+                biaya: '',
+            }
+        ];
 
     };
     $scope.update = function(form) {
@@ -98,10 +153,10 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
         $scope.formtitle = "Lihat Data : " + form.merk;
         $scope.form = form;
     };
-    $scope.save = function(form) {
+    $scope.save = function(form, detail) {
         var data = {
             ujimutu: form,
-//            det_ujimutu: detail,
+            det_ujimutu: detail,
         };
         var url = ($scope.is_create == true) ? 'ujimutu/create' : 'ujimutu/update/' + form.id;
         Data.post(url, data).then(function(result) {
@@ -124,37 +179,6 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
-    };
-    $scope.detUjimutu = [
-        {
-            id: '',
-            kd_uji: '',
-            bentuk_baru: '',
-            kelas: '',
-            biaya: '',
-        }
-    ];
-    $scope.addDetail = function() {
-        var newDet = [{
-            id: '',
-            kd_uji: '',
-            bentuk_baru: '',
-            kelas: '',
-            biaya: '',
-        }]
-        $scope.detUjimutu.push(newDet);
-
-    };
-     $scope.removeRow = function(paramindex) {
-        var comArr = eval($scope.detUjimutu);
-         
-        if (comArr.length > 1) {
-            $scope.detUjimutu.splice(paramindex, 1);
-            
-        } else {
-            alert("Something gone wrong");
-        }
-        
     };
 
 
