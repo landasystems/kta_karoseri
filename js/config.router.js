@@ -511,10 +511,10 @@ angular.module('app')
                                     url: '/ujimutu',
                                     templateUrl: 'tpl/t_ujimutu/index.html',
                                     resolve: {
-                                       deps: ['$ocLazyLoad',
-                                            function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load('ui.select').then(
-                                                        function () {
+                                        deps: ['$ocLazyLoad',
+                                            function($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['ui.select2']).then(
+                                                        function() {
                                                             return $ocLazyLoad.load('js/controllers/ujimutu.js');
                                                         }
                                                 );
