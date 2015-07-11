@@ -383,7 +383,7 @@ angular.module('app')
                                             function($ocLazyLoad) {
                                                 return $ocLazyLoad.load(['ui.select', 'daterangepicker']).then(
                                                         function() {
-                                                            return $ocLazyLoad.load('js/controllers/rubahbentuk.js');
+                                                            return $ocLazyLoad.load('js/controllers/bkt-barangkeluar.js');
                                                         }
                                                 );
                                             }]

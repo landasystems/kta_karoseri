@@ -176,22 +176,29 @@
                                     <thead>
                                         <tr>
                                             <th>Barang</th>
-                                            <th>Jumlah</th>
-                                            <th>Keterangan</th>
+                                            <th style="width:100px">Jumlah</th>
+                                            <th style="width:400px">Keterangan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td>
-                                            <ui-select on-select="detail.harga = $item.harga_beli_terakhir" ng-model="detail.produk" theme="bootstrap">
-                                                <ui-select-match>{{$select.selected.nama}}</ui-select-match>
-                                                <ui-select-choices refresh="cariProduk($select.search)" repeat="val in results">
-                                                    {{val.nama}}
-                                                </ui-select-choices>
-                                            </ui-select>
+                                                <div class="input-group">
+                                                    <ui-select on-select="detail.harga = $item.harga_beli_terakhir" ng-model="detail.produk" theme="bootstrap">
+                                                        <ui-select-match>{{$select.selected.nama}}</ui-select-match>
+                                                        <ui-select-choices refresh="cariProduk($select.search)" repeat="val in results">
+                                                            {{val.nama}}
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <span class="input-group-btn">
+                                                        <button ng-click="detail.produk = undefined" class="btn btn-default">
+                                                            <span class="glyphicon glyphicon-trash"></span>
+                                                        </button>
+                                                    </span>
+                                                </div>
                                             </td>
-                                            <td></td>
-                                            <td></td>
+                                            <td><input type="text" ng-model="jumlah" class="form-control"></td>
+                                            <td><input type="text" ng-model="keterangan" class="form-control"></td>
                                         </tr>
                                     </tbody>
                                 </table>
