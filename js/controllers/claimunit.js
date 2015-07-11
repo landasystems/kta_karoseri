@@ -1,16 +1,33 @@
 app.controller('claimunitCtrl', function($scope, Data, toaster) {
-    //init data
+//init data
     var tableStateRef;
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
+    $scope.jenis_kmp = [];
+    $scope.bagian = '-';
 
     $scope.open1 = function($event) {
         $event.preventDefault();
         $event.stopPropagation();
         $scope.opened1 = true;
     };
+
+    $scope.open2 = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened2 = true;
+    };
+    $scope.kalkuasi = function() {
+        $scope.form.total_biaya = (1 * $scope.form.biaya_spd) + (1 * $scope.form.biaya_tk) + (1 * $scope.form.biaya_mat);
+    }
+
+    $scope.jenisKmp = function(status, bagian) {
+        Data.get('claimunit/jeniskomplain?status=' + status + '&bagian=' + bagian).then(function(data) {
+            $scope.jenis_kmp = data.data;
+        });
+    }
 
     $scope.wo = {
         minimumInputLength: 3,
@@ -39,14 +56,12 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
             return data.no_wo;
         },
     };
-
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
         var limit = tableState.pagination.number || 10;
         var param = {offset: offset, limit: limit};
-
         if (tableState.sort.predicate) {
             param['sort'] = tableState.sort.predicate;
             param['order'] = tableState.sort.reverse;
@@ -55,14 +70,12 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('rubahbentuk', param).then(function(data) {
+        Data.get('claimunit', param).then(function(data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
-
         $scope.isLoading = false;
     };
-
     $scope.create = function(form) {
         $scope.is_edit = true;
         $scope.is_view = false;
@@ -74,17 +87,23 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
-        $scope.formtitle = "Edit Data : " + form.kd_rubah;
+        $scope.formtitle = "Edit Data : " + form.no_wo;
         $scope.form = form;
+        $scope.jenisKmp(form.stat, form.bag)
+        $scope.form.kd_jns = form.kd_jns;
+        $scope.kalkuasi();
     };
     $scope.view = function(form) {
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.kd_rubah;
+        $scope.formtitle = "Lihat Data : " + form.no_wo;
         $scope.form = form;
+        $scope.jenisKmp(form.stat, form.bag)
+        $scope.form.kd_jns = form.kd_jns;
+        $scope.kalkuasi();
     };
     $scope.save = function(form) {
-        var url = ($scope.is_create == true) ? 'rubahbentuk/create' : 'rubahbentuk/update/' + form.id;
+        var url = ($scope.is_create == true) ? 'claimunit/create' : 'claimunit/update/' + form.id;
         Data.post(url, form).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -101,12 +120,11 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
     };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('rubahbentuk/delete/' + row.id).then(function(result) {
+            Data.delete('claimunit/delete/' + row.id).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
-
     $scope.isJson = function(str) {
         try {
             JSON.parse(str);

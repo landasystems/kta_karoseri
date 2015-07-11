@@ -129,7 +129,7 @@ class ChassisController extends Controller {
     
     public function actionKode(){
       $query = new Query;
-        $query->from('barang')
+        $query->from('chassis')
                 ->select('*')
                 ->orderBy('kd_chassis DESC')
                 ->limit(1);
