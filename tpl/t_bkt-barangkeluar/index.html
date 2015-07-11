@@ -109,20 +109,19 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">No Wo</label>
                                     <div class="col-sm-9">
-                                        <input type="text" 
-                                               ui-select2="wo"
-                                               ng-model="no_wo"
-                                               ng-change="
-                                                           form.nm_customer = no_wo.nm_customer;
-                                                           form.no_wo = no_wo.no_wo;
-                                                           form.model = no_wo.model;
-                                                           form.jenis = no_wo.jenis;
-                                                           form.sales = no_wo.sales;
-                                                           form.wilayah = no_wo.wilayah;
-                                               "
-                                               data-placeholder="-Pilih No Wo-"
-                                               class="form-control"
-                                               ng-disabled="is_view"/>
+                                        <div class="input-group">
+                                            <ui-select ng-model="form.no_wo" theme="bootstrap">
+                                                <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
+                                                <ui-select-choices refresh="cariWo($select.search)" repeat="val in results">
+                                                    {{val.no_wo}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            <span class="input-group-btn">
+                                                <button ng-click="detail.produk = undefined" class="btn btn-default">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group">

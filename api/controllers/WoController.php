@@ -3,14 +3,15 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Barang;
+use app\models\TransPo;
+use app\models\DetailPo;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class BarangController extends Controller {
+class WoController extends Controller {
 
     public function behaviors() {
         return [
@@ -19,13 +20,11 @@ class BarangController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
-                    'excel' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'jenis' => ['get'],
                     'kode' => ['get'],
-                    'listbarang' => ['get'],
+                    'wospk' => ['get'],
                 ],
             ]
         ];
@@ -42,7 +41,6 @@ class BarangController extends Controller {
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
-//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -54,58 +52,45 @@ class BarangController extends Controller {
         return true;
     }
 
-    public function actionListbarang() {
-        $param = $_REQUEST;
+    public function actionWospk() {
+        $params = $_REQUEST;
         $query = new Query;
-        $query->from('barang')
-                ->select("*")
-                ->where('nm_barang like "%' . $param['nama'] . '%"');
-
+        $query->from('view_wo_spk as vws')
+                ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
+                ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
+                ->select("vws.*, tk.nama as sales, tk.lokasi_kntr as wilayah")
+                ->where(['like', 'vws.no_wo', $params['nama']]);
         $command = $query->createCommand();
         $models = $command->queryAll();
 
         $this->setHeader(200);
-
         echo json_encode(array('status' => 1, 'data' => $models));
-    }
-
-    public function actionJenis() {
-        $query = new Query;
-        $query->from('jenis_brg')
-                ->select("*");
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'jenis_brg' => $models));
     }
 
     public function actionKode() {
         $query = new Query;
-        $query->from('barang')
+        $query->from('trans_po')
                 ->select('*')
-                ->orderBy('kd_barang DESC')
+                ->orderBy('nota DESC')
                 ->limit(1);
 
         $command = $query->createCommand();
         $models = $command->query()->read();
-        $kode = $models['kd_barang'] + 1;
-        Yii::error($command->query());
+        $kode_mdl = (substr($models['id_jabatan'], -6) + 1);
+        $kode = substr('000000' . $kode_mdl, strlen($kode_mdl));
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => $kode));
+        echo json_encode(array('status' => 1, 'kode' => 'PCH' . $kode));
     }
 
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_barang ASC";
+        $sort = "trans_po.nota ASC";
         $offset = 0;
         $limit = 10;
-        //        Yii::error($params);
+
         //limit & offset pagination
         if (isset($params['limit']))
             $limit = $params['limit'];
@@ -122,20 +107,20 @@ class BarangController extends Controller {
                     $sort.=" DESC";
             }
         }
-
         //create query
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from(['barang', 'jenis_brg'])
-                ->where('barang.jenis = jenis_brg.kd_jenis')
+                ->from('trans_po')
+                ->join('JOIN', 'detail_po', 'trans_po.nota = detail_po.nota')
                 ->orderBy($sort)
-                ->select("barang.*, jenis_brg.jenis_brg");
+                ->select("*");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
+
                 $query->andFilterWhere(['like', $key, $val]);
             }
         }
@@ -143,13 +128,17 @@ class BarangController extends Controller {
         session_start();
         $_SESSION['query'] = $query;
 
+//        print_r($_SESSION['query']);
+
         $command = $query->createCommand();
         $models = $command->queryAll();
-        $totalItems = $query->count();
+        $totalItems = 0;
 
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+
+//        echo json_encode(array('status'=>1));
     }
 
     public function actionView($id) {
@@ -162,8 +151,9 @@ class BarangController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Barang();
+        $model = new TransPo();
         $model->attributes = $params;
+
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -202,7 +192,7 @@ class BarangController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Barang::findOne($id)) !== null) {
+        if (($model = TransPo::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -243,20 +233,7 @@ class BarangController extends Controller {
         $query->limit("");
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expmaster/barang", ['models' => $models]);
-    }
-    public function actionCari(){
-        $params = $_REQUEST;
-        $query = new Query;
-        $query->from('barang')
-                ->select("kd_barang,nm_barang")
-                ->where(['like', 'nm_barang', $params['barang']])
-                ->orWhere(['like','kd_barang',$params['barang']]);
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $models));
-    
+        return $this->render("/expmaster/jabatan", ['models' => $models]);
     }
 
 }
