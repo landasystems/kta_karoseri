@@ -1,6 +1,6 @@
-<div ng-app="app" ng-controller="sppNonRutinCtrl">
+<div ng-app="app" ng-controller="sppCtrl">
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n font-thin h3">Transaksi - SPP Non Rutin</h1>
+        <h1 class="m-n font-thin h3">Transaksi - SPP</h1>
     </div>
     <div class="wrapper-md" ng-show="!is_edit">
         <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
@@ -85,60 +85,91 @@
             </div>
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation ">
+                    <div class="img-thumbnail">
+                        <div class="col-md-4 col-sm-12">
 
-                    <div class="col-md-4 col-sm-12">
-
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">NO SPP</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" ng-model="form.no_spp" ng-disabled="is_view" ng-readonly="is_create == false" >
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">NO SPP</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" ng-model="form.no_spp" ng-disabled="is_view" ng-readonly="true" placeholder="Digenerate secara otomatis">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Tanggal Transaksi</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" ng-model="form.nm_customer" ng-disabled="is_view" ng-readonly="is_create == false" >
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Tanggal Transaksi</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" ng-model="form.nm_customer" ng-disabled="is_view" ng-readonly="is_create == false" >
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Periode SPP</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group m-b">
+                                        <input date-range-picker class="form-control" type="text"  ng-model="form.periode">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Tipe SPP</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" ng-change="changed(form)" ui-select2 style="width:100%" ng-model="form.no_proyek" ng-disabled="is_view" data-placeholder="Pilih Tipe SPP" required>
+                                        <option value="RUTIN">Rutin</option>
+                                        <option value="Non Rutin">Non Rutin</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 img-thumbnail">
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label" style="font-weight: bold">Periode SPP</label>
-                            <div class="col-sm-6">
-                                
-                            </div>
-                        </div>
-
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <label class="col-sm-1 control-label" style="font-weight: bold">Detail SPP</label>
+                    <!--{{listBarang}}-->
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center; font-weight: bold;width:10%">Kode</th>
+                                <th style="text-align: center; font-weight: bold;width:20%">Nama Barang</th>
+                                <th style="text-align: center; font-weight: bold;width:10%">QTY</th>
+                                <th style="text-align: center; font-weight: bold;width: 20%">Keterangan</th>
+                                <th style="text-align: center; font-weight: bold;width:20%">Delivery</th>
+                                <th style="text-align: center; font-weight: bold;width:20%">No WO</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="detail in sppDet">
+                                <td>
+                                    <input type="text" class="form-control" ng-model="detail.kode" ng-disabled="is_view" ng-readonly="is_create == false" >
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <ui-select ng-model="form.no_proyek" theme="bootstrap">
+                                            <ui-select-match>{{$select.selected.nama}}</ui-select-match>
+                                            <ui-select-choices refresh="cariBarang($select.search)" repeat="barang in listBarang">
+                                                {{barang.kd_barang}} - {{barang.nm_barang}}
+                                            </ui-select-choices>
+                                        </ui-select>
+                                        <span class="input-group-btn">
+                                            <button ng-click="form.no_proyek = undefined" class="btn btn-default">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-arrows"></i></button>
+                                    <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0"><i class="fa fa-trash-o"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div align="center">
+                        <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
+                        <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, detKerja)">&nbsp;Simpan Perubahan</button>
                     </div>
-
-
+                </form>
             </div>
-            <div class="line line-dashed b-b line-lg pull-in"></div>
-            <table class="table table-bordered">
-                <tr>
-                    <td>Detail SPK Pekerjaan</td>
-                    <td width="15">#</td>
-                </tr>
-                <tr ng-repeat="detail in detKerja">
-                    <td>
-                        <input type="hidden" ng-model="detail.kd_jab">
-                        <input type="hidden" ng-model="detail.jenis">
-                        <input type="text" class="form-control" ng-model="detail.nm_kerja" ng-disabled="is_view" ng-readonly="is_create == false" >
-
-                    </td>
-                    <td>
-                        <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-arrows"></i></button>
-                        <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0"><i class="fa fa-trash-o"></i></button>
-
-                    </td>
-                </tr>
-            </table>
-            <div align="center">
-                <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
-                <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, detKerja)">&nbsp;Simpan Perubahan</button>
-            </div>	
-            </form>
         </div>
     </div>
-</div>
 </div>

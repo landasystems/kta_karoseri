@@ -11,7 +11,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class SppnonrutinController extends Controller {
+class SppController extends Controller {
 
     public function behaviors() {
         return [
@@ -24,7 +24,7 @@ class SppnonrutinController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'kode' => ['get'],
+                    'listbarang' => ['get'],
                 ],
             ]
         ];
@@ -52,8 +52,6 @@ class SppnonrutinController extends Controller {
 
         return true;
     }
-
-   
 
     public function actionIndex() {
         //init variable
@@ -85,7 +83,7 @@ class SppnonrutinController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('trans_spp')
-                ->where('no_proyek ="Non Rutin"')
+//                ->where('no_proyek')
                 ->orderBy($sort)
                 ->select("*");
 
@@ -107,13 +105,11 @@ class SppnonrutinController extends Controller {
         echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
     }
 
-    
-
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
-        Yii::error($params);
+//        Yii::error($params);
         if ($model->save()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -123,10 +119,8 @@ class SppnonrutinController extends Controller {
         }
     }
 
-    
-
     protected function findModel($id) {
-        if (($model = Umk::findOne($id)) !== null) {
+        if (($model = TransSpp::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -160,14 +154,27 @@ class SppnonrutinController extends Controller {
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
-    
-     public function actionExcel() {
+    public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("excel", ['models'=>$models]);
+        return $this->render("excel", ['models' => $models]);
     }
+
+    public function actionListbarang() {
+        $query = new Query();
+        $query->from('barang')
+                ->select("kd_barang,nm_barang");
+
+        //filter
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models), JSON_PRETTY_PRINT);
+    }
+
 }
 
 ?>

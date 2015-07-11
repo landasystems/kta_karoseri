@@ -1,10 +1,11 @@
-app.controller('sppNonRutinCtrl', function ($scope, Data, toaster) {
+app.controller('sppCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
+    $scope.sppDet = [];
 //    Data.get('bstk/nowo').then(function (data) {
 //        $scope.list_wo = data.list_wo;
 //    });
@@ -13,6 +14,16 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster) {
         $event.stopPropagation();
         $scope.opened1 = true;
     };
+    $scope.cariBarang = function ($query) {
+        if ($query.length >= 3) {
+            Data.get('barang/cari', {barang: $query}).then(function (data) {
+                $scope.results = data.data;
+            });
+        }
+    }
+    Data.get('spp/listbarang').then(function (data) {
+        $scope.listBarang = data.data;
+    });
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -29,7 +40,7 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('sppnonrutin', param).then(function (data) {
+        Data.get('spp', param).then(function (data) {
             $scope.displayed = data.data;
 //            $scope.displayed.tgl_terima = new Date(data.data.tgl_terima);
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
@@ -44,6 +55,18 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.sppDet = [{
+                id: '',
+                no_spp: '',
+                kd_barang: '',
+                saldo: '',
+                qty: '',
+                ket: '',
+                p: '',
+                a: '',
+                stat_spp: '',
+                no_wo: '',
+            }];
 //        Data.get('custmer/kode').then(function(data) {
 //            $scope.form.kd_cust = data.kode;
 //        });
@@ -102,12 +125,27 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster) {
             });
         }
     };
-//    $scope.changed = function(form){
-////        alert(wo.no_wo);
-//        Data.post('serahterimain/selected/', form).then(function (result){
-////            console.log(result.selected_spk.merk);
-//            $scope.form.merk = result.merk;
-//            $scope.form.model = result.model;
-//        });
-//    };
+    $scope.addDetail = function () {
+        var newDet = {
+            id: '',
+            no_spp: '',
+            kd_barang: '',
+            saldo: '',
+            qty: '',
+            ket: '',
+            p: '',
+            a: '',
+            stat_spp: '',
+            no_wo: '',
+        }
+        $scope.detBom.unshift(newDet);
+    };
+    $scope.removeRow = function (paramindex) {
+        var comArr = eval($scope.detBom);
+        if (comArr.length > 1) {
+            $scope.detBom.splice(paramindex, 1);
+        } else {
+            alert("Something gone wrong");
+        }
+    };
 });
