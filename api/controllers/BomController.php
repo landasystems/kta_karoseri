@@ -26,7 +26,6 @@ class BomController extends Controller {
                     'chassis' => ['get'],
                     'model' => ['get'],
                     'barang' => ['get'],
-                    'jabatan' => ['get'],
                     'kode' => ['get'],
                     'tipe' => ['get'],
                 ],
@@ -56,22 +55,6 @@ class BomController extends Controller {
         }
 
         return true;
-    }
-
-    public function actionJabatan() {
-        $param = $_REQUEST;
-        if (!empty($param)) {
-            $query = new Query;
-            $query->from('tbl_jabatan')
-                    ->select("*")
-                    ->where('jabatan like "%' . $param['nama'] . '%"');
-
-            $command = $query->createCommand();
-            $models = $command->queryAll();
-            $this->setHeader(200);
-
-            echo json_encode(array('status' => 1, 'data' => $models));
-        }
     }
 
     public function actionChassis() {
@@ -187,7 +170,7 @@ class BomController extends Controller {
 
         if ($model->save()) {
             $detailBom = $params['detailBom'];
-            print_r($detailBom);
+//            print_r($detailBom);
             foreach ($detailBom as $val) {
                 $det = new BomDet();
                 $det->attributes = $val;

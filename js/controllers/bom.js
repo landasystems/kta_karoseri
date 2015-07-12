@@ -1,3 +1,24 @@
+app.controller('selectJabatan', function($scope, Data, $modalInstance) {
+    $scope.kd_jab = '';
+    
+    $scope.cariJabatan = function($query) {
+        if ($query.length >= 3) {
+            Data.get('bom/jabatan', {nama: $query}).then(function(data) {
+                $scope.resultsjabatan = data.data;
+            });
+        }
+    }
+
+    $scope.ok = function(jabatan) {
+        $modalInstance.close(jabatan);
+        console.log(jabatan);
+    };
+
+    $scope.cancel = function() {
+        $modalInstance.dismiss('cancel');
+    };
+});
+
 app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal) {
     var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
     var uploader = $scope.uploader = new FileUploader({
@@ -17,13 +38,17 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal) 
     $scope.close = function() {
         $modal.dismiss('cancel');
     };
-
+    $scope.tes = '';
     $scope.modalJabatan = function() {
-        $modal.open({
+        var jab = $modal.open({
             templateUrl: 'modalJabatan.html',
-            controller: 'bomCtrl',
+            controller: 'selectJabatan',
             size: 'sm',
         });
+        jab.result.then(function(jabatan) {
+            $scope.tes = jabatan;
+            console.log(jabatan);
+        })
     };
 
     $scope.modalBarang = function() {
@@ -58,14 +83,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal) 
         if ($query.length >= 3) {
             Data.get('modelkendaraan/listmodel', {nama: $query}).then(function(data) {
                 $scope.results = data.data;
-            });
-        }
-    }
-
-    $scope.cariJabatan = function($query) {
-        if ($query.length >= 3) {
-            Data.get('bom/jabatan', {nama: $query}).then(function(data) {
-                $scope.resultsjabatan = data.data;
             });
         }
     }
