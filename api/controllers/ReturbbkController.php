@@ -156,7 +156,7 @@ class ReturbbkController extends Controller {
         $model->attributes = $params;
         $model->kd_barang = $params['kd_barang']['kd_barang'];
         $model->no_bbk = $params['no_bbk']['no_bbk'];
-        if ($model->alasan == 'Rusak') {
+        if ($model->alasan == 'Tidak Sesuai') {
             //update stok barang
             $barang = Barang::find()->where('kd_barang="' . $model->kd_barang . '"')->one();
             $barang->saldo -= $model->jml;
@@ -174,9 +174,9 @@ class ReturbbkController extends Controller {
 
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
-        print_r($params);
+//        print_r($params);
         $model = ReturBbk::find()->where('no_retur_bbk="' . $id . '"')->one();
-        if ($model->alasan == 'Rusak') {
+        if ($model->alasan == 'Tidak Sesuai') {
             //kembalikan stok barang ke semula
             $barang = Barang::find()->where('kd_barang="' . $params['kd_barang']['kd_barang'] . '"')->one();
             $barang->saldo += $model->jml;
@@ -187,7 +187,7 @@ class ReturbbkController extends Controller {
         $model->no_bbk = $params['no_bbk']['no_bbk'];
 
         if ($model->save()) {
-            if ($model->alasan == 'Rusak') {
+            if ($model->alasan == 'Tidak Sesuai') {
                 //update stok barang dengan yang baru
                 $barang = Barang::find()->where('kd_barang="' . $params['kd_barang']['kd_barang'] . '"')->one();
                 $barang->saldo -= $model->jml;
@@ -204,7 +204,16 @@ class ReturbbkController extends Controller {
     public function actionDelete($id) {
         $model = ReturBbk::find()->where('no_retur_bbk="' . $id . '"')->one();
 
+
+        if ($model->alasan == 'Tidak Sesuai') {
+            //kembalikan stok barang ke semula
+            $barang = Barang::find()->where('kd_barang="' . $model->kd_barang . '"')->one();
+            $barang->saldo += $model->jml;
+            $barang->save();
+        }
+
         if ($model->delete()) {
+
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
