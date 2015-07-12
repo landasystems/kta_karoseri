@@ -86,22 +86,22 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <div class="col-sm-12">
                             <div class="row">
-                                
+
                                 <div class="col-md-4">
                                     <div class="panel panel-info">
                                         <div class="panel-heading">
                                             <label class="i-checks">
-                                                <input type="checkbox" ng-disabled="is_view" ng-model='selectMaster' ng-click="checkAll('master',selectMaster)">
+                                                <input type="checkbox" ng-disabled="is_view" ng-model='selectMaster' ng-click="checkAll('master', selectMaster)">
                                                 <i></i>
                                                 Data Master
                                             </label>
                                         </div>
                                         <div class="list-group bg-white">
-                                             <div class="list-group-item">
+                                            <div class="list-group-item">
                                                 <b>Pengguna</b>
                                             </div>
                                             <div href="" class="list-group-item m-l">
@@ -118,7 +118,7 @@
                                                     Hak Akses
                                                 </label>
                                             </div>
-                                            
+
                                             <div class="list-group-item">
                                                 <b>Master</b>
                                             </div>
@@ -220,84 +220,207 @@
                                                     Departement
                                                 </label>
                                             </div>
-                                           
+
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-4">
                                     <div class="panel panel-info">
                                         <div class="panel-heading">
                                             <label class="i-checks">
-                                                <input type="checkbox" ng-disabled="is_view" ng-model='selectTransaksi' ng-click="checkAll('transaksi',selectTransaksi)">
+                                                <input type="checkbox" ng-disabled="is_view" ng-model='selectTransaksi' ng-click="checkAll('transaksi', selectTransaksi)">
                                                 <i></i>
                                                 Transaksi
                                             </label>
                                         </div>
                                         <div class="list-group bg-white">
                                             <div class="list-group-item">
-                                                <b>Persediaan</b>
+                                                <b>Engineering</b>
                                             </div>
                                             <div href="" class="list-group-item m-l">
                                                 <label class="i-checks">
-                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_stokmasuk">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_bom">
                                                     <i></i>
-                                                    Barang Masuk
+                                                    Bill of Material
                                                 </label>
                                             </div>
                                             <div href="" class="list-group-item m-l">
                                                 <label class="i-checks">
-                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_stokkeluar">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_validasibom">
                                                     <i></i>
-                                                    Barang Keluar
+                                                    Validasi Bom
                                                 </label>
                                             </div>
-                                            <div class="list-group-item">
-                                                <b>Pembelian</b>
-                                            </div>
+
                                             <div href="" class="list-group-item m-l">
                                                 <label class="i-checks">
-                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_pembelian">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_tambahitem">
                                                     <i></i>
-                                                    Pembelian
-                                                </label>
-                                            </div>
-                                            <div href="" class="list-group-item m-l">
-                                                <label class="i-checks">
-                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_bayarhutang">
-                                                    <i></i>
-                                                    Bayar Hutang
-                                                </label>
-                                            </div>
-                                            <div href="" class="list-group-item m-l">
-                                                <label class="i-checks">
-                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_returpembelian">
-                                                    <i></i>
-                                                    Retur Pembelian
+                                                    Tambahan Items
                                                 </label>
                                             </div>
                                             <div class="list-group-item">
-                                                <b>Penjualan</b>
+                                                <b>Sales Support</b>
                                             </div>
                                             <div href="" class="list-group-item m-l">
                                                 <label class="i-checks">
-                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_penjualan">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_sti">
                                                     <i></i>
-                                                    Penjualan
+                                                    Serah Terima Internal
                                                 </label>
                                             </div>
                                             <div href="" class="list-group-item m-l">
                                                 <label class="i-checks">
-                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_bayarpiutang">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_pembatalanchasis">
                                                     <i></i>
-                                                    Bayar Piutang
+                                                    Pembatalan Chassis
                                                 </label>
                                             </div>
                                             <div href="" class="list-group-item m-l">
                                                 <label class="i-checks">
-                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_returpenjualan">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_spesanankaroseri">
                                                     <i></i>
-                                                    Retur Penjualan
+                                                    Surat Pesanan Karoseri
+                                                </label>
+                                            </div>
+                                            <div href="" class="list-group-item m-l">
+                                                <label class="i-checks">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_claimunit">
+                                                    <i></i>
+                                                    Claim Unit
+                                                </label>
+                                            </div>
+                                            <div href="" class="list-group-item m-l">
+                                                <label class="i-checks">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_sperintahkaroseri">
+                                                    <i></i>
+                                                    Surat Perintah Kerja
+                                                </label>
+                                            </div>
+                                            <div href="" class="list-group-item m-l">
+                                                <label class="i-checks">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_bstk">
+                                                    <i></i>
+                                                    BSTK
+                                                </label>
+                                            </div>
+                                            <div href="" class="list-group-item m-l">
+                                                <label class="i-checks">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_rubahbentuk">
+                                                    <i></i>
+                                                    Rubah Bentuk
+                                                </label>
+                                            </div>
+                                            <div href="" class="list-group-item m-l">
+                                                <label class="i-checks">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_ujimutu">
+                                                    <i></i>
+                                                    Pengajuan Uji Mutu
+                                                </label>
+                                            </div>
+                                            <div href="" class="list-group-item m-l">
+                                                <label class="i-checks">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_deliveryunit">
+                                                    <i></i>
+                                                   Delivery Unit
+                                                </label>
+                                            </div>
+                                            <div href="" class="list-group-item m-l">
+                                                <label class="i-checks">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_buktiterima">
+                                                    <i></i>
+                                                   Bukti Serah Terima
+                                                </label>
+                                            </div>
+                                             <div class="list-group-item">
+                                                <b>Logistic</b>
+                                            </div>
+                                             <div href="" class="list-group-item m-l">
+                                                <label class="i-checks">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_spprutin">
+                                                    <i></i>
+                                                  SPP Rutin
+                                                </label>
+                                            </div>
+                                             <div href="" class="list-group-item m-l">
+                                                <label class="i-checks">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_sppnonrutin">
+                                                    <i></i>
+                                                   SPP Non Rutin
+                                                </label>
+                                            </div>
+                                             <div href="" class="list-group-item m-l">
+                                                <label class="i-checks">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_purchaseorder">
+                                                    <i></i>
+                                                   Purchase Order
+                                                </label>
+                                            </div>
+                                             <div href="" class="list-group-item m-l">
+                                                <label class="i-checks">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_bktbarangmasuk">
+                                                    <i></i>
+                                                   Bukti Barang Masuk
+                                                </label>
+                                            </div>
+                                             <div href="" class="list-group-item m-l">
+                                                <label class="i-checks">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_bktbarangkeluar">
+                                                    <i></i>
+                                                  Bukti Barang Keluar
+                                                </label>
+                                            </div>
+                                             <div href="" class="list-group-item m-l">
+                                                <label class="i-checks">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_returbuktibarangmasuk">
+                                                    <i></i>
+                                                   Retur Bukti Barang Masuk
+                                                </label>
+                                            </div>
+                                             <div href="" class="list-group-item m-l">
+                                                <label class="i-checks">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_returbuktibarangkeluar">
+                                                    <i></i>
+                                                   Retur Bukti Barang Keluar
+                                                </label>
+                                            </div>
+                                            <div class="list-group-item">
+                                                <b>PPC</b>
+                                            </div>
+                                             <div href="" class="list-group-item m-l">
+                                                <label class="i-checks">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_wordermasuk">
+                                                    <i></i>
+                                                 Work Order Masuk
+                                                </label>
+                                            </div>
+                                             <div href="" class="list-group-item m-l">
+                                                <label class="i-checks">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_worderkeluar">
+                                                    <i></i>
+                                                 Work Order Keluar
+                                                </label>
+                                            </div>
+                                             <div href="" class="list-group-item m-l">
+                                                <label class="i-checks">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_winprogress">
+                                                    <i></i>
+                                                 Work In Progress
+                                                </label>
+                                            </div>
+                                             <div href="" class="list-group-item m-l">
+                                                <label class="i-checks">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_spk">
+                                                    <i></i>
+                                                Surat Perintah Kerja
+                                                </label>
+                                            </div>
+                                             <div href="" class="list-group-item m-l">
+                                                <label class="i-checks">
+                                                    <input type="checkbox" ng-disabled="is_view" ng-model="form.akses.transaksi_kpb">
+                                                    <i></i>
+                                                Kartu Pengambilan Bahan
                                                 </label>
                                             </div>
                                             <!--end-->
@@ -308,7 +431,7 @@
                                     <div class="panel panel-info">
                                         <div class="panel-heading">
                                             <label class="i-checks">
-                                                <input type="checkbox" ng-disabled="is_view" ng-model='selectLaporan' ng-click="checkAll('laporan',selectLaporan)">
+                                                <input type="checkbox" ng-disabled="is_view" ng-model='selectLaporan' ng-click="checkAll('laporan', selectLaporan)">
                                                 <i></i>
                                                 Laporan
                                             </label>

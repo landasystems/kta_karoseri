@@ -115,8 +115,8 @@
                                 <label class="col-sm-3 control-label">Pilihan</label>
                                 <div class="col-sm-6">
                                     <div class="btn-group">
-                                        <label style="padding:5px 24px;" class="btn btn-sm btn-success"  ng-model="form.status" ng-disabled="is_view" btn-radio="'1'"><i  class="fa fa-check text-active"></i> PO Produksi</label>
-                                        <label style="padding:5px 25px;" class="btn btn-sm btn-info"  ng-model="form.status" ng-disabled="is_view" btn-radio="'0'"><i  class="fa fa-check text-active"></i> PO Non Produksi</label>
+                                        <label required style="padding:5px 24px;" class="btn btn-sm btn-success"  ng-model="form.status" ng-disabled="is_view" btn-radio="'1'"><i  class="fa fa-check text-active"></i> PO Produksi</label>
+                                        <label required style="padding:5px 25px;" class="btn btn-sm btn-info"  ng-model="form.status" ng-disabled="is_view" btn-radio="'0'"><i  class="fa fa-check text-active"></i> PO Non Produksi</label>
                                     </div>
                                 </div>
                             </div>
@@ -195,14 +195,14 @@
 
                                         <td style="padding-left: 8px;padding-right: 8px;">
                                             <div class="input-group">
-                                                <ui-select on-select="detail.harga = $item.harga_beli_terakhir" ng-model="detail.kode_barang" theme="bootstrap">
-                                                    <ui-select-match>{{$select.selected.barang}}</ui-select-match>
+                                                <ui-select on-select="pilih(detail, $item)" ng-model="detail.kode_barang" theme="bootstrap">
+                                                    <ui-select-match>{{$select.selected.kd_barang}} - {{$select.selected.nm_barang}}</ui-select-match>
                                                     <ui-select-choices refresh="cariBarang($select.search)" repeat="val in results">
-                                                        {{val.nm_barang}}
+                                                        {{val.kd_barang}} - {{val.nm_barang}}
                                                     </ui-select-choices>
                                                 </ui-select>
                                                 <span class="input-group-btn">
-                                                    <button ng-click="detail.produk = undefined" class="btn btn-default">
+                                                    <button ng-click="detail.kode_barang = undefined" class="btn btn-default">
                                                         <span class="glyphicon glyphicon-trash"></span>
                                                     </button>
                                                 </span>
@@ -217,8 +217,8 @@
                                         <td style="width:120px; padding-left: 8px;padding-right: 8px;">
                                             <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.harga" ng-disabled="is_view" ng-readonly="is_create == false" required>
                                         </td>
-                                        <td style="width:70px; padding-left: 8px;padding-right: 8px;">
-                                            <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.jml" ng-disabled="is_view" ng-readonly="is_create == false" required>
+                                        <td style="width:120px; padding-left: 8px;padding-right: 8px;">
+                                            <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.jml" ng-disabled="is_view" ng-readonly="true">
                                         </td>
                                         <td style="width:200px; padding-left: 8px;padding-right: 8px;">
                                             <div class="input-group">
@@ -280,46 +280,56 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-5 control-label">Total Pembayaran</label>
-                                <div class="col-sm-6">
+                            <div class="form-group" >
+                                <label class="col-sm-6 control-label" style="text-align: left; margin-left: 10px">Total Pembayaran</label>
+                                <div class="col-sm-5">
                                     <input type="text" class="form-control" ng-model="form.total" ng-disabled="is_view" required >
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Diskon</label>
+                                <label class="col-sm-3 control-label" style="text-align: left; margin-left: 10px">Diskon</label>
 
-                                <div class="col-sm-2">
-                                    <input type="text" class="form-control" ng-model="form.npwp" ng-disabled="is_view" required >
+                                <div class="col-sm-3">
+                                    <div class="input-group m-b" style="margin:0px;">
+                                        <input type="text" class="form-control" ng-model="form.npwp" ng-disabled="is_view" required >
+                                        <span class="input-group-addon">%</span>
+                                    </div>
+
                                 </div>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" ng-model="form.npwp" ng-disabled="is_view" required >
-                                </div>
-
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">PPN 10 %</label>
-
-                                <div class="col-sm-8">
+                                <div class="col-sm-5">
                                     <input type="text" class="form-control" ng-model="form.npwp" ng-disabled="is_view" required >
                                 </div>
 
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">&nbsp;Total Dibayar</label>
-                                <div class="col-sm-8">
+                                <label class="col-sm-3 control-label" style="text-align: left; margin-left: 10px">PPN 10 %</label>
+                                <div class="col-sm-3">
+                            <select stInputEvent="change" ng-model="test" class="form-control">
+                                <option value="0">Aktif</option>
+                                <option value="1">Terhapus</option>
+                            </select>
+
+                        </div>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" ng-readonly="test == 1" ng-model="form.npwp" ng-disabled="is_view" required >
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" style="text-align: left; margin-left: 10px">&nbsp;Total Dibayar</label>
+                                <div class="col-sm-5">
                                     <input type="text" class="form-control" ng-model="form.npwp" ng-disabled="is_view" required >
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">&nbsp;DP</label>
-                                <div class="col-sm-8">
+                                <label class="col-sm-6 control-label" style="text-align: left; margin-left: 10px">&nbsp;DP</label>
+                                <div class="col-sm-5">
                                     <input type="text" class="form-control" ng-model="form.npwp" ng-disabled="is_view" required >
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">&nbsp;Sisa Bayar</label>
-                                <div class="col-sm-8">
+                                <label class="col-sm-6 control-label" style="text-align: left; margin-left: 10px">&nbsp;Sisa Bayar</label>
+                                <div class="col-sm-5">
                                     <input type="text" class="form-control" ng-model="form.npwp" ng-disabled="is_view" required >
                                 </div>
                             </div>

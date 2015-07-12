@@ -69,10 +69,10 @@ angular.module('app')
                                             }]
                                     }
                                 })
-//                                .state('access.forbidden', {
-//                                    url: '/forbidden',
-//                                    templateUrl: 'tpl/page_forbidden.html'
-//                                })
+                                .state('access.forbidden', {
+                                    url: '/forbidden',
+                                    templateUrl: 'tpl/page_forbidden.html'
+                                })
                                 .state('access.404', {
                                     url: '/404',
                                     templateUrl: 'tpl/page_404.html'
@@ -88,7 +88,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select2']).then(
+                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select']).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/barang.js');
                                                         }
@@ -374,6 +374,15 @@ angular.module('app')
                                                 return $ocLazyLoad.load('js/controllers/s-pesanankaroseri.js');
                                             }]
                                     }})
+                                .state('transaksi.s-perintahkaroseri', {
+                                    url: '/suratperintahkaroseri',
+                                    templateUrl: 'tpl/t_s-perintahkaroseri/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function($ocLazyLoad) {
+                                                return $ocLazyLoad.load('js/controllers/s-perintahkaroseri.js');
+                                            }]
+                                    }})
                                 //
                                 .state('transaksi.bkt-barangkeluar', {
                                     url: '/bkt-barangkeluar',
@@ -478,6 +487,15 @@ angular.module('app')
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
                                                 return $ocLazyLoad.load('js/controllers/retur-buktibarangkeluar.js');
+                                            }]
+                                    }})
+                                .state('transaksi.retur-buktibarangmasuk', {
+                                    url: '/retur-buktibarangmasuk',
+                                    templateUrl: 'tpl/t_retur-buktibarangmasuk/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function($ocLazyLoad) {
+                                                return $ocLazyLoad.load('js/controllers/retur-buktibarangmasuk.js');
                                             }]
                                     }})
                                 //

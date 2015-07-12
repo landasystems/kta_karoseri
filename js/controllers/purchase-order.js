@@ -46,10 +46,29 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     $scope.cariBarang = function ($query) {
 
         if ($query.length >= 3) {
-            Data.get('barang/cari', {barang: $query}).then(function (data) {
+            Data.get('barang/listbarang', {nama: $query}).then(function (data) {
                 $scope.results = data.data;
             });
         }
+    }
+
+    $scope.pilih = function (detail, $item) {
+        detail.harga = $item.harga;
+        detail.satuan = $item.satuan;
+
+    }
+
+    $scope.subtotal = function () {
+        var total = 0;
+        var sub_total = 0;
+        angular.forEach($scope.detskeluar, function (detail) {
+            var jml = (detail.jml) ? parseInt(detail.jml) : 0;
+            var hrg = (detail.harga) ? parseInt(detail.harga) : 0;
+            sub_total = (jml * hrg);
+            detail.total = sub_total;
+            total += sub_total;
+        })
+        $scope.form.total = total;
     }
 
 
