@@ -473,7 +473,11 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/retur-buktibarangkeluar.js');
+                                                return $ocLazyLoad.load(['ui.select']).then(
+                                                        function() {
+                                                            return $ocLazyLoad.load('js/controllers/retur-buktibarangkeluar.js');
+                                                        }
+                                                );
                                             }]
                                     }})
                                 //
@@ -482,9 +486,9 @@ angular.module('app')
                                     templateUrl: 'tpl/t_spp-nonrutin/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function ($ocLazyLoad) {
+                                            function($ocLazyLoad) {
                                                 return $ocLazyLoad.load(['ui.select', 'daterangepicker']).then(
-                                                        function () {
+                                                        function() {
                                                             return $ocLazyLoad.load('js/controllers/spp-nonrutin.js');
                                                         }
                                                 );

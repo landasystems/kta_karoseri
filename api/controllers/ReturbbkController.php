@@ -3,14 +3,15 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Jabatan;
+use app\models\ReturBbk;
+use app\models\Barang;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class JabatanController extends Controller {
+class ReturbbkController extends Controller {
 
     public function behaviors() {
         return [
@@ -19,14 +20,10 @@ class JabatanController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
-                    'excel' => ['get'],
-                    'listsubsection' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
-                    'listkaryawan' => ['get'],
-                    'listjabatan' => ['get']
                 ],
             ]
         ];
@@ -43,7 +40,6 @@ class JabatanController extends Controller {
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
-//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -55,74 +51,36 @@ class JabatanController extends Controller {
         return true;
     }
 
-    public function actionListkaryawan() {
-        $param = $_REQUEST;
-        $query = new Query;
-        $query->from('tbl_karyawan')
-                ->select("nik, nama")
-                ->where('nama like "%' . $param['nama'] . '%"');
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $models));
-    }
-
-    public function actionListjabatan() {
-        $param = $_REQUEST;
-        $query = new Query;
-        $query->from('tbl_jabatan')
-                ->select("id_jabatan, jabatan")
-                ->where('jabatan like "%' . $param['nama'] . '%"');
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $models));
-    }
-
     public function actionKode() {
         $query = new Query;
-        $query->from('tbl_jabatan')
+        $query->from('retur_bbk')
                 ->select('*')
-                ->orderBy('id_jabatan DESC')
+                ->orderBy('no_retur_bbk DESC')
                 ->limit(1);
 
-        $command = $query->createCommand();
-        $models = $command->query()->read();
-        $kode_mdl = (substr($models['id_jabatan'], -3) + 1);
-        $kode = substr('000' . $kode_mdl, strlen($kode_mdl));
+        $cek = TransBbk::findOne('no_retur_bbk = "BK' . date("y") . '0001"');
+        if (empty($cek)) {
+            $command = $query->createCommand();
+            $models = $command->query()->read();
+            $urut = substr($models['no_retur_bbk'], 4) + 1;
+            $kode = substr('0000' . $urut, strlen($urut));
+            $kode = "RK" . date("y") . $kode;
+        } else {
+            $kode = "RK" . date("y") . "0001";
+        }
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => 'JBTN' . $kode));
-    }
-
-    public function actionListsubsection() {
-        $query = new Query;
-        $query->from('pekerjaan')
-                ->select("*")
-                ->orderBy('kd_kerja ASC');
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $models));
+        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tbl_jabatan.id_jabatan ASC";
+        $sort = "tgl ASC";
         $offset = 0;
         $limit = 10;
-        //        Yii::error($params);
+
         //limit & offset pagination
         if (isset($params['limit']))
             $limit = $params['limit'];
@@ -144,22 +102,18 @@ class JabatanController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('tbl_jabatan')
-                ->join('JOIN', 'pekerjaan', 'tbl_jabatan.krj = pekerjaan.kd_kerja')
+                ->from('retur_bbk as rb')
+                ->leftJoin('barang as b', 'rb.kd_barang = b.kd_barang')
                 ->orderBy($sort)
-                ->select("tbl_jabatan.*,pekerjaan.kerja");
+                ->select("rb.*, b.nm_barang");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-
                 $query->andFilterWhere(['like', $key, $val]);
             }
         }
-
-        session_start();
-        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -172,7 +126,25 @@ class JabatanController extends Controller {
 
     public function actionView($id) {
 
-        $model = $this->findModel($id);
+        $model = ReturBbk::find()->where('no_retur_bbk="' . $id . '"')->one();
+
+        $query = new Query;
+        $query->from('barang')
+                ->select('kd_barang, nm_barang')
+                ->where('kd_barang = "' . $model->kd_barang . '"')
+                ->limit(1);
+        $command = $query->createCommand();
+        $barang = $command->query()->read();
+
+        $query = new Query;
+        $query->from('trans_bbk')
+                ->select('no_bbk')
+                ->where('no_bbk = "' . $model->no_bbk . '"')
+                ->limit(1);
+        $command = $query->createCommand();
+        $bbk = $command->query()->read();
+        $model->kd_barang = isset($barang) ? $barang : '-';
+        $model->no_bbk = isset($bbk) ? $bbk : '-';
 
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -180,9 +152,16 @@ class JabatanController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Jabatan();
+        $model = new ReturBbk();
         $model->attributes = $params;
-
+        $model->kd_barang = $params['kd_barang']['kd_barang'];
+        $model->no_bbk = $params['no_bbk']['no_bbk'];
+        if ($model->alasan == 'Rusak') {
+            //update stok barang
+            $barang = Barang::find()->where('kd_barang="' . $model->kd_barang . '"')->one();
+            $barang->saldo -= $model->jml;
+            $barang->save();
+        }
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -195,10 +174,25 @@ class JabatanController extends Controller {
 
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = $this->findModel($id);
+        print_r($params);
+        $model = ReturBbk::find()->where('no_retur_bbk="' . $id . '"')->one();
+        if ($model->alasan == 'Rusak') {
+            //kembalikan stok barang ke semula
+            $barang = Barang::find()->where('kd_barang="' . $params['kd_barang']['kd_barang'] . '"')->one();
+            $barang->saldo += $model->jml;
+            $barang->save();
+        }
         $model->attributes = $params;
+        $model->kd_barang = $params['kd_barang']['kd_barang'];
+        $model->no_bbk = $params['no_bbk']['no_bbk'];
 
         if ($model->save()) {
+            if ($model->alasan == 'Rusak') {
+                //update stok barang dengan yang baru
+                $barang = Barang::find()->where('kd_barang="' . $params['kd_barang']['kd_barang'] . '"')->one();
+                $barang->saldo -= $model->jml;
+                $barang->save();
+            }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -208,7 +202,7 @@ class JabatanController extends Controller {
     }
 
     public function actionDelete($id) {
-        $model = $this->findModel($id);
+        $model = ReturBbk::find()->where('no_retur_bbk="' . $id . '"')->one();
 
         if ($model->delete()) {
             $this->setHeader(200);
@@ -221,7 +215,7 @@ class JabatanController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Jabatan::findOne($id)) !== null) {
+        if (($model = ReturBbk::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -253,16 +247,6 @@ class JabatanController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
-    }
-
-    public function actionExcel() {
-        session_start();
-        $query = $_SESSION['query'];
-        $query->offset("");
-        $query->limit("");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        return $this->render("/expmaster/jabatan", ['models' => $models]);
     }
 
 }

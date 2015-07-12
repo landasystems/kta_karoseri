@@ -3,15 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Bom;
-use app\models\BomDet;
+use app\models\TransBbk;
+use app\models\DetBbk;
+use app\models\Barang;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class BomController extends Controller {
+class BbkController extends Controller {
 
     public function behaviors() {
         return [
@@ -23,11 +24,9 @@ class BomController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'chassis' => ['get'],
-                    'model' => ['get'],
-                    'barang' => ['get'],
                     'kode' => ['get'],
-                    'tipe' => ['get'],
+                    'petugas' => ['get'],
+                    'listbbk' => ['get'],
                 ],
             ]
         ];
@@ -35,7 +34,6 @@ class BomController extends Controller {
 
     public function beforeAction($event) {
         $action = $event->id;
-
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
         } elseif (excel(isset($this->actions['*']))) {
@@ -43,7 +41,6 @@ class BomController extends Controller {
         } else {
             return $event->isValid;
         }
-
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
 
@@ -57,46 +54,59 @@ class BomController extends Controller {
         return true;
     }
 
-    public function actionChassis() {
+    public function actionKode() {
         $query = new Query;
-        $query->from('chassis')
-                ->select("kd_chassis")
-                ->where('merk="' . $_GET['merk'] . '" and tipe="' . $_GET['tipe'] . '"');
+        $query->from('trans_bbk')
+                ->select('*')
+                ->orderBy('no_bbk DESC')
+                ->limit(1);
 
-        $command = $query->createCommand();
-        $models = $command->query()->read();
-        $kode = $models['kd_chassis'];
-
+        $cek = TransBbk::findOne('no_bbk = "BK' . date("y") . '0001"');
+        if (empty($cek)) {
+            $command = $query->createCommand();
+            $models = $command->query()->read();
+            $urut = substr($models['no_bbk'], 4) + 1;
+            $kode = substr('0000' . $urut, strlen($urut));
+            $kode = "BK" . date("y") . $kode;
+        } else {
+            $kode = "BK" . date("y") . "0001";
+        }
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
-    public function actionKode() {
+    public function actionPetugas() {
+//        $petugas = \yii\models\User::findOne('id = '.Yii::$app->user->getId());
+//        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'petugas' => 'admin'));
+    }
+
+    public function actionListbbk() {
+        $param = $_REQUEST;
         $query = new Query;
-        $query->from('trans_standar_bahan')
-                ->select('*')
-                ->orderBy('kd_bom DESC')
-                ->limit(1);
+        $query->from('trans_bbk')
+                ->select("no_bbk")
+                ->where('no_bbk like "%' . $param['nama'] . '%"')
+                ->limit(15);
 
         $command = $query->createCommand();
-        $models = $command->query()->read();
-        $lastKode = substr($models['kd_bom'], -4) + 1;
+        $models = $command->queryAll();
 
-        $kode = 'BOM' . date("y") . substr('0000' . $lastKode, -4);
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => $kode));
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_bom ASC";
+        $sort = "no_bbk DESC";
         $offset = 0;
         $limit = 10;
-       
+
         //limit & offset pagination
         if (isset($params['limit']))
             $limit = $params['limit'];
@@ -118,10 +128,11 @@ class BomController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from(['trans_standar_bahan', 'chassis', 'model'])
-                ->where('trans_standar_bahan.kd_chassis = chassis.kd_chassis and trans_standar_bahan.kd_model=model.kd_model')
+                ->from('trans_bbk as tb')
+                ->leftJoin('tbl_karyawan as tk', 'tb.penerima = tk.nik')
+                ->leftJoin('tbl_jabatan as tj', 'tj.id_jabatan  = tb.kd_jab')
                 ->orderBy($sort)
-                ->select("*");
+                ->select("tb.*, tk.nama as penerima, tj.jabatan as bagian");
 
         //filter
         if (isset($params['filter'])) {
@@ -141,44 +152,73 @@ class BomController extends Controller {
     }
 
     public function actionView($id) {
+
+        $model = TransBbk::find()->where('no_bbk="' . $id . '"')->one();
+
         $query = new Query;
-        $query->from(['trans_standar_bahan', 'chassis', 'model'])
-                ->where('trans_standar_bahan.kd_model = model.kd_model and trans_standar_bahan.kd_chassis = chassis.kd_chassis and trans_standar_bahan.kd_bom="' . $id . '"')
-                ->select("*");
-
+        $query->from('tbl_jabatan')
+                ->select('id_jabatan, jabatan')
+                ->where('id_jabatan = "' . $model->kd_jab . '"')
+                ->limit(1);
         $command = $query->createCommand();
-        $models = $command->query()->read();
-        $models['kd_model'] = array('kd_model' => $models['kd_model'], 'model' => $models['model']);
+        $jabatan = $command->query()->read();
+        $query = new Query;
+        $query->from('tbl_karyawan')
+                ->select('nik, nama')
+                ->where('nik = "' . $model->penerima . '"')
+                ->limit(1);
+        $command = $query->createCommand();
+        $penerima = $command->query()->read();
 
-        $det = BomDet::find()
-                ->where(['kd_bom' => $models['kd_bom']])
-                ->all();
+        $model->kd_jab = isset($jabatan) ? $jabatan : '';
+        $model->penerima = isset($penerima) ? $penerima : '';
+        $model->no_wo = array('no_wo' => $model->no_wo);
 
-        $detail = array();
-        foreach ($det as $val) {
-            $detail[] = $val->attributes;
+        $detail = DetBbk::find()->where('no_bbk="' . $model->no_bbk . '"')->all();
+        $i = 0;
+        $det = array();
+        foreach ($detail as $val) {
+            $query->from('barang')
+                    ->select('kd_barang, nm_barang')
+                    ->where('kd_barang = "' . $val['kd_barang'] . '"')
+                    ->limit(1);
+            $command = $query->createCommand();
+            $det[$i]['jml'] = $val['jml'];
+            $det[$i]['ket'] = $val['ket'];
+            $barang = $command->query()->read();
+            $det[$i]['kd_barang'] = isset($barang) ? $barang : '';
+            $i++;
         }
+
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $models, 'detail' => $detail), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes), 'detail' => $det), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Bom();
-        $model->attributes = $params['bom'];
-        $model->kd_model = $params['bom']['kd_model']['kd_model'];
+        $model = new TransBbk();
+        $model->attributes = $params['bbk'];
+        $model->tanggal = date("Y-m-d");
+        $model->status = 0;
+        $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '-';
+        $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '-';
+        $model->penerima = isset($params['bbk']['penerima']['nik']) ? $params['bbk']['penerima']['nik'] : '-';
 
         if ($model->save()) {
-            $detailBom = $params['detailBom'];
-//            print_r($detailBom);
-            foreach ($detailBom as $val) {
-                $det = new BomDet();
+            $detailBbk = $params['detailBbk'];
+            foreach ($detailBbk as $val) {
+                $det = new DetBbk();
                 $det->attributes = $val;
-                $det->kd_jab = $val['kd_jab']['id_jabatan'];
                 $det->kd_barang = $val['kd_barang']['kd_barang'];
-                $det->kd_bom = $model->kd_bom;
+                $det->no_bbk = $model->no_bbk;
                 $det->save();
+
+                //update stok barang
+                $barang = Barang::find()->where('kd_barang="' . $det->kd_barang . '"')->one();
+                $barang->saldo -= $det->jml;
+                $barang->save();
             }
+
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -189,21 +229,41 @@ class BomController extends Controller {
 
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = $this->findModel($id);
-        $model->attributes = $params['bom'];
-        $model->kd_model = $params['bom']['kd_model']['kd_model'];
+        $model = TransBbk::find()->where('no_bbk="' . $id . '"')->one();
+        $model->attributes = $params['bbk'];
+        $model->tanggal = date("Y-m-d");
+        $model->status = 0;
+        $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '-';
+        $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '-';
+        $model->penerima = isset($params['bbk']['penerima']['nik']) ? $params['bbk']['penerima']['nik'] : '-';
 
         if ($model->save()) {
-            $deleteDetail = BomDet::deleteAll(['kd_bom' => $model->kd_bom]);
-            $detailBom = $params['detailBom'];
-            foreach ($detailBom as $val) {
-                $det = new BomDet();
-                $det->attributes = $val;
-                $det->kd_jab = $val['kd_jab']['id_jabatan'];
-                $det->kd_barang = $val['kd_barang']['kd_barang'];
-                $det->kd_bom = $model->kd_bom;
-                $det->save();
+            // mengembalikan stok barang
+            $detail = DetBbk::find()->where('no_bbk = "' . $model->no_bbk . '"')->all();
+            foreach ($detail as $detbbk) {
+                $barang = Barang::find()->where('kd_barang="' . $detbbk->kd_barang . '"')->one();
+                $barang->saldo += $detbbk->jml;
+                $barang->save();
             }
+
+            //hapus detail bbk
+            $del = DetBbk::deleteAll('no_bbk = "' . $model->no_bbk . '"');
+
+            //isi detail dengan yang baru
+            $detailBbk = $params['detailBbk'];
+            foreach ($detailBbk as $val) {
+                $det = new DetBbk();
+                $det->attributes = $val;
+                $det->kd_barang = $val['kd_barang']['kd_barang'];
+                $det->no_bbk = $model->no_bbk;
+                $det->save();
+
+                //update stok barang
+                $barang = Barang::find()->where('kd_barang="' . $det->kd_barang . '"')->one();
+                $barang->saldo -= $det->jml;
+                $barang->save();
+            }
+
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -213,21 +273,19 @@ class BomController extends Controller {
     }
 
     public function actionDelete($id) {
-        $model = $this->findModel($id);
-        $deleteDetail = BomDet::deleteAll(['kd_bom' => $id]);
-
+        $model = TransBbk::find()->where('no_bbk="' . $id . '"')->one();
         if ($model->delete()) {
+            $delBbk = DetBbk::deleteAll('no_bbk = "' . $id . '"');
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
-
             $this->setHeader(400);
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
     }
 
     protected function findModel($id) {
-        if (($model = Bom::findOne($id)) !== null) {
+        if (($model = TransBbk::findOne($id)) !== null) {
             return $model;
         } else {
 
