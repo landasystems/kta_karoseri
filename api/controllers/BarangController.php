@@ -250,7 +250,7 @@ class BarangController extends Controller {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('barang')
-                ->select("kd_barang,nm_barang")
+                ->select("*")
                 ->where(['like', 'nm_barang', $params['barang']])
                 ->orWhere(['like','kd_barang',$params['barang']])
                 ->limit(10);
