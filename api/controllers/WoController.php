@@ -24,6 +24,7 @@ class WoController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
+                    'cari' => ['get'],
                     'wospk' => ['get'],
                 ],
             ]
@@ -234,6 +235,18 @@ class WoController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expmaster/jabatan", ['models' => $models]);
+    }
+    public function actionCari(){
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('wo_masuk')
+                ->select("no_wo")
+                ->where(['like', 'no_wo', $params['no_wo']])
+                ->limit(10);
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
 }
