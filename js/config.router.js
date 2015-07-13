@@ -299,7 +299,7 @@ angular.module('app')
                                     }
                                 })
                                 //Rubah Bentuk
-                                .state('transaksi.rubah-bentuk', {
+                                .state('transaksi.rubahbentuk', {
                                     url: '/rubah-bentuk',
                                     templateUrl: 'tpl/t_rubahbentuk/index.html',
                                     resolve: {
@@ -365,7 +365,7 @@ angular.module('app')
                                             }]
                                     }})
                                 //
-                                .state('transaksi.s-pesanankaroseri', {
+                                .state('transaksi.spesanankaroseri', {
                                     url: '/suratpesanankaroseri',
                                     templateUrl: 'tpl/t_s-pesanankaroseri/index.html',
                                     resolve: {
@@ -374,7 +374,7 @@ angular.module('app')
                                                 return $ocLazyLoad.load('js/controllers/s-pesanankaroseri.js');
                                             }]
                                     }})
-                                .state('transaksi.s-perintahkaroseri', {
+                                .state('transaksi.sperintahkaroseri', {
                                     url: '/suratperintahkaroseri',
                                     templateUrl: 'tpl/t_s-perintahkaroseri/index.html',
                                     resolve: {
@@ -384,7 +384,7 @@ angular.module('app')
                                             }]
                                     }})
                                 //
-                                .state('transaksi.bkt-barangkeluar', {
+                                .state('transaksi.bktbarangkeluar', {
                                     url: '/bkt-barangkeluar',
                                     templateUrl: 'tpl/t_bkt-barangkeluar/index.html',
                                     resolve: {
@@ -398,7 +398,7 @@ angular.module('app')
                                             }]
                                     }})
                                 //
-                                .state('transaksi.bkt-barangmasuk', {
+                                .state('transaksi.bktbarangmasuk', {
                                     url: '/bkt-barangmasuk',
                                     templateUrl: 'tpl/t_bkt-barangmasuk/index.html',
                                     resolve: {
@@ -408,7 +408,7 @@ angular.module('app')
                                             }]
                                     }})
                                 //
-                                .state('transaksi.bukti-terima', {
+                                .state('transaksi.buktiterima', {
                                     url: '/bukti-terima',
                                     templateUrl: 'tpl/t_bukti-terima/index.html',
                                     resolve: {
