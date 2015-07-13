@@ -46,7 +46,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     $scope.cariBarang = function ($query) {
 
         if ($query.length >= 3) {
-            Data.get('barang/listbarang', {nama: $query}).then(function (data) {
+            Data.get('barang/cari', {barang: $query}).then(function (data) {
                 $scope.results = data.data;
             });
         }
@@ -61,11 +61,11 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     $scope.subtotal = function () {
         var total = 0;
         var sub_total = 0;
-        angular.forEach($scope.detskeluar, function (detail) {
+        angular.forEach($scope.detsPo, function (detail) {
             var jml = (detail.jml) ? parseInt(detail.jml) : 0;
             var hrg = (detail.harga) ? parseInt(detail.harga) : 0;
             sub_total = (jml * hrg);
-            detail.total = sub_total;
+            detail.jumlah = sub_total;
             total += sub_total;
         })
         $scope.form.total = total;
@@ -135,6 +135,9 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
             $scope.form.nota = data.kode;
         });
         $scope.form.tanggal = moment().format('DD-MM-YYYY');
+        $scope.form.status_po = '1';
+        $scope.form.status_ppn = '0';
+        $scope.form.ppn = '0';
 
     };
     $scope.update = function (form) {
@@ -143,12 +146,18 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.no;
         $scope.form = form;
+        $scope.form.status_po = ($scope.form.spp == '-') ? '0' : '1';
+        $scope.form.status_ppn = ($scope.form.ppn == '0') ? '1' : '0';
+        
+//        console.log(form);
     };
     $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.no;
         $scope.form = form;
+        $scope.form.status_po = ($scope.form.spp == '-') ? '0' : '1';
+        $scope.form.status_ppn = ($scope.form.ppn == '0') ? '1' : '0';
     };
     $scope.save = function (form) {
         var url = ($scope.is_create == true) ? 'po/create' : 'po/update/' + form.nota;

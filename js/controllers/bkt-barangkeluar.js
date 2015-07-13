@@ -1,4 +1,4 @@
-app.controller('returbbkCtrl', function($scope, Data, toaster) {
+app.controller('bbkCtrl', function($scope, Data, toaster) {
 //init data
     var tableStateRef;
     $scope.displayed = [];
@@ -7,6 +7,18 @@ app.controller('returbbkCtrl', function($scope, Data, toaster) {
     $scope.is_create = false;
     $scope.jenis_kmp = [];
     $scope.bagian = '-';
+
+    $scope.detailstok = function(no_wo, kd_barang) {
+        var data = {
+            no_wo: no_wo,
+            kd_barang: kd_barang,
+        };
+        console.log(data);
+        Data.post('bbk/detailstok', data).then(function(data) {
+            $scope.sisa_pengambilan = data.data.sisa_pengambilan;
+            $scope.stok_sekarang = data.data.stok_sekarang;
+        });
+    }
 
     $scope.cariWo = function($query) {
         if ($query.length >= 3) {
@@ -34,7 +46,7 @@ app.controller('returbbkCtrl', function($scope, Data, toaster) {
 
     $scope.cariBarang = function($query) {
         if ($query.length >= 3) {
-            Data.get('barang/listbarang', {nama: $query}).then(function(data) {
+            Data.get('barang/cari', {barang: $query}).then(function(data) {
                 $scope.resultsbarang = data.data;
             });
         }
@@ -99,6 +111,7 @@ app.controller('returbbkCtrl', function($scope, Data, toaster) {
         Data.get('bbk/petugas').then(function(data) {
             $scope.form.petugas = data.petugas;
         });
+        $scope.detailstok('', '');
     };
     $scope.update = function(form) {
         $scope.is_edit = true;
