@@ -25,6 +25,7 @@ class BarangController extends Controller {
                     'delete' => ['delete'],
                     'jenis' => ['get'],
                     'kode' => ['get'],
+                    'cari' => ['get'],
                 ],
             ]
         ];
@@ -236,7 +237,8 @@ class BarangController extends Controller {
         $query->from('barang')
                 ->select("kd_barang,nm_barang")
                 ->where(['like', 'nm_barang', $params['barang']])
-                ->orWhere(['like','kd_barang',$params['barang']]);
+                ->orWhere(['like','kd_barang',$params['barang']])
+                ->limit(10);
         $command = $query->createCommand();
         $models = $command->queryAll();
         $this->setHeader(200);
