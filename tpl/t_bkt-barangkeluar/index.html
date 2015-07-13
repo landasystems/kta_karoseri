@@ -15,33 +15,29 @@
                 <div class="form-horizontal">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="col-md-3">No. Wo</label>
+                            <label class="col-md-3">No. BBK</label>
                             <div class="col-md-9">
-                                <input st-search="no_wo" class="form-control"/>
+                                <input st-search="no_bbk" class="form-control"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-3">Periode</label>
+                            <label class="col-md-3">No. Wo</label>
                             <div class="col-md-9">
-                                <input date-range-picker class="form-control" st-search="terima" type="text"  ng-model="tanggal">
+                                <input class="form-control" st-search="no_wo" type="text"  ng-model="tanggal">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="col-md-3">Status</label>
+                            <label class="col-md-3">Bagian</label>
                             <div class="col-md-9">
-                                <select class="form-control" st-search="stat">
-                                    <option value="">-Pilih Status-</option>
-                                    <option value="Interior">Interior</option>
-                                    <option value="Eksterior">Eksterior</option>
-                                </select>
+                                <input st-search="bagian" class="form-control"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-3">Jenis Komplain</label>
+                            <label class="col-md-3">Penerima</label>
                             <div class="col-md-9">
-                                <input st-search="jenis" class="form-control"/>
+                                <input st-search="penerima" class="form-control"/>
                             </div>
                         </div>
                     </div>
@@ -121,7 +117,7 @@
                                     <label class="col-sm-3 control-label">No Wo</label>
                                     <div class="col-sm-9">
                                         <div class="input-group">
-                                            <ui-select ng-model="form.no_wo" ng-disabled="is_view" theme="bootstrap">
+                                            <ui-select ng-model="form.no_wo" ng-disabled="is_view" theme="bootstrap" on-select="detailstok(form.no_wo, '')">
                                                 <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
                                                 <ui-select-choices refresh="cariWo($select.search)" repeat="val in results">
                                                     {{val.no_wo}}
@@ -182,18 +178,18 @@
                                 <div class="row">
                                     <div class="col-md-6 col-sm-12 thumb-wrapper">
                                         <center><h4>Sisa Pengambilan</h4></center>
-                                        <center style="margin-top: 10px;"><h1>0</h1></center>
+                                        <center style="margin-top: 10px;"><h1>{{sisa_pengambilan}}</h1></center>
                                     </div>
                                     <div class="col-md-6 col-sm-12 thumb-wrapper">
                                         <center><h4>Stok Sekarang</h4></center>
-                                        <center style="margin-top: 10px;"><h1>0</h1></center>
+                                        <center style="margin-top: 10px;"><h1>{{stok_sekarang}}</h1></center>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <br>
                         <div class="row">
-                            <div class="col-sm-12" ng-show="lihat_detail == false">
+                            <div class="col-sm-12">
                                 <div class="panel-heading text-muted font-bold">
                                     Detail Barang Keluar
                                 </div>
@@ -211,7 +207,7 @@
                                         <tr style="margin:0px;padding:0px;" ng-repeat="detail in detailBbk">
                                             <td style="margin:0px;padding:0px;">
                                                 <div class="input-group">
-                                                    <ui-select ng-disabled="is_view" ng-model="detail.kd_barang" theme="bootstrap">
+                                                    <ui-select on-select="detailstok(form.no_wo, $item)" ng-disabled="is_view" ng-model="detail.kd_barang" theme="bootstrap">
                                                         <ui-select-match>{{$select.selected.nm_barang}}</ui-select-match>
                                                         <ui-select-choices refresh="cariBarang($select.search)" repeat="val in resultsbarang">
                                                             {{val.nm_barang}}
