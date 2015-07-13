@@ -299,7 +299,7 @@ angular.module('app')
                                     }
                                 })
                                 //Rubah Bentuk
-                                .state('transaksi.rubah-bentuk', {
+                                .state('transaksi.rubahbentuk', {
                                     url: '/rubah-bentuk',
                                     templateUrl: 'tpl/t_rubahbentuk/index.html',
                                     resolve: {
@@ -365,7 +365,7 @@ angular.module('app')
                                             }]
                                     }})
                                 //
-                                .state('transaksi.s-pesanankaroseri', {
+                                .state('transaksi.spesanankaroseri', {
                                     url: '/suratpesanankaroseri',
                                     templateUrl: 'tpl/t_s-pesanankaroseri/index.html',
                                     resolve: {
@@ -374,7 +374,7 @@ angular.module('app')
                                                 return $ocLazyLoad.load('js/controllers/s-pesanankaroseri.js');
                                             }]
                                     }})
-                                .state('transaksi.s-perintahkaroseri', {
+                                .state('transaksi.sperintahkaroseri', {
                                     url: '/suratperintahkaroseri',
                                     templateUrl: 'tpl/t_s-perintahkaroseri/index.html',
                                     resolve: {
@@ -384,7 +384,7 @@ angular.module('app')
                                             }]
                                     }})
                                 //
-                                .state('transaksi.bkt-barangkeluar', {
+                                .state('transaksi.bktbarangkeluar', {
                                     url: '/bkt-barangkeluar',
                                     templateUrl: 'tpl/t_bkt-barangkeluar/index.html',
                                     resolve: {
@@ -398,7 +398,7 @@ angular.module('app')
                                             }]
                                     }})
                                 //
-                                .state('transaksi.bkt-barangmasuk', {
+                                .state('transaksi.bktbarangmasuk', {
                                     url: '/bkt-barangmasuk',
                                     templateUrl: 'tpl/t_bkt-barangmasuk/index.html',
                                     resolve: {
@@ -408,7 +408,7 @@ angular.module('app')
                                             }]
                                     }})
                                 //
-                                .state('transaksi.bukti-terima', {
+                                .state('transaksi.buktiterima', {
                                     url: '/bukti-terima',
                                     templateUrl: 'tpl/t_bukti-terima/index.html',
                                     resolve: {
@@ -466,7 +466,7 @@ angular.module('app')
                                             }]
                                     }})
                                 //
-                                .state('transaksi.purchase-order', {
+                                .state('transaksi.purchaseorder', {
                                     url: '/purchase-order',
                                     templateUrl: 'tpl/t_purchase-order/index.html',
                                     resolve: {
@@ -480,7 +480,7 @@ angular.module('app')
                                             }]
                                     }})
                                 //
-                                .state('transaksi.retur-buktibarangkeluar', {
+                                .state('transaksi.returbuktibarangkeluar', {
                                     url: '/retur-buktibarangkeluar',
                                     templateUrl: 'tpl/t_retur-buktibarangkeluar/index.html',
                                     resolve: {
@@ -493,7 +493,7 @@ angular.module('app')
                                                 );
                                             }]
                                     }})
-                                .state('transaksi.retur-buktibarangmasuk', {
+                                .state('transaksi.returbuktibarangmasuk', {
                                     url: '/retur-buktibarangmasuk',
                                     templateUrl: 'tpl/t_retur-buktibarangmasuk/index.html',
                                     resolve: {
@@ -503,7 +503,7 @@ angular.module('app')
                                             }]
                                     }})
                                 //
-                                .state('transaksi.spp-nonrutin', {
+                                .state('transaksi.sppnonrutin', {
                                     url: '/spp-nonrutin',
                                     templateUrl: 'tpl/t_spp-nonrutin/index.html',
                                     resolve: {
@@ -517,7 +517,7 @@ angular.module('app')
                                             }]
                                     }})
                                 //
-                                .state('transaksi.spp-rutin', {
+                                .state('transaksi.spprutin', {
                                     url: '/spp-nonrutin',
                                     templateUrl: 'tpl/t_spp-rutin/index.html',
                                     resolve: {
@@ -551,7 +551,7 @@ angular.module('app')
                                             }]
                                     }})
                                 //
-                                .state('transaksi.w-inprogress', {
+                                .state('transaksi.winprogress', {
                                     url: '/workinprogress',
                                     templateUrl: 'tpl/t_w-inprogress/index.html',
                                     resolve: {
@@ -561,7 +561,7 @@ angular.module('app')
                                             }]
                                     }})
                                 //
-                                .state('transaksi.w-orderkeluar', {
+                                .state('transaksi.worderkeluar', {
                                     url: '/workorderkeluar',
                                     templateUrl: 'tpl/t_w-orderkeluar/index.html',
                                     resolve: {
@@ -571,7 +571,7 @@ angular.module('app')
                                             }]
                                     }})
                                 //
-                                .state('transaksi.w-ordermasuk', {
+                                .state('transaksi.wordermasuk', {
                                     url: '/workordermasuk',
                                     templateUrl: 'tpl/t_w-ordermasuk/index.html',
                                     resolve: {

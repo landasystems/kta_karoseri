@@ -27,6 +27,7 @@ class BbkController extends Controller {
                     'kode' => ['get'],
                     'petugas' => ['get'],
                     'listbbk' => ['get'],
+                    'detailstok' => ['post'],
                 ],
             ]
         ];
@@ -74,6 +75,40 @@ class BbkController extends Controller {
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'kode' => $kode));
+    }
+
+    public function actionDetailstok() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $sisa_pengambilan = 0;
+        $stok_sekarang = 0;
+        
+        if (!empty($params['kd_barang'])) {
+            $stok = Barang::find()->where('kd_barang="' . $params['kd_barang']['kd_barang'] . '"')->one();
+            $stok_sekarang = $stok->saldo;
+
+            if (!empty($params['no_wo'])) {
+                // mencari jumlah barang dari bom
+                $query = new Query;
+                $query->from('view_bom_wo as vbw, det_standar_bahan as dsb')
+                        ->select("sum(dsb.qty) as jml")
+                        ->where('vbw.kd_bom = dsb.kd_bom and and dsb.kd_barang = "' . $params['kd_barang']['kd_barang'] . '" and vbw.no_wo = "' . $params['no_wo'] . '"');
+                $command = $query->createCommand();
+                $stokBom = $command->query()->read();
+
+                //mencari jumlah barang yang telah diambil
+                $query = new Query;
+                $query->from('det_bbk as db, trans_bbk as tb')
+                        ->select("sum(db.jml) as jml_keluar")
+                        ->where('db.no_bbk = tb.no_bbk and db.kd_barang = "' . $params['kd_barang']['kd_barang'] . '" and db.no_wo = "' . $params['no_wo'] . '"');
+                $command = $query->createCommand();
+                $stokKeluar = $command->query()->read();
+
+                $sisa_pengambilan = $stokBom['jml'] - $stokKeluar['jml_keluar'];
+            }
+        }
+        $data['sisa_pengambilan'] = $sisa_pengambilan;
+        $data['stok_sekarang'] = $stok_sekarang;
+        echo json_encode(array('data' => $data));
     }
 
     public function actionPetugas() {
@@ -282,10 +317,10 @@ class BbkController extends Controller {
                 $barang->saldo += $detbbk->jml;
                 $barang->save();
             }
-            
+
             //hapus detail bbk
             $delBbk = DetBbk::deleteAll('no_bbk = "' . $id . '"');
-            
+
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {

@@ -115,15 +115,15 @@
                                 <label class="col-sm-3 control-label">Pilihan</label>
                                 <div class="col-sm-6">
                                     <div class="btn-group">
-                                        <label required style="padding:5px 24px;" class="btn btn-sm btn-success"  ng-model="form.status" ng-disabled="is_view" btn-radio="'1'"><i  class="fa fa-check text-active"></i> PO Produksi</label>
-                                        <label required style="padding:5px 25px;" class="btn btn-sm btn-info"  ng-model="form.status" ng-disabled="is_view" btn-radio="'0'"><i  class="fa fa-check text-active"></i> PO Non Produksi</label>
+                                        <label required style="padding:5px 24px;" class="btn btn-sm btn-success"  ng-model="form.status_po" ng-disabled="is_view" btn-radio="'1'"><i  class="fa fa-check text-active"></i> PO Produksi</label>
+                                        <label required style="padding:5px 25px;" class="btn btn-sm btn-info"  ng-model="form.status_po" ng-disabled="is_view" btn-radio="'0'"><i  class="fa fa-check text-active"></i> PO Non Produksi</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">No. SPP</label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" ng-model="form.spp" ng-disabled="is_view" ng-readonly="form.status == '0'" required/>
+                                    <input type="text" class="form-control" ng-model="form.spp" ng-disabled="is_view" ng-readonly="form.status_po == '0'" required/>
                                 </div>
                             </div>
                         </div>
@@ -218,7 +218,7 @@
                                             <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.harga" ng-disabled="is_view" ng-readonly="is_create == false" required>
                                         </td>
                                         <td style="width:120px; padding-left: 8px;padding-right: 8px;">
-                                            <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.jml" ng-disabled="is_view" ng-readonly="true">
+                                            <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.jumlah" ng-disabled="is_view" ng-readonly="true">
                                         </td>
                                         <td style="width:200px; padding-left: 8px;padding-right: 8px;">
                                             <div class="input-group">
@@ -291,7 +291,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="input-group m-b" style="margin:0px;">
-                                        <input type="text" class="form-control" ng-model="form.npwp" ng-disabled="is_view" required >
+                                        <input type="text" class="form-control" ng-model="form.diskon" ng-disabled="is_view" required >
                                         <span class="input-group-addon">%</span>
                                     </div>
 
@@ -304,14 +304,14 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" style="text-align: left; margin-left: 10px">PPN 10 %</label>
                                 <div class="col-sm-3">
-                            <select stInputEvent="change" ng-model="test" class="form-control">
-                                <option value="0">Aktif</option>
-                                <option value="1">Terhapus</option>
+                            <select ng-model="form.status_ppn" class="form-control"  required>
+                                <option value="0">Include</option>
+                                <option value="1">Exclude</option>
                             </select>
 
                         </div>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" ng-readonly="test == 1" ng-model="form.npwp" ng-disabled="is_view" required >
+                                    <input type="text" class="form-control" ng-readonly="form.status_ppn == '1'" ng-model="form.ppn" ng-disabled="is_view" required >
                                 </div>
 
                             </div>

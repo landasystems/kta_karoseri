@@ -26,6 +26,7 @@ class BarangController extends Controller {
                     'jenis' => ['get'],
                     'kode' => ['get'],
                     'listbarang' => ['get'],
+                    'cari' => ['get'],
                 ],
             ]
         ];
@@ -35,7 +36,7 @@ class BarangController extends Controller {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
-        } elseif (excel(isset($this->actions['*']))) {
+        } else if (excel(isset($this->actions['*']))) {
             $verbs = $this->actions['*'];
         } else {
             return $event->isValid;
@@ -249,9 +250,10 @@ class BarangController extends Controller {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('barang')
-                ->select("kd_barang,nm_barang")
+                ->select("*")
                 ->where(['like', 'nm_barang', $params['barang']])
-                ->orWhere(['like','kd_barang',$params['barang']]);
+                ->orWhere(['like','kd_barang',$params['barang']])
+                ->limit(10);
         $command = $query->createCommand();
         $models = $command->queryAll();
         $this->setHeader(200);
