@@ -69,10 +69,10 @@ angular.module('app')
                                             }]
                                     }
                                 })
-//                                .state('access.forbidden', {
-//                                    url: '/forbidden',
-//                                    templateUrl: 'tpl/page_forbidden.html'
-//                                })
+                                .state('access.forbidden', {
+                                    url: '/forbidden',
+                                    templateUrl: 'tpl/page_forbidden.html'
+                                })
                                 .state('access.404', {
                                     url: '/404',
                                     templateUrl: 'tpl/page_404.html'
