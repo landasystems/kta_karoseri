@@ -34,7 +34,7 @@ app.controller('returbbkCtrl', function($scope, Data, toaster) {
 
     $scope.cariBarang = function($query) {
         if ($query.length >= 3) {
-            Data.get('barang/listbarang', {nama: $query}).then(function(data) {
+            Data.get('barang/cari', {barang: $query}).then(function(data) {
                 $scope.resultsbarang = data.data;
             });
         }
