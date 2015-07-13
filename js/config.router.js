@@ -11,7 +11,7 @@ angular.module('app')
                         $rootScope.$stateParams = $stateParams;
                         //pengecekan login
                         $rootScope.$on("$stateChangeStart", function(event, toState) {
-                            var globalmenu = ['app.dashboard'];
+                            var globalmenu = ['app.dashboard', 'access.signin', 'transaksi.coba'];
                             Data.get('site/session').then(function(results) {
                                 if (typeof results.data.user != "undefined") {
                                     $rootScope.user = results.data.user;
