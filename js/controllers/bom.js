@@ -212,39 +212,27 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $modal)
                 }
             }
         });
-        
-//        modalInstance.result.then(function () {
-////            $scope.selected = selectedItem;
-//        }, function () {
-//
-//        });
     };
 
 })
 
 app.controller('modalCtrl', function ($scope, Data, $modalInstance, form) {
 
-    $scope.cariJabatan = function ($query) {
+    $scope.cariBagian = function ($query) {
         if ($query.length >= 3) {
-            Data.get('bom/jabatan', {nama: $query}).then(function (data) {
+            Data.get('jabatan/cari', {nama: $query}).then(function (data) {
                 $scope.resultsjabatan = data.data;
             });
         }
     }
     $scope.cariBarang= function ($query) {
         if ($query.length >= 3) {
-            Data.get('bom/jabatan', {nama: $query}).then(function (data) {
+            Data.get('barang/cari', {barang: $query}).then(function (data) {
                 $scope.resultsbarang = data.data;
             });
         }
     }
     $scope.formmodal = form;
-
-//    $scope.ok = function (jabatan) {
-//        $modalInstance.close(jabatan);
-//        console.log(jabatan);
-//    };
-
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };

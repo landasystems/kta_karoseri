@@ -8,9 +8,9 @@
             <div class="col-sm-10">
                 <div class="input-group">
                     <ui-select ng-model="formmodal.bagian" theme="bootstrap" style="width: 100%">
-                        <ui-select-match>{{$select.selected.nm_barang}}</ui-select-match>
-                        <ui-select-choices refresh="cariBagian($select.search)" repeat="val in resultsbarang">
-                            {{val.nm_barang}}
+                        <ui-select-match>{{$select.selected.jabatan}}</ui-select-match>
+                        <ui-select-choices refresh="cariBagian($select.search)" repeat="val in resultsjabatan">
+                            {{val.jabatan}}
                         </ui-select-choices>
                     </ui-select>
                     <span class="input-group-btn">

@@ -55,21 +55,6 @@ class BarangController extends Controller {
         return true;
     }
 
-    public function actionListbarang() {
-        $param = $_REQUEST;
-        $query = new Query;
-        $query->from('barang')
-                ->select("*")
-                ->where('nm_barang like "%' . $param['nama'] . '%"');
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $models));
-    }
-
     public function actionJenis() {
         $query = new Query;
         $query->from('jenis_brg')
@@ -252,8 +237,8 @@ class BarangController extends Controller {
         $query->from('barang')
                 ->select("*")
                 ->where(['like', 'nm_barang', $params['barang']])
-                ->orWhere(['like','kd_barang',$params['barang']])
-                ->limit(10);
+                ->orWhere(['like','kd_barang',$params['barang']]);
+                
         $command = $query->createCommand();
         $models = $command->queryAll();
         $this->setHeader(200);

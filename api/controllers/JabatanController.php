@@ -26,7 +26,7 @@ class JabatanController extends Controller {
                     'delete' => ['delete'],
                     'kode' => ['get'],
                     'listkaryawan' => ['get'],
-                    'listjabatan' => ['get']
+                    'cari' => ['get']
                 ],
             ]
         ];
@@ -70,12 +70,13 @@ class JabatanController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $models));
     }
 
-    public function actionCarijabatan() {
+    public function actionCari() {
         $param = $_REQUEST;
         $query = new Query;
         $query->from('tbl_jabatan')
-                ->select("id_jabatan, jabatan")
-                ->where('jabatan like "%' . $param['nama'] . '%"');
+                ->select("*")
+                ->where('jabatan like "%' . $param['nama'] . '%"')
+                ->orWhere(['like', 'id_jabatan', $param['nama']]);
 
         $command = $query->createCommand();
         $models = $command->queryAll();

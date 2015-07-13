@@ -128,7 +128,6 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Model</label>
                             <div class="col-sm-8">
-                                {{form.kd_model}}
                                 <div class="input-group">
                                     <ui-select ng-model="form.kd_model" theme="bootstrap">
                                         <ui-select-match>{{$select.selected.model}}</ui-select-match>
@@ -173,19 +172,6 @@
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
-                    <!-- modal -->{{tes}}
-                    <div class="panel b-a">
-                        <script type="text/ng-template" id="modalJabatan.html">
-                            <div ng-include="'tpl/t_bom/modalJabatan.html'"></div>
-                        </script>
-                    </div>
-                    <!-- modal -->
-                    <div class="panel b-a">
-                        <script type="text/ng-template" id="modalBarang.html">
-                            <div ng-include="'tpl/t_bom/modalBarang.html'"></div>
-                        </script>
-                    </div>
-
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -199,10 +185,10 @@
                         <tbody>
                             <tr ng-repeat="detail in detBom" style="margin:0px;padding:0px;">
                                 <td  style="margin:0px;padding:0px;width:25%">
-                                    <input type="text" class="form-control" ng-model="detail.namabagian" required disabled="true"/>
+                                    <input type="text" class="form-control" ng-model="detail.bagian.jabatan" required disabled="true"/>
                                 </td>
                                 <td style="margin:0px;padding:0px;width:25%">
-                                    <input type="text" class="form-control" ng-model="detail.namabarang" required disabled="true"/>
+                                    <input type="text" class="form-control" ng-model="detail.barang.nm_barang" required disabled="true"/>
                                 </td>
                                 <td  style="margin:0px;padding:0px;"><input type="text" class="form-control" ng-model="detail.qty" ng-disabled="is_view"></td>
                                 <td  style="margin:0px;padding:0px;"><input type="text" class="form-control" ng-model="detail.ket" ng-disabled="is_view"></td>
