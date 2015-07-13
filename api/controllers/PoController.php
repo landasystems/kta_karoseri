@@ -140,8 +140,27 @@ class PoController extends Controller {
 
         $model = $this->findModel($id);
 
+//        $supplier = (isset($model->supplier->nama_supplier)) ? $model->supplier->nama_supplier : '';
+//        $model['supplier'] = ['kd_supplier' => $model[''], 'nama_supplier' => $supplier];
+
+        $det = DetailPo::find()
+                ->with(['barang'])
+                ->orderBy('nota')
+                ->where(['nota' => $model['nota']])
+                ->all();
+
+        $detail = array();
+
+        foreach ($det as $key => $val) {
+            $detail[$key] = $val->attributes;
+            $hargaBarang = (isset($val->barang->harga)) ? $val->barang->harga : '';
+            $namaBarang = (isset($val->barang->nama)) ? $val->barang->nama : '';
+            $satuanBarang = (isset($val->barang->satuan)) ? $val->barang->satuan : '';
+            $detail[$key]['data_barang'] = ['nota' => $val->nota, 'nama' => $namaBarang, 'harga' => $hargaBarang, 'satuan' => $satuanBarang];
+        }
+
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes), 'detail' => $detail), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {

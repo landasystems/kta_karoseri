@@ -72,4 +72,12 @@ class TransPo extends \yii\db\ActiveRecord
             'bayar' => 'Bayar',
         ];
     }
+     public function getDetailPo()
+    {
+        return $this->hasOne(DetailPo::className(), ['nota' => 'nota']);
+    }
+     public function getSupplier()
+    {
+        return $this->hasOne(Supplier::className(), ['kd_supplier' => 'supplier']);
+    }
 }

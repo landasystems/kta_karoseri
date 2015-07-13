@@ -55,7 +55,7 @@
                             <td>{{row.dikirim_ke}}</td>
                             <td>
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
+                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row.nota)"></button>
                                     <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" ></button>
                                 </div> 
                             </td>
@@ -195,7 +195,7 @@
 
                                         <td style="padding-left: 8px;padding-right: 8px;">
                                             <div class="input-group">
-                                                <ui-select on-select="pilih(detail, $item)" ng-model="detail.kode_barang" theme="bootstrap">
+                                                <ui-select on-select="pilih(detail, $item)" ng-model="detail.data_barang" theme="bootstrap">
                                                     <ui-select-match>{{$select.selected.kd_barang}} - {{$select.selected.nm_barang}}</ui-select-match>
                                                     <ui-select-choices refresh="cariBarang($select.search)" repeat="val in results">
                                                         {{val.kd_barang}} - {{val.nm_barang}}
@@ -209,7 +209,7 @@
                                             </div>
                                         </td>
                                         <td style="width:50px; padding-left: 8px;padding-right: 8px;">
-                                            <input type="text" class="form-control" ng-model="detail.jml" ng-disabled="is_view" ng-readonly="is_create == false" required>
+                                            <input type="text" class="form-control" ng-model="detail.jml" ng-change="subtotal()" ng-disabled="is_view" ng-readonly="is_create == false" required>
                                         </td>
                                         <td style="width:50px; padding-left: 8px;padding-right: 8px;"> 
                                             <input type="text" class="form-control" ng-model="detail.satuan" ng-disabled="is_view" ng-readonly="true" required>
@@ -291,13 +291,13 @@
 
                                 <div class="col-sm-3">
                                     <div class="input-group m-b" style="margin:0px;">
-                                        <input type="text" class="form-control" ng-model="form.diskon" ng-disabled="is_view" required >
+                                        <input type="text" class="form-control" ng-change="subtotal()"  ng-model="form.diskon" ng-disabled="is_view" required >
                                         <span class="input-group-addon">%</span>
                                     </div>
 
                                 </div>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" ng-model="form.npwp" ng-disabled="is_view" required >
+                                    <input type="text" class="form-control"  ng-model="form.hasil_diskon" ng-disabled="is_view" required >
                                 </div>
 
                             </div>
@@ -311,26 +311,26 @@
 
                         </div>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" ng-readonly="form.status_ppn == '1'" ng-model="form.ppn" ng-disabled="is_view" required >
+                                    <input type="text" class="form-control" ng-readonly="form.status_ppn == '1'" ng-model="form.hasil_ppn" ng-disabled="is_view" required >
                                 </div>
 
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-6 control-label" style="text-align: left; margin-left: 10px">&nbsp;Total Dibayar</label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" ng-model="form.npwp" ng-disabled="is_view" required >
+                                    <input type="text" class="form-control" ng-model="form.total_dibayar" ng-disabled="is_view" required >
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-6 control-label" style="text-align: left; margin-left: 10px">&nbsp;DP</label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" ng-model="form.npwp" ng-disabled="is_view" required >
+                                    <input type="text" class="form-control" ng-model="form.dp" ng-disabled="is_view" required >
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-6 control-label" style="text-align: left; margin-left: 10px">&nbsp;Sisa Bayar</label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" ng-model="form.npwp" ng-disabled="is_view" required >
+                                    <input type="text" class="form-control" ng-model="form.sisa_dibayar" ng-disabled="is_view" required >
                                 </div>
                             </div>
                         </div>
