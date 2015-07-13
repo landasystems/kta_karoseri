@@ -57,4 +57,8 @@ class DetailPo extends \yii\db\ActiveRecord
             'stat_po' => 'Stat Po',
         ];
     }
+    public function getBarang()
+    {
+        return $this->hasOne(Barang::className(), ['kd_barang' => 'kd_barang']);
+    }
 }
