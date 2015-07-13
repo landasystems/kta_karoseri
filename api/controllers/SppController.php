@@ -21,6 +21,7 @@ class SppController extends Controller {
                     'index' => ['get'],
                     'view' => ['get'],
                     'excel' => ['get'],
+                    'detail' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -105,6 +106,22 @@ class SppController extends Controller {
         echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
     }
 
+    public function actionCreate() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $model = new TransSpp();
+        $model->attributes = $params;
+//        Yii::error($params);
+        if ($model->save()) {
+            foreach($params['details'] as $val){
+                
+            }
+            $this->setHeader(200);
+            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        } else {
+            $this->setHeader(400);
+            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+        }
+    }
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
@@ -173,6 +190,17 @@ class SppController extends Controller {
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models), JSON_PRETTY_PRINT);
+    }
+    public function actionDetail($id){
+        $query = new Query();
+        $query->select('*')
+                ->from('det_spp')
+//                ->join('LEFT JOIN', 'barnag', $on)
+                ->where('no_spp='.$id);
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+        echo json_encode(['status'=> 1,'details'=> $models]);
     }
 
 }

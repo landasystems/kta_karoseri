@@ -6,6 +6,7 @@ app.controller('sppCtrl', function ($scope, Data, toaster) {
     $scope.is_view = false;
     $scope.is_create = false;
     $scope.sppDet = [];
+    $scope.openedDet = -1;
 //    Data.get('bstk/nowo').then(function (data) {
 //        $scope.list_wo = data.list_wo;
 //    });
@@ -14,17 +15,28 @@ app.controller('sppCtrl', function ($scope, Data, toaster) {
         $event.stopPropagation();
         $scope.opened1 = true;
     };
+    $scope.setStatus = function () {
+        $scope.openedDet = -1;
+    };
+    $scope.openDet = function ($event, $index) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.openedDet = $index;
+    };
     $scope.cariBarang = function ($query) {
         if ($query.length >= 3) {
             Data.get('barang/cari', {barang: $query}).then(function (data) {
                 $scope.results = data.data;
             });
         }
-    }
-    Data.get('spp/listbarang').then(function (data) {
-        $scope.listBarang = data.data;
-    });
-
+    };
+    $scope.cariWo = function ($query) {
+        if ($query.length >= 3) {
+            Data.get('wo/cari', {no_wo: $query}).then(function (data) {
+                $scope.listWo = data.data;
+            });
+        }
+    };
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
@@ -67,25 +79,28 @@ app.controller('sppCtrl', function ($scope, Data, toaster) {
                 stat_spp: '',
                 no_wo: '',
             }];
-//        Data.get('custmer/kode').then(function(data) {
-//            $scope.form.kd_cust = data.kode;
-//        });
     };
     $scope.update = function (form) {
         $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = false;
-        $scope.formtitle = "Edit Data : " + form.kd_titipan;
+        $scope.formtitle = "Edit Data : " + form.no_spp;
         $scope.form = form;
+        $scope.getDetail(form.no_spp);
     };
     $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.kd_titipan;
+        $scope.formtitle = "Lihat Data : " + form.no_spp;
         $scope.form = form;
+        $scope.getDetail(form.no_spp);
     };
-    $scope.save = function (form) {
-        var url = 'serahterimain/create';
+    $scope.save = function (form,detais) {
+        var data = {
+            form :form,
+            details : details
+        };
+        var url = 'spp/create';
         Data.post(url, form).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -102,25 +117,9 @@ app.controller('sppCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
     };
 
-    $scope.trash = function (row) {
-        if (confirm("Apa anda yakin akan MENGHAPUS item ini ?")) {
-            row.is_deleted = 1;
-            Data.post('serahterimain/update/' + row.id, row).then(function (result) {
-                ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
-            });
-        }
-    };
-    $scope.restore = function (row) {
-        if (confirm("Apa anda yakin akan MERESTORE item ini ?")) {
-            row.is_deleted = 0;
-            Data.post('serahterimain/update/' + row.id, row).then(function (result) {
-                ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
-            });
-        }
-    };
     $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('serahterimain/delete/' + row.kd_cust).then(function (result) {
+            Data.delete('spp/delete/' + row.no_spp).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
@@ -138,14 +137,20 @@ app.controller('sppCtrl', function ($scope, Data, toaster) {
             stat_spp: '',
             no_wo: '',
         }
-        $scope.detBom.unshift(newDet);
+        $scope.setStatus();
+        $scope.sppDet.unshift(newDet);
     };
     $scope.removeRow = function (paramindex) {
-        var comArr = eval($scope.detBom);
+        var comArr = eval($scope.sppDet);
         if (comArr.length > 1) {
-            $scope.detBom.splice(paramindex, 1);
+            $scope.sppDet.splice(paramindex, 1);
         } else {
             alert("Something gone wrong");
         }
     };
+    $scope.getDetail = function (id) {
+        Data.get('spp/detail/'+ id).then(function (data) {
+            $scope.sppDet = data.details;
+        });
+    }
 });
