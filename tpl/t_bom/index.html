@@ -152,16 +152,8 @@
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-12">
-                        <div nv-file-drop="" uploader="uploader" filters="imageFilter">
-                            <div class="col-md-12 bg-auto">    
-                                <div ng-show="uploader.isHTML5" class="m-b-md">
-                                    <img ng-src="js/controllers/uploads/bom/{{form.foto}}" ng-hide="is_create == true" class="img-thumbnail">
-                                    <img src="img/noimage.jpg" class="img-thumbnail" ng-show="is_create == true">
-                                    <input type="file" ng-model="form.filefoto" nv-file-select="" uploader="uploader" ng-disabled="is_view"/>
-                                    {{foto}}
-                                </div>
-                            </div>
-                        </div>
+                        <img ng-src="img/{{(form.foto) ? 'bom/'+form.foto : 'noimage.jpg'}}" class="img-thumbnail">
+                        <input type="file" nv-file-select="" uploader="uploader" />
                     </div>                    
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <h5 class="font-bold">- Detail Bill Of Material</h5>
