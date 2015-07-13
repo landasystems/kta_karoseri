@@ -24,6 +24,7 @@ class ModelkendaraanController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
+                    'listmodel' => ['get'],
                 ],
             ]
         ];
@@ -50,6 +51,21 @@ class ModelkendaraanController extends Controller {
         }
 
         return true;
+    }
+
+    public function actionListmodel() {
+        $param = $_REQUEST;
+        $query = new Query;
+        $query->from('model')
+                ->select("*")
+                ->where("model like '%" . $param['nama'] . "%'");
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionIndex() {
@@ -92,7 +108,7 @@ class ModelkendaraanController extends Controller {
                 $query->andFilterWhere(['like', $key, $val]);
             }
         }
-        
+
         session_start();
         $_SESSION['query'] = $query;
 
@@ -102,15 +118,15 @@ class ModelkendaraanController extends Controller {
 
         $this->setHeader(200);
         $data = array();
-        $i=0;
+        $i = 0;
         foreach ($models as $val) {
             $data[$i] = $val;
-            if($val['standard'] == "1"){
+            if ($val['standard'] == "1") {
                 $data[$i]['status_standard'] = "Standard";
-            }else{
+            } else {
                 $data[$i]['status_standard'] = "Tidak Standard";
             }
-        $i++;
+            $i++;
         }
 
         echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
@@ -148,8 +164,8 @@ class ModelkendaraanController extends Controller {
         $command = $query->createCommand();
         $models = $command->query()->read();
         $kode_mdl = ($models['kd_model'] + 1);
-        $jmlkode=strlen($kode_mdl);
-        $kode=substr('00000'.$kode_mdl,$jmlkode);
+        $jmlkode = strlen($kode_mdl);
+        $kode = substr('00000' . $kode_mdl, $jmlkode);
 
         $this->setHeader(200);
 
@@ -217,15 +233,15 @@ class ModelkendaraanController extends Controller {
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
-     public function actionExcel() {
+
+    public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
         $query->offset("");
         $query->limit("");
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expmaster/modelkendaraan", ['models'=>$models]);
-
+        return $this->render("/expmaster/modelkendaraan", ['models' => $models]);
     }
 
 }

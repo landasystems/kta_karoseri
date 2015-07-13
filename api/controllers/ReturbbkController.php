@@ -3,14 +3,15 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Chassis;
+use app\models\ReturBbk;
+use app\models\Barang;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class ChassisController extends Controller {
+class ReturbbkController extends Controller {
 
     public function behaviors() {
         return [
@@ -19,13 +20,10 @@ class ChassisController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
-                    'excel' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
-                    'merk' => ['get'],
-                    'tipe' => ['get'],
                 ],
             ]
         ];
@@ -35,14 +33,13 @@ class ChassisController extends Controller {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
-        } elseif (isset($this->actions['*'])) {
+        } elseif (excel(isset($this->actions['*']))) {
             $verbs = $this->actions['*'];
         } else {
             return $event->isValid;
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
-//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -54,40 +51,36 @@ class ChassisController extends Controller {
         return true;
     }
 
-    public function actionMerk() {
+    public function actionKode() {
         $query = new Query;
-        $query->from('chassis')
-                ->select("distinct(merk)");
+        $query->from('retur_bbk')
+                ->select('*')
+                ->orderBy('no_retur_bbk DESC')
+                ->limit(1);
 
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
+        $cek = TransBbk::findOne('no_retur_bbk = "BK' . date("y") . '0001"');
+        if (empty($cek)) {
+            $command = $query->createCommand();
+            $models = $command->query()->read();
+            $urut = substr($models['no_retur_bbk'], 4) + 1;
+            $kode = substr('0000' . $urut, strlen($urut));
+            $kode = "RK" . date("y") . $kode;
+        } else {
+            $kode = "RK" . date("y") . "0001";
+        }
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'data' => $models));
-    }
-    
-    public function actionTipe() {
-        $query = new Query;
-        $query->from('chassis')
-                ->select("distinct(tipe)");
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $models));
+        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_chassis ASC";
+        $sort = "tgl ASC";
         $offset = 0;
         $limit = 10;
-        //        Yii::error($params);
+
         //limit & offset pagination
         if (isset($params['limit']))
             $limit = $params['limit'];
@@ -109,9 +102,10 @@ class ChassisController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('chassis')
+                ->from('retur_bbk as rb')
+                ->leftJoin('barang as b', 'rb.kd_barang = b.kd_barang')
                 ->orderBy($sort)
-                ->select("*");
+                ->select("rb.*, b.nm_barang");
 
         //filter
         if (isset($params['filter'])) {
@@ -120,9 +114,6 @@ class ChassisController extends Controller {
                 $query->andFilterWhere(['like', $key, $val]);
             }
         }
-
-        session_start();
-        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -135,7 +126,25 @@ class ChassisController extends Controller {
 
     public function actionView($id) {
 
-        $model = $this->findModel($id);
+        $model = ReturBbk::find()->where('no_retur_bbk="' . $id . '"')->one();
+
+        $query = new Query;
+        $query->from('barang')
+                ->select('kd_barang, nm_barang')
+                ->where('kd_barang = "' . $model->kd_barang . '"')
+                ->limit(1);
+        $command = $query->createCommand();
+        $barang = $command->query()->read();
+
+        $query = new Query;
+        $query->from('trans_bbk')
+                ->select('no_bbk')
+                ->where('no_bbk = "' . $model->no_bbk . '"')
+                ->limit(1);
+        $command = $query->createCommand();
+        $bbk = $command->query()->read();
+        $model->kd_barang = isset($barang) ? $barang : '-';
+        $model->no_bbk = isset($bbk) ? $bbk : '-';
 
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -143,8 +152,16 @@ class ChassisController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Chassis();
+        $model = new ReturBbk();
         $model->attributes = $params;
+        $model->kd_barang = $params['kd_barang']['kd_barang'];
+        $model->no_bbk = $params['no_bbk']['no_bbk'];
+        if ($model->alasan == 'Tidak Sesuai') {
+            //update stok barang
+            $barang = Barang::find()->where('kd_barang="' . $model->kd_barang . '"')->one();
+            $barang->saldo -= $model->jml;
+            $barang->save();
+        }
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -155,28 +172,27 @@ class ChassisController extends Controller {
         }
     }
 
-    public function actionKode() {
-        $query = new Query;
-        $query->from('chassis')
-                ->select('*')
-                ->orderBy('kd_chassis DESC')
-                ->limit(1);
-
-        $command = $query->createCommand();
-        $models = $command->query()->read();
-        $kode_mdl = $models['kd_chassis'] + 1;
-        $kode = substr('00000' . $kode_mdl, strlen($kode_mdl));
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'kode' => $kode));
-    }
-
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = $this->findModel($id);
+//        print_r($params);
+        $model = ReturBbk::find()->where('no_retur_bbk="' . $id . '"')->one();
+        if ($model->alasan == 'Tidak Sesuai') {
+            //kembalikan stok barang ke semula
+            $barang = Barang::find()->where('kd_barang="' . $params['kd_barang']['kd_barang'] . '"')->one();
+            $barang->saldo += $model->jml;
+            $barang->save();
+        }
         $model->attributes = $params;
+        $model->kd_barang = $params['kd_barang']['kd_barang'];
+        $model->no_bbk = $params['no_bbk']['no_bbk'];
 
         if ($model->save()) {
+            if ($model->alasan == 'Tidak Sesuai') {
+                //update stok barang dengan yang baru
+                $barang = Barang::find()->where('kd_barang="' . $params['kd_barang']['kd_barang'] . '"')->one();
+                $barang->saldo -= $model->jml;
+                $barang->save();
+            }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -186,9 +202,18 @@ class ChassisController extends Controller {
     }
 
     public function actionDelete($id) {
-        $model = $this->findModel($id);
+        $model = ReturBbk::find()->where('no_retur_bbk="' . $id . '"')->one();
+
+
+        if ($model->alasan == 'Tidak Sesuai') {
+            //kembalikan stok barang ke semula
+            $barang = Barang::find()->where('kd_barang="' . $model->kd_barang . '"')->one();
+            $barang->saldo += $model->jml;
+            $barang->save();
+        }
 
         if ($model->delete()) {
+
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -199,7 +224,7 @@ class ChassisController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Chassis::findOne($id)) !== null) {
+        if (($model = ReturBbk::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -231,16 +256,6 @@ class ChassisController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
-    }
-
-    public function actionExcel() {
-        session_start();
-        $query = $_SESSION['query'];
-        $query->offset("");
-        $query->limit("");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        return $this->render("/expmaster/chassis", ['models' => $models]);
     }
 
 }

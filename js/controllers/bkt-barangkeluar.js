@@ -1,4 +1,4 @@
-app.controller('bbkCtrl', function($scope, Data, toaster) {
+app.controller('returbbkCtrl', function($scope, Data, toaster) {
 //init data
     var tableStateRef;
     $scope.displayed = [];
@@ -7,7 +7,6 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
     $scope.is_create = false;
     $scope.jenis_kmp = [];
     $scope.bagian = '-';
-    $scope.lihat_detail = false;
 
     $scope.cariWo = function($query) {
         if ($query.length >= 3) {
@@ -17,54 +16,52 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
         }
     }
 
+    $scope.cariJabatan = function($query) {
+        if ($query.length >= 3) {
+            Data.get('jabatan/listjabatan', {nama: $query}).then(function(data) {
+                $scope.resultsjabatan = data.data;
+            });
+        }
+    }
+
+    $scope.cariKaryawan = function($query) {
+        if ($query.length >= 3) {
+            Data.get('jabatan/listkaryawan', {nama: $query}).then(function(data) {
+                $scope.resultskaryawan = data.data;
+            });
+        }
+    }
+
+    $scope.cariBarang = function($query) {
+        if ($query.length >= 3) {
+            Data.get('barang/listbarang', {nama: $query}).then(function(data) {
+                $scope.resultsbarang = data.data;
+            });
+        }
+    }
+
+    $scope.addDetail = function(detail) {
+        $scope.detailBbk.unshift({
+            kd_barang: '',
+            jml: '',
+            ket: '',
+        })
+    };
+    $scope.removeRow = function(paramindex) {
+        var comArr = eval($scope.detailBbk);
+        if (comArr.length > 1) {
+            $scope.detailBbk.splice(paramindex, 1);
+        } else {
+            alert("Something gone wrong");
+        }
+    };
+
     $scope.open1 = function($event) {
         $event.preventDefault();
         $event.stopPropagation();
         $scope.opened1 = true;
     };
 
-    $scope.open2 = function($event) {
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.opened2 = true;
-    };
-    $scope.kalkuasi = function() {
-        $scope.form.total_biaya = (1 * $scope.form.biaya_spd) + (1 * $scope.form.biaya_tk) + (1 * $scope.form.biaya_mat);
-    }
-
-    $scope.jenisKmp = function(status, bagian) {
-        Data.get('claimunit/jeniskomplain?status=' + status + '&bagian=' + bagian).then(function(data) {
-            $scope.jenis_kmp = data.data;
-        });
-    }
-
-    $scope.wo = {
-        minimumInputLength: 3,
-        allowClear: false,
-        ajax: {
-            url: "api/web/claimunit/listwo/",
-            dataType: 'json',
-            data: function(term) {
-                return {
-                    kata: term,
-                };
-            },
-            results: function(data, page) {
-                return {
-                    results: data.data
-                };
-            }
-        },
-        formatResult: function(object) {
-            return object.no_wo;
-        },
-        formatSelection: function(object) {
-            return object.no_wo;
-        },
-        id: function(data) {
-            return data.no_wo;
-        },
-    };
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
@@ -79,7 +76,7 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('claimunit', param).then(function(data) {
+        Data.get('bbk', param).then(function(data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
@@ -91,29 +88,40 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.detailBbk = [{
+                kd_barang: '',
+                jml: '',
+                ket: '',
+            }];
+        Data.get('bbk/kode').then(function(data) {
+            $scope.form.no_bbk = data.kode;
+        });
+        Data.get('bbk/petugas').then(function(data) {
+            $scope.form.petugas = data.petugas;
+        });
     };
     $scope.update = function(form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
-        $scope.formtitle = "Edit Data : " + form.no_wo;
+        $scope.formtitle = "Edit Data : " + form.no_bbk;
         $scope.form = form;
-        $scope.jenisKmp(form.stat, form.bag)
-        $scope.form.kd_jns = form.kd_jns;
-        $scope.kalkuasi();
+        $scope.selected(form.no_bbk);
     };
     $scope.view = function(form) {
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.no_wo;
         $scope.form = form;
-        $scope.jenisKmp(form.stat, form.bag)
-        $scope.form.kd_jns = form.kd_jns;
-        $scope.kalkuasi();
+        $scope.selected(form.no_bbk);
     };
-    $scope.save = function(form) {
-        var url = ($scope.is_create == true) ? 'claimunit/create' : 'claimunit/update/' + form.id;
-        Data.post(url, form).then(function(result) {
+    $scope.save = function(form, detail) {
+        var data = {
+            bbk: form,
+            detailBbk: detail,
+        };
+        var url = ($scope.is_create == true) ? 'bbk/create' : 'bbk/update/' + form.no_bbk;
+        Data.post(url, data).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
@@ -129,18 +137,24 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
     };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('claimunit/delete/' + row.id).then(function(result) {
+            Data.delete('bbk/delete/' + row.no_bbk).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
-    $scope.isJson = function(str) {
-        try {
-            JSON.parse(str);
-        } catch (e) {
-            return false;
-        }
-        return true;
+    $scope.selected = function(id) {
+        Data.get('bbk/view/' + id).then(function(data) {
+            $scope.form = data.data;
+            if (jQuery.isEmptyObject(data.detail)) {
+                $scope.detailBbk = [{
+                        kd_barang: '',
+                        jml: '',
+                        ket: '',
+                    }];
+            } else {
+                $scope.detailBbk = data.detail;
+            }
+        });
     }
 
 })
