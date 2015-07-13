@@ -192,25 +192,28 @@
                                 <th>Bagian</th>
                                 <th>Barang</th>
                                 <th width="25">Qty</th>
-                                <th>Keteragan</th>
-                                <th width="15">#</th>
+                                <th>Keterangan</th>
+                                <th width="80" ng-hide="is_view">#</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr ng-repeat="detail in detBom" style="margin:0px;padding:0px;">
                                 <td  style="margin:0px;padding:0px;width:25%">
-                        <center><button class="btn btn-info" ng-click="modalJabatan()" style="width:100%">Pilih Bagian</button></center>
-                        </td>
-                        <td  style="margin:0px;padding:0px;width:25%">
-                        <center><button class="btn btn-info" ng-click="modalBarang()"  style="width:100%">Pilih Barang</button></center>
-                        </td>
-                        <td  style="margin:0px;padding:0px;"><input type="text" class="form-control" ng-model="detail.qty" ng-disabled="is_view"></td>
-                        <td  style="margin:0px;padding:0px;"><input type="text" class="form-control" ng-model="detail.ket" ng-disabled="is_view"></td>
-                        <td  style="margin:0px;padding:0px;">
-                            <button ng-click="addDetail(detail)" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-arrows"></i></button>
-                            <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
-                        </td>
-                        </tr>
+                                    <input type="text" class="form-control" ng-model="detail.namabagian" required disabled="true"/>
+                                </td>
+                                <td style="margin:0px;padding:0px;width:25%">
+                                    <input type="text" class="form-control" ng-model="detail.namabarang" required disabled="true"/>
+                                </td>
+                                <td  style="margin:0px;padding:0px;"><input type="text" class="form-control" ng-model="detail.qty" ng-disabled="is_view"></td>
+                                <td  style="margin:0px;padding:0px;"><input type="text" class="form-control" ng-model="detail.ket" ng-disabled="is_view"></td>
+                                <td style="margin:0px;padding:0px;" ng-hide="is_view">
+                                    <div class="btn-group pull-right" role="group">
+                                        <button ng-click="modal(detail)" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
+                                        <button ng-click="addDetail(detail)" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-plus-square-o"></i></button>
+                                        <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <div align="center">

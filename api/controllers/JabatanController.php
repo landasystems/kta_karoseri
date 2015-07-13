@@ -70,7 +70,7 @@ class JabatanController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $models));
     }
 
-    public function actionListjabatan() {
+    public function actionCarijabatan() {
         $param = $_REQUEST;
         $query = new Query;
         $query->from('tbl_jabatan')
