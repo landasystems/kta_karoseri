@@ -122,7 +122,11 @@ class BarangController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
+                if ($key == "kat") {
+                    $query->andFilterWhere(['=', $key, $val]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+                }
             }
         }
 
@@ -231,19 +235,19 @@ class BarangController extends Controller {
         $models = $command->queryAll();
         return $this->render("/expmaster/barang", ['models' => $models]);
     }
-    public function actionCari(){
+
+    public function actionCari() {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('barang')
                 ->select("*")
                 ->where(['like', 'nm_barang', $params['barang']])
-                ->orWhere(['like','kd_barang',$params['barang']]);
-                
+                ->orWhere(['like', 'kd_barang', $params['barang']]);
+
         $command = $query->createCommand();
         $models = $command->queryAll();
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $models));
-    
     }
 
 }
