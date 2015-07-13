@@ -151,12 +151,15 @@ class BomController extends Controller {
         $models['kd_model'] = array('kd_model' => $models['kd_model'], 'model' => $models['model']);
 
         $det = BomDet::find()
+                ->with(['jabatan','barang'])
                 ->where(['kd_bom' => $models['kd_bom']])
                 ->all();
 
         $detail = array();
-        foreach ($det as $val) {
-            $detail[] = $val->attributes;
+        foreach ($det as $key => $val) {
+            $detail[$key] = $val->attributes;
+            $detail[$key]['bagian'] = (isset($val->jabatan)) ?  $val->jabatan->attributes : [];
+            $detail[$key]['barang'] = (isset($val->barang)) ?  $val->barang->attributes : [];
         }
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $models, 'detail' => $detail), JSON_PRETTY_PRINT);
@@ -174,8 +177,8 @@ class BomController extends Controller {
             foreach ($detailBom as $val) {
                 $det = new BomDet();
                 $det->attributes = $val;
-                $det->kd_jab = $val['kd_jab']['id_jabatan'];
-                $det->kd_barang = $val['kd_barang']['kd_barang'];
+                $det->kd_jab = $val['bagian']['id_jabatan'];
+                $det->kd_barang = $val['barang']['kd_barang'];
                 $det->kd_bom = $model->kd_bom;
                 $det->save();
             }
@@ -199,8 +202,8 @@ class BomController extends Controller {
             foreach ($detailBom as $val) {
                 $det = new BomDet();
                 $det->attributes = $val;
-                $det->kd_jab = $val['kd_jab']['id_jabatan'];
-                $det->kd_barang = $val['kd_barang']['kd_barang'];
+                $det->kd_jab = $val['bagian']['id_jabatan'];
+                $det->kd_barang = $val['barang']['kd_barang'];
                 $det->kd_bom = $model->kd_bom;
                 $det->save();
             }

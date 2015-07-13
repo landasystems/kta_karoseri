@@ -50,4 +50,11 @@ class BomDet extends \yii\db\ActiveRecord
             'kd_jab' => 'Kd Jab',
         ];
     }
+    
+    public function getJabatan() {
+        return $this->hasOne(Jabatan::className(), ['id_jabatan' => 'kd_jab']);
+    }
+    public function getBarang() {
+        return $this->hasOne(Barang::className(), ['kd_barang' => 'kd_barang']);
+    }
 }
