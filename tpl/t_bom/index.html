@@ -128,6 +128,7 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Model</label>
                             <div class="col-sm-8">
+                                {{form.kd_model}}
                                 <div class="input-group">
                                     <ui-select ng-model="form.kd_model" theme="bootstrap">
                                         <ui-select-match>{{$select.selected.model}}</ui-select-match>
@@ -172,7 +173,7 @@
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
-                    <!-- modal -->
+                    <!-- modal -->{{tes}}
                     <div class="panel b-a">
                         <script type="text/ng-template" id="modalJabatan.html">
                             <div ng-include="'tpl/t_bom/modalJabatan.html'"></div>
