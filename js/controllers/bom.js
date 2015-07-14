@@ -112,7 +112,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal) 
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-        $scope.form.tgl_buat =  moment().format('DD-MM-YYYY');
         $scope.detBom = [
             {
                 kd_jab: '',
@@ -123,7 +122,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal) 
         ];
         Data.get('bom/kode').then(function(data) {
             $scope.form.kd_bom = data.kode;
-        }); 
+        });
     };
     $scope.update = function(form) {
         $scope.is_create = false;
@@ -148,7 +147,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal) 
         } else {
             form.foto = '';
         }
-        
+
         form.model = form.kd_model;
         detail.kd_jab = detail.kd_jab;
         detail.kd_barang = detail.kd_barang;
