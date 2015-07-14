@@ -61,6 +61,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     $scope.subtotal = function () {
         var total = 0;
         var sub_total = 0;
+        
         angular.forEach($scope.detsPo, function (detail) {
             var jml = (detail.jml) ? parseInt(detail.jml) : 0;
             var hrg = (detail.harga) ? parseInt(detail.harga) : 0;
@@ -69,6 +70,11 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
             total += sub_total;
         })
         $scope.form.total = total;
+        
+        var diskon = $scope.form.diskon;
+        var nilai_diskon = ((diskon / 100) * total);
+//        console.log(nilai_diskon);
+        $scope.form.hasil_diskon = total - nilai_diskon;
     }
 
 
@@ -131,6 +137,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.detsPo = [{}]
         Data.get('po/kode').then(function (data) {
             $scope.form.nota = data.kode;
         });
@@ -140,11 +147,11 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         $scope.form.ppn = '0';
 
     };
-    $scope.update = function (form) {
+    $scope.update = function (nota) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
-        $scope.formtitle = "Edit Data : " + form.no;
+        $scope.formtitle = "Edit Data : " + $scope.form.nota;
         $scope.form = form;
         $scope.form.status_po = ($scope.form.spp == '-') ? '0' : '1';
         $scope.form.status_ppn = ($scope.form.ppn == '0') ? '1' : '0';

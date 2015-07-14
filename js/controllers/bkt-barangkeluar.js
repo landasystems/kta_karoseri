@@ -13,7 +13,6 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
             no_wo: no_wo,
             kd_barang: kd_barang,
         };
-        console.log(data);
         Data.post('bbk/detailstok', data).then(function(data) {
             $scope.sisa_pengambilan = data.data.sisa_pengambilan;
             $scope.stok_sekarang = data.data.stok_sekarang;

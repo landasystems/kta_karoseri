@@ -25,6 +25,7 @@ class ClaimunitController extends Controller {
                     'kode' => ['get'],
                     'listwo' => ['get'],
                     'jeniskomplain' => ['get'],
+                    'sisagaransi' => ['post'],
                 ],
             ]
         ];
@@ -50,6 +51,32 @@ class ClaimunitController extends Controller {
         }
 
         return true;
+    }
+
+    public function actionSisagaransi() {
+        $params = json_decode(file_get_contents("php://input"), true);
+
+        $sisa = 0;
+
+        $query = new Query;
+        $query->from('delivery')
+                ->select("tgl_delivery")
+                ->where('no_wo = "' . $params['no_wo'] . '" and status = 1 ');
+        $command = $query->createCommand();
+        $tglDelivery = $command->query()->read();
+
+        if (!empty($tglDelivery)) {
+            $query = new Query;
+            $query->select('SELECT DATE_ADD("' . $tglDelivery . '", INTERVAL 1 YEAR) as tgl');
+            $tglAkhirGaransi = $query->createCommand()->query()->read();
+
+            $query->select('SELECT DATEDIFF("' . $tglDelivery . '", "' . date("Y-m-d") . '") as sisa');
+            $s = $query->createCommand()->query()->read();
+
+            $sisa = $s['sisa'];
+        }
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $sisa));
     }
 
     public function actionJeniskomplain() {
@@ -157,6 +184,7 @@ class ClaimunitController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new DetClaim();
         $model->attributes = $params;
+        $model->no_wo = $params['no_wo']['no_wo'];
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -171,6 +199,7 @@ class ClaimunitController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
+        $model->no_wo = $params['no_wo']['no_wo'];
 
         if ($model->save()) {
             $this->setHeader(200);

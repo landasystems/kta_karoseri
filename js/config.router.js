@@ -305,7 +305,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select2', 'daterangepicker']).then(
+                                                return $ocLazyLoad.load(['ui.select', 'daterangepicker']).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/rubahbentuk.js');
                                                         }
@@ -404,7 +404,11 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/bkt-barangmasuk.js');
+                                                return $ocLazyLoad.load(['ui.select']).then(
+                                                        function() {
+                                                            return $ocLazyLoad.load('js/controllers/bkt-barangmasuk.js');
+                                                        }
+                                                );
                                             }]
                                     }})
                                 //
@@ -434,7 +438,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select2', 'daterangepicker']).then(
+                                                return $ocLazyLoad.load(['ui.select', 'daterangepicker']).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/claimunit.js');
                                                         }
