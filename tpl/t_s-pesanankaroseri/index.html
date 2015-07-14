@@ -21,23 +21,21 @@
                 <table class="table table-striped table-hover" >
                     <thead>
                         <tr>
-                            <th st-sort="no_retur_bbk">No SPK</th>
-                            <th st-sort="no_bbk">No Wo</th>
-                            <th st-sort="ket">Kode BOM</th>
-                            <th st-sort="tgl">Kode Titipan</th>
-                            <th st-sort="nm_barang">Customer</th>
-                            <th st-sort="alasan">Tanggal</th>
+                            <th st-sort="no_spk">No SPK</th>
+                            <th st-sort="tgl">Tanggal</th>
+                            <th st-sort="kd_bom">Kode BOM</th>
+                            <th st-sort="nm_customer">Kode Customer</th>
+                            <th st-sort="kd_chassis">Kode Chassis</th>
                             <th ng-show="is_view == false"></th>
                         </tr>
                     </thead>
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
-                            <td>{{row.no_retur_bbk}}</td>
-                            <td>{{row.no_bbk}}</td>
+                            <td>{{row.no_spk}}</td>
                             <td>{{row.tgl|date}}</td>
-                            <td>{{row.nm_barang}}</td>
-                            <td>{{row.alasan}}</td>
-                            <td>{{row.ket}}</td>
+                            <td>{{row.kd_bom}}</td>
+                            <td>{{row.kd_customer}}</td>
+                            <td>{{row.kd_chassis}}</td>
                             <td ng-show="is_view == false">
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
                                     <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
@@ -74,10 +72,10 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">No. SPK</label>
                                 <div class="col-sm-8">
-                                    <label class="btn btn-default" ng-model="form.kat_spk" ng-disabled="is_view" btn-radio="1" required>Finish Unit</label>
-                                    <label class="btn btn-default" ng-model="form.kat_spk" ng-disabled="is_view" btn-radio="0" required>Stok Unit</label>                        
+                                    <label class="btn btn-default" ng-model="form.kat_spk" ng-click="kode('finish')" ng-disabled="is_create == false" btn-radio="'finish'" required>Finish Unit</label>
+                                    <label class="btn btn-default" ng-model="form.kat_spk" ng-click="kode('stok')" ng-disabled="is_create == false" btn-radio="'stok'" required>Stok Unit</label>                        
                                     <br><br>
-                                    <input type="text" class="form-control" readonly ng-model="form.no_spk" ng-disabled="is_view" readonly required placeholder="Nomor SPK">
+                                    <input type="text" class="form-control" ng-model="form.no_spk" ng-disabled="is_view" required placeholder="Nomor SPK">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -280,7 +278,7 @@
                                 <label class="col-sm-4 control-label">Jumlah</label>
                                 <div class="col-sm-8">
                                     <div class="input-group m-b">
-                                        <input type="text" class="form-control" ng-model="form.jml_unit" ng-disabled="is_view" placeholder="Jumlah Unit">
+                                        <input type="text" class="form-control" ng-keyup="kalkulasi()" ng-model="form.jml_unit" ng-disabled="is_view" placeholder="Jumlah Unit">
                                         <span class="input-group-addon">Unit</span>
                                     </div>    
                                 </div>
@@ -290,7 +288,7 @@
                                 <div class="col-sm-8">
                                     <div class="input-group m-b">
                                         <span class="input-group-addon">Rp</span>
-                                        <input type="text" class="form-control" ng-model="form.harga_karoseri" ng-disabled="is_view" placeholder="Harga Karoseri">
+                                        <input type="text" class="form-control" ng-keyup="kalkulasi()" ng-model="form.harga_karoseri" ng-disabled="is_view" placeholder="Harga Karoseri">
                                     </div>  
                                 </div>
                             </div>
@@ -299,7 +297,7 @@
                                 <div class="col-sm-8">
                                     <div class="input-group m-b">
                                         <span class="input-group-addon">Rp</span>
-                                        <input type="text" class="form-control" ng-model="form.harga_optional" ng-disabled="is_view" placeholder="Harga Optional">
+                                        <input type="text" class="form-control" ng-keyup="kalkulasi()" ng-model="form.harga_optional" ng-disabled="is_view" placeholder="Harga Optional">
                                     </div>    
                                 </div>
                             </div>
@@ -308,19 +306,21 @@
                                 <div class="col-sm-8">
                                     <div class="input-group m-b">
                                         <span class="input-group-addon">Rp</span>
-                                        <input type="text" class="form-control" ng-model="form.jml_harga" ng-disabled="is_view" placeholder="Jumlah Harga">
+                                        <input type="text" class="form-control" ng-keyup="kalkulasi()" readonly ng-model="form.jml_harga" ng-disabled="is_view" placeholder="Jumlah Harga">
                                     </div>   
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">PPN</label>
                                 <div class="col-sm-8">
-                                    <label class="btn btn-default" ng-model="form.is_ppn" ng-disabled="is_view" btn-radio="1" required>In</label>
-                                    <label class="btn btn-default" ng-model="form.is_ppn" ng-disabled="is_view" btn-radio="0" required>Eks</label>                        
+                                    <label class="btn btn-default" ng-model="form.is_ppn" ng-click="is_ppn = true;
+                                            kalkulasi()" ng-disabled="is_view" btn-radio="'1'" required>Include</label>
+                                    <label class="btn btn-default" ng-model="form.is_ppn" ng-click="is_ppn = false;
+                                            kalkulasi()" ng-disabled="is_view" btn-radio="'0'" required>Exclude</label>                        
                                     <br><br>
                                     <div class="input-group m-b">
                                         <span class="input-group-addon">Rp</span>
-                                        <input type="text" class="form-control" ng-model="form.ppn" ng-disabled="is_view" placeholder="Jumlah PPN">
+                                        <input type="text" class="form-control" ng-keyup="kalkulasi()" ng-model="form.ppn" ng-disabled="is_view" placeholder="Jumlah PPN" readonly>
                                     </div>   
                                 </div>
                             </div>
@@ -329,7 +329,7 @@
                                 <div class="col-sm-8">
                                     <div class="input-group m-b">
                                         <span class="input-group-addon">Rp</span>
-                                        <input type="text" class="form-control" ng-model="form.total_harga" ng-disabled="is_view" placeholder="Total Harga">
+                                        <input type="text" class="form-control" readonly ng-model="form.total_harga" ng-disabled="is_view" placeholder="Total Harga">
                                     </div>   
                                 </div>
                             </div>
@@ -338,7 +338,7 @@
                                 <div class="col-sm-8">
                                     <div class="input-group m-b">
                                         <span class="input-group-addon">Rp</span>
-                                        <input type="text" class="form-control" ng-model="form.uang_muka" ng-disabled="is_view" placeholder="Uang Muka">
+                                        <input type="text" class="form-control" ng-keyup="kalkulasi()" ng-model="form.uang_muka" ng-disabled="is_view" placeholder="Uang Muka">
                                     </div>   
                                 </div>
                             </div>
@@ -347,7 +347,7 @@
                                 <div class="col-sm-8">
                                     <div class="input-group m-b">
                                         <span class="input-group-addon">Rp</span>
-                                        <input type="text" class="form-control" ng-model="form.sisa_bayar" ng-disabled="is_view" placeholder="Sisa Pembayaran">
+                                        <input type="text" class="form-control" ng-keyup="kalkulasi()" readonly ng-model="form.sisa_bayar" ng-disabled="is_view" placeholder="Sisa Pembayaran">
                                     </div>       
                                 </div>
                             </div>

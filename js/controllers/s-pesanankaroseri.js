@@ -7,6 +7,56 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
     $scope.is_create = false;
     $scope.jenis_kmp = [];
     $scope.bagian = '-';
+    $scope.is_ppn = false;
+
+    Data.get('chassis/merk').then(function(data) {
+        $scope.listMerk = data.data;
+    });
+
+    Data.get('chassis/tipe').then(function(data) {
+        $scope.listTipe = data.data;
+    });
+
+    $scope.getchassis = function(merk, tipe) {
+        Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function(data) {
+            $scope.form.kd_chassis = data.kode;
+        });
+    };
+
+    $scope.kode = function(tipe) {
+        Data.post('spkaroseri/kode', {tipe: tipe}).then(function(data) {
+            $scope.form.no_spk = data.kode;
+        });
+    }
+
+    $scope.kalkulasi = function() {
+        var jml = (!$scope.form.jml_unit) ? 0 : $scope.form.jml_unit * 1;
+        var harga_karoseri = (!$scope.form.harga_karoseri) ? 0 : $scope.form.harga_karoseri * 1;
+        var harga_optional = (!$scope.form.harga_optional) ? 0 : $scope.form.harga_optional * 1;
+        var is_ppn = (!$scope.form.is_ppn) ? 0 : $scope.form.is_ppn * 1;
+        var ppn = 0;
+        var total = 0;
+
+        if ($scope.is_ppn == true) {
+            ppn = (10 / 100) * (harga_karoseri * jml);
+            $scope.form.ppn = ppn;
+        } else {
+            $scope.form.ppn = 0;
+            ppn = 0;
+        }
+
+        var jml_harga = (harga_karoseri * jml) + harga_optional;
+
+        $scope.form.jml_harga = jml_harga;
+
+        total = jml_harga + ppn;
+
+        $scope.form.total_harga = total;
+
+        var sisa = total - $scope.form.uang_muka;
+
+        $scope.form.sisa_bayar = sisa;
+    }
 
     $scope.cariCustomer = function($query) {
         if ($query.length >= 3) {
@@ -31,7 +81,7 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
             });
         }
     }
-    
+
     $scope.cariBom = function($query) {
         if ($query.length >= 3) {
             Data.get('bom/cari', {nama: $query}).then(function(data) {
@@ -60,7 +110,7 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('returbbk', param).then(function(data) {
+        Data.get('spkaroseri', param).then(function(data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
@@ -77,27 +127,25 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
                 jml: '',
                 ket: '',
             }];
-        Data.get('bbk/kode').then(function(data) {
-            $scope.form.no_retur_bbk = data.kode;
-        });
     };
     $scope.update = function(form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
-        $scope.formtitle = "Edit Data : " + form.no_bbk;
+        $scope.formtitle = "Edit Data : " + form.no_spk;
         $scope.form = form;
         $scope.selected(form.no_retur_bbk);
     };
     $scope.view = function(form) {
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.no_wo;
+        $scope.is_create = false;
+        $scope.formtitle = "Lihat Data : " + form.no_spk;
         $scope.form = form;
         $scope.selected(form.no_retur_bbk);
     };
     $scope.save = function(form) {
-        var url = ($scope.is_create == true) ? 'returbbk/create' : 'returbbk/update/' + form.no_retur_bbk;
+        var url = ($scope.is_create == true) ? 'spkaroseri/create' : 'spkaroseri/update/' + form.no_retur_bbk;
         Data.post(url, form).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);

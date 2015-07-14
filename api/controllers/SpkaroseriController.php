@@ -3,14 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Customer;
+use app\models\Spkaroseri;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class CustomerController extends Controller {
+class SpkaroseriController extends Controller {
 
     public function behaviors() {
         return [
@@ -19,12 +19,10 @@ class CustomerController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
-                    'excel' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-//                    'kode' => ['get'],
-                    'cari' => ['get'],
+                    'kode' => ['post'],
                 ],
             ]
         ];
@@ -53,25 +51,54 @@ class CustomerController extends Controller {
         return true;
     }
 
-    public function actionCari() {
-        $params = $_REQUEST;
-        $query = new Query;
-        $query->from('customer')
-                ->select("*")
-//                ->where(['like', 'kd_cust', $params['nama']])
-                ->Where(['like', 'nm_customer', $params['nama']]);
+    public function actionKode() {
+        $tipe = json_decode(file_get_contents("php://input"), true);
+        if ($tipe['tipe'] == "finish") {
+            $query = new Query;
+            $query->from('spk')
+                    ->select('no_spk')
+                    ->orderBy('no_spk DESC')
+                    ->limit(1);
 
-        $command = $query->createCommand();
-        $models = $command->queryAll();
+            $cek = Spkaroseri::findOne('no_spk = "O' . date("y") . '01"');
+            if (empty($cek)) {
+                $command = $query->createCommand();
+                $models = $command->query()->read();
+                $urut = substr($models['no_spk'], 2) + 1;
+                $kode = substr('00' . $urut, strlen($urut));
+                $kode = "O" . date("y") . $kode;
+            } else {
+                $kode = "O" . date("y") . "01";
+            }
+        } else if ($tipe['tipe'] == "stok") {
+            $query = new Query;
+            $query->from('spk')
+                    ->select('no_spk')
+                    ->orderBy('no_spk DESC')
+                    ->limit(1);
+
+            $cek = Spkaroseri::findOne('no_spk = "S' . date("y") . '01"');
+            if (empty($cek)) {
+                $command = $query->createCommand();
+                $models = $command->query()->read();
+                $urut = substr($models['no_spk'], 2) + 1;
+                $kode = substr('00' . $urut, strlen($urut));
+                $kode = "S" . date("y") . $kode;
+            } else {
+                $kode = "S" . date("y") . "01";
+            }
+        }
+
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $models));
+
+        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_cust ASC";
+        $sort = "no_spk ASC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -96,7 +123,7 @@ class CustomerController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('customer')
+                ->from('spk')
                 ->orderBy($sort)
                 ->select("*");
 
@@ -107,9 +134,6 @@ class CustomerController extends Controller {
                 $query->andFilterWhere(['like', $key, $val]);
             }
         }
-
-        session_start();
-        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -130,8 +154,12 @@ class CustomerController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new Customer();
+        $model = new Spkaroseri();
         $model->attributes = $params;
+        $model->kd_customer = $params['kd_customer']['kd_cust'];
+        $model->nik = $params['nik']['nik'];
+        $model->kd_bom = $params['kd_bom']['kd_bom'];
+        $model->kd_model = $params['kd_model']['kd_model'];
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -146,6 +174,10 @@ class CustomerController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
+        $model->kd_customer = $params['kd_customer']['kd_cust'];
+        $model->nik = $params['nik']['nik'];
+        $model->kd_bom = $params['kd_bom']['kd_bom'];
+        $model->kd_model = $params['kd_model']['kd_model'];
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -170,7 +202,7 @@ class CustomerController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = Customer::findOne($id)) !== null) {
+        if (($model = Spkaroseri::find()->where('no_spk = "' . $id . '"')->one()) !== null) {
             return $model;
         } else {
 
@@ -202,16 +234,6 @@ class CustomerController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
-    }
-
-    public function actionExcel() {
-        session_start();
-        $query = $_SESSION['query'];
-        $query->offset("");
-        $query->limit("");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        return $this->render("/expmaster/customer", ['models' => $models]);
     }
 
 }
