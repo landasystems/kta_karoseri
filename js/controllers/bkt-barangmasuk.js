@@ -134,7 +134,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
 
     $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('spp/delete/' + row.no_spp).then(function (result) {
+            Data.delete('bbm/delete/' + row.no_bbm).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }

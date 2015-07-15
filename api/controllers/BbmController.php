@@ -292,18 +292,18 @@ class BbmController extends Controller {
     }
 
     public function actionDelete($id) {
-        $model = TransBbk::find()->where('no_bbk="' . $id . '"')->one();
+        $model = $this->findModel($id);
         if ($model->delete()) {
             // mengembalikan stok barang
-            $detail = DetBbk::find()->where('no_bbk = "' . $model->no_bbk . '"')->all();
+            $detail = DetBbm::find()->where('no_bbm = "' . $model->no_bbm . '"')->all();
             foreach ($detail as $detbbk) {
                 $barang = Barang::find()->where('kd_barang="' . $detbbk->kd_barang . '"')->one();
-                $barang->saldo += $detbbk->jml;
+                $barang->saldo -= $detbbk->jml;
                 $barang->save();
             }
 
             //hapus detail bbk
-            $delBbk = DetBbk::deleteAll('no_bbk = "' . $id . '"');
+            $delBbm = DetBbm::deleteAll('no_bbm = "' . $id . '"');
 
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
