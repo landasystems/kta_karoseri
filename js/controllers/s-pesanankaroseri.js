@@ -162,7 +162,7 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
     };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('returbbk/delete/' + row.no_retur_bbk).then(function(result) {
+            Data.delete('spkaroseri/delete/' + row.no_spk).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
