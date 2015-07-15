@@ -13,7 +13,34 @@
             <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
                 <div class="form-horizontal">
                     <div class="col-md-12 col-sm-12">
-
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">No Spk</label>
+                                <div class="col-sm-9">
+                                    <input st-search="no_spk" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Kode BOM</label>
+                                <div class="col-sm-9">
+                                    <input st-search="kd_bom" class="form-control"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Kode Customer</label>
+                                <div class="col-sm-9">
+                                    <input st-search="kd_customer" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Kode Chassis</label>
+                                <div class="col-sm-9">
+                                    <input st-search="kd_chassis" class="form-control"/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -24,7 +51,7 @@
                             <th st-sort="no_spk">No SPK</th>
                             <th st-sort="tgl">Tanggal</th>
                             <th st-sort="kd_bom">Kode BOM</th>
-                            <th st-sort="nm_customer">Kode Customer</th>
+                            <th st-sort="kd_customer">Kode Customer</th>
                             <th st-sort="kd_chassis">Kode Chassis</th>
                             <th ng-show="is_view == false"></th>
                         </tr>
