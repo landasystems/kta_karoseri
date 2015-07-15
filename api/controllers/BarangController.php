@@ -26,6 +26,7 @@ class BarangController extends Controller {
                     'jenis' => ['get'],
                     'kode' => ['get'],
                     'listbarang' => ['get'],
+                    'cari' => ['get'],
                 ],
             ]
         ];
@@ -35,7 +36,7 @@ class BarangController extends Controller {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
-        } elseif (excel(isset($this->actions['*']))) {
+        } else if (excel(isset($this->actions['*']))) {
             $verbs = $this->actions['*'];
         } else {
             return $event->isValid;
@@ -52,21 +53,6 @@ class BarangController extends Controller {
         }
 
         return true;
-    }
-
-    public function actionListbarang() {
-        $param = $_REQUEST;
-        $query = new Query;
-        $query->from('barang')
-                ->select("*")
-                ->where('nm_barang like "%' . $param['nama'] . '%"');
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionJenis() {
@@ -136,7 +122,11 @@ class BarangController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
+                if ($key == "kat") {
+                    $query->andFilterWhere(['=', $key, $val]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+                }
             }
         }
 
@@ -245,18 +235,19 @@ class BarangController extends Controller {
         $models = $command->queryAll();
         return $this->render("/expmaster/barang", ['models' => $models]);
     }
-    public function actionCari(){
+
+    public function actionCari() {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('barang')
-                ->select("kd_barang,nm_barang")
+                ->select("*")
                 ->where(['like', 'nm_barang', $params['barang']])
-                ->orWhere(['like','kd_barang',$params['barang']]);
+                ->orWhere(['like', 'kd_barang', $params['barang']]);
+
         $command = $query->createCommand();
         $models = $command->queryAll();
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $models));
-    
     }
 
 }

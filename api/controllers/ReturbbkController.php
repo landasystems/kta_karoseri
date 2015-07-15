@@ -3,15 +3,15 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\TransPo;
-use app\models\DetailPo;
+use app\models\ReturBbk;
+use app\models\Barang;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class WoController extends Controller {
+class ReturbbkController extends Controller {
 
     public function behaviors() {
         return [
@@ -24,8 +24,6 @@ class WoController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
-                    'cari' => ['get'],
-                    'wospk' => ['get'],
                 ],
             ]
         ];
@@ -53,42 +51,33 @@ class WoController extends Controller {
         return true;
     }
 
-    public function actionWospk() {
-        $params = $_REQUEST;
-        $query = new Query;
-        $query->from('view_wo_spk as vws')
-                ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
-                ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                ->select("vws.*, tk.nama as sales, tk.lokasi_kntr as wilayah")
-                ->where(['like', 'vws.no_wo', $params['nama']]);
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $models));
-    }
-
     public function actionKode() {
         $query = new Query;
-        $query->from('trans_po')
+        $query->from('retur_bbk')
                 ->select('*')
-                ->orderBy('nota DESC')
+                ->orderBy('no_retur_bbk DESC')
                 ->limit(1);
 
-        $command = $query->createCommand();
-        $models = $command->query()->read();
-        $kode_mdl = (substr($models['id_jabatan'], -6) + 1);
-        $kode = substr('000000' . $kode_mdl, strlen($kode_mdl));
+        $cek = TransBbk::findOne('no_retur_bbk = "BK' . date("y") . '0001"');
+        if (empty($cek)) {
+            $command = $query->createCommand();
+            $models = $command->query()->read();
+            $urut = substr($models['no_retur_bbk'], 4) + 1;
+            $kode = substr('0000' . $urut, strlen($urut));
+            $kode = "RK" . date("y") . $kode;
+        } else {
+            $kode = "RK" . date("y") . "0001";
+        }
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => 'PCH' . $kode));
+        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "trans_po.nota ASC";
+        $sort = "tgl ASC";
         $offset = 0;
         $limit = 10;
 
@@ -108,43 +97,54 @@ class WoController extends Controller {
                     $sort.=" DESC";
             }
         }
+
         //create query
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('trans_po')
-                ->join('JOIN', 'detail_po', 'trans_po.nota = detail_po.nota')
+                ->from('retur_bbk as rb')
+                ->leftJoin('barang as b', 'rb.kd_barang = b.kd_barang')
                 ->orderBy($sort)
-                ->select("*");
+                ->select("rb.*, b.nm_barang");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-
                 $query->andFilterWhere(['like', $key, $val]);
             }
         }
 
-        session_start();
-        $_SESSION['query'] = $query;
-
-//        print_r($_SESSION['query']);
-
         $command = $query->createCommand();
         $models = $command->queryAll();
-        $totalItems = 0;
+        $totalItems = $query->count();
 
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
-
-//        echo json_encode(array('status'=>1));
     }
 
     public function actionView($id) {
 
-        $model = $this->findModel($id);
+        $model = ReturBbk::find()->where('no_retur_bbk="' . $id . '"')->one();
+
+        $query = new Query;
+        $query->from('barang')
+                ->select('kd_barang, nm_barang')
+                ->where('kd_barang = "' . $model->kd_barang . '"')
+                ->limit(1);
+        $command = $query->createCommand();
+        $barang = $command->query()->read();
+
+        $query = new Query;
+        $query->from('trans_bbk')
+                ->select('no_bbk')
+                ->where('no_bbk = "' . $model->no_bbk . '"')
+                ->limit(1);
+        $command = $query->createCommand();
+        $bbk = $command->query()->read();
+        $model->kd_barang = isset($barang) ? $barang : '-';
+        $model->no_bbk = isset($bbk) ? $bbk : '-';
 
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -152,9 +152,16 @@ class WoController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new TransPo();
+        $model = new ReturBbk();
         $model->attributes = $params;
-
+        $model->kd_barang = $params['kd_barang']['kd_barang'];
+        $model->no_bbk = $params['no_bbk']['no_bbk'];
+        if ($model->alasan == 'Tidak Sesuai') {
+            //update stok barang
+            $barang = Barang::find()->where('kd_barang="' . $model->kd_barang . '"')->one();
+            $barang->saldo -= $model->jml;
+            $barang->save();
+        }
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -167,10 +174,25 @@ class WoController extends Controller {
 
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = $this->findModel($id);
+//        print_r($params);
+        $model = ReturBbk::find()->where('no_retur_bbk="' . $id . '"')->one();
+        if ($model->alasan == 'Tidak Sesuai') {
+            //kembalikan stok barang ke semula
+            $barang = Barang::find()->where('kd_barang="' . $params['kd_barang']['kd_barang'] . '"')->one();
+            $barang->saldo += $model->jml;
+            $barang->save();
+        }
         $model->attributes = $params;
+        $model->kd_barang = $params['kd_barang']['kd_barang'];
+        $model->no_bbk = $params['no_bbk']['no_bbk'];
 
         if ($model->save()) {
+            if ($model->alasan == 'Tidak Sesuai') {
+                //update stok barang dengan yang baru
+                $barang = Barang::find()->where('kd_barang="' . $params['kd_barang']['kd_barang'] . '"')->one();
+                $barang->saldo -= $model->jml;
+                $barang->save();
+            }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -180,9 +202,18 @@ class WoController extends Controller {
     }
 
     public function actionDelete($id) {
-        $model = $this->findModel($id);
+        $model = ReturBbk::find()->where('no_retur_bbk="' . $id . '"')->one();
+
+
+        if ($model->alasan == 'Tidak Sesuai') {
+            //kembalikan stok barang ke semula
+            $barang = Barang::find()->where('kd_barang="' . $model->kd_barang . '"')->one();
+            $barang->saldo += $model->jml;
+            $barang->save();
+        }
 
         if ($model->delete()) {
+
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -193,7 +224,7 @@ class WoController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = TransPo::findOne($id)) !== null) {
+        if (($model = ReturBbk::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -225,28 +256,6 @@ class WoController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
-    }
-
-    public function actionExcel() {
-        session_start();
-        $query = $_SESSION['query'];
-        $query->offset("");
-        $query->limit("");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        return $this->render("/expmaster/jabatan", ['models' => $models]);
-    }
-    public function actionCari(){
-        $params = $_REQUEST;
-        $query = new Query;
-        $query->from('wo_masuk')
-                ->select("no_wo")
-                ->where(['like', 'no_wo', $params['no_wo']])
-                ->limit(10);
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
 }

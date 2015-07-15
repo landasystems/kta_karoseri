@@ -20,11 +20,12 @@ class PoController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
-                    'listsubsection' => ['get'],
+                    'listsupplier' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
+                    'cari' => ['get'],
                 ],
             ]
         ];
@@ -62,18 +63,19 @@ class PoController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->query()->read();
-        $kode_mdl = (substr($models['id_jabatan'], -6) + 1);
-        $kode = substr('000000' . $kode_mdl, strlen($kode_mdl));
+        $kode_mdl = (substr($models['nota'], -4) + 1);
+        $kode = substr('0000' . $kode_mdl, strlen($kode_mdl));
+        $kode_tahun = substr(date('Y'), -2);
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => 'PCH' . $kode));
+        echo json_encode(array('status' => 1, 'kode' => 'PCH' . $kode_tahun . $kode));
     }
 
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "trans_po.nota ASC";
+        $sort = "trans_po.nota DESC";
         $offset = 0;
         $limit = 10;
 
@@ -111,28 +113,55 @@ class PoController extends Controller {
             }
         }
 
-        session_start();
-        $_SESSION['query'] = $query;
-        
-//        print_r($_SESSION['query']);
 
         $command = $query->createCommand();
         $models = $command->queryAll();
-        $totalItems = 0;
+        $totalItems = $query->count();
 
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
 
-//        echo json_encode(array('status'=>1));
+    public function actionListsupplier() {
+        $query = new Query;
+        $query->from('supplier')
+                ->select("*")
+                ->orderBy('kd_supplier ASC');
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionView($id) {
 
         $model = $this->findModel($id);
 
+//        $supplier = (isset($model->supplier->nama_supplier)) ? $model->supplier->nama_supplier : '';
+//        $model['supplier'] = ['kd_supplier' => $model[''], 'nama_supplier' => $supplier];
+
+        $det = DetailPo::find()
+                ->with(['barang'])
+                ->orderBy('nota')
+                ->where(['nota' => $model['nota']])
+                ->all();
+
+        $detail = array();
+
+        foreach ($det as $key => $val) {
+            $detail[$key] = $val->attributes;
+            $hargaBarang = (isset($val->barang->harga)) ? $val->barang->harga : '';
+            $namaBarang = (isset($val->barang->nama)) ? $val->barang->nama : '';
+            $satuanBarang = (isset($val->barang->satuan)) ? $val->barang->satuan : '';
+            $detail[$key]['data_barang'] = ['nota' => $val->nota, 'nama' => $namaBarang, 'harga' => $hargaBarang, 'satuan' => $satuanBarang];
+        }
+
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes), 'detail' => $detail), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
@@ -212,14 +241,20 @@ class PoController extends Controller {
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
-    public function actionExcel() {
-        session_start();
-        $query = $_SESSION['query'];
-        $query->offset("");
-        $query->limit("");
+    public function actionCari() {
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('trans_po')
+                ->select("*")
+                ->where(['like', 'nota', $params['nama']])
+                ->limit(10);
+
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expmaster/jabatan", ['models' => $models]);
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
 }

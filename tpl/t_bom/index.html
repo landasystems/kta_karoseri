@@ -20,12 +20,7 @@
                         </div>
                         <label class="col-sm-1 control-label">Model</label>
                         <div class="col-sm-2">
-                            <input type="hidden" 
-                                   ui-select2="model"
-                                   ng-model="form.kd_model"
-                                   data-placeholder="-Pilih Model-"
-                                   st-search="model"
-                                   style="width:250px" />
+
                         </div>
                     </div>
                 </div>
@@ -44,7 +39,7 @@
                         </tr>
                     </thead>
                     <tbody ng-show="!isLoading">
-                        <tr ng-repeat="row in displayed" ng-dblclick="view(row.kd_bom)">
+                        <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
                             <td>{{row.kd_bom}}</td>
                             <td>{{row.merk}}</td>
                             <td>{{row.tipe}}</td>
@@ -52,7 +47,7 @@
                             <td>{{row.tgl_buat| date}}</td>
                             <td>
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row.kd_bom)"></button>
+                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
                                     <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);"></button>
                                 </div> 
                             </td>
@@ -118,7 +113,7 @@
                             <label class="col-sm-4 control-label">Tanggal Buat</label>
                             <div class="col-sm-8">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-disabled="is_view" ng-model="form.tgl_buat" is-open="opened1" ng-click="open1($event)" placeholder="Tanggal Claim"/>
+                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-disabled="is_view" ng-model="form.tgl_buat" is-open="opened1" ng-click="open1($event)" />
                                     <span class="input-group-addon">
                                         <i class="fa fa-calendar-o"></i>
                                     </span>
@@ -152,73 +147,44 @@
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-12">
-                        <div nv-file-drop="" uploader="uploader" filters="imageFilter">
-                            <div class="col-md-12 bg-auto">    
-                                <div ng-show="uploader.isHTML5" class="m-b-md">
-                                    <img ng-src="js/controllers/uploads/bom/{{form.foto}}" ng-hide="is_create == true" class="img-thumbnail">
-                                    <img src="img/noimage.jpg" class="img-thumbnail" ng-show="is_create == true">
-                                    <input type="file" ng-model="form.filefoto" nv-file-select="" uploader="uploader" ng-disabled="is_view"/>
-                                    {{foto}}
-                                </div>
-                            </div>
-                        </div>
+                        <img ng-src="img/{{(form.foto) ? 'bom/'+form.foto : 'noimage.jpg'}}" class="img-thumbnail">
+                        <input type="file" nv-file-select="" uploader="uploader" />
                     </div>                    
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <h5 class="font-bold">- Detail Bill Of Material</h5>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Filter Berdasarkan Bagian</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" style="width:300px;" ng-disabled="is_view">
+                            <input type="text" class="form-control" ng-model="cari" style="width:300px;" ng-disabled="is_view">
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Jabatan</th>
+                                <th>Bagian</th>
                                 <th>Barang</th>
                                 <th width="25">Qty</th>
-                                <th>Keteragan</th>
-                                <th width="15">#</th>
+                                <th>Keterangan</th>
+                                <th width="80" ng-hide="is_view">#</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="detail in detBom" style="margin:0px;padding:0px;">
+                            <tr ng-repeat="detail in detBom| filter : cari" style="margin:0px;padding:0px;">
                                 <td  style="margin:0px;padding:0px;width:25%">
-                                    <div class="input-group">
-                                        <ui-select ng-model="detail.kd_jab" theme="bootstrap">
-                                            <ui-select-match>{{$select.selected.jabatan}}</ui-select-match>
-                                            <ui-select-choices refresh="cariJabatan($select.search)" repeat="val in resultsjabatan">
-                                                {{val.jabatan}}
-                                            </ui-select-choices>
-                                        </ui-select>
-                                        <span class="input-group-btn">
-                                            <button ng-click="detail.kd_jab = undefined" class="btn btn-default">
-                                                <span class="glyphicon glyphicon-trash"></span>
-                                            </button>
-                                        </span>
-                                    </div>
+                                    <input type="text" class="form-control" ng-model="detail.bagian.jabatan" required disabled="true"/>
                                 </td>
-                                <td  style="margin:0px;padding:0px;width:25%">
-                                    <div class="input-group">
-                                        <ui-select ng-model="detail.kd_barang" theme="bootstrap">
-                                            <ui-select-match>{{$select.selected.nm_barang}}</ui-select-match>
-                                            <ui-select-choices refresh="cariBarang($select.search)" repeat="val in resultsbarang">
-                                                {{val.nm_barang}}
-                                            </ui-select-choices>
-                                        </ui-select>
-                                        <span class="input-group-btn">
-                                            <button ng-click="detail.kd_barang = undefined" class="btn btn-default">
-                                                <span class="glyphicon glyphicon-trash"></span>
-                                            </button>
-                                        </span>
-                                    </div>
+                                <td style="margin:0px;padding:0px;width:25%">
+                                    <input type="text" class="form-control" ng-model="detail.barang.nm_barang" required disabled="true"/>
                                 </td>
                                 <td  style="margin:0px;padding:0px;"><input type="text" class="form-control" ng-model="detail.qty" ng-disabled="is_view"></td>
                                 <td  style="margin:0px;padding:0px;"><input type="text" class="form-control" ng-model="detail.ket" ng-disabled="is_view"></td>
-                                <td  style="margin:0px;padding:0px;">
-                                    <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-arrows"></i></button>
-                                    <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
+                                <td style="margin:0px;padding:0px;" ng-hide="is_view">
+                                    <div class="btn-group pull-right" role="group">
+                                        <button ng-click="modal(detail)" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
+                                        <button ng-click="addDetail(detail)" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-plus-square-o"></i></button>
+                                        <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>

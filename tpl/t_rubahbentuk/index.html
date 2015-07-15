@@ -102,17 +102,22 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">No Wo</label>
                             <div class="col-sm-9">
-                                <input type="text" 
-                                       ui-select2="wo"
-                                       ng-model="no_wo"
-                                       ng-change="
-                                                   form.nm_customer = no_wo.nm_customer;
-                                                   form.no_chassis = no_wo.no_mesin;
-                                                   form.no_mesin = no_wo.no_chassis;
-                                                   form.no_wo = no_wo.no_wo;
-                                       "
-                                       data-placeholder="-Pilih No Wo-"
-                                       class="form-control"/>
+                                <div class="input-group">
+                                    <ui-select ng-model="form.no_wo" ng-disabled="is_view" theme="bootstrap" on-select="
+                                                   form.nm_customer = $item.nm_customer;
+                                                   form.no_chassis = $item.no_mesin;
+                                                   form.no_mesin = $item.no_chassis;">
+                                        <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
+                                        <ui-select-choices refresh="cariWo($select.search)" repeat="val in results">
+                                            {{val.no_wo}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <span class="input-group-btn">
+                                        <button ng-click="form.no_wo = undefined" class="btn btn-default">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </button>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">

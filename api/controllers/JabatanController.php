@@ -25,6 +25,8 @@ class JabatanController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
+                    'listkaryawan' => ['get'],
+                    'cari' => ['get']
                 ],
             ]
         ];
@@ -51,6 +53,37 @@ class JabatanController extends Controller {
         }
 
         return true;
+    }
+
+    public function actionListkaryawan() {
+        $param = $_REQUEST;
+        $query = new Query;
+        $query->from('tbl_karyawan')
+                ->select("nik, nama")
+                ->where('nama like "%' . $param['nama'] . '%"');
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+
+    public function actionCari() {
+        $param = $_REQUEST;
+        $query = new Query;
+        $query->from('tbl_jabatan')
+                ->select("*")
+                ->where('jabatan like "%' . $param['nama'] . '%"')
+                ->orWhere(['like', 'id_jabatan', $param['nama']]);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionKode() {
@@ -121,9 +154,8 @@ class JabatanController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-               
-                    $query->andFilterWhere(['like', $key, $val]);
-                
+
+                $query->andFilterWhere(['like', $key, $val]);
             }
         }
 

@@ -26,12 +26,25 @@ class BomController extends Controller {
                     'chassis' => ['get'],
                     'model' => ['get'],
                     'barang' => ['get'],
-                    'jabatan' => ['get'],
                     'kode' => ['get'],
                     'tipe' => ['get'],
+                    'cari' => ['get'],
                 ],
             ]
         ];
+    }
+
+    public function actionCari() {
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('trans_standar_bahan')
+                ->select("*")
+                ->where(['like', 'kd_bom', $params['nama']]);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function beforeAction($event) {
@@ -58,22 +71,6 @@ class BomController extends Controller {
         return true;
     }
 
-    public function actionJabatan() {
-        $param = $_REQUEST;
-        if (!empty($param)) {
-            $query = new Query;
-            $query->from('tbl_jabatan')
-                    ->select("*")
-                    ->where('jabatan like "%' . $param['nama'] . '%"');
-
-            $command = $query->createCommand();
-            $models = $command->queryAll();
-            $this->setHeader(200);
-
-            echo json_encode(array('status' => 1, 'data' => $models));
-        }
-    }
-
     public function actionChassis() {
         $query = new Query;
         $query->from('chassis')
@@ -90,19 +87,18 @@ class BomController extends Controller {
     }
 
     public function actionKode() {
-//        $query = new Query;
-//        $query->from('trans_standar_bahan')
-//                ->select('*')
-//                ->orderBy('kd_bom DESC')
-//                ->limit(1);
-//
-//        $command = $query->createCommand();
-//        $models = $command->query()->read();
-//        $lastKode = substr($models['kd_bom'], -4) + 1;
-//
-//        $kode = 'BOM' . date("y") . substr('0000' . $lastKode, -4);
-//        $this->setHeader(200);
-        $kode = 'asd';
+        $query = new Query;
+        $query->from('trans_standar_bahan')
+                ->select('*')
+                ->orderBy('kd_bom DESC')
+                ->limit(1);
+
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+        $lastKode = substr($models['kd_bom'], -4) + 1;
+
+        $kode = 'BOM' . date("y") . substr('0000' . $lastKode, -4);
+        $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'kode' => $kode));
     }
@@ -114,7 +110,7 @@ class BomController extends Controller {
         $sort = "kd_bom ASC";
         $offset = 0;
         $limit = 10;
-        //        Yii::error($params);
+
         //limit & offset pagination
         if (isset($params['limit']))
             $limit = $params['limit'];
@@ -160,22 +156,25 @@ class BomController extends Controller {
 
     public function actionView($id) {
         $query = new Query;
-        $query->from(['trans_standar_bahan', 'chassis'])
-                ->where('trans_standar_bahan.kd_chassis = chassis.kd_chassis and trans_standar_bahan.kd_bom="' . $id . '"')
+        $query->from(['trans_standar_bahan', 'chassis', 'model'])
+                ->where('trans_standar_bahan.kd_model = model.kd_model and trans_standar_bahan.kd_chassis = chassis.kd_chassis and trans_standar_bahan.kd_bom="' . $id . '"')
                 ->select("*");
 
         $command = $query->createCommand();
         $models = $command->query()->read();
+        $models['kd_model'] = array('kd_model' => $models['kd_model'], 'model' => $models['model']);
 
         $det = BomDet::find()
+                ->with(['jabatan', 'barang'])
                 ->where(['kd_bom' => $models['kd_bom']])
                 ->all();
 
         $detail = array();
-        foreach ($det as $val) {
-            $detail[] = $val->attributes;
+        foreach ($det as $key => $val) {
+            $detail[$key] = $val->attributes;
+            $detail[$key]['bagian'] = (isset($val->jabatan)) ? $val->jabatan->attributes : [];
+            $detail[$key]['barang'] = (isset($val->barang)) ? $val->barang->attributes : [];
         }
-
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $models, 'detail' => $detail), JSON_PRETTY_PRINT);
     }
@@ -188,12 +187,12 @@ class BomController extends Controller {
 
         if ($model->save()) {
             $detailBom = $params['detailBom'];
-            print_r($detailBom);
+//            print_r($detailBom);
             foreach ($detailBom as $val) {
                 $det = new BomDet();
                 $det->attributes = $val;
-                $det->kd_jab = $val['kd_jab']['id_jabatan'];
-                $det->kd_barang = $val['kd_barang']['kd_barang'];
+                $det->kd_jab = $val['bagian']['id_jabatan'];
+                $det->kd_barang = $val['barang']['kd_barang'];
                 $det->kd_bom = $model->kd_bom;
                 $det->save();
             }
@@ -217,8 +216,8 @@ class BomController extends Controller {
             foreach ($detailBom as $val) {
                 $det = new BomDet();
                 $det->attributes = $val;
-                $det->kd_jab = $val['kd_jab']['id_jabatan'];
-                $det->kd_barang = $val['kd_barang']['kd_barang'];
+                $det->kd_jab = $val['bagian']['id_jabatan'];
+                $det->kd_barang = $val['barang']['kd_barang'];
                 $det->kd_bom = $model->kd_bom;
                 $det->save();
             }

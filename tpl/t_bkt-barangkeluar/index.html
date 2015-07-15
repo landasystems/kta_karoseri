@@ -15,33 +15,29 @@
                 <div class="form-horizontal">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="col-md-3">No. Wo</label>
+                            <label class="col-md-3">No. BBK</label>
                             <div class="col-md-9">
-                                <input st-search="no_wo" class="form-control"/>
+                                <input st-search="no_bbk" class="form-control"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-3">Periode</label>
+                            <label class="col-md-3">No. Wo</label>
                             <div class="col-md-9">
-                                <input date-range-picker class="form-control" st-search="terima" type="text"  ng-model="tanggal">
+                                <input class="form-control" st-search="no_wo" type="text"  ng-model="tanggal">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="col-md-3">Status</label>
+                            <label class="col-md-3">Bagian</label>
                             <div class="col-md-9">
-                                <select class="form-control" st-search="stat">
-                                    <option value="">-Pilih Status-</option>
-                                    <option value="Interior">Interior</option>
-                                    <option value="Eksterior">Eksterior</option>
-                                </select>
+                                <input st-search="bagian" class="form-control"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-3">Jenis Komplain</label>
+                            <label class="col-md-3">Penerima</label>
                             <div class="col-md-9">
-                                <input st-search="jenis" class="form-control"/>
+                                <input st-search="penerima" class="form-control"/>
                             </div>
                         </div>
                     </div>
@@ -53,7 +49,7 @@
                         <tr>
                             <th st-sort="tanggal">Tanggal</th>
                             <th st-sort="no_bbk">No. BBK</th>
-                            <th st-sort="no_wo">NO. WO</th>
+                            <th st-sort="no_wo">No. Wo</th>
                             <th st-sort="bagian">Bagian</th>
                             <th st-sort="penerima">Penerima</th>
                             <th st-sort="petugas">Petugas</th>
@@ -62,7 +58,7 @@
                     </thead>
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
-                            <td>{{row.tanggal}}</td>
+                            <td>{{row.tanggal| date}}</td>
                             <td>{{row.no_bbk}}</td>
                             <td>{{row.no_wo}}</td>
                             <td>{{row.bagian}}</td>
@@ -103,21 +99,32 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">No. BBK</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" readonly ng-model="form.no_bbk" ng-disabled="is_view" required placeholder="Nomor BBK">
+                                        <input type="text" class="form-control" readonly ng-model="form.no_bbk" ng-disabled="is_view" readonly required placeholder="Nomor BBK">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Tanggal</label>
+                                    <div class="col-sm-9">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-disabled="is_view" ng-model="form.tanggal" is-open="opened1" ng-click="open1($event)" placeholder="Tanggal Barang Keluar"/>
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar-o"></i>
+                                            </span>
+                                        </div> 
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">No Wo</label>
                                     <div class="col-sm-9">
                                         <div class="input-group">
-                                            <ui-select ng-model="form.no_wo" theme="bootstrap">
+                                            <ui-select ng-model="form.no_wo" ng-disabled="is_view" theme="bootstrap" on-select="detailstok(form.no_wo, '')">
                                                 <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
                                                 <ui-select-choices refresh="cariWo($select.search)" repeat="val in results">
                                                     {{val.no_wo}}
                                                 </ui-select-choices>
                                             </ui-select>
                                             <span class="input-group-btn">
-                                                <button ng-click="detail.produk = undefined" class="btn btn-default">
+                                                <button ng-click="form.no_wo = undefined" class="btn btn-default">
                                                     <span class="glyphicon glyphicon-trash"></span>
                                                 </button>
                                             </span>
@@ -127,13 +134,37 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Bagian</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" readonly ng-model="form.kd_jab" ng-disabled="is_view" required placeholder="Bagian">
+                                        <div class="input-group">
+                                            <ui-select ng-model="form.kd_jab" ng-disabled="is_view" theme="bootstrap">
+                                                <ui-select-match>{{$select.selected.jabatan}}</ui-select-match>
+                                                <ui-select-choices refresh="cariJabatan($select.search)" repeat="val in resultsjabatan">
+                                                    {{val.jabatan}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            <span class="input-group-btn">
+                                                <button ng-click="form.kd_jab = undefined" class="btn btn-default">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Penerima</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" readonly ng-model="form.penerima" ng-disabled="is_view" required placeholder="Penerima">
+                                        <div class="input-group">
+                                            <ui-select ng-model="form.penerima" ng-disabled="is_view" theme="bootstrap">
+                                                <ui-select-match>{{$select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices refresh="cariKaryawan($select.search)" repeat="val in resultskaryawan">
+                                                    {{val.nama}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            <span class="input-group-btn">
+                                                <button ng-click="form.penerima = undefined" class="btn btn-default">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -147,26 +178,18 @@
                                 <div class="row">
                                     <div class="col-md-6 col-sm-12 thumb-wrapper">
                                         <center><h4>Sisa Pengambilan</h4></center>
-                                        <center style="margin-top: 10px;"><h1>0</h1></center>
+                                        <center style="margin-top: 10px;"><h1>{{sisa_pengambilan}}</h1></center>
                                     </div>
                                     <div class="col-md-6 col-sm-12 thumb-wrapper">
                                         <center><h4>Stok Sekarang</h4></center>
-                                        <center style="margin-top: 10px;"><h1>0</h1></center>
+                                        <center style="margin-top: 10px;"><h1>{{stok_sekarang}}</h1></center>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <br>
-                                    <br>
-                                    <center>
-                                        <button class="btn btn-success btn-rounded" ng-show="lihat_detail == false" ng-click="lihat_detail = true">Tampilkan barang yang sudah diambil</button>
-                                        <button class="btn btn-danger btn-rounded" ng-show="lihat_detail == true" ng-click="lihat_detail = false">Sembunyikan barang yang sudah diambil</button>
-                                    </center>
                                 </div>
                             </div>
                         </div>
                         <br>
                         <div class="row">
-                            <div class="col-sm-12" ng-show="lihat_detail == false">
+                            <div class="col-sm-12">
                                 <div class="panel-heading text-muted font-bold">
                                     Detail Barang Keluar
                                 </div>
@@ -177,54 +200,42 @@
                                             <th>Barang</th>
                                             <th style="width:100px">Jumlah</th>
                                             <th style="width:400px">Keterangan</th>
+                                            <td width="79"></td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>
+                                        <tr style="margin:0px;padding:0px;" ng-repeat="detail in detailBbk">
+                                            <td style="margin:0px;padding:0px;">
                                                 <div class="input-group">
-                                                    <ui-select on-select="detail.harga = $item.harga_beli_terakhir" ng-model="detail.produk" theme="bootstrap">
-                                                        <ui-select-match>{{$select.selected.nama}}</ui-select-match>
-                                                        <ui-select-choices refresh="cariProduk($select.search)" repeat="val in results">
-                                                            {{val.nama}}
+                                                    <ui-select on-select="detailstok(form.no_wo, $item)" ng-disabled="is_view" ng-model="detail.kd_barang" theme="bootstrap">
+                                                        <ui-select-match>{{$select.selected.nm_barang}}</ui-select-match>
+                                                        <ui-select-choices refresh="cariBarang($select.search)" repeat="val in resultsbarang">
+                                                            {{val.nm_barang}}
                                                         </ui-select-choices>
                                                     </ui-select>
                                                     <span class="input-group-btn">
-                                                        <button ng-click="detail.produk = undefined" class="btn btn-default">
+                                                        <button ng-click="detail.kd_barang = undefined" class="btn btn-default">
                                                             <span class="glyphicon glyphicon-trash"></span>
                                                         </button>
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td><input type="text" ng-model="jumlah" class="form-control"></td>
-                                            <td><input type="text" ng-model="keterangan" class="form-control"></td>
+                                            <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control" required></td>
+                                            <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control"></td>
+                                            <td  style="margin:0px;padding:0px;">
+                                                <button ng-click="addDetail(detail)" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-plus"></i></button>
+                                                <button ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view" ng-if="$index == 0"><i class="fa fa-trash-o"></i></button>
+                                                <button ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view" ng-if="$index > 0" style="width:100%"><i class="fa fa-trash-o"></i></button>
+                                            </td>
                                         </tr>
                                     </tbody>
-                                </table>
-                            </div>
-                            <div class="col-sm-12" ng-show="lihat_detail == true">
-                                <div class="panel-heading text-muted font-bold">
-                                    Barang yang sudah diambil
-                                </div>
-                                <br>
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Bagian</th>
-                                            <th>Penerima</th>
-                                            <th>Kode</th>
-                                            <th>Barang</th>
-                                            <th>Jumlah</th>
-                                            <th>Keterangan</th>
-                                        </tr>
-                                    </thead>
                                 </table>
                             </div>
                         </div>
                         <div class="line line-dashed"></div>
                         <div align="center">
                             <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
-                            <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form)">&nbsp;Simpan Perubahan</button>
+                            <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, detailBbk)">&nbsp;Simpan Perubahan</button>
                         </div>
                     </div>
                 </form>

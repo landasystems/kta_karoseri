@@ -13,17 +13,33 @@
             </div>
             <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
                 <div class="form-horizontal">
-                    <div class="form-group">
-                        <label class="col-sm-1 control-label">Jenis</label>
-                        <div class="col-sm-2">
-                            <select stInputEvent="change" st-search="jenis_brg" class="form-control">
-                                <option value="">-Pilih Jenis-</option>
-                                <option ng-repeat="jenis in jenis_brg" value="{{jenis.jenis_brg}}">{{jenis.jenis_brg}}</option>
-                            </select>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Jenis</label>
+                            <div class="col-sm-9">
+                                <select st-search="jenis_brg" class="form-control">
+                                    <option value="">-Pilih Jenis-</option>
+                                    <option ng-repeat="jenis in jenis_brg" value="{{jenis.jenis_brg}}">{{jenis.jenis_brg}}</option>
+                                </select>
+                            </div>
+                        </div>    
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Kategori</label>
+                            <div class="col-sm-9">
+                                <select st-search="kat" class="form-control">
+                                    <option value="">-Pilih Jenis-</option>
+                                    <option value="RUTIN">-Rutin-</option>
+                                    <option value="Non Rutin">-Non Rutin-</option>
+                                </select>
+                            </div>
                         </div>
-                        <label class="col-sm-2 control-label">Nama Barang</label>
-                        <div class="col-sm-3">
-                            <input st-search="nm_barang" class="form-control"/>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Nama Barang</label>
+                            <div class="col-sm-9">
+                                <input st-search="nm_barang" class="form-control"/>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -38,6 +54,7 @@
                             <th st-sort="jenis_brg">Jenis</th>
                             <th st-sort="harga">Harga</th>
                             <th st-sort="satuan">Satuan</th>
+                            <th st-sort="kat">Kategori</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -48,6 +65,7 @@
                             <td>{{row.jenis_brg}}</td>
                             <td>{{row.harga| currency }}</td>
                             <td>{{row.satuan}}</td>
+                            <td>{{row.kat}}<td>
                             <td>
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
                                     <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
@@ -93,7 +111,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Jenis</label>
                             <div class="col-sm-10">
-                                <select ui-select2="jenis_barang" ng-model="form.jenis" ng-disabled="is_view" required style="width: 250px;">
+                                <select class="form-control" ng-model="form.jenis" ng-disabled="is_view" required>
                                     <option value="">-Pilih Jenis-</option>
                                     <option ng-repeat="jenis in jenis_brg" value="{{jenis.kd_jenis}}">{{jenis.jenis_brg}}</option>
                                 </select>
@@ -102,11 +120,11 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Harga</label>
                             <div class="col-sm-10">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">Rp</span>
-                                        <input type="text" class="form-control" ng-model="form.harga" ng-disabled="is_view" required>
-                                    </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">Rp</span>
+                                    <input type="text" class="form-control" ng-model="form.harga" ng-disabled="is_view" required>
                                 </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Satuan</label>
@@ -117,7 +135,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Kategori</label>
                             <div class="col-sm-10">
-                                <label class="btn btn-default" ng-model="form.kat" ng-disabled="is_view" btn-radio="'Rutin'" required>Rutin</label>
+                                <label class="btn btn-default" ng-model="form.kat" ng-disabled="is_view" btn-radio="'RUTIN'" required>Rutin</label>
                                 <label class="btn btn-default" ng-model="form.kat" ng-disabled="is_view" btn-radio="'Non Rutin'" required>Non Rutin</label>
                             </div>
                         </div>
@@ -158,15 +176,8 @@
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-12">
-                        <div nv-file-drop="" uploader="uploader" filters="imageFilter">
-                            <div class="col-md-12 bg-auto">    
-                                <div ng-show="uploader.isHTML5" class="m-b-md">
-                                    <img ng-src="js/controllers/uploads/barang/{{form.foto}}" ng-hide="is_create == true" class="img-thumbnail">
-                                    <img src="img/noimage.jpg" class="img-thumbnail" ng-show="is_create == true">
-                                    <input type="file" nv-file-select="" uploader="uploader" />
-                                </div>
-                            </div>
-                        </div>
+                        <img ng-src="img/{{(form.foto) ? 'barang/'+form.foto : 'noimage.jpg'}}" class="img-thumbnail">
+                        <input type="file" nv-file-select="" uploader="uploader" />
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <div align="center">
