@@ -30,6 +30,7 @@ class DetBbm extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['id'], 'number'],
             [['tgl_terima'], 'safe'],
             [['jumlah'], 'number'],
             [['no_bbm'], 'string', 'max' => 15],

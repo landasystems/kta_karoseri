@@ -164,7 +164,7 @@ class BbmController extends Controller {
                 ->join('LEFT JOIN', 'supplier as su', 'tb.kd_suplier= su.kd_supplier')
 //                ->leftJoin('tbl_jabatan as tj', 'tj.id_jabatan  = tb.kd_jab')
                 ->orderBy($sort)
-                ->select("tb.*,su.nama_supplier as supplier");
+                ->select("tb.*,su.nama_supplier as nm_supplier");
 
         //filter
         if (isset($params['filter'])) {
@@ -186,50 +186,39 @@ class BbmController extends Controller {
     public function actionView($id) {
 
         $model = $this->findModel($id);
-        $queryPo = new Query;
-        $queryPo->select("*")
-                ->from('trans_po')
-                ->where('nota='.$model->no_po);
-        $command = $queryPo->createCommand();
-        $po = $command->queryOne();
+        $querySup = new Query;
+        $querySup->select("*")
+                ->from('supplier')
+                ->where('kd_supplier="' . $model->kd_suplier . '"');
+        $commandSup = $querySup->createCommand();
+        $sup = $commandSup->queryOne();
 
         $queryWo = new Query;
         $queryWo->from('wo_masuk')
 //                ->select('id_jabatan, jabatan')
                 ->where('no_wo = "' . $model->no_wo . '"')
                 ->limit(1);
-        $command2 = $query->createCommand();
+        $command2 = $queryWo->createCommand();
         $wo = $command2->queryOne();
-//        $query = new Query;
-//        $query->from('tbl_karyawan')
-//                ->select('nik, nama')
-//                ->where('nik = "' . $model->penerima . '"')
-//                ->limit(1);
-//        $command = $query->createCommand();
-//        $penerima = $command->query()->read();
-//
-//        $model->kd_jab = isset($jabatan) ? $jabatan : '';
-//        $model->penerima = isset($penerima) ? $penerima : '';
-//        $model->no_wo = array('no_wo' => $model->no_wo);
-//
-//        $detail = DetBbk::find()->where('no_bbk="' . $model->no_bbk . '"')->all();
-//        $i = 0;
-//        $det = array();
-//        foreach ($detail as $val) {
-//            $query->from('barang')
-//                    ->select('kd_barang, nm_barang')
-//                    ->where('kd_barang = "' . $val['kd_barang'] . '"')
-//                    ->limit(1);
-//            $command = $query->createCommand();
-//            $det[$i]['jml'] = $val['jml'];
-//            $det[$i]['ket'] = $val['ket'];
-//            $barang = $command->query()->read();
-//            $det[$i]['kd_barang'] = isset($barang) ? $barang : '';
-//            $i++;
-//        }
+        $queryDet = new Query;
+        $queryDet->from('det_bbm')
+                ->select('*')
+                ->where('no_bbm = "' . $model->no_bbm . '"');
+        $commandDet = $queryDet->createCommand();
+        $detail = $commandDet->queryAll();
 
+        foreach ($detail as $key => $ab) {
+            $queryBrg = new Query;
+            $queryBrg->from('barang')
+                    ->select('*')
+                    ->where('kd_barang = "' . $ab['kd_barang'] . '"');
+            $commandBrg = $queryBrg->createCommand();
+            $Brg = $commandBrg->queryOne();
+            $detail[$key]['barang'] = $Brg;
+        }
+        Yii::error($detail);
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes), 'detail' => $det), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'sup' => $sup, 'wo' => $wo, 'details' => $detail), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
@@ -240,10 +229,10 @@ class BbmController extends Controller {
         $findNumber = TransBbm::find()->orderBy('no_bbm DESC')->one();
 //         Yii::error();
         $lastNumber = (int) substr($findNumber->no_bbm, -5);
-        $model->no_bbm = 'BM' . date('y', strtotime($model->tgl_nota)) . substr('00000'. ($lastNumber + 1),-5);
+        $model->no_bbm = 'BM' . date('y', strtotime($model->tgl_nota)) . substr('00000' . ($lastNumber + 1), -5);
         $model->kd_suplier = $params['form']['supplier']['kd_supplier'];
         $model->no_wo = $params['form']['wo']['no_wo'];
-        
+
         if ($model->save()) {
             $detailBbm = $params['detBbm'];
             foreach ($detailBbm as $val) {
@@ -270,38 +259,27 @@ class BbmController extends Controller {
 
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = TransBbm::find()->where('no_bbk="' . $id . '"')->one();
-        $model->attributes = $params['bbk'];
-        $model->tanggal = date("Y-m-d");
-        $model->status = 0;
-        $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '-';
-        $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '-';
-        $model->penerima = isset($params['bbk']['penerima']['nik']) ? $params['bbk']['penerima']['nik'] : '-';
+        $model = $this->findModel($id);
+        $model->attributes = $params['form'];
+        $model->kd_suplier = $params['form']['supplier']['kd_supplier'];
+        $model->no_wo = $params['form']['wo']['no_wo'];
 
         if ($model->save()) {
-            // mengembalikan stok barang
-            $detail = DetBbk::find()->where('no_bbk = "' . $model->no_bbk . '"')->all();
-            foreach ($detail as $detbbk) {
-                $barang = Barang::find()->where('kd_barang="' . $detbbk->kd_barang . '"')->one();
-                $barang->saldo += $detbbk->jml;
-                $barang->save();
-            }
-
-            //hapus detail bbk
-            $del = DetBbk::deleteAll('no_bbk = "' . $model->no_bbk . '"');
-
-            //isi detail dengan yang baru
-            $detailBbk = $params['detailBbk'];
-            foreach ($detailBbk as $val) {
-                $det = new DetBbk();
+            $detailBbm = $params['detBbm'];
+            foreach ($detailBbm as $val) {
+                $det = DetBbm::findOne($val['id']);
+                if(empty($det)){
+                    $det = new DetBbm();
+                }
                 $det->attributes = $val;
-                $det->kd_barang = $val['kd_barang']['kd_barang'];
-                $det->no_bbk = $model->no_bbk;
+                $det->kd_barang = $val['barang']['kd_barang'];
+                $det->no_po = (isset($params['form']['po']['nota'])) ? $params['form']['po']['nota'] : '-';
+                $det->no_bbm = $model->no_bbm;
                 $det->save();
 
                 //update stok barang
                 $barang = Barang::find()->where('kd_barang="' . $det->kd_barang . '"')->one();
-                $barang->saldo -= $det->jml;
+                $barang->saldo += $det->jumlah;
                 $barang->save();
             }
 
