@@ -134,7 +134,7 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.no_spk;
         $scope.form = form;
-        $scope.selected(form.no_retur_bbk);
+        $scope.selected(form.no_spk);
     };
     $scope.view = function(form) {
         $scope.is_edit = true;
@@ -142,7 +142,7 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
         $scope.is_create = false;
         $scope.formtitle = "Lihat Data : " + form.no_spk;
         $scope.form = form;
-        $scope.selected(form.no_retur_bbk);
+        $scope.selected(form.no_spk);
     };
     $scope.save = function(form) {
         var url = ($scope.is_create == true) ? 'spkaroseri/create' : 'spkaroseri/update/' + form.no_retur_bbk;
@@ -162,23 +162,14 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
     };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('returbbk/delete/' + row.no_retur_bbk).then(function(result) {
+            Data.delete('spkaroseri/delete/' + row.no_spk).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
-    $scope.selected = function(id) {
-        Data.get('returbbk/view/' + id).then(function(data) {
+    $scope.selected = function(no_spk) {
+        Data.get('spkaroseri/view/' + no_spk).then(function(data) {
             $scope.form = data.data;
-            if (jQuery.isEmptyObject(data.detail)) {
-                $scope.detailBbk = [{
-                        kd_barang: '',
-                        jml: '',
-                        ket: '',
-                    }];
-            } else {
-                $scope.detailBbk = data.detail;
-            }
         });
     }
 })

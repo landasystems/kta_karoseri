@@ -123,10 +123,18 @@ class SpkaroseriController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('spk')
+                ->from('spk as s')
+                ->join('Join', 'chassis as c', 's.kd_chassis = c.kd_chassis')
+                ->join('Join', 'customer cus', 'cus.kd_cust = s.kd_customer')
                 ->orderBy($sort)
-                ->select("*");
+                ->select("s.*, c.*, cus.*");
 
+//        $models = Spkaroseri::find()->with(['chassis', 'customer'])
+//                ->offset($offset)
+//                ->orderBy($sort)
+//                ->select("spk.*, chassis.*, customer.*")
+//                ->find()
+//                ->all();
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
@@ -138,6 +146,7 @@ class SpkaroseriController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
+//        $totalItems = 0;
 
         $this->setHeader(200);
 
@@ -145,11 +154,24 @@ class SpkaroseriController extends Controller {
     }
 
     public function actionView($id) {
+        $query = new Query;
+        $query->from('spk as s')
+                ->join('Join', 'chassis as c', 's.kd_chassis = c.kd_chassis')
+                ->join('Join', 'customer cus', 'cus.kd_cust = s.kd_customer')
+                ->join('Join', 'model m', 'm.kd_model= s.kd_model')
+                ->join('Join', 'tbl_karyawan tb', 's.nik= tb.nik')
+                ->where('s.no_spk="' . $id . '"')
+                ->select("s.*, c.merk, c.tipe, cus.kd_cust, cus.nm_customer , tb.nik, tb.nama, m.kd_model, m.model");
+        $command = $query->createCommand();
+        $models = $command->query()->read();
 
-        $model = $this->findModel($id);
+        $models['kd_customer'] = array('kd_cust' => $models['kd_cust'], 'nm_customer' => $models['nm_customer']);
+        $models['kd_bom'] = array('kd_bom' => $models['kd_bom']);
+        $models['kd_model'] = array('kd_model' => $models['kd_model'], 'model' => $models['model']);
+        $models['nik'] = array('nik' => $models['nik'], 'nama' => $models['nama']);
 
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => array_filter($models)), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
