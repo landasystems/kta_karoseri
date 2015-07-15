@@ -44,16 +44,16 @@
                             <th st-sort="spp">No SPP</th>
                             <th st-sort="tanggal">tanggal</th>
                             <th st-sort="dikirim_ke">Tujuan Pengiriman</th>
-                            <th style="text-align:right;">Action &nbsp;</th>
+                            <th style="text-align:right;" ng-hide="is_view == true">Action &nbsp;</th>
                         </tr>
                     </thead>
                     <tbody ng-show="!isLoading">
-                        <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
+                        <tr ng-repeat="row in displayed" ng-dblclick="view(row.nota)">
                             <td>{{row.nota}}</td>
                             <td>{{row.spp}}</td>
                             <td>{{row.tanggal}}</td>
                             <td>{{row.dikirim_ke}}</td>
-                            <td>
+                            <td ng-hide="is_view == true">
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
                                     <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row.nota)"></button>
                                     <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" ></button>
@@ -149,19 +149,16 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Jatuh Tempo</label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" ng-model="form.jatuh_tempo" ng-disabled="is_view" required/>
+                                    <div class="input-group m-b" style="margin:0px;">
+                                        <input type="text" class="form-control" ng-model="form.jatuh_tempo" ng-disabled="is_view" required/>
+                                        <span class="input-group-addon">/ Hari</span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Dikirim Ke</label>
                                 <div class="col-sm-6">
                                     <input type="text" class="form-control" ng-model="form.dikirim_ke" ng-disabled="is_view" required/>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <button type="submit" style="padding:5px 150px;" class="btn btn-default" ng-click="">PO Lain-Lain</button>
                                 </div>
                             </div>
                         </div>
@@ -187,7 +184,7 @@
                                         <th style="text-align: center;">Jumlah</th>
                                         <th style="text-align: center;">Tgl Pengiriman</th>
                                         <th style="text-align: center;">Keterangan</th>
-                                        <th style="text-align: center;">#</th>
+                                        <th style="text-align: center;" ng-hide="is_view == true">#</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -208,30 +205,30 @@
                                                 </span>
                                             </div>
                                         </td>
-                                        <td style="width:50px; padding-left: 8px;padding-right: 8px;">
-                                            <input type="text" class="form-control" ng-model="detail.jml" ng-change="subtotal()" ng-disabled="is_view" ng-readonly="is_create == false" required>
+                                        <td style="width:80px; padding-left: 8px;padding-right: 8px;">
+                                            <input type="text" class="form-control" ng-model="detail.jml" ng-change="subtotal()" ng-disabled="is_view" ng-readonly="is_edit == false" required>
                                         </td>
                                         <td style="width:50px; padding-left: 8px;padding-right: 8px;"> 
-                                            <input type="text" class="form-control" ng-model="detail.satuan" ng-disabled="is_view" ng-readonly="true" required>
+                                            <input type="text" class="form-control" ng-model="detail.data_barang.satuan" ng-disabled="is_view" ng-readonly="true" required>
                                         </td>
                                         <td style="width:120px; padding-left: 8px;padding-right: 8px;">
-                                            <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.harga" ng-disabled="is_view" ng-readonly="is_create == false" required>
+                                            <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.harga" ng-disabled="is_view" ng-readonly="is_edit == false" required>
                                         </td>
                                         <td style="width:120px; padding-left: 8px;padding-right: 8px;">
                                             <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.jumlah" ng-disabled="is_view" ng-readonly="true">
                                         </td>
                                         <td style="width:200px; padding-left: 8px;padding-right: 8px;">
                                             <div class="input-group">
-                                                <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_pengiriman" is-open="opened2" ng-click="open2($event)"/>
+                                                <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="detail.data_barang.tgl_pengiriman" is-open="openedDet == $index" ng-change="setStatus()" ng-click="openDet($event, $index)"/>
                                                 <span class="input-group-addon">
                                                     <i class="glyphicon glyphicon-calendar"></i>
                                                 </span>
                                             </div>
                                         </td>
                                         <td style="width:200px; padding-left: 8px;padding-right: 8px;">
-                                            <input type="text" class="form-control"   ng-model="detail.ket" ng-disabled="is_view" ng-readonly="is_create == false" required>
+                                            <input type="text" class="form-control"   ng-model="detail.ket" ng-disabled="is_view" ng-readonly="is_edit == false">
                                         </td>
-                                        <td style="width:50px;text-align: center; margin:0px; padding-left: 8px;padding-right: 8px;">
+                                        <td ng-hide="is_view == true" style="width:50px;text-align: center; margin:0px; padding-left: 8px;padding-right: 8px;">
                                             <button ng-click="addDetail()" title="Tambah Data" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-plus"></i></button>
                                             <button ng-click="removeRow($index)" title="Hapus Data" class="btn btn-danger" ng-show="$index > 0" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
                                         </td>
@@ -254,17 +251,13 @@
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-12">
-                                    <div class="btn-group" style="position: center;">
-                                        <label style="padding:5px 73px;" class="btn btn-sm btn-success"  ng-model="form.bayar" ng-disabled="is_view" btn-radio="'1'"><i class="fa fa-check text-active"></i>&nbsp; Tunai</label>
-                                        <label style="padding:5px 73px;" class="btn btn-sm btn-info" ng-model="form.bayar" ng-disabled="is_view" btn-radio="'0'"><i class="fa fa-check text-active"></i>&nbsp; Kredit</label>
+                                    <div class="btn-group" style="position: center;" required>
+                                        <label style="padding:5px 73px;" class="btn btn-sm btn-success"  ng-model="form.bayar" ng-disabled="is_view" btn-radio="'0'"><i class="fa fa-check text-active"></i>&nbsp; Tunai</label>
+                                        <label style="padding:5px 73px;" class="btn btn-sm btn-info" ng-model="form.bayar" ng-disabled="is_view" btn-radio="'1'"><i class="fa fa-check text-active"></i>&nbsp; Kredit</label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-12" style="position: center;">
-                                    <button type="submit" style="padding:5px 135px;" class="btn btn-default" ng-click="">RE SCHEDULLE</button>
-                                </div>
-                            </div>
+                           
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-12">
@@ -283,7 +276,7 @@
                             <div class="form-group" >
                                 <label class="col-sm-6 control-label" style="text-align: left; margin-left: 10px">Total Pembayaran</label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" ng-model="form.total" ng-disabled="is_view" required >
+                                    <input type="text" class="form-control" ng-model="form.total" ng-disabled="is_view" ng-readonly="true" >
                                 </div>
                             </div>
                             <div class="form-group">
@@ -291,46 +284,53 @@
 
                                 <div class="col-sm-3">
                                     <div class="input-group m-b" style="margin:0px;">
-                                        <input type="text" class="form-control" ng-change="subtotal()"  ng-model="form.diskon" ng-disabled="is_view" required >
+                                        <input type="text" class="form-control" ng-change="subtotal()"  ng-model="form.nilai_diskon" ng-disabled="is_view" required >
                                         <span class="input-group-addon">%</span>
                                     </div>
 
                                 </div>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control"  ng-model="form.hasil_diskon" ng-disabled="is_view" required >
+                                    <input type="text" class="form-control"  ng-model="form.diskon" ng-disabled="true" >
                                 </div>
 
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" style="text-align: left; margin-left: 10px">PPN 10 %</label>
                                 <div class="col-sm-3">
-                            <select ng-model="form.status_ppn" class="form-control"  required>
-                                <option value="0">Include</option>
-                                <option value="1">Exclude</option>
-                            </select>
+                                    <select ng-model="form.status_ppn"  class="form-control"  required ng-change="subtotal()">
+                                        <option  value="0">Include</option>
+                                        <option value="1">Exclude</option>
+                                    </select>
 
-                        </div>
+                                </div>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" ng-readonly="form.status_ppn == '1'" ng-model="form.hasil_ppn" ng-disabled="is_view" required >
+                                    <input type="text" class="form-control" ng-change="subtotal()" ng-readonly="form.status_ppn == '1'" ng-model="form.ppn" ng-disabled="is_view" required >
                                 </div>
 
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" style="text-align: left; margin-left: 10px">&nbsp;Total Biaya</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" ng-change="subtotal()" ng-model="form.total_seluruh" ng-disabled="is_view" required >
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-6 control-label" style="text-align: left; margin-left: 10px">&nbsp;Total Dibayar</label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" ng-model="form.total_dibayar" ng-disabled="is_view" required >
+                                    <input type="text" class="form-control" ng-change="subtotal()" ng-model="form.total_dibayar" ng-disabled="is_view" required >
                                 </div>
                             </div>
+
                             <div class="form-group">
                                 <label class="col-sm-6 control-label" style="text-align: left; margin-left: 10px">&nbsp;DP</label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" ng-model="form.dp" ng-disabled="is_view" required >
+                                    <input type="text" class="form-control" ng-readonly="form.bayar == 1" ng-change="subtotal()" ng-model="form.dp" ng-disabled="is_view" required >
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-6 control-label" style="text-align: left; margin-left: 10px">&nbsp;Sisa Bayar</label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" ng-model="form.sisa_dibayar" ng-disabled="is_view" required >
+                                    <input type="text" class="form-control" ng-change="subtotal()" ng-model="form.sisa_dibayar" ng-disabled="is_view" ng-readonly="true" >
                                 </div>
                             </div>
                         </div>
@@ -339,7 +339,7 @@
                     <div class="form-group" style="text-align: center">
                         <div class="col-sm-8 col-sm-offset-2">
                             <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
-                            <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form)">&nbsp;Simpan</button>
+                            <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, detsPo)">&nbsp;Simpan</button>
                         </div>
                     </div>	
                 </form>

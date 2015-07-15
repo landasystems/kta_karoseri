@@ -84,7 +84,7 @@ class PenggunaController extends Controller {
                 ->from(['m_user','m_roles'])
                 ->where('m_user.roles_id = m_roles.id')
                 ->orderBy($sort)
-                ->select("m_user.id as id, m_roles.nama as roles, m_user.username as username, m_user.is_deleted as is_deleted, m_user.nama, m_user.password");
+                ->select("m_user.id as id, m_user.roles_id as roles_id, m_roles.nama as roles, m_user.username as username, m_user.is_deleted as is_deleted, m_user.nama, m_user.password");
 
         //filter
         if (isset($params['filter'])) {

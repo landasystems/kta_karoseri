@@ -39,53 +39,10 @@ app.controller('rolesCtrl', function ($scope, Data, toaster) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
-        $scope.form = {"akses": {
-                "master_roles": false,
-                "master_user": false,
-                "master_barang": false,
-                "master_jenisbrg": false,
-                "master_customer": false,
-                "master_supplier": false,
-                "master_modelkendaraan": false,
-                "master_chassis": false,
-                "master_kalender": false,
-                "master_lokasi": false,
-                "master_jabatan": false,
-                "master_section": false,
-                "master_subsection": false,
-                "master_umk": false,
-                "master_departement": false,
-                "master_jnskomplain": false,
-                "transaksi_bom": false,
-                "transaksi_validasibom": false,
-                "transaksi_tambahitem": false,
-                "transaksi_sti": false,
-                "transaksi_pembatalanchasis": false,
-                "transaksi_spesanankaroseri": false,
-                "transaksi_sperintahkaroseri": false,
-                "transaksi_claimunit": false,
-                "transaksi_transaksi_deliveryunitbstk": false,
-                "transaksi_rubahbentuk": false,
-                "transaksi_ujimutu": false,
-                "transaksi_deliveryunit": false,
-                "transaksi_buktiterima": false,
-                "transaksi_spprutin": false,
-                "transaksi_sppnonrutin": false,
-                "transaksi_purchaseorder": false,
-                "transaksi_bktbarangmasuk": false,
-                "transaksi_bktbarangkeluar": false,
-                "transaksi_returbuktibarangmasuk": false,
-                "transaksi_returbuktibarangkeluar": false,
-                "transaksi_wordermasuk": false,
-                "transaksi_worderkeluar": false,
-                "transaksi_winprogress": false,
-                "transaksi_spk": false,
-                "transaksi_kpb": false
-                
-            }};
-
-        console.log($scope.form);
+        $scope.form = {};
+        $scope.form.akses = {};     
     };
+    
     $scope.update = function (form) {
         $scope.is_edit = true;
         $scope.is_view = false;
@@ -146,6 +103,49 @@ app.controller('rolesCtrl', function ($scope, Data, toaster) {
     };
 
     $scope.checkAll = function (module, valueCheck) {
+        var akses = {
+            "master_roles": false,
+                "master_user": false,
+                "master_barang": false,
+                "master_jenisbrg": false,
+                "master_customer": false,
+                "master_supplier": false,
+                "master_modelkendaraan": false,
+                "master_chassis": false,
+                "master_kalender": false,
+                "master_lokasi": false,
+                "master_jabatan": false,
+                "master_section": false,
+                "master_subsection": false,
+                "master_umk": false,
+                "master_departement": false,
+                "master_jnskomplain": false,
+                "transaksi_bom": false,
+                "transaksi_validasibom": false,
+                "transaksi_tambahitem": false,
+                "transaksi_sti": false,
+                "transaksi_pembatalanchasis": false,
+                "transaksi_spesanankaroseri": false,
+                "transaksi_sperintahkaroseri": false,
+                "transaksi_claimunit": false,
+                "transaksi_transaksi_deliveryunitbstk": false,
+                "transaksi_rubahbentuk": false,
+                "transaksi_ujimutu": false,
+                "transaksi_deliveryunit": false,
+                "transaksi_buktiterima": false,
+                "transaksi_spprutin": false,
+                "transaksi_sppnonrutin": false,
+                "transaksi_purchaseorder": false,
+                "transaksi_bktbarangmasuk": false,
+                "transaksi_bktbarangkeluar": false,
+                "transaksi_returbuktibarangmasuk": false,
+                "transaksi_returbuktibarangkeluar": false,
+                "transaksi_wordermasuk": false,
+                "transaksi_worderkeluar": false,
+                "transaksi_winprogress": false,
+                "transaksi_spk": false,
+                "transaksi_kpb": false
+        }
         angular.forEach($scope.form.akses, function ($value, $key) {
             if ($key.indexOf(module) >= 0)
                 $scope.form.akses[$key] = valueCheck;

@@ -23,21 +23,19 @@ use Yii;
  * @property integer $status
  * @property integer $bayar
  */
-class TransPo extends \yii\db\ActiveRecord
-{
+class TransPo extends \yii\db\ActiveRecord {
+    public $supplier,$kode;
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'trans_po';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['nota', 'dp'], 'required'],
             [['tanggal'], 'safe'],
@@ -52,8 +50,7 @@ class TransPo extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'nota' => 'Nota',
             'spp' => 'Spp',
@@ -72,12 +69,13 @@ class TransPo extends \yii\db\ActiveRecord
             'bayar' => 'Bayar',
         ];
     }
-     public function getDetailPo()
-    {
+
+    public function getDetailPo() {
         return $this->hasOne(DetailPo::className(), ['nota' => 'nota']);
     }
-     public function getSupplier()
-    {
-        return $this->hasOne(Supplier::className(), ['kd_supplier' => 'supplier']);
+
+    public function getSupplier() {
+        return $this->hasMany(Supplier::className(), ['kd_supplier' => 'suplier']);
     }
+
 }
