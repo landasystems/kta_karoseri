@@ -139,6 +139,7 @@ class RubahbentukController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new RubahBentuk();
         $model->attributes = $params;
+        $model->no_wo = $params['no_wo']['no_wo'];
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -169,6 +170,7 @@ class RubahbentukController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
+        $model->no_wo = $params['no_wo']['no_wo'];
 
         if ($model->save()) {
             $this->setHeader(200);

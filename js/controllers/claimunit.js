@@ -7,6 +7,7 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
     $scope.is_create = false;
     $scope.jenis_kmp = [];
     $scope.bagian = '-';
+    $scope.sisa = 0;
 
     $scope.open1 = function($event) {
         $event.preventDefault();
@@ -19,6 +20,7 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
         $event.stopPropagation();
         $scope.opened2 = true;
     };
+
     $scope.kalkuasi = function() {
         $scope.form.total_biaya = (1 * $scope.form.biaya_spd) + (1 * $scope.form.biaya_tk) + (1 * $scope.form.biaya_mat);
     }
@@ -29,33 +31,14 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
         });
     }
 
-    $scope.wo = {
-        minimumInputLength: 3,
-        allowClear: false,
-        ajax: {
-            url: "api/web/claimunit/listwo/",
-            dataType: 'json',
-            data: function(term) {
-                return {
-                    kata: term,
-                };
-            },
-            results: function(data, page) {
-                return {
-                    results: data.data
-                };
-            }
-        },
-        formatResult: function(object) {
-            return object.no_wo;
-        },
-        formatSelection: function(object) {
-            return object.no_wo;
-        },
-        id: function(data) {
-            return data.no_wo;
-        },
-    };
+    $scope.cariWo = function($query) {
+        if ($query.length >= 3) {
+            Data.get('wo/wospk', {nama: $query}).then(function(data) {
+                $scope.results = data.data;
+            });
+        }
+    }
+
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
@@ -92,6 +75,7 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
         $scope.jenisKmp(form.stat, form.bag)
         $scope.form.kd_jns = form.kd_jns;
         $scope.kalkuasi();
+        $scope.selected(form.no_wo);
     };
     $scope.view = function(form) {
         $scope.is_edit = true;
@@ -101,6 +85,7 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
         $scope.jenisKmp(form.stat, form.bag)
         $scope.form.kd_jns = form.kd_jns;
         $scope.kalkuasi();
+        $scope.selected(form.no_wo);
     };
     $scope.save = function(form) {
         var url = ($scope.is_create == true) ? 'claimunit/create' : 'claimunit/update/' + form.id;
@@ -125,13 +110,24 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
             });
         }
     };
-    $scope.isJson = function(str) {
-        try {
-            JSON.parse(str);
-        } catch (e) {
-            return false;
-        }
-        return true;
+    $scope.selected = function($query) {
+        Data.get('wo/wospk', {nama: $query}).then(function(data) {
+            $scope.form.no_wo = data.data[0];
+        });
     }
+    $scope.sisagaransi = function(no_wo) {
+        Data.post('claimunit/sisagaransi', {no_wo: no_wo}).then(function(data) {
+            $scope.sisa = data.data;
+        });
+    }
+    $scope.pilihWo = function($item) {
+        $scope.form.nm_customer = $item.nm_customer;
+        $scope.form.model = $item.model;
+        $scope.form.jenis = $item.jenis;
+        $scope.form.sales = $item.sales;
+        $scope.form.wilayah = $item.wilayah;
+        $scope.sisagaransi($item.no_wo);
+    }
+
 
 })

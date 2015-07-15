@@ -25,6 +25,7 @@ class PoController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
+                    'cari' => ['get'],
                 ],
             ]
         ];
@@ -264,6 +265,22 @@ class PoController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+
+    public function actionCari() {
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('trans_po')
+                ->select("*")
+                ->where(['like', 'nota', $params['nama']])
+                ->limit(10);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
 }

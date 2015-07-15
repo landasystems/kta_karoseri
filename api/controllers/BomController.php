@@ -28,9 +28,23 @@ class BomController extends Controller {
                     'barang' => ['get'],
                     'kode' => ['get'],
                     'tipe' => ['get'],
+                    'cari' => ['get'],
                 ],
             ]
         ];
+    }
+
+    public function actionCari() {
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('trans_standar_bahan')
+                ->select("*")
+                ->where(['like', 'kd_bom', $params['nama']]);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function beforeAction($event) {
@@ -96,7 +110,7 @@ class BomController extends Controller {
         $sort = "kd_bom ASC";
         $offset = 0;
         $limit = 10;
-       
+
         //limit & offset pagination
         if (isset($params['limit']))
             $limit = $params['limit'];
@@ -151,15 +165,15 @@ class BomController extends Controller {
         $models['kd_model'] = array('kd_model' => $models['kd_model'], 'model' => $models['model']);
 
         $det = BomDet::find()
-                ->with(['jabatan','barang'])
+                ->with(['jabatan', 'barang'])
                 ->where(['kd_bom' => $models['kd_bom']])
                 ->all();
 
         $detail = array();
         foreach ($det as $key => $val) {
             $detail[$key] = $val->attributes;
-            $detail[$key]['bagian'] = (isset($val->jabatan)) ?  $val->jabatan->attributes : [];
-            $detail[$key]['barang'] = (isset($val->barang)) ?  $val->barang->attributes : [];
+            $detail[$key]['bagian'] = (isset($val->jabatan)) ? $val->jabatan->attributes : [];
+            $detail[$key]['barang'] = (isset($val->barang)) ? $val->barang->attributes : [];
         }
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $models, 'detail' => $detail), JSON_PRETTY_PRINT);

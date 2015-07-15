@@ -24,6 +24,7 @@ class CustomerController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
 //                    'kode' => ['get'],
+                    'cari' => ['get'],
                 ],
             ]
         ];
@@ -50,6 +51,20 @@ class CustomerController extends Controller {
         }
 
         return true;
+    }
+
+    public function actionCari() {
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('customer')
+                ->select("*")
+//                ->where(['like', 'kd_cust', $params['nama']])
+                ->Where(['like', 'nm_customer', $params['nama']]);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionIndex() {
@@ -188,7 +203,7 @@ class CustomerController extends Controller {
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
-    
+
     public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
@@ -196,8 +211,7 @@ class CustomerController extends Controller {
         $query->limit("");
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expmaster/customer", ['models'=>$models]);
-
+        return $this->render("/expmaster/customer", ['models' => $models]);
     }
 
 }

@@ -3,15 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\TransPo;
-use app\models\DetailPo;
+use app\models\Spkaroseri;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class WoController extends Controller {
+class SpkaroseriController extends Controller {
 
     public function behaviors() {
         return [
@@ -23,9 +22,7 @@ class WoController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'kode' => ['get'],
-                    'cari' => ['get'],
-                    'wospk' => ['get'],
+                    'kode' => ['post'],
                 ],
             ]
         ];
@@ -42,6 +39,7 @@ class WoController extends Controller {
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
+//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -53,45 +51,57 @@ class WoController extends Controller {
         return true;
     }
 
-    public function actionWospk() {
-        $params = $_REQUEST;
-        $query = new Query;
-        $query->from('view_wo_spk as vws')
-                ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
-                ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                ->select("vws.*, tk.nama as sales, tk.lokasi_kntr as wilayah")
-                ->where(['like', 'vws.no_wo', $params['nama']]);
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $models));
-    }
-
     public function actionKode() {
-        $query = new Query;
-        $query->from('trans_po')
-                ->select('*')
-                ->orderBy('nota DESC')
-                ->limit(1);
+        $tipe = json_decode(file_get_contents("php://input"), true);
+        if ($tipe['tipe'] == "finish") {
+            $query = new Query;
+            $query->from('spk')
+                    ->select('no_spk')
+                    ->orderBy('no_spk DESC')
+                    ->limit(1);
 
-        $command = $query->createCommand();
-        $models = $command->query()->read();
-        $kode_mdl = (substr($models['id_jabatan'], -6) + 1);
-        $kode = substr('000000' . $kode_mdl, strlen($kode_mdl));
+            $cek = Spkaroseri::findOne('no_spk = "O' . date("y") . '01"');
+            if (empty($cek)) {
+                $command = $query->createCommand();
+                $models = $command->query()->read();
+                $urut = substr($models['no_spk'], 2) + 1;
+                $kode = substr('00' . $urut, strlen($urut));
+                $kode = "O" . date("y") . $kode;
+            } else {
+                $kode = "O" . date("y") . "01";
+            }
+        } else if ($tipe['tipe'] == "stok") {
+            $query = new Query;
+            $query->from('spk')
+                    ->select('no_spk')
+                    ->orderBy('no_spk DESC')
+                    ->limit(1);
+
+            $cek = Spkaroseri::findOne('no_spk = "S' . date("y") . '01"');
+            if (empty($cek)) {
+                $command = $query->createCommand();
+                $models = $command->query()->read();
+                $urut = substr($models['no_spk'], 2) + 1;
+                $kode = substr('00' . $urut, strlen($urut));
+                $kode = "S" . date("y") . $kode;
+            } else {
+                $kode = "S" . date("y") . "01";
+            }
+        }
+
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => 'PCH' . $kode));
+        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "trans_po.nota ASC";
+        $sort = "no_spk ASC";
         $offset = 0;
         $limit = 10;
-
+        //        Yii::error($params);
         //limit & offset pagination
         if (isset($params['limit']))
             $limit = $params['limit'];
@@ -108,12 +118,12 @@ class WoController extends Controller {
                     $sort.=" DESC";
             }
         }
+
         //create query
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('trans_po')
-                ->join('JOIN', 'detail_po', 'trans_po.nota = detail_po.nota')
+                ->from('spk')
                 ->orderBy($sort)
                 ->select("*");
 
@@ -121,25 +131,17 @@ class WoController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-
                 $query->andFilterWhere(['like', $key, $val]);
             }
         }
 
-        session_start();
-        $_SESSION['query'] = $query;
-
-//        print_r($_SESSION['query']);
-
         $command = $query->createCommand();
         $models = $command->queryAll();
-        $totalItems = 0;
+        $totalItems = $query->count();
 
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
-
-//        echo json_encode(array('status'=>1));
     }
 
     public function actionView($id) {
@@ -152,9 +154,12 @@ class WoController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new TransPo();
+        $model = new Spkaroseri();
         $model->attributes = $params;
-
+        $model->kd_customer = $params['kd_customer']['kd_cust'];
+        $model->nik = $params['nik']['nik'];
+        $model->kd_bom = $params['kd_bom']['kd_bom'];
+        $model->kd_model = $params['kd_model']['kd_model'];
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -169,6 +174,10 @@ class WoController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
+        $model->kd_customer = $params['kd_customer']['kd_cust'];
+        $model->nik = $params['nik']['nik'];
+        $model->kd_bom = $params['kd_bom']['kd_bom'];
+        $model->kd_model = $params['kd_model']['kd_model'];
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -193,7 +202,7 @@ class WoController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = TransPo::findOne($id)) !== null) {
+        if (($model = Spkaroseri::find()->where('no_spk = "' . $id . '"')->one()) !== null) {
             return $model;
         } else {
 
@@ -225,28 +234,6 @@ class WoController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
-    }
-
-    public function actionExcel() {
-        session_start();
-        $query = $_SESSION['query'];
-        $query->offset("");
-        $query->limit("");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        return $this->render("/expmaster/jabatan", ['models' => $models]);
-    }
-    public function actionCari(){
-        $params = $_REQUEST;
-        $query = new Query;
-        $query->from('wo_masuk')
-                ->select("no_wo")
-                ->where(['like', 'no_wo', $params['no_wo']])
-                ->limit(10);
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
 }
