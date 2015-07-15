@@ -161,13 +161,13 @@ class SpkaroseriController extends Controller {
                 ->join('Join', 'model m', 'm.kd_model= s.kd_model')
                 ->join('Join', 'tbl_karyawan tb', 's.nik= tb.nik')
                 ->where('s.no_spk="' . $id . '"')
-                ->select("s.*, c.merk, c.tipe, cus.kd_cust, cus.nm_customer , tb.nik, tb.nama");
+                ->select("s.*, c.merk, c.tipe, cus.kd_cust, cus.nm_customer , tb.nik, tb.nama, m.kd_model, m.model");
         $command = $query->createCommand();
         $models = $command->query()->read();
 
         $models['kd_customer'] = array('kd_cust' => $models['kd_cust'], 'nm_customer' => $models['nm_customer']);
         $models['kd_bom'] = array('kd_bom' => $models['kd_bom']);
-        $models['kd_model'] = array('kd_model' => $models['kd_model']);
+        $models['kd_model'] = array('kd_model' => $models['kd_model'], 'model' => $models['model']);
         $models['nik'] = array('nik' => $models['nik'], 'nama' => $models['nama']);
 
         $this->setHeader(200);
