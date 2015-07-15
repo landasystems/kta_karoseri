@@ -21,6 +21,7 @@ class PoController extends Controller {
                     'index' => ['get'],
                     'view' => ['get'],
                     'listsupplier' => ['get'],
+                    'listspp' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -141,12 +142,20 @@ class PoController extends Controller {
 
         $model = $this->findModel($id);
         $data = $model->attributes;
+        //supplier
         $sup = \app\models\Supplier::find()
                 ->where(['kd_supplier' => $model['suplier']])
                 ->One();
         $supplier = (isset($sup->nama_supplier)) ? $sup->nama_supplier : '';
         $kode = (isset($sup->kd_supplier)) ? $sup->kd_supplier : '';
         $data['supplier'] = ['kd_supplier' => $kode, 'nama_supplier' => $supplier];
+        //spp
+        $spp = \app\models\TransSpp::find()
+                ->where(['no_spp' => $model['spp']])
+                ->One();
+        $no_spp = (isset($spp->no_spp)) ? $spp->no_spp : '';
+        $no_proyek = (isset($spp->no_proyek)) ? $spp->no_proyek : '';
+        $data['listspp'] = ['no_spp' => $no_spp, 'no_proyek' => $no_proyek];
 
         $det = DetailPo::find()
                 ->with(['barang'])
@@ -175,7 +184,7 @@ class PoController extends Controller {
         $model->attributes = $params['formpo'];
         $model->suplier = $params['formpo']['supplier']['kd_supplier'];
         $model->tanggal = date("Y-m-d", strtotime($params['formpo']['tanggal']));
-        $model->spp = (empty($params['formpo']['spp'])) ? '-' : $params['formpo']['spp'];
+        $model->spp = (empty($params['formpo']['listspp']['no_spp'])) ? '-' : $params['formpo']['listspp']['no_spp'];
 
 
         if ($model->save()) {
@@ -201,7 +210,8 @@ class PoController extends Controller {
         $model = $this->findModel($id);
         $model->attributes = $params['formPo'];
         $model->tanggal = date("Y-m-d", strtotime($params['formPo']['tanggal']));
-
+        $model->spp = (empty($params['formpo']['listspp']['no_spp'])) ? '-' : $params['formpo']['listspp']['no_spp'];
+        
         if ($model->save()) {
             $detailsr = $params['details'];
             foreach ($details as $val) {

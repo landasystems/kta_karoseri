@@ -33,7 +33,17 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     Data.get('po/listsupplier').then(function (data) {
         $scope.listsupplier = data.data;
     });
+    
 
+    $scope.cariSpp = function ($query) {
+
+        if ($query.length >= 3) {
+            Data.get('spp/cari', {nama: $query}).then(function (data) {
+//                console.log(data.data);
+                $scope.results = data.data;
+            });
+        }
+    }
     $scope.cariSuppiler = function ($query) {
 
         if ($query.length >= 3) {
