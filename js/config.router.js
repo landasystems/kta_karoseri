@@ -585,7 +585,11 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/w-ordermasuk.js');
+                                                return $ocLazyLoad.load(['ui.select','angularFileUpload']).then(
+                                                        function() {
+                                                            return $ocLazyLoad.load('js/controllers/womasuk.js');
+                                                        }
+                                                );
                                             }]
                                     }})
 
