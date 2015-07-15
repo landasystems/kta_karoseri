@@ -1,16 +1,434 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
-</html>
+<div ng-controller="spkaroseriCtrl">
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n font-thin h3">Surat Pesanan Karoseri</h1>
+    </div>
+    <div class="wrapper-md" ng-show="!is_edit">
+        <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
+            <div class="panel-heading">
+                <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
+                <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
+                    <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
+                </div> 
+            </div>
+            <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
+                <div class="form-horizontal">
+                    <div class="col-md-12 col-sm-12">
+
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover" >
+                    <thead>
+                        <tr>
+                            <th st-sort="no_spk">No SPK</th>
+                            <th st-sort="tgl">Tanggal</th>
+                            <th st-sort="kd_bom">Kode BOM</th>
+                            <th st-sort="nm_customer">Kode Customer</th>
+                            <th st-sort="kd_chassis">Kode Chassis</th>
+                            <th ng-show="is_view == false"></th>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="!isLoading">
+                        <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
+                            <td>{{row.no_spk}}</td>
+                            <td>{{row.tgl|date}}</td>
+                            <td>{{row.kd_bom}}</td>
+                            <td>{{row.kd_customer}}</td>
+                            <td>{{row.kd_chassis}}</td>
+                            <td ng-show="is_view == false">
+                                <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
+                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
+                                    <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);"></button>
+                                </div> 
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tbody ng-show="isLoading">
+                        <tr>
+                            <td colspan="4" class="text-center">Loading ... </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="6"></td>
+                        </tr>
+                </table>		
+            </div>
+        </div>
+    </div>
+
+    <!--FORM-->
+
+    <div class="wrapper-md" ng-show="is_edit">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                {{formtitle}} 
+            </div>
+            <div class="panel-body">
+                <form name="landaform" class="form-horizontal from-validation">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">No. SPK</label>
+                                <div class="col-sm-8">
+                                    <label class="btn btn-default" ng-model="form.kat_spk" ng-click="kode('finish')" ng-disabled="is_create == false" btn-radio="'finish'" required>Finish Unit</label>
+                                    <label class="btn btn-default" ng-model="form.kat_spk" ng-click="kode('stok')" ng-disabled="is_create == false" btn-radio="'stok'" required>Stok Unit</label>                        
+                                    <br><br>
+                                    <input type="text" class="form-control" ng-model="form.no_spk" ng-disabled="is_view" required placeholder="Nomor SPK">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Tanggal</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-disabled="is_view" ng-model="form.tgl" is-open="opened1" ng-click="open1($event)" placeholder="Tanggal SPK"/>
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar-o"></i>
+                                        </span>
+                                    </div> 
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Customer</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <ui-select ng-model="form.kd_customer" ng-disabled="is_view" theme="bootstrap">
+                                            <ui-select-match>{{$select.selected.nm_customer}}</ui-select-match>
+                                            <ui-select-choices refresh="cariCustomer($select.search)" repeat="val in rCustomer">
+                                                {{val.nm_customer}}
+                                            </ui-select-choices>
+                                        </ui-select>
+                                        <span class="input-group-btn">
+                                            <button ng-click="form.kd_customer = undefined" class="btn btn-default">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Merk</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" ng-change="getchassis(form.merk, form.tipe)" ng-model="form.merk" ng-disabled="is_view" required>
+                                        <option value="">-Pilih Merk-</option>
+                                        <option ng-repeat="merk in listMerk" value="{{merk.merk}}">{{merk.merk}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Tipe</label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" ng-change="getchassis(form.merk, form.tipe)" ng-model="form.tipe" ng-disabled="is_view" required>
+                                        <option value="">-Pilih Tipe-</option>
+                                        <option ng-repeat="tipe in listTipe" value="{{tipe.tipe}}">{{tipe.tipe}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Kode Chassis</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" ng-model="form.kd_chassis" readonly required ng-disabled="is_view">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Model</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <ui-select ng-model="form.kd_model" theme="bootstrap">
+                                            <ui-select-match>{{$select.selected.model}}</ui-select-match>
+                                            <ui-select-choices refresh="cariModel($select.search)" repeat="val in results">
+                                                {{val.model}}
+                                            </ui-select-choices>
+                                        </ui-select>
+                                        <span class="input-group-btn">
+                                            <button ng-click="form.kd_model = undefined" class="btn btn-default">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Jarak Sumbu</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" ng-model="form.jarak_sumbu" ng-disabled="is_view" placeholder="Jarak Sumbu">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Sumber Pelanggan</label>
+                                <div class="col-sm-8">
+                                    <div class="col-md-6">
+                                        <div class="radio">
+                                            <label class="i-checks">
+                                                <input type="radio" name="a" value="option2" checked="">
+                                                <i></i>
+                                                Repeat Order
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label class="i-checks">
+                                                <input type="radio" name="a" value="option2" checked="">
+                                                <i></i>
+                                                Walk In / Call In
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label class="i-checks">
+                                                <input type="radio" name="a" value="option2" checked="">
+                                                <i></i>
+                                                Lainnya
+                                            </label>
+                                        </div>
+                                    </div>  
+                                    <div class="col-md-6">
+                                        <div class="radio">
+                                            <label class="i-checks">
+                                                <input type="radio" name="a" value="option2" checked="">
+                                                <i></i>
+                                                Referensi
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label class="i-checks">
+                                                <input type="radio" name="a" value="option2" checked="">
+                                                <i></i>
+                                                Canvas
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Estimasi Pengerjaan</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group m-b">
+                                        <input type="text" class="form-control" ng-model="form.jml_hari" ng-disabled="is_view" placeholder="Estimasi Pengerjaan">
+                                        <span class="input-group-addon">Hari</span>
+                                    </div>                     
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Sales</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <ui-select ng-model="form.nik" ng-disabled="is_view" theme="bootstrap">
+                                            <ui-select-match>{{$select.selected.nama}}</ui-select-match>
+                                            <ui-select-choices refresh="cariSales($select.search)" repeat="val in rSales">
+                                                {{val.nama}}
+                                            </ui-select-choices>
+                                        </ui-select>
+                                        <span class="input-group-btn">
+                                            <button ng-click="form.nik = undefined" class="btn btn-default">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </button>
+                                        </span>
+                                    </div>    
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Kode BOM</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <ui-select ng-model="form.kd_bom" ng-disabled="is_view" theme="bootstrap">
+                                            <ui-select-match>{{$select.selected.kd_bom}}</ui-select-match>
+                                            <ui-select-choices refresh="cariBom($select.search)" repeat="val in rBom">
+                                                {{val.kd_bom}}
+                                            </ui-select-choices>
+                                        </ui-select>
+                                        <span class="input-group-btn">
+                                            <button ng-click="form.kd_bom = undefined" class="btn btn-default">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </button>
+                                        </span>
+                                    </div>   
+                                </div>
+                            </div>
+                            <div class="panel-heading text-muted font-bold">
+                                Informasi Perpajakan
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">PKP</label>
+                                <div class="col-sm-8">
+                                    <label class="btn btn-default" ng-model="form.pkp" ng-disabled="is_view" btn-radio="1" required>Ya</label>
+                                    <label class="btn btn-default" ng-model="form.pkp" ng-disabled="is_view" btn-radio="0" required>Tidak</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">NPWP</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" ng-model="form.npwp" ng-disabled="is_view" placeholder="NPWP">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label">Instansi Pemungut Pajak</label>
+                                <div class="col-sm-6">
+                                    <label class="btn btn-default" ng-model="form.pemungut_pajak" ng-disabled="is_view" btn-radio="1" required>Ya</label>
+                                    <label class="btn btn-default" ng-model="form.pemungut_pajak" ng-disabled="is_view" btn-radio="0" required>Tidak</label>                               
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <div class="panel-heading text-muted font-bold">
+                                Perincian Harga Jasa Karoseri
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Jumlah</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group m-b">
+                                        <input type="text" class="form-control" ng-keyup="kalkulasi()" ng-model="form.jml_unit" ng-disabled="is_view" placeholder="Jumlah Unit">
+                                        <span class="input-group-addon">Unit</span>
+                                    </div>    
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Harga Karoseri</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group m-b">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control" ng-keyup="kalkulasi()" ng-model="form.harga_karoseri" ng-disabled="is_view" placeholder="Harga Karoseri">
+                                    </div>  
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Harga Optional</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group m-b">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control" ng-keyup="kalkulasi()" ng-model="form.harga_optional" ng-disabled="is_view" placeholder="Harga Optional">
+                                    </div>    
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Jumlah Harga</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group m-b">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control" ng-keyup="kalkulasi()" readonly ng-model="form.jml_harga" ng-disabled="is_view" placeholder="Jumlah Harga">
+                                    </div>   
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">PPN</label>
+                                <div class="col-sm-8">
+                                    <label class="btn btn-default" ng-model="form.is_ppn" ng-click="is_ppn = true;
+                                            kalkulasi()" ng-disabled="is_view" btn-radio="'1'" required>Include</label>
+                                    <label class="btn btn-default" ng-model="form.is_ppn" ng-click="is_ppn = false;
+                                            kalkulasi()" ng-disabled="is_view" btn-radio="'0'" required>Exclude</label>                        
+                                    <br><br>
+                                    <div class="input-group m-b">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control" ng-keyup="kalkulasi()" ng-model="form.ppn" ng-disabled="is_view" placeholder="Jumlah PPN" readonly>
+                                    </div>   
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Total Harga</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group m-b">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control" readonly ng-model="form.total_harga" ng-disabled="is_view" placeholder="Total Harga">
+                                    </div>   
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Uang Muka</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group m-b">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control" ng-keyup="kalkulasi()" ng-model="form.uang_muka" ng-disabled="is_view" placeholder="Uang Muka">
+                                    </div>   
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Sisa Pembayaran</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group m-b">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control" ng-keyup="kalkulasi()" readonly ng-model="form.sisa_bayar" ng-disabled="is_view" placeholder="Sisa Pembayaran">
+                                    </div>       
+                                </div>
+                            </div>
+                            <div class="panel-heading text-muted font-bold">
+                                Pembelian Kredit
+                            </div>
+                            <br>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Leasin / Bank</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group m-b">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control" ng-model="form.leasin" ng-disabled="is_view" placeholder="Leasin / Bank">
+                                    </div>   
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Tenor Kredit</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group m-b">
+                                        <input type="text" class="form-control" ng-model="form.tenor_kredit" ng-disabled="is_view" placeholder="Tenor Kredit">
+                                        <span class="input-group-addon">Tahun</span>
+                                    </div>   
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Uang Muka</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group m-b">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control" ng-model="form.uang_muka_kredit" ng-disabled="is_view" placeholder="Uang Muka Kredit">
+                                    </div>   
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Angsuran / Bln</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group m-b">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control" ng-model="form.angsuran_bln" ng-disabled="is_view" placeholder="Angsuran Per bulan">
+                                    </div>   
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Administrasi</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group m-b">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control" ng-model="form.admin" ng-disabled="is_view" placeholder="Biaya Administrasi">
+                                    </div>       
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Asuransi</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group m-b">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control" ng-model="form.asuransi" ng-disabled="is_view" placeholder="Asuransi">
+                                    </div>   
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Total Uang Muka</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group m-b">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control" ng-model="form.total_uang_muka_credit" ng-disabled="is_view" placeholder="Total Uang Muka">
+                                    </div>   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2 col-sm-12"></div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div align="center">
+                        <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
+                        <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form)">&nbsp;Simpan Perubahan</button>
+                    </div>	
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

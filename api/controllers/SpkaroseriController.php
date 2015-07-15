@@ -3,15 +3,14 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\TransPo;
-use app\models\DetailPo;
+use app\models\Spkaroseri;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class PoController extends Controller {
+class SpkaroseriController extends Controller {
 
     public function behaviors() {
         return [
@@ -20,12 +19,10 @@ class PoController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
-                    'listsupplier' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'kode' => ['get'],
-                    'cari' => ['get'],
+                    'kode' => ['post'],
                 ],
             ]
         ];
@@ -55,30 +52,56 @@ class PoController extends Controller {
     }
 
     public function actionKode() {
-        $query = new Query;
-        $query->from('trans_po')
-                ->select('*')
-                ->orderBy('nota DESC')
-                ->limit(1);
+        $tipe = json_decode(file_get_contents("php://input"), true);
+        if ($tipe['tipe'] == "finish") {
+            $query = new Query;
+            $query->from('spk')
+                    ->select('no_spk')
+                    ->orderBy('no_spk DESC')
+                    ->limit(1);
 
-        $command = $query->createCommand();
-        $models = $command->query()->read();
-        $kode_mdl = (substr($models['nota'], -4) + 1);
-        $kode = substr('0000' . $kode_mdl, strlen($kode_mdl));
-        $kode_tahun = substr(date('Y'), -2);
+            $cek = Spkaroseri::findOne('no_spk = "O' . date("y") . '01"');
+            if (empty($cek)) {
+                $command = $query->createCommand();
+                $models = $command->query()->read();
+                $urut = substr($models['no_spk'], 2) + 1;
+                $kode = substr('00' . $urut, strlen($urut));
+                $kode = "O" . date("y") . $kode;
+            } else {
+                $kode = "O" . date("y") . "01";
+            }
+        } else if ($tipe['tipe'] == "stok") {
+            $query = new Query;
+            $query->from('spk')
+                    ->select('no_spk')
+                    ->orderBy('no_spk DESC')
+                    ->limit(1);
+
+            $cek = Spkaroseri::findOne('no_spk = "S' . date("y") . '01"');
+            if (empty($cek)) {
+                $command = $query->createCommand();
+                $models = $command->query()->read();
+                $urut = substr($models['no_spk'], 2) + 1;
+                $kode = substr('00' . $urut, strlen($urut));
+                $kode = "S" . date("y") . $kode;
+            } else {
+                $kode = "S" . date("y") . "01";
+            }
+        }
+
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => 'PCH' . $kode_tahun . $kode));
+        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "trans_po.nota DESC";
+        $sort = "no_spk ASC";
         $offset = 0;
         $limit = 10;
-
+        //        Yii::error($params);
         //limit & offset pagination
         if (isset($params['limit']))
             $limit = $params['limit'];
@@ -95,12 +118,12 @@ class PoController extends Controller {
                     $sort.=" DESC";
             }
         }
+
         //create query
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('trans_po')
-                ->join('JOIN', 'detail_po', 'trans_po.nota = detail_po.nota')
+                ->from('spk')
                 ->orderBy($sort)
                 ->select("*");
 
@@ -108,11 +131,9 @@ class PoController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-
                 $query->andFilterWhere(['like', $key, $val]);
             }
         }
-
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -123,52 +144,22 @@ class PoController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
-    public function actionListsupplier() {
-        $query = new Query;
-        $query->from('supplier')
-                ->select("*")
-                ->orderBy('kd_supplier ASC');
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $models));
-    }
-
     public function actionView($id) {
 
         $model = $this->findModel($id);
 
-//        $supplier = (isset($model->supplier->nama_supplier)) ? $model->supplier->nama_supplier : '';
-//        $model['supplier'] = ['kd_supplier' => $model[''], 'nama_supplier' => $supplier];
-
-        $det = DetailPo::find()
-                ->with(['barang'])
-                ->orderBy('nota')
-                ->where(['nota' => $model['nota']])
-                ->all();
-
-        $detail = array();
-
-        foreach ($det as $key => $val) {
-            $detail[$key] = $val->attributes;
-            $hargaBarang = (isset($val->barang->harga)) ? $val->barang->harga : '';
-            $namaBarang = (isset($val->barang->nama)) ? $val->barang->nama : '';
-            $satuanBarang = (isset($val->barang->satuan)) ? $val->barang->satuan : '';
-            $detail[$key]['data_barang'] = ['nota' => $val->nota, 'nama' => $namaBarang, 'harga' => $hargaBarang, 'satuan' => $satuanBarang];
-        }
-
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes), 'detail' => $detail), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new TransPo();
+        $model = new Spkaroseri();
         $model->attributes = $params;
-
+        $model->kd_customer = $params['kd_customer']['kd_cust'];
+        $model->nik = $params['nik']['nik'];
+        $model->kd_bom = $params['kd_bom']['kd_bom'];
+        $model->kd_model = $params['kd_model']['kd_model'];
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -183,6 +174,10 @@ class PoController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
+        $model->kd_customer = $params['kd_customer']['kd_cust'];
+        $model->nik = $params['nik']['nik'];
+        $model->kd_bom = $params['kd_bom']['kd_bom'];
+        $model->kd_model = $params['kd_model']['kd_model'];
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -207,7 +202,7 @@ class PoController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = TransPo::findOne($id)) !== null) {
+        if (($model = Spkaroseri::find()->where('no_spk = "' . $id . '"')->one()) !== null) {
             return $model;
         } else {
 
@@ -239,22 +234,6 @@ class PoController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
-    }
-
-    public function actionCari() {
-        $params = $_REQUEST;
-        $query = new Query;
-        $query->from('trans_po')
-                ->select("*")
-                ->where(['like', 'nota', $params['nama']])
-                ->limit(10);
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
 }

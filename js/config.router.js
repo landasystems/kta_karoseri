@@ -305,7 +305,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select2', 'daterangepicker']).then(
+                                                return $ocLazyLoad.load(['ui.select', 'daterangepicker']).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/rubahbentuk.js');
                                                         }
@@ -371,7 +371,11 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/s-pesanankaroseri.js');
+                                                return $ocLazyLoad.load('ui.select').then(
+                                                        function() {
+                                                            return $ocLazyLoad.load('js/controllers/s-pesanankaroseri.js');
+                                                        }
+                                                );
                                             }]
                                     }})
                                 .state('transaksi.sperintahkaroseri', {
@@ -438,7 +442,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select2', 'daterangepicker']).then(
+                                                return $ocLazyLoad.load(['ui.select', 'daterangepicker']).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/claimunit.js');
                                                         }
@@ -475,9 +479,9 @@ angular.module('app')
                                     templateUrl: 'tpl/t_purchase-order/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function ($ocLazyLoad) {
+                                            function($ocLazyLoad) {
                                                 return $ocLazyLoad.load(['ui.select']).then(
-                                                        function () {
+                                                        function() {
                                                             return $ocLazyLoad.load('js/controllers/purchase-order.js');
                                                         }
                                                 );
