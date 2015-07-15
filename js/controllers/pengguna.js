@@ -7,7 +7,7 @@ app.controller('penggunaCtrl', function ($scope, Data, toaster) {
     $scope.is_view = false;
 
     Data.get('pengguna/roles').then(function (data) {
-        $scope.roles_id = data.roles;
+        $scope.listroles = data.roles;
     });
 
     $scope.callServer = function callServer(tableState) {

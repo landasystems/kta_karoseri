@@ -114,7 +114,7 @@
                         <div class="col-sm-4">
                             <select class="form-control" ng-model="form.roles_id" ng-disabled="is_view" required>
                                 <option value="">-- Pilih Roles --</option>
-                                <option ng-repeat="roles in roles_id" value="{{roles.id}}">{{roles.nama}}</option>
+                                <option ng-repeat="roles in listroles" value="{{roles.id}}">{{roles.nama}}</option>
                             </select>
                         </div>
                         <label class="col-sm-2 control-label">Password</label>
