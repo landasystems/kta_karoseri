@@ -33,7 +33,17 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     Data.get('po/listsupplier').then(function (data) {
         $scope.listsupplier = data.data;
     });
+    
 
+    $scope.cariSpp = function ($query) {
+
+        if ($query.length >= 3) {
+            Data.get('spp/cari', {nama: $query}).then(function (data) {
+//                console.log(data.data);
+                $scope.results = data.data;
+            });
+        }
+    }
     $scope.cariSuppiler = function ($query) {
 
         if ($query.length >= 3) {
@@ -58,10 +68,11 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 
     }
 
+
     $scope.subtotal = function () {
         var total = 0;
         var sub_total = 0;
-        
+
         angular.forEach($scope.detsPo, function (detail) {
             var jml = (detail.jml) ? parseInt(detail.jml) : 0;
             var hrg = (detail.harga) ? parseInt(detail.harga) : 0;
@@ -70,31 +81,49 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
             total += sub_total;
         })
         $scope.form.total = total;
-        
-        var diskon = $scope.form.diskon;
+
+        //diskon
+        var diskon = $scope.form.nilai_diskon;
         var nilai_diskon = ((diskon / 100) * total);
-//        console.log(nilai_diskon);
-        $scope.form.hasil_diskon = total - nilai_diskon;
+
+        //ppn
+        if ($scope.form.status_ppn == "0") {
+            var nilai_ppn = ((10 / 100) * total);
+        } else {
+            var nilai_ppn = 0;
+        }
+//        if ($scope.form.bayar)
+
+        var total_bayar = $scope.form.total_dibayar;
+        var total_dp = $scope.form.dp;
+        var total_seluruh = ((total - nilai_diskon) + nilai_ppn);
+        var sisa_bayar = (total_seluruh - (total_bayar - total_dp));
+
+
+        $scope.form.ppn = Math.ceil(nilai_ppn);
+        $scope.form.diskon = Math.ceil(nilai_diskon);
+        $scope.form.total_seluruh = Math.ceil(total_seluruh);
+        $scope.form.sisa_dibayar = Math.ceil(sisa_bayar);
+
     }
 
 
     $scope.addDetail = function () {
-        var newDet = [{
-                nota: '',
-                kode_barang: '',
-                jml: '',
-                harga: '',
-                diterima: '0',
-                ket: '',
-                tgl_pengiriman: ''
-            }]
+        var newDet = {
+            nota: '',
+            kode_barang: '',
+            jml: '',
+            harga: '',
+            diterima: '',
+            ket: '',
+            tgl_pengiriman: ''
+        }
         $scope.detsPo.unshift(newDet);
 
     };
 
 //detail
-    $scope.detsPo = [
-        {
+    $scope.detsPo = {
             nota: '',
             kode_barang: '',
             jml: '',
@@ -102,7 +131,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
             diterima: '0',
             ket: '',
             tgl_pengiriman: ''
-        }];
+        };
 
 //remove
     $scope.removeRow = function (paramindex) {
@@ -123,10 +152,15 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         $scope.opened1 = true;
     };
 
-    $scope.open2 = function ($event) {
+
+    $scope.setStatus = function () {
+        $scope.openedDet = -1;
+    };
+
+    $scope.openDet = function ($event, $index) {
         $event.preventDefault();
         $event.stopPropagation();
-        $scope.opened2 = true;
+        $scope.openedDet = $index;
     };
 
 
@@ -137,38 +171,47 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-        $scope.detsPo = [{}]
+        $scope.detsPo = [{}];
         Data.get('po/kode').then(function (data) {
             $scope.form.nota = data.kode;
         });
         $scope.form.tanggal = moment().format('DD-MM-YYYY');
+        $scope.form.dp = '0';
+        $scope.form.diskon = '0';
         $scope.form.status_po = '1';
         $scope.form.status_ppn = '0';
         $scope.form.ppn = '0';
 
     };
+
+
     $scope.update = function (nota) {
+
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
-        $scope.formtitle = "Edit Data : " + $scope.form.nota;
-        $scope.form = form;
-        $scope.form.status_po = ($scope.form.spp == '-') ? '0' : '1';
-        $scope.form.status_ppn = ($scope.form.ppn == '0') ? '1' : '0';
-        
-//        console.log(form);
+        $scope.formtitle = "Edit Data : " + nota;
+        $scope.selected(nota);
+
     };
-    $scope.view = function (form) {
+
+    $scope.view = function (nota) {
+
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.no;
-        $scope.form = form;
-        $scope.form.status_po = ($scope.form.spp == '-') ? '0' : '1';
-        $scope.form.status_ppn = ($scope.form.ppn == '0') ? '1' : '0';
+        $scope.formtitle = "Lihat Data : " + nota;
+        $scope.selected(nota);
+
     };
-    $scope.save = function (form) {
+
+    $scope.save = function (form, detail) {
+        var data = {
+            formpo: form,
+            details: detail,
+        };
+//        console.log(data);
         var url = ($scope.is_create == true) ? 'po/create' : 'po/update/' + form.nota;
-        Data.post(url, form).then(function (result) {
+        Data.post(url, data).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
@@ -197,7 +240,15 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     $scope.selected = function (id) {
         Data.get('po/view/' + id).then(function (data) {
             $scope.form = data.data;
-            $scope.detsmasuk = data.detail;
+            $scope.detsPo = data.detail;
+            $scope.form.dp = (data.data.dp == undefined) ? '0' : data.data.dp;
+            $scope.form.ppn = (data.data.ppn == undefined) ? '0' : data.data.ppn;
+            $scope.form.bayar = (data.data.bayar == '1') ? '1' : '0';
+            $scope.form.diskon = (data.data.diskon == undefined) ? '0' : data.data.diskon;
+            $scope.form.status_po = (data.data.spp == '-') ? '0' : '1';
+            $scope.form.status_ppn = (data.data.ppn == '0') ? '1' : '0';
+            $scope.form.jatuh_tempo = (data.data.jatuh_tempo == undefined) ? '0' : data.data.jatuh_tempo;
+            $scope.form.nilai_diskon = (data.data.diskon != undefined) ? ((data.data.diskon / data.data.total) * 100) : '0';
 
         });
         $scope.subtotal();

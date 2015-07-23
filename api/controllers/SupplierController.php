@@ -93,7 +93,7 @@ class SupplierController extends Controller {
                 $query->andFilterWhere(['like', $key, $val]);
             }
         }
-        
+
         session_start();
         $_SESSION['query'] = $query;
 
@@ -105,7 +105,7 @@ class SupplierController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
-    
+
     public function actionCari() {
         $params = $_REQUEST;
         $query = new Query;
@@ -139,14 +139,14 @@ class SupplierController extends Controller {
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
     }
-    
-    public function actionKode(){
-       $query = new Query;
+
+    public function actionKode() {
+        $query = new Query;
         $query->from('supplier')
                 ->select('*')
                 ->orderBy('kd_supplier DESC')
                 ->limit(1);
-        
+
         $command = $query->createCommand();
         $models = $command->query()->read();
         $kode = $models['kd_supplier'] + 1;
@@ -216,16 +216,15 @@ class SupplierController extends Controller {
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
-    
-     public function actionExcel() {
+
+    public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
         $query->offset("");
         $query->limit("");
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expmaster/supplier", ['models'=>$models]);
-
+        return $this->render("/expmaster/supplier", ['models' => $models]);
     }
 
 }

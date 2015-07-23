@@ -21,10 +21,12 @@ class PoController extends Controller {
                     'index' => ['get'],
                     'view' => ['get'],
                     'listsupplier' => ['get'],
+                    'listspp' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
+                    'cari' => ['get'],
                 ],
             ]
         ];
@@ -108,7 +110,7 @@ class PoController extends Controller {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
 
-                $query->andFilterWhere(['like', $key, $val]);
+                $query->andFilterWhere(['like', 'trans_po.' . $key, $val]);
             }
         }
 
@@ -139,9 +141,21 @@ class PoController extends Controller {
     public function actionView($id) {
 
         $model = $this->findModel($id);
-
-//        $supplier = (isset($model->supplier->nama_supplier)) ? $model->supplier->nama_supplier : '';
-//        $model['supplier'] = ['kd_supplier' => $model[''], 'nama_supplier' => $supplier];
+        $data = $model->attributes;
+        //supplier
+        $sup = \app\models\Supplier::find()
+                ->where(['kd_supplier' => $model['suplier']])
+                ->One();
+        $supplier = (isset($sup->nama_supplier)) ? $sup->nama_supplier : '';
+        $kode = (isset($sup->kd_supplier)) ? $sup->kd_supplier : '';
+        $data['supplier'] = ['kd_supplier' => $kode, 'nama_supplier' => $supplier];
+        //spp
+        $spp = \app\models\TransSpp::find()
+                ->where(['no_spp' => $model['spp']])
+                ->One();
+        $no_spp = (isset($spp->no_spp)) ? $spp->no_spp : '';
+        $no_proyek = (isset($spp->no_proyek)) ? $spp->no_proyek : '';
+        $data['listspp'] = ['no_spp' => $no_spp, 'no_proyek' => $no_proyek];
 
         $det = DetailPo::find()
                 ->with(['barang'])
@@ -149,27 +163,40 @@ class PoController extends Controller {
                 ->where(['nota' => $model['nota']])
                 ->all();
 
+
         $detail = array();
 
         foreach ($det as $key => $val) {
             $detail[$key] = $val->attributes;
             $hargaBarang = (isset($val->barang->harga)) ? $val->barang->harga : '';
-            $namaBarang = (isset($val->barang->nama)) ? $val->barang->nama : '';
+            $namaBarang = (isset($val->barang->nm_barang)) ? $val->barang->nm_barang : '';
             $satuanBarang = (isset($val->barang->satuan)) ? $val->barang->satuan : '';
-            $detail[$key]['data_barang'] = ['nota' => $val->nota, 'nama' => $namaBarang, 'harga' => $hargaBarang, 'satuan' => $satuanBarang];
+            $detail[$key]['data_barang'] = ['tgl_pengiriman' => $val->tgl_pengiriman, 'kd_barang' => $val->kd_barang, 'nm_barang' => $namaBarang, 'harga' => $hargaBarang, 'satuan' => $satuanBarang];
         }
 
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes), 'detail' => $detail), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'detail' => $detail), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new TransPo();
-        $model->attributes = $params;
+        $model->attributes = $params['formpo'];
+        $model->suplier = $params['formpo']['supplier']['kd_supplier'];
+        $model->tanggal = date("Y-m-d", strtotime($params['formpo']['tanggal']));
+        $model->spp = (empty($params['formpo']['listspp']['no_spp'])) ? '-' : $params['formpo']['listspp']['no_spp'];
 
 
         if ($model->save()) {
+            $details = $params['details'];
+            foreach ($details as $val) {
+                $det = new DetailPo();
+                $det->attributes = $val;
+                $det->kd_barang = $val['data_barang']['kd_barang'];
+                $det->tgl_pengiriman = date("Y-m-d", strtotime($val['data_barang']['tgl_pengiriman']));
+                $det->nota = $model->nota;
+                $det->save();
+            }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -181,9 +208,19 @@ class PoController extends Controller {
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
-        $model->attributes = $params;
-
+        $model->attributes = $params['formPo'];
+        $model->tanggal = date("Y-m-d", strtotime($params['formPo']['tanggal']));
+        $model->spp = (empty($params['formpo']['listspp']['no_spp'])) ? '-' : $params['formpo']['listspp']['no_spp'];
+        
         if ($model->save()) {
+            $detailsr = $params['details'];
+            foreach ($details as $val) {
+                $det = new DetailPo();
+                $det->attributes = $val;
+                $det->kd_barang = $val['data_barang']['kd_barang'];
+                $det->nota = $model->nota;
+                $det->save();
+            }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -194,7 +231,7 @@ class PoController extends Controller {
 
     public function actionDelete($id) {
         $model = $this->findModel($id);
-
+        $deleteDetail = DetailPo::deleteAll(['nota' => $id]);
         if ($model->delete()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -238,6 +275,22 @@ class PoController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+
+    public function actionCari() {
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('trans_po')
+                ->select("*")
+                ->where(['like', 'nota', $params['nama']])
+                ->limit(10);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
 }
