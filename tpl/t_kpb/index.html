@@ -1,16 +1,71 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
-</html>
+<div ng-controller="kpbCtrl">
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n font-thin h3">Kartu Pengambilan Bahan</h1>
+    </div>
+    <!--FORM-->
+    <div class="wrapper-md">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Form Kartu Pengambilan Bahan
+            </div>
+            <div class="panel-body">
+                <form name="landaform" class="form-horizontal form-validation ">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">No Wo.</label>
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <ui-select on-select="listBagian($item.kd_bom)" ng-model="form.no_wo"  theme="bootstrap">
+                                    <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
+                                    <ui-select-choices refresh="cariWo($select.search)" repeat="val in results">
+                                        {{val.no_wo}}
+                                    </ui-select-choices>
+                                </ui-select>
+                                <span class="input-group-btn">
+                                    <button ng-click="form.no_wo = undefined" class="btn btn-default">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </button>
+                                </span>
+                            </div> 
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Bagian</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" ng-model="form.kd_jabatan" required ng-change="listBahan(form.no_wo, form.kd_jabatan)">
+                                <option value="">.: Pilih Bagian :.</option>
+                                <option ng-repeat="jab in jabatan" value="{{jab.id_jabatan}}">{{jab.jabatan}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Pekerjaan</th>
+                                        <th>Barang</th>
+                                        <th>Jumlah</th>
+                                        <th>Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="det in detail">
+                                        <td>{{det.kerja}}</td>
+                                        <td>{{det.nm_barang}}</td>
+                                        <td>{{det.qty}}</td>
+                                        <td>{{det.ket}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-3">
+                            <button type="submit" class="btn btn-primary fa fa-print" ng-click="print()">&nbsp;Cetak</button>
+                        </div>
+                    </div>	
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
