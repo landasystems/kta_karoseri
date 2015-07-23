@@ -29,7 +29,7 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
 
     $scope.cariJabatan = function($query) {
         if ($query.length >= 3) {
-            Data.get('jabatan/listjabatan', {nama: $query}).then(function(data) {
+            Data.get('jabatan/cari', {nama: $query}).then(function(data) {
                 $scope.resultsjabatan = data.data;
             });
         }
