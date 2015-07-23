@@ -75,7 +75,7 @@ class KpbController extends Controller {
                 ->join('Join', 'tbl_jabatan as tj', 'dsb.kd_jab = tj.id_jabatan')
                 ->join('Join', 'pekerjaan as p', 'tj.krj = p.kd_kerja')
                 ->join('Join', 'barang as b', 'dsb.kd_barang = b.kd_barang')
-                ->select("dsb.*, b.nm_barang, p.*")
+                ->select("dsb.*, b.nm_barang, b.satuan, p.*")
                 ->where(['dsb.kd_bom' => $param['kd_bom'], 'dsb.kd_jab' => $param['kd_jab']]);
 
         $command = $query->createCommand();
