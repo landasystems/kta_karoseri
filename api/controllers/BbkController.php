@@ -99,7 +99,7 @@ class BbkController extends Controller {
                 $query = new Query;
                 $query->from('det_bbk as db, trans_bbk as tb')
                         ->select("sum(db.jml) as jml_keluar")
-                        ->where('db.no_bbk = tb.no_bbk and db.kd_barang = "' . $params['kd_barang']['kd_barang'] . '" and db.no_wo = "' . $params['no_wo']['no_wo'] . '"');
+                        ->where('db.no_bbk = tb.no_bbk and db.kd_barang = "' . $params['kd_barang']['kd_barang'] . '" and tb.no_wo = "' . $params['no_wo']['no_wo'] . '"');
                 $command = $query->createCommand();
                 $stokKeluar = $command->query()->read();
 
