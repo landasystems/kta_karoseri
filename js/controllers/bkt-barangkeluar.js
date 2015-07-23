@@ -99,6 +99,10 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        Data.get('pengguna/profile').then(function(data) {
+            $scope.form.petugas = data.data.nama;
+//            console.log(data);
+        });
         $scope.detailBbk = [{
                 kd_barang: '',
                 jml: '',
