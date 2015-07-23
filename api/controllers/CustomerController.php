@@ -71,15 +71,15 @@ class CustomerController extends Controller {
         $query = new Query;
         $query->from('customer')
                 ->select("kd_cust")
-                ->Where(['like', 'kd_cust', $filter_name])
+                ->where(['SUBSTR(kd_cust,1,1)' => $filter_name])
                 ->orderBy('kd_cust DESC')
                 ->limit(1);
         $command = $query->createCommand();
         $models = $command->query()->read();
         $kode_mdl = (substr($models['kd_cust'], -4) + 1);
-        $kode = substr('0000' . $kode_mdl, strlen($kode_mdl));
+        $kode = $filter_name.substr('0000' . $kode_mdl, strlen($kode_mdl));
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' =>$filter_name.$kode));
+        echo json_encode(array('status' => 1, 'data' =>$kode));
     }
 
     public function actionIndex() {

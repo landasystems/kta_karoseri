@@ -29,7 +29,6 @@ class SupplierController extends Controller {
             ]
         ];
     }
-    
 
     public function beforeAction($event) {
         $action = $event->id;
@@ -143,32 +142,19 @@ class SupplierController extends Controller {
 
     public function actionKode() {
         $params = $_REQUEST;
-        $filter_name = strtoupper(substr($params['nama'],0,1));
+        $filter_name = strtoupper(substr($params['nama'], 0, 1));
         $query = new Query;
         $query->from('supplier')
                 ->select("kd_supplier")
-                ->Where(['like', 'kd_supplier', $filter_name])
+                ->where(['SUBSTR(kd_supplier,1,1)' => $filter_name])
                 ->orderBy('kd_supplier DESC')
                 ->limit(1);
         $command = $query->createCommand();
-        
-//        $models = $command->queryAll();
-//        $s= 0;
-//        foreach ($models as $val){
-//           foreach($val as $key){
-//               $test=substr($key,0,1);
-////               echo $test;
-//               if(is_numeric($test)){
-//                   echo $key.'='.$test.'<br>';
-//               }
-//           }
-//        }
-//        echo $s;
         $models = $command->query()->read();
         $kode_mdl = (substr($models['kd_supplier'], -4) + 1);
-        $kode = substr('0000' . $kode_mdl, strlen($kode_mdl));
+        $kode = $filter_name . substr('0000' . $kode_mdl, strlen($kode_mdl));
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' =>$filter_name, 'test' => $models));
+        echo json_encode(array('status' => 1, 'data' => $kode, 'test' => $models));
     }
 
     public function actionUpdate($id) {

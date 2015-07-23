@@ -101,7 +101,6 @@ class PoController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('trans_po')
-                ->join('JOIN', 'detail_po', 'trans_po.nota = detail_po.nota')
                 ->orderBy($sort)
                 ->select("*");
 
@@ -165,13 +164,14 @@ class PoController extends Controller {
 
 
         $detail = array();
-
+        $no=1;
         foreach ($det as $key => $val) {
             $detail[$key] = $val->attributes;
             $hargaBarang = (isset($val->barang->harga)) ? $val->barang->harga : '';
             $namaBarang = (isset($val->barang->nm_barang)) ? $val->barang->nm_barang : '';
             $satuanBarang = (isset($val->barang->satuan)) ? $val->barang->satuan : '';
-            $detail[$key]['data_barang'] = ['tgl_pengiriman' => $val->tgl_pengiriman, 'kd_barang' => $val->kd_barang, 'nm_barang' => $namaBarang, 'harga' => $hargaBarang, 'satuan' => $satuanBarang];
+            $detail[$key]['data_barang'] = ['no'=>$no,'tgl_pengiriman' => $val->tgl_pengiriman, 'kd_barang' => $val->kd_barang, 'nm_barang' => $namaBarang, 'harga' => $hargaBarang, 'satuan' => $satuanBarang];
+        $no++;
         }
 
         $this->setHeader(200);
