@@ -123,8 +123,8 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">No. SPP</label>
                                 <div class="col-sm-6">
-                                         <div class="input-group">
-                                        <ui-select  ng-model="form.listspp" theme="bootstrap">
+                                    <div class="input-group">
+                                        <ui-select  ng-model="form.listspp" ng-readonly="form.status_po == '0'" theme="bootstrap">
                                             <ui-select-match>{{$select.selected.no_spp}} - {{$select.selected.no_proyek}}</ui-select-match>
                                             <ui-select-choices refresh="cariSpp($select.search)" repeat="val in results">
                                                 {{val.no_spp}} - {{val.no_proyek}}
@@ -136,7 +136,7 @@
                                             </button>
                                         </span>
                                     </div>
-                                    
+
                                     <!--<input type="text" class="form-control" ng-model="form.spp" ng-disabled="is_view" ng-readonly="form.status_po == '0'" required/>-->
                                 </div>
                             </div>
@@ -219,17 +219,23 @@
                                                 </span>
                                             </div>
                                         </td>
-                                        <td style="width:80px; padding-left: 8px;padding-right: 8px;">
+                                        <td style="width:70px; padding-left: 8px;padding-right: 8px;">
                                             <input type="text" class="form-control" ng-model="detail.jml" ng-change="subtotal()" ng-disabled="is_view" ng-readonly="is_edit == false" required>
                                         </td>
                                         <td style="width:50px; padding-left: 8px;padding-right: 8px;"> 
                                             <input type="text" class="form-control" ng-model="detail.data_barang.satuan" ng-disabled="is_view" ng-readonly="true" required>
                                         </td>
-                                        <td style="width:120px; padding-left: 8px;padding-right: 8px;">
-                                            <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.harga" ng-disabled="is_view" ng-readonly="is_edit == false" required>
+                                        <td style="width:180px; padding-left: 8px;padding-right: 8px;">
+                                            <div class="input-group" style="margin:0px;">
+                                                <span class="input-group-addon">Rp</span>
+                                                <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.harga" ng-disabled="is_view" ng-readonly="is_edit == false" required>
+                                            </div>
                                         </td>
-                                        <td style="width:120px; padding-left: 8px;padding-right: 8px;">
-                                            <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.jumlah" ng-disabled="is_view" ng-readonly="true">
+                                        <td style="width:180px; padding-left: 8px;padding-right: 8px;">
+                                            <div class="input-group" style="margin:0px;">
+                                                <span class="input-group-addon">Rp</span>
+                                                <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.jumlah" ng-disabled="is_view" ng-readonly="true">
+                                            </div>
                                         </td>
                                         <td style="width:200px; padding-left: 8px;padding-right: 8px;">
                                             <div class="input-group">
@@ -271,7 +277,7 @@
                                     </div>
                                 </div>
                             </div>
-                           
+
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-12">
@@ -290,7 +296,10 @@
                             <div class="form-group" >
                                 <label class="col-sm-6 control-label" style="text-align: left; margin-left: 10px">Total Pembayaran</label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" ng-model="form.total" ng-disabled="is_view" ng-readonly="true" >
+                                    <div class="input-group" style="margin:0px;">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control" ng-model="form.total" ng-disabled="is_view" ng-readonly="true" >
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -304,7 +313,10 @@
 
                                 </div>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control"  ng-model="form.diskon" ng-disabled="true" >
+                                    <div class="input-group" style="margin:0px;">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control"  ng-model="form.diskon" ng-disabled="true" >
+                                    </div>
                                 </div>
 
                             </div>
@@ -318,38 +330,44 @@
 
                                 </div>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" ng-change="subtotal()" ng-readonly="form.status_ppn == '1'" ng-model="form.ppn" ng-disabled="is_view" required >
+                                    <div class="input-group" style="margin:0px;">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control" ng-change="subtotal()" ng-readonly="form.status_ppn == '1'" ng-model="form.ppn" ng-disabled="is_view" required >
+                                    </div>
                                 </div>
 
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-6 control-label" style="text-align: left; margin-left: 10px">&nbsp;Total Biaya</label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control" ng-change="subtotal()" ng-model="form.total_seluruh" ng-disabled="is_view" required >
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label class="col-sm-6 control-label" style="text-align: left; margin-left: 10px">&nbsp;Total Dibayar</label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" ng-change="subtotal()" ng-model="form.total_dibayar" ng-disabled="is_view" required >
+                                    <div class="input-group" style="margin:0px;">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" ng-change="subtotal()" ng-model="form.total_dibayar" ng-disabled="is_view" required >
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-6 control-label" style="text-align: left; margin-left: 10px">&nbsp;DP</label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" ng-readonly="form.bayar == 1" ng-change="subtotal()" ng-model="form.dp" ng-disabled="is_view" required >
+                                    <div class="input-group" style="margin:0px;">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" ng-readonly="form.bayar == 0" ng-change="subtotal()" ng-model="form.dp" ng-disabled="is_view" required >
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-6 control-label" style="text-align: left; margin-left: 10px">&nbsp;Sisa Bayar</label>
                                 <div class="col-sm-5">
-                                    <input type="text" class="form-control" ng-change="subtotal()" ng-model="form.sisa_dibayar" ng-disabled="is_view" ng-readonly="true" >
+                                    <div class="input-group" style="margin:0px;">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" ng-change="subtotal()" ng-model="form.sisa_dibayar" ng-disabled="is_view" >
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="line line-dashed"></div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
                     <div class="form-group" style="text-align: center">
                         <div class="col-sm-8 col-sm-offset-2">
                             <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>

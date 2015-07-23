@@ -35,10 +35,20 @@ app.controller('subsectionCtrl', function ($scope, Data, toaster) {
             window.location = 'api/web/subsection/excel';
         });
     }
-
-    Data.get('subsection/listsection').then(function (data) {
+    
+     Data.get('section/list').then(function(data) {
         $scope.listsection = data.data;
     });
+
+    $scope.cariSection = function ($query) {
+
+        if ($query.length >= 3) {
+            Data.get('section/cari', {nama: $query}).then(function (data) {
+
+                $scope.results = data.data;
+            });
+        }
+    }
 
     $scope.create = function (form) {
         $scope.is_edit = true;
@@ -55,13 +65,13 @@ app.controller('subsectionCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.kd_kerja;
-        $scope.form = form;
+        $scope.selected(form.kd_kerja);
     };
     $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.kd_kerja;
-        $scope.form = form;
+        $scope.selected(form.kd_kerja);
     };
     $scope.save = function (form) {
         var url = ($scope.is_create == true) ? 'subsection/create' : 'subsection/update/' + form.kd_kerja;
@@ -89,6 +99,12 @@ app.controller('subsectionCtrl', function ($scope, Data, toaster) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
+    };
+    
+    $scope.selected = function (id) {
+        Data.get('subsection/view/' + id).then(function (data) {
+            $scope.form = data.data;
+        });
     };
 
 

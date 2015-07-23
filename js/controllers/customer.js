@@ -30,6 +30,19 @@ app.controller('customerCtrl', function ($scope, Data, toaster) {
         $scope.isLoading = false;
     };
 
+    $scope.create_kode = function () {
+        var kat = $scope.form.kategori;
+        var kods = $scope.form.kd_cust;
+        var buat = $scope.is_create;
+        if (buat == true) {
+            Data.get('customer/kode', {nama: kat}).then(function (data) {
+                $scope.form.kd_cust = data.data;
+            });
+        } else {
+            $scope.form.kd_cust = kods;
+        }
+    }
+
     $scope.excel = function () {
         Data.get('customer', paramRef).then(function (data) {
             window.location = 'api/web/customer/excel';
@@ -41,9 +54,6 @@ app.controller('customerCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-//        Data.get('custmer/kode').then(function(data) {
-//            $scope.form.kd_cust = data.kode;
-//        });
     };
     $scope.update = function (form) {
         $scope.is_create = false;
@@ -79,22 +89,6 @@ app.controller('customerCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
     };
 
-//    $scope.trash = function (row) {
-//        if (confirm("Apa anda yakin akan MENGHAPUS item ini ?")) {
-//            row.is_deleted = 1;
-//            Data.post('jenisbrg/update/' + row.id, row).then(function (result) {
-//                ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
-//            });
-//        }
-//    };
-//    $scope.restore = function (row) {
-//        if (confirm("Apa anda yakin akan MERESTORE item ini ?")) {
-//            row.is_deleted = 0;
-//            Data.post('jenisbrg/update/' + row.id, row).then(function (result) {
-//                ctrl.displayed.splice(ctrl.displayed.indexOf(row), 1);
-//            });
-//        }
-//    };
     $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
             Data.delete('customer/delete/' + row.kd_cust).then(function (result) {

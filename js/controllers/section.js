@@ -36,7 +36,7 @@ app.controller('sectionCtrl', function ($scope, Data, toaster) {
         });
     }
 
-    Data.get('section/listdepartment').then(function (data) {
+    Data.get('departement/listdepartment').then(function (data) {
         $scope.listdept = data.data;
     });
 
