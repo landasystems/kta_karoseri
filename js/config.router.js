@@ -10,9 +10,9 @@ angular.module('app')
                         $rootScope.$state = $state;
                         $rootScope.$stateParams = $stateParams;
                         //pengecekan login
-                        $rootScope.$on("$stateChangeStart", function(event, toState) {
-                            var globalmenu = ['app.dashboard', 'access.signin', 'transaksi.coba'];
-                            Data.get('site/session').then(function(results) {
+                        $rootScope.$on("$stateChangeStart", function (event, toState) {
+                            var globalmenu = ['app.dashboard','master.userprofile', 'access.signin', 'transaksi.coba'];
+                            Data.get('site/session').then(function (results) {
                                 if (typeof results.data.user != "undefined") {
                                     $rootScope.user = results.data.user;
                                     if (results.data.user.akses[(toState.name).replace(".", "_")]) { // jika punya hak akses, return true
@@ -264,6 +264,16 @@ angular.module('app')
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
                                                 return $ocLazyLoad.load('js/controllers/pengguna.js');
+                                            }]
+                                    }
+                                })
+                                .state('master.userprofile', {
+                                    url: '/profile',
+                                    templateUrl: 'tpl/m_user/profile.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load('js/controllers/pengguna_profile.js');
                                             }]
                                     }
                                 })
