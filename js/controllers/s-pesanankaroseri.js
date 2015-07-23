@@ -145,7 +145,7 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
         $scope.selected(form.no_spk);
     };
     $scope.save = function(form) {
-        var url = ($scope.is_create == true) ? 'spkaroseri/create' : 'spkaroseri/update/' + form.no_retur_bbk;
+        var url = ($scope.is_create == true) ? 'spkaroseri/create' : 'spkaroseri/update/' + form.no_spk;
         Data.post(url, form).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
