@@ -134,6 +134,11 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.no_spk;
         $scope.form = form;
+        $scope.form.is_ppn = 0;
+        if (form.ppn > 0) {
+            $scope.form.is_ppn = "1";
+        }
+        console.log($scope.form);
         $scope.selected(form.no_spk);
     };
     $scope.view = function(form) {

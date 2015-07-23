@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Pengguna;
+use app\models\User;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -59,7 +59,8 @@ class SiteController extends Controller {
     
     public function actionLogin() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = Pengguna::find()->where(['username' => $params['username'], 'password' => sha1($params['password'])])->one();
+        $model = User::find()->where(['username' => $params['username'], 'password' => sha1($params['password'])])->one();
+
         if (!empty($model)) {
             session_start();
             $_SESSION['user']['id'] = $model->id;
@@ -67,6 +68,7 @@ class SiteController extends Controller {
             $_SESSION['user']['nama'] = $model->nama;
             $akses = (isset($model->roles->akses)) ? $model->roles->akses : '[]';
             $_SESSION['user']['akses'] = json_decode($akses);
+            $_SESSION['user']['settings'] = json_decode($model->settings);
             
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -83,7 +85,6 @@ class SiteController extends Controller {
 
         header($status_header);
         header('Content-type: ' . $content_type);
-        header('X-Powered-By: ' . "Nintriva <nintriva.com>");
     }
 
     private function _getStatusCodeMessage($status) {

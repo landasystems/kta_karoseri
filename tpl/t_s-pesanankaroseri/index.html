@@ -102,7 +102,7 @@
                                     <label class="btn btn-default" ng-model="form.kat_spk" ng-click="kode('finish')" ng-disabled="is_create == false" btn-radio="'finish'">Finish Unit</label>
                                     <label class="btn btn-default" ng-model="form.kat_spk" ng-click="kode('stok')" ng-disabled="is_create == false" btn-radio="'stok'">Stok Unit</label>                        
                                     <br><br>
-                                    <input type="text" class="form-control" ng-model="form.no_spk" ng-disabled="is_view" required placeholder="Nomor SPK">
+                                    <input type="text" class="form-control" ng-model="form.no_spk" ng-disabled="is_create == false" required placeholder="Nomor SPK">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -188,21 +188,21 @@
                                     <div class="col-md-6">
                                         <div class="radio">
                                             <label class="i-checks">
-                                                <input type="radio" name="a" value="option2" checked="">
+                                                <input type="radio" ng-disabled="is_view" ng-model="form.sumber_pelanggan" ng-value="1">
                                                 <i></i>
                                                 Repeat Order
                                             </label>
                                         </div>
                                         <div class="radio">
                                             <label class="i-checks">
-                                                <input type="radio" name="a" value="option2" checked="">
+                                                <input type="radio" ng-disabled="is_view" ng-model="form.sumber_pelanggan" ng-value="3">
                                                 <i></i>
                                                 Walk In / Call In
                                             </label>
                                         </div>
                                         <div class="radio">
                                             <label class="i-checks">
-                                                <input type="radio" name="a" value="option2" checked="">
+                                                <input type="radio" ng-disabled="is_view" ng-model="form.sumber_pelanggan" ng-value="5">
                                                 <i></i>
                                                 Lainnya
                                             </label>
@@ -211,14 +211,14 @@
                                     <div class="col-md-6">
                                         <div class="radio">
                                             <label class="i-checks">
-                                                <input type="radio" name="a" value="option2" checked="">
+                                                <input type="radio" ng-disabled="is_view" ng-model="form.sumber_pelanggan" ng-value="2">
                                                 <i></i>
                                                 Referensi
                                             </label>
                                         </div>
                                         <div class="radio">
                                             <label class="i-checks">
-                                                <input type="radio" name="a" value="option2" checked="">
+                                                <input type="radio" ng-disabled="is_view" ng-model="form.sumber_pelanggan" ng-value="4">
                                                 <i></i>
                                                 Canvas
                                             </label>
