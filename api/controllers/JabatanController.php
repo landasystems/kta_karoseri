@@ -20,7 +20,6 @@ class JabatanController extends Controller {
                     'index' => ['get'],
                     'view' => ['get'],
                     'excel' => ['get'],
-                    'listsubsection' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -102,20 +101,6 @@ class JabatanController extends Controller {
         echo json_encode(array('status' => 1, 'kode' => 'JBTN' . $kode));
     }
 
-    public function actionListsubsection() {
-        $query = new Query;
-        $query->from('pekerjaan')
-                ->select("*")
-                ->orderBy('kd_kerja ASC');
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $models));
-    }
-
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
@@ -174,15 +159,23 @@ class JabatanController extends Controller {
     public function actionView($id) {
 
         $model = $this->findModel($id);
+        $data = $model->attributes;
+        $subsec = \app\models\SubSection::find()
+                ->where(['kd_kerja' => $model['krj']])
+                ->One();
+        $kd_kerja = (isset($subsec->kd_kerja)) ? $subsec->kd_kerja : '';
+        $kerja = (isset($subsec->kerja)) ? $subsec->kerja : '';
+        $data['subSection'] = ['kd_kerja' => $kd_kerja, 'kerja' => $kerja];
 
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new Jabatan();
         $model->attributes = $params;
+        $model->krj = $params['subSection']['kd_kerja'];
 
 
         if ($model->save()) {
@@ -198,6 +191,7 @@ class JabatanController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
+        $model->krj = $params['subSection']['kd_kerja'];
 
         if ($model->save()) {
             $this->setHeader(200);

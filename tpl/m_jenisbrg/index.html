@@ -14,17 +14,17 @@
             <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
                 <div class="form-horizontal">
                     <div class="form-group">
-                        
+
                         <label class="col-sm-2 control-label">Kode Jenis</label>
                         <div class="col-sm-3">
                             <input st-search="kd_jenis" class="form-control"/>
                         </div>
-                        
+
                         <label class="col-sm-2 control-label">Jenis Barang</label>
                         <div class="col-sm-3">
                             <input st-search="jenis_brg" class="form-control"/>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                         <tr>
                             <th st-sort="kd_jenis">Kode Jenis</th>
                             <th st-sort="jenis_brg">Jenis Barang</th>
-                            
+
                         </tr>
                     </thead>
                     <tbody ng-show="!isLoading">
@@ -51,12 +51,12 @@
                     </tbody>
                     <tbody ng-show="isLoading">
                         <tr>
-                            <td colspan="4" class="text-center">Loading ... </td>
+                            <td colspan="8" class="text-center">Loading ... </td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html">
+                            <td colspan="6" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html">
                             </td>
                         </tr>
                 </table>		
@@ -76,8 +76,8 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Kode Jenis</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" ng-model="form.kd_jenis" ng-disabled="is_view" ng-readonly="is_create == false" required>
-                            
+                            <input type="text" class="form-control" ng-model="form.kd_jenis" ng-disabled="is_view" ng-readonly="true" required>
+
                         </div>
                         <label class="col-sm-2 control-label">Jenis Barang</label>
                         <div class="col-sm-4">

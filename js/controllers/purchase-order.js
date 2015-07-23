@@ -94,15 +94,16 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         }
 //        if ($scope.form.bayar)
 
-        var total_bayar = $scope.form.total_dibayar;
+//        var total_bayar = $scope.form.total_dibayar;
         var total_dp = $scope.form.dp;
         var total_seluruh = ((total - nilai_diskon) + nilai_ppn);
-        var sisa_bayar = (total_seluruh - (total_bayar - total_dp));
-
+        var sisa_bayar = (total_seluruh - total_dp);
+        
+//        console.log(total_seluruh);
 
         $scope.form.ppn = Math.ceil(nilai_ppn);
         $scope.form.diskon = Math.ceil(nilai_diskon);
-        $scope.form.total_seluruh = Math.ceil(total_seluruh);
+        $scope.form.total_dibayar = Math.ceil(total_seluruh);
         $scope.form.sisa_dibayar = Math.ceil(sisa_bayar);
 
     }

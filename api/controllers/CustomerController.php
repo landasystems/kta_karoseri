@@ -23,7 +23,7 @@ class CustomerController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-//                    'kode' => ['get'],
+                    'kode' => ['get'],
                     'cari' => ['get'],
                 ],
             ]
@@ -58,13 +58,28 @@ class CustomerController extends Controller {
         $query = new Query;
         $query->from('customer')
                 ->select("*")
-//                ->where(['like', 'kd_cust', $params['nama']])
                 ->Where(['like', 'nm_customer', $params['nama']]);
 
         $command = $query->createCommand();
         $models = $command->queryAll();
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $models));
+    }
+    public function actionKode() {
+        $params = $_REQUEST;
+        $filter_name = strtoupper(substr($params['nama'],0,1));
+        $query = new Query;
+        $query->from('customer')
+                ->select("kd_cust")
+                ->Where(['like', 'kd_cust', $filter_name])
+                ->orderBy('kd_cust DESC')
+                ->limit(1);
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+        $kode_mdl = (substr($models['kd_cust'], -4) + 1);
+        $kode = substr('0000' . $kode_mdl, strlen($kode_mdl));
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' =>$filter_name.$kode));
     }
 
     public function actionIndex() {

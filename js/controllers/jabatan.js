@@ -34,9 +34,21 @@ app.controller('jabatanCtrl', function ($scope, Data, toaster) {
             window.location = 'api/web/jabatan/excel';
         });
     }
-    Data.get('jabatan/listsubsection').then(function (data) {
+    
+    Data.get('subsection/list').then(function(data) {
         $scope.listsubsection = data.data;
     });
+
+
+    $scope.cariSubsection = function ($query) {
+
+        if ($query.length >= 3) {
+            Data.get('subsection/cari', {nama: $query}).then(function (data) {
+
+                $scope.results = data.data;
+            });
+        }
+    }
 
     $scope.create = function (form) {
         $scope.is_edit = true;
@@ -47,19 +59,21 @@ app.controller('jabatanCtrl', function ($scope, Data, toaster) {
         Data.get('jabatan/kode').then(function (data) {
             $scope.form.id_jabatan = data.kode;
         });
+
     };
     $scope.update = function (form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.id_jabatan;
-        $scope.form = form;
+        $scope.selected(form.id_jabatan);
     };
     $scope.view = function (form) {
+        
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.id_jabatan;
-        $scope.form = form;
+        $scope.selected(form.id_jabatan);
     };
     $scope.save = function (form) {
         var url = ($scope.is_create == true) ? 'jabatan/create' : 'jabatan/update/' + form.id_jabatan;
@@ -87,6 +101,13 @@ app.controller('jabatanCtrl', function ($scope, Data, toaster) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
+    };
+
+    $scope.selected = function (id) {
+        Data.get('jabatan/view/' + id).then(function (data) {
+            $scope.form = data.data;
+//            console.log(data.data);
+        });
     };
 
 

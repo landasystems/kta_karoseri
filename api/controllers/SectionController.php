@@ -20,7 +20,7 @@ class SectionController extends Controller {
                     'index' => ['get'],
                     'view' => ['get'],
                     'excel' => ['get'],
-                    'listdepartment' => ['get'],
+                    'list' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -28,6 +28,36 @@ class SectionController extends Controller {
                 ],
             ]
         ];
+    }
+    
+     public function actionCari() {
+        
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('tbl_section')
+                ->select("id_section,section")
+                ->andWhere(['like', 'section', $params['nama']]);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+    
+    public function actionList() {
+        $query = new Query;
+        $query->from('tbl_section')
+                ->select("*")
+                ->orderBy('id_section ASC');
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function beforeAction($event) {
@@ -69,19 +99,7 @@ class SectionController extends Controller {
         echo json_encode(array('status' => 1, 'kode' => 'SCT' . $kode));
     }
     
-    public function actionListdepartment() {
-        $query = new Query;
-        $query->from('tbl_department')
-                ->select("*")
-                ->orderBy('id_department ASC');
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $models));
-    }
+    
 
     public function actionIndex() {
         //init variable

@@ -101,10 +101,19 @@
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">Nama Section</label>
                                         <div class="col-sm-4">
-                                            <select ui-select2="selectdept"  ng-model="form.id_section" ng-disabled="is_view" required style="width:100%;">
-                                                <option value="">-Pilih Section-</option>
-                                                <option ng-repeat="section in listsection" value="{{section.id_section}}">{{section.section}}</option>
-                                            </select>
+                                            <div class="input-group">
+                                                <ui-select ng-model="form.Sections" theme="bootstrap" required>
+                                                    <ui-select-match>{{$select.selected.section}}</ui-select-match>
+                                                    <ui-select-choices refresh="cariSection($select.search)" repeat="val in results">
+                                                         {{val.section}}
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                                <span class="input-group-btn">
+                                                    <button ng-click="form.Sections = undefined" class="btn btn-default">
+                                                        <span class="glyphicon glyphicon-trash"></span>
+                                                    </button>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
