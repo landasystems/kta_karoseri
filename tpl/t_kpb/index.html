@@ -37,8 +37,11 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" ng-if="detail.length > 0">
                         <div class="col-md-12">
+                            <div class="alert alert-danger" ng-if="msg.length > 0">
+                                <p>{{msg}}</p>
+                            </div>
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -62,12 +65,16 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-sm-4 col-sm-offset-3">
-                            <button type="submit" class="btn btn-primary fa fa-print" ng-click="print()">&nbsp;Cetak</button>
-                        </div>
+                        <center>
+                            <button type="button" class="btn btn-primary fa fa-print" ng-print print-element-id="printArea" ng-disabled="status == 0">&nbsp;Print</button>
+                        </center>
                     </div>	
                 </form>
             </div>
         </div>
     </div>
+</div>
+
+<div id="printArea">
+
 </div>

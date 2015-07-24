@@ -49,6 +49,17 @@ angular.module('app')
                     return (/iPhone|iPod|iPad|Silk|Android|BlackBerry|Opera Mini|IEMobile/).test(ua);
                 }
 
+                $scope.pencarian = function ($query) {
+                    if ($query.length >= 3) {
+                        Data.get('barang/cari', {nama: $query}).then(function (data) {
+                            $scope.results = data.data;
+                        });
+                    }
+                }
+                $scope.pencarianDet = function ($query) {
+                    $state.go('master.barang', {form: $query});
+                }
+
                 $scope.logout = function () {
                     Data.get('site/logout').then(function (results) {
                         $state.go('access.signin');

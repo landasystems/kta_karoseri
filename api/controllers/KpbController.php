@@ -68,15 +68,18 @@ class KpbController extends Controller {
     }
 
     public function actionListbahan() {
-//        print_r($_REQUEST);
         $param = json_decode(file_get_contents("php://input"), true);
+
+        //cek apakah sdh di print
+        $cek = Kpb::find()->where(['no_wo' => $param['kd_bom']['no_wo'], 'kd_jab' => $param['kd_jab'], 'status' => 0])->count();
+
         $query = new Query;
         $query->from('det_standar_bahan as dsb')
                 ->join('Join', 'tbl_jabatan as tj', 'dsb.kd_jab = tj.id_jabatan')
                 ->join('Join', 'pekerjaan as p', 'tj.krj = p.kd_kerja')
                 ->join('Join', 'barang as b', 'dsb.kd_barang = b.kd_barang')
                 ->select("dsb.*, b.nm_barang, b.satuan, p.*")
-                ->where(['dsb.kd_bom' => $param['kd_bom'], 'dsb.kd_jab' => $param['kd_jab']]);
+                ->where(['dsb.kd_bom' => $param['kd_bom']['kd_bom'], 'dsb.kd_jab' => $param['kd_jab']]);
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -87,9 +90,17 @@ class KpbController extends Controller {
             $list = $models;
         }
 
+        if ($cek == 1) {
+            $msg = 'Kartu pengambilan bahan sudah dicetak, silahkan menghubungi admin untuk mencetak ulang';
+            $print = 0;
+        } else {
+            $msg = '';
+            $print = 1;
+        }
+
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'data' => array_unique($list, SORT_REGULAR)));
+        echo json_encode(array('status' => 1, 'data' => array_unique($list, SORT_REGULAR), 'msg' => $msg, 'print' => $print));
     }
 
     private function setHeader($status) {
@@ -125,4 +136,5 @@ class KpbController extends Controller {
     }
 
 }
+
 ?>
