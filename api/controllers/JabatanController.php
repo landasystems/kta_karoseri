@@ -25,7 +25,7 @@ class JabatanController extends Controller {
                     'delete' => ['delete'],
                     'kode' => ['get'],
                     'listkaryawan' => ['get'],
-                    'cari' => ['get']
+                    'cari' => ['get'],
                 ],
             ]
         ];
