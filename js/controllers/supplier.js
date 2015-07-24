@@ -34,6 +34,19 @@ app.controller('supplierCtrl', function ($scope, Data, toaster) {
             window.location = 'api/web/supplier/excel';
         });
     }
+    
+    $scope.create_kode = function () {
+        var nama_sp = $scope.form.nama_supplier;
+        var kods = $scope.form.kd_supplier;
+        var buat = $scope.is_create;
+        if (buat == true) {
+            Data.get('supplier/kode', {nama: nama_sp}).then(function (data) {
+                $scope.form.kd_supplier = data.data;
+            });
+        } else {
+            $scope.form.kd_supplier = kods;
+        }
+    }
 
     $scope.create = function (form) {
         $scope.is_edit = true;
@@ -41,9 +54,6 @@ app.controller('supplierCtrl', function ($scope, Data, toaster) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-//        Data.get('supplier/kode').then(function(data) {
-//            $scope.form.kd_chassis = "0000" + data.kode;
-//        });
     };
     $scope.update = function (form) {
         $scope.is_edit = true;

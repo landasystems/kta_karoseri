@@ -1,4 +1,4 @@
-app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal) {
+app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, $http) {
     var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
     var uploader = $scope.uploader = new FileUploader({
         url: 'img/upload.php?folder=barang&kode=' + kode_unik,

@@ -19,6 +19,7 @@ class SppController extends Controller {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'index' => ['get'],
+                    'cari' => ['get'],
                     'view' => ['get'],
                     'excel' => ['get'],
                     'detail' => ['get'],
@@ -30,7 +31,23 @@ class SppController extends Controller {
             ]
         ];
     }
+    
+    public function actionCari() {
+        
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('trans_spp')
+                ->select("no_spp,no_proyek")
+                ->andWhere(['like', 'no_spp', $params['nama']]);
 
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+    
     public function beforeAction($event) {
         $action = $event->id;
         if (isset($this->actions[$action])) {

@@ -60,7 +60,8 @@ class WoController extends Controller {
                 ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
                 ->select("vws.*, tk.nama as sales, tk.lokasi_kntr as wilayah")
-                ->where(['like', 'vws.no_wo', $params['nama']]);
+                ->where(['like', 'vws.no_wo', $params['nama']])
+                ->limit(20);
         $command = $query->createCommand();
         $models = $command->queryAll();
 
@@ -236,7 +237,8 @@ class WoController extends Controller {
         $models = $command->queryAll();
         return $this->render("/expmaster/jabatan", ['models' => $models]);
     }
-    public function actionCari(){
+
+    public function actionCari() {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('wo_masuk')

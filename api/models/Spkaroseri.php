@@ -36,21 +36,19 @@ use Yii;
  * @property string $nik
  * @property string $kd_bom
  */
-class Spkaroseri extends \yii\db\ActiveRecord
-{
+class Spkaroseri extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'spk';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['no_spk'], 'required'],
             [['tgl'], 'safe'],
@@ -67,8 +65,7 @@ class Spkaroseri extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'no_spk' => 'No Spk',
             'tgl' => 'Tgl',
@@ -99,5 +96,13 @@ class Spkaroseri extends \yii\db\ActiveRecord
             'nik' => 'Nik',
             'kd_bom' => 'Kd Bom',
         ];
+    }
+
+    public function getChassis() {
+        return $this->hasOne(Chassis::className(), ['kd_chassis' => 'kd_chassis']);
+    }
+
+    public function getCutomer() {
+        return $this->hasOne(Chassis::className(), ['kd_cust' => 'kd_customer']);
     }
 }

@@ -101,7 +101,7 @@
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">Department</label>
                                         <div class="col-sm-4">
-                                            <select ui-select2="selectdept"  ng-model="form.dept" ng-disabled="is_view" required style="width:100%;">
+                                            <select stInputEvent="change" ng-model="form.dept" class="form-control">    
                                                 <option value="">-Pilih Department-</option>
                                                 <option ng-repeat="department in listdept" value="{{department.id_department}}">{{department.department}}</option>
                                             </select>

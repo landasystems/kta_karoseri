@@ -101,10 +101,19 @@
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">Sub Section</label>
                                         <div class="col-sm-4">
-                                            <select ui-select2="selectdept"  ng-model="form.krj" ng-disabled="is_view" required style="width:100%;">
-                                                <option value="">-Pilih Sub Section-</option>
-                                                <option ng-repeat="listsub in listsubsection" value="{{listsub.kd_kerja}}">{{listsub.kerja}}</option>
-                                            </select>
+                                            <div class="input-group">
+                                                <ui-select ng-model="form.subSection" theme="bootstrap" required>
+                                                    <ui-select-match>{{$select.selected.kerja}}</ui-select-match>
+                                                    <ui-select-choices refresh="cariSubsection($select.search)" repeat="val in results">
+                                                         {{val.kerja}}
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                                <span class="input-group-btn">
+                                                    <button ng-click="form.subSection = undefined" class="btn btn-default">
+                                                        <span class="glyphicon glyphicon-trash"></span>
+                                                    </button>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

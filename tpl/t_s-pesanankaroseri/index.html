@@ -13,7 +13,34 @@
             <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
                 <div class="form-horizontal">
                     <div class="col-md-12 col-sm-12">
-
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">No Spk</label>
+                                <div class="col-sm-9">
+                                    <input st-search="no_spk" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Kode BOM</label>
+                                <div class="col-sm-9">
+                                    <input st-search="kd_bom" class="form-control"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Kode Customer</label>
+                                <div class="col-sm-9">
+                                    <input st-search="kd_customer" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Kode Chassis</label>
+                                <div class="col-sm-9">
+                                    <input st-search="kd_chassis" class="form-control"/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -24,7 +51,7 @@
                             <th st-sort="no_spk">No SPK</th>
                             <th st-sort="tgl">Tanggal</th>
                             <th st-sort="kd_bom">Kode BOM</th>
-                            <th st-sort="nm_customer">Kode Customer</th>
+                            <th st-sort="kd_customer">Kode Customer</th>
                             <th st-sort="kd_chassis">Kode Chassis</th>
                             <th ng-show="is_view == false"></th>
                         </tr>
@@ -72,10 +99,10 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">No. SPK</label>
                                 <div class="col-sm-8">
-                                    <label class="btn btn-default" ng-model="form.kat_spk" ng-click="kode('finish')" ng-disabled="is_create == false" btn-radio="'finish'" required>Finish Unit</label>
-                                    <label class="btn btn-default" ng-model="form.kat_spk" ng-click="kode('stok')" ng-disabled="is_create == false" btn-radio="'stok'" required>Stok Unit</label>                        
+                                    <label class="btn btn-default" ng-model="form.kat_spk" ng-click="kode('finish')" ng-disabled="is_create == false" btn-radio="'finish'">Finish Unit</label>
+                                    <label class="btn btn-default" ng-model="form.kat_spk" ng-click="kode('stok')" ng-disabled="is_create == false" btn-radio="'stok'">Stok Unit</label>                        
                                     <br><br>
-                                    <input type="text" class="form-control" ng-model="form.no_spk" ng-disabled="is_view" required placeholder="Nomor SPK">
+                                    <input type="text" class="form-control" ng-model="form.no_spk" ng-disabled="is_create == false" required placeholder="Nomor SPK">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -161,21 +188,21 @@
                                     <div class="col-md-6">
                                         <div class="radio">
                                             <label class="i-checks">
-                                                <input type="radio" name="a" value="option2" checked="">
+                                                <input type="radio" ng-disabled="is_view" ng-model="form.sumber_pelanggan" ng-value="1">
                                                 <i></i>
                                                 Repeat Order
                                             </label>
                                         </div>
                                         <div class="radio">
                                             <label class="i-checks">
-                                                <input type="radio" name="a" value="option2" checked="">
+                                                <input type="radio" ng-disabled="is_view" ng-model="form.sumber_pelanggan" ng-value="3">
                                                 <i></i>
                                                 Walk In / Call In
                                             </label>
                                         </div>
                                         <div class="radio">
                                             <label class="i-checks">
-                                                <input type="radio" name="a" value="option2" checked="">
+                                                <input type="radio" ng-disabled="is_view" ng-model="form.sumber_pelanggan" ng-value="5">
                                                 <i></i>
                                                 Lainnya
                                             </label>
@@ -184,14 +211,14 @@
                                     <div class="col-md-6">
                                         <div class="radio">
                                             <label class="i-checks">
-                                                <input type="radio" name="a" value="option2" checked="">
+                                                <input type="radio" ng-disabled="is_view" ng-model="form.sumber_pelanggan" ng-value="2">
                                                 <i></i>
                                                 Referensi
                                             </label>
                                         </div>
                                         <div class="radio">
                                             <label class="i-checks">
-                                                <input type="radio" name="a" value="option2" checked="">
+                                                <input type="radio" ng-disabled="is_view" ng-model="form.sumber_pelanggan" ng-value="4">
                                                 <i></i>
                                                 Canvas
                                             </label>
@@ -251,8 +278,8 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">PKP</label>
                                 <div class="col-sm-8">
-                                    <label class="btn btn-default" ng-model="form.pkp" ng-disabled="is_view" btn-radio="1" required>Ya</label>
-                                    <label class="btn btn-default" ng-model="form.pkp" ng-disabled="is_view" btn-radio="0" required>Tidak</label>
+                                    <label class="btn btn-default" ng-model="form.pkp" ng-disabled="is_view" btn-radio="'1'" required>Ya</label>
+                                    <label class="btn btn-default" ng-model="form.pkp" ng-disabled="is_view" btn-radio="'0'" required>Tidak</label>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -264,8 +291,8 @@
                             <div class="form-group">
                                 <label class="col-sm-6 control-label">Instansi Pemungut Pajak</label>
                                 <div class="col-sm-6">
-                                    <label class="btn btn-default" ng-model="form.pemungut_pajak" ng-disabled="is_view" btn-radio="1" required>Ya</label>
-                                    <label class="btn btn-default" ng-model="form.pemungut_pajak" ng-disabled="is_view" btn-radio="0" required>Tidak</label>                               
+                                    <label class="btn btn-default" ng-model="form.pemungut_pajak" ng-disabled="is_view" btn-radio="'1'" required>Ya</label>
+                                    <label class="btn btn-default" ng-model="form.pemungut_pajak" ng-disabled="is_view" btn-radio="'0'" required>Tidak</label>                               
                                 </div>
                             </div>
                         </div>
@@ -314,9 +341,9 @@
                                 <label class="col-sm-4 control-label">PPN</label>
                                 <div class="col-sm-8">
                                     <label class="btn btn-default" ng-model="form.is_ppn" ng-click="is_ppn = true;
-                                            kalkulasi()" ng-disabled="is_view" btn-radio="'1'" required>Include</label>
+                                            kalkulasi()" ng-disabled="is_view" btn-radio="'1'">Include</label>
                                     <label class="btn btn-default" ng-model="form.is_ppn" ng-click="is_ppn = false;
-                                            kalkulasi()" ng-disabled="is_view" btn-radio="'0'" required>Exclude</label>                        
+                                            kalkulasi()" ng-disabled="is_view" btn-radio="'0'">Exclude</label>                        
                                     <br><br>
                                     <div class="input-group m-b">
                                         <span class="input-group-addon">Rp</span>

@@ -44,7 +44,7 @@
                             <th st-sort="no_bbm">NO BBM</th>
                             <th st-sort="tgl_nota">Tanggal Nota</th>
                             <th st-sort="surat_jalan">Surat Jalan</th>
-                            <th st-sort="supplier">Supplier</th>
+                            <th st-sort="nm_supplier">Supplier</th>
                             <th st-sort="pengirim">Pengirim</th>
                             <th st-sort="penerima">Penerima</th>
                             <th st-sort="no_wo">No. WO</th>
@@ -56,7 +56,7 @@
                             <td>{{row.no_bbm}}</td>
                             <td>{{row.tgl_nota| date}}</td>
                             <td>{{row.surat_jalan}}</td>
-                            <td>{{row.supplier}}</td>
+                            <td>{{row.nm_supplier}}</td>
                             <td>{{row.pengirim}}</td>
                             <td>{{row.penerima}}</td>
                             <td>{{row.no_wo}}</td>
@@ -227,7 +227,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <input type="text" ng-model="detail.ket" class="form-control">
+                                    <input type="text" ng-model="detail.keterangan" class="form-control">
                                 </td>
                                 <td>
                                     <input type="text" ng-pattern="/^[0-9]+$/" ng-model="detail.jumlah" class="form-control">

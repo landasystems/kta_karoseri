@@ -115,8 +115,20 @@ class JenisbrgController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
+        //
+        $query = new Query;
+        $query->from('jenis_brg')
+                ->select('kd')
+                ->orderBy('kd DESC')
+                ->limit(1);
+
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+        $kd = ($models['kd'] + 1);
+        
         $model = new JenisBrg();
         $model->attributes = $params;
+        $model->kd = $kd;
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -130,11 +142,13 @@ class JenisbrgController extends Controller {
     public function actionKode() {
         $query = new Query;
         $query  ->from('jenis_brg')
-                ->select("*");
+                ->select("*")
+                ->orderBy('kd_jenis DESC')
+                ->limit(1);
 
         $command = $query->createCommand();
-        $totalItems = $query->count();
-        $kode_mdl = ($totalItems + 1);
+        $models = $command->query()->read();
+        $kode_mdl = (substr($models['kd_jenis'], -5) + 1);
         $kode = substr('00000' . $kode_mdl, strlen($kode_mdl));
         
         $this->setHeader(200);
@@ -142,6 +156,7 @@ class JenisbrgController extends Controller {
         echo json_encode(array('status' => 1, 'kode' => 'JNS'.$kode));
     }
 
+    
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);

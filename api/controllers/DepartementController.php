@@ -20,6 +20,7 @@ class DepartementController extends Controller {
                     'index' => ['get'],
                     'view' => ['get'],
                     'excel' => ['get'],
+                    'listdepartment' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -29,6 +30,20 @@ class DepartementController extends Controller {
         ];
     }
 
+    public function actionListdepartment() {
+        $query = new Query;
+        $query->from('tbl_department')
+                ->select("*")
+                ->orderBy('id_department ASC');
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+    
     public function beforeAction($event) {
         $action = $event->id;
         if (isset($this->actions[$action])) {

@@ -21,6 +21,8 @@ class SubsectionController extends Controller {
                     'view' => ['get'],
                     'excel' => ['get'],
                     'listsection' => ['get'],
+                    'list' => ['get'],
+                    'cari' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -28,6 +30,36 @@ class SubsectionController extends Controller {
                 ],
             ]
         ];
+    }
+
+    public function actionCari() {
+
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('pekerjaan')
+                ->select("kd_kerja,kerja")
+                ->andWhere(['like', 'kerja', $params['nama']]);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+    
+    public function actionList() {
+        $query = new Query;
+        $query->from('pekerjaan')
+                ->select("*")
+                ->orderBy('kd_kerja ASC');
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function beforeAction($event) {
@@ -67,20 +99,6 @@ class SubsectionController extends Controller {
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'kode' => 'KR' . $kode));
-    }
-
-    public function actionListsection() {
-        $query = new Query;
-        $query->from('tbl_section')
-                ->select("*")
-                ->orderBy('id_section ASC');
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionIndex() {
@@ -144,15 +162,23 @@ class SubsectionController extends Controller {
     public function actionView($id) {
 
         $model = $this->findModel($id);
-
+        $data = $model->attributes;
+        $sec = \app\models\Section::find()
+                ->where(['id_section' => $model['id_section']])
+                ->One();
+        $id_section = (isset($sec->id_section)) ? $sec->id_section : '';
+        $section = (isset($sec->section)) ? $sec->section : '';
+        $data['Sections'] = ['id_section' => $id_section, 'section' => $section];
+        
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new SubSection();
         $model->attributes = $params;
+        $model->id_section = $params['Sections']['kd_kerja'];
 
 
         if ($model->save()) {
@@ -168,6 +194,7 @@ class SubsectionController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
+        $model->id_section = $params['Sections']['kd_kerja'];
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -226,7 +253,7 @@ class SubsectionController extends Controller {
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
-     public function actionExcel() {
+    public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
         $query->offset("");

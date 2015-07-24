@@ -5,21 +5,21 @@
                 <div class="wrapper-md" ng-show="!is_edit">
                     <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
                         <div class="panel-heading">
-                            <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian & Export Data</button>
+                            <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                             <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
                                 <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                             </div> 
                         </div>
                         <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
                             <div class="form-horizontal">
-                                <div class="col-md-6 col-sm-12">
+                                <div class="col-md-12 col-sm-12">
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">ID Lokasi Kantor</label>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                             <input st-search="id_lokasi_kantor" class="form-control"/>
                                         </div>
                                         <label class="col-sm-2 control-label">Lokasi Kantor</label>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-3">
                                             <input st-search="lokasi_kantor" class="form-control"/>
                                         </div>
                                     </div>

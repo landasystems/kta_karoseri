@@ -3,7 +3,7 @@
 /* Controllers */
 
 angular.module('app')
-        .controller('AppCtrl', ['$scope', '$window','Data','$state',
+        .controller('AppCtrl', ['$scope', '$window', 'Data', '$state',
             function ($scope, $window, Data, $state) {
                 // add 'ie' classes to html
                 var isIE = !!navigator.userAgent.match(/MSIE/i);
@@ -12,7 +12,7 @@ angular.module('app')
 
                 // config
                 $scope.app = {
-                    name: 'KTA Karoseri',
+                    name: 'Kta Karoseri',
                     version: '1.1',
                     // for chart colors
                     color: {
@@ -25,13 +25,21 @@ angular.module('app')
                         dark: '#3a3f51',
                         black: '#1c2b36'
                     },
-                    settings: {
-                        themeID: 10,
-                        navbarHeaderColor: 'bg-info dker',
-                        navbarCollapseColor: 'bg-info dk',
-                        asideColor: 'bg-black',
-                    }
                 }
+
+                //cek warna di session
+                Data.get('site/session').then(function (data) {
+                    if (typeof data.data.user.settings != "undefined") {
+                        $scope.app.settings = data.data.user.settings;
+                    } else { //default warna jika tidak ada setingan
+                        $scope.app.settings = {
+                            themeID: 12,
+                            navbarHeaderColor: 'bg-info dker',
+                            navbarCollapseColor: 'bg-info dk',
+                            asideColor: 'bg-black',
+                        };
+                    }
+                });
 
                 function isSmartDevice($window)
                 {
@@ -41,8 +49,19 @@ angular.module('app')
                     return (/iPhone|iPod|iPad|Silk|Android|BlackBerry|Opera Mini|IEMobile/).test(ua);
                 }
 
+                $scope.pencarian = function ($query) {
+                    if ($query.length >= 3) {
+                        Data.get('barang/cari', {nama: $query}).then(function (data) {
+                            $scope.results = data.data;
+                        });
+                    }
+                }
+                $scope.pencarianDet = function ($query) {
+                    $state.go('master.barang', {form: $query});
+                }
+
                 $scope.logout = function () {
-                   Data.get('site/logout').then(function (results) {
+                    Data.get('site/logout').then(function (results) {
                         $state.go('access.signin');
                     });
                 }

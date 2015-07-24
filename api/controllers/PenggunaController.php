@@ -23,6 +23,7 @@ class PenggunaController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'roles' => ['get'],
+                    'profile' => ['get'],
                 ],
             ]
         ];
@@ -81,18 +82,20 @@ class PenggunaController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
 //                ->select('m_user.id as id', 'm_roles.nama as roles')
-                ->from(['m_user','m_roles'])
+                ->from(['m_user', 'm_roles'])
                 ->where('m_user.roles_id = m_roles.id')
                 ->orderBy($sort)
-                ->select("m_user.id as id, m_roles.nama as roles, m_user.username as username, m_user.is_deleted as is_deleted, m_user.nama, m_user.password");
+                ->select("m_user.id as id, m_user.roles_id as roles_id, m_roles.nama as roles, m_user.username as username, m_user.is_deleted as is_deleted, m_user.nama, m_user.password");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', 'm_user.'.$key, $val]);
+                $query->andFilterWhere(['like', 'm_user.' . $key, $val]);
             }
         }
+
+
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -106,10 +109,21 @@ class PenggunaController extends Controller {
     public function actionView($id) {
 
         $model = $this->findModel($id);
-
+        unset($model->password);
+        
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
     }
+    public function actionProfile() {
+        session_start();
+        $id = $_SESSION['user']['id'];
+        $model = $this->findModel($id);
+        unset($model->password);
+        
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+    }
+    
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
@@ -129,7 +143,8 @@ class PenggunaController extends Controller {
     public function actionRoles() {
         $query = new Query;
         $query->from('m_roles')
-                ->select('*');
+                ->select('*')
+                ->where(['is_deleted'=>0]);
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -143,7 +158,15 @@ class PenggunaController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
-        $model->password = sha1($model->password);
+        if (!empty($params['password'])) {
+            $model->password = sha1($model['password']);
+        }else{
+            unset($model->password);
+        }
+        
+        if (isset($params['settings'])) {
+            $model->settings = json_encode($params['settings']);
+        }
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -185,7 +208,6 @@ class PenggunaController extends Controller {
 
         header($status_header);
         header('Content-type: ' . $content_type);
-        header('X-Powered-By: ' . "Nintriva <nintriva.com>");
     }
 
     private function _getStatusCodeMessage($status) {

@@ -115,7 +115,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
             form: form,
             detBbm: detBbm
         };
-        var url = 'bbm/create';
+        var url = (form.no_bbm !== undefined) ? 'bbm/update/'+form.no_bbm : 'bbm/create';
         Data.post(url, data).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -134,14 +134,14 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
 
     $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('spp/delete/' + row.no_spp).then(function (result) {
+            Data.delete('bbm/delete/' + row.no_bbm).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
     $scope.addDetail = function () {
         var newDet = {
-            id: '',
+            id: '0',
             kd_barang: '',
             jumlah: '',
             tgl_terima: '',
@@ -159,8 +159,11 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
         }
     };
     $scope.getDetail = function (id) {
-        Data.get('bbm/detail/' + id).then(function (data) {
+        Data.get('bbm/view/' + id).then(function (data) {
             $scope.detBbm = data.details;
+//            $scope.detBbm.barang = data.details;
+            $scope.form.wo = data.wo;
+            $scope.form.supplier = data.sup;
         });
     }
 });
