@@ -88,7 +88,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select']).then(
+                                                return $ocLazyLoad.load(['angularFileUpload', ]).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/barang.js');
                                                         }
@@ -193,7 +193,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select']).then(
+                                                return $ocLazyLoad.load([]).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/jabatan.js');
                                                         }
@@ -208,7 +208,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select']).then(
+                                                return $ocLazyLoad.load([]).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/subsection.js');
                                                         }
@@ -298,7 +298,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select']).then(
+                                                return $ocLazyLoad.load(['angularFileUpload', ]).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/bom.js');
                                                         }
@@ -313,7 +313,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select', 'daterangepicker']).then(
+                                                return $ocLazyLoad.load([ 'daterangepicker']).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/rubahbentuk.js');
                                                         }
@@ -379,7 +379,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load('ui.select').then(
+                                                return $ocLazyLoad.load().then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/s-pesanankaroseri.js');
                                                         }
@@ -402,7 +402,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select', 'daterangepicker']).then(
+                                                return $ocLazyLoad.load([ 'daterangepicker']).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/bkt-barangkeluar.js');
                                                         }
@@ -416,7 +416,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select']).then(
+                                                return $ocLazyLoad.load([]).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/bkt-barangmasuk.js');
                                                         }
@@ -450,7 +450,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select', 'daterangepicker']).then(
+                                                return $ocLazyLoad.load([ 'daterangepicker']).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/claimunit.js');
                                                         }
@@ -464,7 +464,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select']).then(
+                                                return $ocLazyLoad.load(['angularFileUpload', ]).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/deliveryunit.js');
                                                         }
@@ -488,7 +488,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select']).then(
+                                                return $ocLazyLoad.load([]).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/purchase-order.js');
                                                         }
@@ -502,7 +502,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select']).then(
+                                                return $ocLazyLoad.load([]).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/retur-buktibarangkeluar.js');
                                                         }
@@ -525,7 +525,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select', 'daterangepicker']).then(
+                                                return $ocLazyLoad.load([ 'daterangepicker']).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/spp-nonrutin.js');
                                                         }
@@ -559,7 +559,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select']).then(
+                                                return $ocLazyLoad.load([]).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/ujimutu.js');
                                                         }
@@ -593,7 +593,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select', 'angularFileUpload']).then(
+                                                return $ocLazyLoad.load([ 'angularFileUpload']).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/womasuk.js');
                                                         }
