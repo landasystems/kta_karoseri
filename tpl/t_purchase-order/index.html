@@ -82,8 +82,8 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 {{formtitle}} 
-                <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-hide="is_view == false">
-                    <button type="button" class="btn btn-primary fa fa-print" ng-print print-element-id="printArea">&nbsp;Print</button>
+                <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-hide="is_view == false || form.status == '1'">
+                    <button type="button" class="btn btn-primary fa fa-print" ng-click="updt_st(form.nota)" ng-print print-element-id="printArea">&nbsp;Print</button>
                 </div> 
             </div>
             <div class="panel-body">
@@ -355,7 +355,7 @@
                                 <div class="col-sm-5">
                                     <div class="input-group" style="margin:0px;">
                                         <span class="input-group-addon">Rp</span>
-                                        <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" ng-readonly="form.bayar == 0" ng-change="subtotal()" ng-model="form.dp" ng-disabled="is_view" required >
+                                        <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" ng-change="subtotal()" ng-model="form.dp" ng-disabled="is_view" required >
                                     </div>
                                 </div>
                             </div>
@@ -420,34 +420,82 @@
             </thead>
 
 
-            <tbody>
+            <tbody  width="700">
                 <tr>
-                    <th style="width: 50px">No.</th>
-                    <th style="width:450px">Uraian</th>
-                    <th style="width:100px">Kwantum</th>
-                    <th style="width:100px">satuan</th>
-                    <th style="width:120px">harga</th>
-                    <th style="width:170px; border-right:0px">jumlah</th>
+                    <th style="width: 5%">No.</th>
+                    <th style="width:54%;">URAIAN</th>
+                    <th style="width:5%">KWANTUM</th>
+                    <th style="width:6%">SATUAN</th>
+                    <th >HARGA</th>
+                    <th>JUMLAH</th>
                 </tr>
                 <tr ng-repeat="detail in detsPo">
                     <td style="text-align:center;">{{detail.data_barang.no}}</td>
                     <td>{{detail.data_barang.nm_barang}}</td>
                     <td style="text-align:center;">{{detail.jml}}</td>
                     <td style="text-align:center;">{{detail.data_barang.satuan}}</td>
-                    <td style="text-align:right;">{{detail.harga| number}}</td>
-                    <td style=" text-align: right;  border-right:0px">{{detail.jumlah| number}}</td>
+                    <td style="text-align:right;" width="19%">{{detail.harga| number}}</td>
+                    <td style=" text-align: right;  " width="19%">{{detail.jumlah| number}}</td>
                 </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-            <div class="kiri">
-                
-            </div>
-            <div class="kanan">
 
-            </div>
-            </tr>
-            </tfoot>
+
+                <tr style="border-bottom:0px">
+                    <td colspan="3">
+                        Keterangan :
+                        <div>- Jatuh Tempo &nbsp;&nbsp;:&nbsp; {{form.jatuh_tempo}} hari</div> 
+                        <div>- Dikirim ke &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{form.dikirim_ke}}</div>
+                        <div>- Pengiriman Tanggal : {{form.tanggal| date:'dd-MMMM-yyyy'}}</div>
+                        <div>- Form asli ini berlaku untuk penagihan</div>
+                        <div>- Spesifikasi teknis terlampir</div>
+                        <table class="tablepo">
+                            <tr style="border-top:  1px solid #333;">
+                                <td style="text-align:center;border-top:  1px solid #333;border-left:  1px solid #333;">Pemberi Order</td>
+                                <td style="text-align:center;border-top:  1px solid #333;">Penerima Order</td>
+                            </tr>
+                            <tr height="80">
+                                <td style="border-left:  1px solid #333;"></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="border-left:  1px solid #333;">Tgl :</td>
+                                <td>Tgl :</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td colspan="3" rowspan="3" style="border-right:0px;" valign="top">
+                        <div>
+                            <div class="kiri">
+                                <div>Total pembelian / biaya </div>
+                                <div>Diskon</div>
+                                <div>Dasar pengenaan pajak</div>
+                                <div>PPN 10%</div>
+                                <div>Total yang harus dibayar</div>
+                                <div>Uang muka</div>
+                                <div>sisa yang harus dibayar</div>
+                                <div>Terbilang</div>
+
+                            </div>
+                            <div class="kanan">
+                                <div>{{form.total|  currency:undefined:0}}</div>
+                                <div>{{form.nilai_diskon| currency:undefined:0 }}</div>
+                                <div>Rp. </div>
+                                <div>{{form.ppn| currency:undefined:0}}</div>
+                                <div>{{form.total_dibayar| currency:undefined:0}}</div>
+                                <div>{{form.dp| currency:undefined:0 }}</div>
+                                <div>{{form.sisa_dibayar| currency:undefined:0}}</div>
+                                <div> </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="kiri" style="padding-left: 1px;">
+                                {{form.terbilang| uppercase}}
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+
+            </tbody>
 
         </table>
     </div>
