@@ -1,6 +1,6 @@
 <!-- navbar header -->
 <div class="navbar-header {{app.settings.navbarHeaderColor}}">
-    <a href="#/" class="navbar-brand text-lt">
+    <a ui-sref="app.dashboard" class="navbar-brand text-lt">
         <img src="img/logo.png" alt="." style="display: inline">
         <span class="hidden-folded m-l-xs">{{app.name}}</span>
     </a>
@@ -247,42 +247,42 @@
                         <div class="row">
                             <div class="col-xs-6">
                                 <ul class="list-unstyled l-h-2x">
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Supplier</a>
+                                    <li ng-show="user.akses.rekap_supplier">
+                                        <a ui-sref='rekapsupplier'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Supplier</a>
                                     </li>
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Barang</a>
+                                    <li ng-show="user.akses.rekap_barang">
+                                        <a ui-sref='rekap.barang'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Barang</a>
                                     </li>
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Customer</a>
+                                    <li ng-show="user.akses.rekap_customer">
+                                        <a ui-sref='rekap.customer'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Customer</a>
                                     </li>
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Barang Masuk</a>
+                                    <li ng-show="user.akses.rekap_barangmasuk">
+                                        <a ui-sref='rekap.barangmasuk'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Barang Masuk</a>
                                     </li>
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Barang Keluar</a>
+                                    <li ng-show="user.akses.rekap_barangkeluar">
+                                        <a ui-sref='rekap.barangkeluar'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Barang Keluar</a>
                                     </li>
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Pergerakan Barang</a>
+                                    <li ng-show="user.akses.rekap_pergerakanbarang">
+                                        <a ui-sref='rekap.pergerakanbarang'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Pergerakan Barang</a>
                                     </li>
                                 </ul>
                             </div>
                             <div class="col-xs-6">
                                 <ul class="list-unstyled l-h-2x">
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>SPP</a>
+                                    <li ng-show="user.akses.rekap_spp">
+                                        <a ui-sref='rekap.spp'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>SPP</a>
                                     </li>
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Purchase Order</a>
+                                    <li ng-show="user.akses.rekap_purchaseorder">
+                                        <a ui-sref='rekap.purchaseorder'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Purchase Order</a>
                                     </li>
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Rubah Bentuk</a>
+                                    <li ng-show="user.akses.rekap_rubahbentuk">
+                                        <a ui-sref='rekap.rubahbentuk'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Rubah Bentuk</a>
                                     </li>
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Claim Unit</a>
+                                    <li ng-show="user.akses.rekap_claimunit">
+                                        <a ui-sref='rekap.claimunit'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Claim Unit</a>
                                     </li>
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Delivery Unit</a>
+                                    <li ng-show="user.akses.rekap_deliveryunit">
+                                        <a ui-sref='rekap.deliveryunit'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Delivery Unit</a>
                                     </li>
                                 </ul>
                             </div>
@@ -292,25 +292,25 @@
                         <div class="row">
                             <div class="col-xs-6">
                                 <ul class="list-unstyled l-h-2x">
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Bill Of Material</a>
+                                    <li ng-show="user.akses.rekap_bom">
+                                        <a ui-sref='rekap.bom'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Bill Of Material</a>
                                     </li>
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Chassis In</a>
+                                    <li ng-show="user.akses.rekap_chassisin">
+                                        <a ui-sref='rekap.chassisin'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Chassis In</a>
                                     </li>
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>BSTK</a>
+                                    <li ng-show="user.akses.rekap_bstk">
+                                        <a ui-sref='rekap.bstk'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>BSTK</a>
                                     </li>
                                 </ul>
                             </div>
                             <div class="col-xs-6">
                                 <ul class="list-unstyled l-h-2x">
 
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Surat Pesanan</a>
+                                    <li ng-show="user.akses.rekap_suratpesanan">
+                                        <a ui-sref='rekap.suratpesanan'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Surat Pesanan</a>
                                     </li>
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Pengajuan Uji Mutu</a>
+                                    <li ng-show="user.akses.rekap_ujimutu">
+                                        <a ui-sref='rekap.ujimutu'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Pengajuan Uji Mutu</a>
                                     </li>
 
                                 </ul>
@@ -322,11 +322,11 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <ul class="list-unstyled l-h-2x">
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>WO Masuk</a>
+                                    <li ng-show="user.akses.rekap_womasuk">
+                                        <a ui-sref='rekap.womasuk'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>WO Masuk</a>
                                     </li>
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>WO Keluar</a>
+                                    <li ng-show="user.akses.rekap_wokeluar">
+                                        <a ui-sref='rekap.wokeluar'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>WO Keluar</a>
                                     </li>
                                 </ul>
                             </div>
@@ -335,11 +335,11 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <ul class="list-unstyled l-h-2x">
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Barang Masuk</a>
+                                    <li ng-show="user.akses.rekap_retbarangmasuk">
+                                        <a ui-sref='rekap.retbarangmasuk'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Barang Masuk</a>
                                     </li>
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Barang Keluar</a>
+                                    <li ng-show="user.akses.rekap_retbarangkeluar">
+                                        <a ui-sref='rekap.retbarangkeluar'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Barang Keluar</a>
                                     </li>
                                 </ul>
                             </div>
@@ -350,11 +350,11 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <ul class="list-unstyled l-h-2x">
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>WIP</a>
+                                    <li ng-show="user.akses.rekap_wip">
+                                        <a ui-sref='rekap.wip'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>WIP</a>
                                     </li>
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Schedule</a>
+                                    <li ng-show="user.akses.rekap_schedule">
+                                        <a ui-sref='rekap.schedule'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Schedule</a>
                                     </li>
                                 </ul>
                             </div>
@@ -363,14 +363,14 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <ul class="list-unstyled l-h-2x">
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Barang</a>
+                                    <li ng-show="user.akses.rekap_historybarang">
+                                        <a ui-sref='rekap.historybarang'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Barang</a>
                                     </li>
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Unit</a>
+                                    <li ng-show="user.akses.rekap_historyunit">
+                                        <a ui-sref='rekap.historyunit'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Unit</a>
                                     </li>
-                                    <li>
-                                        <a href><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>WIP</a>
+                                    <li ng-show="user.akses.rekap_historywip">
+                                        <a ui-sref='rekap.historywip'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>WIP</a>
                                     </li>
                                 </ul>
                             </div>
@@ -383,10 +383,15 @@
     <!-- / link and dropdown -->
 
     <!-- search form -->
-    <form class="navbar-form navbar-form-sm navbar-left shift hidden-sm" ui-shift="prependTo" target=".navbar-collapse" role="search">
+    <form class="navbar-form navbar-form-sm navbar-left shift hidden-sm" id="pencarian">
         <div class="form-group">
             <div class="input-group">
-                <input type="text" ng-model="selected" typeahead="state for state in states | filter:$viewValue | limitTo:8" class="form-control input-sm bg-light no-border rounded padder" placeholder="Pencarian ...">
+                <ui-select on-select="pencarianDet($item)" ng-model="cari">
+                    <ui-select-match placeholder="Pencarian barang...">{{$select.selected.nama}}</ui-select-match>
+                    <ui-select-choices refresh="pencarian($select.search)" repeat="val in results">
+                        {{val.nama}}
+                    </ui-select-choices>
+                </ui-select>
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-sm bg-light rounded"><i class="fa fa-search"></i></button>
                 </span>

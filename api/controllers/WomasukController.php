@@ -5,6 +5,10 @@ namespace app\controllers;
 use Yii;
 use app\models\Womasuk;
 use app\models\Warna;
+use app\models\Smalleks;
+use app\models\Smallint;
+use app\models\Minieks;
+use app\models\Miniint;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -23,7 +27,7 @@ class WomasukController extends Controller {
                     'excel' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
-                    'delete' => ['delete'],
+                    'delete' => ['post'],
                     'jenis' => ['get'],
                     'kode' => ['get'],
                     'cari' => ['get'],
@@ -287,7 +291,7 @@ class WomasukController extends Controller {
             $command3 = $interior->createCommand();
             $models3 = $command3->queryAll();
         }
-        $model['no_spk'] = ['as'=>'1111'];
+        $model['no_spk'] = ['as' => '1111'];
 
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes), 'det' => $asu, 'eksterior' => $models2, 'interior' => $models3), JSON_PRETTY_PRINT);
@@ -295,10 +299,41 @@ class WomasukController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
+        Yii::error($params['womasuk']['jenis']);
         $model = new Womasuk();
-        $model->attributes = $params;
+        $model->attributes = $params['womasuk'];
+
 
         if ($model->save()) {
+//            save small eksterior
+            if ($params['womasuk']['jenis'] == "Small Bus") {
+                $smaleks = new Smalleks();
+                $smaleks->attributes = $params['eksterior'];
+                $smaleks->no_wo = $model->no_wo;
+                $smaleks->warna = (isset($params['eksterior']['warna']['kd_warna'])) ? $params['eksterior']['warna']['kd_warna'] : '';
+                $smaleks->warna2 = (isset($params['eksterior']['warna2']['kd_warna'])) ? $params['eksterior']['warna2']['kd_warna'] : '';
+                $smaleks->save();
+
+//                save small interior
+                $smallint = new Smallint();
+                $smallint->attributes = $params['interior'];
+                $smallint->no_wo = $model->no_wo;
+                $smallint->save();
+            } else {
+                //  save mini bus ekterior
+                $minieks = new Minieks();
+                $minieks->attributes = $params['eksterior'];
+                $minieks->no_wo = $model->no_wo;
+                $minieks->warna = (isset($params['eksterior']['warna']['kd_warna'])) ? $params['eksterior']['warna']['kd_warna'] : '';
+                $minieks->warna2 = (isset($params['eksterior']['warna2']['kd_warna'])) ? $params['eksterior']['warna2']['kd_warna'] : '';
+                $minieks->save();
+
+                // save interior mini bus
+                $miniint = new Miniint();
+                $miniint->attributes = $params['interior'];
+                $miniint->no_wo = $model->no_wo;
+                $miniint->save();
+            }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -307,12 +342,48 @@ class WomasukController extends Controller {
         }
     }
 
-    public function actionUpdate($id) {
+    public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = $this->findModel($id);
-        $model->attributes = $params;
+        Yii::error($params['interior']);
+//        $model = $this->findModel($params['womasuk']['no_wo']);
+        $model = WoMasuk::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
+
+        $model->attributes = $params['womasuk'];
+
+
 
         if ($model->save()) {
+            if ($params['womasuk']['jenis'] == "Small Bus") {
+
+                // small eksterior
+                $smalleks = Smalleks::find()->where('no_wo="' . $model->no_wo . '"')->one();
+                $smalleks->attributes = $params['eksterior'];
+                $smalleks->no_wo = $model->no_wo;
+                $smalleks->warna = (isset($params['eksterior']['warna']['kd_warna'])) ? $params['eksterior']['warna']['kd_warna'] : '';
+                $smalleks->warna2 = (isset($params['eksterior']['warna2']['kd_warna'])) ? $params['eksterior']['warna2']['kd_warna'] : '';
+                $smalleks->save();
+
+                // small interior
+                $smallint = Smallint::find()->where('no_wo="' . $model->no_wo . '"')->one();
+                $smallint->attributes = $params['interior'];
+                $smallint->no_wo = $model->no_wo;
+                $smallint->save();
+            } else {
+                // mini eksterior
+                $minieks = Minieks::find()->where('no_wo="' . $model->no_wo . '"')->one();
+                $minieks->attributes = $params['eksterior'];
+                $minieks->no_wo = $model->no_wo;
+                $minieks->warna = (isset($params['eksterior']['warna']['kd_warna'])) ? $params['eksterior']['warna']['kd_warna'] : '';
+                $minieks->warna2 = (isset($params['eksterior']['warna2']['kd_warna'])) ? $params['eksterior']['warna2']['kd_warna'] : '';
+                $minieks->save();
+
+                // mini interior
+                $miniint = Miniint::find()->where('no_wo="' . $model->no_wo . '"')->one();
+                $miniint->attributes = $params['interior'];
+                $miniint->no_wo = $model->no_wo;
+                $miniint->save();
+            }
+
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -321,9 +392,18 @@ class WomasukController extends Controller {
         }
     }
 
-    public function actionDelete($id) {
-        $model = $this->findModel($id);
-
+    public function actionDelete() {
+        $params = json_decode(file_get_contents("php://input"), true);
+//        Yii::error($params);
+        $model = $this->findModel($params['no_wo']);
+//        $model = WoMasuk::deleteAll(['no_wo' => $params['no_wo']]);
+        if ($params['jenis'] == "Small Bus") {
+            $eks = Smalleks::deleteAll(['no_wo' => $params['no_wo']]);
+            $int = Smallint::deleteAll(['no_wo' => $params['no_wo']]);
+        } else {
+            $eks = Minieks::deleteAll(['no_wo' => $params['no_wo']]);
+            $int = Miniint::deleteAll(['no_wo' => $params['no_wo']]);
+        }
         if ($model->delete()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);

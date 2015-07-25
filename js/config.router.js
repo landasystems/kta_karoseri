@@ -65,7 +65,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['uiLoad',
                                             function(uiLoad) {
-                                                return uiLoad.load(['js/controllers/signin.js']);
+                                                return uiLoad.load(['js/controllers/site.js']);
                                             }]
                                     }
                                 })
@@ -87,9 +87,9 @@ angular.module('app')
                                     templateUrl: 'tpl/m_barang/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select']).then(
-                                                        function() {
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['angularFileUpload', ]).then(
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/barang.js');
                                                         }
                                                 );
@@ -192,9 +192,9 @@ angular.module('app')
                                     templateUrl: 'tpl/m_jabatan/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select']).then(
-                                                        function() {
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/jabatan.js');
                                                         }
                                                 );
@@ -207,9 +207,9 @@ angular.module('app')
                                     templateUrl: 'tpl/m_subsection/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select']).then(
-                                                        function() {
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/subsection.js');
                                                         }
                                                 );
@@ -297,9 +297,9 @@ angular.module('app')
                                     templateUrl: 'tpl/t_bom/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select']).then(
-                                                        function() {
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['angularFileUpload', ]).then(
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/bom.js');
                                                         }
                                                 );
@@ -312,9 +312,9 @@ angular.module('app')
                                     templateUrl: 'tpl/t_rubahbentuk/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select', 'daterangepicker']).then(
-                                                        function() {
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([ 'daterangepicker']).then(
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/rubahbentuk.js');
                                                         }
                                                 );
@@ -378,9 +378,9 @@ angular.module('app')
                                     templateUrl: 'tpl/t_s-pesanankaroseri/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load('ui.select').then(
-                                                        function() {
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load().then(
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/s-pesanankaroseri.js');
                                                         }
                                                 );
@@ -401,9 +401,9 @@ angular.module('app')
                                     templateUrl: 'tpl/t_bkt-barangkeluar/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select', 'daterangepicker']).then(
-                                                        function() {
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([ 'daterangepicker']).then(
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/bkt-barangkeluar.js');
                                                         }
                                                 );
@@ -415,9 +415,9 @@ angular.module('app')
                                     templateUrl: 'tpl/t_bkt-barangmasuk/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select']).then(
-                                                        function() {
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/bkt-barangmasuk.js');
                                                         }
                                                 );
@@ -449,9 +449,9 @@ angular.module('app')
                                     templateUrl: 'tpl/t_claimunit/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select', 'daterangepicker']).then(
-                                                        function() {
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([ 'daterangepicker']).then(
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/claimunit.js');
                                                         }
                                                 );
@@ -463,9 +463,9 @@ angular.module('app')
                                     templateUrl: 'tpl/t_deliveryunit/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select']).then(
-                                                        function() {
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['angularFileUpload', ]).then(
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/deliveryunit.js');
                                                         }
                                                 );
@@ -491,9 +491,9 @@ angular.module('app')
                                     templateUrl: 'tpl/t_purchase-order/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select']).then(
-                                                        function() {
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/purchase-order.js');
                                                         }
                                                 );
@@ -505,9 +505,9 @@ angular.module('app')
                                     templateUrl: 'tpl/t_retur-buktibarangkeluar/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select']).then(
-                                                        function() {
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/retur-buktibarangkeluar.js');
                                                         }
                                                 );
@@ -528,9 +528,9 @@ angular.module('app')
                                     templateUrl: 'tpl/t_spp-nonrutin/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select', 'daterangepicker']).then(
-                                                        function() {
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([ 'daterangepicker']).then(
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/spp-nonrutin.js');
                                                         }
                                                 );
@@ -562,9 +562,9 @@ angular.module('app')
                                     templateUrl: 'tpl/t_ujimutu/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select']).then(
-                                                        function() {
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/ujimutu.js');
                                                         }
                                                 );
@@ -587,7 +587,11 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/w-orderkeluar.js');
+                                                return $ocLazyLoad.load(['ui.select']).then(
+                                                        function() {
+                                                            return $ocLazyLoad.load('js/controllers/wokeluar.js');
+                                                        }
+                                                );
                                             }]
                                     }})
                                 //
@@ -596,10 +600,352 @@ angular.module('app')
                                     templateUrl: 'tpl/t_w-ordermasuk/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select', 'angularFileUpload']).then(
-                                                        function() {
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([ 'angularFileUpload']).then(
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/womasuk.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                
+                                // Rekap
+                                .state('rekap', {
+                                    url: '/rekap',
+                                    templateUrl: 'tpl/app.html'
+                                })
+                                //
+                                .state('rekap.purchaseorder', {
+                                    url: '/purchase-order',
+                                    templateUrl: 'tpl/r_purchase-order/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/purchase-order.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.supplier', {
+                                    url: '/supplier',
+                                    templateUrl: 'tpl/r_supplier/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.barang', {
+                                    url: '/barang',
+                                    templateUrl: 'tpl/r_purchase-order/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                               //
+                                .state('rekap.barangmasuk', {
+                                    url: '/barang-masuk',
+                                    templateUrl: 'tpl/r_barang-masuk/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.barangkeluar', {
+                                    url: '/barang-keluar',
+                                    templateUrl: 'tpl/r_barang-keluar/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                ///
+                                .state('rekap.pergerakanbarang', {
+                                    url: '/pergerakan-barang',
+                                    templateUrl: 'tpl/r_pergerakan-barang/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.spp', {
+                                    url: '/spp',
+                                    templateUrl: 'tpl/r_spp/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.rubahbentuk', {
+                                    url: '/rubah-bentuk',
+                                    templateUrl: 'tpl/r_rubah-bentuk/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.claimunit', {
+                                    url: '/claim-unit',
+                                    templateUrl: 'tpl/r_claim-unit/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.customer', {
+                                    url: '/customer',
+                                    templateUrl: 'tpl/r_customer/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.bom', {
+                                    url: '/bom',
+                                    templateUrl: 'tpl/r_bom/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.chassisin', {
+                                    url: '/chassis-in',
+                                    templateUrl: 'tpl/r_chassis-in/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.bstk', {
+                                    url: '/bstk',
+                                    templateUrl: 'tpl/r_bstk/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.suratpesanan', {
+                                    url: '/surat-pesanan',
+                                    templateUrl: 'tpl/r_surat-pesanan/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.ujimutu', {
+                                    url: '/uji-mutu',
+                                    templateUrl: 'tpl/r_uji-mutu/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.womasuk', {
+                                    url: '/wo-masuk',
+                                    templateUrl: 'tpl/r_wo-masuk/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.wokeluar', {
+                                    url: '/wo-keluar',
+                                    templateUrl: 'tpl/r_wo-keluar/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.retbarangmasuk', {
+                                    url: '/ret-barangmasuk',
+                                    templateUrl: 'tpl/r_ret-barangmasuk/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.retbarangkeluar', {
+                                    url: '/ret-barangkeluar',
+                                    templateUrl: 'tpl/r_ret-barangkeluar/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.wip', {
+                                    url: '/wip',
+                                    templateUrl: 'tpl/r_wip/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.schedule', {
+                                    url: '/schedule',
+                                    templateUrl: 'tpl/r_schedule/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.historybarang', {
+                                    url: '/history-barang',
+                                    templateUrl: 'tpl/r_history-barang/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.historyunit', {
+                                    url: '/rhistory-unit',
+                                    templateUrl: 'tpl/r_history-unit/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('rekap.historywip', {
+                                    url: '/rhistory-wip',
+                                    templateUrl: 'tpl/r_history-wip/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
                                                         }
                                                 );
                                             }]

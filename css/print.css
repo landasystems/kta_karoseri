@@ -2,18 +2,18 @@
   
  Hartija Css Print  Framework
    * Version:   1.0 
-	 
+         
 -------------------------------------------------------------- */
 
 body { 
-width:100% !important;
-margin:0 !important;
-padding:0 !important;
-line-height: 1.1; 
-font-family: Garamond,"Times New Roman", serif; 
-color: #000; 
-background: none; 
-font-size: 14pt; }
+    width:100% !important;
+    margin:0 !important;
+    padding:0 !important;
+    line-height: 1.1; 
+    font-family: Garamond,"Times New Roman", serif; 
+    color: #000; 
+    background: none; 
+    font-size: 14pt; }
 
 /* Headings */
 h1,h2,h3,h4,h5,h6 { page-break-after:avoid; }
@@ -66,7 +66,7 @@ span.label{width: 180px;display: inline-table;}
     border-right: 1px solid #333; 
     border-top:  1px solid #333;
     margin: 1px;  
-    width:100%
+    width:100%;
 }
 .table_po td{
     border-right: 1px solid #333; 
@@ -76,7 +76,29 @@ span.label{width: 180px;display: inline-table;}
 }
 
 .table_po tr{
-    border-bottom: 1px solid #333; 
+    border-top: 1px solid #333; 
+}
+//tablepo
+.tablepo{
+     border-bottom: 1px solid #333; 
+    border-left: 1px solid #333; 
+    border-right: 1px solid #333; 
+    border-top:  1px solid #333;
+    padding-left: 0px;
+    padding-right: 0px;
+    width:100%
+}
+
+.tablepo td{
+    border-right: 1px solid #333;
+
+}
+.tablepo tr{
+    border-top: 1px solid #333; 
+    border-bottom: 1px solid #333;
+    border-left: 1px solid #333;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 /* Hide various parts from the site
 #header, #footer, #navigation, #rightSideBar, #leftSideBar 

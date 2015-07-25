@@ -1,11 +1,11 @@
 app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
-    var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
+  var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
     var uploader = $scope.uploader = new FileUploader({
-        url: 'js/controllers/upload.php?folder=womasuk&kode=' + kode_unik,
+        url: 'img/upload.php?folder=womasuk&kode=' + kode_unik,
         queueLimit: 1,
-        removeAfterUpload: true
+        removeAfterUpload: true,
     });
-    // FILTERS
+
     uploader.filters.push({
         name: 'imageFilter',
         fn: function(item) {
@@ -13,7 +13,6 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
     });
-
     //init data
     var tableStateRef;
     $scope.displayed = [];
@@ -37,6 +36,11 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         $event.stopPropagation();
         $scope.opened3 = true;
     };
+    $scope.open4 = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened4 = true;
+    };
     Data.post('womasuk/warna').then(function (data) {
         $scope.list_warna = data.warna;
     });
@@ -55,7 +59,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
 //        alert('asjdfhasjdfkas');
         Data.post('womasuk/getspk/', wo).then(function (data) {
             $scope.form = data.spk;
-            console.log($scope.form);
+//            console.log($scope.form);
 
         });
     };
@@ -123,15 +127,19 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.form = form;
          $scope.selected(form.id);
     };
-    $scope.save = function(form) {
-        $scope.uploader.uploadAll();
-        form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
+    $scope.save = function(form, eks, inter) {
+        if ($scope.uploader.queue.length > 0) {
+            $scope.uploader.uploadAll();
+            form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
+        } else {
+            form.foto = '';
+        }
          var data = {
             womasuk: form,
             eksterior: eks,
             interior: inter,
         };
-        var url = ($scope.is_create == true) ? 'womasuk/create' : 'womasuk/update/'+ form.no_wo;
+        var url = ($scope.is_create == true) ? 'womasuk/create' : 'womasuk/update/';
         Data.post(url, data).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -147,8 +155,9 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.is_view = false;
     };
     $scope.delete = function(row) {
+//        alert(row);
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('delivery/delete/' + row.id).then(function(result) {
+            Data.post('womasuk/delete/',row).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }

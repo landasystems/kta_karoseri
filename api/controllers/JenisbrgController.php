@@ -142,11 +142,13 @@ class JenisbrgController extends Controller {
     public function actionKode() {
         $query = new Query;
         $query  ->from('jenis_brg')
-                ->select("*");
+                ->select("*")
+                ->orderBy('kd_jenis DESC')
+                ->limit(1);
 
         $command = $query->createCommand();
-        $totalItems = $query->count();
-        $kode_mdl = ($totalItems + 1);
+        $models = $command->query()->read();
+        $kode_mdl = (substr($models['kd_jenis'], -5) + 1);
         $kode = substr('00000' . $kode_mdl, strlen($kode_mdl));
         
         $this->setHeader(200);

@@ -27,6 +27,7 @@ class PoController extends Controller {
                     'delete' => ['delete'],
                     'kode' => ['get'],
                     'cari' => ['get'],
+                    'updtst' => ['get'],
                 ],
             ]
         ];
@@ -164,20 +165,27 @@ class PoController extends Controller {
 
 
         $detail = array();
-        $no=1;
+        $no = 1;
         foreach ($det as $key => $val) {
             $detail[$key] = $val->attributes;
             $hargaBarang = (isset($val->barang->harga)) ? $val->barang->harga : '';
             $namaBarang = (isset($val->barang->nm_barang)) ? $val->barang->nm_barang : '';
             $satuanBarang = (isset($val->barang->satuan)) ? $val->barang->satuan : '';
-            $detail[$key]['data_barang'] = ['no'=>$no,'tgl_pengiriman' => $val->tgl_pengiriman, 'kd_barang' => $val->kd_barang, 'nm_barang' => $namaBarang, 'harga' => $hargaBarang, 'satuan' => $satuanBarang];
-        $no++;
+            $detail[$key]['data_barang'] = ['no' => $no, 'tgl_pengiriman' => $val->tgl_pengiriman, 'kd_barang' => $val->kd_barang, 'nm_barang' => $namaBarang, 'harga' => $hargaBarang, 'satuan' => $satuanBarang];
+            $no++;
         }
 
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $data, 'detail' => $detail), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1,'data' => $data, 'detail' => $detail), JSON_PRETTY_PRINT);
     }
 
+    public function actionUpdtst($id){
+       $model = TransPo::findOne(['nota' => $id]);
+       $model->status = 1;
+       $model->save();
+      
+    }
+    
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new TransPo();
@@ -185,8 +193,12 @@ class PoController extends Controller {
         $model->suplier = $params['formpo']['supplier']['kd_supplier'];
         $model->tanggal = date("Y-m-d", strtotime($params['formpo']['tanggal']));
         $model->spp = (empty($params['formpo']['listspp']['no_spp'])) ? '-' : $params['formpo']['listspp']['no_spp'];
-
-
+        //
+        session_start();
+        $id = $_SESSION['user']['id'];
+        $mdl = \app\models\Pengguna::findOne(['id' => $id]);
+        $model->pemberi_order = $mdl['nama'];
+        
         if ($model->save()) {
             $details = $params['details'];
             foreach ($details as $val) {
@@ -211,7 +223,7 @@ class PoController extends Controller {
         $model->attributes = $params['formPo'];
         $model->tanggal = date("Y-m-d", strtotime($params['formPo']['tanggal']));
         $model->spp = (empty($params['formpo']['listspp']['no_spp'])) ? '-' : $params['formpo']['listspp']['no_spp'];
-        
+
         if ($model->save()) {
             $detailsr = $params['details'];
             foreach ($details as $val) {
@@ -229,6 +241,7 @@ class PoController extends Controller {
         }
     }
 
+    
     public function actionDelete($id) {
         $model = $this->findModel($id);
         $deleteDetail = DetailPo::deleteAll(['nota' => $id]);
