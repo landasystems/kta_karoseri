@@ -1,4 +1,4 @@
-app.controller('sppCtrl', function ($scope, Data, toaster) {
+app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
     //init data
     var tableStateRef;
     $scope.displayed = [];
@@ -23,20 +23,7 @@ app.controller('sppCtrl', function ($scope, Data, toaster) {
         $event.stopPropagation();
         $scope.openedDet = $index;
     };
-    $scope.cariBarang = function ($query) {
-        if ($query.length >= 3) {
-            Data.get('barang/cari', {barang: $query}).then(function (data) {
-                $scope.results = data.data;
-            });
-        }
-    };
-    $scope.cariWo = function ($query) {
-        if ($query.length >= 3) {
-            Data.get('wo/cari', {no_wo: $query}).then(function (data) {
-                $scope.listWo = data.data;
-            });
-        }
-    };
+
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
@@ -52,7 +39,7 @@ app.controller('sppCtrl', function ($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('spp', param).then(function (data) {
+        Data.get('sppnonrutin', param).then(function (data) {
             $scope.displayed = data.data;
 //            $scope.displayed.tgl_terima = new Date(data.data.tgl_terima);
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
@@ -86,6 +73,9 @@ app.controller('sppCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.no_spp;
         $scope.form = form;
+        var start = new Date(form.tgl1);
+        var end = new Date(form.tgl2);
+        $scope.form.periode = {startDate: start, endDate: end};
         $scope.getDetail(form.no_spp);
     };
     $scope.view = function (form) {
@@ -95,13 +85,13 @@ app.controller('sppCtrl', function ($scope, Data, toaster) {
         $scope.form = form;
         $scope.getDetail(form.no_spp);
     };
-    $scope.save = function (form,detais) {
+    $scope.save = function (form, details) {
         var data = {
-            form :form,
-            details : details
+            form: form,
+            details: details
         };
-        var url = 'spp/create';
-        Data.post(url, form).then(function (result) {
+        var url = (form.no_spp == undefined) ? 'sppnonrutin/create' : 'sppnonrutin/update/' + form.no_spp;
+        Data.post(url, data).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
@@ -119,14 +109,14 @@ app.controller('sppCtrl', function ($scope, Data, toaster) {
 
     $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('spp/delete/' + row.no_spp).then(function (result) {
+            Data.delete('sppnonrutin/delete/' + row.no_spp).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
     $scope.addDetail = function () {
         var newDet = {
-            id: '',
+            id: 0,
             no_spp: '',
             kd_barang: '',
             saldo: '',
@@ -149,8 +139,49 @@ app.controller('sppCtrl', function ($scope, Data, toaster) {
         }
     };
     $scope.getDetail = function (id) {
-        Data.get('spp/detail/'+ id).then(function (data) {
+        Data.get('sppnonrutin/detail/' + id).then(function (data) {
             $scope.sppDet = data.details;
         });
-    }
+    };
+    $scope.modal = function (form) {
+        var modalInstance = $modal.open({
+            templateUrl: 'tpl/t_spp-nonrutin/modal.html',
+            controller: 'modalCtrl',
+            size: 'lg',
+            resolve: {
+                form: function () {
+                    return form;
+                }
+            }
+        });
+    };
+});
+
+app.controller('modalCtrl', function ($scope, Data, $modalInstance, form) {
+
+    $scope.cariBarang = function ($query) {
+        if ($query.length >= 3) {
+            Data.get('barang/cari', {barang: $query}).then(function (data) {
+                $scope.results = data.data;
+            });
+        }
+    };
+    $scope.cariWo = function ($query) {
+        if ($query.length >= 3) {
+            Data.get('wo/cari', {no_wo: $query}).then(function (data) {
+                $scope.listWo = data.data;
+            });
+        }
+    };
+
+    $scope.open2 = function ($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened2 = true;
+    };
+    
+    $scope.formmodal = form;
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
 });

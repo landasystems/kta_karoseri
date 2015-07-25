@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use app\models\Womasuk;
+use app\models\TransSpp;
+use app\models\Barang;
 
 /**
  * This is the model class for table "det_spp".
@@ -18,21 +21,19 @@ use Yii;
  * @property integer $stat_spp
  * @property string $no_wo
  */
-class DetSpp extends \yii\db\ActiveRecord
-{
+class DetSpp extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'det_spp';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['saldo', 'qty'], 'number'],
             [['p', 'a'], 'safe'],
@@ -46,8 +47,7 @@ class DetSpp extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'ID',
             'no_spp' => 'No Spp',
@@ -61,4 +61,15 @@ class DetSpp extends \yii\db\ActiveRecord
             'no_wo' => 'No Wo',
         ];
     }
+
+    public function getSpp() {
+        return $this->hasOne(TransSpp::className(), ['no_spp' => 'no_spp']);
+    }
+    public function getWo() {
+        return $this->hasOne(WoMasuk::className(), ['no_wo' => 'no_wo']);
+    }
+    public function getBarang() {
+        return $this->hasOne(Barang::className(), ['kd_barang' => 'kd_barang']);
+    }
+
 }
