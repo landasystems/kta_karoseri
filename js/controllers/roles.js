@@ -144,7 +144,32 @@ app.controller('rolesCtrl', function ($scope, Data, toaster) {
                 "transaksi_worderkeluar": false,
                 "transaksi_winprogress": false,
                 "transaksi_spk": false,
-                "transaksi_kpb": false
+                "transaksi_kpb": false,
+                "rekap_supplier": false,
+                "rekap_barang": false,
+                "rekap_customer": false,
+                "rekap_barangmasuk": false,
+                "rekap_barangkeluar": false,
+                "rekap_pergerakanbarang": false,
+                "rekap_spp": false,
+                "rekap_purchaseorder": false,
+                "rekap_rubahbentuk": false,
+                "rekap_claimunit": false,
+                "rekap_deliveryunit": false,
+                "rekap_bom": false,
+                "rekap_chassisin": false,
+                "rekap_bstk": false,
+                "rekap_suratpesanan": false,
+                "rekap_ujimutu": false,
+                "rekap_womasuk": false,
+                "rekap_wokeluar": false,
+                "rekap_retbarangmasuk": false,
+                "rekap_retbarangkeluar": false,
+                "rekap_wip": false,
+                "rekap_schedule": false,
+                "rekap_historybarang": false,
+                "rekap_historyunit": false,
+                "rekap_historywip": false
         }
         angular.forEach($scope.form.akses, function ($value, $key) {
             if ($key.indexOf(module) >= 0)

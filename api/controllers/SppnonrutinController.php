@@ -11,7 +11,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class SppController extends Controller {
+class SppnonrutinController extends Controller {
 
     public function behaviors() {
         return [
@@ -31,9 +31,9 @@ class SppController extends Controller {
             ]
         ];
     }
-    
+
     public function actionCari() {
-        
+
         $params = $_REQUEST;
         $query = new Query;
         $query->from('trans_spp')
@@ -47,7 +47,7 @@ class SppController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models));
     }
-    
+
     public function beforeAction($event) {
         $action = $event->id;
         if (isset($this->actions[$action])) {
@@ -99,15 +99,21 @@ class SppController extends Controller {
         //create query
         $query = new Query;
         $query->offset($offset)
+                ->where("no_proyek='Non Rutin'")
                 ->limit($limit)
                 ->from('trans_spp')
-//                ->where('no_proyek')
                 ->orderBy($sort)
                 ->select("*");
 
         //filter
         $command = $query->createCommand();
         $models = $command->queryAll();
+//        foreach ($models as $key => $val) {
+//            $models[$key]['tgl1'] = date('d-m-Y', strtotime($val['tgl1']));
+//            $models[$key]['tgl2'] = date('d-m-Y', strtotime($val['tgl2']));
+//        }
+//        Yii::error($models);
+
         $totalItems = $query->count();
 
         $this->setHeader(200);
@@ -125,12 +131,30 @@ class SppController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
+        Yii::error($params);
         $model = new TransSpp();
-        $model->attributes = $params;
-//        Yii::error($params);
+        $tgl_trans = date('Y-m-d', strtotime($params['form']['tgl_trans']));
+        $lastNumber = TransSpp::find()
+                ->where('year(tgl_trans)="' . $tgl_trans . '"')
+                ->orderBy('no_spp DESC')
+                ->one();
+        $number = (empty($lastNumber)) ? 1 : (int) substr($lastNumber->no_spp, 3) + 1;
+        $model->no_spp = date('y') . substr("000" . $number, -3);
+        $model->tgl_trans = $tgl_trans;
+        $model->tgl1 = date('Y-m-d',  strtotime($params['form']['periode']['startDate']));
+        $model->tgl2 = date('Y-m-d',  strtotime($params['form']['periode']['endDate']));
+        $model->no_proyek = 'Non Rutin';
+
         if ($model->save()) {
-            foreach($params['details'] as $val){
-                
+            foreach ($params['details'] as $val) {
+                $det = new DetSpp();
+                $det->attributes = $val;
+                $det->no_spp = $model->no_spp;
+                $det->kd_barang = (empty($val['barang']['kd_barang'])) ? '-' : $val['barang']['kd_barang'];
+                $det->saldo = $val['barang']['saldo'];
+                $det->p = date('Y-m-d', strtotime($det->p));
+                $det->no_wo = (empty($val['wo']['no_wo'])) ? '-' : $val['wo']['no_wo'];
+                $det->save();
             }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -139,6 +163,7 @@ class SppController extends Controller {
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
     }
+
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
@@ -208,16 +233,20 @@ class SppController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models), JSON_PRETTY_PRINT);
     }
-    public function actionDetail($id){
-        $query = new Query();
-        $query->select('*')
-                ->from('det_spp')
-//                ->join('LEFT JOIN', 'barnag', $on)
-                ->where('no_spp='.$id);
-        $command = $query->createCommand();
-        $models = $command->queryAll();
+
+    public function actionDetail($id) {
+        $detSpp = DetSpp::find()
+                ->with(['wo', 'barang'])
+                ->where(['no_spp' => $id])
+                ->all();
+        $detail = array();
+        foreach ($detSpp as $key => $val) {
+            $detail[$key] = $val->attributes;
+            $detail[$key]['wo'] = (isset($val->wo)) ? $val->wo->attributes : [];
+            $detail[$key]['barang'] = (isset($val->barang)) ? $val->barang->attributes : [];
+        }
         $this->setHeader(200);
-        echo json_encode(['status'=> 1,'details'=> $models]);
+        echo json_encode(['status' => 1, 'details' => $detail]);
     }
 
 }
