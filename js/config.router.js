@@ -577,7 +577,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/w-inprogress.js');
+                                                return $ocLazyLoad.load('js/controllers/wip.js');
                                             }]
                                     }})
                                 //
@@ -585,13 +585,9 @@ angular.module('app')
                                     url: '/workorderkeluar',
                                     templateUrl: 'tpl/t_w-orderkeluar/index.html',
                                     resolve: {
-                                        deps: ['$ocLazyLoad',
+                                       deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['ui.select']).then(
-                                                        function() {
-                                                            return $ocLazyLoad.load('js/controllers/wokeluar.js');
-                                                        }
-                                                );
+                                                return $ocLazyLoad.load('js/controllers/wokeluar.js');
                                             }]
                                     }})
                                 //
