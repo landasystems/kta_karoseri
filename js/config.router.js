@@ -587,7 +587,11 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/w-orderkeluar.js');
+                                                return $ocLazyLoad.load(['ui.select']).then(
+                                                        function() {
+                                                            return $ocLazyLoad.load('js/controllers/wokeluar.js');
+                                                        }
+                                                );
                                             }]
                                     }})
                                 //

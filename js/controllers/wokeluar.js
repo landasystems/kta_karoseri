@@ -1,18 +1,5 @@
-app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
-  var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
-    var uploader = $scope.uploader = new FileUploader({
-        url: 'img/upload.php?folder=womasuk&kode=' + kode_unik,
-        queueLimit: 1,
-        removeAfterUpload: true,
-    });
-
-    uploader.filters.push({
-        name: 'imageFilter',
-        fn: function(item) {
-            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-        }
-    });
+app.controller('wokeluarCtrl', function($scope, Data, toaster) {
+  
     //init data
     var tableStateRef;
     $scope.displayed = [];
@@ -26,40 +13,13 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         $event.stopPropagation();
         $scope.opened1 = true;
     };
-    $scope.open2 = function($event) {
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.opened2 = true;
-    };
-    $scope.open3 = function($event) {
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.opened3 = true;
-    };
-    $scope.open4 = function($event) {
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.opened4 = true;
-    };
-    Data.post('womasuk/warna').then(function (data) {
-        $scope.list_warna = data.warna;
+    Data.post('wokeluar/nowo').then(function (data) {
+        $scope.list_nowo = data.nowo;
     });
-
-    $scope.cariSpk = function($query) {
-        if ($query.length >= 3) {
-            Data.get('womasuk/cari', {nama: $query}).then(function(data) {
-                $scope.results = data.data;
-            });
-        }
-    }
-    Data.post('womasuk/spk').then(function (data) {
-        $scope.list_spk = data.spk;
-    });
-    $scope.getspk = function (wo) {
-//        alert('asjdfhasjdfkas');
-        Data.post('womasuk/getspk/', wo).then(function (data) {
-            $scope.form = data.spk;
-//            console.log($scope.form);
+    $scope.getnowo = function (wo) {
+        Data.post('wokeluar/getnowo/', wo).then(function (data) {
+            $scope.form = data.nowo;
+            console.log(data.nowo);
 
         });
     };
@@ -91,7 +51,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('womasuk', param).then(function(data) {
+        Data.get('wokeluar', param).then(function(data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
@@ -117,8 +77,6 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.form = form;
         $scope.selected(form);
         $scope.form = {};
-        $scope.eks = {};
-        $scope.inter = {};
     };
     $scope.view = function(form) {
         $scope.is_edit = true;
@@ -127,20 +85,10 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.form = form;
          $scope.selected(form.id);
     };
-    $scope.save = function(form, eks, inter) {
-        if ($scope.uploader.queue.length > 0) {
-            $scope.uploader.uploadAll();
-            form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
-        } else {
-            form.foto = '';
-        }
-         var data = {
-            womasuk: form,
-            eksterior: eks,
-            interior: inter,
-        };
-        var url = ($scope.is_create == true) ? 'womasuk/create' : 'womasuk/update/';
-        Data.post(url, data).then(function(result) {
+    $scope.save = function(form) {
+       
+        var url =  'wokeluar/update/';
+        Data.post(url, form).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
@@ -189,3 +137,4 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
 
 
 })
+                                                                                      
