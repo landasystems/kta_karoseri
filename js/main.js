@@ -16,6 +16,20 @@ angular.module('app')
                     version: '1.1',
                 }
 
+                //cek warna di session
+                Data.get('site/session').then(function (data) {
+                    if (typeof data.data.user != "undefined") {
+                        $scope.app.settings = data.data.user.settings;
+                    } else { //default warna jika tidak ada setingan
+                        $scope.app.settings = {
+                            themeID: 12,
+                            navbarHeaderColor: 'bg-info dker',
+                            navbarCollapseColor: 'bg-info dk',
+                            asideColor: 'bg-black',
+                        };
+                    }
+                });
+
                 function isSmartDevice($window)
                 {
                     // Adapted from http://www.detectmobilebrowsers.com
@@ -42,4 +56,4 @@ angular.module('app')
                 }
 
             }]);
-        
+

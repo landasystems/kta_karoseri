@@ -1,4 +1,4 @@
-<div ng-app="app" ng-controller="sppCtrl">
+<div ng-app="app" ng-controller="sppNonRutinCtrl">
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n font-thin h3">Transaksi - SPP Non Rutin</h1>
     </div>
@@ -111,18 +111,9 @@
                                 <label class="col-sm-4 control-label">Periode SPP</label>
                                 <div class="col-sm-8">
                                     <div class="input-group m-b">
-                                        <input date-range-picker class="form-control" type="text"  ng-model="form.periode">
+                                        <input date-range-picker options="{separator: ':'}" class="form-control" type="text" ng-model="form.periode">
                                         <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-4 control-label">Tipe SPP</label>
-                                <div class="col-sm-8">
-                                    <select class="form-control" ng-change="changed(form)" ui-select2 style="width:100%" ng-model="form.no_proyek" ng-disabled="is_view" data-placeholder="Pilih Tipe SPP" required>
-                                        <option value="RUTIN">Rutin</option>
-                                        <option value="Non Rutin">Non Rutin</option>
-                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -133,61 +124,48 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th style="text-align: center; font-weight: bold;width:30%">Barang</th>
-                                <th style="text-align: center; font-weight: bold;width:10%">QTY</th>
-                                <th style="text-align: center; font-weight: bold;width: 20%">Keterangan</th>
-                                <th style="text-align: center; font-weight: bold;width:20%">Delivery</th>
-                                <th style="text-align: center; font-weight: bold;width:20%">No WO</th>
+                                <th style="text-align: center; font-weight: bold;width:10%">Kode Barang</th>
+                                <th style="text-align: center; font-weight: bold;width:20%">Nama Barang</th>
+                                <th style="text-align: center; font-weight: bold;width:7%">QTY</th>
+                                <th style="text-align: center; font-weight: bold;width:25%">Keterangan</th>
+                                <th style="text-align: center; font-weight: bold;width:15%">Delivery</th>
+                                <th style="text-align: center; font-weight: bold;width:15%">No WO</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr ng-repeat="detail in sppDet">
-                                <td>
+                                <td style="margin:0px;padding:0px;">
                                     <div class="input-group" style="width:100%">
-                                        <ui-select ng-model="detail.kd_barang" theme="bootstrap">
-                                            <ui-select-match>{{$select.selected.kd_barang}} - {{$select.selected.nm_barang}}</ui-select-match>
-                                            <ui-select-choices refresh="cariBarang($select.search)" repeat="barang in results">
-                                                {{barang.kd_barang}} - {{barang.nm_barang}}
-                                            </ui-select-choices>
-                                        </ui-select>
-                                        <span class="input-group-btn">
-                                            <button ng-click="detail.kd_barang = undefined" class="btn btn-default">
-                                                <span class="glyphicon glyphicon-trash"></span>
-                                            </button>
-                                        </span>
+                                        <input type="text" ng-readonly="true" ng-model="detail.barang.kd_barang" class="form-control">
                                     </div>
                                 </td>
-                                <td>
-                                    <input type="text" ng-pattern="/^[0-9]+$/" ng-model="detail.qty" class="form-control">
+                                <td style="margin:0px;padding:0px;">
+                                    <div class="input-group" style="width:100%">
+                                        <input type="text" ng-readonly="true" ng-model="detail.barang.nm_barang" class="form-control">
+                                    </div>
                                 </td>
-                                <td>
+                                <td style="margin:0px;padding:0px;">
+                                    <input type="text" ng-pattern="/^[0-9.]*$/" ng-model="detail.qty" class="form-control">
+                                </td>
+                                <td style="margin:0px;padding:0px;">
                                     <input type="text" ng-model="detail.ket" class="form-control">
                                 </td>
-                                <td>
+                                <td style="margin:0px;padding:0px;">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="detail.tgl1" is-open="openedDet == $index" ng-change="setStatus()" ng-click="openDet($event,$index)"/>
+                                        <input type="text" class="form-control" ng-model="detail.p" ng-readonly="true"/>
                                         <span class="input-group-addon">
                                             <i class="fa fa-calendar-o"></i>
                                         </span>
                                     </div>
                                 </td>
-                                <td>
-                                    <div class="input-group">
-                                        <ui-select ng-model="detail.no_wo" theme="bootstrap">
-                                            <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
-                                            <ui-select-choices refresh="cariWo($select.search)" repeat="wo in listWo">
-                                                {{wo.no_wo}}
-                                            </ui-select-choices>
-                                        </ui-select>
-                                        <span class="input-group-btn">
-                                            <button ng-click="detail.no_wo = undefined" class="btn btn-default">
-                                                <span class="glyphicon glyphicon-trash"></span>
-                                            </button>
-                                        </span>
+                                <td style="margin:0px;padding:0px;">
+                                    <div class="input-group" style="width:100%">
+                                        <input type="text" ng-readonly="true" ng-model="detail.wo.no_wo" class="form-control">
                                     </div>
                                 </td>
-                                <td>
+                                <td style="text-align: center;margin:0px;padding:0px;">
+                                    <button ng-click="modal(detail)" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
                                     <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-arrows"></i></button>
                                     <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0"><i class="fa fa-trash-o"></i></button>
                                 </td>
