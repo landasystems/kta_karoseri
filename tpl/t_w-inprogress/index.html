@@ -101,19 +101,26 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">NO WO</label>
                                 <div class="col-sm-6">
-                                    <ui-select ng-change="getnowo(form)" ng-model="form.no_wo" theme="bootstrap" style="width: 245px; margin-top: 2px; margin-bottom: 1px;">
-                                        <ui-select-match placeholder="Cari No SPK">{{$select.selected.no_wo}}</ui-select-match>
-                                        <ui-select-choices group-by="'group'" repeat="spk in list_nowo | filter: $select.search">
-                                            <div ng-bind-html="spk.no_wo | highlight: $select.search"></div>
-
-                                        </ui-select-choices>
-                                    </ui-select>
+                                    <div class="input-group">
+                                        <ui-select on-select="pilih(form, $item)" ng-model="form.no_wo" theme="bootstrap" style="width: 100%">
+                                            <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
+                                            <ui-select-choices refresh="cariWo($select.search)" repeat="val in listWo">
+                                                {{val.no_wo}}
+                                            </ui-select-choices>
+                                        </ui-select>
+                                        <span class="input-group-btn">
+                                            <button ng-click="form.no_wo = undefined" class="btn btn-default">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </button>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Tanggal Masuk</label>
                                 <div class="col-sm-6">
-                                    {{form.tgl_kontrak | date:'dd - MMM - yyyy'}}
+                                    <!--{{form.tgl_kontrak | date:'dd - MMM - yyyy'}}-->
+                                    <input type="text" class="form-control" ng-model="form.tgl_kontrak" required disabled="true"/>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -124,96 +131,13 @@
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-12 center">
-                            <div class="r bg-light dker item hbox no-border">
-                                <div class="col dk padder-v r-r">
-                                    <div class="text-primary-dk  h1 center"><b>{{form.jenis}}</b></div>
-                                </div>
-                            </div>
+                            <center> <b>{{form.jenis}}</b></center>
+
                         </div>
                     </div>
                     <div class="col-md-12 col-sm-12">
                         <tabset justified="true" class="tab-container">
-                            <table width="100%">
-                                <tr>
-                                    <td width="35%" valign="top">
 
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">Jenis Kendaraan</label>
-                                            <div class="col-sm-9">
-                                                <label class="btn btn-default" ng-model="form.jenis" ng-disabled="is_view" btn-radio="'Mini Bus'" required>Mini Bus</label>
-                                                <label class="btn btn-default" ng-model="form.jenis" ng-disabled="is_view" btn-radio="'Small Bus'" required>Small Bus</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">Model Chassis</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" ng-model="form.model_chassis" ng-disabled="true" placeholder="Model Chassis">
-                                            </div>
-                                        </div> 
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">Merk</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" ng-model="form.merk" ng-disabled="true" placeholder="Merk">
-                                            </div>
-                                        </div> 
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">Tipe</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" ng-model="form.tipe" ng-disabled="true" placeholder="Tipe">
-                                            </div>
-                                        </div> 
-
-                                    </td>
-                                    <td width="35%" valign="top">
-
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">Model kendaraan</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" ng-model="form.model" ng-disabled="true" placeholder="Model Kendaraan">
-                                            </div>
-                                        </div> 
-
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">In SPK Marketing</label>
-                                            <div class="col-sm-8">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-disabled="true" ng-model="form.in_spk_marketing" is-open="opened2" ng-click="open2($event)"/>
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-calendar-o"></i>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div> 
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">Tanggal Kontrak</label>
-                                            <div class="col-sm-8">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-disabled="true" ng-model="form.tgl_kontrak" is-open="opened3" ng-click="open3($event)"/>
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-calendar-o"></i>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div> 
-                                        <div class="form-group" ng-show="is_edit">
-                                            <label class="col-sm-3 control-label">Tanggal Keluar</label>
-                                            <div class="col-sm-8">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_keluar" is-open="opened1" ng-click="open1($event)"/>
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-calendar-o"></i>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div> 
-                                    </td>
-                                    <td width="30%" valign="top">
-                                        <img ng-src="img/{{(form.foto) ? 'womasuk/'+form.foto : 'noimage.jpg'}}" class="img-thumbnail">
-
-                                    </td>
-                                </tr>
-                            </table>
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <div align="center">
                                 <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
@@ -232,7 +156,7 @@
                                     <th>Keterangan</th>
                                     <th></th>
                                 </tr>
-                                <tr ng-repeat="det in detail">
+                                <tr ng-repeat="det in detWip">
                                     <td  style="margin:0px;padding:0px;">
                                         <input type="text" class="form-control" ng-model="det.no_wo" required disabled="true"/>
                                     </td>
@@ -257,7 +181,7 @@
                                     <td style="margin:0px;padding:0px;">
                                         <input type="text" class="form-control" ng-model="det.keterangan" required disabled="true"/>
                                     </td>
-                                   <td style="margin:0px;padding:0px;width:7%" ng-hide="is_view">
+                                    <td style="margin:0px;padding:0px;width:7%" ng-hide="is_view">
                                         <div class="btn-group pull-right" role="group">
                                             <button ng-click="modal(detail)" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
                                             <button ng-click="addDetail(detail)" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-plus-square-o"></i></button>
@@ -265,7 +189,7 @@
                                         </div>
                                     </td>
 
-                                   </tr>
+                                </tr>
 
                             </table>
                         </tabset>

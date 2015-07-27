@@ -242,7 +242,7 @@ class WoController extends Controller {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('wo_masuk')
-                ->select("no_wo")
+                ->select("*")
                 ->where(['like', 'no_wo', $params['no_wo']])
                 ->limit(10);
         $command = $query->createCommand();
