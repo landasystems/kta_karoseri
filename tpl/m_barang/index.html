@@ -27,9 +27,9 @@
                             <label class="col-sm-3 control-label">Kategori</label>
                             <div class="col-sm-9">
                                 <select st-search="kat" class="form-control">
-                                    <option value="">-Pilih Jenis-</option>
-                                    <option value="RUTIN">-Rutin-</option>
-                                    <option value="Non Rutin">-Non Rutin-</option>
+                                    <option value="">.:Pilih Jenis:.</option>
+                                    <option value="RUTIN">Rutin</option>
+                                    <option value="Non Rutin">Non Rutin</option>
                                 </select>
                             </div>
                         </div>
@@ -76,12 +76,12 @@
                     </tbody>
                     <tbody ng-show="isLoading">
                         <tr>
-                            <td colspan="4" class="text-center">Loading ... </td>
+                            <td colspan="8" class="text-center">Loading ... </td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="6"></td>
+                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="8"></td>
                         </tr>
                 </table>		
             </div>
@@ -135,8 +135,8 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Kategori</label>
                             <div class="col-sm-10">
-                                <label class="btn btn-default" ng-model="form.kat" ng-disabled="is_view" btn-radio="'RUTIN'" required>Rutin</label>
-                                <label class="btn btn-default" ng-model="form.kat" ng-disabled="is_view" btn-radio="'Non Rutin'" required>Non Rutin</label>
+                                <label class="btn btn-default" ng-model="form.kat"  btn-radio="'RUTIN'" required>Rutin</label>
+                                <label class="btn btn-default" ng-model="form.kat"  btn-radio="'Non Rutin'" required>Non Rutin</label>
                             </div>
                         </div>
                     </div>
