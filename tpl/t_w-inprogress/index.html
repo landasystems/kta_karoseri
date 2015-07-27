@@ -120,33 +120,36 @@
                                 <label class="col-sm-3 control-label">Tanggal Masuk</label>
                                 <div class="col-sm-6">
                                     <!--{{form.tgl_kontrak | date:'dd - MMM - yyyy'}}-->
-                                    <input type="text" class="form-control" ng-model="form.tgl_kontrak" required disabled="true"/>
+                                    <input type="text" class="form-control" ng-model="form.tgl_terima" required disabled="true"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Model</label>
+                                <div class="col-sm-6">
+                                    <!--{{form.tgl_kontrak | date:'dd - MMM - yyyy'}}-->
+                                    <input type="text" class="form-control" ng-model="form.model" required disabled="true"/>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Umur Unit</label>
                                 <div class="col-sm-6">
-
+                                    <input type="text" class="form-control" ng-model="form.umur" required disabled="true"/>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 col-sm-12 center">
-                            <center> <b>{{form.jenis}}</b></center>
+                        <div class="col-md-6 col-sm-12 center" style="margin-top: 30px;">
+                            <center> <b style="font-size: -webkit-xxx-large;">{{form.jenis}}</b></center>
 
                         </div>
                     </div>
                     <div class="col-md-12 col-sm-12">
                         <tabset justified="true" class="tab-container">
 
-                            <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <div align="center">
-                                <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
-                                <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form)">&nbsp;Simpan Perubahan</button>
-                            </div>
+
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <table class="table table-bordered">
                                 <tr>
-                                    <th>NO WO</th>
+                                    <!--<th>NO WO</th>-->
                                     <th>Kepala Pemborong</th>
                                     <th>Proses</th>
                                     <th>Plan Tgl Mulai</th>
@@ -157,14 +160,14 @@
                                     <th></th>
                                 </tr>
                                 <tr ng-repeat="det in detWip">
-                                    <td  style="margin:0px;padding:0px;">
-                                        <input type="text" class="form-control" ng-model="det.no_wo" required disabled="true"/>
+                                    <!--                                    <td  style="margin:0px;padding:0px;">
+                                                                            <input type="text" class="form-control" ng-model="det.no_wo" required disabled="true"/>
+                                                                        </td>-->
+                                    <td style="margin:0px;padding:0px;">
+                                        <input type="text" class="form-control" ng-model="det.pemborong.nama" required disabled="true"/>
                                     </td>
                                     <td style="margin:0px;padding:0px;">
-                                        <input type="text" class="form-control" ng-model="det.nama" required disabled="true"/>
-                                    </td>
-                                    <td style="margin:0px;padding:0px;">
-                                        <input type="text" class="form-control" ng-model="det.bagian" required disabled="true"/>
+                                        <input type="text" class="form-control" ng-model="det.proses.bagian" required disabled="true"/>
                                     </td>
                                     <td style="margin:0px;padding:0px;">
                                         <input type="text" class="form-control" ng-model="det.plan_start" required disabled="true"/>
@@ -179,12 +182,12 @@
                                         <input type="text" class="form-control" ng-model="det.act_start" required disabled="true"/>
                                     </td>
                                     <td style="margin:0px;padding:0px;">
-                                        <input type="text" class="form-control" ng-model="det.keterangan" required disabled="true"/>
+                                        <input type="text" class="form-control" ng-model="det.keterangan" disabled="true"/>
                                     </td>
                                     <td style="margin:0px;padding:0px;width:7%" ng-hide="is_view">
                                         <div class="btn-group pull-right" role="group">
-                                            <button ng-click="modal(detail)" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
-                                            <button ng-click="addDetail(detail)" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-plus-square-o"></i></button>
+                                            <button ng-click="modal(det)" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
+                                            <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-plus-square-o"></i></button>
                                             <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
                                         </div>
                                     </td>
@@ -193,7 +196,11 @@
 
                             </table>
                         </tabset>
-
+                        <div class="line line-dashed b-b line-lg pull-in"></div>
+                        <div align="center">
+                            <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
+                            <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, detWip)">&nbsp;Simpan Perubahan</button>
+                        </div>
 
 
                     </div>
