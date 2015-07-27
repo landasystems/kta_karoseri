@@ -619,7 +619,7 @@ angular.module('app')
                                             function ($ocLazyLoad) {
                                                 return $ocLazyLoad.load([]).then(
                                                         function () {
-                                                            return $ocLazyLoad.load('js/controllers/purchase-order.js');
+                                                            return $ocLazyLoad.load('js/controllers/r_purchase-order.js');
                                                         }
                                                 );
                                             }]

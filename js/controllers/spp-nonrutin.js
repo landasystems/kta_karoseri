@@ -90,7 +90,7 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
             form: form,
             details: details
         };
-        var url = 'sppnonrutin/create';
+        var url = (form.no_spp == undefined) ? 'sppnonrutin/create' : 'sppnonrutin/update/' + form.no_spp;
         Data.post(url, data).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);

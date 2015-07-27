@@ -108,12 +108,6 @@ class SppnonrutinController extends Controller {
         //filter
         $command = $query->createCommand();
         $models = $command->queryAll();
-//        foreach ($models as $key => $val) {
-//            $models[$key]['tgl1'] = date('d-m-Y', strtotime($val['tgl1']));
-//            $models[$key]['tgl2'] = date('d-m-Y', strtotime($val['tgl2']));
-//        }
-//        Yii::error($models);
-
         $totalItems = $query->count();
 
         $this->setHeader(200);
@@ -131,7 +125,7 @@ class SppnonrutinController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($params);
+//        Yii::error($params);
         $model = new TransSpp();
         $tgl_trans = date('Y-m-d', strtotime($params['form']['tgl_trans']));
         $lastNumber = TransSpp::find()
@@ -139,10 +133,10 @@ class SppnonrutinController extends Controller {
                 ->orderBy('no_spp DESC')
                 ->one();
         $number = (empty($lastNumber)) ? 1 : (int) substr($lastNumber->no_spp, 3) + 1;
-        $model->no_spp = date('y') . substr("000" . $number, -3);
+        $model->no_spp = date('y', $tgl_trans) . substr("000" . $number, -3);
         $model->tgl_trans = $tgl_trans;
-        $model->tgl1 = date('Y-m-d',  strtotime($params['form']['periode']['startDate']));
-        $model->tgl2 = date('Y-m-d',  strtotime($params['form']['periode']['endDate']));
+        $model->tgl1 = date('Y-m-d', strtotime($params['form']['periode']['startDate']));
+        $model->tgl2 = date('Y-m-d', strtotime($params['form']['periode']['endDate']));
         $model->no_proyek = 'Non Rutin';
 
         if ($model->save()) {
@@ -167,12 +161,42 @@ class SppnonrutinController extends Controller {
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
-        $model->attributes = $params;
+//        $model->attributes = $params;
+        $tgl_trans = date('Y-m-d', strtotime($params['form']['tgl_trans']));
+        $model->tgl_trans = $tgl_trans;
+        $model->tgl1 = date('Y-m-d', strtotime($params['form']['periode']['startDate']));
+        $model->tgl2 = date('Y-m-d', strtotime($params['form']['periode']['endDate']));
+        $model->no_proyek = 'Non Rutin';
 //        Yii::error($params);
         if ($model->save()) {
+            $deleteAll = DetSpp::deleteAll('no_spp="' . $model->no_spp . '"');
+            foreach ($params['details'] as $val) {
+                $det = new DetSpp();
+                $det->attributes = $val;
+                $det->no_spp = $model->no_spp;
+                $det->kd_barang = (empty($val['barang']['kd_barang'])) ? '-' : $val['barang']['kd_barang'];
+                $det->saldo = $val['barang']['saldo'];
+                $det->p = date('Y-m-d', strtotime($det->p));
+                $det->no_wo = (empty($val['wo']['no_wo'])) ? '-' : $val['wo']['no_wo'];
+                $det->save();
+            }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
+            $this->setHeader(400);
+            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+        }
+    }
+
+    public function actionDelete($id) {
+        $model = $this->findModel($id);
+        $deleteDetail = DetSpp::deleteAll('no_spp="'.$id.'"');
+        
+        if ($model->delete()) {
+            $this->setHeader(200);
+            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        } else {
+
             $this->setHeader(400);
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
@@ -250,5 +274,3 @@ class SppnonrutinController extends Controller {
     }
 
 }
-
-?>

@@ -19,6 +19,7 @@ class PoController extends Controller {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'index' => ['get'],
+                    'rekap' => ['get'],
                     'view' => ['get'],
                     'listsupplier' => ['get'],
                     'listspp' => ['get'],
@@ -118,10 +119,85 @@ class PoController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
+        $data = array();
+        $i = 0;
+        foreach ($models as $key => $val) {
+            $data[$key] = $val;
+            $data[$i]['bayar'] = ($val == '0') ? 'Tunai' : 'Kredit';
+            $sup = \app\models\Supplier::find()
+                    ->where(['kd_supplier' => $data[$i]['suplier']])
+                    ->One();
+            $supplier = (isset($sup->nama_supplier)) ? $sup->nama_supplier : '';
+            $data[$i]['suplier'] = $supplier;
+            $i++;
+        }
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+
+    public function actionRekap() {
+        $params = $_REQUEST;
+        $filter = array();
+        $sort = "trans_po.nota DESC";
+        $offset = 0;
+        $limit = 10;
+
+        //limit & offset pagination
+        if (isset($params['limit']))
+            $limit = $params['limit'];
+        if (isset($params['offset']))
+            $offset = $params['offset'];
+
+        //sorting
+        if (isset($params['sort'])) {
+            $sort = $params['sort'];
+            if (isset($params['order'])) {
+                if ($params['order'] == "false")
+                    $sort.=" ASC";
+                else
+                    $sort.=" DESC";
+            }
+        }
+
+        //create query
+       $query = new Query;
+        //filter
+        if (isset($params['filter'])) {
+            
+            $query->offset($offset)
+                    ->limit($limit)
+                    ->from('trans_po')
+                    ->orderBy($sort)
+                    ->select("*");
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+
+                $query->andFilterWhere(['like', 'trans_po.' . $key, $val]);
+            }
+        }
+
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $totalItems = $query->count();
+        $data = array();
+        $i = 0;
+        foreach ($models as $key => $val) {
+            $data[$key] = $val;
+            $data[$i]['bayar'] = ($val == '0') ? 'Tunai' : 'Kredit';
+            $sup = \app\models\Supplier::find()
+                    ->where(['kd_supplier' => $data[$i]['suplier']])
+                    ->One();
+            $supplier = (isset($sup->nama_supplier)) ? $sup->nama_supplier : '';
+            $data[$i]['suplier'] = $supplier;
+            $i++;
+        }
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
     public function actionListsupplier() {
@@ -176,16 +252,15 @@ class PoController extends Controller {
         }
 
         $this->setHeader(200);
-        echo json_encode(array('status' => 1,'data' => $data, 'detail' => $detail), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'detail' => $detail), JSON_PRETTY_PRINT);
     }
 
-    public function actionUpdtst($id){
-       $model = TransPo::findOne(['nota' => $id]);
-       $model->status = 1;
-       $model->save();
-      
+    public function actionUpdtst($id) {
+        $model = TransPo::findOne(['nota' => $id]);
+        $model->status = 1;
+        $model->save();
     }
-    
+
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new TransPo();
@@ -198,7 +273,7 @@ class PoController extends Controller {
         $id = $_SESSION['user']['id'];
         $mdl = \app\models\Pengguna::findOne(['id' => $id]);
         $model->pemberi_order = $mdl['nama'];
-        
+
         if ($model->save()) {
             $details = $params['details'];
             foreach ($details as $val) {
@@ -241,7 +316,6 @@ class PoController extends Controller {
         }
     }
 
-    
     public function actionDelete($id) {
         $model = $this->findModel($id);
         $deleteDetail = DetailPo::deleteAll(['nota' => $id]);
