@@ -32,8 +32,9 @@ class WipController extends Controller {
                     'kode' => ['get'],
                     'warna' => ['post'],
                     'getnowo' => ['post'],
-                    'nowo' => ['post'],
                     'select' => ['post'],
+                    'karyawan' => ['get'],
+                    'cari' => ['get'],
                 ],
             ]
         ];
@@ -62,53 +63,37 @@ class WipController extends Controller {
         return true;
     }
 
-    public function actionNowo() {
-
+     public function actionCari() {
         $params = $_REQUEST;
         $query = new Query;
-        $query->from('wo_masuk')
-                ->select("*");
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'nowo' => $models));
-    }
-    public function actionGetnowo() {
-        $params = json_decode(file_get_contents("php://input"), true);
-        $query = new Query;
-//        $query->from(['customesr', 'chassis', 'tbl_karyawan', 'spk', 'serah_terima_in', 'warna', 'model'])
-//                ->where('chassis.kd_chassis = spk.kd_chassis
-//                        AND spk.nik = tbl_karyawan.nik
-//                        AND spk.kd_customer = customer.kd_cust AND serah_terima_in.no_spk = spk.no_spk AND serah_terima_in.kd_warna = warna.kd_warna AND spk.kd_model = model.kd_model AND spk.no_spk="' . $params['no_wo']['no_spk'] . '"')
-//                ->select("spk.*, tbl_karyawan.nama as sales,customer.nm_customer as customer, customer.nm_pemilik as pemilik, chassis.model_chassis as model_chassis,
-//                        chassis.merk as merk, chassis.tipe as tipe, serah_terima_in.kd_titipan, serah_terima_in.no_chassis, serah_terima_in.no_mesin,
-//                        serah_terima_in.tgl_terima, warna.warna as warna, model.model");
         $query->from('spk')
                 ->join(' JOIN', 'customer as cs', 'spk.kd_customer = cs.kd_cust')
                 ->join('JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
                 ->join(' JOIN', 'chassis', 'chassis.kd_chassis = spk.kd_chassis')
                 ->join(' JOIN', 'wo_masuk', 'wo_masuk.no_spk = spk.no_spk')
-//                ->join(' JOIN', 'warna', 'sti.kd_warna = warna.kd_warna')
+                ->join(' JOIN', 'serah_terima_in as sti', 'sti.no_spk = spk.no_spk')
                 ->join(' JOIN', 'model', 'model.kd_model = spk.kd_model')
                 ->select("*")
-                ->where('spk.no_spk="' . $params['no_wo']['no_spk'] . '"');
-
-
+                ->where(['like', 'wo_masuk.no_wo', $params['no_wo']])
+                ->limit(10);
         $command = $query->createCommand();
-        $models = $command->queryOne();
-        
-        $query2 = new Query;
+        $models = $command->queryAll();
+        $this->setHeader(200);
+        $models = ['coba'=>'test'];
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+    public function actionGetnowo() {
+        $params = json_decode(file_get_contents("php://input"), true);
+       
+         $query2 = new Query;
         $query2->from('det_wip as wip')
                 ->join('JOIN','bagian','bagian.kd_bag = wip.kd_kerja')
                 ->join('JOIN', 'tbl_karyawan as tk', 'tk.nik = wip.nik')
-                ->where('wip.no_wo = "'.$params['no_wo']['no_wo'].'"')
+                ->where('wip.no_wo = "'.$params['no_wo'].'"')
                 ->select('*');
         $command2 = $query2->createCommand();
         $detail = $command2->queryAll();
-        Yii::error($detail);
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'nowo' => $models,'detail'=>$detail));
+        echo json_encode(array('status' => 1, 'detail'=>$detail));
     }
 
     public function actionIndex() {
@@ -170,6 +155,19 @@ class WipController extends Controller {
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+    
+     public function actionKaryawan() {
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('tbl_karyawan')
+                ->select("*")
+                ->where(['like', 'nama', $params['karyawan']]);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionView($id) {
