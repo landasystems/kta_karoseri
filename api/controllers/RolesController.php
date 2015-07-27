@@ -19,6 +19,7 @@ class RolesController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
+                    'list' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -48,6 +49,20 @@ class RolesController extends Controller {
         }
 
         return true;
+    }
+    
+    public function actionList() {
+        $query = new Query;
+        $query->from('m_roles')
+                ->where(['is_deleted'=>0])
+                ->select('*');
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'roles' => $models));
     }
 
     public function actionIndex() {
