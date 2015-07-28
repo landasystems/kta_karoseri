@@ -7,15 +7,7 @@ app.controller('wipCtrl', function($scope, Data, toaster, $modal) {
     $scope.is_view = false;
     $scope.is_create = false;
     $scope.is_create = false;
-    $scope.detWip = {
-        no_wo: '',
-        nama: '',
-        bagian: '',
-        plan_start: '',
-        plan_finish: '',
-        act_start: '',
-        keterangan: ''
-    };
+    $scope.detWip = [];
     $scope.form = {};
 
     $scope.open1 = function($event) {
@@ -27,21 +19,32 @@ app.controller('wipCtrl', function($scope, Data, toaster, $modal) {
         if ($query.length >= 3) {
             Data.get('wip/cari', {no_wo: $query}).then(function(data) {
                 $scope.listWo = data.data;
-//               $scope.detWip = data.detail;
-                console.log(data.data);
             });
         }
     };
 
     $scope.pilih = function(form, $item) {
         Data.post('wip/getnowo/', $item).then(function(data) {
-            $scope.detWip = data.detail;
+//            console.log(data.detail);
+            var newDet = [{
+                    id: 0,
+                    no_wo: '',
+                    kd_kerja: '',
+                    plan_start: '',
+                    plan_finish: '',
+                    act_start: '',
+                    act_finish: '',
+                    keterangan: '',
+                }];
+//            $scope.detWip = newDet;
+            $scope.detWip = (data.detail != null) ? data.detail : newDet;
+            form.umur = data.umur;
+
         });
 
-        form.tgl_kontrak = $item.tgl_terima;
+        form.tgl_terima = $item.tgl_terima;
         form.jenis = $item.jenis;
-//        form.tgl_kontrak = $item.tgl_kontrak;
-//        $scope.detail = $item.tgl_kontrak;
+        form.model = $item.model;
     }
 
     $scope.callServer = function callServer(tableState) {
@@ -94,15 +97,16 @@ app.controller('wipCtrl', function($scope, Data, toaster, $modal) {
         $scope.form = form;
         $scope.selected(form.id);
     };
-    $scope.save = function(form) {
-
-        var url = 'wokeluar/update/';
-        Data.post(url, form).then(function(result) {
+    $scope.save = function(form, detWip) {
+        var data = {
+            wip: form,
+            detWip: detWip,
+        };
+        var url = 'wip/update/';
+        Data.post(url, data).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
-                $scope.is_edit = false;
-                $scope.callServer(tableStateRef); //reload grid ulang
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
             }
         });
@@ -131,8 +135,7 @@ app.controller('wipCtrl', function($scope, Data, toaster, $modal) {
             plan_finish: '',
             act_start: '',
             act_finish: '',
-            ket: '',
-            nik: '',
+            keterangan: '',
         }
         $scope.setStatus();
         $scope.detWip.unshift(newDet);
@@ -140,7 +143,7 @@ app.controller('wipCtrl', function($scope, Data, toaster, $modal) {
     $scope.removeRow = function(paramindex) {
         var comArr = eval($scope.detWip);
         if (comArr.length > 1) {
-            $scope.sppDet.splice(paramindex, 1);
+            $scope.detWip.splice(paramindex, 1);
         } else {
             alert("Something gone wrong");
         }
@@ -177,7 +180,7 @@ app.controller('wipCtrl', function($scope, Data, toaster, $modal) {
             $scope.form.jenis = data.det.jenis;
             $scope.form.jenis = data.det.jenis;
             $scope.form.no_spk = data.data.no_spk.as;
-            console.log(data.data);
+//            console.log(data.data);
 
 
         });
@@ -187,25 +190,40 @@ app.controller('wipCtrl', function($scope, Data, toaster, $modal) {
 });
 app.controller('modalCtrl', function($scope, Data, $modalInstance, form) {
 
-    $scope.cariBagian = function($query) {
+    $scope.cariProses = function($query) {
         if ($query.length >= 3) {
-            Data.get('bagian/cari', {bagian: $query}).then(function(data) {
-                $scope.results = data.data;
+            Data.get('wip/proses', {proses: $query}).then(function(data) {
+                $scope.listproses = data.data;
             });
         }
     };
     $scope.cariPemborong = function($query) {
         if ($query.length >= 3) {
             Data.get('wip/karyawan', {karyawan: $query}).then(function(data) {
-                $scope.listWo = data.data;
+                $scope.listkarywan = data.data;
             });
         }
     };
 
+    $scope.open1 = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened1 = true;
+    };
     $scope.open2 = function($event) {
         $event.preventDefault();
         $event.stopPropagation();
         $scope.opened2 = true;
+    };
+    $scope.open3 = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened3 = true;
+    };
+    $scope.open4 = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened4 = true;
     };
 
     $scope.formmodal = form;

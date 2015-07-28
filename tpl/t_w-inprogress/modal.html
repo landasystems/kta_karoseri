@@ -9,7 +9,7 @@
                 <div class="input-group">
                     <ui-select ng-model="formmodal.pemborong" theme="bootstrap" style="width: 100%">
                         <ui-select-match>{{$select.selected.nama}}</ui-select-match>
-                        <ui-select-choices refresh="cariPemborong($select.search)" repeat="val in results">
+                        <ui-select-choices refresh="cariPemborong($select.search)" repeat="val in listkarywan">
                             {{val.nama}}
                         </ui-select-choices>
                     </ui-select>
@@ -22,36 +22,13 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">Qty</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" ng-model="formmodal.qty" style="width:70px">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Keterangan</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" ng-model="formmodal.ket">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Delivery</label>
+            <label class="col-sm-2 control-label">Proses</label>
             <div class="col-sm-10">
                 <div class="input-group">
-                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="formmodal.p" is-open="opened2" ng-click="open2($event)"/>
-                    <span class="input-group-addon">
-                        <i class="fa fa-calendar-o"></i>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">No WO</label>
-            <div class="col-sm-10">
-                <div class="input-group">
-                    <ui-select ng-model="formmodal.wo" theme="bootstrap" style="width: 100%">
-                        <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
-                        <ui-select-choices refresh="cariWo($select.search)" repeat="val in listWo">
-                            {{val.no_wo}}
+                    <ui-select ng-model="formmodal.proses" theme="bootstrap" style="width: 100%">
+                        <ui-select-match>{{$select.selected.bagian}}</ui-select-match>
+                        <ui-select-choices refresh="cariProses($select.search)" repeat="val in listproses">
+                            {{val.bagian}}
                         </ui-select-choices>
                     </ui-select>
                     <span class="input-group-btn">
@@ -62,6 +39,57 @@
                 </div>
             </div>
         </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Plan Start</label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="formmodal.plan_start" is-open="opened1" ng-click="open1($event)"/>
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar-o"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Plan Finish</label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="formmodal.plan_finish" is-open="opened2" ng-click="open2($event)"/>
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar-o"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Actual Start</label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="formmodal.act_start" is-open="opened3" ng-click="open3($event)"/>
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar-o"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Actual Finish</label>
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="formmodal.act_finish" is-open="opened4" ng-click="open4($event)"/>
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar-o"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Actual Finish</label>
+            <div class="col-sm-6">
+                <textarea class="form-control" ng-model="formmodal.keterangan" ></textarea>
+            </div>
+        </div>
+       
     </form>
 </div>
 <div class="modal-footer">                  
