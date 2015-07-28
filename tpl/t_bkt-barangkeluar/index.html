@@ -220,7 +220,7 @@
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control" required></td>
+                                            <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control" required ng-keyup="detailstok(form.no_wo, detail.kd_barang')"></td>
                                             <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control"></td>
                                             <td  style="margin:0px;padding:0px;">
                                                 <button ng-click="addDetail(detail)" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-plus"></i></button>

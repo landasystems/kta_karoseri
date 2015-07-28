@@ -328,7 +328,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select2']).then(
+                                                return $ocLazyLoad.load(['angularFileUpload']).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/bstk.js');
                                                         }
@@ -341,7 +341,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['angularFileUpload', 'ui.select2']).then(
+                                                return $ocLazyLoad.load(['angularFileUpload']).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/sti.js');
                                                         }
@@ -365,7 +365,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load('ui.select2').then(
+                                                return $ocLazyLoad.load('').then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/spk.js');
                                                         }
@@ -478,7 +478,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load('ui.select').then(
+                                                return $ocLazyLoad.load('').then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/kpb.js');
                                                         }

@@ -23,7 +23,6 @@ class RubahbentukController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
-                    'listwo' => ['get'],
                 ],
             ]
         ];
@@ -49,21 +48,6 @@ class RubahbentukController extends Controller {
         }
 
         return true;
-    }
-
-    public function actionListwo() {
-        if (!empty($_GET['kata'])) {
-            $query = new Query;
-            $query->from('view_wo_spk')
-                    ->select("*")
-                    ->where("no_wo like '%" . $_GET['kata'] . "%'");
-
-            $command = $query->createCommand();
-            $models = $command->queryAll();
-
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => $models));
-        }
     }
 
     public function actionIndex() {
