@@ -162,23 +162,56 @@ class PoController extends Controller {
         }
 
         //create query
-       $query = new Query;
+        $query = new Query;
+        $query->offset($offset)
+                        ->limit($limit)
+                        ->from('detail_po as dpo')
+                        ->join('LEFT JOIN', 'trans_po', 'trans_po.nota = dpo.nota')
+                        ->orderBy($sort)
+                        ->select("dpo.*, trans_po.* ");
         //filter
         if (isset($params['filter'])) {
-            
-            $query->offset($offset)
-                    ->limit($limit)
-                    ->from('trans_po')
-                    ->orderBy($sort)
-                    ->select("*");
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-
-                $query->andFilterWhere(['like', 'trans_po.' . $key, $val]);
+                if (isset($key['kategori'])) {
+                    if ($val == 'yes') {
+                        $test = "spp !='-'";
+                    } elseif ($val == 'no') {
+                        $test = "spp =='-'";
+                    } 
+                }
+//                Yii::error($test);
+                
+                if (isset($key) && $key == 'kategori') {
+                 if ($val == 'yes') {
+                       $query->where("spp !='-'");
+                    } elseif ($val == 'no') {
+                        $query->where("spp ='-'");
+                    } 
+                    
+                } elseif($key == 'tanggal'){
+                    $value = explode(' - ', $val);
+                    $start = date("Y-m-d", strtotime($value[0]));
+                    $end = date("Y-m-d", strtotime($value[1]));
+                    $query->andFilterWhere(['between', 'dpo.tgl_pengiriman', $start, $end]);
+                }else{
+                $query->andFilterWhere(['like',  $key, $val]);
+                }
             }
         }
 
+        $data = $this->retRekap($query);
+        
+//        $query->limit(null);
+        $dataPrint = $this->retRekap($query);
+        
 
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $data['data'], 'totalItems' => $data['totalItems'],'dataPrint' => $dataPrint['data']), JSON_PRETTY_PRINT);
+    }
+    
+    public function retRekap($query){
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
@@ -190,14 +223,22 @@ class PoController extends Controller {
             $sup = \app\models\Supplier::find()
                     ->where(['kd_supplier' => $data[$i]['suplier']])
                     ->One();
+            $bbm = \app\models\TransBbm::find()
+                    ->where(['kd_suplier' => $data[$i]['suplier']])
+                    ->One();
+            $brg = \app\models\Barang::find()
+                    ->where(['kd_barang' => $data[$i]['kd_barang']])
+                    ->one();
             $supplier = (isset($sup->nama_supplier)) ? $sup->nama_supplier : '';
-            $data[$i]['suplier'] = $supplier;
+            $barang = (isset($brg->nm_barang)) ? $brg->nm_barang : '';
+            $bb = (isset($bbm->no_bbm)) ? $bbm->no_bbm : '';
+            $kodebarang = (isset($brg->kd_barang)) ? $brg->kd_barang : '';
+            $data[$i]['suplier'] = ['suplier' => $supplier, 'no_bbm' => $bb];
+            $data[$i]['kd_barang'] = ['kd_barang' => $kodebarang, 'nm_barang' => $barang];
             $i++;
         }
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        
+        return ['data'=>$data,'totalItems'=>$totalItems];
     }
 
     public function actionListsupplier() {

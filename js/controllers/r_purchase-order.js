@@ -26,6 +26,7 @@ app.controller('returpoCtrl', function ($scope, Data, toaster) {
 
         Data.get('po/rekap', param).then(function (data) {
             $scope.displayed = data.data;
+            $scope.displayedPrint = data.dataPrint;
             $scope.paginations = data.totalItems;
             if(data.totalItems != 0) {
                 tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
