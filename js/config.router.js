@@ -404,7 +404,7 @@ angular.module('app')
                                             function ($ocLazyLoad) {
                                                 return $ocLazyLoad.load([]).then(
                                                         function () {
-                                                            return $ocLazyLoad.load('js/controllers/val-barangkeluar.js');
+                                                            return $ocLazyLoad.load('js/controllers/validasibkk.js');
                                                         }
                                                 );
                                             }]

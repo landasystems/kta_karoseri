@@ -50,7 +50,7 @@ class ValidasibomController extends Controller {
         return true;
     }
 
-    public function actionIndex() {
+   public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
@@ -107,7 +107,6 @@ class ValidasibomController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
-
     public function actionView($id) {
 
         $model = $this->findModel($id);
@@ -139,20 +138,7 @@ class ValidasibomController extends Controller {
 //        }
     }
 
-    public function actionUpdate($id) {
-        $params = json_decode(file_get_contents("php://input"), true);
-        $model = $this->findModel($id);
-        $model->attributes = $params;
-
-        if ($model->save()) {
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-        } else {
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-        }
-    }
-
+    
     public function actionDelete($id) {
         $model = $this->findModel($id);
 
