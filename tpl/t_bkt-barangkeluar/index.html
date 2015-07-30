@@ -47,8 +47,10 @@
                 <table class="table table-striped table-hover" >
                     <thead>
                         <tr>
+                            <th st-sort="tanggal">#</th>
+                             <th st-sort="no_bbk">No. BBK</th>
                             <th st-sort="tanggal">Tanggal</th>
-                            <th st-sort="no_bbk">No. BBK</th>
+                           
                             <th st-sort="no_wo">No. Wo</th>
                             <th st-sort="bagian">Bagian</th>
                             <th st-sort="penerima">Penerima</th>
@@ -58,8 +60,12 @@
                     </thead>
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
+                            <td><label class="i-checks">
+                                        <input type="checkbox" ng-model="form.no_bkk[row.no_bkk]" ><i></i> 
+                                    </label></td>
+                                    <td>{{row.no_bbk}}</td>
                             <td>{{row.tanggal| date}}</td>
-                            <td>{{row.no_bbk}}</td>
+                            
                             <td>{{row.no_wo}}</td>
                             <td>{{row.bagian}}</td>
                             <td>{{row.penerima}}</td>
