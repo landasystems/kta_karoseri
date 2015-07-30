@@ -25,6 +25,8 @@ class BbmController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
+                    'excel' => ['get'],
+                    'rekap' => ['get'],
                     'petugas' => ['get'],
                     'listbbk' => ['get'],
                     'detailstok' => ['post'],
@@ -183,6 +185,81 @@ class BbmController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
+    public function actionRekap() {
+        $params = $_REQUEST;
+        $filter = array();
+        $sort = "db.no_bbm ASC";
+        $offset = 0;
+        $limit = 10;
+
+        //limit & offset pagination
+        if (isset($params['limit']))
+            $limit = $params['limit'];
+        if (isset($params['offset']))
+            $offset = $params['offset'];
+
+        //sorting
+        if (isset($params['sort'])) {
+            $sort = $params['sort'];
+            if (isset($params['order'])) {
+                if ($params['order'] == "false")
+                    $sort.=" ASC";
+                else
+                    $sort.=" DESC";
+            }
+        }
+
+        //create query
+        $query = new Query;
+        $query->offset($offset)
+                ->limit($limit)
+                ->from('det_bbm as db')
+                ->join('JOIN', 'trans_bbm as tb', 'tb.no_bbm= db.no_bbm')
+                ->join('LEFT JOIN', 'supplier as su', 'tb.kd_suplier= su.kd_supplier')
+                ->join('JOIN', 'barang', 'barang.kd_barang = db.kd_barang')
+                ->join('LEFT JOIN', 'jenis_brg as jb', 'barang.jenis = jb.kd_jenis')
+                
+                ->orderBy($sort)
+                ->select("tb.tgl_nota as tanggal_nota, db.no_bbm as no_bbm, barang.kd_barang as kd_barang, barang.nm_barang,
+                    barang.satuan, db.jumlah as jumlah, tb.surat_jalan, db.no_po, su.nama_supplier, db.keterangan");
+//filter
+
+        if (isset($params['filter'])) {
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+
+                if (isset($key) && $key == 'tgl_nota') 
+                    {
+                    $value = explode(' - ', $val);
+                    $start = date("Y-m-d", strtotime($value[0]));
+                    $end = date("Y-m-d", strtotime($value[1]));
+                    $query->andFilterWhere(['between', 'tb.tgl_nota', $start, $end]);
+                }elseif($key == 'nama_supplier'){
+                    $query->andFilterWhere(['like', 'su.'.$key, $val]);
+                } elseif($key == 'no_bbm'){
+                    $query->andFilterWhere(['like', 'tb.'.$key, $val]);
+                
+                } elseif($key == 'nm_barang'){
+                    $query->andFilterWhere(['like', 'barang.'.$key, $val]);
+                }
+            }
+        }
+        Yii::error($query);
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+//        Yii::error($models);
+        $totalItems = $query->count();
+
+        $query->limit(null);
+        $query->offset(null);
+        session_start();
+        $_SESSION['query'] = $query;
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+
     public function actionView($id) {
 
         $model = $this->findModel($id);
@@ -268,7 +345,7 @@ class BbmController extends Controller {
             $detailBbm = $params['detBbm'];
             foreach ($detailBbm as $val) {
                 $det = DetBbm::findOne($val['id']);
-                if(empty($det)){
+                if (empty($det)) {
                     $det = new DetBbm();
                 }
                 $det->attributes = $val;
@@ -346,6 +423,13 @@ class BbmController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+     public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/bbm", ['models' => $models]);
     }
 
 }

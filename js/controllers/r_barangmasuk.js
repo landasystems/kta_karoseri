@@ -1,4 +1,4 @@
-app.controller('returpoCtrl', function ($scope, Data, toaster) {
+app.controller('returbarangmasukCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
     var paramRef;
@@ -24,7 +24,7 @@ app.controller('returpoCtrl', function ($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
         paramRef = param;
-        Data.get('po/rekap', param).then(function (data) {
+        Data.get('bbm/rekap', param).then(function (data) {
             $scope.displayed = data.data;
             $scope.displayedPrint = data.dataPrint;
             $scope.paginations = data.totalItems;
@@ -35,44 +35,12 @@ app.controller('returpoCtrl', function ($scope, Data, toaster) {
 
         $scope.isLoading = false;
     };
+    
     $scope.excel = function () {
-        Data.get('po/rekap', paramRef).then(function (data) {
-            window.location = 'api/web/po/excel';
+        Data.get('bbm/rekap', paramRef).then(function (data) {
+            window.location = 'api/web/bbm/excel';
         });
     }
-
-
-    $scope.updt_st = function ($id) {
-        Data.get('po/updtst/'+$id).then(function (data) {
-        });
-    }
-
-    $scope.cariSpp = function ($query) {
-
-        if ($query.length >= 3) {
-            Data.get('spp/cari', {nama: $query}).then(function (data) {
-                $scope.results = data.data;
-            });
-        }
-    }
-    $scope.cariSuppiler = function ($query) {
-
-        if ($query.length >= 3) {
-            Data.get('supplier/cari', {nama: $query}).then(function (data) {
-                $scope.results = data.data;
-            });
-        }
-    }
-
-    $scope.cariBarang = function ($query) {
-
-        if ($query.length >= 3) {
-            Data.get('barang/cari', {barang: $query}).then(function (data) {
-                $scope.results = data.data;
-            });
-        }
-    }
-
    
 
 

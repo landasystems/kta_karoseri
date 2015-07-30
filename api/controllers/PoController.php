@@ -195,6 +195,9 @@ class PoController extends Controller {
                     $query->andFilterWhere(['like', 'dpo.nota', $val]);
                 }else  if($key == 'spp') {
                     $query->andFilterWhere(['like', 'trans_po.'.$key, $val]);
+                
+                }else  if($key == 'nama_supplier') {
+                    $query->andFilterWhere(['like', 'supplier.'.$key, $val]);
                 }
             }
         }
