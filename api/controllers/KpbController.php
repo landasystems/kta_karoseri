@@ -21,7 +21,7 @@ class KpbController extends Controller {
                     'view' => ['get'],
                     'excel' => ['get'],
                     'jabkpb' => ['get'],
-                    'listbahan' => ['post'],
+                    'listbahan' => ['get'],
                 ],
             ]
         ];
@@ -38,7 +38,6 @@ class KpbController extends Controller {
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
-//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -57,7 +56,6 @@ class KpbController extends Controller {
                 ->join('JOIN', 'det_standar_bahan as dsb', 'dsb.kd_jab = tj.id_jabatan')
                 ->select("tj.*")
                 ->where(['dsb.kd_bom' => $param['key']]);
-//                ->orWhere(['like', 'id_jabatan', $param['key']]);
 
         $command = $query->createCommand();
         $models = $command->queryAll();
