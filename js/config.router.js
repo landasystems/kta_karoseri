@@ -396,6 +396,20 @@ angular.module('app')
                                             }]
                                     }})
                                 //
+                                .state('transaksi.valbarangkeluar', {
+                                    url: '/val-barangkeluar',
+                                    templateUrl: 'tpl/t_val-barangkeluar/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/validasibkk.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
                                 .state('transaksi.bktbarangkeluar', {
                                     url: '/bkt-barangkeluar',
                                     templateUrl: 'tpl/t_bkt-barangkeluar/index.html',
@@ -617,7 +631,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load([]).then(
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/r_purchase-order.js');
                                                         }

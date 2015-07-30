@@ -1,7 +1,8 @@
 app.controller('returpoCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
-
+    var paramRef;
+    
     $scope.displayed = [];
     $scope.paginations = 0;
     $scope.form = {};
@@ -23,9 +24,10 @@ app.controller('returpoCtrl', function ($scope, Data, toaster) {
         if (tableState.search.predicateObject) {
             param['filter'] = tableState.search.predicateObject;
         }
-
+        paramRef = param;
         Data.get('po/rekap', param).then(function (data) {
             $scope.displayed = data.data;
+            $scope.displayedPrint = data.dataPrint;
             $scope.paginations = data.totalItems;
             if(data.totalItems != 0) {
                 tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
@@ -34,10 +36,18 @@ app.controller('returpoCtrl', function ($scope, Data, toaster) {
 
         $scope.isLoading = false;
     };
+    $scope.excel = function () {
+        Data.get('po/rekap', paramRef).then(function (data) {
+            window.location = 'api/web/po/excel';
+        });
+    }
 
-    Data.get('po/listsupplier').then(function (data) {
-        $scope.listsupplier = data.data;
-    });
+//    Data.get('po/listsupplier').then(function (data) {
+//        $scope.listsupplier = data.data;
+//    });
+//    Data.get('po/listbarang').then(function (data) {
+//        $scope.listbarang = data.data;
+//    });
 
 
     $scope.updt_st = function ($id) {
