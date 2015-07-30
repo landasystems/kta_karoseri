@@ -28,7 +28,7 @@ app.controller('kpbCtrl', function($scope, Data, toaster) {
             kd_bom: kd_bom,
             kd_jab: kd_jab,
         };
-        Data.post('kpb/listbahan', dt).then(function(data) {
+        Data.get('kpb/listbahan', dt).then(function(data) {
             $scope.detail = data.data;
             $scope.status = data.print;
             $scope.msg = data.msg;
