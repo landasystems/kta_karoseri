@@ -102,14 +102,14 @@
                 <form name="landaform" class="form-horizontal from-validation">
                     <div class="col-md-6 col-sm-12">
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Kode Jenis</label>
+                            <label class="col-sm-3 control-label">Kode Jenis</label>
                             <div class="col-sm-6">
                                 <input type="text" class="form-control" ng-model="form.kd_jns" ng-disabled="is_view" ng-readonly="is_create == false" required>
 
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Status</label>
+                            <label class="col-sm-3 control-label">Status</label>
                             <div class="col-sm-6">
                                 <select class="form-control" ng-model="form.stat" ng-disabled="is_view" required>
                                     <option value="">-Pilih Status-</option>
@@ -119,7 +119,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Bagian</label>
+                            <label class="col-sm-3 control-label">Bagian</label>
                             <div class="col-sm-6">
                                 <select ng-model="form.bag" ng-disabled="is_view" class="form-control">
                                     <option value="">-Pilih Bagian-</option>
@@ -137,14 +137,14 @@
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="form-group">
-                            <label class="col-sm-2 control-label">Jenis Komplain</label>
+                            <label class="col-sm-3 control-label">Jenis Komplain</label>
                             <div class="col-sm-6">
                                 <textarea class="form-control" rows="2" ng-model="form.jns_komplain" ng-disabled="is_view" required></textarea>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-md-2 col-sm-12"></div>
+                    <div class="col-md-5 col-sm-12"></div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <div align="center">
                         <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
