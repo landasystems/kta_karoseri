@@ -1,6 +1,6 @@
 <?php
 header("Content-type: application/vnd-ms-excel");
-//header("Content-Disposition: attachment; filename=excel-retur-PO.xls");
+header("Content-Disposition: attachment; filename=excel-retur-PO.xls");
 ?>
 <h3>PT. KARYA TUGAS ANDA</h3>
 Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
@@ -10,12 +10,32 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
 <br>
 <center><b>REKAP PURCHASE ORDER</b></center>
 <br><br>
+<?php
+$data = array();
+$i = 0;
 
+foreach ($models as $key => $val) {
+    $data[$val['nota']]['body']['jml'] = isset($data[$val['nota']]['body']['jml']) ? $data[$val['nota']]['body']['jml'] . $val['jml'] . '<br>' : $val['jml'] . '<br>';
+    $data[$val['nota']]['body']['bayar'] = isset($data[$val['nota']]['body']['bayar']) ? $data[$val['nota']]['body']['bayar'] . ($val['bayar'] == '0') ? 'Tunai' : 'Kredit' . '<br>' : ($val['bayar'] == '0') ? 'Tunai' : 'Kredit' . '<br>';
+    $data[$val['nota']]['body']['total'] = isset($data[$val['nota']]['body']['total']) ? $data[$val['nota']]['body']['total'] . $val['jml'] * $val['harga'] . '<br>' : $val['jml'] * $val['harga'].'<br>';
+    $data[$val['nota']]['body']['ket'] = isset($data[$val['nota']]['body']['ket']) ? $data[$val['nota']]['body']['ket'] . $val['ket'] . '<br>' : $val['ket'] . '<br>';
+    $data[$val['nota']]['body']['tgl_pengiriman'] = isset($data[$val['nota']]['body']['tgl_pengiriman']) ? $data[$val['nota']]['body']['tgl_pengiriman'] . $val['tgl_pengiriman'] . '<br>' : $val['tgl_pengiriman'] . '<br>';
+    $data[$val['nota']]['body']['harga'] = isset($data[$val['nota']]['body']['harga']) ? $data[$val['nota']]['body']['harga'] . $val['harga'] . '<br>' : $val['harga'] . '<br>';
+    $data[$val['nota']]['body']['nama_supplier'] = isset($data[$val['nota']]['body']['nama_supplier']) ? $data[$val['nota']]['body']['nama_supplier'] . $val['nama_supplier'] . '<br>' : $val['nama_supplier'] . '<br>';
+    $data[$val['nota']]['body']['no_bbm'] = isset($data[$val['nota']]['body']['no_bbm']) ? $data[$val['nota']]['body']['no_bbm'] . $val['no_bbm'] . '<br>' : $val['no_bbm'] . '<br>';
+    $data[$val['nota']]['body']['kd_barang'] = isset($data[$val['nota']]['body']['kd_barang']) ? $data[$val['nota']]['body']['kd_barang'] . $val['kd_barang'] . '<br>' : $val['kd_barang'] . '<br>';
+    $data[$val['nota']]['body']['nm_barang'] = isset($data[$val['nota']]['body']['nm_barang']) ? $data[$val['nota']]['body']['nm_barang'] . $val['nm_barang'] . '<br>' : $val['nm_barang'] . '<br>';
+    $data[$val['nota']]['title']['nota'] = $val['nota'];
+    $data[$val['nota']]['title']['suplier'] = $val['nama_supplier'];
+    $data[$val['nota']]['title']['no_bbm'] = $val['no_bbm'];
+    $i++;
+}
+?>
 <table border="1">
     <tr>
-        <th>No PO</th>
-        <th>Supplier</th>
-        <th>NO BBM</th>
+        <th valign="top">No PO</th>
+        <th valign="top">Supplier</th>
+        <th valign="top">NO BBM</th>
         <th>Kode Barang</th>
         <th>Nama Barang</th>
         <th>Qty</th>
@@ -26,52 +46,22 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
         <th>Keterangan</th>
     </tr>
     <?php
-    $data = array();
-    $i = 0;
-
-    foreach ($models as $key => $val) {
-        $data[$key] = $val;
-        $data[$i]['bayar'] = ($val == '0') ? 'Tunai' : 'Kredit';
-        $sup = \app\models\Supplier::find()
-                ->where(['kd_supplier' => $data[$i]['suplier']])
-                ->One();
-        $bbm = \app\models\DetBbm::find()
-                ->where(['no_po' => $data[$i]['nota']])
-                ->One();
-        $brg = \app\models\Barang::find()
-                ->where(['kd_barang' => $data[$i]['kd_barang']])
-                ->one();
-        $supplier = (isset($sup->nama_supplier)) ? $sup->nama_supplier : '';
-        $barang = (isset($brg->nm_barang)) ? $brg->nm_barang : '';
-        $bb = (isset($bbm->no_bbm)) ? $bbm->no_bbm : '';
-        $kodebarang = (isset($brg->kd_barang)) ? $brg->kd_barang : '';
-        $data[$i]['suplier'] = ['suplier' => $supplier, 'no_bbm' => $bb];
-        $data[$i]['kd_barang'] = ['kd_barang' => $kodebarang, 'nm_barang' => $barang];
-        $colspan = 0;
-        if (isset($data[$i + 1]) && $data[$i]['suplier']['no_bbm'] == $data[$i + 1]['suplier']['no_bbm']) {
-            $datcol = $data[$i]['suplier']['no_bbm'];
-            $colspan++;
-        } else {
-            $datcol = $data[$i]['suplier']['no_bbm'];
-            $colspan = 0;
-        }
+    foreach ($data as $key) {
         ?>
         <tr>
-            <td rowspan="<?= $colspan ?>">&nbsp;<?= $data[$i]['nota'] ?></td>
-            <td rowspan="<?= $colspan ?>"><?= $data[$i]['suplier']['suplier'] ?></td>
-            <td rowspan="<?= $colspan ?>"><?= $datcol ?></td>
-            <td>&nbsp;<?= $data[$i]['kd_barang']['kd_barang'] ?></td>
-            <td><?= $data[$i]['kd_barang']['nm_barang'] ?></td>
-            <td>&nbsp;<?= $data[$i]['jml'] ?></td>
-            <td>&nbsp;<?= $data[$i]['harga'] ?></td>
-            <td>&nbsp;<?= ($data[$i]['jml'] * $data[$i]['harga']) ?></td>
-            <td><?= date('d-m-Y', strtotime($data[$i]['tgl_pengiriman'])) ?></td>
-            <td><?= $data[$i]['bayar'] ?></td>
-            <td><?= $data[$i]['ket'] ?></td>
+            <td valign="top"><?php echo $key['title']['nota'] ?></td>
+            <td valign="top"><?php echo $key['title']['suplier'] ?></td>
+            <td valign="top"><?php echo $key['title']['no_bbm'] ?></td>
+            <td style="text-align: center">&nbsp;<?php echo $key['body']['kd_barang'] ?></td>
+            <td><?php echo $key['body']['nm_barang'] ?></td>
+            <td style="text-align: right">&nbsp;<?php echo $key['body']['jml'] ?></td>
+            <td style="text-align: right">&nbsp;<?php echo $key['body']['harga'] ?></td>
+            <td style="text-align: right">&nbsp;<?php echo $key['body']['total'] ?></td>
+            <td><?php echo $key['body']['tgl_pengiriman'] ?></td>
+            <td><?php echo $key['body']['bayar'] ?></td>
+            <td><?php echo $key['body']['ket'] ?></td>
         </tr>
         <?php
-        $i++;
     }
     ?>
 </table>
-
