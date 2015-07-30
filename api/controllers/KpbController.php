@@ -21,7 +21,8 @@ class KpbController extends Controller {
                     'view' => ['get'],
                     'excel' => ['get'],
                     'jabkpb' => ['get'],
-                    'listbahan' => ['get'],
+                    'listbahan' => ['post'],
+                    'simpanprint' => ['post'],
                 ],
             ]
         ];
@@ -38,15 +39,23 @@ class KpbController extends Controller {
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
-
         if (!in_array($verb, $allowed)) {
 
             $this->setHeader(400);
             echo json_encode(array('status' => 0, 'error_code' => 400, 'message' => 'Method not allowed'), JSON_PRETTY_PRINT);
             exit;
         }
-
         return true;
+    }
+
+    public function actionSimpanprint() {
+        $param = json_decode(file_get_contents("php://input"), true);
+        \Yii::error($param);
+        $kpb = new Kpb;
+        $kpb->no_wo = $param['no_wo'];
+        $kpb->kd_jab = $param['kd_jab'];
+        $kpb->status = 1;
+        $kpb->save();
     }
 
     public function actionJabkpb() {
@@ -69,7 +78,7 @@ class KpbController extends Controller {
         $param = json_decode(file_get_contents("php://input"), true);
 
         //cek apakah sdh di print
-        $cek = Kpb::find()->where(['no_wo' => $param['kd_bom']['no_wo'], 'kd_jab' => $param['kd_jab'], 'status' => 0])->count();
+        $cek = Kpb::find()->where(['no_wo' => $param['kd_bom']['no_wo'], 'kd_jab' => $param['kd_jab'], 'status' => 1])->count();
 
         $query = new Query;
         $query->from('det_standar_bahan as dsb')
@@ -87,8 +96,10 @@ class KpbController extends Controller {
         } else {
             $list = $models;
         }
+        
+        session_start();
 
-        if ($cek == 1) {
+        if ($cek == 1 and $_SESSION['user']['id'] != "-1") {
             $msg = 'Kartu pengambilan bahan sudah dicetak, silahkan menghubungi admin untuk mencetak ulang';
             $print = 0;
         } else {
