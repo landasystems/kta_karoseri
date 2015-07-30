@@ -5,6 +5,16 @@ app.controller('kpbCtrl', function($scope, Data, toaster) {
     $scope.status = 0;
     $scope.msg = '';
 
+    $scope.simpanPrint = function(no_wo, kd_jab) {
+        var data = {
+            no_wo: no_wo,
+            kd_jab: kd_jab,
+        }
+        Data.post('kpb/simpanprint', data).then(function(data) {
+
+        });
+    }
+
     $scope.cariWo = function($query) {
         if ($query.length >= 3) {
             Data.get('wo/wospk', {nama: $query}).then(function(data) {

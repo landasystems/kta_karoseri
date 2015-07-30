@@ -18,9 +18,11 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, 
         $scope.listMerk = data.data;
     });
 
-    Data.get('chassis/tipe').then(function(data) {
-        $scope.listTipe = data.data;
-    });
+    $scope.typeChassis = function(merk) {
+        Data.get('chassis/tipe?merk=' + merk).then(function(data) {
+            $scope.listTipe = data.data;
+        });
+    }
 
     $scope.getchassis = function(merk, tipe) {
         Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function(data) {
@@ -186,6 +188,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, 
     $scope.selected = function(id) {
         Data.get('bom/view/' + id).then(function(data) {
             $scope.form = data.data;
+            $scope.typeChassis($scope.form.merk);
             if (jQuery.isEmptyObject(data.detail)) {
                 $scope.detBom = [
                     {
@@ -198,6 +201,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, 
             } else {
                 $scope.detBom = data.detail;
             }
+            $scope.form.tipe = $scope.form.tipe;
         });
     }
 

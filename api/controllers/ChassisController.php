@@ -66,10 +66,12 @@ class ChassisController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models));
     }
-    
+
     public function actionTipe() {
+        $merk = $_GET['merk'];
         $query = new Query;
         $query->from('chassis')
+                ->where(['like', 'merk', $merk])
                 ->select("distinct(tipe)");
 
         $command = $query->createCommand();
