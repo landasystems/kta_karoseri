@@ -273,7 +273,7 @@ class PoController extends Controller {
         $no_spp = (isset($spp->no_spp)) ? $spp->no_spp : '';
         $no_proyek = (isset($spp->no_proyek)) ? $spp->no_proyek : '';
         $data['listspp'] = ['no_spp' => $no_spp, 'no_proyek' => $no_proyek];
-
+        $cek = $data['status'];
         $det = DetailPo::find()
                 ->with(['barang'])
                 ->orderBy('nota')
@@ -291,9 +291,17 @@ class PoController extends Controller {
             $detail[$key]['data_barang'] = ['no' => $no, 'tgl_pengiriman' => $val->tgl_pengiriman, 'kd_barang' => $val->kd_barang, 'nm_barang' => $namaBarang, 'harga' => $hargaBarang, 'satuan' => $satuanBarang];
             $no++;
         }
+        session_start();
+        if ($cek == 1 and $_SESSION['user']['id'] != "-1") {
+            $msg = 'Detail PO sudah dicetak, silahkan menghubungi admin untuk mencetak ulang';
+            $print = 0;
+        } else {
+            $msg = '';
+            $print = 1;
+        }
 
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $data, 'detail' => $detail), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'detail' => $detail, 'msg' => $msg, 'print' => $print), JSON_PRETTY_PRINT);
     }
 
     public function actionUpdtst($id) {

@@ -4,8 +4,10 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 
     $scope.displayed = [];
     $scope.is_edit = false;
+    $scope.is_print = false;
     $scope.is_view = false;
     $scope.is_create = false;
+    $scope.msg = '';
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -36,7 +38,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 
 
     $scope.updt_st = function ($id) {
-        Data.get('po/updtst/'+$id).then(function (data) {
+        Data.get('po/updtst/' + $id).then(function (data) {
 //            $scope.callServer(tableStateRef);
         });
     }
@@ -224,6 +226,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 //button
     $scope.create = function (form) {
         $scope.is_edit = true;
+        $scope.is_print = false;
         $scope.is_view = false;
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
@@ -243,7 +246,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 
 
     $scope.update = function (nota) {
-
+        $scope.is_print = false;
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
@@ -253,7 +256,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     };
 
     $scope.view = function (nota) {
-
+        $scope.is_print = true;
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + nota;
@@ -297,6 +300,8 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     $scope.selected = function (id) {
         Data.get('po/view/' + id).then(function (data) {
             $scope.form = data.data;
+            $scope.status = data.print;
+            $scope.msg = data.msg;
             $scope.form.terbilang = $scope.keKata(data.data.total_dibayar) + ' RUPIAH';
             $scope.detsPo = data.detail;
             $scope.form.dp = (data.data.dp == undefined) ? '0' : data.data.dp;
