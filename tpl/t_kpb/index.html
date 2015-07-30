@@ -37,12 +37,18 @@
                             </select>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label"></label>
+                        <div class="col-sm-4">
+                            <button type="button" class="btn btn-primary fa fa-print" ng-click="simpanPrint(form.no_wo.no_wo, form.kd_jabatan)" ng-print print-element-id="printArea" ng-disabled="status == 0">&nbsp;Print</button>
+                        </div>
+                    </div>
                     <div class="form-group" ng-if="detail.length > 0">
                         <div class="col-md-12">
                             <div class="alert alert-danger" ng-if="msg.length > 0">
                                 <p>{{msg}}</p>
                             </div>
-<!--                            <table class="table table-bordered">
+                            <table class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th>Pekerjaan</th>
@@ -61,20 +67,48 @@
                                         <td>{{det.ket}}</td>
                                     </tr>
                                 </tbody>
-                            </table>-->
+                            </table>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <center>
-                            <button type="button" class="btn btn-primary fa fa-print" ng-print print-element-id="printArea" ng-disabled="status == 0">&nbsp;Print</button>
-                        </center>
                     </div>	
                 </form>
             </div>
         </div>
     </div>
+
+    <div id="printArea">
+        <h2 align="center">
+            KARTU PENGAMBILAN BAHAN (KPB) <BR>
+            SMALL BUS
+        </h2><br>
+        <p>NO WO : {{form.no_wo.no_wo}}
+        <table class="print-detail" style="font-size: 9pt">
+            <thead>
+                <tr>
+                    <th>NO</th>
+                    <th>JENIS BARANG</th>
+                    <th>JML</th>
+                    <th>SAT</th>
+                </tr>
+            <tbody>
+                <tr ng-repeat="det in detail">
+                    <td>{{(1 * $index) + 1}}</td>
+                    <td>{{det.nm_barang}}</td>
+                    <td>{{det.qty}}</td>
+                    <td>{{det.satuan}}</td>
+                </tr>
+            </tbody>
+            </thead>
+        </table>
+        <br><br><br>
+        <hr style="border: 2px solid #000">
+        <table width="100%">
+            <tr>
+                <td style="border: none; text-align: center; width: 30%">PPIC</td>
+                <td style="border: none; text-align: center; width: 40%">GUDANG</td>
+                <td style="border: none; text-align: center; width: 30%">PEKERJA</td>
+            </tr>
+        </table>
+    </div>
 </div>
 
-<div id="printArea">
 
-</div>
