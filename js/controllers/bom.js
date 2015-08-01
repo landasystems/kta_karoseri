@@ -173,8 +173,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, 
         if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
             $scope.callServer(tableStateRef);
         }
-
-        $scope.detBom = {};
         $scope.is_edit = false;
         $scope.is_view = false;
     };

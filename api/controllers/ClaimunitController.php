@@ -23,7 +23,6 @@ class ClaimunitController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
-                    'listwo' => ['get'],
                     'jeniskomplain' => ['get'],
                     'sisagaransi' => ['post'],
                 ],
