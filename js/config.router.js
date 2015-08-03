@@ -668,10 +668,10 @@ angular.module('app')
                                     templateUrl: 'tpl/r_barang-masuk/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load([]).then(
-                                                        function() {
-                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/r_barangmasuk.js');
                                                         }
                                                 );
                                             }]
