@@ -246,7 +246,8 @@ class BarangController extends Controller {
         $query->from('barang')
                 ->select("*")
                 ->where(['like', 'nm_barang', $params['barang']])
-                ->orWhere(['like', 'kd_barang', $params['barang']]);
+                ->orWhere(['like', 'kd_barang', $params['barang']])
+                ->andWhere("nm_barang != '-' && kd_barang != '-'");
 
         $command = $query->createCommand();
         $models = $command->queryAll();

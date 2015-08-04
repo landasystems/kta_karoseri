@@ -3,6 +3,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     var tableStateRef;
 
     $scope.displayed = [];
+    $scope.form = {};
     $scope.is_edit = false;
     $scope.is_print = false;
     $scope.is_view = false;
@@ -46,9 +47,9 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     $scope.cariSpp = function ($query) {
 
         if ($query.length >= 3) {
-            Data.get('spp/cari', {nama: $query}).then(function (data) {
+            Data.get('sppnonrutin/cari', {nama: $query}).then(function (data) {
 //                console.log(data.data);
-                $scope.results = data.data;
+                $scope.resultsspp = data.data;
             });
         }
     }
@@ -56,7 +57,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 
         if ($query.length >= 3) {
             Data.get('supplier/cari', {nama: $query}).then(function (data) {
-                $scope.results = data.data;
+                $scope.resultssupplier = data.data;
             });
         }
     }
@@ -65,7 +66,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 
         if ($query.length >= 3) {
             Data.get('barang/cari', {barang: $query}).then(function (data) {
-                $scope.results = data.data;
+                $scope.resultsbrg = data.data;
             });
         }
     }
@@ -237,10 +238,12 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         });
         $scope.form.tanggal = moment().format('DD-MM-YYYY');
         $scope.form.dp = '0';
-        $scope.form.diskon = '0';
+//        $scope.form.diskon = 0;
+        $scope.form.nilai_diskon = 0;
         $scope.form.status_po = '1';
         $scope.form.status_ppn = '0';
         $scope.form.ppn = '0';
+        $scope.form.dikirim_ke = 'PT KARYA TUGAS ANDA';
 
     };
 

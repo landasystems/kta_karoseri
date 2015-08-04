@@ -28,6 +28,7 @@ class PoController extends Controller {
                     'cari' => ['get'],
                     'updtst' => ['get'],
                     'excel' => ['get'],
+                    'excelbeli' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -105,15 +106,16 @@ class PoController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('trans_po')
+                ->join('JOIN', 'supplier', 'supplier.kd_supplier = trans_po.suplier')
                 ->orderBy($sort)
-                ->select("*");
+                ->select("trans_po.*,supplier.nama_supplier");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
 
-                $query->andFilterWhere(['like', 'trans_po.' . $key, $val]);
+                $query->andFilterWhere(['like', $key, $val]);
             }
         }
 
@@ -130,7 +132,7 @@ class PoController extends Controller {
                     ->where(['kd_supplier' => $data[$i]['suplier']])
                     ->One();
             $supplier = (isset($sup->nama_supplier)) ? $sup->nama_supplier : '';
-            $data[$i]['suplier'] = $supplier;
+//            $data[$i]['suplier'] = $supplier;
             $i++;
         }
 
@@ -172,8 +174,9 @@ class PoController extends Controller {
                 ->join('JOIN', 'supplier', 'supplier.kd_supplier = trans_po.suplier')
                 ->join('JOIN', 'det_bbm', 'det_bbm.no_po = trans_po.nota and det_bbm.kd_barang = dpo.kd_barang')
                 ->join('JOIN', 'barang', 'barang.kd_barang = dpo.kd_barang')
+                ->join('JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
                 ->orderBy($sort)
-                ->select("dpo.* ,trans_po.* , supplier.nama_supplier, det_bbm.no_bbm, barang.nm_barang ");
+                ->select("dpo.* ,trans_po.* ,jenis_brg.jenis_brg, supplier.nama_supplier, det_bbm.no_bbm, barang.nm_barang, barang.satuan");
         //filter
 
         if (isset($params['filter'])) {
@@ -347,12 +350,12 @@ class PoController extends Controller {
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
-        $model->attributes = $params['formPo'];
-        $model->tanggal = date("Y-m-d", strtotime($params['formPo']['tanggal']));
+        $model->attributes = $params['formpo'];
+        $model->tanggal = date("Y-m-d", strtotime($params['formpo']['tanggal']));
         $model->spp = (empty($params['formpo']['listspp']['no_spp'])) ? '-' : $params['formpo']['listspp']['no_spp'];
 
         if ($model->save()) {
-            $detailsr = $params['details'];
+           $details = $params['details'];
             foreach ($details as $val) {
                 $det = new DetailPo();
                 $det->attributes = $val;
@@ -438,6 +441,13 @@ class PoController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/po", ['models' => $models]);
+    }
+    public function actionExcelbeli() {
+        session_start();
+        $query = $_SESSION['query'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/belitunaikredit", ['models' => $models]);
     }
 
 }
