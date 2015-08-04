@@ -19,6 +19,12 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
         $scope.opened2 = true;
     };
 
+    $scope.open3 = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened3 = true;
+    };
+
     $scope.cariWo = function($query) {
         if ($query.length >= 3) {
             Data.get('wo/wospk', {nama: $query}).then(function(data) {
@@ -49,6 +55,7 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
 
         $scope.isLoading = false;
     };
+
     $scope.excel = function() {
         Data.get('rubahbentuk', paramRef).then(function(data) {
             window.location = 'api/web/rubahbentuk/excel';
@@ -62,15 +69,16 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
     };
+
     $scope.update = function(form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.kd_rubah;
         $scope.form = form;
-        $scope.form.no_wo = form.no_wo;
         $scope.selected(form.no_wo);
     };
+
     $scope.view = function(form) {
         $scope.is_edit = true;
         $scope.is_view = true;
@@ -78,6 +86,7 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
         $scope.form = form;
         $scope.selected(form.no_wo);
     };
+
     $scope.save = function(form) {
         var url = ($scope.is_create == true) ? 'rubahbentuk/create' : 'rubahbentuk/update/' + form.id;
         Data.post(url, form).then(function(result) {
@@ -90,13 +99,14 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
             }
         });
     };
+
     $scope.cancel = function() {
-        if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
-            $scope.callServer(tableStateRef);
-        }
+        $scope.form.no_wo = "";
+        $scope.callServer(tableStateRef);
         $scope.is_edit = false;
         $scope.is_view = false;
     };
+
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
             Data.delete('rubahbentuk/delete/' + row.id).then(function(result) {
@@ -104,6 +114,7 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
             });
         }
     };
+
     $scope.selected = function($query) {
         Data.get('wo/wospk', {nama: $query}).then(function(data) {
             $scope.form.no_wo = data.data[0];
