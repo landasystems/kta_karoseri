@@ -3,9 +3,12 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     var tableStateRef;
 
     $scope.displayed = [];
+    $scope.form = {};
     $scope.is_edit = false;
+    $scope.is_print = false;
     $scope.is_view = false;
     $scope.is_create = false;
+    $scope.msg = '';
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -36,7 +39,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 
 
     $scope.updt_st = function ($id) {
-        Data.get('po/updtst/'+$id).then(function (data) {
+        Data.get('po/updtst/' + $id).then(function (data) {
 //            $scope.callServer(tableStateRef);
         });
     }
@@ -44,9 +47,9 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     $scope.cariSpp = function ($query) {
 
         if ($query.length >= 3) {
-            Data.get('spp/cari', {nama: $query}).then(function (data) {
+            Data.get('sppnonrutin/cari', {nama: $query}).then(function (data) {
 //                console.log(data.data);
-                $scope.results = data.data;
+                $scope.resultsspp = data.data;
             });
         }
     }
@@ -54,7 +57,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 
         if ($query.length >= 3) {
             Data.get('supplier/cari', {nama: $query}).then(function (data) {
-                $scope.results = data.data;
+                $scope.resultssupplier = data.data;
             });
         }
     }
@@ -63,7 +66,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 
         if ($query.length >= 3) {
             Data.get('barang/cari', {barang: $query}).then(function (data) {
-                $scope.results = data.data;
+                $scope.resultsbrg = data.data;
             });
         }
     }
@@ -224,6 +227,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 //button
     $scope.create = function (form) {
         $scope.is_edit = true;
+        $scope.is_print = false;
         $scope.is_view = false;
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
@@ -234,16 +238,18 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         });
         $scope.form.tanggal = new Date();
         $scope.form.dp = '0';
-        $scope.form.diskon = '0';
+//        $scope.form.diskon = 0;
+        $scope.form.nilai_diskon = 0;
         $scope.form.status_po = '1';
         $scope.form.status_ppn = '0';
         $scope.form.ppn = '0';
+        $scope.form.dikirim_ke = 'PT KARYA TUGAS ANDA';
 
     };
 
 
     $scope.update = function (nota) {
-
+        $scope.is_print = false;
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
@@ -253,7 +259,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     };
 
     $scope.view = function (nota) {
-
+        $scope.is_print = true;
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + nota;
@@ -297,6 +303,8 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     $scope.selected = function (id) {
         Data.get('po/view/' + id).then(function (data) {
             $scope.form = data.data;
+            $scope.status = data.print;
+            $scope.msg = data.msg;
             $scope.form.terbilang = $scope.keKata(data.data.total_dibayar) + ' RUPIAH';
             $scope.detsPo = data.detail;
             $scope.form.dp = (data.data.dp == undefined) ? '0' : data.data.dp;

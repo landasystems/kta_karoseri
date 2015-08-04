@@ -54,11 +54,10 @@ class PembatalanchassisController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "trans_standar_bahan.kd_titipan ASC";
+        $sort = "serah_terima_in.kd_titipan ASC";
         $offset = 0;
         $limit = 20;
-        //        Yii::error($params);
-        //limit & offset pagination
+
         if (isset($params['limit']))
             $limit = $params['limit'];
         if (isset($params['offset']))
@@ -81,7 +80,8 @@ class PembatalanchassisController extends Controller {
                 ->limit($limit)
                 ->from(['serah_terima_in', 'customer', 'chassis'])
                 ->where('serah_terima_in.kd_cust = customer.kd_cust and serah_terima_in.kd_chassis = chassis.kd_chassis and serah_terima_in.status = 1 and serah_terima_in.no_spk = "-"')
-                ->select("*");
+                ->select("*")
+                ->orderBy($sort);
 
         //filter
         if (isset($params['filter'])) {

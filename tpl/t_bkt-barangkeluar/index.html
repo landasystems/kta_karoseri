@@ -31,7 +31,7 @@
                         <div class="form-group">
                             <label class="col-md-3">Bagian</label>
                             <div class="col-md-9">
-                                <input st-search="bagian" class="form-control"/>
+                                <input st-search="tj.jabatan" class="form-control"/>
                             </div>
                         </div>
                         <div class="form-group">
@@ -48,11 +48,10 @@
                     <thead>
                         <tr>
                             <th st-sort="tanggal">#</th>
-                             <th st-sort="no_bbk">No. BBK</th>
+                            <th st-sort="no_bbk">No. BBK</th>
                             <th st-sort="tanggal">Tanggal</th>
-                           
                             <th st-sort="no_wo">No. Wo</th>
-                            <th st-sort="bagian">Bagian</th>
+                            <th st-sort="tj.jabatan">Bagian</th>
                             <th st-sort="penerima">Penerima</th>
                             <th st-sort="petugas">Petugas</th>
                             <th></th>
@@ -61,11 +60,10 @@
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
                             <td><label class="i-checks">
-                                        <input type="checkbox" ng-model="form.no_bkk[row.no_bkk]" ><i></i> 
-                                    </label></td>
-                                    <td>{{row.no_bbk}}</td>
+                                    <input type="checkbox" ng-model="form.no_bkk[row.no_bkk]" ><i></i> 
+                                </label></td>
+                            <td>{{row.no_bbk}}</td>
                             <td>{{row.tanggal| date}}</td>
-                            
                             <td>{{row.no_wo}}</td>
                             <td>{{row.bagian}}</td>
                             <td>{{row.penerima}}</td>
@@ -206,7 +204,7 @@
                                             <th>Barang</th>
                                             <th style="width:100px">Jumlah</th>
                                             <th style="width:400px">Keterangan</th>
-                                            <td width="79"></td>
+                                            <td width="79" ng-show="is_view != true"></td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -226,9 +224,9 @@
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control" required ng-keyup="detailstok(form.no_wo, detail.kd_barang')"></td>
+                                            <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control" required ng-change=""></td>
                                             <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control"></td>
-                                            <td  style="margin:0px;padding:0px;">
+                                            <td  style="margin:0px;padding:0px;" ng-show="is_view != true">
                                                 <button ng-click="addDetail(detail)" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-plus"></i></button>
                                                 <button ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view" ng-if="$index == 0"><i class="fa fa-trash-o"></i></button>
                                                 <button ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view" ng-if="$index > 0" style="width:100%"><i class="fa fa-trash-o"></i></button>
