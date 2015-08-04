@@ -548,7 +548,7 @@ angular.module('app')
                                     }})
                                 //
                                 .state('transaksi.spprutin', {
-                                    url: '/spp-nonrutin',
+                                    url: '/spp-rutin',
                                     templateUrl: 'tpl/t_spp-rutin/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
