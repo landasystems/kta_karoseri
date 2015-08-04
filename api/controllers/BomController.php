@@ -39,7 +39,8 @@ class BomController extends Controller {
         $query = new Query;
         $query->from('trans_standar_bahan')
                 ->select("*")
-                ->where(['like', 'kd_bom', $params['nama']]);
+                ->where(['like', 'kd_bom', $params['nama']])
+                ->andWhere('status = 1');
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -187,7 +188,6 @@ class BomController extends Controller {
 
         if ($model->save()) {
             $detailBom = $params['detailBom'];
-//            print_r($detailBom);
             foreach ($detailBom as $val) {
                 $det = new BomDet();
                 $det->attributes = $val;

@@ -1,5 +1,5 @@
-app.controller('wipCtrl', function($scope, Data, toaster) {
-  
+app.controller('wipCtrl', function($scope, Data, toaster, $modal) {
+
     //init data
     var tableStateRef;
     $scope.displayed = [];
@@ -7,23 +7,45 @@ app.controller('wipCtrl', function($scope, Data, toaster) {
     $scope.is_view = false;
     $scope.is_create = false;
     $scope.is_create = false;
+    $scope.detWip = [];
+    $scope.form = {};
 
     $scope.open1 = function($event) {
         $event.preventDefault();
         $event.stopPropagation();
         $scope.opened1 = true;
     };
-    Data.post('wip/nowo').then(function (data) {
-        $scope.list_nowo = data.nowo;
-    });
-    $scope.getnowo = function (wo) {
-        Data.post('wip/getnowo/', wo).then(function (data) {
-            $scope.form = data.nowo;
-            $scope.detail = data.detail;
-            console.log(data.detail);
+    $scope.cariWo = function($query) {
+        if ($query.length >= 3) {
+            Data.get('wip/cari', {no_wo: $query}).then(function(data) {
+                $scope.listWo = data.data;
+            });
+        }
+    };
+
+    $scope.pilih = function(form, $item) {
+        Data.post('wip/getnowo/', $item).then(function(data) {
+//            console.log(data.detail);
+            var newDet = [{
+                    id: 0,
+                    no_wo: '',
+                    kd_kerja: '',
+                    plan_start: '',
+                    plan_finish: '',
+                    act_start: '',
+                    act_finish: '',
+                    keterangan: '',
+                }];
+//            $scope.detWip = newDet;
+            $scope.detWip = (data.detail != null) ? data.detail : newDet;
+            form.umur = data.umur;
 
         });
-    };
+
+        form.tgl_terima = $item.tgl_terima;
+        form.jenis = $item.jenis;
+        form.model = $item.model;
+    }
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -40,7 +62,7 @@ app.controller('wipCtrl', function($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('wokeluar', param).then(function(data) {
+        Data.get('wip', param).then(function(data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
@@ -54,8 +76,9 @@ app.controller('wipCtrl', function($scope, Data, toaster) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-         $scope.eks = {};
-        $scope.inter = {};
+        $scope.detWip = {};
+//        $scope.eks = {};
+//        $scope.inter = {};
 
     };
     $scope.update = function(form) {
@@ -72,17 +95,18 @@ app.controller('wipCtrl', function($scope, Data, toaster) {
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.no_wo;
         $scope.form = form;
-         $scope.selected(form.id);
+        $scope.selected(form.id);
     };
-    $scope.save = function(form) {
-       
-        var url =  'wokeluar/update/';
-        Data.post(url, form).then(function(result) {
+    $scope.save = function(form, detWip) {
+        var data = {
+            wip: form,
+            detWip: detWip,
+        };
+        var url = 'wip/update/';
+        Data.post(url, data).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
-                $scope.is_edit = false;
-                $scope.callServer(tableStateRef); //reload grid ulang
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
             }
         });
@@ -94,11 +118,49 @@ app.controller('wipCtrl', function($scope, Data, toaster) {
     $scope.delete = function(row) {
 //        alert(row);
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.post('womasuk/delete/',row).then(function(result) {
+            Data.post('womasuk/delete/', row).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
+    $scope.setStatus = function() {
+        $scope.openedDet = -1;
+    };
+    $scope.addDetail = function() {
+        var newDet = {
+            id: 0,
+            no_wo: '',
+            kd_kerja: '',
+            plan_start: '',
+            plan_finish: '',
+            act_start: '',
+            act_finish: '',
+            keterangan: '',
+        }
+        $scope.setStatus();
+        $scope.detWip.unshift(newDet);
+    };
+    $scope.removeRow = function(paramindex) {
+        var comArr = eval($scope.detWip);
+        if (comArr.length > 1) {
+            $scope.detWip.splice(paramindex, 1);
+        } else {
+            alert("Something gone wrong");
+        }
+    };
+    $scope.modal = function(form) {
+        var modalInstance = $modal.open({
+            templateUrl: 'tpl/t_w-inprogress/modal.html',
+            controller: 'modalCtrl',
+            size: 'lg',
+            resolve: {
+                form: function() {
+                    return form;
+                }
+            }
+        });
+    };
+
     $scope.selected = function(form) {
         Data.post('womasuk/select/', form).then(function(data) {
             $scope.form = data.data;
@@ -118,12 +180,56 @@ app.controller('wipCtrl', function($scope, Data, toaster) {
             $scope.form.jenis = data.det.jenis;
             $scope.form.jenis = data.det.jenis;
             $scope.form.no_spk = data.data.no_spk.as;
-            console.log(data.data);
-            
+//            console.log(data.data);
+
 
         });
     }
 
 
-})
+});
+app.controller('modalCtrl', function($scope, Data, $modalInstance, form) {
+
+    $scope.cariProses = function($query) {
+        if ($query.length >= 3) {
+            Data.get('wip/proses', {proses: $query}).then(function(data) {
+                $scope.listproses = data.data;
+            });
+        }
+    };
+    $scope.cariPemborong = function($query) {
+        if ($query.length >= 3) {
+            Data.get('wip/karyawan', {karyawan: $query}).then(function(data) {
+                $scope.listkarywan = data.data;
+            });
+        }
+    };
+
+    $scope.open1 = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened1 = true;
+    };
+    $scope.open2 = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened2 = true;
+    };
+    $scope.open3 = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened3 = true;
+    };
+    $scope.open4 = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened4 = true;
+    };
+
+    $scope.formmodal = form;
+    $scope.cancel = function() {
+        $modalInstance.dismiss('cancel');
+    };
+});
+
                                                                                       

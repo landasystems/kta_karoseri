@@ -19,15 +19,18 @@ class PoController extends Controller {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'index' => ['get'],
+                    'rekap' => ['get'],
                     'view' => ['get'],
                     'listsupplier' => ['get'],
+                    'listbarang' => ['get'],
                     'listspp' => ['get'],
-                    'create' => ['post'],
-                    'update' => ['post'],
-                    'delete' => ['delete'],
                     'kode' => ['get'],
                     'cari' => ['get'],
                     'updtst' => ['get'],
+                    'excel' => ['get'],
+                    'create' => ['post'],
+                    'update' => ['post'],
+                    'delete' => ['delete'],
                 ],
             ]
         ];
@@ -118,10 +121,113 @@ class PoController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
+        $data = array();
+        $i = 0;
+        foreach ($models as $key => $val) {
+            $data[$key] = $val;
+            $data[$i]['bayar'] = ($val == '0') ? 'Tunai' : 'Kredit';
+            $sup = \app\models\Supplier::find()
+                    ->where(['kd_supplier' => $data[$i]['suplier']])
+                    ->One();
+            $supplier = (isset($sup->nama_supplier)) ? $sup->nama_supplier : '';
+            $data[$i]['suplier'] = $supplier;
+            $i++;
+        }
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+
+    public function actionRekap() {
+        $params = $_REQUEST;
+        $filter = array();
+        $sort = "trans_po.nota ASC";
+        $offset = 0;
+        $limit = 10;
+
+        //limit & offset pagination
+        if (isset($params['limit']))
+            $limit = $params['limit'];
+        if (isset($params['offset']))
+            $offset = $params['offset'];
+
+        //sorting
+        if (isset($params['sort'])) {
+            $sort = $params['sort'];
+            if (isset($params['order'])) {
+                if ($params['order'] == "false")
+                    $sort.=" ASC";
+                else
+                    $sort.=" DESC";
+            }
+        }
+
+        //create query
+        $query = new Query;
+        $query->offset($offset)
+                ->limit($limit)
+                ->from('detail_po as dpo')
+                ->join('JOIN', 'trans_po', 'trans_po.nota = dpo.nota')
+                ->join('JOIN', 'supplier', 'supplier.kd_supplier = trans_po.suplier')
+                ->join('JOIN', 'det_bbm', 'det_bbm.no_po = trans_po.nota and det_bbm.kd_barang = dpo.kd_barang')
+                ->join('JOIN', 'barang', 'barang.kd_barang = dpo.kd_barang')
+                ->orderBy($sort)
+                ->select("dpo.* ,trans_po.* , supplier.nama_supplier, det_bbm.no_bbm, barang.nm_barang ");
+        //filter
+
+        if (isset($params['filter'])) {
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+
+                if (isset($key) && $key == 'kategori') {
+                    if ($val == 'yes') {
+                        $query->where("spp !='-'");
+                    } elseif ($val == 'no') {
+                        $query->where("spp ='-'");
+                    }
+                } elseif ($key == 'tanggal') {
+                    $value = explode(' - ', $val);
+                    $start = date("Y-m-d", strtotime($value[0]));
+                    $end = date("Y-m-d", strtotime($value[1]));
+                    $query->andFilterWhere(['between', 'dpo.tgl_pengiriman', $start, $end]);
+                } else if($key == 'nota') {
+                    $query->andFilterWhere(['like', 'dpo.nota', $val]);
+                }else  if($key == 'spp') {
+                    $query->andFilterWhere(['like', 'trans_po.'.$key, $val]);
+                
+                }else  if($key == 'nama_supplier') {
+                    $query->andFilterWhere(['like', 'supplier.'.$key, $val]);
+                }
+            }
+        }
+        Yii::error($query);
+        $data = $this->retRekap($query);
+
+        $query->limit(null);
+        $query->offset(null);
+        session_start();
+        $_SESSION['query'] = $query;
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $data['data'], 'totalItems' => $data['totalItems']), JSON_PRETTY_PRINT);
+    }
+
+    public function retRekap($query) {
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+//        Yii::error($models);
+        $totalItems = $query->count();
+        $data = array();
+        $i = 0;
+        foreach ($models as $key => $val) {
+            $data[$key] = $val;
+            $data[$i]['bayar'] = ($val == '0') ? 'Tunai' : 'Kredit';
+            $i++;
+        }
+
+        return ['data' => $data, 'totalItems' => $totalItems];
     }
 
     public function actionListsupplier() {
@@ -129,6 +235,20 @@ class PoController extends Controller {
         $query->from('supplier')
                 ->select("*")
                 ->orderBy('kd_supplier ASC');
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+
+    public function actionListbarang() {
+        $query = new Query;
+        $query->from('barang')
+                ->select("*")
+                ->orderBy('kd_barang ASC');
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -176,16 +296,15 @@ class PoController extends Controller {
         }
 
         $this->setHeader(200);
-        echo json_encode(array('status' => 1,'data' => $data, 'detail' => $detail), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'detail' => $detail), JSON_PRETTY_PRINT);
     }
 
-    public function actionUpdtst($id){
-       $model = TransPo::findOne(['nota' => $id]);
-       $model->status = 1;
-       $model->save();
-      
+    public function actionUpdtst($id) {
+        $model = TransPo::findOne(['nota' => $id]);
+        $model->status = 1;
+        $model->save();
     }
-    
+
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new TransPo();
@@ -198,7 +317,7 @@ class PoController extends Controller {
         $id = $_SESSION['user']['id'];
         $mdl = \app\models\Pengguna::findOne(['id' => $id]);
         $model->pemberi_order = $mdl['nama'];
-        
+
         if ($model->save()) {
             $details = $params['details'];
             foreach ($details as $val) {
@@ -241,7 +360,6 @@ class PoController extends Controller {
         }
     }
 
-    
     public function actionDelete($id) {
         $model = $this->findModel($id);
         $deleteDetail = DetailPo::deleteAll(['nota' => $id]);
@@ -304,6 +422,14 @@ class PoController extends Controller {
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models));
+    }
+
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/po", ['models' => $models]);
     }
 
 }

@@ -26,6 +26,7 @@ class WoController extends Controller {
                     'kode' => ['get'],
                     'cari' => ['get'],
                     'wospk' => ['get'],
+                    'wospkselesai' => ['get'],
                 ],
             ]
         ];
@@ -53,6 +54,25 @@ class WoController extends Controller {
         return true;
     }
 
+    public function actionWospkselesai() {
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('view_wo_spk as vws')
+                ->join('LEFT JOIN','wo_masuk as wm','wm.no_wo = vws.no_wo')
+                ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
+                ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
+                ->select("vws.*, tk.nama as sales, tk.lokasi_kntr as wilayah, wm.tgl_keluar as tgl_wo_keluar")
+                ->where(['like', 'vws.no_wo', $params['nama']])
+                ->andWhere('wm.tgl_keluar is not NULL')
+                ->limit(20);
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+
+    
     public function actionWospk() {
         $params = $_REQUEST;
         $query = new Query;
@@ -242,7 +262,7 @@ class WoController extends Controller {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('wo_masuk')
-                ->select("no_wo")
+                ->select("*")
                 ->where(['like', 'no_wo', $params['no_wo']])
                 ->limit(10);
         $command = $query->createCommand();

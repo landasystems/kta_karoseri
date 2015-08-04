@@ -81,9 +81,10 @@ class BbkController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $sisa_pengambilan = 0;
         $stok_sekarang = 0;
+        Yii::error($params);
 
         if (!empty($params['kd_barang'])) {
-            $stok = Barang::find()->where('kd_barang="' . $params['kd_barang']['kd_barang'] . '"')->one();
+            $stok = Barang::find()->where('kd_barang="' . $params['kd_barang'] . '"')->one();
             $stok_sekarang = $stok->saldo;
 
             if (!empty($params['no_wo'])) {
@@ -91,7 +92,7 @@ class BbkController extends Controller {
                 $query = new Query;
                 $query->from('view_bom_wo as vbw, det_standar_bahan as dsb')
                         ->select("sum(dsb.qty) as jml")
-                        ->where('vbw.kd_bom = dsb.kd_bom and dsb.kd_barang = "' . $params['kd_barang']['kd_barang'] . '" and vbw.no_wo = "' . $params['no_wo']['no_wo'] . '"');
+                        ->where('vbw.kd_bom = dsb.kd_bom and dsb.kd_barang = "' . $params['kd_barang'] . '" and vbw.no_wo = "' . $params['no_wo']['no_wo'] . '"');
                 $command = $query->createCommand();
                 $stokBom = $command->query()->read();
 
@@ -99,7 +100,7 @@ class BbkController extends Controller {
                 $query = new Query;
                 $query->from('det_bbk as db, trans_bbk as tb')
                         ->select("sum(db.jml) as jml_keluar")
-                        ->where('db.no_bbk = tb.no_bbk and db.kd_barang = "' . $params['kd_barang']['kd_barang'] . '" and tb.no_wo = "' . $params['no_wo']['no_wo'] . '"');
+                        ->where('db.no_bbk = tb.no_bbk and db.kd_barang = "' . $params['kd_barang'] . '" and tb.no_wo = "' . $params['no_wo']['no_wo'] . '"');
                 $command = $query->createCommand();
                 $stokKeluar = $command->query()->read();
 

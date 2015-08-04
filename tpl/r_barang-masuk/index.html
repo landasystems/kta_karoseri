@@ -1,16 +1,110 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
-</html>
+<div ng-app="app" ng-controller="returbarangmasukCtrl">
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n font-thin h3">Data Rekap - Barang Masuk</h1>
+    </div>
+    <div class="wrapper-md" ng-show="!is_edit">
+        <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
+            <div class="panel-heading">.:: Rekap Barang Masuk
+                <div class="btn-group pull-right" role="group" style="margin-top: -4px; margin-right: 18px;">
+                    <button type="button" class="btn btn-success fa fa-file-excel-o" ng-show="!isCollapsed" ng-click="excel();">&nbsp;&nbsp;Export Excel</button>
+                </div> 
+            </div>
+
+            <div class="panel-body">
+
+                <div class="panel panel-info" style="text-align: center">
+                    <div class="panel-heading">
+                        <div class="form-horizontal">
+
+                            <div class="form-group">
+                                <div class="control-group">
+                                    <label class="col-sm-2 control-label">Periode</label>
+                                    <div class="col-sm-3">
+                                        <input placeholder="Tanggal Periode" date-range-picker class="form-control" st-search="tgl_nota" type="text"  ng-model="tanggal">
+                                    </div>
+                                    <label class="col-sm-2 control-label">Supplier</label>
+                                <div class="col-sm-3">
+                                    <input placeholder="Nama Supplier" st-search="nama_supplier" class="form-control"/>
+                                </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="control-group">
+                                    
+                                    <label class="col-sm-2 control-label">No BBM</label>
+                                <div class="col-sm-3">
+                                    <input placeholder="Nama Supplier" st-search="no_bbm" class="form-control"/>
+                                </div>
+                                    <label class="col-sm-2 control-label">Nama Barang</label>
+                                <div class="col-sm-3">
+                                    <input placeholder="Nama Supplier" st-search="nm_barang" class="form-control"/>
+                                </div>
+                                    
+                                </div>
+                            </div>
+                            <!--</div>-->
+                            
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive" ng-hide="paginations == 0">
+                <table class="table table-striped table-hover" >
+                    <thead>
+                        <tr>
+
+                            <th st-sort="tgl_nota">Tanggal</th>
+                            <th st-sort="spp">No BBM</th>
+                            <th st-sort="spp">KODE BRG</th>
+                            <th st-sort="spp">NAMA BARANG</th>
+                            <th st-sort="spp">SAT</th>
+                            <th st-sort="spp">JML</th>
+                            <th st-sort="spp">SURAT JALAN</th>
+                            <th st-sort="spp">PO</th>
+                            <th st-sort="nama_supplier">SUPPLIER</th>
+                            <th st-sort="spp">KET</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="!isLoading">
+                        <tr ng-repeat="row in displayed">
+                            <td>{{row.tanggal_nota | date:'dd - MMM - yyyy'}}</td>
+                            <td>{{row.no_bbm}}</td>
+                            <td>{{row.kd_barang}}</td>
+                            <td>{{row.nm_barang}}</td>
+                            <td>{{row.satuan}}</td>
+                            <td>{{row.jumlah}}</td>
+                            <td>{{row.surat_jalan}}</td>
+                            <td>{{row.no_po}}</td>
+                            <td>{{row.nama_supplier}}</td>
+                            <td>{{row.keterangan}}</td>
+
+
+                        </tr>
+                    </tbody>
+                    <tbody ng-show="isLoading">
+                        <tr>
+                            <td colspan="4" class="text-center">Loading ... </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="12" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html">
+                            </td>
+                        </tr>
+                </table>		
+            </div>
+        </div>
+    </div>
+
+    <!--FORM-->
+
+
+
+    <!--PRINT-->
+
+    
+
+</div>

@@ -37,7 +37,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Kode Chassis</label>
                                 <div class="col-sm-9">
-                                    <input st-search="kd_chassis" class="form-control"/>
+                                    <input st-search="c.kd_chassis" class="form-control"/>
                                 </div>
                             </div>
                         </div>
@@ -52,7 +52,7 @@
                             <th st-sort="tgl">Tanggal</th>
                             <th st-sort="kd_bom">Kode BOM</th>
                             <th st-sort="kd_customer">Kode Customer</th>
-                            <th st-sort="kd_chassis">Kode Chassis</th>
+                            <th st-sort="c.kd_chassis">Kode Chassis</th>
                             <th ng-show="is_view == false"></th>
                         </tr>
                     </thead>
@@ -73,7 +73,7 @@
                     </tbody>
                     <tbody ng-show="isLoading">
                         <tr>
-                            <td colspan="4" class="text-center">Loading ... </td>
+                            <td colspan="6" class="text-center">Loading ... </td>
                         </tr>
                     </tbody>
                     <tfoot>
@@ -137,7 +137,7 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Merk</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control" ng-change="getchassis(form.merk, form.tipe)" ng-model="form.merk" ng-disabled="is_view" required>
+                                    <select class="form-control" ng-change="typeChassis(form.merk); getchassis(form.merk, form.tipe)" ng-model="form.merk" ng-disabled="is_view" required>
                                         <option value="">-Pilih Merk-</option>
                                         <option ng-repeat="merk in listMerk" value="{{merk.merk}}">{{merk.merk}}</option>
                                     </select>
