@@ -39,7 +39,11 @@
                         <div class="form-group">
                             <label class="col-md-3">Jenis</label>
                             <div class="col-md-9">
-                                <input st-search="jenis" class="form-control"/>
+                                <select class="form-control" st-search="jenis">
+                                    <option value="">.: Semua Jenis :.</option>
+                                    <option value="Mini Bus">Mini Bus</option>
+                                    <option value="Small Bus">Small Bus</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -104,9 +108,9 @@
                             <div class="col-sm-9">
                                 <div class="input-group">
                                     <ui-select ng-model="form.no_wo" ng-disabled="is_view" theme="bootstrap" on-select="
-                                                   form.nm_customer = $item.nm_customer;
-                                                   form.no_chassis = $item.no_mesin;
-                                                   form.no_mesin = $item.no_chassis;">
+                                               form.nm_customer = $item.nm_customer;
+                                               form.no_chassis = $item.no_mesin;
+                                               form.no_mesin = $item.no_chassis;">
                                         <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
                                         <ui-select-choices refresh="cariWo($select.search)" repeat="val in results">
                                             {{val.no_wo}}
@@ -159,6 +163,17 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-3 control-label">Tanggal</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl" is-open="opened3" ng-click="open3($event)" required="true"/>
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar-o"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-3 control-label">Pengajuan</label>
                             <div class="col-sm-9">
                                 <div class="input-group">
@@ -167,6 +182,7 @@
                                         <i class="fa fa-calendar-o"></i>
                                     </span>
                                 </div>
+                                {{form.pengajuan}}aaa
                             </div>
                         </div>
                         <div class="form-group">

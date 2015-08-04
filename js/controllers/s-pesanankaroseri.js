@@ -13,9 +13,11 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
         $scope.listMerk = data.data;
     });
 
-    Data.get('chassis/tipe').then(function(data) {
-        $scope.listTipe = data.data;
-    });
+    $scope.typeChassis = function(merk) {
+        Data.get('chassis/tipe?merk=' + merk).then(function(data) {
+            $scope.listTipe = data.data;
+        });
+    }
 
     $scope.getchassis = function(merk, tipe) {
         Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function(data) {
@@ -133,21 +135,20 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
         $scope.is_view = false;
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.no_spk;
+        $scope.selected(form.no_spk);
         $scope.form = form;
         $scope.form.is_ppn = 0;
         if (form.ppn > 0) {
             $scope.form.is_ppn = "1";
         }
-        console.log($scope.form);
-        $scope.selected(form.no_spk);
     };
     $scope.view = function(form) {
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.is_create = false;
         $scope.formtitle = "Lihat Data : " + form.no_spk;
-        $scope.form = form;
         $scope.selected(form.no_spk);
+        $scope.form = form;
     };
     $scope.save = function(form) {
         var url = ($scope.is_create == true) ? 'spkaroseri/create' : 'spkaroseri/update/' + form.no_spk;
@@ -175,6 +176,7 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
     $scope.selected = function(no_spk) {
         Data.get('spkaroseri/view/' + no_spk).then(function(data) {
             $scope.form = data.data;
+            $scope.typeChassis($scope.form.merk);
         });
     }
 })

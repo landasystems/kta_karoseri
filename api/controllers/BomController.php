@@ -39,7 +39,8 @@ class BomController extends Controller {
         $query = new Query;
         $query->from('trans_standar_bahan')
                 ->select("*")
-                ->where(['like', 'kd_bom', $params['nama']]);
+                ->where(['like', 'kd_bom', $params['nama']])
+                ->andWhere('status = 1');
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -91,13 +92,17 @@ class BomController extends Controller {
         $query->from('trans_standar_bahan')
                 ->select('*')
                 ->orderBy('kd_bom DESC')
+                ->where('year(tgl_buat) = "' . date("y") . '"')
                 ->limit(1);
 
         $command = $query->createCommand();
         $models = $command->query()->read();
-        $lastKode = substr($models['kd_bom'], -4) + 1;
-
-        $kode = 'BOM' . date("y") . substr('0000' . $lastKode, -4);
+        if (empty($models)) {
+            $kode = 'BOM' . date("y") . '00001';
+        } else {
+            $lastKode = substr($models['kd_bom'], -4) + 1;
+            $kode = 'BOM' . date("y") . substr('0000' . $lastKode, -4);
+        }
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'kode' => $kode));
@@ -187,7 +192,6 @@ class BomController extends Controller {
 
         if ($model->save()) {
             $detailBom = $params['detailBom'];
-//            print_r($detailBom);
             foreach ($detailBom as $val) {
                 $det = new BomDet();
                 $det->attributes = $val;

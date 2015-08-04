@@ -379,7 +379,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load().then(
+                                                return $ocLazyLoad.load(['angularFileUpload']).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/s-pesanankaroseri.js');
                                                         }
@@ -548,7 +548,7 @@ angular.module('app')
                                     }})
                                 //
                                 .state('transaksi.spprutin', {
-                                    url: '/spp-nonrutin',
+                                    url: '/spp-rutin',
                                     templateUrl: 'tpl/t_spp-rutin/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',

@@ -236,7 +236,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         Data.get('po/kode').then(function (data) {
             $scope.form.nota = data.kode;
         });
-        $scope.form.tanggal = moment().format('DD-MM-YYYY');
+        $scope.form.tanggal = new Date();
         $scope.form.dp = '0';
 //        $scope.form.diskon = 0;
         $scope.form.nilai_diskon = 0;

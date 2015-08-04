@@ -3,14 +3,15 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\DetClaim;
+use app\models\TransSpp;
+use app\models\DetSpp;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class ClaimunitController extends Controller {
+class SpprutinController extends Controller {
 
     public function behaviors() {
         return [
@@ -18,29 +19,47 @@ class ClaimunitController extends Controller {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'index' => ['get'],
+                    'cari' => ['get'],
                     'view' => ['get'],
+                    'excel' => ['get'],
+                    'detail' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'kode' => ['get'],
-                    'jeniskomplain' => ['get'],
-                    'sisagaransi' => ['post'],
+                    'listbarang' => ['get'],
                 ],
             ]
         ];
+    }
+
+    public function actionCari() {
+
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('trans_spp')
+                ->select("no_spp,no_proyek")
+                ->andWhere(['like', 'no_spp', $params['nama']]);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function beforeAction($event) {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
-        } elseif (isset($this->actions['*'])) {
+        } elseif (excel(isset($this->actions['*']))) {
             $verbs = $this->actions['*'];
         } else {
             return $event->isValid;
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
+//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -52,68 +71,15 @@ class ClaimunitController extends Controller {
         return true;
     }
 
-    public function actionSisagaransi() {
-        $params = json_decode(file_get_contents("php://input"), true);
-
-        $sisa = 0;
-
-        $query = new Query;
-        $query->from('delivery')
-                ->select("tgl_delivery")
-                ->where('no_wo = "' . $params['no_wo'] . '" and status = 1 ');
-        $command = $query->createCommand();
-        $tglDelivery = $command->query()->read();
-
-        if (!empty($tglDelivery)) {
-            $query = new Query;
-            $query->select('SELECT DATE_ADD("' . $tglDelivery . '", INTERVAL 1 YEAR) as tgl');
-            $tglAkhirGaransi = $query->createCommand()->query()->read();
-
-            $query->select('SELECT DATEDIFF("' . $tglDelivery . '", "' . date("Y-m-d") . '") as sisa');
-            $s = $query->createCommand()->query()->read();
-
-            $sisa = $s['sisa'];
-        }
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $sisa));
-    }
-
-    public function actionJeniskomplain() {
-        $query = new Query;
-        $query->from('jenis_komplain')
-                ->select("*")
-                ->where('stat="' . $_GET['status'] . '" and bag="' . $_GET['bagian'] . '"');
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $models));
-    }
-
-    public function actionListwo() {
-        if (!empty($_GET['kata'])) {
-            $query = new Query;
-            $query->from('view_wo_spk as vws')
-                    ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
-                    ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                    ->select("vws.*, tk.nama as sales, tk.lokasi_kntr as wilayah");
-            $command = $query->createCommand();
-            $models = $command->queryAll();
-
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => $models));
-        }
-    }
-
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "dc.tgl ASC";
+        $sort = "tgl_trans DESC";
         $offset = 0;
         $limit = 10;
+        //        Yii::error($params);
+        //limit & offset pagination
         if (isset($params['limit']))
             $limit = $params['limit'];
         if (isset($params['offset']))
@@ -122,9 +88,6 @@ class ClaimunitController extends Controller {
         //sorting
         if (isset($params['sort'])) {
             $sort = $params['sort'];
-            if ($sort == 'no_wo') {
-                $sort = 'dc.no_wo';
-            }
             if (isset($params['order'])) {
                 if ($params['order'] == "false")
                     $sort.=" ASC";
@@ -136,32 +99,13 @@ class ClaimunitController extends Controller {
         //create query
         $query = new Query;
         $query->offset($offset)
+                ->where("no_proyek='Rutin'")
                 ->limit($limit)
-                ->from('det_claim as dc')
-                ->join('LEFT JOIN', 'jenis_komplain as jk', 'dc.kd_jns = jk.kd_jns')
-                ->join('LEFT JOIN', 'view_wo_spk as vws', 'dc.no_wo = vws.no_wo')
-                ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
-                ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                ->select("vws.*, jk.*, dc.*, tk.nama as sales, tk.lokasi_kntr as wilayah")
-                ->orderBy($sort);
+                ->from('trans_spp')
+                ->orderBy($sort)
+                ->select("*");
 
         //filter
-        if (isset($params['filter'])) {
-            $filter = (array) json_decode($params['filter']);
-            foreach ($filter as $key => $val) {
-                if ($key == 'no_wo') {
-                    $query->andFilterWhere(['like', 'dc.no_wo', $val]);
-                } else if ($key == 'terima') {
-                    $tgl = explode(" - ", $val);
-                    $start = date("Y-m-d", strtotime($tgl[0]));
-                    $end = date("Y-m-d", strtotime($tgl[1]));
-                    $query->andFilterWhere(['between', 'tgl', $start, $end]);
-                } else {
-                    $query->andFilterWhere(['like', $key, $val]);
-                }
-            }
-        }
-
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
@@ -181,11 +125,31 @@ class ClaimunitController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new DetClaim();
-        $model->attributes = $params;
-        $model->no_wo = $params['no_wo']['no_wo'];
+//        Yii::error($params);
+        $model = new TransSpp();
+        $tgl_trans = date('Y-m-d', strtotime($params['form']['tgl_trans']));
+        $lastNumber = TransSpp::find()
+                ->where('year(tgl_trans)="' . $tgl_trans . '"')
+                ->orderBy('no_spp DESC')
+                ->one();
+        $number = (empty($lastNumber)) ? 1 : (int) substr($lastNumber->no_spp, 3) + 1;
+        $model->no_spp = date('y', $tgl_trans) . substr("000" . $number, -3);
+        $model->tgl_trans = $tgl_trans;
+        $model->tgl1 = date('Y-m-d', strtotime($params['form']['periode']['startDate']));
+        $model->tgl2 = date('Y-m-d', strtotime($params['form']['periode']['endDate']));
+        $model->no_proyek = 'Rutin';
 
         if ($model->save()) {
+            foreach ($params['details'] as $val) {
+                $det = new DetSpp();
+                $det->attributes = $val;
+                $det->no_spp = $model->no_spp;
+                $det->kd_barang = (empty($val['barang']['kd_barang'])) ? '-' : $val['barang']['kd_barang'];
+                $det->saldo = $val['barang']['saldo'];
+                $det->p = date('Y-m-d', strtotime($det->p));
+                $det->no_wo = (empty($val['wo']['no_wo'])) ? '-' : $val['wo']['no_wo'];
+                $det->save();
+            }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -197,10 +161,25 @@ class ClaimunitController extends Controller {
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
-        $model->attributes = $params;
-        $model->no_wo = $params['no_wo']['no_wo'];
-
+//        $model->attributes = $params;
+        $tgl_trans = date('Y-m-d', strtotime($params['form']['tgl_trans']));
+        $model->tgl_trans = $tgl_trans;
+        $model->tgl1 = date('Y-m-d', strtotime($params['form']['periode']['startDate']));
+        $model->tgl2 = date('Y-m-d', strtotime($params['form']['periode']['endDate']));
+        $model->no_proyek = 'Rutin';
+//        Yii::error($params);
         if ($model->save()) {
+            $deleteAll = DetSpp::deleteAll('no_spp="' . $model->no_spp . '"');
+            foreach ($params['details'] as $val) {
+                $det = new DetSpp();
+                $det->attributes = $val;
+                $det->no_spp = $model->no_spp;
+                $det->kd_barang = (empty($val['barang']['kd_barang'])) ? '-' : $val['barang']['kd_barang'];
+                $det->saldo = $val['barang']['saldo'];
+                $det->p = date('Y-m-d', strtotime($det->p));
+                $det->no_wo = (empty($val['wo']['no_wo'])) ? '-' : $val['wo']['no_wo'];
+                $det->save();
+            }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -211,7 +190,8 @@ class ClaimunitController extends Controller {
 
     public function actionDelete($id) {
         $model = $this->findModel($id);
-
+        $deleteDetail = DetSpp::deleteAll('no_spp="'.$id.'"');
+        
         if ($model->delete()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -223,7 +203,7 @@ class ClaimunitController extends Controller {
     }
 
     protected function findModel($id) {
-        if (($model = DetClaim::findOne($id)) !== null) {
+        if (($model = TransSpp::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -257,6 +237,40 @@ class ClaimunitController extends Controller {
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
-}
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("excel", ['models' => $models]);
+    }
 
-?>
+    public function actionListbarang() {
+        $query = new Query();
+        $query->from('barang')
+                ->select("kd_barang,nm_barang");
+
+        //filter
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models), JSON_PRETTY_PRINT);
+    }
+
+    public function actionDetail($id) {
+        $detSpp = DetSpp::find()
+                ->with(['wo', 'barang'])
+                ->where(['no_spp' => $id])
+                ->all();
+        $detail = array();
+        foreach ($detSpp as $key => $val) {
+            $detail[$key] = $val->attributes;
+            $detail[$key]['wo'] = (isset($val->wo)) ? $val->wo->attributes : [];
+            $detail[$key]['barang'] = (isset($val->barang)) ? $val->barang->attributes : [];
+        }
+        $this->setHeader(200);
+        echo json_encode(['status' => 1, 'details' => $detail]);
+    }
+
+}
