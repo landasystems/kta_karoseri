@@ -108,6 +108,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, 
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.form.tgl_buat = new Date();
         $scope.detBom = [
             {
                 kd_jab: '',
@@ -125,6 +126,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, 
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.form = form;
+        $scope.form.tgl_buat = new Date(form.tgl_buat);
         $scope.formtitle = "Edit Data : " + $scope.form.kd_bom;
         $scope.selected(form.kd_bom);
     };
