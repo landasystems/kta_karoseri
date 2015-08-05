@@ -140,14 +140,6 @@ class RubahbentukController extends Controller {
         }
         \Yii::error($params['tgl']);
         $model->attributes = $params;
-        $model->tgl = date("Y-m-d", strtotime($params['tgl']));
-
-        if (isset($params['pengajuan']))
-            $model->pengajuan = date("Y-m-d", strtotime($params['pengajuan']));
-
-        if (isset($params['terima']))
-            $model->terima = date("Y-m-d", strtotime($params['terima']));
-
         $model->kd_rubah = $kode;
         $model->no_wo = $params['no_wo']['no_wo'];
 

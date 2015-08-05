@@ -166,7 +166,7 @@
                             <label class="col-sm-3 control-label">Tanggal</label>
                             <div class="col-sm-9">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl" is-open="opened3" ng-click="open3($event)" required="true"/>
+                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl" is-open="open3" ng-click="open3 = true" required="true"/>
                                     <span class="input-group-addon">
                                         <i class="fa fa-calendar-o"></i>
                                     </span>
@@ -177,19 +177,18 @@
                             <label class="col-sm-3 control-label">Pengajuan</label>
                             <div class="col-sm-9">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.pengajuan" is-open="opened2" ng-click="open2($event)"/>
+                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.pengajuan" is-open="open2" ng-click="open2 = true"/>
                                     <span class="input-group-addon">
                                         <i class="fa fa-calendar-o"></i>
                                     </span>
                                 </div>
-                                ---{{form.pengajuan}}---
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Terima</label>
                             <div class="col-sm-9">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.terima" is-open="opened1" ng-click="open1($event)"/>
+                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.terima" is-open="open1" ng-click="open1 = true"/>
                                     <span class="input-group-addon">
                                         <i class="fa fa-calendar-o"></i>
                                     </span>
