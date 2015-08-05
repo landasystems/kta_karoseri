@@ -35,9 +35,15 @@ app.controller('returpoCtrl', function ($scope, Data, toaster) {
 
         $scope.isLoading = false;
     };
+    
     $scope.excel = function () {
         Data.get('po/rekap', paramRef).then(function (data) {
             window.location = 'api/web/po/excel';
+        });
+    }
+    $scope.excelbeli = function () {
+        Data.get('po/rekap', paramRef).then(function (data) {
+            window.location = 'api/web/po/excelbeli';
         });
     }
 

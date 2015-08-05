@@ -158,9 +158,9 @@
                                     <li ng-show="user.akses.transaksi_deliveryunit">
                                         <a ui-sref='transaksi.deliveryunit'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Delivery Unit</a>
                                     </li>
-<!--                                    <li ng-show="user.akses.transaksi_buktiterima">
-                                        <a ui-sref="transaksi.buktiterima"><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Bukti Serah Terima</a>
-                                    </li>-->
+                                    <!--                                    <li ng-show="user.akses.transaksi_buktiterima">
+                                                                            <a ui-sref="transaksi.buktiterima"><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Bukti Serah Terima</a>
+                                                                        </li>-->
                                 </ul>
                             </div>
                         </div>
@@ -390,9 +390,9 @@
         <div class="form-group">
             <div class="input-group">
                 <ui-select on-select="pencarianDet($item)" ng-model="cari">
-                    <ui-select-match placeholder="Pencarian barang...">{{$select.selected.nama}}</ui-select-match>
+                    <ui-select-match placeholder="Pencarian BOM...">{{$select.selected.nama}}</ui-select-match>
                     <ui-select-choices refresh="pencarian($select.search)" repeat="val in results">
-                        {{val.nama}}
+                        {{val.kd_bom}}
                     </ui-select-choices>
                 </ui-select>
                 <span class="input-group-btn">
@@ -407,6 +407,21 @@
     <ul class="nav navbar-nav navbar-right">
         <li class="hidden-xs">
             <a ui-fullscreen></a>
+        </li>
+        <li class="dropdown" dropdown>
+            <a href class="dropdown-toggle" dropdown-toggle>
+                <i class="fa fa-bell"></i>
+                <span class="visible-xs-inline">Notifications</span>
+                <!--<span class="badge badge-sm up bg-danger pull-right-xs">2</span>-->
+            </a>
+            <!-- dropdown -->
+            <ul class="dropdown-menu animated fadeInRight w">
+                <li><a href="">BOM</a></li>
+                <li><a href="">Chassis Masuk</a></li>
+                <li><a href="">Work Order</a></li>
+                <li><a href="">Work In Progress</a></li>
+            </ul>
+            <!-- / dropdown -->
         </li>
         <li class="dropdown" dropdown>
             <a href class="dropdown-toggle clear" dropdown-toggle>

@@ -17,19 +17,19 @@
 
                         <label class="col-sm-2 control-label">No. PO</label>
                         <div class="col-sm-3">
-                            <input st-search="nota" class="form-control"/>
+                            <input st-search="trans_po.nota" class="form-control"/>
                         </div>
                         <label class="col-sm-2 control-label">No.SPP</label>
                         <div class="col-sm-3">
-                            <input st-search="spp" class="form-control"/>
+                            <input st-search="trans_po.spp" class="form-control"/>
 
                         </div>
 
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Jatuh Tempo</label>
+                        <label class="col-sm-2 control-label">Supplier</label>
                         <div class="col-sm-3">
-                            <input st-search="jatuh_tempo" class="form-control"/>
+                            <input st-search="supplier.nama_supplier" class="form-control"/>
 
                         </div>
 
@@ -81,12 +81,15 @@
     <div class="wrapper-md" ng-show="is_edit">
         <div class="panel panel-default">
             <div class="panel-heading">
-                {{formtitle}} 
-                <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-hide="is_view == false || form.status == '1'">
-                    <button type="button" class="btn btn-primary fa fa-print" ng-click="updt_st(form.nota)" ng-print print-element-id="printArea">&nbsp;Print</button>
+                {{formtitle}}
+                <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-hide="is_print == false">
+                    <button type="button" class="btn btn-primary fa fa-print" ng-click="updt_st(form.nota)" ng-print print-element-id="printArea" ng-disabled="status == '0'">&nbsp;Print</button>
                 </div> 
             </div>
             <div class="panel-body">
+                <div class="alert alert-danger" ng-hide="is_print == false" ng-if="msg.length > 0">
+                    <p>{{msg}}</p>
+                </div>
                 <form name="landaform" class="form-horizontal form-validation ">
                     <div class="col-md-12 col-sm-12 thumb-wrapper">
                         <div class="form-group">
@@ -123,13 +126,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" ng-hide="form.status_po == 0">
                                 <label class="col-sm-3 control-label">No. SPP</label>
                                 <div class="col-sm-6">
                                     <div class="input-group">
                                         <ui-select  ng-model="form.listspp" ng-readonly="form.status_po == '0'" theme="bootstrap">
                                             <ui-select-match>{{$select.selected.no_spp}} - {{$select.selected.no_proyek}}</ui-select-match>
-                                            <ui-select-choices refresh="cariSpp($select.search)" repeat="val in results">
+                                            <ui-select-choices refresh="cariSpp($select.search)" repeat="val in resultsspp">
                                                 {{val.no_spp}} - {{val.no_proyek}}
                                             </ui-select-choices>
                                         </ui-select>
@@ -151,7 +154,7 @@
                                     <div class="input-group">
                                         <ui-select  ng-model="form.supplier" theme="bootstrap">
                                             <ui-select-match>{{$select.selected.nama_supplier}}</ui-select-match>
-                                            <ui-select-choices refresh="cariSuppiler($select.search)" repeat="val in results">
+                                            <ui-select-choices refresh="cariSuppiler($select.search)" repeat="val in resultssupplier">
                                                 {{val.nama_supplier}}
                                             </ui-select-choices>
                                         </ui-select>
@@ -210,9 +213,9 @@
                                         <td style="padding-left: 8px;padding-right: 8px;">
                                             <div class="input-group">
                                                 <ui-select on-select="pilih(detail, $item)" ng-model="detail.data_barang" theme="bootstrap">
-                                                    <ui-select-match>{{$select.selected.kd_barang}} - {{$select.selected.nm_barang}}</ui-select-match>
-                                                    <ui-select-choices refresh="cariBarang($select.search)" repeat="val in results">
-                                                        {{val.kd_barang}} - {{val.nm_barang}}
+                                                    <ui-select-match><b>{{$select.selected.kd_barang}}</b> - {{$select.selected.nm_barang}}</ui-select-match>
+                                                    <ui-select-choices refresh="cariBarang($select.search)" repeat="val in resultsbrg">
+                                                        <b>{{val.kd_barang}}</b> -  {{val.nm_barang}}
                                                     </ui-select-choices>
                                                 </ui-select>
                                                 <span class="input-group-btn">
@@ -226,12 +229,12 @@
                                             <input type="text" class="form-control" ng-model="detail.jml" ng-change="subtotal()" ng-disabled="is_view" ng-readonly="is_edit == false" required>
                                         </td>
                                         <td style="width:50px; padding-left: 8px;padding-right: 8px;"> 
-                                            <input type="text" class="form-control" ng-model="detail.data_barang.satuan" ng-disabled="is_view" ng-readonly="true" required>
+                                            <input type="text" class="form-control" ng-model="detail.data_barang.satuan" ng-disabled="is_view" ng-readonly="true">
                                         </td>
                                         <td style="width:180px; padding-left: 8px;padding-right: 8px;">
                                             <div class="input-group" style="margin:0px;">
                                                 <span class="input-group-addon">Rp</span>
-                                                <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.harga" ng-disabled="is_view" ng-readonly="is_edit == false" required>
+                                                <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.harga" ng-disabled="is_view" ng-readonly="is_edit == false">
                                             </div>
                                         </td>
                                         <td style="width:180px; padding-left: 8px;padding-right: 8px;">
@@ -242,7 +245,7 @@
                                         </td>
                                         <td style="width:200px; padding-left: 8px;padding-right: 8px;">
                                             <div class="input-group">
-                                                <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="detail.data_barang.tgl_pengiriman" is-open="openedDet == $index" ng-change="setStatus()" ng-click="openDet($event, $index)"/>
+                                                <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="detail.data_barang.tgl_pengiriman" is-open="openedDet == $index" ng-change="setStatus()" ng-click="openDet($event, $index)" required/>
                                                 <span class="input-group-addon">
                                                     <i class="glyphicon glyphicon-calendar"></i>
                                                 </span>
@@ -310,7 +313,7 @@
 
                                 <div class="col-sm-3">
                                     <div class="input-group m-b" style="margin:0px;">
-                                        <input type="text" class="form-control" ng-change="subtotal()"  ng-model="form.nilai_diskon" ng-disabled="is_view" required >
+                                        <input type="text" class="form-control" ng-change="subtotal()"  ng-model="form.nilai_diskon" ng-disabled="is_view">
                                         <span class="input-group-addon">%</span>
                                     </div>
 

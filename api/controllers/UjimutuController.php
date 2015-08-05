@@ -74,7 +74,7 @@ class UjimutuController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_uji ASC";
+        $sort = "kd_uji DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -128,37 +128,38 @@ class UjimutuController extends Controller {
         $query->from('det_uji_mutu as det')
                 ->join('JOIN', 'view_wo_spk as vms', 'vms.no_wo = det.no_wo')
                 ->select("det.*, vms.no_wo as no_wo, vms.merk as merk")
-                ->where("det.kd_uji='" . $id . "'");
+                ->where("det.kd_uji='" . $model['kd_uji'] . "'")
+                ->select('det.*, vms.merk');
 
         $command = $query->createCommand();
         $models = $command->queryAll();
-
+        $detail ='';
         foreach ($models as $key => $val) {
             $nowo = (isset($val['no_wo'])) ? $val['no_wo'] : '';
             $merk = (isset($val['merk'])) ? $val['merk'] : '';
-            $detail[$key] = ['kd_uji' => $val['kd_uji'], 'kelas' => $val['kelas'], 'bentuk_baru' => $val['bentuk_baru']
-                , 'biaya' => $val['biaya'], 'merk' => $merk];
-
-
-            $detail[$key]['no_wo'] = ['no_wo' => $nowo];
+           
+            $detail[$key] = $val;
+            $detail[$key]['nowo'] = ['no_wo' => $nowo];
         }
 
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes), 'detail' => $detail), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes), 'detail' => $models), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
+        \Yii::error($params);
         $model = new Ujimutu();
 
         $model->attributes = $params['ujimutu'];
 
         if ($model->save()) {
-            foreach ($params['det_ujimutu'] as $data) {
+            $detail = $params['det_ujimutu'];
+            foreach ($detail as $data) {
                 $det = new DetUjimutu();
                 $det->attributes = $data;
                 $det->kd_uji = $model->kd_uji;
-                $det->no_wo = $data['no_wo']['no_wo'];
+                $det->no_wo = $data['nowo']['no_wo'];
                 $det->save();
             }
             $this->setHeader(200);
@@ -180,7 +181,7 @@ class UjimutuController extends Controller {
                 $det = new DetUjimutu();
                 $det->attributes = $data;
                 $det->kd_uji = $model->kd_uji;
-                $det->no_wo = $data['no_wo']['no_wo'];
+                $det->no_wo = $data['nowo']['no_wo'];
                 $det->save();
             }
             $this->setHeader(200);

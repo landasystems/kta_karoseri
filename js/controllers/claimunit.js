@@ -20,7 +20,7 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
         $scope.opened2 = true;
     };
     $scope.kalkuasi = function() {
-        $scope.form.total_biaya = (1 * $scope.form.biaya_spd) + (1 * $scope.form.biaya_tk) + (1 * $scope.form.biaya_mat);
+        $scope.form.total_biaya = (($scope.form.biaya_spd) ? 1 * $scope.form.biaya_spd : 0) + (($scope.form.biaya_tk) ? 1 * $scope.form.biaya_tk : 0) + (($scope.form.biaya_mat) ? 1 * $scope.form.biaya_mat : 0);
     }
     $scope.jenisKmp = function(status, bagian) {
         Data.get('claimunit/jeniskomplain?status=' + status + '&bagian=' + bagian).then(function(data) {
@@ -60,6 +60,10 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.form.biaya_mat = 0;
+        $scope.form.biaya_tk = 0;
+        $scope.form.biaya_spd = 0;
+        $scope.form.total_biaya = 0;
     };
     $scope.update = function(form) {
         $scope.is_edit = true;

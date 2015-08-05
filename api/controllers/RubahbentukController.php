@@ -22,7 +22,6 @@ class RubahbentukController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
-                    'kode' => ['get'],
                 ],
             ]
         ];
@@ -51,7 +50,7 @@ class RubahbentukController extends Controller {
     }
 
     public function actionIndex() {
-        //init variable
+//init variable
         $params = $_REQUEST;
         $filter = array();
         $sort = "kd_rubah ASC";
@@ -62,7 +61,7 @@ class RubahbentukController extends Controller {
         if (isset($params['offset']))
             $offset = $params['offset'];
 
-        //sorting
+//sorting
         if (isset($params['sort'])) {
             $sort = $params['sort'];
             if ($sort == 'no_wo') {
@@ -76,7 +75,7 @@ class RubahbentukController extends Controller {
             }
         }
 
-        //create query
+//create query
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
@@ -85,7 +84,7 @@ class RubahbentukController extends Controller {
                 ->orderBy($sort)
                 ->select("*");
 
-        //filter
+//filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
@@ -122,7 +121,26 @@ class RubahbentukController extends Controller {
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new RubahBentuk();
+
+        $query = new Query;
+        $query->select("kd_rubah")
+                ->from("rubah_bentuk as rb")
+                ->where("year(tgl) = year('" . $params['tgl'] . "') order by substr(kd_rubah,1,4) DESC");
+
+        $command = $query->createCommand();
+        $show = $command->query()->read();
+
+//        echo $show['kd_rubah'];
+
+        if (empty($show)) {
+            $kode = "0001/TA III/SKJ/" . date("d/m/y", strtotime($params['tgl']));
+        } else {
+            $lastKode = substr($show['kd_rubah'], 0, 4) + 1;
+            $kode = substr('0000' . $lastKode, -4) . "/TA III/SKJ/" . date("d/m/y", strtotime($params['tgl']));
+        }
+        \Yii::error($params['tgl']);
         $model->attributes = $params;
+        $model->kd_rubah = $kode;
         $model->no_wo = $params['no_wo']['no_wo'];
 
         if ($model->save()) {
@@ -132,22 +150,6 @@ class RubahbentukController extends Controller {
             $this->setHeader(400);
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
-    }
-
-    public function actionKode() {
-        $query = new Query;
-        $query->from('supplier')
-                ->select('*')
-                ->orderBy('kd_supplier DESC')
-                ->limit(1);
-
-        $command = $query->createCommand();
-        $models = $command->query()->read();
-        $kode = $models['kd_supplier'] + 1;
-        Yii::error($command->query());
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionUpdate($id) {
