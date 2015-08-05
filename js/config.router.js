@@ -365,11 +365,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load('').then(
-                                                        function() {
-                                                            return $ocLazyLoad.load('js/controllers/spk.js');
-                                                        }
-                                                );
+                                                return $ocLazyLoad.load('js/controllers/spk.js');
                                             }]
                                     }})
                                 //
@@ -881,7 +877,7 @@ angular.module('app')
                                             function($ocLazyLoad) {
                                                 return $ocLazyLoad.load([]).then(
                                                         function() {
-                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                            return $ocLazyLoad.load('js/controllers/r_returbarangkeluar.js');
                                                         }
                                                 );
                                             }]

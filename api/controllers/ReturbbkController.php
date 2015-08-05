@@ -24,6 +24,7 @@ class ReturbbkController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
+                    'rekap' => ['get'],
                 ],
             ]
         ];
@@ -118,6 +119,79 @@ class ReturbbkController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+    
+    public function actionRekap() {
+        $params = $_REQUEST;
+        $filter = array();
+        $sort = "rb.tgl ASC";
+        $offset = 0;
+        $limit = 10;
+
+        //limit & offset pagination
+        if (isset($params['limit']))
+            $limit = $params['limit'];
+        if (isset($params['offset']))
+            $offset = $params['offset'];
+
+        //sorting
+        if (isset($params['sort'])) {
+            $sort = $params['sort'];
+            if (isset($params['order'])) {
+                if ($params['order'] == "false")
+                    $sort.=" ASC";
+                else
+                    $sort.=" DESC";
+            }
+        }
+
+        //create query
+        $query = new Query;
+        $query->offset($offset)
+                ->limit($limit)
+                ->from('retur_bbk as rb')
+                ->join('JOIN', 'trans_bbk as tb', 'tb.no_bbk = rb.no_bbk')
+                ->join('JOIN', 'barang', 'barang.kd_barang = rb.kd_barang')
+                ->join('LEFT JOIN', 'jenis_brg as jb', 'barang.jenis = jb.kd_jenis')
+                
+                ->orderBy($sort)
+                ->select("rb.tgl as tanggal, rb.no_retur_bbk, tb.no_bbk, tb.no_wo, barang.kd_barang, jb.jenis_brg, barang.nm_barang, barang.satuan,
+                       rb.ket ");
+//filter
+
+        if (isset($params['filter'])) {
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+
+                if (isset($key) && $key == 'tanggal') 
+                    {
+                    $value = explode(' - ', $val);
+                    $start = date("Y-m-d", strtotime($value[0]));
+                    $end = date("Y-m-d", strtotime($value[1]));
+                    $query->andFilterWhere(['between', 'rb.tanggal', $start, $end]);
+                }elseif($key == 'no_retur_bbk'){
+                    $query->andFilterWhere(['like', 'rb.'.$key, $val]);
+                } elseif($key == 'no_bbk'){
+                    $query->andFilterWhere(['like', 'tb.'.$key, $val]);
+                } elseif($key == 'nm_barang'){
+                    $query->andFilterWhere(['like', 'barang.'.$key, $val]);
+                }
+            }
+        }
+        Yii::error($query);
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+//        Yii::error($models);
+        $totalItems = $query->count();
+
+        $query->limit(null);
+        $query->offset(null);
+        session_start();
+        $_SESSION['query'] = $query;
 
         $this->setHeader(200);
 

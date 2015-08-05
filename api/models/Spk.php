@@ -11,7 +11,7 @@ use Yii;
  * @property string $kd_jab
  * @property integer $status
  */
-class TransSpk extends \yii\db\ActiveRecord
+class Spk extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
