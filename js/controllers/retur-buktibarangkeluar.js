@@ -16,9 +16,9 @@ app.controller('returbbkCtrl', function($scope, Data, toaster) {
         }
     }
 
-    $scope.cariBarang = function($query) {
+    $scope.cariBarang = function($query, no_bbk) {
         if ($query.length >= 3) {
-            Data.get('barang/cari', {barang: $query}).then(function(data) {
+            Data.post('returbbk/barangkeluar', {barang: $query, no_bbk: no_bbk}).then(function(data) {
                 $scope.resultsbarang = data.data;
             });
         }
@@ -61,7 +61,7 @@ app.controller('returbbkCtrl', function($scope, Data, toaster) {
                 jml: '',
                 ket: '',
             }];
-        Data.get('bbk/kode').then(function(data) {
+        Data.get('returbbk/kode').then(function(data) {
             $scope.form.no_retur_bbk = data.kode;
         });
     };

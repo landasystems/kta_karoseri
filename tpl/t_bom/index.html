@@ -5,22 +5,26 @@
     <div class="wrapper-md" ng-show="!is_edit">
         <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
             <div class="panel-heading">
-                <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian & Export Data</button>
+                <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                    <button type="button" class="btn btn-default fa fa-file-excel-o" ng-show="!isCollapsed">&nbsp;Export Excel</button>
+                    <!--<button type="button" class="btn btn-default fa fa-file-excel-o" ng-show="!isCollapsed">&nbsp;Export Excel</button>-->
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>
             <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
                 <div class="form-horizontal">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Kode Bom</label>
-                        <div class="col-sm-3">
-                            <input st-search="kd_bom" class="form-control"/>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Kode Bom</label>
+                            <div class="col-sm-9">
+                                <input st-search="kd_bom" class="form-control"/>
+                            </div>
                         </div>
-                        <label class="col-sm-1 control-label">Model</label>
-                        <div class="col-sm-2">
-
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Model</label>
+                            <div class="col-sm-9">
+                                <input st-search="model" class="form-control"/>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -34,7 +38,7 @@
                             <th st-sort="merk">Merk</th>
                             <th st-sort="tipe">Type</th>
                             <th st-sort="model">Model</th>
-                            <th st-sort="tgl_buat">Tanggal</th>
+                            <th st-sort="tgl_buat">Tanggal Buat</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -46,10 +50,11 @@
                             <td>{{row.model}}</td>
                             <td>{{row.tgl_buat| date}}</td>
                             <td>
-                                <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
+                                <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-if="row.status == 0">
                                     <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
                                     <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);"></button>
                                 </div> 
+                                <span class="badge bg-success" ng-if="row.status == 1"><i>Validated</i></span>
                             </td>
                         </tr>
                     </tbody>
@@ -78,7 +83,7 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Kode BOM</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" ng-model="form.kd_bom" ng-disabled="is_view" ng-readonly="is_create == false" >
+                                <input type="text" class="form-control" ng-model="form.kd_bom" ng-disabled="is_view" readonly>
                             </div>
                         </div>
                         <div class="form-group">
@@ -148,7 +153,7 @@
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-12">
-                        <img ng-src="img/{{(form.foto) ? 'bom/'+form.foto : 'noimage.jpg'}}" class="img-thumbnail">
+                        <img ng-src="img/{{(form.gambar) ? 'bom/'+form.gambar : 'noimage.jpg'}}" class="img-thumbnail">
                         <input type="file" nv-file-select="" uploader="uploader" />
                     </div>                    
                     <div class="line line-dashed b-b line-lg pull-in"></div>
@@ -156,7 +161,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Filter Berdasarkan Bagian</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" ng-model="cari" style="width:300px;" ng-disabled="is_view">
+                            <input type="text" class="form-control" ng-model="cari" style="width:300px;">
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>

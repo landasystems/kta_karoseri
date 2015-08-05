@@ -1,7 +1,7 @@
-app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, $http) {
+app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $stateParams, $modal) {
     var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
     var uploader = $scope.uploader = new FileUploader({
-        url: 'img/upload.php?folder=barang&kode=' + kode_unik,
+        url: 'img/upload.php?folder=bom&kode=' + kode_unik,
         queueLimit: 1,
         removeAfterUpload: true,
     });
@@ -27,6 +27,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, 
     $scope.getchassis = function(merk, tipe) {
         Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function(data) {
             $scope.form.kd_chassis = data.kode;
+            $scope.form.jenis = data.jenis;
         });
     };
 
@@ -67,7 +68,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, 
             qty: '',
             ket: '',
         })
-//        $scope.detBom.push(newDet);
     };
     $scope.removeRow = function(paramindex) {
         var comArr = eval($scope.detBom);
@@ -77,12 +77,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, 
             alert("Something gone wrong");
         }
     };
-    $scope.getTipe = function(merk) {
-        Data.get('bom/tipe/?merk=' + merk).then(function(data) {
-            $scope.tipe = data.data;
-        });
-    };
-
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
@@ -114,6 +108,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, 
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.form.tgl_buat = new Date();
         $scope.detBom = [
             {
                 kd_jab: '',
@@ -131,6 +126,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, 
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.form = form;
+        $scope.form.tgl_buat = new Date(form.tgl_buat);
         $scope.formtitle = "Edit Data : " + $scope.form.kd_bom;
         $scope.selected(form.kd_bom);
     };
@@ -145,15 +141,11 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, 
     $scope.save = function(form, detail) {
         if ($scope.uploader.queue.length > 0) {
             $scope.uploader.uploadAll();
-            form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
+            form.gambar = kode_unik + "-" + $scope.uploader.queue[0].file.name;
         } else {
-            form.foto = '';
+//            form.gambar = '';
         }
 
-        form.model = form.kd_model;
-        detail.kd_jab = detail.kd_jab;
-        detail.kd_barang = detail.kd_barang;
-        $scope.form.model = form.kd_model;
         var data = {
             bom: form,
             detailBom: detail,
@@ -173,8 +165,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, 
         if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
             $scope.callServer(tableStateRef);
         }
-
-        $scope.detBom = {};
         $scope.is_edit = false;
         $scope.is_view = false;
     };
@@ -204,8 +194,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, 
             $scope.form.tipe = $scope.form.tipe;
         });
     }
-
-
     $scope.modal = function(form) {
         var modalInstance = $modal.open({
             templateUrl: 'tpl/t_bom/modal.html',
@@ -219,6 +207,10 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, 
         });
     };
 
+    if ($stateParams.form != null) { //pengecekan jika ada pencarian, dilempar ke view
+        $scope.view($stateParams.form);
+
+    }
 })
 
 app.controller('modalCtrl', function($scope, Data, $modalInstance, form) {
@@ -238,7 +230,9 @@ app.controller('modalCtrl', function($scope, Data, $modalInstance, form) {
         }
     }
     $scope.formmodal = form;
+
     $scope.cancel = function() {
         $modalInstance.dismiss('cancel');
     };
-});
+
+})

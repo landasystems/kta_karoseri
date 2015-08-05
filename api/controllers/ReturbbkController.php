@@ -25,6 +25,7 @@ class ReturbbkController extends Controller {
                     'delete' => ['delete'],
                     'kode' => ['get'],
                     'rekap' => ['get'],
+                    'barangkeluar' => ['post'],
                 ],
             ]
         ];
@@ -52,6 +53,24 @@ class ReturbbkController extends Controller {
         return true;
     }
 
+    public function actionBarangkeluar() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $query = new Query;
+        if ($params['no_bbk']['no_bbk'] != "") {
+            $query->from('barang, det_bbk')
+                    ->select("barang.kd_barang, barang.nm_barang, det_bbk.jml")
+                    ->where(['like', 'barang.nm_barang', $params['barang']])
+                    ->orWhere(['like', 'barang.kd_barang', $params['barang']])
+                    ->andWhere("barang.nm_barang != '-' && barang.kd_barang != '-'")
+                    ->andWhere("det_bbk.no_bbk = '" . $params['no_bbk']['no_bbk'] . "' and det_bbk.kd_barang = barang.kd_barang ");
+
+            $command = $query->createCommand();
+            $models = $command->queryAll();
+            $this->setHeader(200);
+            echo json_encode(array('status' => 1, 'data' => $models));
+        }
+    }
+
     public function actionKode() {
         $query = new Query;
         $query->from('retur_bbk')
@@ -59,11 +78,11 @@ class ReturbbkController extends Controller {
                 ->orderBy('no_retur_bbk DESC')
                 ->limit(1);
 
-        $cek = TransBbk::findOne('no_retur_bbk = "BK' . date("y") . '0001"');
+        $cek = ReturBbk::findOne('no_retur_bbk = "BK' . date("y") . '0001"');
         if (empty($cek)) {
             $command = $query->createCommand();
             $models = $command->query()->read();
-            $urut = substr($models['no_retur_bbk'], 4) + 1;
+            $urut = substr($models['no_retur_bbk'], 2, 4) + 1;
             $kode = substr('0000' . $urut, strlen($urut));
             $kode = "RK" . date("y") . $kode;
         } else {

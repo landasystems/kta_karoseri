@@ -59,7 +59,6 @@ app.controller('pembatalanchassisCtrl', function ($scope, Data, toaster) {
         $scope.form = form;
     };
     $scope.save = function (form) {
-//        console.log(form);
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
             Data.post('pembatalanchassis/create/', form).then(function (result) {
                 if (result.status == 0) {

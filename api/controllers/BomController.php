@@ -39,7 +39,9 @@ class BomController extends Controller {
         $query = new Query;
         $query->from('trans_standar_bahan')
                 ->select("*")
-                ->where(['like', 'kd_bom', $params['nama']]);
+                ->where(['like', 'kd_bom', $params['nama']])
+                ->andWhere('status = 1')
+                ->limit(25);
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -74,16 +76,17 @@ class BomController extends Controller {
     public function actionChassis() {
         $query = new Query;
         $query->from('chassis')
-                ->select("kd_chassis")
+                ->select("kd_chassis , jenis")
                 ->where('merk="' . $_GET['merk'] . '" and tipe="' . $_GET['tipe'] . '"');
 
         $command = $query->createCommand();
         $models = $command->query()->read();
         $kode = $models['kd_chassis'];
+        $jenis = $models['jenis'];
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => $kode));
+        echo json_encode(array('status' => 1, 'kode' => $kode, 'jenis' => $jenis));
     }
 
     public function actionKode() {
@@ -91,13 +94,18 @@ class BomController extends Controller {
         $query->from('trans_standar_bahan')
                 ->select('*')
                 ->orderBy('kd_bom DESC')
+                ->where('year(tgl_buat) = "' . date("Y") . '"')
                 ->limit(1);
 
         $command = $query->createCommand();
         $models = $command->query()->read();
-        $lastKode = substr($models['kd_bom'], -4) + 1;
 
-        $kode = 'BOM' . date("y") . substr('0000' . $lastKode, -4);
+        if (empty($models)) {
+            $kode = 'BOM' . date("y") . '00001';
+        } else {
+            $lastKode = substr($models['kd_bom'], -5) + 1;
+            $kode = 'BOM' . date("y") . substr('0000' . $lastKode, -5);
+        }
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'kode' => $kode));
@@ -184,10 +192,10 @@ class BomController extends Controller {
         $model = new Bom();
         $model->attributes = $params['bom'];
         $model->kd_model = $params['bom']['kd_model']['kd_model'];
+        $model->status = 0;
 
         if ($model->save()) {
             $detailBom = $params['detailBom'];
-//            print_r($detailBom);
             foreach ($detailBom as $val) {
                 $det = new BomDet();
                 $det->attributes = $val;

@@ -179,7 +179,7 @@ app.controller('modalCtrl', function ($scope, Data, $modalInstance, form) {
         $event.stopPropagation();
         $scope.opened2 = true;
     };
-    
+
     $scope.formmodal = form;
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');

@@ -15,8 +15,8 @@ header("Content-Disposition: attachment; filename=excel-master-jenis-barang.xls"
         
         ?>
         <tr>
-            <td>&nbsp;<?=$arr['kd_jenis']?></td>
-            <td><?=$arr['jenis_brg']?></td>
+            <td>&nbsp;<?=$arr['kd_jenis'];?></td>
+            <td><?=$arr['jenis_brg'];?></td>
             
         </tr>
     <?php } ?>

@@ -1,4 +1,10 @@
 app.controller('jabatanCtrl', function ($scope, Data, toaster) {
+    $scope.open2 = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened2 = true;
+    };
+    
     //init data
     var tableStateRef;
     var paramRef;

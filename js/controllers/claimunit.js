@@ -14,31 +14,26 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
         $event.stopPropagation();
         $scope.opened1 = true;
     };
-
     $scope.open2 = function($event) {
         $event.preventDefault();
         $event.stopPropagation();
         $scope.opened2 = true;
     };
-
     $scope.kalkuasi = function() {
-        $scope.form.total_biaya = (1 * $scope.form.biaya_spd) + (1 * $scope.form.biaya_tk) + (1 * $scope.form.biaya_mat);
+        $scope.form.total_biaya = (($scope.form.biaya_spd) ? 1 * $scope.form.biaya_spd : 0) + (($scope.form.biaya_tk) ? 1 * $scope.form.biaya_tk : 0) + (($scope.form.biaya_mat) ? 1 * $scope.form.biaya_mat : 0);
     }
-
     $scope.jenisKmp = function(status, bagian) {
         Data.get('claimunit/jeniskomplain?status=' + status + '&bagian=' + bagian).then(function(data) {
             $scope.jenis_kmp = data.data;
         });
     }
-
     $scope.cariWo = function($query) {
         if ($query.length >= 3) {
-            Data.get('wo/wospk', {nama: $query}).then(function(data) {
+            Data.get('wo/wospkselesai', {nama: $query}).then(function(data) {
                 $scope.results = data.data;
             });
         }
     }
-
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
@@ -65,6 +60,10 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.form.biaya_mat = 0;
+        $scope.form.biaya_tk = 0;
+        $scope.form.biaya_spd = 0;
+        $scope.form.total_biaya = 0;
     };
     $scope.update = function(form) {
         $scope.is_edit = true;
@@ -111,7 +110,7 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
         }
     };
     $scope.selected = function($query) {
-        Data.get('wo/wospk', {nama: $query}).then(function(data) {
+        Data.get('wo/wospkselesai', {nama: $query}).then(function(data) {
             $scope.form.no_wo = data.data[0];
         });
     }
@@ -128,6 +127,4 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
         $scope.form.wilayah = $item.wilayah;
         $scope.sisagaransi($item.no_wo);
     }
-
-
 })
