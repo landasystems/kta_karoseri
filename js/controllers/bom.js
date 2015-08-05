@@ -1,4 +1,4 @@
-app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, $http) {
+app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $stateParams, $modal) {
     var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
     var uploader = $scope.uploader = new FileUploader({
         url: 'img/upload.php?folder=bom&kode=' + kode_unik,
@@ -194,8 +194,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, 
             $scope.form.tipe = $scope.form.tipe;
         });
     }
-
-
     $scope.modal = function(form) {
         var modalInstance = $modal.open({
             templateUrl: 'tpl/t_bom/modal.html',
@@ -209,6 +207,10 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, 
         });
     };
 
+    if ($stateParams.form != null) { //pengecekan jika ada pencarian, dilempar ke view
+        $scope.view($stateParams.form);
+
+    }
 })
 
 app.controller('modalCtrl', function($scope, Data, $modalInstance, form) {
@@ -228,7 +230,9 @@ app.controller('modalCtrl', function($scope, Data, $modalInstance, form) {
         }
     }
     $scope.formmodal = form;
+
     $scope.cancel = function() {
         $modalInstance.dismiss('cancel');
     };
-});
+
+})

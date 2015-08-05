@@ -64,7 +64,7 @@ angular.module('app')
                                     templateUrl: 'tpl/page_signin.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function ($ocLazyLoad) {
+                                            function($ocLazyLoad) {
                                                 return $ocLazyLoad.load('js/controllers/site.js').then(
                                                         );
                                             }]
@@ -295,6 +295,7 @@ angular.module('app')
                                 //BOM
                                 .state('transaksi.bom', {
                                     url: '/bom',
+                                    params: {'form': null},
                                     templateUrl: 'tpl/t_bom/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
@@ -669,9 +670,9 @@ angular.module('app')
                                     templateUrl: 'tpl/r_barang-masuk/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function ($ocLazyLoad) {
+                                            function($ocLazyLoad) {
                                                 return $ocLazyLoad.load(['daterangepicker']).then(
-                                                        function () {
+                                                        function() {
                                                             return $ocLazyLoad.load('js/controllers/r_barangmasuk.js');
                                                         }
                                                 );

@@ -40,7 +40,8 @@ class BomController extends Controller {
         $query->from('trans_standar_bahan')
                 ->select("*")
                 ->where(['like', 'kd_bom', $params['nama']])
-                ->andWhere('status = 1');
+                ->andWhere('status = 1')
+                ->limit(25);
 
         $command = $query->createCommand();
         $models = $command->queryAll();
