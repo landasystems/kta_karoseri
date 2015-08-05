@@ -27,6 +27,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $modal, 
     $scope.getchassis = function(merk, tipe) {
         Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function(data) {
             $scope.form.kd_chassis = data.kode;
+            $scope.form.jenis = data.jenis;
         });
     };
 

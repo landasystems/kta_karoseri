@@ -75,16 +75,17 @@ class BomController extends Controller {
     public function actionChassis() {
         $query = new Query;
         $query->from('chassis')
-                ->select("kd_chassis")
+                ->select("kd_chassis , jenis")
                 ->where('merk="' . $_GET['merk'] . '" and tipe="' . $_GET['tipe'] . '"');
 
         $command = $query->createCommand();
         $models = $command->query()->read();
         $kode = $models['kd_chassis'];
+        $jenis = $models['jenis'];
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => $kode));
+        echo json_encode(array('status' => 1, 'kode' => $kode, 'jenis' => $jenis));
     }
 
     public function actionKode() {
@@ -92,16 +93,17 @@ class BomController extends Controller {
         $query->from('trans_standar_bahan')
                 ->select('*')
                 ->orderBy('kd_bom DESC')
-                ->where('year(tgl_buat) = "' . date("y") . '"')
+                ->where('year(tgl_buat) = "' . date("Y") . '"')
                 ->limit(1);
 
         $command = $query->createCommand();
         $models = $command->query()->read();
+
         if (empty($models)) {
             $kode = 'BOM' . date("y") . '00001';
         } else {
-            $lastKode = substr($models['kd_bom'], -4) + 1;
-            $kode = 'BOM' . date("y") . substr('0000' . $lastKode, -4);
+            $lastKode = substr($models['kd_bom'], -5) + 1;
+            $kode = 'BOM' . date("y") . substr('0000' . $lastKode, -5);
         }
         $this->setHeader(200);
 
@@ -189,6 +191,7 @@ class BomController extends Controller {
         $model = new Bom();
         $model->attributes = $params['bom'];
         $model->kd_model = $params['bom']['kd_model']['kd_model'];
+        $model->status = 0;
 
         if ($model->save()) {
             $detailBom = $params['detailBom'];
