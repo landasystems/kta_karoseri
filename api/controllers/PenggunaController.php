@@ -91,7 +91,7 @@ class PenggunaController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', 'm_user.' . $key, $val]);
+                $query->andFilterWhere(['like', $key, $val]);
             }
         }
 
