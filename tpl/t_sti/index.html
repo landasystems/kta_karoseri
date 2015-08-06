@@ -107,6 +107,24 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="col-sm-4 control-label">Kode Bom</label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <ui-select on-select="getSpk(form,$item)" ng-model="form.bom" required theme="bootstrap" ng-disabled="is_view" >
+                                        <ui-select-match>{{$select.selected.kd_bom}}</ui-select-match>
+                                        <ui-select-choices refresh="cariSpk($select.search)" repeat="val in kdBom">
+                                            {{val.kd_bom}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <span class="input-group-btn">
+                                        <button ng-click="form.bom = undefined" class="btn btn-default">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-3 control-label">Nama Customer</label>
                             <div class="col-sm-6">
                                 <select ng-change="changed(form)" ui-select2 style="width:100%" ng-model="form.kd_cust" ng-disabled="is_view" data-placeholder="Pilih Nama Customer" required>
