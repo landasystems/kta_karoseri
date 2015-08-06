@@ -99,9 +99,15 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">No. SPK</label>
                                 <div class="col-sm-8">
-                                    <label class="btn btn-default" ng-model="form.kat_spk" ng-click="kode('finish')" ng-disabled="is_create == false" btn-radio="'finish'">Finish Unit</label>
-                                    <label class="btn btn-default" ng-model="form.kat_spk" ng-click="kode('stok')" ng-disabled="is_create == false" btn-radio="'stok'">Stok Unit</label>                        
-                                    <br><br>
+                                    <div ng-if="is_create == true">
+                                        <label class="btn btn-default" ng-model="form.kat_spk" ng-click="kode('finish')" btn-radio="'finish'">Finish Unit</label>
+                                        <label class="btn btn-default" ng-model="form.kat_spk" ng-click="kode('stok')"  btn-radio="'stok'">Stok Unit</label>
+                                    </div>
+                                    <div ng-if="is_create == false">
+                                        <label class="btn btn-default" ng-model="form.kat_spk" btn-radio="'finish'">Finish Unit</label>
+                                        <label class="btn btn-default" ng-model="form.kat_spk" btn-radio="'stok'">Stok Unit</label>
+                                    </div>
+                                    <br>
                                     <input type="text" class="form-control" ng-model="form.no_spk" ng-disabled="is_create == false" required placeholder="Nomor SPK">
                                 </div>
                             </div>
@@ -137,7 +143,8 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Merk</label>
                                 <div class="col-sm-8">
-                                    <select class="form-control" ng-change="typeChassis(form.merk); getchassis(form.merk, form.tipe)" ng-model="form.merk" ng-disabled="is_view" required>
+                                    <select class="form-control" ng-change="typeChassis(form.merk);
+                                                getchassis(form.merk, form.tipe)" ng-model="form.merk" ng-disabled="is_view" required>
                                         <option value="">-Pilih Merk-</option>
                                         <option ng-repeat="merk in listMerk" value="{{merk.merk}}">{{merk.merk}}</option>
                                     </select>
@@ -278,8 +285,9 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">PKP</label>
                                 <div class="col-sm-8">
-                                    <label class="btn btn-default" ng-model="form.pkp" ng-disabled="is_view" btn-radio="'1'" required>Ya</label>
-                                    <label class="btn btn-default" ng-model="form.pkp" ng-disabled="is_view" btn-radio="'0'" required>Tidak</label>
+
+                                    <label class="btn btn-default" ng-model="form.pkp" btn-radio="'1'" required>Ya</label>
+                                    <label class="btn btn-default" ng-model="form.pkp" btn-radio="'0'" required>Tidak</label>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -291,8 +299,8 @@
                             <div class="form-group">
                                 <label class="col-sm-6 control-label">Instansi Pemungut Pajak</label>
                                 <div class="col-sm-6">
-                                    <label class="btn btn-default" ng-model="form.pemungut_pajak" ng-disabled="is_view" btn-radio="'1'" required>Ya</label>
-                                    <label class="btn btn-default" ng-model="form.pemungut_pajak" ng-disabled="is_view" btn-radio="'0'" required>Tidak</label>                               
+                                    <label class="btn btn-default" ng-model="form.pemungut_pajak" btn-radio="'1'" required>Ya</label>
+                                    <label class="btn btn-default" ng-model="form.pemungut_pajak" btn-radio="'0'" required>Tidak</label>                               
                                 </div>
                             </div>
                         </div>
@@ -341,9 +349,9 @@
                                 <label class="col-sm-4 control-label">PPN</label>
                                 <div class="col-sm-8">
                                     <label class="btn btn-default" ng-model="form.is_ppn" ng-click="is_ppn = true;
-                                            kalkulasi()" ng-disabled="is_view" btn-radio="'1'">Include</label>
+                                            kalkulasi()" btn-radio="'1'">Include</label>
                                     <label class="btn btn-default" ng-model="form.is_ppn" ng-click="is_ppn = false;
-                                            kalkulasi()" ng-disabled="is_view" btn-radio="'0'">Exclude</label>                        
+                                            kalkulasi()" btn-radio="'0'">Exclude</label>                        
                                     <br><br>
                                     <div class="input-group m-b">
                                         <span class="input-group-addon">Rp</span>

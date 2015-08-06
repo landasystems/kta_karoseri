@@ -7,24 +7,6 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
     $scope.is_view = false;
     $scope.is_create = false;
 
-    $scope.open1 = function($event) {
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.opened1 = true;
-    };
-
-    $scope.open2 = function($event) {
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.opened2 = true;
-    };
-
-    $scope.open3 = function($event) {
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.opened3 = true;
-    };
-
     $scope.cariWo = function($query) {
         if ($query.length >= 3) {
             Data.get('wo/wospk', {nama: $query}).then(function(data) {
@@ -68,6 +50,9 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.form.pengajuan = new Date();
+        $scope.form.terima = new Date();
+        $scope.form.tgl = new Date();
     };
 
     $scope.update = function(form) {

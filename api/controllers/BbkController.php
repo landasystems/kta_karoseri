@@ -25,7 +25,6 @@ class BbkController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
-                    'petugas' => ['get'],
                     'listbbk' => ['get'],
                     'detailstok' => ['post'],
                 ],
@@ -110,13 +109,6 @@ class BbkController extends Controller {
         $data['sisa_pengambilan'] = $sisa_pengambilan;
         $data['stok_sekarang'] = $stok_sekarang;
         echo json_encode(array('data' => $data));
-    }
-
-    public function actionPetugas() {
-//        $petugas = \yii\models\User::findOne('id = '.Yii::$app->user->getId());
-//        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'petugas' => 'admin'));
     }
 
     public function actionListbbk() {

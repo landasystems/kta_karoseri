@@ -14,7 +14,18 @@
             <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
                 <div class="form-horizontal">
                     <div class="col-md-12 col-sm-12">
-
+                        <div class="form-group">
+                            <label class="col-md-3">Kode Retur</label>
+                            <div class="col-md-9">
+                                <input st-search="no_retur_bbk" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3">Kode BBK</label>
+                            <div class="col-md-9">
+                                <input st-search="no_bbk" class="form-control"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -113,7 +124,7 @@
                                     <div class="input-group">
                                         <ui-select ng-disabled="is_view" ng-model="form.kd_barang" theme="bootstrap">
                                             <ui-select-match>{{$select.selected.nm_barang}}</ui-select-match>
-                                            <ui-select-choices refresh="cariBarang($select.search)" repeat="val in resultsbarang">
+                                            <ui-select-choices refresh="cariBarang($select.search, form.no_bbk)" repeat="val in resultsbarang">
                                                 {{val.nm_barang}}
                                             </ui-select-choices>
                                         </ui-select>
@@ -126,7 +137,13 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">Jumlah</label>
+                                <label class="col-sm-3 control-label">Jumlah BBK</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" ng-model="form.kd_barang.jml" ng-disabled="is_view" required placeholder="Jumlah Barang Keluar" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Jumlah Retur</label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" ng-model="form.jml" ng-disabled="is_view" required placeholder="Jumlah">
                                 </div>

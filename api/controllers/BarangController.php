@@ -25,7 +25,6 @@ class BarangController extends Controller {
                     'delete' => ['delete'],
                     'jenis' => ['get'],
                     'kode' => ['get'],
-                    'listbarang' => ['get'],
                     'cari' => ['get'],
                 ],
             ]
@@ -77,7 +76,11 @@ class BarangController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->query()->read();
-        $kode = $models['kd_barang'] + 1;
+        if(empty($models)){
+            $kode = '100001';
+        }else{
+            $kode = $models['kd_barang'] + 1;
+        }
         Yii::error($command->query());
         $this->setHeader(200);
 

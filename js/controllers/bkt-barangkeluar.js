@@ -19,6 +19,8 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
         });
     }
 
+    $scope.detailstok('', '');
+
     $scope.cariWo = function($query) {
         if ($query.length >= 3) {
             Data.get('wo/wospk', {nama: $query}).then(function(data) {
@@ -114,7 +116,6 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
         Data.get('bbk/petugas').then(function(data) {
             $scope.form.petugas = data.petugas;
         });
-        $scope.detailstok('', '');
     };
     $scope.update = function(form) {
         $scope.is_edit = true;
