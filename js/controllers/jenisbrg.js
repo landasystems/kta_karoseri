@@ -30,7 +30,7 @@ app.controller('jenisbrgCtrl', function ($scope, Data, toaster) {
         $scope.isLoading = false;
     };
     $scope.excel = function () {
-        Data.get('jabatan', paramRef).then(function (data) {
+        Data.get('jenisbrg', paramRef).then(function (data) {
             window.location = 'api/web/jenisbrg/excel';
         });
     }

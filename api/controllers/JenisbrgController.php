@@ -222,8 +222,8 @@ class JenisbrgController extends Controller {
     public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
-        $query->offset("");
-        $query->limit("");
+        $query->offset(NULL);
+        $query->limit(NULL);
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expmaster/jenisbarang", ['models'=>$models]);
