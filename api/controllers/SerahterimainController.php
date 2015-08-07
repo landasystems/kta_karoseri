@@ -105,33 +105,6 @@ class SerahterimainController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
-    public function actionSpk() {
-        $query = new Query;
-        $query->from('spk')
-                ->select("no_spk");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        echo json_encode(array('status' => 1, 'kd_spk' => $models));
-    }
-
-    public function actionChassis() {
-        $query = new Query;
-        $query->from('chassis')
-                ->select("*");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        echo json_encode(array('status' => 1, 'list_chassis' => $models));
-    }
-
-    public function actionCustomer() {
-        $query = new Query;
-        $query->from('customer')
-                ->select("*");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        echo json_encode(array('status' => 1, 'list_customer' => $models));
-    }
-
     public function actionWarna() {
         $query = new Query;
         $query->from('warna')
@@ -155,13 +128,7 @@ class SerahterimainController extends Controller {
         if (empty($model)) {
             $model = new Serahterimain();
         }
-        Yii::error(date('Y-m-d', strtotime('+1 days', strtotime(substr($params['tgl_terima'], 0, 10)))));
         $model->attributes = $params;
-//        $model->tgl_terima = date('Y-m-d',  strtotime('+1 day',substr($params['tgl_terima'], 0,10)));
-//        $model->serah_terima = date('Y-m-d',  strtotime('+1 day',substr($params['serah_terima'], 0,10)));
-//        $model->tgl_prd = date('Y-m-d',  strtotime('+1 day',substr($params['tgl_prd'], 0,10)));
-//        $model->tgl_pdc = date('Y-m-d',  strtotime('+1 day',substr($params['tgl_pdc'], 0,10)));
-
         if ($model->save()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);

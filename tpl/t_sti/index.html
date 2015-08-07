@@ -100,24 +100,15 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">No. SPK</label>
                             <div class="col-sm-6">
-                                <select ng-change="changed(form)" ui-select2 style="width:100%" ng-model="form.no_spk" ng-disabled="is_view" data-placeholder="Pilih Kode SPK" required>
-                                    <!--<option ng-selected value="{{form.no_wo}}">{{form.no_spk}}</option>-->
-                                    <option ng-repeat="spk in list_spk" value="{{spk.no_spk}}">{{spk.no_spk}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Kode Bom</label>
-                            <div class="col-sm-8">
                                 <div class="input-group">
-                                    <ui-select on-select="getSpk(form,$item)" ng-model="form.bom" required theme="bootstrap" ng-disabled="is_view" >
-                                        <ui-select-match>{{$select.selected.kd_bom}}</ui-select-match>
-                                        <ui-select-choices refresh="cariSpk($select.search)" repeat="val in kdBom">
-                                            {{val.kd_bom}}
+                                    <ui-select on-select="getSpk(form,$item)" ng-model="form.spk" required theme="bootstrap" ng-disabled="is_view" >
+                                        <ui-select-match>{{$select.selected.no_spk}}</ui-select-match>
+                                        <ui-select-choices refresh="cariSpk($select.search)" repeat="val in kdSpk">
+                                            {{val.no_spk}}
                                         </ui-select-choices>
                                     </ui-select>
                                     <span class="input-group-btn">
-                                        <button ng-click="form.bom = undefined" class="btn btn-default">
+                                        <button ng-click="form.spk = undefined" class="btn btn-default">
                                             <span class="glyphicon glyphicon-trash"></span>
                                         </button>
                                     </span>
@@ -127,10 +118,19 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Nama Customer</label>
                             <div class="col-sm-6">
-                                <select ng-change="changed(form)" ui-select2 style="width:100%" ng-model="form.kd_cust" ng-disabled="is_view" data-placeholder="Pilih Nama Customer" required>
-                                    <!--<option ng-selected value="{{form.no_wo}}">{{form.no_spk}}</option>-->
-                                    <option ng-repeat="cust in list_customer" value="{{cust.kd_cust}}">{{cust.nm_customer}}</option>
-                                </select>
+                                <div class="input-group">
+                                    <ui-select on-select="getCustomer(form,$item)" ng-model="form.customer" required theme="bootstrap" ng-disabled="is_view" >
+                                        <ui-select-match>{{$select.selected.kd_cust}} - {{$select.selected.nm_customer}}</ui-select-match>
+                                        <ui-select-choices refresh="cariCustomer($select.search)" repeat="val in kdCust">
+                                            {{val.kd_cust}} - {{val.nm_customer}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <span class="input-group-btn">
+                                        <button ng-click="form.customer = undefined" class="btn btn-default">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </button>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -146,8 +146,6 @@
                                 <input type="text" class="form-control" ng-model="form.driver" ng-readonly="is_view" >
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Serah Terima kendaraan</label>
                             <div class="col-sm-6">
@@ -159,6 +157,9 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-md-6">
+                        
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Diterima PRD</label>
                             <div class="col-sm-6">
