@@ -118,6 +118,7 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.merk;
         $scope.form = form;
+        $scope.form.tgl = new Date(form.tgl);
         
         $scope.selected(form.id);
     };
@@ -160,7 +161,6 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
             $scope.form = data.data;
             $scope.detUjimutu = data.detail;
 //            $scope.total();
-console.log(data);
         });
 
     }

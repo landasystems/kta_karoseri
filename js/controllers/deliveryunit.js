@@ -1,11 +1,11 @@
 app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
-    var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
+     var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
     var uploader = $scope.uploader = new FileUploader({
-        url: 'js/controllers/upload.php?folder=delivery&kode=' + kode_unik,
+        url: 'img/upload.php?folder=delivery&kode=' + kode_unik,
         queueLimit: 1,
-        removeAfterUpload: true
+        removeAfterUpload: true,
     });
-    // FILTERS
+
     uploader.filters.push({
         name: 'imageFilter',
         fn: function(item) {
@@ -13,7 +13,6 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
     });
-
     //init data
     var tableStateRef;
     $scope.displayed = [];
@@ -71,6 +70,7 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.form.tgl_delivery = new Date();
 
     };
     $scope.update = function(form) {
@@ -79,6 +79,7 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.no_wo;
         $scope.form = form;
+        $scope.form.tgl_delivery = new Date(form.tgl_delivery);
         $scope.selected(form.id);
     };
     $scope.view = function(form) {
@@ -89,8 +90,12 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
          $scope.selected(form.id);
     };
     $scope.save = function(form) {
-        $scope.uploader.uploadAll();
-        form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
+        if ($scope.uploader.queue.length > 0) {
+            $scope.uploader.uploadAll();
+            form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
+        } else {
+            form.foto = '';
+        }
         var url = ($scope.is_create == true) ? 'delivery/create' : 'delivery/update/' + form.id;
         Data.post(url, form).then(function(result) {
             if (result.status == 0) {

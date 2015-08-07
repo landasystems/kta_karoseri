@@ -183,7 +183,15 @@ class WokeluarController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
+                if ($key == 'model') {
+                    $query->andFilterWhere(['like', 'model.' . $key, $val]);
+                } elseif ($key == 'merk') {
+                    $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
+                } elseif ($key == 'no_wo') {
+                    $query->andFilterWhere(['like', 'wo_masuk.' . $key, $val]);
+                } elseif ($key == 'nama') {
+                    $query->andFilterWhere(['like', 'sales.' . $key, $val]);
+                }
             }
         }
 
@@ -298,8 +306,6 @@ class WokeluarController extends Controller {
         echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes), 'det' => $asu, 'eksterior' => $models2, 'interior' => $models3), JSON_PRETTY_PRINT);
     }
 
-   
-
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
 //        $model = $this->findModel($params['womasuk']['no_wo']);
@@ -310,7 +316,7 @@ class WokeluarController extends Controller {
 
 
         if ($model->save()) {
-           
+
 
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);

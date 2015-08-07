@@ -182,7 +182,15 @@ class WomasukController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
+                if ($key == 'no_spk') {
+                    $query->andFilterWhere(['like', 'spk.' . $key, $val]);
+                } elseif ($key == 'jenis') {
+                    $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
+                } elseif ($key == 'no_wo') {
+                    $query->andFilterWhere(['like', 'wo_masuk.' . $key, $val]);
+                } elseif ($key == 'nm_customer') {
+                    $query->andFilterWhere(['like', 'customer.' . $key, $val]);
+                }
             }
         }
 
@@ -225,6 +233,7 @@ class WomasukController extends Controller {
     public function actionSelect() {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($params['no_wo']);
+        $data = $model->attributes;
         $query = new Query;
         $query->from('wo_masuk')
                 ->join('JOIN', 'spk', 'spk.no_spk = wo_masuk.no_spk')
@@ -235,13 +244,12 @@ class WomasukController extends Controller {
                 ->join('LEFT JOIN', 'serah_terima_in', 'spk.no_spk = serah_terima_in.no_spk') // customer
                 ->join('LEFT JOIN', 'warna', 'serah_terima_in.kd_warna = warna.kd_warna') // customer
                 ->where('wo_masuk.no_wo = "' . $params['no_wo'] . '"')
-                ->select("sales.nama as sales,warna.warna as warna, customer.nm_customer as customer, customer.nm_pemilik as pemilik,
+                ->select("wo_masuk.*,sales.nama as sales, customer.nm_customer as customer, customer.nm_pemilik as pemilik,
                             chassis.model_chassis as model_chassis, chassis.merk as merk, chassis.tipe as tipe, model.model, serah_terima_in.no_chassis as no_rangka,
                             serah_terima_in.no_mesin, chassis.jenis, serah_terima_in.tgl_terima");
         $command = $query->createCommand();
         $models = $command->queryAll();
         foreach ($models as $data) {
-            $asu['warna'] = (isset($data['warna'])) ? $data['warna'] : '-';
             $asu['customer'] = (isset($data['customer'])) ? $data['customer'] : '-';
             $asu['sales'] = (isset($data['sales'])) ? $data['sales'] : '-';
             $asu['pemilik'] = (isset($data['pemilik'])) ? $data['pemilik'] : '-';
@@ -258,11 +266,19 @@ class WomasukController extends Controller {
             // eksterior
             $eksterior = new Query;
             $eksterior->from('small_eks')
+                    ->join('JOIN', 'warna', 'small_eks.warna = warna.kd_warna') // customer
                     ->select("*")
                     ->where('no_wo="' . $params['no_wo'] . '"');
 
             $command2 = $eksterior->createCommand();
             $models2 = $command2->queryAll();
+            $eks = array();
+            foreach ($models2 as $r) {
+                $eks = $r;
+                $eks['warna'] = ['kd_warna' => $r['kd_warna'], 'warna' => $r['warna']];
+                $eks['warna2'] = ['kd_warna' => $r['kd_warna'], 'warna' => $r['warna']];
+            }
+
 
             // interior
             $interior = new Query;
@@ -276,11 +292,18 @@ class WomasukController extends Controller {
             // eksterior
             $eksterior = new Query;
             $eksterior->from('mini_eks')
+                    ->join('JOIN', 'warna', 'mini_eks.warna = warna.kd_warna') // customer
                     ->select("*")
                     ->where('no_wo="' . $params['no_wo'] . '"');
 
             $command2 = $eksterior->createCommand();
             $models2 = $command2->queryAll();
+            $eks = array();
+            foreach ($models2 as $r) {
+                $eks = $r;
+                $eks['warna'] = ['kd_warna' => $r['kd_warna'], 'warna' => $r['warna']];
+                $eks['warna2'] = ['kd_warna' => $r['kd_warna'], 'warna' => $r['warna']];
+            }
 
             // interior
             $interior = new Query;
@@ -291,10 +314,11 @@ class WomasukController extends Controller {
             $command3 = $interior->createCommand();
             $models3 = $command3->queryAll();
         }
-        $model['no_spk'] = ['as' => '1111'];
+        $data['spk'] = ['no_spk' => $model['no_spk']];
+        $data['no_wo'] = ['no_wo' => $model['no_wo']];
 
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes), 'det' => $asu, 'eksterior' => $models2, 'interior' => $models3), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'det' => $asu, 'eksterior' => $eks, 'interior' => $models3), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
@@ -344,9 +368,9 @@ class WomasukController extends Controller {
 
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($params['interior']);
+        Yii::error($params);
 //        $model = $this->findModel($params['womasuk']['no_wo']);
-        $model = WoMasuk::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
+        $model = WoMasuk::find()->where('no_wo="' . $params['eksterior']['no_wo'] . '"')->one();
 
         $model->attributes = $params['womasuk'];
 
