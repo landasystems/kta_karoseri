@@ -115,6 +115,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">No PO</label>
                                 <div class="col-sm-8">
+                                    {{form.po}}
                                     <div class="input-group" style="width:100%">
                                         <ui-select ng-model="form.po" theme="bootstrap">
                                             <ui-select-match>{{$select.selected.nota}}</ui-select-match>
@@ -256,8 +257,8 @@
                                     </div>
                                 </td>-->
                                 <td>
-                                    <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-arrows"></i></button>
-                                    <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0"><i class="fa fa-trash-o"></i></button>
+                                    <button ng-disabled="is_view" ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-arrows"></i></button>
+                                    <button ng-disabled="is_view" ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0"><i class="fa fa-trash-o"></i></button>
                                 </td>
                             </tr>
                         </tbody>

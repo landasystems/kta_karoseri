@@ -263,6 +263,7 @@ class BbmController extends Controller {
     public function actionView($id) {
 
         $model = $this->findModel($id);
+        $data = $model->attributes;
         $querySup = new Query;
         $querySup->select("*")
                 ->from('supplier')
@@ -279,7 +280,7 @@ class BbmController extends Controller {
         $wo = $command2->queryOne();
         $queryDet = new Query;
         $queryDet->from('det_bbm')
-                ->select('*')
+                ->select('det_bbm.*, det_bbm.no_po as po')
                 ->where('no_bbm = "' . $model->no_bbm . '"');
         $commandDet = $queryDet->createCommand();
         $detail = $commandDet->queryAll();
@@ -291,11 +292,11 @@ class BbmController extends Controller {
                     ->where('kd_barang = "' . $ab['kd_barang'] . '"');
             $commandBrg = $queryBrg->createCommand();
             $Brg = $commandBrg->queryOne();
-            $detail[$key]['barang'] = $Brg;
+            $detail[$key]['barang'] = $Brg;  
         }
         Yii::error($detail);
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'sup' => $sup, 'wo' => $wo, 'details' => $detail), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1,'data'=>$data, 'sup' => $sup, 'wo' => $wo, 'details' => $detail), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
