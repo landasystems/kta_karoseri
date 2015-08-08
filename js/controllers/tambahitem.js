@@ -14,7 +14,7 @@ app.controller('tambahItemCtrl', function ($scope, Data, toaster, FileUploader, 
     });
     $scope.cariBagian = function ($query) {
         if ($query.length >= 3) {
-            Data.get('bom/cari', {nama: $query}).then(function (data) {
+            Data.get('bom/cariall', {nama: $query}).then(function (data) {
                 $scope.kdBom = data.data;
             });
         }
@@ -30,6 +30,7 @@ app.controller('tambahItemCtrl', function ($scope, Data, toaster, FileUploader, 
     $scope.getChassis = function (form, items) {
         form.kd_chassis = items.kd_chassis;
         form.kd_bom = items.kd_bom;
+        $scope.selectBom(form.kd_bom);
     };
     $scope.getWo = function (form, items) {
         form.no_wo = items.no_wo;
@@ -45,11 +46,11 @@ app.controller('tambahItemCtrl', function ($scope, Data, toaster, FileUploader, 
         });
     }
 
-    $scope.getchassis = function (merk, tipe) {
-        Data.get('additionalbom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function (data) {
-            $scope.form.kd_chassis = data.kode;
-        });
-    };
+//    $scope.getchassis = function (merk, tipe) {
+//        Data.get('additionalbom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function (data) {
+//            $scope.form.kd_chassis = data.kode;
+//        });
+//    };
 
     $scope.open1 = function ($event) {
         $event.preventDefault();
@@ -199,7 +200,7 @@ app.controller('tambahItemCtrl', function ($scope, Data, toaster, FileUploader, 
         Data.get('additionalbom/view/' + id).then(function (data) {
 //            $scope.typeChassis($scope.form.merk);
             if (jQuery.isEmptyObject(data.detail)) {
-                $scope.detBom = [
+                $scope.detTambahItem = [
                     {
                         kd_jab: '',
                         kd_barang: '',
@@ -211,6 +212,22 @@ app.controller('tambahItemCtrl', function ($scope, Data, toaster, FileUploader, 
                 $scope.detTambahItem = data.detail;
             }
 //            $scope.form.tipe = $scope.form.tipe;
+        });
+    }
+    $scope.selectBom = function(id) {
+        Data.get('bom/view/' + id).then(function(data) {
+            if (jQuery.isEmptyObject(data.detail)) {
+                $scope.detTambahItem = [
+                    {
+                        kd_jab: '',
+                        kd_barang: '',
+                        qty: '',
+                        ket: '',
+                    }
+                ];
+            } else {
+                $scope.detTambahItem = data.detail;
+            }
         });
     }
 

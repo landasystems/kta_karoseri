@@ -30,6 +30,7 @@ class WomasukController extends Controller {
                     'delete' => ['post'],
                     'jenis' => ['get'],
                     'kode' => ['get'],
+                    'cariwo' => ['get'],
                     'cari' => ['get'],
                     'spk' => ['post'],
                     'warna' => ['post'],
@@ -457,6 +458,23 @@ class WomasukController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expmaster/barang", ['models' => $models]);
+    }
+    public function actionCariwo() {
+
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('wo_masuk as wo')
+                ->join('LEFT JOIN','serah_terima_in as se','wo.kd_titipan = se.kd_titipan')
+                ->join('LEFT JOIN','chassis as ch',' ch.kd_chassis= se.kd_chassis')
+                ->join('LEFT JOIN','spk as sp',' wo.no_spk= sp.no_spk')
+                ->join('LEFT JOIN','model as mo',' mo.kd_model= sp.kd_model')
+                ->where(['like', 'wo.no_wo', $params['nama']])
+                ->select("wo.no_wo as no_wo,ch.merk as merk, mo.model as model");
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
 }

@@ -19,9 +19,6 @@ class SerahterimainController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
-                    'spk' => ['get'],
-                    'chassis' => ['get'],
-                    'customer' => ['get'],
                     'warna' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
@@ -99,7 +96,15 @@ class SerahterimainController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
-
+        
+        foreach($models as $key => $val){
+            $spk = \app\models\Spkaroseri::findOne($val['no_spk']);
+            $models[$key]['spk'] = (!empty($spk)) ? $spk->attributes : array();
+            $customer = \app\models\Customer::findOne($val['kd_cust']);
+            $models[$key]['customer'] = (!empty($customer)) ? $customer->attributes : array();
+            $chassis = \app\models\Chassis::findOne($val['kd_chassis']);
+            $models[$key]['chassis'] = (!empty($chassis)) ? $chassis->attributes : array();
+        }
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
@@ -129,6 +134,7 @@ class SerahterimainController extends Controller {
             $model = new Serahterimain();
         }
         $model->attributes = $params;
+        
         if ($model->save()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
