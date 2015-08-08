@@ -1,4 +1,4 @@
-app.controller('returbbkCtrl', function($scope, Data, toaster) {
+app.controller('returBbmCtrl', function ($scope, Data, toaster) {
 //init data
     var tableStateRef;
     $scope.displayed = [];
@@ -8,23 +8,23 @@ app.controller('returbbkCtrl', function($scope, Data, toaster) {
     $scope.jenis_kmp = [];
     $scope.bagian = '-';
 
-    $scope.cariBbk = function($query) {
+    $scope.cariBbm = function ($query) {
         if ($query.length >= 3) {
-            Data.get('bbk/listbbk', {nama: $query}).then(function(data) {
+            Data.get('bbm/listbbm', {nama: $query}).then(function (data) {
                 $scope.results = data.data;
             });
         }
     }
 
-    $scope.cariBarang = function($query) {
+    $scope.cariBarang = function ($query) {
         if ($query.length >= 3) {
-            Data.get('barang/cari', {barang: $query}).then(function(data) {
+            Data.get('barang/cari', {barang: $query}).then(function (data) {
                 $scope.resultsbarang = data.data;
             });
         }
     }
 
-    $scope.open1 = function($event) {
+    $scope.open1 = function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
         $scope.opened1 = true;
@@ -44,45 +44,45 @@ app.controller('returbbkCtrl', function($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('returbbk', param).then(function(data) {
+        Data.get('returbbm', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
         $scope.isLoading = false;
     };
-    $scope.create = function(form) {
+    $scope.create = function (form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-        $scope.detailBbk = [{
+        $scope.detailBbm = [{
                 kd_barang: '',
                 jml: '',
                 ket: '',
             }];
-        Data.get('bbk/kode').then(function(data) {
-            $scope.form.no_retur_bbk = data.kode;
+        Data.get('bbm/kode').then(function (data) {
+            $scope.form.no_retur_bbm = data.kode;
         });
     };
-    $scope.update = function(form) {
+    $scope.update = function (form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
-        $scope.formtitle = "Edit Data : " + form.no_bbk;
+        $scope.formtitle = "Edit Data : " + form.no_bbm;
         $scope.form = form;
-        $scope.selected(form.no_retur_bbk);
+        $scope.selected(form.no_retur_bbm);
     };
-    $scope.view = function(form) {
+    $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.no_wo;
         $scope.form = form;
-        $scope.selected(form.no_retur_bbk);
+        $scope.selected(form.no_retur_bbm);
     };
-    $scope.save = function(form) {
-        var url = ($scope.is_create == true) ? 'returbbk/create' : 'returbbk/update/' + form.no_retur_bbk;
-        Data.post(url, form).then(function(result) {
+    $scope.save = function (form) {
+        var url = ($scope.is_create == true) ? 'returbbm/create' : 'returbbm/update/' + form.no_retur_bbm;
+        Data.post(url, form).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
@@ -92,28 +92,28 @@ app.controller('returbbkCtrl', function($scope, Data, toaster) {
             }
         });
     };
-    $scope.cancel = function() {
+    $scope.cancel = function () {
         $scope.is_edit = false;
         $scope.is_view = false;
     };
-    $scope.delete = function(row) {
+    $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('returbbk/delete/' + row.no_retur_bbk).then(function(result) {
+            Data.delete('returbbm/delete/' + row.no_retur_bbm).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
-    $scope.selected = function(id) {
-        Data.get('returbbk/view/' + id).then(function(data) {
+    $scope.selected = function (id) {
+        Data.get('returbbm/view/' + id).then(function (data) {
             $scope.form = data.data;
             if (jQuery.isEmptyObject(data.detail)) {
-                $scope.detailBbk = [{
+                $scope.detailBbm = [{
                         kd_barang: '',
                         jml: '',
                         ket: '',
                     }];
             } else {
-                $scope.detailBbk = data.detail;
+                $scope.detailBbm = data.detail;
             }
         });
     }
