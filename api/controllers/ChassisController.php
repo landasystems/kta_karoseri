@@ -23,6 +23,7 @@ class ChassisController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
+                    'cari' => ['get'],
                     'kode' => ['get'],
                     'merk' => ['get'],
                     'tipe' => ['get'],
@@ -243,6 +244,21 @@ class ChassisController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expmaster/chassis", ['models' => $models]);
+    }
+
+    public function actionCari() {
+        $params = $_REQUEST;
+        $model = Chassis::find()
+                        ->where('kd_chassis like "%' . $params['nama'] . '%"')
+                        ->limit(10)->all();
+        $data = array();
+        if (!empty($model)) {
+            foreach ($model as $key => $val) {
+                $data[] = $val->attributes;
+            }
+        }
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $data), JSON_PRETTY_PRINT);
     }
 
 }

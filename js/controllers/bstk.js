@@ -6,9 +6,18 @@ app.controller('bstkCtrl', function ($scope, Data, toaster) {
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
-    Data.get('bstk/nowo').then(function (data) {
-        $scope.list_wo = data.list_wo;
-    });
+    $scope.cariWo = function ($query) {
+        if ($query.length >= 3) {
+            Data.get('womasuk/cariwo', {nama: $query}).then(function (data) {
+                $scope.noWo = data.data;
+            });
+        }
+    };
+    $scope.getWo = function (form, items) {
+        form.no_wo = items.no_wo;
+        form.merk = items.merk;
+        form.model = items.model;
+    };
     Data.get('bstk/warna').then(function (data) {
         $scope.list_warna = data.list_warna;
     });
@@ -37,12 +46,6 @@ app.controller('bstkCtrl', function ($scope, Data, toaster) {
         $scope.isLoading = false;
     };
 
-    $scope.excel = function () {
-        Data.get('bstk', paramRef).then(function (data) {
-            window.location = 'api/web/bstk/excel';
-        });
-    }
-
     $scope.create = function (form) {
         $scope.is_create = true;
         $scope.is_edit = true;
@@ -59,6 +62,7 @@ app.controller('bstkCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.no_wo;
         $scope.form = form;
+        console.log(form);
     };
     $scope.view = function (form) {
         $scope.is_edit = true;
@@ -67,7 +71,8 @@ app.controller('bstkCtrl', function ($scope, Data, toaster) {
         $scope.form = form;
     };
     $scope.save = function (form) {
-        var url = 'bstk/create';
+        var url = (form.id > 0) ? 'bstk/update/'+form.id : 'bstk/create';
+        
         Data.post(url, form).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -105,17 +110,9 @@ app.controller('bstkCtrl', function ($scope, Data, toaster) {
     };
     $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('bstk/delete/' + row.kd_cust).then(function (result) {
+            Data.delete('bstk/delete/' + row.id).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
-    };
-    $scope.changed = function (form) {
-//        alert(wo.no_wo);
-        Data.post('bstk/selected/', form).then(function (result) {
-//            console.log(result.selected_spk.merk);
-            $scope.form.merk = result.merk;
-            $scope.form.model = result.model;
-        });
     };
 })

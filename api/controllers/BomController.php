@@ -28,10 +28,26 @@ class BomController extends Controller {
                     'barang' => ['get'],
                     'kode' => ['get'],
                     'tipe' => ['get'],
+                    'cariall' => ['get'],
+                    'detail' => ['get'],
                     'cari' => ['get'],
                 ],
             ]
         ];
+    }
+
+    public function actionCariall() {
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('trans_standar_bahan')
+                ->select("*")
+                ->where(['like', 'kd_bom', $params['nama']])
+                ->limit(25);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionCari() {
@@ -284,6 +300,22 @@ class BomController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+
+    public function actionDetail() {
+        $det = BomDet::find()
+                ->with(['jabatan', 'barang'])
+                ->where(['kd_bom' => $models['kd_bom']])
+                ->all();
+
+        $detail = array();
+        if (!empty($det)) {
+            foreach ($det as $key => $val) {
+                $detail[] = $val->attributes;
+            }
+        }
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'detail' => $detail), JSON_PRETTY_PRINT);
     }
 
 }

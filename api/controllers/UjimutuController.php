@@ -133,13 +133,13 @@ class UjimutuController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->queryAll();
-        $detail ='';
+        $detail = '';
         foreach ($models as $key => $val) {
             $nowo = (isset($val['no_wo'])) ? $val['no_wo'] : '';
             $merk = (isset($val['merk'])) ? $val['merk'] : '';
-           
+
             $detail[$key] = $val;
-            $detail[$key]['nowo'] = ['no_wo' => $nowo];
+            $detail[$key]['no_wo'] = ['no_wo' => $nowo];
         }
 
         $this->setHeader(200);

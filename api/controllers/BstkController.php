@@ -89,7 +89,7 @@ class BstkController extends Controller {
                 ->join('JOIN', 'model as m', 's.kd_model = m.kd_model')
                 ->join('JOIN', 'chassis as c', 's.kd_chassis = c.kd_chassis')
                 ->orderBy($sort)
-                ->select("b.no_wo as no_wo,b.tgl as tgl, c.merk as merk, c.tipe as tipe, m.kd_model as kd_model, m.model as model, wa.warna as warna, b.kd_warna as kd_warna, b.catatan as catatan");
+                ->select("b.id as id, b.no_wo as no_wo,b.tgl as tgl, c.merk as merk, c.tipe as tipe, m.kd_model as kd_model, m.model as model, wa.warna as warna, b.kd_warna as kd_warna, b.catatan as catatan");
 
         //filter
         if (isset($params['filter'])) {
@@ -103,26 +103,16 @@ class BstkController extends Controller {
         $models = $command->queryAll();
         $totalItems = $query->count();
 
+        foreach ($models as $key => $val) {
+            $wo = \app\models\Womasuk::findOne($val['no_wo']);
+            $models[$key]['wo'] = (!empty($wo)) ? $wo->attributes : array();
+        }
+
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
-    public function actionNowo() {
-        $query = new Query;
-        $query->from('wo_masuk as w')
-                ->join('LEFT JOIN', 'bstk as b', 'w.no_wo = b.no_wo')
-                ->where('b.no_wo IS NULL')
-                ->select("w.no_wo as no_wo")
-                ->orderBy('no_wo');
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'list_wo' => $models));
-    }
     public function actionWarna() {
         $query = new Query;
         $query->from('warna')
@@ -137,25 +127,7 @@ class BstkController extends Controller {
 
         echo json_encode(array('status' => 1, 'list_warna' => $models));
     }
-    public function actionSelected(){
-        $params = json_decode(file_get_contents("php://input"), true);
-        $query = new Query;
-        $query->from('wo_masuk as w')
-                ->join('JOIN', 'spk as s', 'w.no_spk = s.no_spk')
-                ->join('JOIN', 'model as m', 'm.kd_model = s.kd_model')
-                ->join('JOIN', 'chassis as c', 'c.kd_chassis = s.kd_chassis')
-                ->select("c.merk as merk, c.tipe as tipe, s.kd_model as kd_model, m.model as model")
-                ->where('no_wo = "'.$params['no_wo'].'"');
-        
-        $command = $query->createCommand();
-        $models = $command->queryOne();
-//        Yii::error($models);
-        $merk = $models['merk'];
-        $model = $models['model'];
-        $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'merk' => $merk,'model'=>$model));
-    }
     public function actionView($id) {
 
         $model = $this->findModel($id);
@@ -166,10 +138,8 @@ class BstkController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = Bstk::find()->where('no_wo="'.$params['no_wo'].'"')->one();
-        if(empty($model)){
         $model = new Bstk();
-        }
+
         $model->attributes = $params;
         if ($model->save()) {
             $this->setHeader(200);
@@ -244,4 +214,5 @@ class BstkController extends Controller {
     }
 
 }
+
 ?>
