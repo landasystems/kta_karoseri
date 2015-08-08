@@ -162,8 +162,10 @@ class DeliveryController extends Controller {
 
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
+        \Yii::error($params);
         $model = $this->findModel($id);
         $model->attributes = $params;
+        $model->no_wo = $params['no_wo']['no_wo'];
         if ($model->tujuan == "customer") {
             $model->status = 1;
         } else {
