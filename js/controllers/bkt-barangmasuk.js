@@ -1,6 +1,6 @@
 app.controller('bbmCtrl', function ($scope, Data, toaster) {
     //init data
-    
+
     var tableStateRef;
     $scope.displayed = [];
     $scope.is_edit = false;
@@ -87,7 +87,6 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
                 id: '',
                 no_bbm: '',
                 barang: [
-                    
                 ],
                 jumlah: '',
                 keterangan: '',
@@ -115,7 +114,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
             form: form,
             detBbm: detBbm
         };
-        var url = (form.no_bbm !== undefined) ? 'bbm/update/'+form.no_bbm : 'bbm/create';
+        var url = (form.no_bbm !== undefined) ? 'bbm/update/' + form.no_bbm : 'bbm/create';
         Data.post(url, data).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -160,7 +159,9 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
     };
     $scope.getDetail = function (id) {
         Data.get('bbm/view/' + id).then(function (data) {
+            $scope.form = data.data;
             $scope.detBbm = data.details;
+           
 //            $scope.detBbm.barang = data.details;
             $scope.form.wo = data.wo;
             $scope.form.supplier = data.sup;

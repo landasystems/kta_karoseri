@@ -7,19 +7,19 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
     $scope.is_view = false;
     $scope.is_create = false;
     $scope.is_create = false;
-    
-     $scope.cariProduk = function ($query) {
+
+    $scope.cariProduk = function($query) {
         if ($query.length >= 3) {
-            Data.get('ujimutu/cari', {nama: $query}).then(function (data) {
+            Data.get('ujimutu/cari', {nama: $query}).then(function(data) {
                 $scope.results = data.data;
             });
         }
     }
-    
-    $scope.pilih = function(detail, $item){
+
+    $scope.pilih = function(detail, $item) {
         detail.merk = $item.merk;
     }
-    
+
     $scope.detUjimutu = [
         {
             kd_uji: '',
@@ -54,11 +54,11 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
     $scope.total = function() {
         var total = 0;
         var total2 = 0;
-        var biaya_admin = parseInt($scope.form.biaya_admin) ;
+        var biaya_admin = parseInt($scope.form.biaya_admin);
         angular.forEach($scope.detUjimutu, function(detail) {
             var hrg = (detail.biaya) ? parseInt(detail.biaya) : 0;
             total += hrg;
-            total2 = (total+biaya_admin);
+            total2 = (total + biaya_admin);
         });
         $scope.form.total_biaya = total2;
 
@@ -71,7 +71,7 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
         $event.stopPropagation();
         $scope.opened1 = true;
     };
-   
+
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
@@ -101,6 +101,7 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.form.tgl = new Date();
         $scope.detUjimutu = [
             {
                 kd_uji: '',
@@ -117,21 +118,23 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.merk;
         $scope.form = form;
-        $scope.selected(form.kd_uji);
+        $scope.form.tgl = new Date(form.tgl);
+        
+        $scope.selected(form.id);
     };
     $scope.view = function(form) {
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.merk;
         $scope.form = form;
-        $scope.selected(form.kd_uji);
+        $scope.selected(form.id);
     };
     $scope.save = function(form, detail) {
         var data = {
             ujimutu: form,
             det_ujimutu: detail,
         };
-        var url = ($scope.is_create == true) ? 'ujimutu/create' : 'ujimutu/update/' + form.kd_uji;
+        var url = ($scope.is_create == true) ? 'ujimutu/create' : 'ujimutu/update/' + form.id;
         Data.post(url, data).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -148,18 +151,18 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
     };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('ujimutu/delete/' + row.kd_uji).then(function(result) {
+            Data.delete('ujimutu/delete/' + row.id).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
-    $scope.selected = function (kd_uji) {
-        Data.get('ujimutu/view/' + kd_uji).then(function (data) {
+    $scope.selected = function(id) {
+        Data.get('ujimutu/view/' + id).then(function(data) {
             $scope.form = data.data;
             $scope.detUjimutu = data.detail;
-
+//            $scope.total();
         });
-        $scope.total();
+
     }
 
 

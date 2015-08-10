@@ -9,15 +9,39 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
 //    Data.get('bstk/nowo').then(function (data) {
 //        $scope.list_wo = data.list_wo;
 //    });
-    Data.get('serahterimain/spk').then(function (data) {
-        $scope.list_spk = data.kd_spk;
-    });
-    Data.get('serahterimain/chassis').then(function (data) {
-        $scope.list_chassis = data.list_chassis;
-    });
-    Data.get('serahterimain/customer').then(function (data) {
-        $scope.list_customer = data.list_customer;
-    });
+    $scope.cariSpk = function ($query) {
+        if ($query.length >= 3) {
+            Data.get('spkaroseri/cari', {nama: $query}).then(function (data) {
+                $scope.kdSpk = data.data;
+            });
+        }
+    };
+    $scope.getSpk= function(form,items){
+        form.no_spk = items.no_spk;
+    };
+    $scope.cariCustomer = function ($query) {
+        if ($query.length >= 3) {
+            Data.get('customer/cari', {nama: $query}).then(function (data) {
+                $scope.kdCust = data.data;
+            });
+        }
+    };
+    $scope.getCustomer= function(form,items){
+        form.kd_cust = items.kd_cust;
+        form.alamat1 = items.alamat1;
+    };
+    $scope.cariChassis = function ($query) {
+        if ($query.length >= 3) {
+            Data.get('chassis/cari', {nama: $query}).then(function (data) {
+                $scope.kdChassis = data.data;
+            });
+        }
+    };
+    $scope.getChassis= function(form,items){
+        form.kd_chassis = items.kd_chassis;
+        form.merk = items.merk;
+        form.tipe = items.tipe;
+    };
     Data.get('serahterimain/warna').then(function (data) {
         $scope.list_warna = data.list_warna;
     });

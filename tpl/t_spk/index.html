@@ -91,14 +91,27 @@
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation ">
 
-                    <div class="col-md-4 col-sm-12">
-                        
+                    <div class="col-md-6 col-sm-12">
+
                         <div class="form-group">
                             <label class="col-sm-4 control-label">NO WO</label>
                             <div class="col-sm-8">
-                                <select class="form-control" ui-select2="" ui-jq="chosen" ng-change="getcustomer(form)" ng-model="form.no_wo" ng-disabled="is_view" >
-                                     <option ng-repeat="customer in sNowo" value="{{customer.no_wo}}">{{customer.no_wo}}</option>
-                                </select>
+                                <!--                                <select class="form-control" ui-select2="" ui-jq="chosen" ng-change="getcustomer(form)" ng-model="form.no_wo" ng-disabled="is_view" >
+                                                                     <option ng-repeat="customer in sNowo" value="{{customer.no_wo}}">{{customer.no_wo}}</option>
+                                                                </select>-->
+                                <div class="input-group">
+                                    <ui-select on-select="pilih(form, $item)" ng-model="form.no_wo" theme="bootstrap">
+                                        <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
+                                        <ui-select-choices refresh="cariProduk($select.search)" repeat="val in results">
+                                            {{val.no_wo}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <span class="input-group-btn">
+                                        <button ng-click="form.no_wo = undefined" class="btn btn-default">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </button>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -109,7 +122,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-12">
+                    <div class="col-md-6 col-sm-12">
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Model</label>
                             <div class="col-sm-8">
@@ -120,8 +133,13 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Bagian</label>
                             <div class="col-sm-8">
-
-                                <input type="text" class="form-control"  ng-model="form.jabatan" ng-disabled="is_view" ng-readonly="is_create == false" >
+                                <ui-select on_select="getjabatan(form)"   ng-model="form.jabatan" theme="bootstrap">
+                                        <ui-select-match placeholder="Cari Jabatan">{{$select.selected.jabatan}}</ui-select-match>
+                                        <ui-select-choices group-by="'group'" repeat="dokter in sJabatan | filter: $select.search">
+                                            <div ng-bind-html="dokter.jabatan | highlight: $select.search"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                <!--<input type="text" class="form-control"  ng-model="form.jabatan" ng-disabled="is_view" ng-readonly="is_create == false" >-->
                             </div>
                         </div>
                     </div>
@@ -135,26 +153,39 @@
                                 </div>
                             </div>
                         </div>
-                     
+
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <table class="table table-bordered">
                         <tr>
-                            <td>Detail SPK Pekerjaan</td>
-                            <td width="15">#</td>
+                            <td colspan="2">Detail SPK Pekerjaan</td>
+                            <!--<td width="15"></td>-->
                         </tr>
+                        
                         <tr ng-repeat="detail in detKerja">
                             <td>
-                                <input type="hidden" ng-model="detail.kd_jab">
-                                <input type="hidden" ng-model="detail.jenis">
-                                <input type="text" class="form-control" ng-model="detail.nm_kerja" ng-disabled="is_view" ng-readonly="is_create == false" >
-                                
-                            </td>
-                            <td>
-                                <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-arrows"></i></button>
-                                <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0"><i class="fa fa-trash-o"></i></button>
+                        <ui-select tagging="tagTransform"  on-select="nambahIsi(detail,$item)" tagging-label="false" ng-model="detail.nm_kerja" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 600px;" title="Choose a color">
+                            <ui-select-match placeholder="Pilih jenis kerjaan">{{$select.selected.nm_kerja}}</ui-select-match>
+                            <ui-select-choices repeat="kerja in sKerja | filter:$select.search" >
+                                <small>
+                                    {{kerja.nm_kerja}} 
 
-                            </td>
+                                </small>
+                            </ui-select-choices>
+                        </ui-select>
+
+                        <!--{{detail.nm_kerja}}-->
+                        <!--                        <input type="hidden" ng-model="detail.kd_jab">
+                                                <input type="hidden" ng-model="detail.jenis">-->
+                        <!--<input type="text" class="form-control" ng-model="detail.nm_kerja" ng-disabled="is_view" ng-readonly="is_create == false" >-->
+
+                        </td>
+                        
+                        <td>
+                            <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-arrows"></i></button>
+                            <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0"><i class="fa fa-trash-o"></i></button>
+
+                        </td>
                         </tr>
                     </table>
                     <div align="center">

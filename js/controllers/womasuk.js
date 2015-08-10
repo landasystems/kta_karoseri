@@ -1,5 +1,5 @@
 app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
-  var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
+    var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
     var uploader = $scope.uploader = new FileUploader({
         url: 'img/upload.php?folder=womasuk&kode=' + kode_unik,
         queueLimit: 1,
@@ -105,6 +105,9 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.form.tgl_keluar = new Date();
+        $scope.form.tgl_kontrak = new Date();
+        $scope.form.in_spk_marketing = new Date();
          $scope.eks = {};
         $scope.inter = {};
 
@@ -117,6 +120,9 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.form = form;
         $scope.selected(form);
         $scope.form = {};
+        $scope.form.tgl_keluar = new Date(form.tgl_keluar);
+        $scope.form.tgl_kontrak = new Date(form.tgl_kontrak);
+        $scope.form.in_spk_marketing = new Date(form.in_spk_marketing);
         $scope.eks = {};
         $scope.inter = {};
     };
@@ -165,7 +171,9 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.selected = function(form) {
         Data.post('womasuk/select/', form).then(function(data) {
             $scope.form = data.data;
-            $scope.eks = data.eksterior[0];
+            $scope.eks = data.eksterior;
+//            $scope.eks.warna = data.eksterior.warna;
+//            $scope.eks.warna2 = data.eksterior.warna2;
             $scope.inter = data.interior[0];
             $scope.form.warna = data.det.warna;
             $scope.form.no_spk = '234';
@@ -181,7 +189,6 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.form.jenis = data.det.jenis;
             $scope.form.jenis = data.det.jenis;
             $scope.form.no_spk = data.data.no_spk.as;
-            console.log(data.data);
             
 
         });

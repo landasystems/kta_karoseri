@@ -14,23 +14,23 @@
             <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
                 <div class="form-horizontal">
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">No Wo</label>
+                        <label class="col-sm-2 control-label">No BBM</label>
                         <div class="col-sm-3">
-                            <input st-search="no_wo" class="form-control"/>
+                            <input st-search="no_bbm" class="form-control"/>
                         </div>
-                        <label class="col-sm-2 control-label">Nama Customer</label>
+                        <label class="col-sm-2 control-label">Nama Supplier</label>
                         <div class="col-sm-3">
-                            <input st-search="nm_customer" class="form-control"/>
+                            <input st-search="su.nama_supplier" class="form-control"/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Model</label>
+                        <label class="col-sm-2 control-label">No WO</label>
                         <div class="col-sm-3">
-                            <input st-search="model" class="form-control"/>
+                            <input st-search="no_wo" class="form-control"/>
                         </div>
-                        <label class="col-sm-2 control-label">Bagian</label>
+                        <label class="col-sm-2 control-label">Surat Jalan</label>
                         <div class="col-sm-3">
-                            <input st-search="jabatan" class="form-control"/>
+                            <input st-search="surat_jalan" class="form-control"/>
 
                         </div>
 
@@ -44,7 +44,7 @@
                             <th st-sort="no_bbm">NO BBM</th>
                             <th st-sort="tgl_nota">Tanggal Nota</th>
                             <th st-sort="surat_jalan">Surat Jalan</th>
-                            <th st-sort="nm_supplier">Supplier</th>
+                            <th st-sort="su.nama_supplier">Supplier</th>
                             <th st-sort="pengirim">Pengirim</th>
                             <th st-sort="penerima">Penerima</th>
                             <th st-sort="no_wo">No. WO</th>
@@ -78,6 +78,7 @@
                             <td colspan="6" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html">
                             </td>
                         </tr>
+                    </tfoot>
                 </table>		
             </div>
         </div>
@@ -196,7 +197,7 @@
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
-                    <label class="col-sm-1 control-label" style="font-weight: bold">Detail SPP</label>
+                    <label class="col-sm-1 control-label" style="font-weight: bold">Detail BBM</label>
                     <!--{{listBarang}}-->
                     <table class="table table-bordered">
                         <thead>
@@ -240,24 +241,24 @@
                                         </span>
                                     </div>
                                 </td>
-<!--                                <td>
-                                    <div class="input-group">
-                                        <ui-select ng-model="detail.no_wo" theme="bootstrap">
-                                            <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
-                                            <ui-select-choices refresh="cariWo($select.search)" repeat="wo in listWo">
-                                                {{wo.no_wo}}
-                                            </ui-select-choices>
-                                        </ui-select>
-                                        <span class="input-group-btn">
-                                            <button ng-click="detail.no_wo = undefined" class="btn btn-default">
-                                                <span class="glyphicon glyphicon-trash"></span>
-                                            </button>
-                                        </span>
-                                    </div>
-                                </td>-->
+                                <!--                                <td>
+                                                                    <div class="input-group">
+                                                                        <ui-select ng-model="detail.no_wo" theme="bootstrap">
+                                                                            <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
+                                                                            <ui-select-choices refresh="cariWo($select.search)" repeat="wo in listWo">
+                                                                                {{wo.no_wo}}
+                                                                            </ui-select-choices>
+                                                                        </ui-select>
+                                                                        <span class="input-group-btn">
+                                                                            <button ng-click="detail.no_wo = undefined" class="btn btn-default">
+                                                                                <span class="glyphicon glyphicon-trash"></span>
+                                                                            </button>
+                                                                        </span>
+                                                                    </div>
+                                                                </td>-->
                                 <td>
-                                    <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-arrows"></i></button>
-                                    <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0"><i class="fa fa-trash-o"></i></button>
+                                    <button ng-disabled="is_view" ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-arrows"></i></button>
+                                    <button ng-disabled="is_view" ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0"><i class="fa fa-trash-o"></i></button>
                                 </td>
                             </tr>
                         </tbody>

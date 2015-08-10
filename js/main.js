@@ -4,7 +4,7 @@
 
 angular.module('app')
         .controller('AppCtrl', ['$scope', '$window', 'Data', '$state',
-            function ($scope, $window, Data, $state) {
+            function($scope, $window, Data, $state) {
                 // add 'ie' classes to html
                 var isIE = !!navigator.userAgent.match(/MSIE/i);
                 isIE && angular.element($window.document.body).addClass('ie');
@@ -17,7 +17,7 @@ angular.module('app')
                 }
 
                 //cek warna di session
-                Data.get('site/session').then(function (data) {
+                Data.get('site/session').then(function(data) {
                     if (typeof data.data.user != "undefined") {
                         $scope.app.settings = data.data.user.settings;
                     } else { //default warna jika tidak ada setingan
@@ -38,19 +38,20 @@ angular.module('app')
                     return (/iPhone|iPod|iPad|Silk|Android|BlackBerry|Opera Mini|IEMobile/).test(ua);
                 }
 
-                $scope.pencarian = function ($query) {
+                $scope.pencarian = function($query) {
                     if ($query.length >= 3) {
-                        Data.get('barang/cari', {nama: $query}).then(function (data) {
+                        Data.get('bom/cari', {nama: $query}).then(function(data) {
                             $scope.results = data.data;
                         });
                     }
                 }
-                $scope.pencarianDet = function ($query) {
-                    $state.go('master.barang', {form: $query});
+
+                $scope.pencarianDet = function($query) {
+                    $state.go('transaksi.bom', {form: $query});
                 }
 
-                $scope.logout = function () {
-                    Data.get('site/logout').then(function (results) {
+                $scope.logout = function() {
+                    Data.get('site/logout').then(function(results) {
                         $state.go('access.signin');
                     });
                 }

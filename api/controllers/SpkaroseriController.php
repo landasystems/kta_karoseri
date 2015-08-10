@@ -19,6 +19,7 @@ class SpkaroseriController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
+                    'cari' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -256,6 +257,21 @@ class SpkaroseriController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+
+    public function actionCari() {
+        $params = $_REQUEST;
+        $model = Spkaroseri::find()
+                        ->where('no_spk like "%' . $params['nama'] . '%"')
+                        ->limit(10)->all();
+        $data = array();
+        if (!empty($model)) {
+            foreach ($model as $key => $val) {
+                $data[] = $val->attributes;
+            }
+        }
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $data), JSON_PRETTY_PRINT);
     }
 
 }

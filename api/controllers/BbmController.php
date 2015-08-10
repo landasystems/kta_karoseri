@@ -179,7 +179,6 @@ class BbmController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
-
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
@@ -218,7 +217,6 @@ class BbmController extends Controller {
                 ->join('LEFT JOIN', 'supplier as su', 'tb.kd_suplier= su.kd_supplier')
                 ->join('JOIN', 'barang', 'barang.kd_barang = db.kd_barang')
                 ->join('LEFT JOIN', 'jenis_brg as jb', 'barang.jenis = jb.kd_jenis')
-                
                 ->orderBy($sort)
                 ->select("tb.tgl_nota as tanggal_nota, db.no_bbm as no_bbm, barang.kd_barang as kd_barang, barang.nm_barang,
                     barang.satuan, db.jumlah as jumlah, tb.surat_jalan, db.no_po, su.nama_supplier, db.keterangan");
@@ -228,19 +226,17 @@ class BbmController extends Controller {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
 
-                if (isset($key) && $key == 'tgl_nota') 
-                    {
+                if (isset($key) && $key == 'tgl_nota') {
                     $value = explode(' - ', $val);
                     $start = date("Y-m-d", strtotime($value[0]));
                     $end = date("Y-m-d", strtotime($value[1]));
                     $query->andFilterWhere(['between', 'tb.tgl_nota', $start, $end]);
-                }elseif($key == 'nama_supplier'){
-                    $query->andFilterWhere(['like', 'su.'.$key, $val]);
-                } elseif($key == 'no_bbm'){
-                    $query->andFilterWhere(['like', 'tb.'.$key, $val]);
-                
-                } elseif($key == 'nm_barang'){
-                    $query->andFilterWhere(['like', 'barang.'.$key, $val]);
+                } elseif ($key == 'nama_supplier') {
+                    $query->andFilterWhere(['like', 'su.' . $key, $val]);
+                } elseif ($key == 'no_bbm') {
+                    $query->andFilterWhere(['like', 'tb.' . $key, $val]);
+                } elseif ($key == 'nm_barang') {
+                    $query->andFilterWhere(['like', 'barang.' . $key, $val]);
                 }
             }
         }
@@ -263,6 +259,7 @@ class BbmController extends Controller {
     public function actionView($id) {
 
         $model = $this->findModel($id);
+        $data = $model->attributes;
         $querySup = new Query;
         $querySup->select("*")
                 ->from('supplier')
@@ -279,7 +276,7 @@ class BbmController extends Controller {
         $wo = $command2->queryOne();
         $queryDet = new Query;
         $queryDet->from('det_bbm')
-                ->select('*')
+                ->select('det_bbm.*, det_bbm.no_po as po')
                 ->where('no_bbm = "' . $model->no_bbm . '"');
         $commandDet = $queryDet->createCommand();
         $detail = $commandDet->queryAll();
@@ -292,10 +289,19 @@ class BbmController extends Controller {
             $commandBrg = $queryBrg->createCommand();
             $Brg = $commandBrg->queryOne();
             $detail[$key]['barang'] = $Brg;
+
+//            $query = DetBbm::find()->
+//                    where('no_bbm="' . $ab['no_bbm'] . '"')
+//                    ->limit(1)
+//                    ->one();
+//            if (!empty($query)) {
+//                $detail[$key]['po'] = $query->attributes;
+//            }
         }
-        Yii::error($detail);
+
+//        Yii::error($detail);
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'sup' => $sup, 'wo' => $wo, 'details' => $detail), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'sup' => $sup, 'wo' => $wo, 'details' => $detail), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
@@ -424,7 +430,8 @@ class BbmController extends Controller {
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
-     public function actionExcel() {
+
+    public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
         $command = $query->createCommand();

@@ -15,19 +15,8 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
 //$i = 0;
 //
 //foreach ($models as $key => $val) {
-//    $data[$val['nota']]['body']['jml'] = isset($data[$val['nota']]['body']['jml']) ? $data[$val['nota']]['body']['jml'] . $val['jml'] . '<br>' : $val['jml'] . '<br>';
-//    $data[$val['nota']]['body']['bayar'] = isset($data[$val['nota']]['body']['bayar']) ? $data[$val['nota']]['body']['bayar'] . ($val['bayar'] == '0') ? 'Tunai' : 'Kredit' . '<br>' : ($val['bayar'] == '0') ? 'Tunai' : 'Kredit' . '<br>';
-//    $data[$val['nota']]['body']['total'] = isset($data[$val['nota']]['body']['total']) ? $data[$val['nota']]['body']['total'] . $val['jml'] * $val['harga'] . '<br>' : $val['jml'] * $val['harga'].'<br>';
-//    $data[$val['nota']]['body']['ket'] = isset($data[$val['nota']]['body']['ket']) ? $data[$val['nota']]['body']['ket'] . $val['ket'] . '<br>' : $val['ket'] . '<br>';
-//    $data[$val['nota']]['body']['tgl_pengiriman'] = isset($data[$val['nota']]['body']['tgl_pengiriman']) ? $data[$val['nota']]['body']['tgl_pengiriman'] . $val['tgl_pengiriman'] . '<br>' : $val['tgl_pengiriman'] . '<br>';
-//    $data[$val['nota']]['body']['harga'] = isset($data[$val['nota']]['body']['harga']) ? $data[$val['nota']]['body']['harga'] . $val['harga'] . '<br>' : $val['harga'] . '<br>';
-//    $data[$val['nota']]['body']['nama_supplier'] = isset($data[$val['nota']]['body']['nama_supplier']) ? $data[$val['nota']]['body']['nama_supplier'] . $val['nama_supplier'] . '<br>' : $val['nama_supplier'] . '<br>';
-//    $data[$val['nota']]['body']['no_bbm'] = isset($data[$val['nota']]['body']['no_bbm']) ? $data[$val['nota']]['body']['no_bbm'] . $val['no_bbm'] . '<br>' : $val['no_bbm'] . '<br>';
-//    $data[$val['nota']]['body']['kd_barang'] = isset($data[$val['nota']]['body']['kd_barang']) ? $data[$val['nota']]['body']['kd_barang'] . $val['kd_barang'] . '<br>' : $val['kd_barang'] . '<br>';
-//    $data[$val['nota']]['body']['nm_barang'] = isset($data[$val['nota']]['body']['nm_barang']) ? $data[$val['nota']]['body']['nm_barang'] . $val['nm_barang'] . '<br>' : $val['nm_barang'] . '<br>';
-//    $data[$val['nota']]['title']['nota'] = $val['nota'];
-//    $data[$val['nota']]['title']['suplier'] = $val['nama_supplier'];
-//    $data[$val['nota']]['title']['no_bbm'] = $val['no_bbm'];
+//    
+//    
 //    $i++;
 //}
 ?>
@@ -126,6 +115,7 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
                 <td><?= $key['nama_supplier'] ?></td>
             </tr>
         <?php
+    }
     }
     ?>
 </table>
