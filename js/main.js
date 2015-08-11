@@ -12,7 +12,7 @@ angular.module('app')
 
                 // config
                 $scope.app = {
-                    name: 'Kta Karoseri',
+                    name: 'POS Anaina',
                     version: '1.1',
                 }
 
@@ -22,10 +22,10 @@ angular.module('app')
                         $scope.app.settings = data.data.user.settings;
                     } else { //default warna jika tidak ada setingan
                         $scope.app.settings = {
-                            themeID: 12,
-                            navbarHeaderColor: 'bg-info dker',
-                            navbarCollapseColor: 'bg-info dk',
-                            asideColor: 'bg-black',
+                            themeID: 11,
+                            navbarHeaderColor: 'bg-primary',
+                            navbarCollapseColor: 'bg-primary',
+                            asideColor: 'bg-dark',
                         };
                     }
                 });
@@ -57,4 +57,20 @@ angular.module('app')
                 }
 
             }]);
+        
+$(document).ready(function () {
+    
+    $("body").on("keypress", ".angka", function (s) {
+        var i = s.which ? s.which : event.keyCode;
+        return i > 31 && (48 > i || i > 57) && 45 != i && 46 != i ? !1 : !0
+    }), $("body").on("focus", ".angka", function () {
+        0 == $(this).val() && $(this).val("")
+    }), $("body").on("blur", ".angka", function () {
+        "" == $(this).val() && $(this).val(0)
+    }), $("input").keypress(function (s) {
+        13 == s.keyCode && s.preventDefault()
+    })
+});
 
+
+        

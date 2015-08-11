@@ -110,6 +110,9 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
                 biaya: '',
             }
         ];
+        Data.get('ujimutu/kode').then(function(data) {
+            $scope.form.kd_uji = data.kode;
+        });
 
     };
     $scope.update = function(form) {

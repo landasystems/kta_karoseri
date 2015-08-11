@@ -21,6 +21,7 @@ class DeliveryController extends Controller {
                     'view' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
+                    'customer' => ['post'],
                     'delete' => ['delete'],
                     'no_wo' => ['post'],
                     'det_nowo' => ['get'],
@@ -50,6 +51,21 @@ class DeliveryController extends Controller {
         }
 
         return true;
+    }
+    
+    public function actionCustomer(){
+        $params = json_decode(file_get_contents("php://input"), true);
+        $query = new Query;
+        $query->from('view_wo_spk')
+                ->where('no_wo="' . $params['no_wo'] . '"')
+                ->select("kd_cust, nm_customer");
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'customer' => $models));
     }
 
     public function actionIndex() {

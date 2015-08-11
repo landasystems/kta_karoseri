@@ -58,7 +58,7 @@ class SpkController extends Controller {
 
     public function actionKerja() {
         $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($params);
+     
         $query = new Query;
         $query->from('kerja')
                 ->where('kd_jab="' . $params['id_jabatan'] . '"')
