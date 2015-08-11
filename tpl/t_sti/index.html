@@ -159,7 +159,7 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        
+
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Diterima PRD</label>
                             <div class="col-sm-9">
@@ -234,10 +234,19 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Kode Warna</label>
                             <div class="col-sm-9">
-                                <select ng-change="changed(form)" class="form-control" style="width:100%" ng-model="form.kd_warna" ng-disabled="is_view" data-placeholder="Pilih Warna" required>
-                                    <!--<option ng-selected value="{{form.no_wo}}">{{form.no_spk}}</option>-->
-                                    <option ng-repeat="warna in list_warna" value="{{warna.kd_warna}}">{{warna.warna}}</option>
-                                </select>
+                                <ui-select tagging="tagTransform"   tagging-label="false" ng-model="form.warna" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 300px;" title="Choose a color">
+                                    <ui-select-match placeholder="Pilih jenis kerjaan">{{$select.selected.warna}}</ui-select-match>
+                                    <ui-select-choices repeat="warna in list_warna | filter:$select.search" >
+                                        <small>
+                                            {{warna.warna}} 
+
+                                        </small>
+                                    </ui-select-choices>
+                                </ui-select>
+                                <!--                                <select ng-change="changed(form)" class="form-control" style="width:100%" ng-model="form.kd_warna" ng-disabled="is_view" data-placeholder="Pilih Warna" required>
+                                                                    <option ng-selected value="{{form.no_wo}}">{{form.no_spk}}</option>
+                                                                    <option ng-repeat="warna in list_warna" value="{{warna.kd_warna}}">{{warna.warna}}</option>
+                                                                </select>-->
                             </div>
                         </div>
                     </div>

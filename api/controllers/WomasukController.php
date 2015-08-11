@@ -277,7 +277,7 @@ class WomasukController extends Controller {
             foreach ($models2 as $r) {
                 $eks = $r;
                 $eks['warna'] = ['kd_warna' => $r['kd_warna'], 'warna' => $r['warna']];
-                $eks['warna2'] = ['kd_warna' => $r['kd_warna'], 'warna' => $r['warna']];
+                $eks['warna2'] = ['kd_warna' => $r['kd_warna'], 'warna' => $r['warna2']];
             }
 
 
@@ -303,7 +303,7 @@ class WomasukController extends Controller {
             foreach ($models2 as $r) {
                 $eks = $r;
                 $eks['warna'] = ['kd_warna' => $r['kd_warna'], 'warna' => $r['warna']];
-                $eks['warna2'] = ['kd_warna' => $r['kd_warna'], 'warna' => $r['warna']];
+                $eks['warna2'] = ['kd_warna' => $r['warna2'], 'warna' => $r['warna']];
             }
 
             // interior

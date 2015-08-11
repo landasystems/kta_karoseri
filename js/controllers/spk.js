@@ -49,7 +49,6 @@ app.controller('spkCtrl', function($scope, Data, toaster) {
         $scope.detKerja = [{
                 nm_kerja: '',
             }];
-        console.log($scope.form);
 //        Data.post('spk/customer/', $item).then(function(data) {
 //            $scope.sJabatan = data.jabatan;
 //            $scope.detKerja = data.detail;
