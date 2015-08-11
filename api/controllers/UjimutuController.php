@@ -24,6 +24,7 @@ class UjimutuController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'no_wo' => ['post'],
+                    'kode' => ['get'],
                     'det_nowo' => ['get'],
                     'cari' => ['get'],
                 ],
@@ -68,6 +69,27 @@ class UjimutuController extends Controller {
         $models = $command->queryAll();
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $models));
+    }
+    public function actionKode() {
+        $query = new Query;
+        $query->from('trans_uji_mutu')
+                ->select('*')
+                ->orderBy('kd_uji DESC')
+                ->where('year(tgl) = "' . date("Y") . '"')
+                ->limit(1);
+
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+
+        if (empty($models)) {
+            $kode = 'UJ' . date("y") . '0001';
+        } else {
+            $lastKode = substr($models['kd_uji'], -4) + 1;
+            $kode = 'UJ' . date("y") . substr('000' . $lastKode, -4);
+        }
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionIndex() {

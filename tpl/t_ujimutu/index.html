@@ -139,7 +139,15 @@
                                 <input type="text" class="form-control"    ng-model="detail.bentuk_baru" ng-disabled="is_view" >
                             </td>
                             <td>
-                                <input type="text" class="form-control"    ng-model="detail.kelas"  ng-pattern="/^[0-9]+$/" ng-disabled="is_view" >
+                                <select  class="form-control m-b" ng-model="detail.kelas" ng-disabled="is_view" required>
+                                <option value="">-- Pilih Kelas --</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                                <!--<input type="text" class="form-control"    ng-model="detail.kelas"  ng-pattern="/^[0-9]+$/" ng-disabled="is_view" >-->
                             </td>
                             <td>
                                 <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" ng-keyup="total()" ng-model="detail.biaya" ng-disabled="is_view" >

@@ -1,5 +1,5 @@
 app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
-     var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
+    var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
     var uploader = $scope.uploader = new FileUploader({
         url: 'img/upload.php?folder=delivery&kode=' + kode_unik,
         queueLimit: 1,
@@ -36,6 +36,10 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
     }
 
     $scope.pilih = function(form, $item) {
+        Data.post('delivery/customer/', $item).then(function(data) {
+            $scope.sCUstomer = data.customer;
+            console.log(data.customer);
+        });
         form.merk = $item.merk;
         form.model = $item.model;
         form.sales = $item.sales;
@@ -87,7 +91,7 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.no_wo;
         $scope.form = form;
-         $scope.selected(form.id);
+        $scope.selected(form.id);
     };
     $scope.save = function(form) {
         if ($scope.uploader.queue.length > 0) {
@@ -124,7 +128,7 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.form.merk = data.data.no_wo.merk;
             $scope.form.model = data.data.no_wo.model;
             $scope.form.sales = data.data.no_wo.sales;
-            
+
 
         });
     }
