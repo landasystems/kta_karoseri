@@ -66,10 +66,22 @@ class SpkController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->queryAll();
+        $query2 = new Query;
+        $query2->from('kerja')
+                ->where('kd_jab="' . $params['id_jabatan'] . '"')
+                ->select("*");
+        $command2 = $query2->createCommand();
+        $detail = $command2->queryAll();
+        $coba = array();
+        foreach ($detail as $key => $asu) {
+            $coba[$key]['nm_kerja'] = $asu;
+        }
+        
+        
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kerja' => $models));
+        echo json_encode(array('status' => 1, 'kerja' => $models,'detail'=>$coba));
     }
 
     public function actionModel() {

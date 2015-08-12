@@ -133,18 +133,19 @@ class SerahterimainController extends Controller {
         if (empty($model)) {
             $model = new Serahterimain();
         }
-        //warna
+       
+
+
+        $model->attributes = $params;
+         //warna
         $warna = \app\models\Warna::findOne($params['warna']['kd_warna']);
-        if (empty($kerja)) {
+        if (empty($warna)) {
             $warna = new \app\models\Warna();
         }
         $warna->attributes = $params;
         if ($warna->save()) {
             $model->kd_warna = $warna->kd_warna;
         }
-
-
-        $model->attributes = $params;
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -159,6 +160,14 @@ class SerahterimainController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
+         $warna = \app\models\Warna::findOne($params['warna']['kd_warna']);
+        if (empty($warna)) {
+            $warna = new \app\models\Warna();
+        }
+        $warna->attributes = $params;
+        if ($warna->save()) {
+            $model->kd_warna = $warna->kd_warna;
+        }
 
         if ($model->save()) {
             $this->setHeader(200);
