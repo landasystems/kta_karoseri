@@ -40,17 +40,20 @@ app.controller('spkCtrl', function($scope, Data, toaster) {
             $scope.sKerja = data.kerja;
             $scope.detKerja = data.detail;
             console.log(data.detail);
+//            $scope.detKerja = [{
+//                nm_kerja: '',
+//            }];
         });
     };
 
     $scope.pilih = function(form, $item) {
-        console.log(form);
         $scope.form.merk = $item.merk;
         $scope.form.model = $item.model;
         $scope.form.nm_customer = $item.nm_customer;
         $scope.detKerja = [{
                 nm_kerja: '',
             }];
+        console.log($scope.detKerja);
 //        Data.post('spk/customer/', $item).then(function(data) {
 //            $scope.sJabatan = data.jabatan;
 //            $scope.detKerja = data.detail;
@@ -114,7 +117,7 @@ app.controller('spkCtrl', function($scope, Data, toaster) {
 
     };
     $scope.save = function(form, detail) {
-        console.log(form);
+        
         var data = {
             spk: form,
             detailSpk: detail,

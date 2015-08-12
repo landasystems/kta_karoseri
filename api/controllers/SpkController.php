@@ -58,7 +58,7 @@ class SpkController extends Controller {
 
     public function actionKerja() {
         $params = json_decode(file_get_contents("php://input"), true);
-     
+
         $query = new Query;
         $query->from('kerja')
                 ->where('kd_jab="' . $params['id_jabatan'] . '"')
@@ -73,15 +73,19 @@ class SpkController extends Controller {
         $command2 = $query2->createCommand();
         $detail = $command2->queryAll();
         $coba = array();
-        foreach ($detail as $key => $asu) {
-            $coba[$key]['nm_kerja'] = $asu;
+        if (empty($detail)) {
+            $coba[0]['nm_kerja'] = '';
+        } else {
+            foreach ($detail as $key => $asu) {
+                $coba[$key]['nm_kerja'] = $asu;
+            }
         }
-        
-        
+
+
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kerja' => $models,'detail'=>$coba));
+        echo json_encode(array('status' => 1, 'kerja' => $models, 'detail' => $coba));
     }
 
     public function actionModel() {
@@ -264,7 +268,7 @@ class SpkController extends Controller {
         $listjabatan = $command3->queryAll();
         $cc = array();
         foreach ($listjabatan as $key => $dd) {
-          $data['jabatan'] = $dd;
+            $data['jabatan'] = $dd;
         }
 
 
@@ -343,10 +347,10 @@ class SpkController extends Controller {
         $model = $this->findModel($id);
         $model->no_wo = $params['spk']['no_wo']['no_wo'];
         $model->kd_jab = $params['spk']['jabatan']['id_jabatan'];
-        
+
 
         if ($model->save()) {
-             $deleteDetail = DetSpkerja::deleteAll(['no_wo' => $params['spk']['no_wo']['no_wo']]);
+            $deleteDetail = DetSpkerja::deleteAll(['no_wo' => $params['spk']['no_wo']['no_wo']]);
             $detail = $params['detailSpk'];
             foreach ($detail as $data) {
                 $kerja = Kerja::findOne($data['nm_kerja']['no']);
@@ -371,7 +375,7 @@ class SpkController extends Controller {
                 $kerja->jenis = $kerja->jenis;
 //                $kerja->save();
                 if ($kerja->save()) {
-                    
+
                     $detsp = new DetSpkerja();
                     $detsp->no_wo = $params['spk']['no_wo']['no_wo'];
                     $detsp->kd_jab = $params['spk']['jabatan']['id_jabatan'];
@@ -379,7 +383,7 @@ class SpkController extends Controller {
                     $detsp->save();
                 }
             }
-            
+
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
@@ -390,7 +394,7 @@ class SpkController extends Controller {
 
     public function actionDelete($id) {
         $model = $this->findModel($id);
-         $deleteDetail = DetSpkerja::deleteAll(['no_wo' => $model['no_wo']]);
+        $deleteDetail = DetSpkerja::deleteAll(['no_wo' => $model['no_wo']]);
 
         if ($model->delete()) {
             $this->setHeader(200);

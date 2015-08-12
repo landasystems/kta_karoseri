@@ -72,21 +72,21 @@ class ReturbbmController extends Controller {
     }
 
     public function actionKode() {
-        $query = new Query;
+ $query = new Query;
         $query->from('retur_bbm')
                 ->select('*')
                 ->orderBy('no_retur_bbm DESC')
+                ->where('year(tgl) = "' . date("Y") . '"')
                 ->limit(1);
 
-        $cek = ReturBbm::findOne('no_retur_bbm = "BM' . date("y") . '0001"');
-        if (empty($cek)) {
-            $command = $query->createCommand();
-            $models = $command->query()->read();
-            $urut = substr($models['no_retur_bbm'], 2, 4) + 1;
-            $kode = substr('0000' . $urut, strlen($urut));
-            $kode = "RM" . date("y") . $kode;
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+
+        if (empty($models)) {
+            $kode = 'RM' . date("y") . '00001';
         } else {
-            $kode = "RM" . date("y") . "0001";
+            $lastKode = substr($models['no_retur_bbm'], -5) + 1;
+            $kode = 'RM' . date("y") . substr('0000' . $lastKode, -5);
         }
         $this->setHeader(200);
 
@@ -97,7 +97,7 @@ class ReturbbmController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tgl ASC";
+        $sort = "tgl DESC";
         $offset = 0;
         $limit = 10;
 

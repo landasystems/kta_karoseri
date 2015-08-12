@@ -68,6 +68,10 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
         $scope.requiredPurchase(form);
+                Data.get('spprutin/kode').then(function(data) {
+            $scope.form.no_spp = data.kode;
+            console.log(data.kode);
+        });
     };
     $scope.update = function (form) {
         $scope.is_create = false;
