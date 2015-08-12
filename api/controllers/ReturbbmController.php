@@ -201,7 +201,6 @@ class ReturbbmController extends Controller {
                 }
             }
         }
-        Yii::error($query);
         $command = $query->createCommand();
         $models = $command->queryAll();
 //        Yii::error($models);
