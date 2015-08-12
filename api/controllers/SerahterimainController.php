@@ -129,7 +129,6 @@ class SerahterimainController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        \Yii::error($params);
         $model = Serahterimain::find()->where('kd_titipan="' . $params['kd_titipan'] . '"')->one();
         if (empty($model)) {
             $model = new Serahterimain();
