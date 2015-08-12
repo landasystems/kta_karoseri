@@ -26,8 +26,14 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
     $scope.requiredPurchase = function(form){
       Data.get('spprutin/requiredpurchase',form).then(function(data){
           $scope.sppDet.barang = data.data;
-          $scope.sppDet.qty = data.data.qty;
-          $scope.sppDet.ket = data.data.ket;
+          var a = 1;
+          for(i = 1;i <= data.count; i++){
+              $scope.sppDet[i] = data.data[i];
+              a++;
+          }
+//          $scope.sppDet.qty = data.data.qty;
+//          $scope.sppDet.ket = data.data.ket;
+          console.log($scope.sppDet);
       });
     };
 

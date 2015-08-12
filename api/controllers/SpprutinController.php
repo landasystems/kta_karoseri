@@ -286,8 +286,10 @@ class SpprutinController extends Controller {
                 $data[$key] = $val->attributes;
             }
         }
+        $totalItems = count($data);
+        Yii::error($totalItems);
         $this->setHeader(200);
-        echo json_encode(['status' => 1, 'data' => $data]);
+        echo json_encode(['status' => 1, 'data' => $data,'count' => $totalItems]);
     }
 
 }
