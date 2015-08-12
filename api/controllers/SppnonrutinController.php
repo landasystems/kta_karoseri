@@ -27,6 +27,7 @@ class SppnonrutinController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'listbarang' => ['get'],
+                    'kode' => ['get'],
                 ],
             ]
         ];
@@ -46,6 +47,23 @@ class SppnonrutinController extends Controller {
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models));
+    }
+    
+    public function actionKode() {
+        $query = new Query;
+        $query  ->from('trans_spp')
+                ->select("*")
+                ->orderBy('no_spp DESC')
+                ->limit(1);
+
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+        $kode_mdl = ($models['no_spp'] + 1);
+        $kode = substr('00000' . $kode_mdl, strlen($kode_mdl));
+        
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function beforeAction($event) {
