@@ -173,6 +173,8 @@ class WomasukController extends Controller {
                 ->join('JOIN', 'chassis', 'spk.kd_chassis = chassis.kd_chassis') // model chassis, merk, jenis, 
                 ->join('JOIN', 'tbl_karyawan as sales', 'spk.nik= sales.nik') // sales
                 ->join('JOIN', 'customer', 'spk.kd_customer = customer.kd_cust') // customer
+                ->join('JOIN', 'small_eks', 'spk.kd_customer = customer.kd_cust') // customer
+                ->join('JOIN', 'mini_eks', 'spk.kd_customer = customer.kd_cust') // customer
 //                ->join('JOIN', 'model', 'spk.kd_model = model.kd_model') // customer
 //                ->join('JOIN', 'serah_terima_in', 'spk.no_spk = serah_terima_in.no_spk') // customer
 //                ->join('JOIN', 'warna', 'serah_terima_in.kd_warna = warna.kd_warna') // customer
@@ -233,6 +235,7 @@ class WomasukController extends Controller {
 
     public function actionSelect() {
         $params = json_decode(file_get_contents("php://input"), true);
+        \Yii::error($params);
         $model = $this->findModel($params['no_wo']);
         $data = $model->attributes;
         $query = new Query;
@@ -337,6 +340,16 @@ class WomasukController extends Controller {
                 $smaleks->no_wo = $model->no_wo;
                 $smaleks->warna = (isset($params['eksterior']['warna']['kd_warna'])) ? $params['eksterior']['warna']['kd_warna'] : '';
                 $smaleks->warna2 = (isset($params['eksterior']['warna2']['kd_warna'])) ? $params['eksterior']['warna2']['kd_warna'] : '';
+                //warna 1
+                $warna = Warna::findOne($params['eksterior']['warna']['kd_warna']);
+                if (empty($kerja)) {
+                    $warna = new Warna();
+                }
+                $warna->attributes = $params;
+                if ($warna->save()) {
+                    $smaleks->warna = $warna->kd_warna;
+                }
+                
                 $smaleks->save();
 
 //                save small interior
@@ -483,15 +496,16 @@ class WomasukController extends Controller {
         $models = $command->queryAll();
         return $this->render("/expmaster/barang", ['models' => $models]);
     }
+
     public function actionCariwo() {
 
         $params = $_REQUEST;
         $query = new Query;
         $query->from('wo_masuk as wo')
-                ->join('LEFT JOIN','serah_terima_in as se','wo.kd_titipan = se.kd_titipan')
-                ->join('LEFT JOIN','chassis as ch',' ch.kd_chassis= se.kd_chassis')
-                ->join('LEFT JOIN','spk as sp',' wo.no_spk= sp.no_spk')
-                ->join('LEFT JOIN','model as mo',' mo.kd_model= sp.kd_model')
+                ->join('LEFT JOIN', 'serah_terima_in as se', 'wo.kd_titipan = se.kd_titipan')
+                ->join('LEFT JOIN', 'chassis as ch', ' ch.kd_chassis= se.kd_chassis')
+                ->join('LEFT JOIN', 'spk as sp', ' wo.no_spk= sp.no_spk')
+                ->join('LEFT JOIN', 'model as mo', ' mo.kd_model= sp.kd_model')
                 ->where(['like', 'wo.no_wo', $params['nama']])
                 ->select("wo.no_wo as no_wo,ch.merk as merk, mo.model as model");
 
