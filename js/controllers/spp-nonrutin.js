@@ -54,6 +54,9 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        Data.get('sppnonrutin/kode').then(function (data) {
+            $scope.form.no_spp = data.kode;
+        });
         $scope.sppDet = [{
                 id: '',
                 no_spp: '',
