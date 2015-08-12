@@ -16,6 +16,23 @@ app.controller('stiCtrl', function($scope, Data, toaster) {
             });
         }
     };
+    Data.get('chassis/merk').then(function(data) {
+        $scope.listMerk = data.data;
+    });
+    
+    $scope.typeChassis = function(merk) {
+        Data.get('chassis/tipe?merk=' + merk).then(function(data) {
+            $scope.listTipe = data.data;
+        });
+    };
+
+    $scope.getchassis = function(merk, tipe) {
+        Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function(data) {
+            $scope.form.kd_chassis = data.kode;
+            $scope.form.jenis = data.jenis;
+        });
+    };
+    
     $scope.getSpk = function(form, items) {
         form.no_spk = items.no_spk;
     };

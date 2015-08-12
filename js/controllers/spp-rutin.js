@@ -23,6 +23,13 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $event.stopPropagation();
         $scope.openedDet = $index;
     };
+    $scope.requiredPurchase = function(form){
+      Data.get('spprutin/requiredpurchase',form).then(function(data){
+          $scope.sppDet.barang = data.data;
+          $scope.sppDet.qty = data.data.qty;
+          $scope.sppDet.ket = data.data.ket;
+      });
+    };
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -54,18 +61,7 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-        $scope.sppDet = [{
-                id: '',
-                no_spp: '',
-                kd_barang: '',
-                saldo: '',
-                qty: '',
-                ket: '',
-                p: '',
-                a: '',
-                stat_spp: '',
-                no_wo: '',
-            }];
+        $scope.requiredPurchase(form);
     };
     $scope.update = function (form) {
         $scope.is_create = false;

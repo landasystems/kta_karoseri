@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\TransSpp;
 use app\models\DetSpp;
+use app\models\Barang;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -27,6 +28,7 @@ class SpprutinController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'listbarang' => ['get'],
+                    'requiredpurchase' => ['get'],
                 ],
             ]
         ];
@@ -271,6 +273,21 @@ class SpprutinController extends Controller {
         }
         $this->setHeader(200);
         echo json_encode(['status' => 1, 'details' => $detail]);
+    }
+    
+    public function actionRequiredpurchase(){
+        $model = Barang::find()
+                ->where('kat like "rutin%"')
+                ->andWhere('qty <= min')
+                ->all();
+        $data = [];
+        if(!empty($model)){
+            foreach($model as $key=> $val){
+                $data[$key] = $val->attributes;
+            }
+        }
+        $this->setHeader(200);
+        echo json_encode(['status' => 1, 'data' => $data]);
     }
 
 }
