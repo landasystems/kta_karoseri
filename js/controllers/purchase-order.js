@@ -62,10 +62,10 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         }
     }
 
-    $scope.cariBarang = function ($query) {
+    $scope.cariBarang = function ($query1,$query2) {
 
-        if ($query.length >= 3) {
-            Data.get('barang/cari', {barang: $query}).then(function (data) {
+        if ($query1.length >= 3) {
+            Data.get('po/brgspp', {namabrg: $query1,nospp:$query2}).then(function (data) {
                 $scope.resultsbrg = data.data;
             });
         }
