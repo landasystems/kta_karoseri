@@ -21,12 +21,14 @@ class BbkController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'view' => ['get'],
+                    'excel' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
                     'listbbk' => ['get'],
                     'detailstok' => ['post'],
+                    'rekap' => ['get'],
                 ],
             ]
         ];
@@ -341,6 +343,85 @@ class BbkController extends Controller {
         header($status_header);
         header('Content-type: ' . $content_type);
         header('X-Powered-By: ' . "Nintriva <nintriva.com>");
+    }
+    
+    public function actionRekap() {
+        //init variable
+        $params = $_REQUEST;
+        $filter = array();
+        $sort = "tanggal DESC";
+        $offset = 0;
+        $limit = 10;
+
+        //limit & offset pagination
+        if (isset($params['limit']))
+            $limit = $params['limit'];
+        if (isset($params['offset']))
+            $offset = $params['offset'];
+
+        //sorting
+        if (isset($params['sort'])) {
+            $sort = $params['sort'];
+            if (isset($params['order'])) {
+                if ($params['order'] == "false")
+                    $sort.=" ASC";
+                else
+                    $sort.=" DESC";
+            }
+        }
+
+        //create query
+        $query = new Query;
+        $query->offset($offset)
+                ->limit($limit)
+                ->from('view_bbk_rekap as rvb')
+                ->join('JOIN','tbl_karyawan as tbk','tbk.nik = rvb.penerima')
+                ->join('LEFT JOIN','tbl_jabatan as tbj','tbj.id_jabatan = tbk.jabatan')
+                ->orderBy($sort)
+                ->select("rvb.*,tbk.nama,tbj.jabatan");
+                
+//                ->from('trans_bbk as trbk')
+//                ->join('JOIN','det_bbk as detbk','detbk.no_bbk = trbk.no_bbk')
+//                ->join('LEFT JOIN','barang as brg','brg.kd_barang = detbk.kd_barang')
+//                ->join('JOIN','tbl_karyawan as tbk','tbk.nik = trbk.penerima')
+//                ->join('JOIN','tbl_jabatan as tbj','tbj.id_jabatan = trbk.kd_jab')
+//                ->orderBy($sort)
+//                ->select("trbk.*,detbk.*,brg.satuan,brg.nm_barang,tbk.nama,tbj.jabatan");
+
+        //filter
+        if (isset($params['filter'])) {
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+                if ($key == 'tgl_periode') {
+                    $value = explode(' - ', $val);
+                    $start = date("Y-m-d", strtotime($value[0]));
+                    $end = date("Y-m-d", strtotime($value[1]));
+                    $query->andFilterWhere(['between', 'rvb.tanggal', $start, $end]);
+                }else{
+                $query->andFilterWhere(['like', $key, $val]);
+                }
+            }
+        }
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $totalItems = $query->count();
+        $query->limit(null);
+        $query->offset(null);
+        session_start();
+        $_SESSION['query'] = $query;
+        
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+    
+     public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/rbbk", ['models' => $models]);
     }
 
     private function _getStatusCodeMessage($status) {
