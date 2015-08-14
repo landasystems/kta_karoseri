@@ -1,10 +1,10 @@
 <div ng-app="app" ng-controller="rekapbarangkeluarCtrl">
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n font-thin h3">Data Rekap - Barang Masuk</h1>
+        <h1 class="m-n font-thin h3">Data Rekap - Barang Keluar</h1>
     </div>
     <div class="wrapper-md" ng-show="!is_edit">
         <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
-            <div class="panel-heading">.:: Rekap Barang Masuk
+            <div class="panel-heading">.:: Rekap Barang Keluar
                 <div class="btn-group pull-right" role="group" style="margin-top: -4px; margin-right: 13px;">
                     <button type="button" class="btn btn-success fa fa-file-excel-o" ng-show="!isCollapsed" ng-click="excel();">&nbsp;&nbsp;Laporan Barang Keluar</button>
                 </div> 
@@ -22,9 +22,9 @@
                                     <div class="col-sm-3">
                                         <input placeholder="Tanggal Periode" date-range-picker class="form-control" st-search="tgl_periode" type="text"  ng-model="tanggal">
                                     </div>
-                                    <label class="col-sm-2 control-label">Supplier</label>
+                                    <label class="col-sm-2 control-label">Bagian</label>
                                 <div class="col-sm-3">
-                                    <input placeholder="Nama Supplier" st-search="nama_supplier" class="form-control"/>
+                                    <input placeholder="Nama Supplier" st-search="tbj.jabatan" class="form-control"/>
                                 </div>
                                     
                                 </div>
@@ -32,13 +32,13 @@
                             <div class="form-group">
                                 <div class="control-group">
                                     
-                                    <label class="col-sm-2 control-label">No BBM</label>
+                                    <label class="col-sm-2 control-label">PLK Kerja</label>
                                 <div class="col-sm-3">
-                                    <input placeholder="Nama Supplier" st-search="no_bbm" class="form-control"/>
+                                    <input placeholder="PLK Kerja" st-search="tbk.nama" class="form-control"/>
                                 </div>
                                     <label class="col-sm-2 control-label">Nama Barang</label>
                                 <div class="col-sm-3">
-                                    <input placeholder="Nama Supplier" st-search="nm_barang" class="form-control"/>
+                                    <input placeholder="Nama Barang" st-search="rvb.nm_barang" class="form-control"/>
                                 </div>
                                     
                                 </div>
