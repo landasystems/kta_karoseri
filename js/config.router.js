@@ -64,7 +64,7 @@ angular.module('app')
                                     templateUrl: 'tpl/page_signin.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
+                                            function ($ocLazyLoad) {
                                                 return $ocLazyLoad.load('js/controllers/site.js').then(
                                                         );
                                             }]
@@ -366,7 +366,7 @@ angular.module('app')
                                     templateUrl: 'tpl/t_spk/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
+                                            function ($ocLazyLoad) {
                                                 return $ocLazyLoad.load('js/controllers/spk.js');
                                             }]
                                     }})
@@ -551,7 +551,10 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/spp-rutin.js');
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/spp-rutin.js');
+                                                        });
                                             }]
                                     }})
                                 //
@@ -670,9 +673,9 @@ angular.module('app')
                                     templateUrl: 'tpl/r_barang-masuk/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
+                                            function ($ocLazyLoad) {
                                                 return $ocLazyLoad.load(['daterangepicker']).then(
-                                                        function() {
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/r_barangmasuk.js');
                                                         }
                                                 );
@@ -882,7 +885,7 @@ angular.module('app')
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
                                                 return $ocLazyLoad.load([]).then(
-                                                        function() {
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/r_returbarangkeluar.js');
                                                         }
                                                 );
