@@ -61,8 +61,9 @@ app.controller('returBbmCtrl', function ($scope, Data, toaster) {
                 jml: '',
                 ket: '',
             }];
-        Data.get('bbm/kode').then(function (data) {
+        Data.get('returbbm/kode').then(function (data) {
             $scope.form.no_retur_bbm = data.kode;
+            console.log(data.kode);
         });
     };
     $scope.update = function (form) {

@@ -24,6 +24,7 @@ class ReturbbkController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
+                    'excel' => ['get'],
                     'rekap' => ['get'],
                     'barangkeluar' => ['post'],
                 ],
@@ -191,7 +192,7 @@ class ReturbbkController extends Controller {
                     $value = explode(' - ', $val);
                     $start = date("Y-m-d", strtotime($value[0]));
                     $end = date("Y-m-d", strtotime($value[1]));
-                    $query->andFilterWhere(['between', 'rb.tanggal', $start, $end]);
+                    $query->andFilterWhere(['between', 'rb.tgl', $start, $end]);
                 }elseif($key == 'no_retur_bbk'){
                     $query->andFilterWhere(['like', 'rb.'.$key, $val]);
                 } elseif($key == 'no_bbk'){
@@ -211,6 +212,7 @@ class ReturbbkController extends Controller {
         $query->offset(null);
         session_start();
         $_SESSION['query'] = $query;
+        $_SESSION['filter'] = $filter;
 
         $this->setHeader(200);
 
@@ -349,6 +351,15 @@ class ReturbbkController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
+        
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/returbbk", ['models' => $models,'filter'=>$filter]);
     }
 
 }

@@ -24,6 +24,7 @@ class SpprutinController extends Controller {
                     'view' => ['get'],
                     'excel' => ['get'],
                     'detail' => ['get'],
+                    'kode' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -49,6 +50,28 @@ class SpprutinController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models));
     }
+    
+    public function actionKode() {
+        $query = new Query;
+        $query->from('trans_spp')
+                ->select('*')
+                ->orderBy('no_spp DESC')
+                ->where('year(tgl_trans) = "' . date("Y") . '"')
+                ->limit(1);
+
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+
+        if (empty($models)) {
+            $kode = date("y") . '00001';
+        } else {
+            $lastKode = substr($models['no_spp'], -3) + 1;
+            $kode = date("y") . substr('0000' . $lastKode, -3);
+        }
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'kode' => $kode));
+    }
 
     public function beforeAction($event) {
         $action = $event->id;
@@ -61,7 +84,6 @@ class SpprutinController extends Controller {
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
-//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -129,13 +151,7 @@ class SpprutinController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
 //        Yii::error($params);
         $model = new TransSpp();
-        $tgl_trans = date('Y-m-d', strtotime($params['form']['tgl_trans']));
-        $lastNumber = TransSpp::find()
-                ->where('year(tgl_trans)="' . $tgl_trans . '"')
-                ->orderBy('no_spp DESC')
-                ->one();
-        $number = (empty($lastNumber)) ? 1 : (int) substr($lastNumber->no_spp, 3) + 1;
-        $model->no_spp = date('y', $tgl_trans) . substr("000" . $number, -3);
+        $model->no_spp = $params['form']['no_spp'];
         $model->tgl_trans = $tgl_trans;
         $model->tgl1 = date('Y-m-d', strtotime($params['form']['periode']['startDate']));
         $model->tgl2 = date('Y-m-d', strtotime($params['form']['periode']['endDate']));
@@ -283,11 +299,12 @@ class SpprutinController extends Controller {
         $data = [];
         if(!empty($model)){
             foreach($model as $key=> $val){
-                $data[$key] = $val->attributes;
+                $data[$key]['barang'] = $val->attributes;
             }
         }
+        $totalItems = count($data);
         $this->setHeader(200);
-        echo json_encode(['status' => 1, 'data' => $data]);
+        echo json_encode(['status' => 1, 'data' => $data,'count' => $totalItems]);
     }
 
 }
