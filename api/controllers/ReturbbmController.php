@@ -23,6 +23,7 @@ class ReturbbmController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
+                    'excel' => ['get'],
                     'kode' => ['get'],
                     'rekap' => ['get'],
                     'barangmasuk' => ['post'],
@@ -72,7 +73,7 @@ class ReturbbmController extends Controller {
     }
 
     public function actionKode() {
- $query = new Query;
+        $query = new Query;
         $query->from('retur_bbm')
                 ->select('*')
                 ->orderBy('no_retur_bbm DESC')
@@ -143,7 +144,7 @@ class ReturbbmController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
-    
+
     public function actionRekap() {
         $params = $_REQUEST;
         $filter = array();
@@ -173,31 +174,33 @@ class ReturbbmController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('retur_bbm as rb')
-                ->join('JOIN', 'trans_bbk as tb', 'tb.no_bbm = rb.no_bbm')
+                ->join('JOIN', 'trans_bbm as tb', 'tb.no_bbm = rb.no_bbm')
                 ->join('JOIN', 'barang', 'barang.kd_barang = rb.kd_barang')
                 ->join('LEFT JOIN', 'jenis_brg as jb', 'barang.jenis = jb.kd_jenis')
-                
                 ->orderBy($sort)
                 ->select("rb.tgl as tanggal, rb.no_retur_bbm, tb.no_bbm, tb.no_wo, barang.kd_barang, jb.jenis_brg, barang.nm_barang, barang.satuan,
-                       rb.ket ");
+                       rb.ket, tb.surat_jalan");
 //filter
 
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
 
-                if (isset($key) && $key == 'tanggal') 
-                    {
+                if (isset($key) && $key == 'tanggal') {
                     $value = explode(' - ', $val);
                     $start = date("Y-m-d", strtotime($value[0]));
                     $end = date("Y-m-d", strtotime($value[1]));
-                    $query->andFilterWhere(['between', 'rb.tanggal', $start, $end]);
-                }elseif($key == 'no_retur_bbm'){
-                    $query->andFilterWhere(['like', 'rb.'.$key, $val]);
-                } elseif($key == 'no_bbm'){
-                    $query->andFilterWhere(['like', 'tb.'.$key, $val]);
-                } elseif($key == 'nm_barang'){
-                    $query->andFilterWhere(['like', 'barang.'.$key, $val]);
+                    $query->andFilterWhere(['between', 'rb.tgl', $start, $end]);
+                } elseif ($key == 'no_retur_bbm') {
+                    $query->andFilterWhere(['like', 'rb.' . $key, $val]);
+                } elseif ($key == 'no_bbm') {
+                    $query->andFilterWhere(['like', 'tb.' . $key, $val]);
+                } elseif ($key == 'nm_barang') {
+                    $query->andFilterWhere(['like', 'barang.' . $key, $val]);
+                } elseif ($key == 'satuan') {
+                    $query->andFilterWhere(['like', 'barang.' . $key, $val]);
+                } elseif ($key == 'surat_jalan') {
+                    $query->andFilterWhere(['like', 'barang.' . $key, $val]);
                 }
             }
         }
@@ -210,6 +213,7 @@ class ReturbbmController extends Controller {
         $query->offset(null);
         session_start();
         $_SESSION['query'] = $query;
+        $_SESSION['filter'] = $filter;
 
         $this->setHeader(200);
 
@@ -348,6 +352,15 @@ class ReturbbmController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
+        
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/returbbm", ['models' => $models,'filter'=>$filter]);
     }
 
 }
