@@ -22,7 +22,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
         Data.get('chassis/tipe?merk=' + merk).then(function(data) {
             $scope.listTipe = data.data;
         });
-    }
+    };
 
     $scope.getchassis = function(merk, tipe) {
         Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function(data) {
@@ -43,7 +43,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
                 $scope.results = data.data;
             });
         }
-    }
+    };
 
     $scope.cariBarang = function($query) {
         if ($query.length >= 3) {
@@ -51,7 +51,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
                 $scope.resultsbarang = data.data;
             });
         }
-    }
+    };
 
     //init data;
     var tableStateRef;
@@ -60,7 +60,15 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
+    $scope.is_copy = false;
 
+    $scope.cariBom = function($query) {
+        if ($query.length >= 3) {
+            Data.get('bom/cari', {nama: $query}).then(function(data) {
+                $scope.rBom = data.data;
+            });
+        }
+    }
     $scope.addDetail = function(detail) {
         $scope.detBom.unshift({
             kd_jab: '',
@@ -103,12 +111,32 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
         });
     }
     $scope.create = function(form, detail) {
+        $scope.is_copy = false;
         $scope.is_create = true;
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        Data.get('bom/kode').then(function(data) {
+            $scope.form.kd_bom = data.kode;
+        });
         $scope.form.tgl_buat = new Date();
+        $scope.detBom = [
+            {
+                kd_jab: '',
+                kd_barang: '',
+                qty: '',
+                ket: '',
+            }
+        ];
+    };
+    $scope.copy = function(form, detail) {
+        $scope.is_copy = true;
+        $scope.is_create = true;
+        $scope.is_edit = true;
+        $scope.is_view = false;
+        $scope.formtitle = "Salin Data";
+        $scope.form = {};
         $scope.detBom = [
             {
                 kd_jab: '',
@@ -122,30 +150,34 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
         });
     };
     $scope.update = function(form) {
+        $scope.is_copy = false;
         $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = false;
+        $scope.formtitle = "Edit Data : " + form.kd_bom;
         $scope.form = form;
-        $scope.form.tgl_buat = new Date(form.tgl_buat);
-        $scope.formtitle = "Edit Data : " + $scope.form.kd_bom;
-        $scope.selected(form.kd_bom);
+//        $scope.form.tgl_buat = new Date(form.tgl_buat);
+        $scope.selected(form.kd_bom, '');
     };
     $scope.view = function(form) {
+        $scope.is_copy = false;
         $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.form = form;
-        $scope.formtitle = "Lihat Data : " + $scope.form.kd_bom;
-        $scope.selected(form.kd_bom);
+        $scope.formtitle = "Lihat Data : " + form.kd_bom;
+//        $scope.form.tgl_buat = new Date(form);
+        $scope.selected(form.kd_bom, '');
+    };
+    $scope.copyData = function(bom, kd_bom) {
+        $scope.form = bom;
+//        $scope.form.tgl_buat = new Date(bom.tgl_buat);
+        $scope.selected(bom.kd_bom, kd_bom);
     };
     $scope.save = function(form, detail) {
         if ($scope.uploader.queue.length > 0) {
             $scope.uploader.uploadAll();
             form.gambar = kode_unik + "-" + $scope.uploader.queue[0].file.name;
-        } else {
-//            form.gambar = '';
         }
-
         var data = {
             bom: form,
             detailBom: detail,
@@ -175,10 +207,15 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
             });
         }
     };
-    $scope.selected = function(id) {
+    $scope.selected = function(id, kd_bom_baru) {
         Data.get('bom/view/' + id).then(function(data) {
             $scope.form = data.data;
             $scope.typeChassis($scope.form.merk);
+            if (kd_bom_baru != '') {
+                $scope.form.kd_bom = kd_bom_baru;
+                $scope.form.tgl_buat = '';
+            }
+
             if (jQuery.isEmptyObject(data.detail)) {
                 $scope.detBom = [
                     {
@@ -191,7 +228,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
             } else {
                 $scope.detBom = data.detail;
             }
-            $scope.form.tipe = $scope.form.tipe;
         });
     }
     $scope.modal = function(form) {
