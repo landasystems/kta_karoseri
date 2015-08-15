@@ -155,8 +155,9 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.kd_bom;
-        $scope.form = form;
-//        $scope.form.tgl_buat = new Date(form.tgl_buat);
+        Data.get('chassis/tipe?merk=' + form.merk).then(function(data) {
+            $scope.listTipe = data.data;
+        });
         $scope.selected(form.kd_bom, '');
     };
     $scope.view = function(form) {
@@ -165,12 +166,13 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.kd_bom;
-//        $scope.form.tgl_buat = new Date(form);
+        Data.get('chassis/tipe?merk=' + form.merk).then(function(data) {
+            $scope.listTipe = data.data;
+        });
         $scope.selected(form.kd_bom, '');
     };
     $scope.copyData = function(bom, kd_bom) {
         $scope.form = bom;
-//        $scope.form.tgl_buat = new Date(bom.tgl_buat);
         $scope.selected(bom.kd_bom, kd_bom);
     };
     $scope.save = function(form, detail) {
@@ -210,7 +212,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
     $scope.selected = function(id, kd_bom_baru) {
         Data.get('bom/view/' + id).then(function(data) {
             $scope.form = data.data;
-            $scope.typeChassis($scope.form.merk);
+            console.log($scope.form.merk);
             if (kd_bom_baru != '') {
                 $scope.form.kd_bom = kd_bom_baru;
                 $scope.form.tgl_buat = '';
