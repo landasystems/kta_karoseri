@@ -832,6 +832,19 @@ angular.module('app')
                                                 );
                                             }]
                                     }})
+                                .state('rekap.deliveryunit', {
+                                    url: '/delivery-unit',
+                                    templateUrl: 'tpl/r_delivery-unit/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/r_deliveryunit.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
                                 //
                                 .state('rekap.womasuk', {
                                     url: '/wo-masuk',
