@@ -11,14 +11,14 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
 <center><b>REKAP PURCHASE ORDER</b></center>
 <br><br>
 <?php
-//$data = array();
-//$i = 0;
-//
-//foreach ($models as $key => $val) {
-//    
-//    
-//    $i++;
-//}
+$data = array();
+$i = 0;
+
+foreach ($models as $key => $val) {
+    
+    
+    $i++;
+}
 ?>
 
 <table border="1">

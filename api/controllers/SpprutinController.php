@@ -84,7 +84,6 @@ class SpprutinController extends Controller {
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
-//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -300,11 +299,10 @@ class SpprutinController extends Controller {
         $data = [];
         if(!empty($model)){
             foreach($model as $key=> $val){
-                $data[$key] = $val->attributes;
+                $data[$key]['barang'] = $val->attributes;
             }
         }
         $totalItems = count($data);
-        Yii::error($totalItems);
         $this->setHeader(200);
         echo json_encode(['status' => 1, 'data' => $data,'count' => $totalItems]);
     }
