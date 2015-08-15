@@ -17,7 +17,6 @@ class ClaimunitController extends Controller {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'index' => ['get'],
                     'view' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
@@ -74,8 +73,9 @@ class ClaimunitController extends Controller {
 
             $sisa = $s['sisa'];
         }
+
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $sisa));
+        echo json_encode(array('status' => 1, 'data' => $sisa,));
     }
 
     public function actionJeniskomplain() {
@@ -107,83 +107,30 @@ class ClaimunitController extends Controller {
         }
     }
 
-    public function actionIndex() {
-        //init variable
-        $params = $_REQUEST;
-        $filter = array();
-        $sort = "dc.tgl ASC";
-        $offset = 0;
-        $limit = 10;
-        if (isset($params['limit']))
-            $limit = $params['limit'];
-        if (isset($params['offset']))
-            $offset = $params['offset'];
+    public function actionView($no_wo) {
 
-        //sorting
-        if (isset($params['sort'])) {
-            $sort = $params['sort'];
-            if ($sort == 'no_wo') {
-                $sort = 'dc.no_wo';
-            }
-            if (isset($params['order'])) {
-                if ($params['order'] == "false")
-                    $sort.=" ASC";
-                else
-                    $sort.=" DESC";
-            }
-        }
-
-        //create query
         $query = new Query;
-        $query->offset($offset)
-                ->limit($limit)
-                ->from('det_claim as dc')
+        $query->from('det_claim as dc')
                 ->join('LEFT JOIN', 'jenis_komplain as jk', 'dc.kd_jns = jk.kd_jns')
                 ->join('LEFT JOIN', 'view_wo_spk as vws', 'dc.no_wo = vws.no_wo')
                 ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
                 ->select("vws.*, jk.*, dc.*, tk.nama as sales, tk.lokasi_kntr as wilayah")
-                ->orderBy($sort);
-
-        //filter
-        if (isset($params['filter'])) {
-            $filter = (array) json_decode($params['filter']);
-            foreach ($filter as $key => $val) {
-                if ($key == 'no_wo') {
-                    $query->andFilterWhere(['like', 'dc.no_wo', $val]);
-                } else if ($key == 'terima') {
-                    $tgl = explode(" - ", $val);
-                    $start = date("Y-m-d", strtotime($tgl[0]));
-                    $end = date("Y-m-d", strtotime($tgl[1]));
-                    $query->andFilterWhere(['between', 'tgl', $start, $end]);
-                } else {
-                    $query->andFilterWhere(['like', $key, $val]);
-                }
-            }
-        }
-
+                ->where("dc.no_wo = '" . $no_wo . "'");
         $command = $query->createCommand();
         $models = $command->queryAll();
-        $totalItems = $query->count();
 
         $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
-    }
-
-    public function actionView($id) {
-
-        $model = $this->findModel($id);
-
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => array_filter($models)), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new DetClaim();
         $model->attributes = $params;
-        $model->no_wo = $params['no_wo']['no_wo'];
+
+        if (isset($params['no_wo']['no_wo']))
+            $model->no_wo = $params['no_wo']['no_wo'];
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -198,7 +145,9 @@ class ClaimunitController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
-        $model->no_wo = $params['no_wo']['no_wo'];
+
+        if (isset($params['no_wo']['no_wo']))
+            $model->no_wo = $params['no_wo']['no_wo'];
 
         if ($model->save()) {
             $this->setHeader(200);
