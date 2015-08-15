@@ -1,4 +1,4 @@
-app.controller('rekapdeliveryCtrl', function ($scope, Data, toaster) {
+app.controller('rekapujimutuCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
     var paramRef;
@@ -24,7 +24,7 @@ app.controller('rekapdeliveryCtrl', function ($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
         paramRef = param;
-        Data.get('delivery/rekap', param).then(function (data) {
+        Data.get('ujimutu/rekap', param).then(function (data) {
             $scope.displayed = data.data;
             $scope.displayedPrint = data.dataPrint;
             $scope.paginations = data.totalItems;
@@ -37,8 +37,8 @@ app.controller('rekapdeliveryCtrl', function ($scope, Data, toaster) {
     };
     
     $scope.excel = function () {
-        Data.get('delivery/rekap', paramRef).then(function (data) {
-            window.location = 'api/web/delivery/excel';
+        Data.get('ujimutu/rekap', paramRef).then(function (data) {
+            window.location = 'api/web/ujimutu/excel';
         });
     }
    

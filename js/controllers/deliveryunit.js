@@ -34,15 +34,25 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
             });
         }
     }
+    $scope.cariCustomer = function($query) {
+        if ($query.length >= 3) {
+            Data.get('customer/cari', {nama: $query}).then(function(data) {
+                $scope.kdCust = data.data;
+            });
+        }
+    };
+     $scope.getCustomer = function(form, items) {
+        form.kd_cust = items.kd_cust;
+    };
 
     $scope.pilih = function(form, $item) {
         Data.post('delivery/customer/', $item).then(function(data) {
             $scope.sCUstomer = data.customer;
-            console.log(data.customer);
         });
         form.merk = $item.merk;
         form.model = $item.model;
         form.sales = $item.sales;
+        form.no_wo = $item.no_wo;
     }
 
     $scope.callServer = function callServer(tableState) {
@@ -84,14 +94,14 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.formtitle = "Edit Data : " + form.no_wo;
         $scope.form = form;
         $scope.form.tgl_delivery = new Date(form.tgl_delivery);
-        $scope.selected(form.id);
+//        $scope.selected(form.id);
     };
     $scope.view = function(form) {
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.no_wo;
         $scope.form = form;
-        $scope.selected(form.id);
+//        $scope.selected(form.id);
     };
     $scope.save = function(form) {
         if ($scope.uploader.queue.length > 0) {
@@ -129,7 +139,7 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.form.model = data.data.no_wo.model;
             $scope.form.sales = data.data.no_wo.sales;
 
-
+            alert('afdasd');
         });
     }
 
