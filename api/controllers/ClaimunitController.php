@@ -18,6 +18,7 @@ class ClaimunitController extends Controller {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'view' => ['get'],
+                    'rekap' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -50,6 +51,74 @@ class ClaimunitController extends Controller {
 
         return true;
     }
+    
+    public function actionRekap() {
+        //init variable
+        $params = $_REQUEST;
+        $filter = array();
+        $sort = "dc.no_wo ASC";
+        $offset = 0;
+        $limit = 10;
+        //        Yii::error($params);
+        //limit & offset pagination
+        if (isset($params['limit']))
+            $limit = $params['limit'];
+        if (isset($params['offset']))
+            $offset = $params['offset'];
+
+        //sorting
+        if (isset($params['sort'])) {
+            $sort = $params['sort'];
+            if (isset($params['order'])) {
+                if ($params['order'] == "false")
+                    $sort.=" ASC";
+                else
+                    $sort.=" DESC";
+            }
+        }
+
+        //create query
+        $query = new Query;
+        $query->offset($offset)
+                ->limit($limit)
+                ->from('det_claim as dc')
+                ->join('JOIN', 'jenis_komplain as jk', 'jk.kd_jns = dc.kd_jns')
+                ->join('JOIN', 'view_wo_spk as vws', 'vws.no_wo = dc.no_wo')
+                ->join('LEFT JOIN', 'chassis as ch', 'ch.kd_chassis = vws.kd_chassis')
+                ->orderBy($sort)
+                ->select("dc.*,jk.*,ch.*,vws.nm_customer");
+
+        //filter
+        if (isset($params['filter'])) {
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+                if ($key == 'tgl_periode') {
+                    $value = explode(' - ', $val);
+                    $start = date("Y-m-d", strtotime($value[0]));
+                    $end = date("Y-m-d", strtotime($value[1]));
+                    $query->andFilterWhere(['between', 'b.tgl', $start, $end]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+                }
+            }
+        }
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $totalItems = $query->count();
+
+        $query->limit(null);
+        $query->offset(null);
+        session_start();
+        $_SESSION['query'] = $query;
+        $_SESSION['filter'] = $filter;
+//        
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+
 
     public function actionSisagaransi() {
         $params = json_decode(file_get_contents("php://input"), true);
