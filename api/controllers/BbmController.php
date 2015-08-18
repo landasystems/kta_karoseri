@@ -57,81 +57,27 @@ class BbmController extends Controller {
         return true;
     }
 
-//    public function actionKode() {
-//        $query = new Query;
-//        $query->from('trans_bbk')
-//                ->select('*')
-//                ->orderBy('no_bbk DESC')
-//                ->limit(1);
-//
-//        $cek = TransBbk::findOne('no_bbk = "BK' . date("y") . '0001"');
-//        if (empty($cek)) {
-//            $command = $query->createCommand();
-//            $models = $command->query()->read();
-//            $urut = substr($models['no_bbk'], 4) + 1;
-//            $kode = substr('0000' . $urut, strlen($urut));
-//            $kode = "BK" . date("y") . $kode;
-//        } else {
-//            $kode = "BK" . date("y") . "0001";
-//        }
-//        $this->setHeader(200);
-//
-//        echo json_encode(array('status' => 1, 'kode' => $kode));
-//    }
-//    public function actionDetailstok() {
-//        $params = json_decode(file_get_contents("php://input"), true);
-//        $sisa_pengambilan = 0;
-//        $stok_sekarang = 0;
-//        
-//        if (!empty($params['kd_barang'])) {
-//            $stok = Barang::find()->where('kd_barang="' . $params['kd_barang']['kd_barang'] . '"')->one();
-//            $stok_sekarang = $stok->saldo;
-//
-//            if (!empty($params['no_wo'])) {
-//                // mencari jumlah barang dari bom
-//                $query = new Query;
-//                $query->from('view_bom_wo as vbw, det_standar_bahan as dsb')
-//                        ->select("sum(dsb.qty) as jml")
-//                        ->where('vbw.kd_bom = dsb.kd_bom and and dsb.kd_barang = "' . $params['kd_barang']['kd_barang'] . '" and vbw.no_wo = "' . $params['no_wo'] . '"');
-//                $command = $query->createCommand();
-//                $stokBom = $command->query()->read();
-//
-//                //mencari jumlah barang yang telah diambil
-//                $query = new Query;
-//                $query->from('det_bbk as db, trans_bbk as tb')
-//                        ->select("sum(db.jml) as jml_keluar")
-//                        ->where('db.no_bbk = tb.no_bbk and db.kd_barang = "' . $params['kd_barang']['kd_barang'] . '" and db.no_wo = "' . $params['no_wo'] . '"');
-//                $command = $query->createCommand();
-//                $stokKeluar = $command->query()->read();
-//
-//                $sisa_pengambilan = $stokBom['jml'] - $stokKeluar['jml_keluar'];
-//            }
-//        }
-//        $data['sisa_pengambilan'] = $sisa_pengambilan;
-//        $data['stok_sekarang'] = $stok_sekarang;
-//        echo json_encode(array('data' => $data));
-//    }
-//    public function actionPetugas() {
-////        $petugas = \yii\models\User::findOne('id = '.Yii::$app->user->getId());
-////        $this->setHeader(200);
-//
-//        echo json_encode(array('status' => 1, 'petugas' => 'admin'));
-//    }
-//    public function actionListbbk() {
-//        $param = $_REQUEST;
-//        $query = new Query;
-//        $query->from('trans_bbk')
-//                ->select("no_bbk")
-//                ->where('no_bbk like "%' . $param['nama'] . '%"')
-//                ->limit(15);
-//
-//        $command = $query->createCommand();
-//        $models = $command->queryAll();
-//
-//        $this->setHeader(200);
-//
-//        echo json_encode(array('status' => 1, 'data' => $models));
-//    }
+    public function actionKode() {
+        $query = new Query;
+        $query->from('trans_bbm')
+                ->select('*')
+                ->orderBy('no_bbm DESC')
+                ->limit(1);
+
+        $cek = TransBbm::findOne('no_bbm = "BM' . date("y") . '0001"');
+        if (empty($cek)) {
+            $command = $query->createCommand();
+            $models = $command->query()->read();
+            $urut = substr($models['no_bbm'], 4) + 1;
+            $kode = substr('0000' . $urut, strlen($urut));
+            $kode = "BM" . date("y") . $kode;
+        } else {
+            $kode = "BM" . date("y") . "0001";
+        }
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'kode' => $kode));
+    }
 
     public function actionIndex() {
         //init variable
@@ -313,7 +259,7 @@ class BbmController extends Controller {
 //         Yii::error();
         $lastNumber = (int) substr($findNumber->no_bbm, -5);
         $model->no_bbm = 'BM' . date('y', strtotime($model->tgl_nota)) . substr('00000' . ($lastNumber + 1), -5);
-        $model->kd_suplier = $params['form']['supplier']['kd_supplier'];
+        $model->kd_suplier = $params['form']['kd_supplier'];
         $model->no_wo = $params['form']['wo']['no_wo'];
 
         if ($model->save()) {

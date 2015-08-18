@@ -423,12 +423,14 @@ class PoController extends Controller {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('trans_po')
+                ->join('LEFT JOIN','supplier', 'trans_po.suplier=supplier.kd_supplier')
                 ->select("*")
                 ->where(['like', 'nota', $params['nama']])
                 ->limit(10);
 
         $command = $query->createCommand();
         $models = $command->queryAll();
+        Yii::error($models);
 
         $this->setHeader(200);
 
