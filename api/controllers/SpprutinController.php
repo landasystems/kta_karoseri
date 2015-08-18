@@ -176,10 +176,16 @@ class SpprutinController extends Controller {
         }
     }
 
-    public function actionUpdate($id) {
+    public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = $this->findModel($id);
+        Yii::error($params);
+        $model = TransSpp::findOne($params['form']['no_spp']);
 //        $model->attributes = $params;
+        if(empty($model)){
+            $model = new TransSpp();
+            $model->no_spp = $params['form']['no_spp'];
+        }
+        
         $tgl_trans = date('Y-m-d', strtotime($params['form']['tgl_trans']));
         $model->tgl_trans = $tgl_trans;
         $model->tgl1 = date('Y-m-d', strtotime($params['form']['periode']['startDate']));
@@ -194,6 +200,7 @@ class SpprutinController extends Controller {
                 $det->no_spp = $model->no_spp;
                 $det->kd_barang = (empty($val['barang']['kd_barang'])) ? '-' : $val['barang']['kd_barang'];
                 $det->saldo = $val['barang']['saldo'];
+                $det->qty = $val['barang']['qty'];
                 $det->p = date('Y-m-d', strtotime($det->p));
                 $det->no_wo = (empty($val['wo']['no_wo'])) ? '-' : $val['wo']['no_wo'];
                 $det->save();
