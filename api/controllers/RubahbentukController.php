@@ -92,6 +92,7 @@ class RubahbentukController extends Controller {
             foreach ($filter as $key => $val) {
                 if ($key == 'tgl') {
                     $tgl = explode(" - ", $val);
+                    $_SESSION['periode'] = $key;
                     $start = date("Y-m-d", strtotime($tgl[0]));
                     $end = date("Y-m-d", strtotime($tgl[1]));
                     $query->andFilterWhere(['between', 'rb.tgl', $start, $end]);
@@ -120,7 +121,8 @@ class RubahbentukController extends Controller {
         $query->select("rb.tgl, vws.no_wo, rb.kd_rubah, vws.merk, vws.tipe, rb.bentuk_baru, vws.no_chassis, vws.nm_customer, spk.jml_unit");
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/rubahbentuk", ['models' => $models]);
+        $periode = isset($_SESSION['periode']) ? $_SESSION['periode'] : '-';
+        return $this->render("/expretur/rubahbentuk", ['models' => $models, 'periode' => $periode]);
     }
 
     public function actionView($id) {
