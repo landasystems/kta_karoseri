@@ -743,10 +743,10 @@ angular.module('app')
                                     templateUrl: 'tpl/r_claim-unit/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load([]).then(
-                                                        function() {
-                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/r_claimunit.js');
                                                         }
                                                 );
                                             }]
@@ -970,6 +970,25 @@ angular.module('app')
                                                 return $ocLazyLoad.load([]).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                
+                                //notifikasi
+                                .state('notif', {
+                                    url: '/notif',
+                                    templateUrl: 'tpl/app.html'
+                                })
+                                .state('notif.barang', {
+                                    url: '/barang',
+                                    templateUrl: 'tpl/n_barang/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/n_barang.js');
                                                         }
                                                 );
                                             }]

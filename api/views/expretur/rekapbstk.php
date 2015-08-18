@@ -29,8 +29,8 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
                 <?php
                 if (!empty($filter['tgl_periode'])) {
                     $value = explode(' - ', $filter['tgl_periode']);
-                    $start = date("d-m-Y", strtotime($value[0]));
-                    $end = date("d-m-Y", strtotime($value[1]));
+                    $start = date("d/m/Y", strtotime($value[0]));
+                    $end = date("d/m/Y", strtotime($value[1]));
                 } else {
                     $start = '';
                     $end = '';
@@ -44,8 +44,8 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
             </tr>
         </table>
     </td>
-    <td>DIBUAT</td>
-    <td>DIPERIKSA</td>
+    <td >DIBUAT</td>
+    <td >DIPERIKSA</td>
 </tr>
 <tr>
     <td rowspan="2"></td>
@@ -76,12 +76,11 @@ foreach ($models as $key => $val) {
         <th>CUSTOMER</th>
         <th>WARNA</th>
         <th colspan="2">CATATAN</th>
-        <th></th>
     </tr>
     <?php
     foreach ($data as $keys) {
         ?>
-    <tr><td colspan="6" style="text-align: left;background-color: #008000;"><?= date('d M Y',strtotime($keys['title']['tgl'])) ?></td></tr>
+    <tr><td colspan="6" style="text-align: left;background-color: #008000;"><?= Yii::$app->landa->date2Ind($keys['title']['tgl']); ?>&nbsp;</td></tr>
         <?php
         $no = 1;
         foreach ($keys['body'] as $val) {
@@ -93,8 +92,7 @@ foreach ($models as $key => $val) {
                 <td><?= $val['nm_customer'] ?></td>
                 <td><?= $val['warna'] ?></td>
                 
-                <td><?= $catatan?></td>
-                <td></td>
+                <td colspan="2"><?= $catatan?></td>
             </tr>
             <?php
             $no++;

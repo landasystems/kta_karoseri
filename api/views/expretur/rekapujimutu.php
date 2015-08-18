@@ -29,8 +29,8 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
                 <?php
                 if (!empty($filter['tgl_periode'])) {
                     $value = explode(' - ', $filter['tgl_periode']);
-                    $start = date("d-m-Y", strtotime($value[0]));
-                    $end = date("d-m-Y", strtotime($value[1]));
+                    $start = date("d/m/Y", strtotime($value[0]));
+                    $end = date("d/m/Y", strtotime($value[1]));
                 } else {
                     $start = '';
                     $end = '';
