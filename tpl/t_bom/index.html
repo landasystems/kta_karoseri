@@ -7,7 +7,7 @@
             <div class="panel-heading">
                 <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                    <!--<button type="button" class="btn btn-default fa fa-file-excel-o" ng-show="!isCollapsed">&nbsp;Export Excel</button>-->
+                    <button type="button" class="btn btn-info fa fa-copy" ng-click="copy();">&nbsp;Salin BOM</button>
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>
@@ -80,6 +80,24 @@
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation">
                     <div class="col-md-4 col-sm-12">
+                        <div class="form-group" ng-if="is_copy">
+                            <label class="col-sm-4 control-label">Cari BOM</label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <ui-select on-select="copyData(form.kode_asli,form.kd_bom)" ng-model="form.kode_asli" ng-disabled="is_view" theme="bootstrap">
+                                        <ui-select-match>{{$select.selected.kd_bom}}</ui-select-match>
+                                        <ui-select-choices refresh="cariBom($select.search)" repeat="val in rBom">
+                                            {{val.kd_bom}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <span class="input-group-btn">
+                                        <button ng-click="form.kode_asli = undefined" class="btn btn-default">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Kode BOM</label>
                             <div class="col-sm-8">
@@ -90,10 +108,10 @@
                             <label class="col-sm-4 control-label">Merk</label>
                             <div class="col-sm-8">
                                 <div class="input-group">
-                                    <select class="form-control" ng-change="typeChassis(form.merk);
-                                                getchassis(form.merk, form.tipe)" ng-model="form.merk" ng-disabled="is_view" required style="width: 245px;">
+                                    <select class="form-control" ng-model="form.merk" ng-change="typeChassis(form.merk);
+                                                getchassis(form.merk, form.tipe)" ng-disabled="is_view" required style="width: 245px;">
                                         <option value="">-Pilih Merk-</option>
-                                        <option ng-repeat="merk in listMerk" value="{{merk.merk}}">{{merk.merk}}</option>
+                                        <option ng-repeat="valMerk in listMerk" value="{{valMerk.merk}}">{{valMerk.merk}}</option>
                                     </select>
                                 </div>
                             </div>

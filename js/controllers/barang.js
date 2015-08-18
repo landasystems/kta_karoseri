@@ -22,15 +22,17 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.is_view = false;
     $scope.is_create = false;
 
+    $scope.qty = function(max, saldo) {
+        var qty = max - saldo;
+        $scope.form.qty = qty;
+    }
     $scope.jenis_barang = {
         minimumInputLength: 3,
         allowClear: true,
     }
-
     Data.get('barang/jenis').then(function(data) {
         $scope.jenis_brg = data.jenis_brg;
     });
-
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
@@ -58,7 +60,6 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
             window.location = 'api/web/barang/excel';
         });
     }
-
     $scope.create = function(form) {
         $scope.is_create = true;
         $scope.is_edit = true;
@@ -75,6 +76,7 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.nm_barang;
         $scope.form = form;
+        $scope.qty(form.max, form.saldo);
     };
     $scope.view = function(form) {
         $scope.is_create = false;
@@ -82,6 +84,7 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.nm_barang;
         $scope.form = form;
+        $scope.qty(form.max, form.saldo);
     };
     $scope.save = function(form) {
         if ($scope.uploader.queue.length > 0) {
@@ -90,7 +93,7 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
         } else {
             form.foto = '';
         }
-        
+
         var url = ($scope.is_create == true) ? 'barang/create/' : 'barang/update/' + form.kd_barang;
         Data.post(url, form).then(function(result) {
             if (result.status == 0) {

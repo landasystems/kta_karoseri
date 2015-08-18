@@ -688,9 +688,9 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load([]).then(
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
                                                         function () {
-                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                            return $ocLazyLoad.load('js/controllers/r_barangkeluar.js');
                                                         }
                                                 );
                                             }]
@@ -730,9 +730,9 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load([]).then(
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
                                                         function () {
-                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                            return $ocLazyLoad.load('js/controllers/rubahbentuk.js');
                                                         }
                                                 );
                                             }]
@@ -786,9 +786,9 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load([]).then(
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
                                                         function () {
-                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                            return $ocLazyLoad.load('js/controllers/r_chassisin.js');
                                                         }
                                                 );
                                             }]
@@ -800,9 +800,9 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load([]).then(
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
                                                         function () {
-                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                            return $ocLazyLoad.load('js/controllers/r_bstk.js');
                                                         }
                                                 );
                                             }]
@@ -828,9 +828,22 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load([]).then(
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
                                                         function () {
-                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                            return $ocLazyLoad.load('js/controllers/r_ujimutu.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                .state('rekap.deliveryunit', {
+                                    url: '/delivery-unit',
+                                    templateUrl: 'tpl/r_delivery-unit/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/r_deliveryunit.js');
                                                         }
                                                 );
                                             }]

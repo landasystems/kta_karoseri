@@ -22,6 +22,7 @@ class RubahbentukController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
+                    'excel' => ['get'],
                 ],
             ]
         ];
@@ -50,10 +51,10 @@ class RubahbentukController extends Controller {
     }
 
     public function actionIndex() {
-//init variable
+
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_rubah ASC";
+        $sort = "rb.kd_rubah ASC";
         $offset = 0;
         $limit = 10;
         if (isset($params['limit']))
@@ -61,7 +62,7 @@ class RubahbentukController extends Controller {
         if (isset($params['offset']))
             $offset = $params['offset'];
 
-//sorting
+
         if (isset($params['sort'])) {
             $sort = $params['sort'];
             if ($sort == 'no_wo') {
@@ -75,26 +76,25 @@ class RubahbentukController extends Controller {
             }
         }
 
-//create query
+
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
                 ->from('rubah_bentuk as rb')
                 ->join('Left Join', 'view_wo_spk as vws', 'rb.no_wo = vws.no_wo')
+                ->join('Left Join', 'spk', 'vws.no_spk = spk.no_spk')
+//            ->select("rb.tgl, vws.no_wo, rb.kd_rubah, vws.merk, vws.tipe, rb.bentuk_baru, vws.no_chassis, vws.nm_customer");
                 ->orderBy($sort)
                 ->select("*");
 
-//filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                if ($key == 'no_wo') {
-                    $query->andFilterWhere(['like', 'rb.no_wo', $val]);
-                } else if ($key == 'terima') {
+                if ($key == 'tgl') {
                     $tgl = explode(" - ", $val);
                     $start = date("Y-m-d", strtotime($tgl[0]));
                     $end = date("Y-m-d", strtotime($tgl[1]));
-                    $query->andFilterWhere(['between', 'terima', $start, $end]);
+                    $query->andFilterWhere(['between', 'rb.tgl', $start, $end]);
                 } else {
                     $query->andFilterWhere(['like', $key, $val]);
                 }
@@ -104,10 +104,23 @@ class RubahbentukController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
+        session_start();
+        $_SESSION['query'] = $query;
 
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $query->limit(null);
+        $query->offset(null);
+        $query->select("rb.tgl, vws.no_wo, rb.kd_rubah, vws.merk, vws.tipe, rb.bentuk_baru, vws.no_chassis, vws.nm_customer, spk.jml_unit");
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/rubahbentuk", ['models' => $models]);
     }
 
     public function actionView($id) {
