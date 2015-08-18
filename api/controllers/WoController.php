@@ -18,7 +18,6 @@ class WoController extends Controller {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'index' => ['get'],
                     'view' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
@@ -71,7 +70,6 @@ class WoController extends Controller {
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $models));
     }
-
     
     public function actionWospk() {
         $params = $_REQUEST;
