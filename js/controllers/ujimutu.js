@@ -7,6 +7,7 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
     $scope.is_view = false;
     $scope.is_create = false;
     $scope.is_create = false;
+    $scope.form = {};
 
     $scope.cariProduk = function($query) {
         if ($query.length >= 3) {
@@ -119,9 +120,7 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
-//        $scope.form = {};
         $scope.formtitle = "Edit Data : " + form.kd_uji;
-//        $scope.form.tgl = new date(form.tgl);
         $scope.selected(form.kd_uji);
     };
     $scope.view = function(form) {
@@ -161,6 +160,7 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
         Data.get('ujimutu/view/' + id).then(function(data) {
          
             $scope.form = data.data;
+            $scope.form.tgl = new Date(data.data.tgl);
             $scope.detUjimutu = data.detail;
 //            $scope.total();
         });
