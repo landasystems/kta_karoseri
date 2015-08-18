@@ -415,15 +415,31 @@
                 <!--<span class="badge badge-sm up bg-danger pull-right-xs">2</span>-->
             </a>
             <!-- dropdown -->
-            <ul class="dropdown-menu animated fadeInRight w" ng-show="user.akses.notif">
-                <li><a href="">BOM</a></li>
-                <li><a href="">Chassis Masuk</a></li>
-                <li><a href="">Work Order</a></li>
-                <li><a href="">Work In Progress</a></li>
-                <li><a ui-sref='notif.barang'>Notifikasi Barang</a></li>
-                <li><a ui-sref='rekap.historyunit'>Notifikasi Unit</a></li>
-                <li><a ui-sref='rekap.historyunit'>Autentikasi Barang Keluar</a></li>
-                <li><a ui-sref='rekap.historyunit'>Monitoring</a></li>
+            <ul class="dropdown-menu animated fadeInRight w">
+                <li ng-show="user.akses.notif_bom">
+                    <a ui-sref='notif.bom'>BOM</a>
+                </li>
+                <li ng-show="user.akses.notif_chassismasuk">
+                    <a ui-sref='notif.chassismasuk'>Chassis Masuk</a>
+                </li>
+                <li ng-show="user.akses.notif_wo">
+                    <a ui-sref='notif.wo'>Work Order</a>
+                </li>
+                <li ng-show="user.akses.notif_wip">
+                    <a ui-sref='notif.wip'>Work In Progress</a>
+                </li>
+                <li ng-show="user.akses.notif_barang">
+                    <a ui-sref='notif.barang'>Notifikasi Barang</a>
+                </li>
+                <li ng-show="user.akses.notif_unit">
+                    <a ui-sref='notif.unit'>Notifikasi Unit</a>
+                </li>
+                <li ng-show="user.akses.notif_abk">
+                    <a ui-sref='notif.abk'>Autentikasi Barang Keluar</a>
+                </li>
+                <li ng-show="user.akses.notif_monitoring">
+                    <a ui-sref='notif.monitoring'>Monitoring</a>
+                </li>
             </ul>
             <!-- / dropdown -->
         </li>
