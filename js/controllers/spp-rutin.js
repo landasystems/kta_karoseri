@@ -27,13 +27,6 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         Data.get('spprutin/requiredpurchase', form).then(function (data) {
             $scope.sppDet = data.data;
             
-//            var a = 1;
-//            for (i = 1; i <= data.count; i++) {
-//                $scope.sppDet[i] = data.data[i];
-//                a++;
-//            }
-//          $scope.sppDet.qty = data.data.qty;
-//          $scope.sppDet.ket = data.data.ket;
         });
     };
 
@@ -70,7 +63,6 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.requiredPurchase(form);
         Data.get('spprutin/kode').then(function (data) {
             $scope.form.no_spp = data.kode;
-            console.log(data.kode);
         });
     };
     $scope.update = function (form) {
@@ -99,7 +91,7 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
             form: form,
             details: details
         };
-        var url = (form.no_spp == undefined) ? 'spprutin/create' : 'spprutin/update/' + form.no_spp;
+        var url = 'spprutin/update/';
         Data.post(url, data).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
