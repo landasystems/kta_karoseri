@@ -25,6 +25,7 @@ class JabatanController extends Controller {
                     'delete' => ['delete'],
                     'kode' => ['get'],
                     'listkaryawan' => ['get'],
+                    'listkaryawansales' => ['get'],
                     'cari' => ['get'],
                 ],
             ]
@@ -60,6 +61,22 @@ class JabatanController extends Controller {
         $query->from('tbl_karyawan')
                 ->select("nik, nama")
                 ->where('nama like "%' . $param['nama'] . '%"');
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+
+    public function actionListkaryawansales() {
+        $param = $_REQUEST;
+        $query = new Query;
+        $query->from('tbl_karyawan')
+                ->select("nik, nama")
+                ->where('nama like "%' . $param['nama'] . '%"')
+                ->andWhere(['department' => 'DPRT005']);
 
         $command = $query->createCommand();
         $models = $command->queryAll();
