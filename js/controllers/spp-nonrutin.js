@@ -6,22 +6,10 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
     $scope.is_view = false;
     $scope.is_create = false;
     $scope.sppDet = [];
-    $scope.openedDet = -1;
-//    Data.get('bstk/nowo').then(function (data) {
-//        $scope.list_wo = data.list_wo;
-//    });
     $scope.open1 = function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
         $scope.opened1 = true;
-    };
-    $scope.setStatus = function () {
-        $scope.openedDet = -1;
-    };
-    $scope.openDet = function ($event, $index) {
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.openedDet = $index;
     };
 
     $scope.callServer = function callServer(tableState) {
@@ -147,14 +135,20 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
             $scope.sppDet = data.details;
         });
     };
-    $scope.modal = function (form) {
+    $scope.modal = function (sppDet, detail) {
         var modalInstance = $modal.open({
             templateUrl: 'tpl/t_spp-nonrutin/modal.html',
             controller: 'modalCtrl',
             size: 'lg',
             resolve: {
                 form: function () {
-                    return form;
+                    var data = {
+                        sppDet: sppDet,
+                        detail: detail
+
+                    };
+                    return data;
+
                 }
             }
         });
@@ -184,7 +178,29 @@ app.controller('modalCtrl', function ($scope, Data, $modalInstance, form) {
         $scope.opened2 = true;
     };
 
-    $scope.formmodal = form;
+    $scope.formmodal = form.detail;
+    $scope.woMasuk = [];
+    $scope.woSelected = function (formmodal, woMasuk, items) {
+//        for (var i = form.sppDet.length - 1; i >= 0; i--) {
+//            if (form.sppDet[i].kd_barang == form.detail.kd_barang) {
+//                form.sppDet.splice(i, 1);
+//            }
+//        }
+        var mongo = form.sppDet;
+        var index = mongo.indexOf(form.detail);
+        var data = {
+            barang: formmodal.barang,
+            qty: formmodal.qty,
+            ket: formmodal.ket,
+            p: formmodal.p,
+            no_wo: items.no_wo
+        };
+        if (woMasuk.length == 1) {
+            mongo[index] = data;
+        } else {
+            mongo.unshift(data);
+        }
+    };
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
