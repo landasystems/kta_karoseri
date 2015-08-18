@@ -13,8 +13,8 @@ header("Content-Disposition: attachment; filename=excel-retur-rubah-bentuk.xls")
                 <table width="100%">
                     <tr height="30">
                         <td width="100">PERIODE</td>
-                        <td width="1">:</td>
-                        <td>01-01-2014 - 01-01-2015</td>
+                        <td width="1" width="1">:</td>
+                        <td><?php echo $periode ?></td>
                     </tr>
                 </table>
             </td>
@@ -26,8 +26,8 @@ header("Content-Disposition: attachment; filename=excel-retur-rubah-bentuk.xls")
                 <table width="100%">
                     <tr height="30">
                         <td width="100">CETAK</td>
-                        <td width="1">:</td>
-                        <td>01-01-2014 - 01-01-2015</td>
+                        <td width="1" width="1">:</td>
+                        <td><?php echo date("d-m-y")?></td>
                     </tr>
                 </table>
             </td>
@@ -42,7 +42,7 @@ header("Content-Disposition: attachment; filename=excel-retur-rubah-bentuk.xls")
         </tr>
         <tr height="30">
             <td colspan="2"></td>
-            <td>TGL 17-03-2015</td>
+            <td></td>
             <td></td>
         </tr>
         <tr>
