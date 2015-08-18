@@ -98,18 +98,18 @@
                             <label class="col-sm-3 control-label">No Wo</label>
                             <div class="col-sm-9">
                                 <div class="input-group">
-                                            <ui-select on-select="pilih(form, $item)" ng-model="form.no_wo" theme="bootstrap">
-                                                <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
-                                                <ui-select-choices refresh="cariProduk($select.search)" repeat="val in results">
-                                                    {{val.no_wo}}
-                                                </ui-select-choices>
-                                            </ui-select>
-                                            <span class="input-group-btn">
-                                                <button ng-click="form.no_wo = undefined" class="btn btn-default">
-                                                    <span class="glyphicon glyphicon-trash"></span>
-                                                </button>
-                                            </span>
-                                        </div>
+                                    <ui-select on-select="pilih(form, $item)" ng-model="form.nowo" theme="bootstrap">
+                                        <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
+                                        <ui-select-choices refresh="cariProduk($select.search)" repeat="val in results">
+                                            {{val.no_wo}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <span class="input-group-btn">
+                                        <button ng-click="form.nowo = undefined" class="btn btn-default">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </button>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -131,8 +131,6 @@
                                 <input type="text" class="form-control" ng-model="form.sales" ng-readonly="true" placeholder="Sales">
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4 col-sm-12">
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Tanggal Delivery</label>
                             <div class="col-sm-9">
@@ -144,6 +142,9 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+
                         <div class="form-group">
                             <label class="col-sm-3 control-label">No Delivery</label>
                             <div class="col-sm-9">
@@ -153,9 +154,40 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Tujuan</label>
                             <div class="col-sm-9">
-                                     <label class="btn btn-sm btn-success" ng-model="form.tujuan" ng-disabled="is_view" btn-radio="'cabang'"><i class="fa fa-check text-active"></i>Kantor Cabang</label>
-                                        <label class="btn btn-sm btn-info" ng-model="form.tujuan" ng-disabled="is_view" btn-radio="'customer'"><i class="fa fa-check text-active"></i> Customer</label>
-                                    
+                                <label class="btn btn-default"  ng-model="form.tujuan" btn-radio="'cabang'"  required>Kantor Cabang</label>
+                                <label class="btn btn-default"  ng-model="form.tujuan" btn-radio="'customer'"  required> Customer</label>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-hide="form.tujuan == 'customer'">
+                            <label class="col-sm-3 control-label"></label>
+                            <div class="col-sm-9">
+                                <div >
+                                    <input type="text" class="form-control" ng-model="form.cabang" ng-disabled="is_view" placeholder="Cabang">
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="form-group" ng-hide="form.tujuan == 'cabang'">
+                            <label class="col-sm-3 control-label"></label>
+
+                            <div class="col-sm-9">
+                                <div>
+                                    <div class="input-group">
+                                        <ui-select on-select="getCustomer(form,$item)" ng-model="form.customer" required theme="bootstrap" ng-disabled="is_view" >
+                                            <ui-select-match>{{$select.selected.nm_customer}}</ui-select-match>
+                                            <ui-select-choices refresh="cariCustomer($select.search)" repeat="val in kdCust">
+                                                <span title ="{{val.alamat1}}"> {{val.nm_customer}}</span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                        <span class="input-group-btn">
+                                            <button ng-click="form.customer = undefined" class="btn btn-default">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                         <div class="form-group">
@@ -177,12 +209,12 @@
                         </div>
                     </div>
 
-                 <div class="line line-dashed b-b line-lg pull-in"></div>
-                        <div align="center">
-                            <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
-                            <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form)">&nbsp;Simpan</button>
-                        </div>
-                 	
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div align="center">
+                        <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
+                        <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form)">&nbsp;Simpan</button>
+                    </div>
+
                 </form>
             </div>
         </div>

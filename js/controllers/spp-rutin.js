@@ -23,6 +23,19 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $event.stopPropagation();
         $scope.openedDet = $index;
     };
+    $scope.requiredPurchase = function (form) {
+        Data.get('spprutin/requiredpurchase', form).then(function (data) {
+            $scope.sppDet = data.data;
+            
+//            var a = 1;
+//            for (i = 1; i <= data.count; i++) {
+//                $scope.sppDet[i] = data.data[i];
+//                a++;
+//            }
+//          $scope.sppDet.qty = data.data.qty;
+//          $scope.sppDet.ket = data.data.ket;
+        });
+    };
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -54,18 +67,11 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-        $scope.sppDet = [{
-                id: '',
-                no_spp: '',
-                kd_barang: '',
-                saldo: '',
-                qty: '',
-                ket: '',
-                p: '',
-                a: '',
-                stat_spp: '',
-                no_wo: '',
-            }];
+        $scope.requiredPurchase(form);
+        Data.get('spprutin/kode').then(function (data) {
+            $scope.form.no_spp = data.kode;
+            console.log(data.kode);
+        });
     };
     $scope.update = function (form) {
         $scope.is_create = false;
@@ -166,13 +172,6 @@ app.controller('modalCtrl', function ($scope, Data, $modalInstance, form) {
         if ($query.length >= 3) {
             Data.get('barang/cari', {barang: $query}).then(function (data) {
                 $scope.results = data.data;
-            });
-        }
-    };
-    $scope.cariWo = function ($query) {
-        if ($query.length >= 3) {
-            Data.get('wo/cari', {no_wo: $query}).then(function (data) {
-                $scope.listWo = data.data;
             });
         }
     };

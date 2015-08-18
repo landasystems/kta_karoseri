@@ -110,31 +110,32 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
                 biaya: '',
             }
         ];
+        Data.get('ujimutu/kode').then(function(data) {
+            $scope.form.kd_uji = data.kode;
+        });
 
     };
     $scope.update = function(form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
-        $scope.formtitle = "Edit Data : " + form.merk;
-        $scope.form = form;
-        $scope.form.tgl = new Date(form.tgl);
-        
-        $scope.selected(form.id);
+//        $scope.form = {};
+        $scope.formtitle = "Edit Data : " + form.kd_uji;
+//        $scope.form.tgl = new date(form.tgl);
+        $scope.selected(form.kd_uji);
     };
     $scope.view = function(form) {
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.merk;
-        $scope.form = form;
-        $scope.selected(form.id);
+        $scope.formtitle = "Lihat Data : " + form.kd_uji;
+        $scope.selected(form.kd_uji);
     };
     $scope.save = function(form, detail) {
         var data = {
             ujimutu: form,
             det_ujimutu: detail,
         };
-        var url = ($scope.is_create == true) ? 'ujimutu/create' : 'ujimutu/update/' + form.id;
+        var url = ($scope.is_create == true) ? 'ujimutu/create' : 'ujimutu/update/' + form.kd_uji;
         Data.post(url, data).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -151,13 +152,14 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
     };
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('ujimutu/delete/' + row.id).then(function(result) {
+            Data.delete('ujimutu/delete/' + row.kd_uji).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
     $scope.selected = function(id) {
         Data.get('ujimutu/view/' + id).then(function(data) {
+         
             $scope.form = data.data;
             $scope.detUjimutu = data.detail;
 //            $scope.total();

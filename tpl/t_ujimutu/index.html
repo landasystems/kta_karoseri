@@ -139,21 +139,29 @@
                                 <input type="text" class="form-control"    ng-model="detail.bentuk_baru" ng-disabled="is_view" >
                             </td>
                             <td>
-                                <input type="text" class="form-control"    ng-model="detail.kelas"  ng-pattern="/^[0-9]+$/" ng-disabled="is_view" >
+                                <select  class="form-control" ng-model="detail.kelas" ng-disabled="is_view" required>
+                                <option value="">-- Pilih Kelas --</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                                <!--<input type="text" class="form-control"    ng-model="detail.kelas"  ng-pattern="/^[0-9]+$/" ng-disabled="is_view" >-->
                             </td>
                             <td>
                                 <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" ng-keyup="total()" ng-model="detail.biaya" ng-disabled="is_view" >
                             </td>
-                            <td >
+                            <td>
 
-                                <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-plus"></i></button>
+                                <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-plus"></i></button>
                                 <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="4" align="right"><b>Biaya Administrasi</b></td>
                             <td colspan="2">
-                                <div class="input-group m-b">
+                                <div class="input-group">
                                     <span class="input-group-addon">Rp.</span>
                                     <input type="text" ng-pattern="/^[0-9]+$/" class="form-control" ng-keyup="total()" ng-model="form.biaya_admin" placeholder="Biaya Administrasi" ng-disabled="is_view" style="width:200px">
                                 </div>
@@ -162,7 +170,7 @@
                         <tr>
                             <td colspan="4" align="right"><b>Total Biaya</b></td>
                             <td colspan="2">
-                                <div class="input-group m-b">
+                                <div class="input-group">
                                     <span class="input-group-addon">Rp.</span>
                                     <input type="text" ng-pattern="/^[0-9]+$/" class="form-control" ng-keyup="" ng-model="form.total_biaya" placeholder="Total Biaya" ng-disabled="is_view" style="width:200px">
                                 </div>

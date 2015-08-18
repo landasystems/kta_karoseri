@@ -78,7 +78,7 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
 
     $scope.cariSales = function($query) {
         if ($query.length >= 3) {
-            Data.get('jabatan/listkaryawan', {nama: $query}).then(function(data) {
+            Data.get('jabatan/listkaryawansales', {nama: $query}).then(function(data) {
                 $scope.rSales = data.data;
             });
         }

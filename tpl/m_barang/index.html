@@ -1,7 +1,9 @@
 <div ng-controller="barangCtrl">
+
     <div class="bg-light lter b-b wrapper-md">
         <h1 class="m-n font-thin h3">Data Master - Barang</h1>
     </div>
+
     <div class="wrapper-md" ng-show="!is_edit">
         <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
             <div class="panel-heading">
@@ -95,91 +97,84 @@
             </div>
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation">
-                    <div class="col-md-4 col-sm-12">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Kode</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" ng-model="form.kd_barang" ng-disabled="is_view" readonly>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Kode</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" ng-model="form.kd_barang" ng-disabled="is_view" readonly>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Nama</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" ng-model="form.nm_barang" ng-disabled="is_view" required>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Nama</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" ng-model="form.nm_barang" ng-disabled="is_view" required>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Jenis</label>
-                            <div class="col-sm-10">
-                                <select class="form-control" ng-model="form.jenis" ng-disabled="is_view" required>
-                                    <option value="">-Pilih Jenis-</option>
-                                    <option ng-repeat="jenis in jenis_brg" value="{{jenis.kd_jenis}}">{{jenis.jenis_brg}}</option>
-                                </select>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Jenis</label>
+                                <div class="col-sm-10">
+                                    <select class="form-control" ng-model="form.jenis" ng-disabled="is_view" required>
+                                        <option value="">-Pilih Jenis-</option>
+                                        <option ng-repeat="jenis in jenis_brg" value="{{jenis.kd_jenis}}">{{jenis.jenis_brg}}</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Harga</label>
-                            <div class="col-sm-10">
-                                <div class="input-group">
-                                    <span class="input-group-addon">Rp</span>
-                                    <input type="text" class="form-control" ng-model="form.harga" ng-disabled="is_view" required>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Harga</label>
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">Rp</span>
+                                        <input type="text" class="form-control" ng-model="form.harga" ng-disabled="is_view" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Satuan</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" ng-model="form.satuan" ng-disabled="is_view" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Kategori</label>
+                                <div class="col-sm-10">
+                                    <label class="btn btn-default" ng-model="form.kat"  btn-radio="'RUTIN'" required>Rutin</label>
+                                    <label class="btn btn-default" ng-model="form.kat"  btn-radio="'Non Rutin'" required>Non Rutin</label>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Satuan</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" ng-model="form.satuan" ng-disabled="is_view" required>
+                        <div class="col-md-4 col-sm-12">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Max</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" ng-model="form.max" ng-disabled="is_view" required ng-keyup="qty(form.max, form.saldo)" readonly>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Kategori</label>
-                            <div class="col-sm-10">
-                                <label class="btn btn-default" ng-model="form.kat"  btn-radio="'RUTIN'" required>Rutin</label>
-                                <label class="btn btn-default" ng-model="form.kat"  btn-radio="'Non Rutin'" required>Non Rutin</label>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Min</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" ng-model="form.min" ng-disabled="is_view" required>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-12">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Max</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" ng-model="form.max" ng-disabled="is_view" required>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Saldo</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" ng-model="form.saldo" ng-disabled="is_view" required ng-keyup="qty(form.max, form.saldo)">
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Min</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" ng-model="form.min" ng-disabled="is_view" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Saldo</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" ng-model="form.saldo" ng-disabled="is_view" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Qty</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" ng-model="form.qty" ng-disabled="is_view" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Umur</label>
-                            <div class="col-sm-10">
-                                <div class="input-group m-b">
-                                    <input type="text" class="form-control" ng-model="form.umur" ng-disabled="is_view" required>
-                                    <span class="input-group-addon">Hari</span>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Qty</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" ng-model="form.qty" ng-disabled="is_view" required>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-4 col-sm-12">
+                            <img ng-src="img/{{(form.foto) ? 'barang/'+form.foto : 'noimage.jpg'}}" class="img-thumbnail">
+                            <input type="file" nv-file-select="" uploader="uploader" />
+                        </div>    
                     </div>
-                    <div class="col-md-4 col-sm-12">
-                        <img ng-src="img/{{(form.foto) ? 'barang/'+form.foto : 'noimage.jpg'}}" class="img-thumbnail">
-                        <input type="file" nv-file-select="" uploader="uploader" />
-                    </div>
-                    <div class="line line-dashed b-b line-lg pull-in"></div>
+
                     <div align="center">
                         <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
                         <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form)">&nbsp;Simpan Perubahan</button>
@@ -188,4 +183,5 @@
             </div>
         </div>
     </div>
+
 </div>

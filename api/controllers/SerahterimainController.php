@@ -96,8 +96,8 @@ class SerahterimainController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
-        
-        foreach($models as $key => $val){
+
+        foreach ($models as $key => $val) {
             $spk = \app\models\Spkaroseri::findOne($val['no_spk']);
             $models[$key]['spk'] = (!empty($spk)) ? $spk->attributes : array();
             $customer = \app\models\Customer::findOne($val['kd_cust']);
@@ -133,8 +133,20 @@ class SerahterimainController extends Controller {
         if (empty($model)) {
             $model = new Serahterimain();
         }
+       
+
+
         $model->attributes = $params;
-        
+         //warna
+        $warna = \app\models\Warna::findOne($params['warna']['kd_warna']);
+        if (empty($warna)) {
+            $warna = new \app\models\Warna();
+        }
+        $warna->attributes = $params;
+        if ($warna->save()) {
+            $model->kd_warna = $warna->kd_warna;
+        }
+
         if ($model->save()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -148,6 +160,14 @@ class SerahterimainController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
+         $warna = \app\models\Warna::findOne($params['warna']['kd_warna']);
+        if (empty($warna)) {
+            $warna = new \app\models\Warna();
+        }
+        $warna->attributes = $params;
+        if ($warna->save()) {
+            $model->kd_warna = $warna->kd_warna;
+        }
 
         if ($model->save()) {
             $this->setHeader(200);

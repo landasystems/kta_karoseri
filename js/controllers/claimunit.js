@@ -1,14 +1,17 @@
 app.controller('claimunitCtrl', function($scope, Data, toaster) {
 //init data
     var tableStateRef;
+    $scope.formtitle = "Claim Unit";
     $scope.displayed = [];
-    $scope.is_edit = false;
-    $scope.is_view = false;
-    $scope.is_create = false;
+    $scope.is_create = true;
     $scope.jenis_kmp = [];
     $scope.bagian = '-';
     $scope.sisa = 0;
+    $scope.list = [];
 
+    $scope.kalkuasi = function() {
+        $scope.form.total_biaya = (($scope.form.biaya_spd) ? 1 * $scope.form.biaya_spd : 0) + (($scope.form.biaya_tk) ? 1 * $scope.form.biaya_tk : 0) + (($scope.form.biaya_mat) ? 1 * $scope.form.biaya_mat : 0);
+    }
     $scope.open1 = function($event) {
         $event.preventDefault();
         $event.stopPropagation();
@@ -19,7 +22,7 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
         $event.stopPropagation();
         $scope.opened2 = true;
     };
-    $scope.kalkuasi = function() {
+    $scope.kalkulasi = function() {
         $scope.form.total_biaya = (($scope.form.biaya_spd) ? 1 * $scope.form.biaya_spd : 0) + (($scope.form.biaya_tk) ? 1 * $scope.form.biaya_tk : 0) + (($scope.form.biaya_mat) ? 1 * $scope.form.biaya_mat : 0);
     }
     $scope.jenisKmp = function(status, bagian) {
@@ -33,58 +36,28 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
                 $scope.results = data.data;
             });
         }
-    }
-    $scope.callServer = function callServer(tableState) {
-        tableStateRef = tableState;
-        $scope.isLoading = true;
-        var offset = tableState.pagination.start || 0;
-        var limit = tableState.pagination.number || 10;
-        var param = {offset: offset, limit: limit};
-        if (tableState.sort.predicate) {
-            param['sort'] = tableState.sort.predicate;
-            param['order'] = tableState.sort.reverse;
-        }
-        if (tableState.search.predicateObject) {
-            param['filter'] = tableState.search.predicateObject;
-        }
-
-        Data.get('claimunit', param).then(function(data) {
-            $scope.displayed = data.data;
-            tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
-        });
-        $scope.isLoading = false;
-    };
-    $scope.create = function(form) {
-        $scope.is_edit = true;
-        $scope.is_view = false;
-        $scope.is_create = true;
-        $scope.formtitle = "Form Tambah Data";
-        $scope.form = {};
-        $scope.form.biaya_mat = 0;
-        $scope.form.biaya_tk = 0;
-        $scope.form.biaya_spd = 0;
-        $scope.form.total_biaya = 0;
-    };
-    $scope.update = function(form) {
-        $scope.is_edit = true;
-        $scope.is_view = false;
-        $scope.is_create = false;
-        $scope.formtitle = "Edit Data : " + form.no_wo;
-        $scope.form = form;
-        $scope.jenisKmp(form.stat, form.bag)
-        $scope.form.kd_jns = form.kd_jns;
-        $scope.kalkuasi();
-        $scope.selected(form.no_wo);
     };
     $scope.view = function(form) {
-        $scope.is_edit = true;
-        $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.no_wo;
+        $scope.is_create = false;
         $scope.form = form;
+        $scope.form.tgl_pelaksanaan = new Date(form.tgl_pelaksanaan);
         $scope.jenisKmp(form.stat, form.bag)
         $scope.form.kd_jns = form.kd_jns;
         $scope.kalkuasi();
-        $scope.selected(form.no_wo);
+    };
+    $scope.tambah = function(form) {
+        $scope.is_create = true;
+        $scope.form.stat = '';
+        $scope.form.bag = '';
+        $scope.form.kd_jns = '';
+        $scope.form.problem = '';
+        $scope.form.solusi = '';
+        $scope.form.tgl_pelaksanaan = new Date();
+        $scope.form.pelaksana = '';
+        $scope.form.biaya_mat = '0';
+        $scope.form.biaya_tk = '0';
+        $scope.form.biaya_spd = '0';
+        $scope.form.total_biaya = '0';
     };
     $scope.save = function(form) {
         var url = ($scope.is_create == true) ? 'claimunit/create' : 'claimunit/update/' + form.id;
@@ -92,39 +65,41 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
-                $scope.is_edit = false;
-                $scope.callServer(tableStateRef); //reload grid ulang
+                $scope.listWo(form.no_wo);
+                $scope.is_create = false;
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
             }
         });
     };
-    $scope.cancel = function() {
-        $scope.is_edit = false;
-        $scope.is_view = false;
-    };
     $scope.delete = function(row) {
+        var wo = row.no_wo;
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
             Data.delete('claimunit/delete/' + row.id).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
+        $scope.listWo(wo);
     };
     $scope.selected = function($query) {
         Data.get('wo/wospkselesai', {nama: $query}).then(function(data) {
-            $scope.form.no_wo = data.data[0];
+            $scope.form = data.data;
         });
-    }
+    };
     $scope.sisagaransi = function(no_wo) {
         Data.post('claimunit/sisagaransi', {no_wo: no_wo}).then(function(data) {
             $scope.sisa = data.data;
         });
+    };
+    $scope.listWo = function(nowo) {
+        Data.get('claimunit/view', {no_wo: nowo}).then(function(data) {
+            $scope.list = data.data;
+        });
     }
     $scope.pilihWo = function($item) {
-        $scope.form.nm_customer = $item.nm_customer;
-        $scope.form.model = $item.model;
-        $scope.form.jenis = $item.jenis;
-        $scope.form.sales = $item.sales;
-        $scope.form.wilayah = $item.wilayah;
+        $scope.form = $item;
+        $scope.form.tgl_pelaksanaan = new Date();
         $scope.sisagaransi($item.no_wo);
+        $scope.listWo($item.no_wo);
+        $scope.is_create = true;
     }
 })

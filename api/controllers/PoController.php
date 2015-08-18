@@ -29,6 +29,7 @@ class PoController extends Controller {
                     'updtst' => ['get'],
                     'excel' => ['get'],
                     'excelbeli' => ['get'],
+                    'brgspp' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -194,13 +195,12 @@ class PoController extends Controller {
                     $start = date("Y-m-d", strtotime($value[0]));
                     $end = date("Y-m-d", strtotime($value[1]));
                     $query->andFilterWhere(['between', 'dpo.tgl_pengiriman', $start, $end]);
-                } else if($key == 'nota') {
+                } else if ($key == 'nota') {
                     $query->andFilterWhere(['like', 'dpo.nota', $val]);
-                }else  if($key == 'spp') {
-                    $query->andFilterWhere(['like', 'trans_po.'.$key, $val]);
-                
-                }else  if($key == 'nama_supplier') {
-                    $query->andFilterWhere(['like', 'supplier.'.$key, $val]);
+                } else if ($key == 'spp') {
+                    $query->andFilterWhere(['like', 'trans_po.' . $key, $val]);
+                } else if ($key == 'nama_supplier') {
+                    $query->andFilterWhere(['like', 'supplier.' . $key, $val]);
                 }
             }
         }
@@ -355,7 +355,7 @@ class PoController extends Controller {
         $model->spp = (empty($params['formpo']['listspp']['no_spp'])) ? '-' : $params['formpo']['listspp']['no_spp'];
 
         if ($model->save()) {
-           $details = $params['details'];
+            $details = $params['details'];
             foreach ($details as $val) {
                 $det = new DetailPo();
                 $det->attributes = $val;
@@ -435,6 +435,30 @@ class PoController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $models));
     }
 
+    public function actionBrgspp() {
+        $param = $_REQUEST;
+        $query = new Query;
+        if (empty($param['nospp']) || $param['nospp'] == '-') {
+            $query->from('barang')
+                    ->select("*")
+                    ->where(['like', 'nm_barang', $param['namabrg']])
+                    ->orWhere(['like', 'kd_barang', $param['namabrg']])
+                    ->andWhere("nm_barang != '-' && kd_barang != '-'");
+        } else {
+            $query->from("det_spp")
+                    ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang ')
+                    ->where('det_spp.no_spp =' . $param['nospp'])
+                    ->andWhere(['LIKE', 'nm_barang', $param['namabrg']])
+                    ->select("det_spp.no_spp,det_spp.kd_barang,barang.*");
+        }
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+
     public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
@@ -442,6 +466,7 @@ class PoController extends Controller {
         $models = $command->queryAll();
         return $this->render("/expretur/po", ['models' => $models]);
     }
+
     public function actionExcelbeli() {
         session_start();
         $query = $_SESSION['query'];
