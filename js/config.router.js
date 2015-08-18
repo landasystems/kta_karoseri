@@ -974,6 +974,25 @@ angular.module('app')
                                                 );
                                             }]
                                     }})
+                                
+                                //notifikasi
+                                .state('notif', {
+                                    url: '/notif',
+                                    templateUrl: 'tpl/app.html'
+                                })
+                                .state('notif.barang', {
+                                    url: '/barang',
+                                    templateUrl: 'tpl/n_barang/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/n_barang.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
 
                     }
                 ]);
