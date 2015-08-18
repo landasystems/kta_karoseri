@@ -93,7 +93,7 @@ foreach ($models as $key => $val) {
                 <td><?= $val['nm_customer'] ?></td>
                 <td><?= $val['warna'] ?></td>
                 
-                <td colspan="2"><?= $catatan?></td>
+                <td><?= $catatan?></td>
                 <td></td>
             </tr>
             <?php
