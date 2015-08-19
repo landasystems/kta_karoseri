@@ -38,6 +38,10 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
             });
         }
     };
+    $scope.getPo = function(form,item){
+        form.nama_supplier = item.nama_supplier;
+        form.kd_supplier = item.kd_supplier;
+    };
     $scope.cariSupplier = function ($query) {
         if ($query.length >= 3) {
             Data.get('supplier/cari', {nama: $query}).then(function (data) {
@@ -93,6 +97,13 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
                 tgl_terima: '',
                 no_po: '',
             }];
+        Data.get('bbm/kode',form).then(function(data){
+            $scope.form.no_bbm = data.kode;
+        });
+        Data.get('pengguna/profile').then(function(data) {
+            $scope.form.penerima = data.data.nama;
+//            console.log(data);
+        });
     };
     $scope.update = function (form) {
         $scope.is_create = false;

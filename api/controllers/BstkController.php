@@ -21,6 +21,8 @@ class BstkController extends Controller {
                     'view' => ['get'],
                     'nowo' => ['get'],
                     'warna' => ['get'],
+                    'rekap' => ['get'],
+                    'excel' => ['get'],
                     'selected' => ['post'],
                     'create' => ['post'],
                     'update' => ['post'],
@@ -107,6 +109,75 @@ class BstkController extends Controller {
             $wo = \app\models\Womasuk::findOne($val['no_wo']);
             $models[$key]['wo'] = (!empty($wo)) ? $wo->attributes : array();
         }
+
+
+
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+
+    public function actionRekap() {
+        //init variable
+        $params = $_REQUEST;
+        $filter = array();
+        $sort = "b.no_wo ASC";
+        $offset = 0;
+        $limit = 10;
+        //        Yii::error($params);
+        //limit & offset pagination
+        if (isset($params['limit']))
+            $limit = $params['limit'];
+        if (isset($params['offset']))
+            $offset = $params['offset'];
+
+        //sorting
+        if (isset($params['sort'])) {
+            $sort = $params['sort'];
+            if (isset($params['order'])) {
+                if ($params['order'] == "false")
+                    $sort.=" ASC";
+                else
+                    $sort.=" DESC";
+            }
+        }
+
+        //create query
+        $query = new Query;
+        $query->offset($offset)
+                ->limit($limit)
+                ->from('bstk as b')
+                ->join('JOIN', 'warna as wa', 'wa.kd_warna = b.kd_warna')
+                ->join('JOIN', 'view_wo_spk as vws', 'vws.no_wo = b.no_wo')
+                ->orderBy($sort)
+                ->select("b.*,wa.*,vws.kd_cust,vws.nm_customer");
+
+        //filter
+        if (isset($params['filter'])) {
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+                if ($key == 'tgl_periode') {
+                    $value = explode(' - ', $val);
+                    $start = date("Y-m-d", strtotime($value[0]));
+                    $end = date("Y-m-d", strtotime($value[1]));
+                    $query->andFilterWhere(['between', 'b.tgl', $start, $end]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+                }
+            }
+        }
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $totalItems = $query->count();
+
+        $query->limit(null);
+        $query->offset(null);
+        session_start();
+        $_SESSION['query'] = $query;
+        $_SESSION['filter'] = $filter;
+//        
 
         $this->setHeader(200);
 
@@ -211,6 +282,16 @@ class BstkController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/rekapbstk", ['models' => $models, 'filter' => $filter]);
     }
 
 }
