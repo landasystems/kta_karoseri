@@ -201,7 +201,6 @@ app.controller('rekapSpk', function($scope, Data) {
         paramRef = param;
         Data.get('spkaroseri/rekap', param).then(function(data) {
             $scope.displayed = data.data;
-            console.log($scope.displayed);
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
         $scope.isLoading = false;

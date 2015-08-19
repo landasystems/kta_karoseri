@@ -9,7 +9,6 @@
                     <button type="button" class="btn btn-success fa fa-file-excel-o" ng-show="!isCollapsed" ng-click="excel();">&nbsp;&nbsp;Exp Laporan SPK</button>
                 </div> 
             </div>
-
             <div class="panel-body">
                 <div class="panel panel-info" style="text-align: center">
                     <div class="panel-heading">
@@ -19,19 +18,19 @@
                                     <div class="form-group">
                                         <label class="col-md-3">Periode</label>
                                         <div class="col-md-9">
-                                            <input placeholder="Tanggal Periode Pembuatan" date-range-picker class="form-control" st-search="tsb.tgl_buat" type="text"  ng-model="tanggals">
+                                            <input placeholder="Tanggal Periode Chasis Masuk" date-range-picker class="form-control" st-search="sti.tgl_terima" type="text"  ng-model="tanggals">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-3">No. Wo</label>
                                         <div class="col-md-9">
-                                            <input placeholder="No. Wo" class="form-control" st-search="wm.no_wo" type="text">
+                                            <input placeholder="No. Wo" class="form-control" st-search="vws.no_wo" type="text">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-3">No. SPK</label>
                                         <div class="col-md-9">
-                                            <input placeholder="No. SPK" class="form-control" st-search="s.Kode Bom" type="text">
+                                            <input placeholder="No. SPK" class="form-control" st-search="vws.no_spk" type="text">
                                         </div>
                                     </div>
                                 </div>
@@ -39,13 +38,13 @@
                                     <div class="form-group">
                                         <label class="col-md-3">Customer</label>
                                         <div class="col-md-9">
-                                            <input st-search="cus.nm_customer" placeholder="Nama Customer" class="form-control"/>
+                                            <input st-search="vws.nm_customer" placeholder="Nama Customer" class="form-control"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-3">Model</label>
                                         <div class="col-md-9">
-                                            <input st-search="m.model" placeholder="Model Kendaraan" class="form-control"/>
+                                            <input st-search="vws.model" placeholder="Model Kendaraan" class="form-control"/>
                                         </div>
                                     </div>
                                 </div>
@@ -71,7 +70,7 @@
                     </thead>
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
-                            <td>{{row.tgl | date}}</td>
+                            <td>{{row.tgl_chassis| date}}</td>
                             <td>{{row.sales}}</td>
                             <td>{{row.nm_customer}}</td>
                             <td>{{row.kd_titipan}}</td>

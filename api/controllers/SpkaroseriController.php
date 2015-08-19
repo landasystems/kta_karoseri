@@ -179,15 +179,23 @@ class SpkaroseriController extends Controller {
                 ->limit($limit)
                 ->from('spk')
                 ->join('LEFT JOIN', 'view_wo_spk as vws', 'spk.no_spk = vws.no_spk')
+                ->join('LEFT JOIN', 'serah_terima_in as sti', 'sti.kd_titipan = vws.kd_titipan')
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                ->select("vws.*, tk.nama as sales")
+                ->select("vws.*, tk.nama as sales, sti.tgl_terima as tgl_chassis")
                 ->orderBy($sort);
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
+                if ($key == 'sti.tgl_terima') {
+                    $tgl = explode(" - ", $val);
+                    $start = date("Y-m-d", strtotime($tgl[0]));
+                    $end = date("Y-m-d", strtotime($tgl[1]));
+                    $query->andFilterWhere(['between', 'sti.tgl_terima', $start, $end]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+                }
             }
         }
 
