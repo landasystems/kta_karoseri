@@ -816,7 +816,7 @@ angular.module('app')
                                             function($ocLazyLoad) {
                                                 return $ocLazyLoad.load([]).then(
                                                         function() {
-                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                            return $ocLazyLoad.load('js/controllers/s-pesanankaroseri.js');
                                                         }
                                                 );
                                             }]
