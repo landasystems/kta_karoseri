@@ -117,7 +117,7 @@
                                 <label class="col-sm-3 control-label">No PO</label>
                                 <div class="col-sm-8">
                                     <div class="input-group" style="width:100%">
-                                        <ui-select ng-model="form.po" theme="bootstrap">
+                                        <ui-select on-select="getPo(form,$item)" ng-model="form.po" theme="bootstrap">
                                             <ui-select-match>{{$select.selected.nota}}</ui-select-match>
                                             <ui-select-choices refresh="cariPo($select.search)" repeat="po in listPo">
                                                 {{po.nota}}
@@ -155,17 +155,7 @@
                                 <label class="col-sm-4 control-label">Supplier</label>
                                 <div class="col-sm-8">
                                     <div class="input-group" style="width:100%">
-                                        <ui-select ng-model="form.supplier" theme="bootstrap">
-                                            <ui-select-match>{{$select.selected.kd_supplier}} - {{$select.selected.nama_supplier}}</ui-select-match>
-                                            <ui-select-choices refresh="cariSupplier($select.search)" repeat="supplier in listSupplier">
-                                                {{supplier.kd_supplier}} - {{supplier.nama_supplier}}
-                                            </ui-select-choices>
-                                        </ui-select>
-                                        <span class="input-group-btn">
-                                            <button ng-click="form.supplier = undefined" class="btn btn-default">
-                                                <span class="glyphicon glyphicon-trash"></span>
-                                            </button>
-                                        </span>
+                                        <input type="text" ng-readonly="true" ng-model="form.nama_supplier" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -181,7 +171,7 @@
                                 <label class="col-sm-4 control-label">Penerima</label>
                                 <div class="col-sm-8">
                                     <div class="input-group" style="width:100%">
-                                        <input type="text" ng-model="form.penerima" class="form-control">
+                                        <input ng-readonly="true" type="text" ng-model="form.penerima" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -199,7 +189,7 @@
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <label class="col-sm-1 control-label" style="font-weight: bold">Detail BBM</label>
                     <!--{{listBarang}}-->
-                    <table class="table table-bordered">
+                    <table class="table table-bordered det-trans">
                         <thead>
                             <tr>
                                 <th style="text-align: center; font-weight: bold;width:30%">Barang</th>

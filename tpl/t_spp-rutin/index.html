@@ -139,32 +139,32 @@
                             <tr ng-repeat="detail in sppDet">
                                 <td>
                                     <div class="input-group" style="width:100%">
-                                        <input type="text"  ng-model="detail.barang.kd_barang" class="form-control">
+                                        <input type="text"  ng-model="detail.barang.kd_barang" ng-readonly="true" class="form-control">
                                     </div>
                                 </td>
                                 <td>
                                     <div class="input-group" style="width:100%">
-                                        <input type="text"  ng-model="detail.barang.nm_barang" class="form-control">
+                                        <input type="text"  ng-model="detail.barang.nm_barang" ng-readonly="true" class="form-control">
                                     </div>
                                 </td>
                                 <td>
-                                    <input type="text" ng-model="detail.barang.satuan" class="form-control">
+                                    <input type="text" ng-model="detail.barang.satuan" ng-readonly="true" class="form-control">
                                 </td>
                                 <td>
-                                    <input type="text" ng-pattern="/^[0-9.-]*$/" ng-model="detail.barang.min" class="form-control">
+                                    <input type="text" ng-pattern="/^[0-9.-]*$/" ng-readonly="true" ng-model="detail.barang.min" class="form-control">
                                 </td>
                                 <td>
-                                    <input type="text" ng-pattern="/^[0-9.-]*$/" ng-model="detail.barang.max" class="form-control">
+                                    <input type="text" ng-pattern="/^[0-9.-]*$/" ng-readonly="true" ng-model="detail.barang.max" class="form-control">
                                 </td>
                                 <td>
-                                    <input type="text" ng-pattern="/^[0-9.-]*$/" ng-model="detail.barang.saldo" class="form-control">
+                                    <input type="text" ng-pattern="/^[0-9.-]*$/" ng-readonly="true" ng-model="detail.barang.saldo" class="form-control">
                                 </td>
                                 <td>
                                     <input type="text" ng-pattern="/^[0-9.-]*$/" ng-model="detail.barang.qty" class="form-control">
                                 </td>
                                 <td>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" ng-model="detail.p"/>
+                                        <input type="text" class="form-control" ng-readonly="true" ng-model="detail.p"/>
                                         <span class="input-group-addon">
                                             <i class="fa fa-calendar-o"></i>
                                         </span>

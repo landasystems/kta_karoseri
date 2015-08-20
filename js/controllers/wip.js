@@ -2,6 +2,7 @@ app.controller('wipCtrl', function($scope, Data, toaster, $modal) {
 
     //init data
     var tableStateRef;
+    var paramRef;
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
@@ -25,7 +26,6 @@ app.controller('wipCtrl', function($scope, Data, toaster, $modal) {
 
     $scope.pilih = function(form, $item) {
         Data.post('wip/getnowo/', $item).then(function(data) {
-//            console.log(data.detail);
             var newDet = [{
                     id: 0,
                     no_wo: '',
@@ -36,7 +36,6 @@ app.controller('wipCtrl', function($scope, Data, toaster, $modal) {
                     act_finish: '',
                     keterangan: '',
                 }];
-//            $scope.detWip = newDet;
             $scope.detWip = (data.detail != null) ? data.detail : newDet;
             form.umur = data.umur;
 
@@ -61,7 +60,7 @@ app.controller('wipCtrl', function($scope, Data, toaster, $modal) {
         if (tableState.search.predicateObject) {
             param['filter'] = tableState.search.predicateObject;
         }
-
+        paramRef = param;
         Data.get('wip', param).then(function(data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
@@ -69,7 +68,11 @@ app.controller('wipCtrl', function($scope, Data, toaster, $modal) {
 
         $scope.isLoading = false;
     };
-
+    $scope.excel = function() {
+        Data.get('wip', paramRef).then(function(data) {
+            window.location = 'api/web/wip/excel';
+        });
+    }
     $scope.create = function(form) {
         $scope.is_edit = true;
         $scope.is_view = false;
@@ -77,9 +80,6 @@ app.controller('wipCtrl', function($scope, Data, toaster, $modal) {
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
         $scope.detWip = {};
-//        $scope.eks = {};
-//        $scope.inter = {};
-
     };
     $scope.update = function(form) {
         $scope.is_edit = true;
@@ -116,7 +116,6 @@ app.controller('wipCtrl', function($scope, Data, toaster, $modal) {
         $scope.is_view = false;
     };
     $scope.delete = function(row) {
-//        alert(row);
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
             Data.post('womasuk/delete/', row).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
@@ -160,7 +159,6 @@ app.controller('wipCtrl', function($scope, Data, toaster, $modal) {
             }
         });
     };
-
     $scope.selected = function(form) {
         Data.post('womasuk/select/', form).then(function(data) {
             $scope.form = data.data;
@@ -180,9 +178,6 @@ app.controller('wipCtrl', function($scope, Data, toaster, $modal) {
             $scope.form.jenis = data.det.jenis;
             $scope.form.jenis = data.det.jenis;
             $scope.form.no_spk = data.data.no_spk.as;
-//            console.log(data.data);
-
-
         });
     }
 

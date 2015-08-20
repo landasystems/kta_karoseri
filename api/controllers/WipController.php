@@ -45,14 +45,13 @@ class WipController extends Controller {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
-        } elseif (excel(isset($this->actions['*']))) {
+        } elseif (isset($this->actions['*'])) {
             $verbs = $this->actions['*'];
         } else {
             return $event->isValid;
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
-//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -112,7 +111,6 @@ class WipController extends Controller {
             $coba[0]['act_finish'] = '';
             $coba[0]['keterangan'] = '';
         }
-//        Yii::error($coba);
         // hitung umur
         // memecah string tanggal awal untuk mendapatkan
         // tanggal, bulan, tahun
@@ -141,17 +139,15 @@ class WipController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tgl_keluar DESC";
+        $sort = "dw.no_wo DESC";
         $offset = 0;
         $limit = 10;
-        //        Yii::error($params);
-        //limit & offset pagination
+
         if (isset($params['limit']))
             $limit = $params['limit'];
         if (isset($params['offset']))
             $offset = $params['offset'];
 
-        //sorting
         if (isset($params['sort'])) {
             $sort = $params['sort'];
             if (isset($params['order'])) {
@@ -166,15 +162,9 @@ class WipController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('wo_masuk')
-                ->join('JOIN', 'spk', 'spk.no_spk = wo_masuk.no_spk')
-                ->join('JOIN', 'chassis', 'spk.kd_chassis = chassis.kd_chassis') // model chassis, merk, jenis, 
-                ->join('JOIN', 'tbl_karyawan as sales', 'spk.nik= sales.nik') // sales
-                ->join('JOIN', 'customer', 'spk.kd_customer = customer.kd_cust') // customer
-                ->join('JOIN', 'model', 'spk.kd_model = model.kd_model') // customer
-//                ->join('JOIN', 'serah_terima_in', 'spk.no_spk = serah_terima_in.no_spk') // customer
-//                ->join('JOIN', 'warna', 'serah_terima_in.kd_warna = warna.kd_warna') // customer
-                ->where('wo_masuk.tgl_keluar is not null')
+                ->from('det_wip as dw')
+                ->join('JOIN', 'view_wo_spk as vws', 'dw.no_wo = vws.no_wo')
+                ->join('JOIN', 'bagian', 'bagian.kd_bag = dw.kd_kerja')
                 ->orderBy($sort)
                 ->select("*");
 
@@ -196,6 +186,16 @@ class WipController extends Controller {
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $query->limit(null);
+        $query->offset(null);
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/schedule", ['models' => $models]);
     }
 
     public function actionKaryawan() {
@@ -406,16 +406,6 @@ class WipController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
-    }
-
-    public function actionExcel() {
-        session_start();
-        $query = $_SESSION['query'];
-        $query->offset("");
-        $query->limit("");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        return $this->render("/expmaster/barang", ['models' => $models]);
     }
 
 }

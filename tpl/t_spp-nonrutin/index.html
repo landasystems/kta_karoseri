@@ -121,7 +121,7 @@
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <label class="col-sm-1 control-label" style="font-weight: bold">Detail SPP</label>
                     <!--{{listBarang}}-->
-                    <table class="table table-bordered">
+                    <table class="table table-bordered det-trans">
                         <thead>
                             <tr>
                                 <th style="text-align: center; font-weight: bold;width:10%">Kode Barang</th>
@@ -135,23 +135,23 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="detail in sppDet">
-                                <td style="margin:0px;padding:0px;">
+                                <td>
                                     <div class="input-group" style="width:100%">
                                         <input type="text" ng-readonly="true" ng-model="detail.barang.kd_barang" class="form-control">
                                     </div>
                                 </td>
-                                <td style="margin:0px;padding:0px;">
+                                <td>
                                     <div class="input-group" style="width:100%">
                                         <input type="text" ng-readonly="true" ng-model="detail.barang.nm_barang" class="form-control">
                                     </div>
                                 </td>
-                                <td style="margin:0px;padding:0px;">
-                                    <input type="text" ng-pattern="/^[0-9.]*$/" ng-model="detail.qty" class="form-control">
+                                <td>
+                                    <input type="text" ng-pattern="/^[0-9.-]*$/" ng-model="detail.qty" class="form-control">
                                 </td>
-                                <td style="margin:0px;padding:0px;">
+                                <td>
                                     <input type="text" ng-model="detail.ket" class="form-control">
                                 </td>
-                                <td style="margin:0px;padding:0px;">
+                                <td>
                                     <div class="input-group">
                                         <input type="text" class="form-control" ng-model="detail.p" ng-readonly="true"/>
                                         <span class="input-group-addon">
@@ -159,13 +159,13 @@
                                         </span>
                                     </div>
                                 </td>
-                                <td style="margin:0px;padding:0px;">
-                                    <div class="input-group" style="width:100%">
-                                        <input type="text" ng-readonly="true" ng-model="detail.wo.no_wo" class="form-control">
+                                <td>
+                                    <div>
+                                        <input type="text" ng-model="detail.no_wo" class="form-control">
                                     </div>
                                 </td>
-                                <td style="text-align: center;margin:0px;padding:0px;">
-                                    <button ng-click="modal(detail)" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
+                                <td>
+                                    <button ng-click="modal(sppDet,detail)" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
                                     <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-arrows"></i></button>
                                     <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0"><i class="fa fa-trash-o"></i></button>
                                 </td>
