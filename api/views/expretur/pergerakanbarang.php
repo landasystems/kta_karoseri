@@ -1,44 +1,42 @@
 <?php
-header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-retur-Pergerakan-Barang.xls");
+//header("Content-type: application/vnd-ms-excel");
+//header("Content-Disposition: attachment; filename=excel-retur-Pergerakan-Barang.xls");
 ?>
 <table width="100%" border="1">
-    <tr>
-        <td width="250" rowspan="2" align="center" valign="top">
-            <h2>LAPORAN STOK BAHAN MINGGUAN</h2>
-            <p>No. Dokumen : FR-WHS-001.REEV.00</p>
-        </td>
-        <td rowspan="2" valign="top" width="50%">
-            <table>
-                <tr valign="top">
-                    <td width="75">Nomor</td>
-                    <td width="1">:</td>
-                    <td></td>
-                </tr>
-                <tr valign="top">
-                    <td>Periode</td>
-                    <td width="1">:</td>
-                    <td></td>
-                </tr>
-                <tr valign="top">
-                    <td>Cetak</td>
-                    <td width="1">:</td>
-                    <td><?php echo date("d/m/Y"); ?></td>
-                </tr>
-            </table>
-        </td>
-        <td align="center" valign="top" height="15">Dibuat Oleh</td>
-        <td align="center" valign="top">Diperiksa Oleh</td>
-        <td align="center" valign="top">Disetujui Oleh</td>
-    </tr>
-    <tr height="75">
-        <td></td>
-        <td></td>
-        <td></td>
-    </tr>
-</table>
-<table width="100%" border="1">
-    <thead >
+    <thead>
+        <tr>
+            <td colspan="3" rowspan="2" align="center">
+                <h2>LAPORAN STOK BAHAN MINGGUAN</h2>
+                <p>No. Dokumen : FR-WHS-001.REEV.00</p>
+            </td>
+            <td rowspan="2" colspan="8"valign="top" width="50%">
+                <table>
+                    <tr valign="top">
+                        <td width="75">Nomor</td>
+                        <td width="1">:</td>
+                        <td></td>
+                    </tr>
+                    <tr valign="top">
+                        <td>Periode</td>
+                        <td width="1">:</td>
+                        <td></td>
+                    </tr>
+                    <tr valign="top">
+                        <td>Cetak</td>
+                        <td width="1">:</td>
+                        <td><?php echo date("d/m/Y"); ?></td>
+                    </tr>
+                </table>
+            </td>
+            <td align="center" valign="top" height="15">Dibuat Oleh</td>
+            <td align="center" valign="top">Diperiksa Oleh</td>
+            <td align="center" valign="top">Disetujui Oleh</td>
+        </tr>
+        <tr height="75">
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
         <tr>
             <th rowspan="3">NO</th>
             <th rowspan="3">KODE BARANG</th>
