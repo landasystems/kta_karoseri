@@ -49,7 +49,6 @@ class RekapController extends Controller {
         return true;
     }
 
-    
     public function actionRekapchassisin() {
         $params = $_REQUEST;
         $filter = array();
@@ -85,7 +84,6 @@ class RekapController extends Controller {
                 ->join('JOIN', 'spk', 'vws.no_spk = spk.no_spk')
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
                 ->where('tk.department="DPRT005"')
-                
                 ->orderBy($sort)
                 ->select("sti.tgl_terima, tk.nama, customer.nm_customer, customer.provinsi, sti.kd_titipan, vws.no_wo, chassis.merk, chassis.tipe, sti.no_chassis,sti.no_mesin, spk.total_harga, spk.no_spk, chassis.jenis");
 //filter
@@ -94,26 +92,25 @@ class RekapController extends Controller {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
 
-                if (isset($key) && $key == 'tgl_terima') 
-                    {
+                if (isset($key) && $key == 'tgl_terima') {
                     $value = explode(' - ', $val);
                     $start = date("Y-m-d", strtotime($value[0]));
                     $end = date("Y-m-d", strtotime($value[1]));
                     $query->andFilterWhere(['between', 'sti.tgl_terima', $start, $end]);
-                }elseif($key == 'no_wo'){
-                    $query->andFilterWhere(['like', 'vws.'.$key, $val]);
-                } elseif($key == 'no_spk'){
-                    $query->andFilterWhere(['like', 'spk.'.$key, $val]);
-                } elseif($key == 'model'){
-                    $query->andFilterWhere(['like', 'model.'.$key, $val]);
-                } elseif($key == 'kd_titipan'){
-                    $query->andFilterWhere(['like', 'sti.'.$key, $val]);
-                } elseif($key == 'nm_customer'){
-                    $query->andFilterWhere(['like', 'customer.'.$key, $val]);
-                } elseif($key == 'no_chassis'){
-                    $query->andFilterWhere(['like', 'spk.'.$key, $val]);
-                } elseif($key == 'merk'){
-                    $query->andFilterWhere(['like', 'chassis.'.$key, $val]);
+                } elseif ($key == 'no_wo') {
+                    $query->andFilterWhere(['like', 'vws.' . $key, $val]);
+                } elseif ($key == 'no_spk') {
+                    $query->andFilterWhere(['like', 'spk.' . $key, $val]);
+                } elseif ($key == 'model') {
+                    $query->andFilterWhere(['like', 'model.' . $key, $val]);
+                } elseif ($key == 'kd_titipan') {
+                    $query->andFilterWhere(['like', 'sti.' . $key, $val]);
+                } elseif ($key == 'nm_customer') {
+                    $query->andFilterWhere(['like', 'customer.' . $key, $val]);
+                } elseif ($key == 'no_chassis') {
+                    $query->andFilterWhere(['like', 'spk.' . $key, $val]);
+                } elseif ($key == 'merk') {
+                    $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
                 }
             }
         }
@@ -133,6 +130,7 @@ class RekapController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
+
     public function actionRekapwokeluar() {
         $params = $_REQUEST;
         $filter = array();
@@ -170,36 +168,36 @@ class RekapController extends Controller {
                 ->join('JOIN', 'spk', 'vws.no_spk = spk.no_spk')
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
                 ->where('tk.department="DPRT005" and wm.tgl_keluar IS NOT NULL')
-                
                 ->orderBy($sort)
                 ->select("sti.tgl_terima, customer.provinsi, customer.nm_customer, chassis.jenis, spk.no_spk, vws.no_wo, sti.kd_titipan, wm.tgl_keluar ,
-                        chassis.merk, chassis.tipe, model.model, tk.nama");
+                        chassis.merk, chassis.tipe, model.model, tk.nama, spk.jml_unit");
 //filter
 
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
 
-                if (isset($key) && $key == 'tgl_terima') 
-                    {
+                if (isset($key) && $key == 'tgl_terima') {
                     $value = explode(' - ', $val);
                     $start = date("Y-m-d", strtotime($value[0]));
                     $end = date("Y-m-d", strtotime($value[1]));
                     $query->andFilterWhere(['between', 'sti.tgl_terima', $start, $end]);
-                }elseif($key == 'no_wo'){
-                    $query->andFilterWhere(['like', 'vws.'.$key, $val]);
-                } elseif($key == 'no_spk'){
-                    $query->andFilterWhere(['like', 'spk.'.$key, $val]);
-                } elseif($key == 'model'){
-                    $query->andFilterWhere(['like', 'model.'.$key, $val]);
-                } elseif($key == 'kd_titipan'){
-                    $query->andFilterWhere(['like', 'sti.'.$key, $val]);
-                } elseif($key == 'nm_customer'){
-                    $query->andFilterWhere(['like', 'customer.'.$key, $val]);
-                } elseif($key == 'no_chassis'){
-                    $query->andFilterWhere(['like', 'spk.'.$key, $val]);
-                } elseif($key == 'merk'){
-                    $query->andFilterWhere(['like', 'chassis.'.$key, $val]);
+                } elseif ($key == 'no_wo') {
+                    $query->andFilterWhere(['like', 'vws.' . $key, $val]);
+                } elseif ($key == 'no_spk') {
+                    $query->andFilterWhere(['like', 'spk.' . $key, $val]);
+                } elseif ($key == 'model') {
+                    $query->andFilterWhere(['like', 'model.' . $key, $val]);
+                } elseif ($key == 'nama') {
+                    $query->andFilterWhere(['like', 'customer.' . $key, $val]);
+                } elseif ($key == 'nm_customer') {
+                    $query->andFilterWhere(['like', 'customer.' . $key, $val]);
+                } elseif ($key == 'jenis') {
+                    $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
+                } elseif ($key == 'merk') {
+                    $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
+                } elseif ($key == 'tipe') {
+                    $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
                 }
             }
         }
@@ -219,26 +217,26 @@ class RekapController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
-    
-     public function actionExcelchassisin() {
-        session_start();
+
+    public function actionExcelchassisin() {
+         session_start();
         $query = $_SESSION['query'];
         $filter = $_SESSION['filter'];
-        
+
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/chassisin", ['models' => $models,'filter'=>$filter]);
-    }
-     public function actionExcelwokeluar() {
-        session_start();
-        $query = $_SESSION['query'];
-        $filter = $_SESSION['filter'];
-        
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        return $this->render("/expretur/chassisin", ['models' => $models,'filter'=>$filter]);
+    return $this->render("/expretur/chassisin", ['models' => $models, 'filter' => $filter]);
     }
 
+    public function actionExcelwokeluar() {
+        session_start();
+        $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/wokeluar", ['models' => $models, 'filter' => $filter]);
+    }
 
 }
 
