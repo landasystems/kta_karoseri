@@ -1,3 +1,7 @@
+<?php
+header("Content-type: application/vnd-ms-excel");
+header("Content-Disposition: attachment; filename=excel-retur-Pergerakan-Barang.xls");
+?>
 <table width="100%" border="1">
     <tr>
         <td width="250" rowspan="2" align="center" valign="top">
@@ -19,7 +23,7 @@
                 <tr valign="top">
                     <td>Cetak</td>
                     <td width="1">:</td>
-                    <td><?php echo date("d/m/Y");?></td>
+                    <td><?php echo date("d/m/Y"); ?></td>
                 </tr>
             </table>
         </td>
@@ -46,13 +50,13 @@
             <th rowspan="3">KELUAR</th>
         </tr>
         <tr>
-            <td rowspan="2">SALDO AKHIR</td>
-            <td colspan="6">OPNAME</td>
+            <th rowspan="2">SALDO AKHIR</th>
+            <th colspan="6">OPNAME</th>
         </tr>
         <tr>
             <?php
             foreach ($tgl as $tanggal) {
-                echo '<td>' . date("d/m/y", strtotime($tanggal)) . '</td>';
+                echo '<th>' . date("d/m/y", strtotime($tanggal)) . '</th>';
             }
             ?>
         </tr>
