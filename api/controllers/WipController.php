@@ -325,7 +325,7 @@ class WipController extends Controller {
 
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($params['detWip']);
+//        Yii::error($params['detWip']);
         $deleteAll = Wip::deleteAll('no_wo="' . $params['wip']['no_wo']['no_wo'] . '"');
 
         foreach ($params['detWip'] as $data) {

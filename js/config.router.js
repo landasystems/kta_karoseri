@@ -868,10 +868,10 @@ angular.module('app')
                                     templateUrl: 'tpl/r_wo-keluar/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load([]).then(
-                                                        function() {
-                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/r_wokeluar.js');
                                                         }
                                                 );
                                             }]
