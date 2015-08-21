@@ -103,7 +103,7 @@ class WomasukController extends Controller {
                 ->join(' JOIN', 'warna', 'sti.kd_warna = warna.kd_warna')
                 ->join(' JOIN', 'model', 'model.kd_model = spk.kd_model')
                 ->select("*")
-                ->where('spk.no_spk="' . $params['no_spk']['no_spk'] . '"');
+                ->where('spk.no_spk="' . $params['spk']['no_spk'] . '"');
 
 
         $command = $query->createCommand();
