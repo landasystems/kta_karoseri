@@ -26,7 +26,7 @@ class BarangController extends Controller {
                     'jenis' => ['get'],
                     'kode' => ['get'],
                     'cari' => ['get'],
-                    'rekappergerakan' => ['get'],
+                    'rekappergerakan' => ['post'],
                     'excelpergerakan' => ['get'],
                 ],
             ]
@@ -56,13 +56,36 @@ class BarangController extends Controller {
     }
 
     public function actionRekappergerakan() {
-        $filter = array();
+        $params = json_decode(file_get_contents("php://input"), true);
+
+        $tglStart = '';
+        $tglEnd = '';
+
+        $value = explode(' - ', date("Y-m-d", strtotime($params['tanggal']['startDate'])));
+        $start = explode('-', $value[0]);
+        $tgl = array();
+        for ($i = 1; $i <= 6; $i++) {
+            $new = mktime(0, 0, 0, $start[1], $start[2] + $i, $start[0]);
+            $newDate = date("Y-m-d", $new);
+            $tgl[] = $newDate;
+
+            if ($i == 1)
+                $tglStart = $newDate;
+            if ($i == 6)
+                $tglEnd = $newDate;
+        }
+
+        if (isset($params['limit']))
+            $limit = $params['limit'];
 
         $bbm = new Query;
         $bbm->from('det_bbm')
                 ->join('Join', 'barang', 'barang.kd_barang = det_bbm.kd_barang')
                 ->select("det_bbm.tgl_terima, barang.kd_barang, barang.nm_barang, barang.satuan, barang.min, barang.saldo, det_bbm.jumlah")
-                ->where('det_bbm.tgl_terima >= "2015-07-01" and det_bbm.tgl_terima <= "2015-07-06"');
+                ->where('det_bbm.tgl_terima >= "' . $tglStart . '" and det_bbm.tgl_terima <= "' . $tglEnd . '"');
+
+        if (isset($params['kd_barang']))
+            $bbm->andWhere(['det_bbm.kd_barang']);
 
         $commandBBM = $bbm->createCommand();
         $modelBBM = $commandBBM->queryAll();
@@ -84,8 +107,10 @@ class BarangController extends Controller {
                 ->join('Join', 'trans_bbk', 'trans_bbk.no_bbk = det_bbk.no_bbk')
                 ->join('Join', 'barang', 'barang.kd_barang = det_bbk.kd_barang')
                 ->select("barang.kd_barang, barang.nm_barang, barang.satuan, barang.min, barang.saldo, det_bbk.jml, trans_bbk.tanggal")
-                ->where('trans_bbk.tanggal >= "2015-07-01" and trans_bbk.tanggal <= "2015-07-06"');
-        $bbk->limit(6);
+                ->where('trans_bbk.tanggal >= "' . $tglStart . '" and trans_bbk.tanggal <= "' . $tglEnd . '"');
+
+        if (isset($params['kd_barang']))
+            $bbk->andWhere(['det_bbk.kd_barang']);
 
         $commandBBK = $bbk->createCommand();
         $modelBBK = $commandBBK->queryAll();
@@ -106,8 +131,8 @@ class BarangController extends Controller {
         session_start();
         $_SESSION['queryBbm'] = $bbm;
         $_SESSION['queryBbk'] = $bbk;
-        $_SESSION['filter'] = $filter;
-
+        $_SESSION['periode'] = $tglStart . ' - ' . $tglEnd;
+        $_SESSION['tanggal'] = $tgl;
         echo json_encode(array('status' => 1, 'data' => $data));
     }
 
@@ -117,13 +142,9 @@ class BarangController extends Controller {
         $bbm = $_SESSION['queryBbm'];
         $bbk = $_SESSION['queryBbk'];
 
-        $bbm->offset("");
-        $bbm->limit("");
         $commandBbm = $bbm->createCommand();
         $modelBBM = $commandBbm->queryAll();
 
-        $bbk->offset("");
-        $bbk->limit("");
         $commandBbk = $bbk->createCommand();
         $modelBBK = $commandBbk->queryAll();
 
@@ -153,7 +174,9 @@ class BarangController extends Controller {
             $data[$valBbk['kd_barang']]['saldo_akhir'] = (isset($data[$valBbk['kd_barang']]['saldo_akhir']) ? $data[$valBbk['kd_barang']]['saldo_akhir'] : $valBbk['saldo'] ) - $valBbk['jml'];
             $i++;
         }
-        $tgl = array('2015-07-01', '2015-07-02', '2015-07-03', '2015-07-04', '2015-07-05', '2015-07-06');
+
+        $tgl = $_SESSION['tanggal'];
+//        print_r($bbm);
         return $this->render("/expretur/pergerakanbarang", ['models' => $data, 'tgl' => $tgl]);
     }
 

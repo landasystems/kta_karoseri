@@ -993,6 +993,19 @@ angular.module('app')
                                                 );
                                             }]
                                     }})
+                                .state('notif.unit', {
+                                    url: '/unit',
+                                    templateUrl: 'tpl/n_unit/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/n_unit.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
 
                     }
                 ]);
