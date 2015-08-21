@@ -1,4 +1,4 @@
-app.controller('notifBarangCtrl', function ($scope, Data, toaster) {
+app.controller('notifAbkCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
     var paramRef;

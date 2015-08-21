@@ -1,4 +1,4 @@
-app.controller('notifBarangCtrl', function ($scope, Data, toaster) {
+app.controller('notifUnitCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
     var paramRef;
@@ -22,7 +22,7 @@ app.controller('notifBarangCtrl', function ($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
         paramRef = param;
-        Data.get('notifbarang', param).then(function (data) {
+        Data.get('notifunit', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
