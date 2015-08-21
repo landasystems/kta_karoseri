@@ -85,7 +85,7 @@ class WomasukController extends Controller {
 
     public function actionGetspk() {
         $params = json_decode(file_get_contents("php://input"), true);
-//        Yii::error($params['no_spk']['no_spk']);
+        Yii::error($params);
         $query = new Query;
 //        $query->from(['customesr', 'chassis', 'tbl_karyawan', 'spk', 'serah_terima_in', 'warna', 'model'])
 //                ->where('chassis.kd_chassis = spk.kd_chassis
@@ -103,7 +103,7 @@ class WomasukController extends Controller {
                 ->join(' JOIN', 'warna', 'sti.kd_warna = warna.kd_warna')
                 ->join(' JOIN', 'model', 'model.kd_model = spk.kd_model')
                 ->select("*")
-                ->where('spk.no_spk="' . $params['no_spk']['no_spk'] . '"');
+                ->where('spk.no_spk="' . $params['spk']['no_spk'] . '"');
 
 
         $command = $query->createCommand();
