@@ -702,9 +702,9 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load([]).then(
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
                                                         function() {
-                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                            return $ocLazyLoad.load('js/controllers/r_pergerakan_brg.js');
                                                         }
                                                 );
                                             }]
@@ -814,9 +814,9 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load([]).then(
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
                                                         function() {
-                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                            return $ocLazyLoad.load('js/controllers/s-pesanankaroseri.js');
                                                         }
                                                 );
                                             }]
@@ -868,10 +868,10 @@ angular.module('app')
                                     templateUrl: 'tpl/r_wo-keluar/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load([]).then(
-                                                        function() {
-                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/r_wokeluar.js');
                                                         }
                                                 );
                                             }]
@@ -989,6 +989,19 @@ angular.module('app')
                                                 return $ocLazyLoad.load([]).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/n_barang.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                .state('notif.unit', {
+                                    url: '/unit',
+                                    templateUrl: 'tpl/n_unit/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/n_unit.js');
                                                         }
                                                 );
                                             }]

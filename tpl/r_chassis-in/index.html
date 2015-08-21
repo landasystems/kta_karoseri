@@ -4,7 +4,7 @@
     </div>
     <div class="wrapper-md" ng-show="!is_edit">
         <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
-            <div class="panel-heading">.:: Rekap CHassis In
+            <div class="panel-heading">.:: Rekap Chassis In
                 <div class="btn-group pull-right" role="group" style="margin-top: -4px; margin-right: 18px;">
                     <button type="button" class="btn btn-success fa fa-file-excel-o" ng-show="!isCollapsed" ng-click="excel();">&nbsp;&nbsp;Export Excel</button>
                 </div> 
@@ -18,13 +18,19 @@
 
                             <div class="form-group">
                                 <div class="control-group">
-                                    <label class="col-sm-2 control-label">Periode</label>
+                                    
                                     <div class="col-sm-3">
                                         <input placeholder="Tanggal Periode" date-range-picker class="form-control" st-search="tgl_terima" type="text"  ng-model="tanggal">
                                     </div>
-                                    <label class="col-sm-2 control-label">No Retur BBK</label>
+                                    
                                 <div class="col-sm-3">
-                                    <input placeholder="Nama Supplier" st-search="no_retur_bbk" class="form-control"/>
+                                    <input placeholder="NO WO" st-search="no_wo" class="form-control"/>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input placeholder="No SPK" st-search="no_spk" class="form-control"/>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input placeholder="Model" st-search="model" class="form-control"/>
                                 </div>
                                     
                                 </div>
@@ -32,13 +38,18 @@
                             <div class="form-group">
                                 <div class="control-group">
                                     
-                                    <label class="col-sm-2 control-label">No BBk</label>
                                 <div class="col-sm-3">
-                                    <input placeholder="Nama Supplier" st-search="no_bbk" class="form-control"/>
+                                    <input placeholder="Kode Titipan" st-search="kd_titipan" class="form-control"/>
                                 </div>
-                                    <label class="col-sm-2 control-label">Nama Barang</label>
                                 <div class="col-sm-3">
-                                    <input placeholder="Nama Supplier" st-search="nm_barang" class="form-control"/>
+                                    <input placeholder="Nama Customer" st-search="nm_customer" class="form-control"/>
+                                </div>
+                                   
+                                <div class="col-sm-3">
+                                    <input placeholder="No Rangka" st-search="no_chassis" class="form-control"/>
+                                </div>
+                                <div class="col-sm-3">
+                                    <input placeholder="Merk" st-search="merk" class="form-control"/>
                                 </div>
                                     
                                 </div>
@@ -56,15 +67,15 @@
                     <thead>
                         <tr>
 
-                            <th st-sort="tanggal">Tanggal</th>
-                            <th st-sort="no_retur_bbk">Sales</th>
-                            <th st-sort="no_bbk">Customer</th>
-                            <th st-sort="spp">Kode Titipan</th>
-                            <th st-sort="spp">NO WO</th>
+                            <th st-sort="tgl_terima">Tanggal</th>
+                            <th st-sort="nama">Sales</th>
+                            <th st-sort="nm_customer">Customer</th>
+                            <th st-sort="kd_titipan">Kode Titipan</th>
+                            <th st-sort="no_wo">NO WO</th>
                             <th st-sort="spp">Revenue</th>
-                            <th st-sort="nm_barang">Merk/Type</th>
-                            <th st-sort="spp">No Rangka</th>
-                            <th st-sort="spp">No Mesin</th>
+                            <th st-sort="merk">Merk/Type</th>
+                            <th st-sort="no_chassis">No Rangka</th>
+                            <th st-sort="no_mesin">No Mesin</th>
                         </tr>
                     </thead>
                     <tbody ng-show="!isLoading">

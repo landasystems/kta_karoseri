@@ -119,7 +119,6 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
             stat_spp: '',
             no_wo: '',
         }
-        $scope.setStatus();
         $scope.sppDet.unshift(newDet);
     };
     $scope.removeRow = function (paramindex) {

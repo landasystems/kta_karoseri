@@ -18,12 +18,14 @@ class SpkaroseriController extends Controller {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'index' => ['get'],
+                    'rekap' => ['get'],
                     'view' => ['get'],
                     'cari' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['post'],
+                    'excel' => ['get'],
                 ],
             ]
         ];
@@ -33,14 +35,13 @@ class SpkaroseriController extends Controller {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
-        } elseif (excel(isset($this->actions['*']))) {
+        } elseif (isset($this->actions['*'])) {
             $verbs = $this->actions['*'];
         } else {
             return $event->isValid;
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
-//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -102,7 +103,7 @@ class SpkaroseriController extends Controller {
         $sort = "no_spk ASC";
         $offset = 0;
         $limit = 10;
-        //        Yii::error($params);
+
         //limit & offset pagination
         if (isset($params['limit']))
             $limit = $params['limit'];
@@ -130,12 +131,6 @@ class SpkaroseriController extends Controller {
                 ->orderBy($sort)
                 ->select("s.*, c.*, cus.*");
 
-//        $models = Spkaroseri::find()->with(['chassis', 'customer'])
-//                ->offset($offset)
-//                ->orderBy($sort)
-//                ->select("spk.*, chassis.*, customer.*")
-//                ->find()
-//                ->all();
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
@@ -147,11 +142,86 @@ class SpkaroseriController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
-//        $totalItems = 0;
 
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+
+    public function actionRekap() {
+        //init variable
+        $params = $_REQUEST;
+        $filter = array();
+        $sort = "spk.no_spk ASC";
+        $offset = 0;
+        $limit = 10;
+
+        //limit & offset pagination
+        if (isset($params['limit']))
+            $limit = $params['limit'];
+        if (isset($params['offset']))
+            $offset = $params['offset'];
+
+        //sorting
+        if (isset($params['sort'])) {
+            $sort = $params['sort'];
+            if (isset($params['order'])) {
+                if ($params['order'] == "false")
+                    $sort.=" ASC";
+                else
+                    $sort.=" DESC";
+            }
+        }
+
+        //create query
+        $query = new Query;
+        $query->offset($offset)
+                ->limit($limit)
+                ->from('spk')
+                ->join('LEFT JOIN', 'view_wo_spk as vws', 'spk.no_spk = vws.no_spk')
+                ->join('LEFT JOIN', 'serah_terima_in as sti', 'sti.kd_titipan = vws.kd_titipan')
+                ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
+                ->select("vws.*, tk.nama as sales, sti.tgl_terima as tgl_chassis")
+                ->orderBy($sort);
+
+        //filter
+        if (isset($params['filter'])) {
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+                if ($key == 'sti.tgl_terima') {
+                    $tgl = explode(" - ", $val);
+                    $start = date("Y-m-d", strtotime($tgl[0]));
+                    $end = date("Y-m-d", strtotime($tgl[1]));
+                    $query->andFilterWhere(['between', 'sti.tgl_terima', $start, $end]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+                }
+            }
+        }
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $totalItems = $query->count();
+
+        session_start();
+        $_SESSION['query'] = $query;
+        $_SESSION['filter'] = $filter;
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
+        $query->limit(null);
+        $query->offset(null);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/spk", ['models' => $models, 'filter' => $filter]);
     }
 
     public function actionView($id) {
@@ -166,7 +236,7 @@ class SpkaroseriController extends Controller {
         $command = $query->createCommand();
         $models = $command->query()->read();
 
-        $models['kd_customer'] = array('kd_cust' => $models['kd_cust'], 'nm_customer' => $models['nm_customer'],'alamat1' => $models['alamat1']);
+        $models['kd_customer'] = array('kd_cust' => $models['kd_cust'], 'nm_customer' => $models['nm_customer'], 'alamat1' => $models['alamat1']);
         $models['kd_bom'] = array('kd_bom' => $models['kd_bom']);
         $models['kd_model'] = array('kd_model' => $models['kd_model'], 'model' => $models['model']);
         $models['nik'] = array('nik' => $models['nik'], 'nama' => $models['nama']);
