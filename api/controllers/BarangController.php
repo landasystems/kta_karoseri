@@ -26,6 +26,8 @@ class BarangController extends Controller {
                     'jenis' => ['get'],
                     'kode' => ['get'],
                     'cari' => ['get'],
+                    'rekappergerakan' => ['post'],
+                    'excelpergerakan' => ['get'],
                 ],
             ]
         ];
@@ -42,7 +44,6 @@ class BarangController extends Controller {
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
-//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -52,6 +53,131 @@ class BarangController extends Controller {
         }
 
         return true;
+    }
+
+    public function actionRekappergerakan() {
+        $params = json_decode(file_get_contents("php://input"), true);
+
+        $tglStart = '';
+        $tglEnd = '';
+
+        $value = explode(' - ', date("Y-m-d", strtotime($params['tanggal']['startDate'])));
+        $start = explode('-', $value[0]);
+        $tgl = array();
+        for ($i = 1; $i <= 6; $i++) {
+            $new = mktime(0, 0, 0, $start[1], $start[2] + $i, $start[0]);
+            $newDate = date("Y-m-d", $new);
+            $tgl[] = $newDate;
+
+            if ($i == 1)
+                $tglStart = $newDate;
+            if ($i == 6)
+                $tglEnd = $newDate;
+        }
+
+        if (isset($params['limit']))
+            $limit = $params['limit'];
+
+        $bbm = new Query;
+        $bbm->from('det_bbm')
+                ->join('Join', 'barang', 'barang.kd_barang = det_bbm.kd_barang')
+                ->select("det_bbm.tgl_terima, barang.kd_barang, barang.nm_barang, barang.satuan, barang.min, barang.saldo, det_bbm.jumlah")
+                ->where('det_bbm.tgl_terima >= "' . $tglStart . '" and det_bbm.tgl_terima <= "' . $tglEnd . '"');
+
+        if (isset($params['kd_barang']))
+            $bbm->andWhere(['det_bbm.kd_barang']);
+
+        $commandBBM = $bbm->createCommand();
+        $modelBBM = $commandBBM->queryAll();
+
+        $data = array();
+        foreach ($modelBBM as $valBbm) {
+            $data[$valBbm['kd_barang']]['kd_barang'] = $valBbm['kd_barang'];
+            $data[$valBbm['kd_barang']]['barang'] = $valBbm['nm_barang'];
+            $data[$valBbm['kd_barang']]['satuan'] = $valBbm['satuan'];
+            $data[$valBbm['kd_barang']]['stok_minim'] = $valBbm['min'];
+            $data[$valBbm['kd_barang']]['saldo_awal'] = $valBbm['saldo'];
+            $data[$valBbm['kd_barang']]['stok_keluar'] = 0;
+            $data[$valBbm['kd_barang']]['stok_masuk'] = isset($data[$valBbm['kd_barang']]['stok_masuk']) ? $data[$valBbm['kd_barang']]['stok_masuk'] + $valBbm['jumlah'] : $valBbm['jumlah'];
+            $data[$valBbm['kd_barang']]['saldo_akhir'] = $data[$valBbm['kd_barang']]['saldo_awal'] + $data[$valBbm['kd_barang']]['stok_masuk'];
+        }
+
+        $bbk = new Query;
+        $bbk->from('det_bbk')
+                ->join('Join', 'trans_bbk', 'trans_bbk.no_bbk = det_bbk.no_bbk')
+                ->join('Join', 'barang', 'barang.kd_barang = det_bbk.kd_barang')
+                ->select("barang.kd_barang, barang.nm_barang, barang.satuan, barang.min, barang.saldo, det_bbk.jml, trans_bbk.tanggal")
+                ->where('trans_bbk.tanggal >= "' . $tglStart . '" and trans_bbk.tanggal <= "' . $tglEnd . '"');
+
+        if (isset($params['kd_barang']))
+            $bbk->andWhere(['det_bbk.kd_barang']);
+
+        $commandBBK = $bbk->createCommand();
+        $modelBBK = $commandBBK->queryAll();
+
+        $i = 1;
+        foreach ($modelBBK as $valBbk) {
+            $data[$valBbk['kd_barang']]['kd_barang'] = $valBbk['kd_barang'];
+            $data[$valBbk['kd_barang']]['barang'] = $valBbk['nm_barang'];
+            $data[$valBbk['kd_barang']]['satuan'] = $valBbk['satuan'];
+            $data[$valBbk['kd_barang']]['stok_minim'] = $valBbk['min'];
+            $data[$valBbk['kd_barang']]['saldo_awal'] = $valBbk['saldo'];
+            $data[$valBbk['kd_barang']]['stok_masuk'] = isset($data[$valBbk['kd_barang']]['stok_masuk']) ? $data[$valBbk['kd_barang']]['stok_masuk'] : 0;
+            $data[$valBbk['kd_barang']]['stok_keluar'] = isset($data[$valBbk['kd_barang']]['stok_keluar']) ? $data[$valBbk['kd_barang']]['stok_keluar'] + $valBbk['jml'] : $valBbk['jml'];
+            $data[$valBbk['kd_barang']]['saldo_akhir'] = (isset($data[$valBbk['kd_barang']]['saldo_akhir']) ? $data[$valBbk['kd_barang']]['saldo_akhir'] : $valBbk['saldo'] ) - $valBbk['jml'];
+            $i++;
+        }
+
+        session_start();
+        $_SESSION['queryBbm'] = $bbm;
+        $_SESSION['queryBbk'] = $bbk;
+        $_SESSION['periode'] = $tglStart . ' - ' . $tglEnd;
+        $_SESSION['tanggal'] = $tgl;
+        echo json_encode(array('status' => 1, 'data' => $data));
+    }
+
+    public function actionExcelpergerakan() {
+        session_start();
+
+        $bbm = $_SESSION['queryBbm'];
+        $bbk = $_SESSION['queryBbk'];
+
+        $commandBbm = $bbm->createCommand();
+        $modelBBM = $commandBbm->queryAll();
+
+        $commandBbk = $bbk->createCommand();
+        $modelBBK = $commandBbk->queryAll();
+
+        $data = array();
+        foreach ($modelBBM as $valBbm) {
+            $data[$valBbm['kd_barang']]['kd_barang'] = $valBbm['kd_barang'];
+            $data[$valBbm['kd_barang']]['barang'] = $valBbm['nm_barang'];
+            $data[$valBbm['kd_barang']]['satuan'] = $valBbm['satuan'];
+            $data[$valBbm['kd_barang']]['stok_minim'] = $valBbm['min'];
+            $data[$valBbm['kd_barang']]['saldo_awal'] = $valBbm['saldo'];
+            $data[$valBbm['kd_barang']][$valBbm['tgl_terima']]['tgl_keluar'] = '-';
+            $data[$valBbm['kd_barang']][$valBbm['tgl_terima']]['jml'] = 0;
+            $data[$valBbm['kd_barang']]['stok_masuk'] = isset($data[$valBbm['kd_barang']]['stok_masuk']) ? $data[$valBbm['kd_barang']]['stok_masuk'] + $valBbm['jumlah'] : $valBbm['jumlah'];
+            $data[$valBbm['kd_barang']]['saldo_akhir'] = $data[$valBbm['kd_barang']]['saldo_awal'] + $data[$valBbm['kd_barang']]['stok_masuk'];
+        }
+
+        $i = 1;
+        foreach ($modelBBK as $valBbk) {
+            $data[$valBbk['kd_barang']]['kd_barang'] = $valBbk['kd_barang'];
+            $data[$valBbk['kd_barang']]['barang'] = $valBbk['nm_barang'];
+            $data[$valBbk['kd_barang']]['satuan'] = $valBbk['satuan'];
+            $data[$valBbk['kd_barang']]['stok_minim'] = $valBbk['min'];
+            $data[$valBbk['kd_barang']]['saldo_awal'] = $valBbk['saldo'];
+            $data[$valBbk['kd_barang']]['stok_masuk'] = isset($data[$valBbk['kd_barang']]['stok_masuk']) ? $data[$valBbk['kd_barang']]['stok_masuk'] : 0;
+            $data[$valBbk['kd_barang']][$valBbk['tanggal']]['tgl_keluar'] = $valBbk['tanggal'];
+            $data[$valBbk['kd_barang']][$valBbk['tanggal']]['jml'] = isset($data[$valBbk['kd_barang']][$valBbk['tanggal']]['jml']) ? $data[$valBbk['kd_barang']][$valBbk['tanggal']]['jml'] + $valBbk['jml'] : $valBbk['jml'];
+            $data[$valBbk['kd_barang']]['saldo_akhir'] = (isset($data[$valBbk['kd_barang']]['saldo_akhir']) ? $data[$valBbk['kd_barang']]['saldo_akhir'] : $valBbk['saldo'] ) - $valBbk['jml'];
+            $i++;
+        }
+
+        $tgl = $_SESSION['tanggal'];
+//        print_r($bbm);
+        return $this->render("/expretur/pergerakanbarang", ['models' => $data, 'tgl' => $tgl]);
     }
 
     public function actionJenis() {
@@ -76,9 +202,9 @@ class BarangController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->query()->read();
-        if(empty($models)){
+        if (empty($models)) {
             $kode = '100001';
-        }else{
+        } else {
             $kode = $models['kd_barang'] + 1;
         }
         Yii::error($command->query());
@@ -112,7 +238,7 @@ class BarangController extends Controller {
             }
         }
 
-        //create query
+//create query
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
@@ -121,7 +247,7 @@ class BarangController extends Controller {
                 ->orderBy($sort)
                 ->select("barang.*, jenis_brg.jenis_brg");
 
-        //filter
+//filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
