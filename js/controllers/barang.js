@@ -119,6 +119,4 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
             });
         }
     };
-
-
-})
+});

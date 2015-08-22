@@ -105,11 +105,25 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
         });
         $scope.isLoading = false;
     };
+
     $scope.excel = function() {
         Data.get('bom', paramRef).then(function(data) {
             window.location = 'api/web/bom/excel';
         });
     }
+
+    $scope.excel = function() {
+        Data.get('bom', paramRef).then(function(data) {
+            window.location = 'api/web/bom/excel';
+        });
+    }
+
+    $scope.excelTrans = function(id) {
+        Data.get('bom/view/' + id).then(function(data) {
+            window.location = 'api/web/bom/exceltrans';
+        });
+    }
+
     $scope.create = function(form, detail) {
         $scope.is_copy = false;
         $scope.is_create = true;
@@ -212,7 +226,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
     $scope.selected = function(id, kd_bom_baru) {
         Data.get('bom/view/' + id).then(function(data) {
             $scope.form = data.data;
-            console.log($scope.form.merk);
             if (kd_bom_baru != '') {
                 $scope.form.kd_bom = kd_bom_baru;
                 $scope.form.tgl_buat = '';
@@ -273,4 +286,35 @@ app.controller('modalCtrl', function($scope, Data, $modalInstance, form) {
         $modalInstance.dismiss('cancel');
     };
 
+})
+
+app.controller('rekapBomCtrl', function($scope, Data) {
+    //init data;
+    var tableStateRef;
+    var paramRef;
+    $scope.callServer = function callServer(tableState) {
+        tableStateRef = tableState;
+        $scope.isLoading = true;
+        var offset = tableState.pagination.start || 0;
+        var limit = tableState.pagination.number || 10;
+        var param = {offset: offset, limit: limit};
+        if (tableState.sort.predicate) {
+            param['sort'] = tableState.sort.predicate;
+            param['order'] = tableState.sort.reverse;
+        }
+        if (tableState.search.predicateObject) {
+            param['filter'] = tableState.search.predicateObject;
+        }
+        paramRef = param;
+        Data.get('bom/rekap', param).then(function(data) {
+            $scope.displayed = data.data;
+            tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
+        });
+        $scope.isLoading = false;
+    };
+    $scope.excel = function() {
+        Data.get('bom/rekap', paramRef).then(function(data) {
+            window.location = 'api/web/bom/excel';
+        });
+    }
 })
