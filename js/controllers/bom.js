@@ -105,11 +105,25 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
         });
         $scope.isLoading = false;
     };
+
     $scope.excel = function() {
         Data.get('bom', paramRef).then(function(data) {
             window.location = 'api/web/bom/excel';
         });
     }
+
+    $scope.excel = function() {
+        Data.get('bom', paramRef).then(function(data) {
+            window.location = 'api/web/bom/excel';
+        });
+    }
+
+    $scope.excelTrans = function(id) {
+        Data.get('bom/view/' + id).then(function(data) {
+            window.location = 'api/web/bom/exceltrans';
+        });
+    }
+
     $scope.create = function(form, detail) {
         $scope.is_copy = false;
         $scope.is_create = true;
@@ -212,7 +226,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
     $scope.selected = function(id, kd_bom_baru) {
         Data.get('bom/view/' + id).then(function(data) {
             $scope.form = data.data;
-            console.log($scope.form.merk);
             if (kd_bom_baru != '') {
                 $scope.form.kd_bom = kd_bom_baru;
                 $scope.form.tgl_buat = '';

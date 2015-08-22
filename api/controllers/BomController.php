@@ -21,6 +21,7 @@ class BomController extends Controller {
                     'index' => ['get'],
                     'rekap' => ['get'],
                     'excel' => ['get'],
+                    'exceltrans' => ['get'],
                     'view' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
@@ -259,6 +260,36 @@ class BomController extends Controller {
         return $this->render("/expretur/rekapbom", ['models' => $models, 'filter' => $filter]);
     }
 
+    public function actionExceltrans() {
+        session_start();
+        $query = $_SESSION['bom'];
+        $kd_bom = $_SESSION['kd_bom'];
+
+        $query->limit(null);
+        $query->offset(null);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $det = BomDet::find()
+                ->with(['jabatan', 'barang'])
+                ->where(['kd_bom' => $kd_bom])
+                ->all();
+
+        $detail = array();
+        $i = 0;
+        foreach ($det as $val) {
+            $detail[$val->jabatan->id_jabatan]['nama_jabatan'] = isset($val->jabatan->jabatan) ? $val->jabatan->jabatan : '-';
+            $detail[$val->jabatan->id_jabatan]['body'][$i]['nama_barang'] = isset($val->barang->nm_barang) ? $val->barang->nm_barang : '-';
+            $detail[$val->jabatan->id_jabatan]['body'][$i]['satuan'] = isset($val->barang->satuan) ? $val->barang->satuan : '-';
+            $detail[$val->jabatan->id_jabatan]['body'][$i]['jumlah'] = isset($val->qty) ? $val->qty : '-';
+            $detail[$val->jabatan->id_jabatan]['body'][$i]['ket'] = isset($val->ket) ? $val->ket : '-';
+            $i++;
+        }
+//        echo json_encode($models);
+        return $this->render("/expretur/bomtrans", ['model' => $models[0], 'detail' => $detail]);
+    }
+
     public function actionView($id) {
         $query = new Query;
         $query->from(['trans_standar_bahan', 'chassis', 'model'])
@@ -273,6 +304,10 @@ class BomController extends Controller {
                 ->with(['jabatan', 'barang'])
                 ->where(['kd_bom' => $models['kd_bom']])
                 ->all();
+
+        session_start();
+        $_SESSION['bom'] = $query;
+        $_SESSION['kd_bom'] = $models['kd_bom'];
 
         $detail = array();
         foreach ($det as $key => $val) {
