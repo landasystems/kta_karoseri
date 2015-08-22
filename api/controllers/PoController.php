@@ -30,6 +30,7 @@ class PoController extends Controller {
                     'excel' => ['get'],
                     'excelbeli' => ['get'],
                     'brgspp' => ['get'],
+                    'spp' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -423,7 +424,7 @@ class PoController extends Controller {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('trans_po')
-                ->join('LEFT JOIN','supplier', 'trans_po.suplier=supplier.kd_supplier')
+                ->join('LEFT JOIN', 'supplier', 'trans_po.suplier=supplier.kd_supplier')
                 ->select("*")
                 ->where(['like', 'nota', $params['nama']])
                 ->limit(10);
@@ -434,6 +435,25 @@ class PoController extends Controller {
 
         $this->setHeader(200);
 
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+
+    public function actionSpp() {
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('trans_spp')
+                ->join('JOIN','det_spp','det_spp.no_spp = trans_spp.no_spp')
+                ->join('JOIN','barang','barang.kd_barang = det_spp.kd_barang')
+                ->join('JOIN','detail_po','detail_po.kd_barang = barang.kd_barang')
+                ->where(['=', 'det_spp.no_spp', $params['nama']])
+                ->select("*");
+        
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+//        Yii::error($models);
+
+        $this->setHeader(200);
+//        echo print_r($params);
         echo json_encode(array('status' => 1, 'data' => $models));
     }
 

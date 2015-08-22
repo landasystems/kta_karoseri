@@ -1,0 +1,73 @@
+<div class="modal-header">
+    <h3 class="modal-title">Form Detail Purchase Order</h3>
+</div>
+<div class="modal-body">
+    <form name="modalform" class="form-horizontal form-validation">
+        <div class="form-group">
+            <!--{{formmodal}}-->
+            <label class="col-sm-2 control-label">Barang</label>
+            <div class="col-sm-10">
+                <div class="input-group">
+                    <ui-select ng-model="formmodal.barang" theme="bootstrap" style="width: 100%">
+                        <ui-select-match>{{$select.selected.nm_barang}}</ui-select-match>
+                        <ui-select-choices refresh="cariBarang($select.search)" repeat="val in results">
+                            {{val.nm_barang}}
+                        </ui-select-choices>
+                    </ui-select>
+                    <span class="input-group-btn">
+                        <button ng-click="formmodal.barang = undefined" class="btn btn-default">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Qty</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" ng-model="formmodal.qty" style="width:70px">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Sat</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" ng-model="formmodal.satuan" style="width:80px">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Keterangan</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" ng-model="formmodal.ket">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">Delivery</label>
+            <div class="col-sm-10">
+                <div class="input-group">
+                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="formmodal.p" is-open="opened2" ng-click="open2($event)"/>
+                    <span class="input-group-addon">
+                        <i class="fa fa-calendar-o"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">No WO</label>
+            <div class="col-sm-10">
+                <ui-select on-select="woSelected(formmodal,woMasuk,$item)" multiple ng-model="woMasuk" theme="bootstrap">
+                    <ui-select-match placeholder="Pilih nomor Wo">{{$item.no_wo}}</ui-select-match>
+                    <ui-select-choices refresh="cariWo($select.search)" repeat="val in listWo">
+                        <div ng-bind-html="val.no_wo | highlight: $select.search"></div>
+                        <small>
+                            Tgl Kontrak: {{val.tgl_kontrak | date}}
+                            <!--telephone: {{val.no_tlp}}-->
+                        </small>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">                  
+    <button class="btn btn-primary" ng-click="cancel()">Close Form</button>
+</div>

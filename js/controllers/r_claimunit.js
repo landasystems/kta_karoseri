@@ -26,6 +26,7 @@ app.controller('rekapclaimCtrl', function ($scope, Data, toaster) {
         paramRef = param;
         Data.get('claimunit/rekap', param).then(function (data) {
             $scope.displayed = data.data;
+            console.log(data.data);
             $scope.displayedPrint = data.dataPrint;
             $scope.paginations = data.totalItems;
             if(data.totalItems != 0) {
