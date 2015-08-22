@@ -57,7 +57,8 @@ class BomController extends Controller {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('trans_standar_bahan')
-                ->select("*")
+                ->join('JOIN','chassis','trans_standar_bahan.kd_chassis = chassis.kd_chassis')
+                ->select("trans_standar_bahan.*, chassis.merk")
                 ->where(['like', 'kd_bom', $params['nama']])
                 ->andWhere('status = 1')
                 ->limit(25);

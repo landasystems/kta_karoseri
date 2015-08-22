@@ -187,6 +187,9 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
     };
     $scope.copyData = function(bom, kd_bom) {
         $scope.form = bom;
+        Data.get('chassis/tipe?merk=' + bom.merk).then(function(data) {
+            $scope.listTipe = data.data;
+        });
         $scope.selected(bom.kd_bom, kd_bom);
     };
     $scope.save = function(form, detail) {
@@ -225,7 +228,9 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
     };
     $scope.selected = function(id, kd_bom_baru) {
         Data.get('bom/view/' + id).then(function(data) {
+
             $scope.form = data.data;
+
             if (kd_bom_baru != '') {
                 $scope.form.kd_bom = kd_bom_baru;
                 $scope.form.tgl_buat = '';

@@ -60,6 +60,21 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
             ket: '',
         })
     };
+
+    $scope.selectBarang = function(no_wo, kd_jab) {
+        Data.get('bbk/listbarang', {no_wo: no_wo, kd_jab: kd_jab}).then(function(data) {
+            if (jQuery.isEmptyObject(data.detail)) {
+                $scope.detailBbk = [{
+                        kd_barang: '',
+                        jml: '',
+                        ket: '',
+                    }];
+            } else {
+                $scope.detailBbk = data.detail;
+            }
+        });
+    }
+
     $scope.removeRow = function(paramindex) {
         var comArr = eval($scope.detailBbk);
         if (comArr.length > 1) {
