@@ -23,6 +23,7 @@ class SerahterimainController extends Controller {
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
+                    'cari' => ['get'],
                 ],
             ]
         ];
@@ -48,6 +49,21 @@ class SerahterimainController extends Controller {
         }
 
         return true;
+    }
+
+    public function actionCari() {
+        $params = $_REQUEST;
+        $model = Serahterimain::find()
+                        ->where('kd_titipan like "%' . $params['nama'] . '%"')
+                        ->limit(10)->all();
+        $data = array();
+        if (!empty($model)) {
+            foreach ($model as $key => $val) {
+                $data[] = $val->attributes;
+            }
+        }
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $data), JSON_PRETTY_PRINT);
     }
 
     public function actionIndex() {
@@ -133,11 +149,11 @@ class SerahterimainController extends Controller {
         if (empty($model)) {
             $model = new Serahterimain();
         }
-       
+
 
 
         $model->attributes = $params;
-         //warna
+        //warna
         $warna = \app\models\Warna::findOne($params['warna']['kd_warna']);
         if (empty($warna)) {
             $warna = new \app\models\Warna();
@@ -160,7 +176,7 @@ class SerahterimainController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
-         $warna = \app\models\Warna::findOne($params['warna']['kd_warna']);
+        $warna = \app\models\Warna::findOne($params['warna']['kd_warna']);
         if (empty($warna)) {
             $warna = new \app\models\Warna();
         }

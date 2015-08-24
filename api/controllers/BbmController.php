@@ -384,6 +384,13 @@ class BbmController extends Controller {
         $models = $command->queryAll();
         return $this->render("/expretur/bbm", ['models' => $models]);
     }
+    public function actionExcelrekap() {
+        session_start();
+        $query = $_SESSION['query'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/rekapbbm", ['models' => $models]);
+    }
 
 }
 
