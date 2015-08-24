@@ -1,8 +1,8 @@
-app.controller('returbarangmasukCtrl', function ($scope, Data, toaster) {
+app.controller('rekapwomasukCtrl', function($scope, Data, toaster) {
     //init data
     var tableStateRef;
     var paramRef;
-    
+
     $scope.displayed = [];
     $scope.paginations = 0;
     $scope.is_edit = false;
@@ -24,34 +24,24 @@ app.controller('returbarangmasukCtrl', function ($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
         paramRef = param;
-        Data.get('bbm/rekap', param).then(function (data) {
+        Data.get('rekap/rekapwomasuk', param).then(function(data) {
             $scope.displayed = data.data;
             $scope.displayedPrint = data.dataPrint;
             $scope.paginations = data.totalItems;
-            if(data.totalItems != 0) {
+            if (data.totalItems != 0) {
                 tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
             }
         });
 
         $scope.isLoading = false;
     };
-    
-    $scope.excel = function () {
-        Data.get('bbm/rekap', paramRef).then(function (data) {
-            window.location = 'api/web/bbm/excel';
+
+    $scope.excel = function() {
+        Data.get('rekap/rekapwomasuk', paramRef).then(function(data) {
+            window.location = 'api/web/rekap/excelwomasuk';
         });
     }
-    $scope.excel = function () {
-        Data.get('bbm/rekap', paramRef).then(function (data) {
-            window.location = 'api/web/bbm/excel';
-        });
-    }
-    $scope.excelRekap = function () {
-        Data.get('bbm/rekap', paramRef).then(function (data) {
-            window.location = 'api/web/bbm/excelrekap';
-        });
-    }
-   
+
 
 
 })

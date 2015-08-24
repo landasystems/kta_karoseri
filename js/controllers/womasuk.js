@@ -41,41 +41,92 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         $event.stopPropagation();
         $scope.opened4 = true;
     };
-    Data.post('womasuk/warna').then(function (data) {
+    Data.post('womasuk/warna').then(function(data) {
         $scope.list_warna = data.warna;
     });
 
     $scope.cariSpk = function($query) {
         if ($query.length >= 3) {
-            Data.get('womasuk/cari', {nama: $query}).then(function(data) {
-                $scope.results = data.data;
+            Data.get('spkaroseri/cari', {nama: $query}).then(function(data) {
+                $scope.kdSpk = data.data;
             });
         }
-    }
-    Data.post('womasuk/spk').then(function (data) {
-        $scope.list_spk = data.spk;
-    });
-    $scope.getspk = function (wo) {
-//        alert('asjdfhasjdfkas');
-        Data.post('womasuk/getspk/', wo).then(function (data) {
-            $scope.form = data.spk;
-//            console.log($scope.form);
+    };
+    $scope.cariNowo = function($query) {
+        if ($query.length >= 3) {
+            Data.get('womasuk/copy', {nama: $query}).then(function(data) {
+                $scope.list_nowo = data.data;
+            });
+        }
+    };
+    $scope.copyData = function(nowo, nowo_baru) {
+        $scope.form = nowo;
+//        form.kode_asli = nowo.no_wo;
+        Data.post('womasuk/view/', nowo).then(function(data) {
+            $scope.form = data.data;
+            $scope.eks = data.eksterior;
+            $scope.inter = data.interior[0];
+            $scope.form.warna = data.det.warna;
+            $scope.form.no_spk = '234';
+            $scope.form.customer = data.det.customer;
+            $scope.form.sales = data.det.sales;
+            $scope.form.pemilik = data.det.pemilik;
+            $scope.form.model_chassis = data.det.model_chassis;
+            $scope.form.merk = data.det.merk;
+            $scope.form.tipe = data.det.tipe;
+            $scope.form.model = data.det.model;
+            $scope.form.no_rangka = data.det.no_rangka;
+            $scope.form.no_mesin = data.det.no_mesin;
+            $scope.form.jenis = data.det.jenis;
+            $scope.form.jenis = data.det.jenis;
+            $scope.form.no_spk = data.data.no_spk.as;
+            $scope.form.no_wo = data.code;
+
+            $scope.form.tgl_terima = data.data.titipan.tgl_terima;
+            $scope.form.no_chassis = data.data.titipan.no_chassis;
+            $scope.form.no_mesin = data.data.titipan.no_mesin;
+            $scope.form.warna = data.data.titipan.warna.warna;
+            
+
 
         });
     };
+    $scope.cariTitipan = function($query) {
+        if ($query.length >= 3) {
+            Data.get('serahterimain/cari', {nama: $query}).then(function(data) {
+                $scope.titip = data.data;
+            });
+        }
+    };
 
-    $scope.pilih = function(form, $item) {
-        console.log($item.customer);
-        form.customer = $item.customer;
-        form.pemilik = $item.pemilik;
-        form.sales = $item.sales;
-        form.warna = $item.warna;
-//        form.model_kendaraan = $item.warna;
-        form.merk = $item.merk;
-        form.model_chassis = $item.model_chassis;
-        form.no_chassis = $item.no_chassis;
-        form.no_mesin = $item.no_mesin;
-    }
+    $scope.getSpk = function(form, items) {
+        form.no_spk = items.no_spk;
+
+        Data.post('womasuk/getspk/', form).then(function(data) {
+            form.merk = data.spk.merk;
+            form.model_chassis = data.spk.model_chassis;
+            form.jenis = data.spk.jenis;
+            form.tipe = data.spk.tipe;
+            form.model = data.spk.model;
+            form.sales = data.spk.nama;
+            form.no_wo = data.code;
+            form.customer = data.spk.nm_customer;
+            form.pemilik = data.spk.nm_pemilik;
+
+
+        });
+    };
+    $scope.getTitipan = function(form, items) {
+        form.kd_titipan = items.kd_titipan;
+        Data.post('womasuk/getsti/', form).then(function(data) {
+            form.tgl_terima = data.sti.tgl_terima;
+            form.no_chassis = data.sti.no_chassis;
+            form.no_mesin = data.sti.no_mesin;
+            form.warna = data.sti.warna;
+
+        });
+
+    };
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
@@ -105,12 +156,22 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-        $scope.form.tgl_keluar = new Date();
         $scope.form.tgl_kontrak = new Date();
         $scope.form.in_spk_marketing = new Date();
-         $scope.eks = {};
+        $scope.eks = {};
         $scope.inter = {};
 
+    };
+    $scope.copy = function(form) {
+        $scope.is_copy = true;
+        $scope.is_create = true;
+        $scope.is_edit = true;
+        $scope.is_view = false;
+        $scope.formtitle = "Salin Data";
+        $scope.form.tgl_keluar = new Date();
+        $scope.form = {};
+        $scope.eks = {};
+        $scope.inter = {};
     };
     $scope.update = function(form) {
         $scope.is_edit = true;
@@ -131,7 +192,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.no_wo;
         $scope.form = form;
-         $scope.selected(form.id);
+        $scope.selected(form.id);
     };
     $scope.save = function(form, eks, inter) {
         if ($scope.uploader.queue.length > 0) {
@@ -140,7 +201,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         } else {
             form.foto = '';
         }
-         var data = {
+        var data = {
             womasuk: form,
             eksterior: eks,
             interior: inter,
@@ -163,20 +224,18 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.delete = function(row) {
 //        alert(row);
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.post('womasuk/delete/',row).then(function(result) {
+            Data.post('womasuk/delete/', row).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
-    $scope.selected = function(form) {
+    $scope.selected = function(form, no_wo_baru) {
         Data.post('womasuk/select/', form).then(function(data) {
             $scope.form = data.data;
             $scope.eks = data.eksterior;
-//            $scope.eks.warna = data.eksterior.warna;
-//            $scope.eks.warna2 = data.eksterior.warna2;
             $scope.inter = data.interior[0];
             $scope.form.warna = data.det.warna;
-            $scope.form.no_spk = '234';
+            $scope.form.no_wo = data.det.no_wo;
             $scope.form.customer = data.det.customer;
             $scope.form.sales = data.det.sales;
             $scope.form.pemilik = data.det.pemilik;
@@ -189,7 +248,13 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.form.jenis = data.det.jenis;
             $scope.form.jenis = data.det.jenis;
             $scope.form.no_spk = data.data.no_spk.as;
+
+            $scope.form.tgl_terima = data.data.titipan.tgl_terima;
+            $scope.form.no_chassis = data.data.titipan.no_chassis;
+            $scope.form.no_mesin = data.data.titipan.no_mesin;
+            $scope.form.warna = data.data.titipan.warna.warna;
             
+
 
         });
     }
