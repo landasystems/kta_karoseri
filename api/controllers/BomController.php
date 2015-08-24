@@ -20,7 +20,10 @@ class BomController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'rekap' => ['get'],
+                    'rekaprealisasiwo' => ['get'],
                     'excel' => ['get'],
+                    'excelrealisasiwo' => ['get'],
+                    'exceltrans' => ['get'],
                     'view' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
@@ -56,7 +59,8 @@ class BomController extends Controller {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('trans_standar_bahan')
-                ->select("*")
+                ->join('JOIN', 'chassis', 'trans_standar_bahan.kd_chassis = chassis.kd_chassis')
+                ->select("trans_standar_bahan.*, chassis.merk")
                 ->where(['like', 'kd_bom', $params['nama']])
                 ->andWhere('status = 1')
                 ->limit(25);
@@ -183,68 +187,51 @@ class BomController extends Controller {
     public function actionRekap() {
         //init variable
         $params = $_REQUEST;
-        $filter = array();
-        $sort = "dts.kd_bom ASC";
-        $offset = 0;
-        $limit = 10;
 
-        //limit & offset pagination
-        if (isset($params['limit']))
-            $limit = $params['limit'];
-        if (isset($params['offset']))
-            $offset = $params['offset'];
-
-        //sorting
-        if (isset($params['sort'])) {
-            $sort = $params['sort'];
-            if (isset($params['order'])) {
-                if ($params['order'] == "false")
-                    $sort.=" ASC";
-                else
-                    $sort.=" DESC";
-            }
-        }
-
-        //create query
-        $query = new Query;
-        $query->offset($offset)
-                ->limit($limit)
-                ->from('det_standar_bahan as dts')
-                ->join('JOIN', 'barang as brg', 'dts.kd_barang = brg.kd_barang')
-                ->join('JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
-                ->join('JOIN', 'spk', 'spk.kd_bom = dts.kd_bom')
-                ->join('JOIN', 'wo_masuk as wm', 'wm.no_spk  = spk.no_spk')
-                ->join('JOIN', 'trans_standar_bahan as tsb', 'tsb.kd_bom  = spk.kd_bom')
-                ->orderBy($sort)
-                ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
-
-        //filter
         if (isset($params['filter'])) {
+
+            $filter = array();
+            $sort = "dts.kd_bom ASC";
+            $offset = 0;
+            $limit = 10;
+
+            //limit & offset pagination
+            if (isset($params['limit']))
+                $limit = $params['limit'];
+            if (isset($params['offset']))
+                $offset = $params['offset'];
+
+            //create query
+            $query = new Query;
+            $query->offset($offset)
+                    ->limit($limit)
+                    ->from('det_standar_bahan as dts')
+                    ->join('JOIN', 'barang as brg', 'dts.kd_barang = brg.kd_barang')
+                    ->join('JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
+                    ->join('JOIN', 'spk', 'spk.kd_bom = dts.kd_bom')
+                    ->join('JOIN', 'wo_masuk as wm', 'wm.no_spk  = spk.no_spk')
+                    ->join('JOIN', 'trans_standar_bahan as tsb', 'tsb.kd_bom  = spk.kd_bom')
+                    ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
+
+            //filter
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                if ($key == 'tsb.tgl_buat') {
-                    $value = explode(' - ', $val);
-                    $start = date("Y-m-d", strtotime($value[0]));
-                    $end = date("Y-m-d", strtotime($value[1]));
-                    $query->andFilterWhere(['between', 'tsb.tgl_buat', $start, $end]);
-                } else {
-                    $query->andFilterWhere(['like', $key, $val]);
-                }
+                $query->where(['like', $key, $val]);
             }
+
+            $command = $query->createCommand();
+            $models = $command->queryAll();
+            $totalItems = $query->count();
+
+            session_start();
+            $_SESSION['query'] = $query;
+            $_SESSION['filter'] = $filter;
+
+
+            $this->setHeader(200);
+
+            echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
         }
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        $totalItems = $query->count();
-
-        session_start();
-        $_SESSION['query'] = $query;
-        $_SESSION['filter'] = $filter;
-
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
     public function actionExcel() {
@@ -253,10 +240,139 @@ class BomController extends Controller {
         $filter = $_SESSION['filter'];
         $query->limit(null);
         $query->offset(null);
-
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/rekapbom", ['models' => $models, 'filter' => $filter]);
+    }
+
+    public function actionRekaprealisasiwo() {
+        //init variable
+        $params = $_REQUEST;
+
+        if (isset($params['filter'])) {
+
+            $filter = array();
+            $sort = "dts.kd_bom ASC";
+            $offset = 0;
+            $limit = 10;
+
+            //limit & offset pagination
+            if (isset($params['limit']))
+                $limit = $params['limit'];
+            if (isset($params['offset']))
+                $offset = $params['offset'];
+
+            //create query
+            $query = new Query;
+            $query->offset($offset)
+                    ->limit($limit)
+                    ->from('det_standar_bahan as dts')
+                    ->join('LEFT JOIN', 'barang as brg', 'dts.kd_barang = brg.kd_barang')
+                    ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
+                    ->join('LEFT JOIN', 'spk', 'spk.kd_bom = dts.kd_bom')
+                    ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_spk  = spk.no_spk')
+                    ->join('LEFT JOIN', 'trans_standar_bahan as tsb', 'tsb.kd_bom  = spk.kd_bom')
+                    ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
+
+            $queryBbk = new Query;
+            $queryBbk->from('trans_bbk as tb')
+                    ->join('JOIN', 'det_bbk as db', 'tb.no_bbk = db.no_bbk')
+                    ->select('db.kd_barang, db.jml');
+
+
+
+            //filter
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+                $query->where(['=', $key, $val]);
+                $queryBbk->where(['=', 'tb.no_wo', $val]);
+            }
+
+            $command = $query->createCommand();
+            $models = $command->queryAll();
+            $totalItems = $query->count();
+
+            $commandBbk = $queryBbk->createCommand();
+            $modelsBbk = $commandBbk->queryAll();
+
+            $detBbk = array();
+            foreach ($modelsBbk as $valBbk) {
+                $detBbk[$valBbk['kd_barang']]['jml'] = isset($detBbk[$valBbk['kd_barang']]['jml']) ? $detBbk[$valBbk['kd_barang']]['jml'] + $valBbk['jml'] : $valBbk['jml'];
+            }
+
+            $detBom = array();
+            foreach ($models as $val) {
+                $jKeluar = isset($detBbk[$val['kd_barang']]['jml']) ? $detBbk[$val['kd_barang']]['jml'] : ' ';
+                $detBom[$val['kd_barang']]['no_wo'] = $val['no_wo'];
+                $detBom[$val['kd_barang']]['kd_barang'] = $val['kd_barang'];
+                $detBom[$val['kd_barang']]['nm_barang'] = $val['nm_barang'];
+                $detBom[$val['kd_barang']]['satuan'] = $val['satuan'];
+                $detBom[$val['kd_barang']]['harga'] = $val['harga'];
+                $detBom[$val['kd_barang']]['qty'] = $val['qty'];
+                $detBom[$val['kd_barang']]['jml_keluar'] = $jKeluar;
+                $detBom[$val['kd_barang']]['ket'] = $val['ket'];
+                $detBom[$val['kd_barang']]['jabatan'] = $val['jabatan'];
+            }
+
+            session_start();
+            $_SESSION['query'] = $query;
+            $_SESSION['bbk'] = $queryBbk;
+            $_SESSION['filter'] = $filter;
+
+
+            $this->setHeader(200);
+
+            echo json_encode(array('status' => 1, 'data' => $detBom, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        }
+    }
+
+    public function actionExcelrealisasiwo() {
+        session_start();
+        $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
+        $query->limit(null);
+        $query->offset(null);
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $bbk = $_SESSION['bbk'];
+        $bbk->limit(null);
+        $bbk->offset(null);
+        $commandbbk = $bbk->createCommand();
+        $modelbbk = $commandbbk->queryAll();
+        
+//        print_r($modelbbk);
+
+        return $this->render("/expretur/r_bomwo", ['models' => $models, 'filter' => $filter, 'modelbbk' => $modelbbk]);
+    }
+
+    public function actionExceltrans() {
+        session_start();
+        $query = $_SESSION['bom'];
+        $kd_bom = $_SESSION['kd_bom'];
+
+        $query->limit(null);
+        $query->offset(null);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $det = BomDet::find()
+                ->with(['jabatan', 'barang'])
+                ->where(['kd_bom' => $kd_bom])
+                ->all();
+
+        $detail = array();
+        $i = 0;
+        foreach ($det as $val) {
+            $detail[$val->jabatan->id_jabatan]['nama_jabatan'] = isset($val->jabatan->jabatan) ? $val->jabatan->jabatan : '-';
+            $detail[$val->jabatan->id_jabatan]['body'][$i]['nama_barang'] = isset($val->barang->nm_barang) ? $val->barang->nm_barang : '-';
+            $detail[$val->jabatan->id_jabatan]['body'][$i]['satuan'] = isset($val->barang->satuan) ? $val->barang->satuan : '-';
+            $detail[$val->jabatan->id_jabatan]['body'][$i]['jumlah'] = isset($val->qty) ? $val->qty : '-';
+            $detail[$val->jabatan->id_jabatan]['body'][$i]['ket'] = isset($val->ket) ? $val->ket : '-';
+            $i++;
+        }
+        return $this->render("/expretur/bomtrans", ['model' => $models[0], 'detail' => $detail]);
     }
 
     public function actionView($id) {
@@ -273,6 +389,10 @@ class BomController extends Controller {
                 ->with(['jabatan', 'barang'])
                 ->where(['kd_bom' => $models['kd_bom']])
                 ->all();
+
+        session_start();
+        $_SESSION['bom'] = $query;
+        $_SESSION['kd_bom'] = $models['kd_bom'];
 
         $detail = array();
         foreach ($det as $key => $val) {
