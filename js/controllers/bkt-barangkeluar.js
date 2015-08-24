@@ -5,6 +5,7 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
+    $scope.is_copy = false;
     $scope.jenis_kmp = [];
     $scope.bagian = '-';
 
@@ -61,16 +62,16 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
         })
     };
 
-    $scope.selectBarang = function(no_wo, kd_jab) {
-        Data.get('bbk/listbarang', {no_wo: no_wo, kd_jab: kd_jab}).then(function(data) {
-            if (jQuery.isEmptyObject(data.detail)) {
+    $scope.listBarang = function(no_wo, kd_jab) {
+        Data.post('bbk/listbarang', {no_wo: no_wo, kd_jab: kd_jab}).then(function(data) {
+            if (jQuery.isEmptyObject(data.data)) {
                 $scope.detailBbk = [{
                         kd_barang: '',
                         jml: '',
                         ket: '',
                     }];
             } else {
-                $scope.detailBbk = data.detail;
+                $scope.detailBbk = data.data;
             }
         });
     }
@@ -89,6 +90,19 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
         $event.stopPropagation();
         $scope.opened1 = true;
     };
+
+    $scope.copyData = function(bbk, kd_bbk) {
+        $scope.form = bbk;
+        $scope.selected(bbk.no_bbk, kd_bbk);
+    };
+
+    $scope.cariBbk = function($query) {
+        if ($query.length >= 3) {
+            Data.get('bbk/listbbk', {nama: $query}).then(function(data) {
+                $scope.resultBbk = data.data;
+            });
+        }
+    }
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -110,16 +124,14 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
         });
         $scope.isLoading = false;
     };
-    $scope.create = function(form) {
+
+    $scope.copy = function(form, detail) {
+        $scope.is_copy = true;
+        $scope.is_create = true;
         $scope.is_edit = true;
         $scope.is_view = false;
-        $scope.is_create = true;
-        $scope.formtitle = "Form Tambah Data";
+        $scope.formtitle = "Salin Data";
         $scope.form = {};
-        Data.get('pengguna/profile').then(function(data) {
-            $scope.form.petugas = data.data.nama;
-//            console.log(data);
-        });
         $scope.detailBbk = [{
                 kd_barang: '',
                 jml: '',
@@ -128,25 +140,47 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
         Data.get('bbk/kode').then(function(data) {
             $scope.form.no_bbk = data.kode;
         });
-        Data.get('bbk/petugas').then(function(data) {
-            $scope.form.petugas = data.petugas;
+        Data.get('pengguna/profile').then(function(data) {
+            $scope.form.petugas = data.data.nama;
         });
     };
+
+    $scope.create = function(form) {
+        $scope.is_edit = true;
+        $scope.is_view = false;
+        $scope.is_create = true;
+        $scope.formtitle = "Form Tambah Data";
+        $scope.form = {};
+        Data.get('pengguna/profile').then(function(data) {
+            $scope.form.petugas = data.data.nama;
+        });
+        Data.get('bbk/kode').then(function(data) {
+            $scope.form.no_bbk = data.kode;
+        });
+        $scope.detailBbk = [{
+                kd_barang: '',
+                jml: '',
+                ket: '',
+            }];
+    };
+
     $scope.update = function(form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.no_bbk;
         $scope.form = form;
-        $scope.selected(form.no_bbk);
+        $scope.selected(form.no_bbk, '');
     };
+
     $scope.view = function(form) {
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.no_wo;
+        $scope.formtitle = "Lihat Data : " + form.no_bbk;
         $scope.form = form;
-        $scope.selected(form.no_bbk);
+        $scope.selected(form.no_bbk, '');
     };
+
     $scope.save = function(form, detail) {
         var data = {
             bbk: form,
@@ -163,10 +197,12 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
             }
         });
     };
+
     $scope.cancel = function() {
         $scope.is_edit = false;
         $scope.is_view = false;
     };
+
     $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
             Data.delete('bbk/delete/' + row.no_bbk).then(function(result) {
@@ -174,9 +210,19 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
             });
         }
     };
-    $scope.selected = function(id) {
+
+    $scope.selected = function(id, id_baru) {
         Data.get('bbk/view/' + id).then(function(data) {
             $scope.form = data.data;
+
+            if (id_baru != '') {
+                $scope.form.no_bbk = id_baru;
+                $scope.form.tanggal = new Date();
+                Data.get('pengguna/profile').then(function(data) {
+                    $scope.form.petugas = data.data.nama;
+                });
+            }
+
             if (jQuery.isEmptyObject(data.detail)) {
                 $scope.detailBbk = [{
                         kd_barang: '',

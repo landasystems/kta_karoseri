@@ -59,39 +59,64 @@ class BbkController extends Controller {
 
     public function actionListbarang() {
         $params = json_decode(file_get_contents("php://input"), true);
+        $moel = array();
 
-        //cek optional bom
-        $optional = \app\models\TransAdditionalBom::findAll(['no_wo' => $params['no_wo']['no_wo']]);
+        if (!empty($params['no_wo']) and !empty($params['kd_jab'])) {
+            //cek optional bom
+            $optional = \app\models\TransAdditionalBom::findAll(['no_wo' => $params['no_wo']['no_wo']]);
 
-        //jikka tidak ada optional
-        if (empty($optional) or count($optional) == 0) {
-            $query = new Query;
-            $query->from('det_standar_bahan as dsb')
-                    ->join('JOIN', 'barang as b', 'b.kd_barang = dsb.kd_barang')
-                    ->join('JOIN', 'tbl_jabatan as tj', 'tj.id_jabatan = dsb.kd_jab')
-                    ->join('JOIN', 'spk', 'spk.kd_bom = dsb.kd_bom')
-                    ->join('JOIN', 'wo_masuk as wm', 'spk.no_spk = wm.no_spk')
-                    ->select('dsb.kd_bom as kd_bom, spk.no_spk as no_spk, '
-                            . 'wm.no_wo as no_wo, b.kd_barang as kd_barang, '
-                            . 'b.nm_barang as barang, tj.id_jabatan as kd_jabatan, '
-                            . 'tj.jabatan as bagian, dsb.qty as jml, dsb.ket as ket')
-                    ->where('wm.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_jab']['kd_jab'] . '"')
-                    ->limit(1);
+            //jika tidak ada optional
+            if (empty($optional) or count($optional) == 0) {
+                $query = new Query;
+                $query->from('det_standar_bahan as dsb')
+                        ->join('LEFT JOIN', 'barang as b', 'b.kd_barang = dsb.kd_barang')
+                        ->join('LEFT JOIN', 'tbl_jabatan as tj', 'tj.id_jabatan = dsb.kd_jab')
+                        ->join('LEFT JOIN', 'spk', 'spk.kd_bom = dsb.kd_bom')
+                        ->join('LEFT JOIN', 'wo_masuk as wm', 'spk.no_spk = wm.no_spk')
+                        ->select('dsb.kd_bom as kd_bom, spk.no_spk as no_spk, '
+                                . 'wm.no_wo as no_wo, b.kd_barang as kd_barang, '
+                                . 'b.nm_barang as barang, tj.id_jabatan as kd_jabatan, '
+                                . 'tj.jabatan as bagian, dsb.qty as jml, dsb.ket as ket')
+                        ->where('wm.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_jab']['id_jabatan'] . '"');
 
-            $command = $query->createCommand();
-            $model = $command->query()->read();
-        } else {
-            $query->from('det_additional_bom as dsb')
-                    ->join('JOIN', 'barang as b', 'b.kd_barang = dsb.kd_barang')
-                    ->join('JOIN', 'tbl_jabatan as tj', 'tj.id_jabatan = dsb.kd_jab')
-                    ->join('JOIN', 'spk', 'spk.kd_bom = dsb.kd_bom')
-                    ->join('JOIN', 'wo_masuk as wm', 'spk.no_spk = wm.no_spk')
-                    ->select('dsb.kd_bom as kd_bom, spk.no_spk as no_spk, '
-                            . 'wm.no_wo as no_wo, b.kd_barang as kd_barang, '
-                            . 'b.nm_barang as barang, tj.id_jabatan as kd_jabatan, '
-                            . 'tj.jabatan as bagian, dsb.qty as jml, dsb.ket as ket')
-                    ->where('dsb.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_jab']['kd_jab'] . '"')
-                    ->limit(1);
+                $command = $query->createCommand();
+                $models = $command->queryAll();
+            } else {
+                $query = new Query;
+                $query->from('det_additional_bom as dsb')
+                        ->join('JOIN', 'barang as b', 'b.kd_barang = dsb.kd_barang')
+                        ->join('JOIN', 'tbl_jabatan as tj', 'tj.id_jabatan = dsb.kd_jab')
+                        ->join('JOIN', 'spk', 'spk.kd_bom = dsb.kd_bom')
+                        ->join('JOIN', 'wo_masuk as wm', 'spk.no_spk = wm.no_spk')
+                        ->select('dsb.kd_bom as kd_bom, spk.no_spk as no_spk, '
+                                . 'wm.no_wo as no_wo, b.kd_barang as kd_barang, '
+                                . 'b.nm_barang as barang, tj.id_jabatan as kd_jabatan, '
+                                . 'tj.jabatan as bagian, dsb.qty as jml, dsb.ket as ket')
+                        ->where('dsb.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_jab']['id_jabatan'] . '"');
+
+                $command = $query->createCommand();
+                $models = $command->queryAll();
+            }
+
+            $i = 0;
+            $det = array();
+            foreach ($models as $val) {
+                $query = new Query;
+                $query->from('barang')
+                        ->select('kd_barang, nm_barang, satuan')
+                        ->where('kd_barang = "' . $val['kd_barang'] . '"')
+                        ->limit(1);
+                $command = $query->createCommand();
+                $barang = $command->query()->read();
+
+                $det[$i]['jml'] = $val['jml'];
+                $det[$i]['satuan'] = $barang['satuan'];
+                $det[$i]['ket'] = $val['ket'];
+                $det[$i]['kd_barang'] = isset($barang) ? $barang : '';
+                $i++;
+            }
+
+            echo json_encode(array('status' => 1, 'data' => $det));
         }
     }
 
@@ -102,15 +127,15 @@ class BbkController extends Controller {
                 ->orderBy('no_bbk DESC')
                 ->limit(1);
 
-        $cek = TransBbk::findOne('no_bbk = "BK' . date("y") . '0001"');
+        $cek = TransBbk::findOne('no_bbk = "BK' . date("y") . '00001"');
         if (empty($cek)) {
             $command = $query->createCommand();
             $models = $command->query()->read();
-            $urut = substr($models['no_bbk'], 4) + 1;
+            $urut = substr($models['no_bbk'], 5) + 1;
             $kode = substr('0000' . $urut, strlen($urut));
             $kode = "BK" . date("y") . $kode;
         } else {
-            $kode = "BK" . date("y") . "0001";
+            $kode = "BK" . date("y") . "00001";
         }
         $this->setHeader(200);
 
@@ -231,11 +256,13 @@ class BbkController extends Controller {
                 ->limit(1);
         $command = $query->createCommand();
         $jabatan = $command->query()->read();
+
         $query = new Query;
         $query->from('tbl_karyawan')
                 ->select('nik, nama')
                 ->where('nik = "' . $model->penerima . '"')
                 ->limit(1);
+
         $command = $query->createCommand();
         $penerima = $command->query()->read();
 
@@ -244,17 +271,20 @@ class BbkController extends Controller {
         $model->no_wo = array('no_wo' => $model->no_wo);
 
         $detail = DetBbk::find()->where('no_bbk="' . $model->no_bbk . '"')->all();
+
         $i = 0;
         $det = array();
         foreach ($detail as $val) {
             $query->from('barang')
-                    ->select('kd_barang, nm_barang')
+                    ->select('kd_barang, nm_barang, satuan')
                     ->where('kd_barang = "' . $val['kd_barang'] . '"')
                     ->limit(1);
             $command = $query->createCommand();
-            $det[$i]['jml'] = $val['jml'];
-            $det[$i]['ket'] = $val['ket'];
             $barang = $command->query()->read();
+
+            $det[$i]['jml'] = $val['jml'];
+            $det[$i]['satuan'] = $barang['satuan'];
+            $det[$i]['ket'] = $val['ket'];
             $det[$i]['kd_barang'] = isset($barang) ? $barang : '';
             $i++;
         }
