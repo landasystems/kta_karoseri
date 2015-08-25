@@ -6,7 +6,7 @@ header("Content-Disposition: attachment; filename=Laporan-HPP.xls");
     <thead>
         <tr valign="top">
             <td align="center"><h2>BILL OF <br>MATERIAL</h2></td>
-            <td colspan="7">
+            <td colspan="8">
                 <table>
                     <tr>
                         <td>Produk</td>
@@ -25,7 +25,7 @@ header("Content-Disposition: attachment; filename=Laporan-HPP.xls");
             <td align="center"><b>NAMA MATERIAL</b></td>
             <td align="center"><b>SATUAN</b></td>
             <td align="center"><b>QTY</b></td>
-            <td align="center"><b>HARGA SATUAN</b></td>
+            <td align="center" colspan="2"><b>HARGA SATUAN</b></td>
             <td align="center" colspan="2"><b>HARGA</b></td>
             <td align="center" colspan="2"><b>KETERANGAN</b></td>
         </tr>
@@ -34,14 +34,14 @@ header("Content-Disposition: attachment; filename=Laporan-HPP.xls");
         <?php
         foreach ($detail as $bag) {
             echo '<tr height="25">
-                        <td colspan="8" style="background-color: rgb(226, 222, 222)">' . $bag['nama_jabatan'] . '</td>
+                        <td colspan="9" style="background-color: rgb(226, 222, 222)">' . $bag['nama_jabatan'] . '</td>
                     </tr>';
             foreach ($bag['body'] as $det) {
                 echo '<tr height="25">
                         <td>' . $det['nama_barang'] . '</td>
                         <td>' . $det['satuan'] . '</td>
                         <td>' . $det['jumlah'] . '</td>
-                        <td></td>
+                        <td colspan="2"></td>
                         <td colspan="2"></td>
                         <td colspan="2">' . $det['ket'] . '</td>
                     </tr>';

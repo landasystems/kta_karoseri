@@ -102,7 +102,7 @@ class Spkaroseri extends \yii\db\ActiveRecord {
         return $this->hasOne(Chassis::className(), ['kd_chassis' => 'kd_chassis']);
     }
 
-    public function getCutomer() {
-        return $this->hasOne(Chassis::className(), ['kd_cust' => 'kd_customer']);
+    public function getCustomer() {
+        return $this->hasOne(Customer::className(), ['kd_cust' => 'kd_customer']);
     }
 }

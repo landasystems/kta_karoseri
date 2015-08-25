@@ -1,8 +1,10 @@
-app.controller('notifUnitCtrl', function ($scope, Data, toaster) {
+app.controller('rekapwomasukCtrl', function($scope, Data, toaster) {
     //init data
     var tableStateRef;
     var paramRef;
+
     $scope.displayed = [];
+    $scope.paginations = 0;
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
@@ -22,23 +24,24 @@ app.controller('notifUnitCtrl', function ($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
         paramRef = param;
-        Data.get('notifunit/index/0', param).then(function (data) {
+        Data.get('rekap/rekapwomasuk', param).then(function(data) {
             $scope.displayed = data.data;
-            console.log($scope.displayed);
-            tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
+            $scope.displayedPrint = data.dataPrint;
+            $scope.paginations = data.totalItems;
+            if (data.totalItems != 0) {
+                tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
+            }
         });
 
         $scope.isLoading = false;
     };
-    $scope.excel = function () {
-        window.location = 'api/web/notifunit/index/1';
-    };
-    $scope.cancel = function () {
-        if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
-            $scope.callServer(tableStateRef);
-        }
-        $scope.is_edit = false;
-        $scope.is_view = false;
-    };
+
+    $scope.excel = function() {
+        Data.get('rekap/rekapwomasuk', paramRef).then(function(data) {
+            window.location = 'api/web/rekap/excelwomasuk';
+        });
+    }
+
+
 
 })

@@ -80,7 +80,7 @@ span.label{width: 180px;display: inline-table;}
 }
 //tablepo
 .tablepo{
-     border-bottom: 1px solid #333; 
+    border-bottom: 1px solid #333; 
     border-left: 1px solid #333; 
     border-right: 1px solid #333; 
     border-top:  1px solid #333;
@@ -106,10 +106,18 @@ span.label{width: 180px;display: inline-table;}
 */
 
 .print-detail{
+    border-bottom: 1px solid #333; 
+    border-left: 1px solid #333; 
+    border-right: 1px solid #333; 
+    border-top:  1px solid #333;
     border-collapse: collapse;
 }
 
-.print-detail th, td{
+.print-detail th{
+    border: 1px solid  #333;
+}
+
+.print-detail td{
     border: 1px solid  #333;
 }
 
@@ -117,3 +125,10 @@ span.label{width: 180px;display: inline-table;}
     border: 0px;
 }
 
+.no-border th, td{
+    border: none;
+}
+
+.no-border tfoot td{
+    border: none;
+}

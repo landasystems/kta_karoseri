@@ -75,6 +75,9 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 {{formtitle}} 
+                <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-show="is_view">
+                    <button type="button" class="btn btn-success fa fa-file-excel-o" ng-click="excelTrans(form.kd_bom)" ng-print print-element-id="printArea" ng-disabled="status == '0'">&nbsp;Export Lap. HPP</button>
+                </div>
             </div>
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation">

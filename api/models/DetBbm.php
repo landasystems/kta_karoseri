@@ -14,21 +14,19 @@ use Yii;
  * @property double $jumlah
  * @property string $keterangan
  */
-class DetBbm extends \yii\db\ActiveRecord
-{
+class DetBbm extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'det_bbm';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['id'], 'number'],
             [['tgl_terima'], 'safe'],
@@ -43,8 +41,7 @@ class DetBbm extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'no_bbm' => 'No Bbm',
             'tgl_terima' => 'Tgl Terima',
@@ -54,4 +51,9 @@ class DetBbm extends \yii\db\ActiveRecord
             'keterangan' => 'Keterangan',
         ];
     }
+
+    public function getBarang() {
+        return $this->hasOne(Barang::className(), ['kd_barang' => 'kd_barang']);
+    }
+
 }

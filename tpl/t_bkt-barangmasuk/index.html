@@ -89,8 +89,12 @@
     <div class="wrapper-md" ng-show="is_edit">
         <div class="panel panel-default">
             <div class="panel-heading">
-                {{formtitle}} 
+                {{formtitle}}
+                <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-hide="is_view == false">
+                    <button type="button" class="btn btn-primary fa fa-file-excel-o" ng-click="excel(form.no_bbm)" ng-show="is_view==true">&nbsp;Lihat & Export Excel Laporan</button>
+                </div>
             </div>
+
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation ">
                     <div class="img-thumbnail">
@@ -261,5 +265,31 @@
                 </form>
             </div>
         </div>
+    </div>
+    <div id="printArea" ng-show="is_view">
+        <div style="height: 75px;">
+            <div class="kiri" style="width: 50%;font-size: 11px;">
+                <table class="det-trans">
+                    <tr>
+                        <td rowspan="3"><img ng-src="img/logo.png" align="left" style="margin-right: 8px"/></td>
+                        <td><h5>PT. KARYA TUGASANDA</h5></td>
+                    </tr>
+                    <tr>
+                        <td>Jl. Raya Sukorejo no 1</td>
+                    </tr>
+                    <tr>
+                        <td>Sukorejo - Pasuruan</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <br/>
+        <br/>
+        <div>
+            <center><h5>BUKTI BARANG MASUK</h5></center><br>
+            <center>kode:</center><br>
+        </div>
+        <hr/>
+        
     </div>
 </div>

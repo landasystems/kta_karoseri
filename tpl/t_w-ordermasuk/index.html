@@ -7,7 +7,7 @@
             <div class="panel-heading">
                 <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian & Export Data</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-
+                    <button type="button" class="btn btn-info fa fa-copy" ng-click="copy();">&nbsp;Salin WO MASUK</button>
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>
@@ -104,23 +104,47 @@
                                 <table width="100%">
                                     <tr>
                                         <td width="35%" valign="top">
+                                            <div class="form-group" ng-if="is_copy">
+                                                <label class="col-sm-3 control-label">Cari Nowo</label>
+                                                <div class="col-sm-8">
+                                                    <div class="input-group">
+                                                        <ui-select on-select="copyData(form.kode_asli,form.no_wo)" ng-model="form.kode_asli" ng-disabled="is_view" theme="bootstrap">
+                                                            <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
+                                                            <ui-select-choices refresh="cariNowo($select.search)" repeat="val in list_nowo">
+                                                                {{val.no_wo}}
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                        <span class="input-group-btn">
+                                                            <button ng-click="form.kode_asli = undefined" class="btn btn-default">
+                                                                <span class="glyphicon glyphicon-trash"></span>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">No SPK</label>
-                                                <div class="col-sm-6">
-                                                    <ui-select ng-change="getspk(form)" ng-model="form.spk" theme="bootstrap" style="width: 245px; margin-top: 2px; margin-bottom: 1px;">
-                                                        <ui-select-match placeholder="Cari No SPK">{{$select.selected.no_spk}}</ui-select-match>
-                                                        <ui-select-choices group-by="'group'" repeat="spk in list_spk | filter: $select.search">
-                                                            <div ng-bind-html="spk.no_spk | highlight: $select.search"></div>
-
-                                                        </ui-select-choices>
-                                                    </ui-select>
+                                                <div class="col-sm-8">
+                                                    <div class="input-group">
+                                                        <ui-select on-select="getSpk(form,$item)" ng-model="form.spk"  theme="bootstrap" ng-disabled="is_view" >
+                                                            <ui-select-match>{{$select.selected.no_spk}}</ui-select-match>
+                                                            <ui-select-choices refresh="cariSpk($select.search)" repeat="val in kdSpk">
+                                                                {{val.no_spk}}
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                        <span class="input-group-btn">
+                                                            <button ng-click="form.spk = undefined" class="btn btn-default">
+                                                                <span class="glyphicon glyphicon-trash"></span>
+                                                            </button>
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Jenis Kendaraan</label>
                                                 <div class="col-sm-9">
-                                                    <label class="btn btn-default" ng-model="form.jenis" ng-disabled="is_view" btn-radio="'Mini Bus'" required>Mini Bus</label>
-                                                    <label class="btn btn-default" ng-model="form.jenis" ng-disabled="is_view" btn-radio="'Small Bus'" required>Small Bus</label>
+                                                    <label class="btn btn-default" ng-model="form.jenis" ng-disabled="is_view" btn-radio="'Mini Bus'" >Mini Bus</label>
+                                                    <label class="btn btn-default" ng-model="form.jenis" ng-disabled="is_view" btn-radio="'Small Bus'" >Small Bus</label>
                                                 </div>
                                             </div>
 
@@ -132,8 +156,21 @@
                                             </div> 
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Kode Titipan</label>
-                                                <div class="col-sm-6">
-                                                    <input type="text" class="form-control" ng-model="form.kd_titipan" ng-disabled="true" placeholder="Kode Titipan">
+                                                <div class="col-sm-8">
+                                                    <div class="input-group">
+                                                        <ui-select on-select="getTitipan(form,$item)" ng-model="form.titipan" theme="bootstrap" ng-disabled="is_view" >
+                                                            <ui-select-match>{{$select.selected.kd_titipan}}</ui-select-match>
+                                                            <ui-select-choices refresh="cariTitipan($select.search)" repeat="val in titip">
+                                                                {{val.kd_titipan}}
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                        <span class="input-group-btn">
+                                                            <button ng-click="form.titipan = undefined" class="btn btn-default">
+                                                                <span class="glyphicon glyphicon-trash"></span>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                    <!--<input type="text" class="form-control" ng-model="form.kd_titipan" ng-disabled="true" placeholder="Kode Titipan">-->
                                                 </div>
                                             </div> 
                                             <div class="form-group">
@@ -201,7 +238,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">No Rangka</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="form.no_rangka" ng-disabled="true" placeholder="No Rangka">
+                                                    <input type="text" class="form-control" ng-model="form.no_chassis" ng-disabled="true" placeholder="No Rangka">
                                                 </div>
                                             </div> 
                                             <div class="form-group">
@@ -342,7 +379,7 @@
                                                 <label class="col-sm-3 control-label">Warna</label>
                                                 <div class="col-sm-8">
                                                     <ui-select tagging="tagTransform"   tagging-label="false" ng-model="eks.warna" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 300px;" title="Choose a color">
-                                                        <ui-select-match placeholder="Pilih jenis kerjaan">{{$select.selected.warna}}</ui-select-match>
+                                                        <ui-select-match placeholder="Pilih Warna">{{$select.selected.warna}}</ui-select-match>
                                                         <ui-select-choices repeat="warna in list_warna | filter:$select.search" >
                                                             <small>
                                                                 {{warna.warna}} 
@@ -364,7 +401,7 @@
                                                 <label class="col-sm-3 control-label">Warna 2</label>
                                                 <div class="col-sm-8">
                                                     <ui-select tagging="tagTransform"   tagging-label="false" ng-model="eks.warna2" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 300px;" title="Choose a color">
-                                                        <ui-select-match placeholder="Pilih jenis kerjaan">{{$select.selected.warna}}</ui-select-match>
+                                                        <ui-select-match placeholder="Pilih Warna">{{$select.selected.warna}}</ui-select-match>
                                                         <ui-select-choices repeat="warna in list_warna | filter:$select.search" >
                                                             <small>
                                                                 {{warna.warna}} 
@@ -372,13 +409,13 @@
                                                             </small>
                                                         </ui-select-choices>
                                                     </ui-select>
-<!--                                                    <ui-select  ng-model="eks.warna2" theme="bootstrap" style="width: 245px; margin-top: 2px; margin-bottom: 1px;">
-                                                        <ui-select-match placeholder="Cari Warna">{{$select.selected.warna}}</ui-select-match>
-                                                        <ui-select-choices group-by="'group'" repeat="warna in list_warna | filter: $select.search">
-                                                            <div ng-bind-html="warna.warna | highlight: $select.search"></div>
-
-                                                        </ui-select-choices>
-                                                    </ui-select>-->
+                                                    <!--                                                    <ui-select  ng-model="eks.warna2" theme="bootstrap" style="width: 245px; margin-top: 2px; margin-bottom: 1px;">
+                                                                                                            <ui-select-match placeholder="Cari Warna">{{$select.selected.warna}}</ui-select-match>
+                                                                                                            <ui-select-choices group-by="'group'" repeat="warna in list_warna | filter: $select.search">
+                                                                                                                <div ng-bind-html="warna.warna | highlight: $select.search"></div>
+                                                    
+                                                                                                            </ui-select-choices>
+                                                                                                        </ui-select>-->
                                                     <!--<input type="text" class="form-control" ng-model="form.warna2" ng-disabled="is_view" placeholder="Warna 2">-->
                                                 </div>
                                             </div>
@@ -451,7 +488,7 @@
                                                 <label class="col-sm-3 control-label">Bagasi Dalam </label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" ng-model="inter.bagasi_dalam" ng-disabled="is_view" placeholder="Bagasi Dalam">
-                                                </div>
+                                                </div>p
                                             </div>
                                             <div class="form-group" ng-show="form.jenis == 'Small Bus'">
                                                 <label class="col-sm-3 control-label">Dashboard</label>
