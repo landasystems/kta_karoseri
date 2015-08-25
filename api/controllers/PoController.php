@@ -336,7 +336,7 @@ class PoController extends Controller {
                 $det = new DetailPo();
                 $det->attributes = $val;
                 $det->kd_barang = $val['data_barang']['kd_barang'];
-                $det->tgl_pengiriman = date("Y-m-d", strtotime($val['data_barang']['tgl_pengiriman']));
+                $det->tgl_pengiriman = date("Y-m-d", strtotime($val['tgl_pengiriman']));
                 $det->nota = $model->nota;
                 $det->save();
             }
@@ -441,20 +441,32 @@ class PoController extends Controller {
     public function actionSpp() {
         $params = $_REQUEST;
         $query = new Query;
-        $query->from('trans_spp')
-                ->join('JOIN','det_spp','det_spp.no_spp = trans_spp.no_spp')
-                ->join('JOIN','barang','barang.kd_barang = det_spp.kd_barang')
-                ->join('JOIN','detail_po','detail_po.kd_barang = barang.kd_barang')
+        $query->from('det_spp')
+                ->join('JOIN', 'trans_spp', 'det_spp.no_spp = trans_spp.no_spp')
+                ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
+//                ->join('LEFT JOIN','detail_po','detail_po.kd_barang = barang.kd_barang')
                 ->where(['=', 'det_spp.no_spp', $params['nama']])
-                ->select("*");
-        
+                ->select("det_spp.kd_barang,det_spp.no_spp,det_spp.ket,det_spp.qty as jml,barang.nm_barang, barang.satuan, barang.harga");
+
         $command = $query->createCommand();
         $models = $command->queryAll();
+
+        $totalItems = $query->count();
+        $data = array();
+        foreach ($models as $key => $val) {
+            $data[$key] = $val;
+            $data[$key]['data_barang'] = [
+                'kd_barang' => $val['kd_barang'],
+                'nm_barang' => $val['nm_barang'],
+                'satuan' => $val['satuan'],
+                'harga' => $val['harga'],
+            ];
+        }
 //        Yii::error($models);
 
         $this->setHeader(200);
 //        echo print_r($params);
-        echo json_encode(array('status' => 1, 'data' => $models));
+        echo json_encode(array('status' => 1, 'total' => $totalItems, 'data' => $data));
     }
 
     public function actionBrgspp() {

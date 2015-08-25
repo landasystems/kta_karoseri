@@ -61,7 +61,8 @@ app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
 //             console.log(data.data)
             $scope.detsPo = data.data;
             
-           $scope.subtotal();
+           
+        $scope.subtotal();
         });
 //        detail.harga = $item.harga;
 //        detail.satuan = $item.satuan;
@@ -102,7 +103,7 @@ app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
         var newDet = {
             nota: '',
             kode_barang: '',
-            jml: '',
+            qty: '',
             harga: '',
             diterima: '',
             ket: '',
@@ -114,7 +115,7 @@ app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
     $scope.detsPo = {
         nota: '',
         kode_barang: '',
-        jml: '',
+        qty: '',
         harga: '',
         diterima: '0',
         ket: '',
@@ -227,7 +228,7 @@ app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
     };
     $scope.modal = function (detsPo, detail) {
         var modalInstance = $modal.open({
-            templateUrl: 'tpl/t_spp-nonrutin/modal.html',
+            templateUrl: 'tpl/t_purchase-order/modal.html',
             controller: 'modalCtrl',
             size: 'lg',
             resolve: {
@@ -317,43 +318,43 @@ app.controller('modalCtrl', function ($scope, Data, $modalInstance, form) {
         $scope.openedDet = -1;
     };
     
-    $scope.openDet = function ($event, $index) {
+    $scope.open2 = function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
-        $scope.openedDet = $index;
+        $scope.opened2 = true;
     };
 
     
 
     $scope.formmodal = form.detail;
-        console.log(form.detail)
+//        console.log(form.detail)
     
-    var data = {
-            
-        };
+//    var data = {
+//            
+//        };
     
-    $scope.woMasuk = [];
-    $scope.woSelected = function (formmodal, woMasuk, items) {
+//    $scope.woMasuk = [];
+//    $scope.woSelected = function (formmodal, woMasuk, items) {
 //        for (var i = form.sppDet.length - 1; i >= 0; i--) {
 //            if (form.sppDet[i].kd_barang == form.detail.kd_barang) {
 //                form.sppDet.splice(i, 1);
 //            }
 //        }
-        var mongo = form.sppDet;
-        var index = mongo.indexOf(form.detail);
-        var data = {
-            barang: formmodal.barang,
-            qty: formmodal.qty,
-            ket: formmodal.ket,
-            p: formmodal.p,
-            no_wo: items.no_wo
-        };
-        if (woMasuk.length == 1) {
-            mongo[index] = data;
-        } else {
-            mongo.unshift(data);
-        }
-    };
+//        var mongo = form.sppDet;
+//        var index = mongo.indexOf(form.detail);
+//        var data = {
+//            barang: formmodal.barang,
+//            qty: formmodal.qty,
+//            ket: formmodal.ket,
+//            p: formmodal.p,
+//            no_wo: items.no_wo
+//        };
+//        if (woMasuk.length == 1) {
+//            mongo[index] = data;
+//        } else {
+//            mongo.unshift(data);
+//        }
+//    };
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };

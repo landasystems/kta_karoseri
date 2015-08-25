@@ -1,29 +1,20 @@
 <?php
 header("Content-type: application/vnd-ms-excel");
-//header("Content-Disposition: attachment; filename=excel-master-barang.xls");
+header("Content-Disposition: attachment; filename=excel-master-barang.xls");
 $data = array();
 $i = 0;
 foreach ($models as $key => $val) {
-    $data[$val['kat']['jenisbarang']]['body'][$i]['kd_barang'] = $val['kd_barang'];
-    $data[$val['kat']]['body'][$i]['nm_barang'] = $val['nm_barang'];
-    $data[$val['kat']]['body'][$i]['jenis_brg'] = $val['jenis_brg'];
-    $data[$val['kat']]['body'][$i]['satuan'] = $val['satuan'];
-    $data[$val['kat']]['body'][$i]['min'] = $val['min'];
-    $data[$val['kat']]['body'][$i]['saldo'] = $val['saldo'];
-    $data[$val['kat']]['body'][$i]['qty'] = $val['qty'];
-    $i++;
-}
-$data2 = array();
-$i2 = 0;
-foreach ($data as $keys => $vals) {
-    $data2[$vals['jenis_brg']]['title']['jenis_brg'] = $vals['jenis_brg'];
-    $data2[$vals['jenis_brg']]['body'][$i2]['kd_barang'] = $vals['kd_barang'];
-    $data2[$vals['jenis_brg']]['body'][$i2]['nm_barang'] = $vals['nm_barang'];
-    $data2[$vals['jenis_brg']]['body'][$i2]['jenis_brg'] = $vals['jenis_brg'];
-    $data2[$vals['jenis_brg']]['body'][$i2]['satuan'] = $vals['satuan'];
-    $data2[$vals['jenis_brg']]['body'][$i2]['min'] = $vals['min'];
-    $data2[$vals['jenis_brg']]['body'][$i2]['saldo'] = $vals['saldo'];
-    $data2[$vals['jenis_brg']]['body'][$i2]['qty'] = $vals['qty'];
+    $data[$val['kat']]['title']['kategory'] = $val['kat'];
+    $data[$val['kat']]['jenis_brg'][$val['jenis_brg']]['title'] = $val['jenis_brg'];
+
+    $data[$val['kat']]['jenis_brg'][$val['jenis_brg']]['body'][$i]['kd_barang'] = $val['kd_barang'];
+    $data[$val['kat']]['jenis_brg'][$val['jenis_brg']]['body'][$i]['nm_barang'] = $val['nm_barang'];
+    $data[$val['kat']]['jenis_brg'][$val['jenis_brg']]['body'][$i]['jenis_brg'] = $val['jenis_brg'];
+    $data[$val['kat']]['jenis_brg'][$val['jenis_brg']]['body'][$i]['satuan'] = $val['satuan'];
+    $data[$val['kat']]['jenis_brg'][$val['jenis_brg']]['body'][$i]['max'] = $val['max'];
+    $data[$val['kat']]['jenis_brg'][$val['jenis_brg']]['body'][$i]['min'] = $val['min'];
+    $data[$val['kat']]['jenis_brg'][$val['jenis_brg']]['body'][$i]['saldo'] = $val['saldo'];
+    $data[$val['kat']]['jenis_brg'][$val['jenis_brg']]['body'][$i]['qty'] = $val['qty'];
     $i++;
 }
 ?>
@@ -40,35 +31,39 @@ foreach ($data as $keys => $vals) {
         <th>Qty</th>
     </tr>
     <?php
-    $data2 = array();
-    $i2 = 0;
-    foreach ($data as $key => $arr) {
+    foreach ($data as $arr) {
         ?>
-    <tr>
-        <td colspan="7">&nbsp;<?= $key['title']['kat'] ?></td><tr>
-    <?php
-        $data2[$vals['jenis_brg']]['title']['jenis_brg'] = $vals['jenis_brg'];
-        $data2[$vals['jenis_brg']]['body'][$i2]['kd_barang'] = $vals['kd_barang'];
-        $data2[$vals['jenis_brg']]['body'][$i2]['nm_barang'] = $vals['nm_barang'];
-        $data2[$vals['jenis_brg']]['body'][$i2]['jenis_brg'] = $vals['jenis_brg'];
-        $data2[$vals['jenis_brg']]['body'][$i2]['satuan'] = $vals['satuan'];
-        $data2[$vals['jenis_brg']]['body'][$i2]['min'] = $vals['min'];
-        $data2[$vals['jenis_brg']]['body'][$i2]['saldo'] = $vals['saldo'];
-        $data2[$vals['jenis_brg']]['body'][$i2]['qty'] = $vals['qty'];
-        ?>
-        <tr>
-            <td>&nbsp;<?= $key['title']['kat'] ?></td>
-            <td><?= $arr['nm_barang'] ?></td>
-            <td><?= $arr['jenis_brg'] ?></td>
-            <td><?= $arr['kat'] ?></td>
-            <td>&nbsp;<?= $arr['harga'] ?></td>
-            <td>&nbsp;<?= $arr['satuan'] ?></td>
-            <td>&nbsp;<?= $arr['max'] ?></td>
-            <td>&nbsp;<?= $arr['min'] ?></td>
-            <td>&nbsp;<?= $arr['saldo'] ?></td>
-            <td>&nbsp;<?= $arr['qty'] ?></td>
+    <tr><td colspan="7" style="background-color: rgb(226, 222, 222);">&nbsp;<b><?= $arr['title']['kategory'] ?></b></td><tr>
+            <?php
+            foreach ($arr['jenis_brg'] as $keys) {
+                ?>
+            <tr>
+                <td></td>
+                <td><b><?= $keys['title'] ?></b></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
 
-        </tr>
-    <?php } ?>
+            </tr>
+            <?php
+            foreach ($keys['body'] as $value) {
+                ?>
+                <tr>
+                    <td>&nbsp;<?= $value['kd_barang'] ?></td>
+                    <td><?= $value['nm_barang'] ?></td>
+                    <td>&nbsp;<?= $value['satuan'] ?></td>
+                    <td>&nbsp;<?= $value['min'] ?></td>
+                    <td>&nbsp;<?= $value['max'] ?></td>
+                    <td>&nbsp;<?= $value['qty'] ?></td>
+                    <td>&nbsp;<?= $value['saldo'] ?></td>
+
+                </tr>
+                <?php
+            }
+        }
+    }
+    ?>
 </table>
 
