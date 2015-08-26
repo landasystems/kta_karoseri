@@ -125,7 +125,8 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
             form: form,
             detBbm: detBbm
         };
-        var url = (form.no_bbm !== undefined) ? 'bbm/update/' + form.no_bbm : 'bbm/create';
+        var url = ($scope.is_create == true) ? 'bbm/create/' : 'bbm/update/' + form.no_bbm;
+//        var url = (form.no_bbm !== undefined) ? 'bbm/update/' + form.no_bbm : 'bbm/create';
         Data.post(url, data).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -172,6 +173,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
         Data.get('bbm/view/' + id).then(function (data) {
             $scope.form = data.data;
             $scope.detBbm = data.details;
+            console.log(data.data);
            
 //            $scope.detBbm.barang = data.details;
             $scope.form.wo = data.wo;

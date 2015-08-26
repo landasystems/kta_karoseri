@@ -5,29 +5,21 @@ header("Content-Disposition: attachment; filename=Laporan-HPP.xls");
 <table border="1" width="100%">
     <thead>
         <tr valign="top">
-            <td align="center"><h2>BILL OF <br>MATERIAL</h2></td>
-            <td colspan="8">
-                <table>
-                    <tr>
-                        <td>Produk</td>
-                        <td width="5">:</td>
-                        <td><?php echo $model['merk'] ?></td>
-                    </tr>
-                    <tr>
-                        <td>Model / Type</td>
-                        <td width="5">:</td>
-                        <td><?php echo $model['model'] . '/' . $model['tipe'] ?></td>
-                    </tr>
-                </table>
-            </td>
+            <td align="center" rowspan="2"><h2>BILL OF <br>MATERIAL</h2></td>
+            <td>Produk</td>
+            <td colspan="7">: <?php echo $model['merk'] ?></td>
+        </tr>
+        <tr>
+            <td>Merk / Tipe</td>
+            <td colspan="7">: <?php echo $model['model'] . '/' . $model['tipe'] ?></td>
         </tr>
         <tr>
             <td align="center"><b>NAMA MATERIAL</b></td>
             <td align="center"><b>SATUAN</b></td>
             <td align="center"><b>QTY</b></td>
-            <td align="center" colspan="2"><b>HARGA SATUAN</b></td>
-            <td align="center" colspan="2"><b>HARGA</b></td>
-            <td align="center" colspan="2"><b>KETERANGAN</b></td>
+            <td align="center" colspan="2" width="200"><b>HARGA SATUAN</b></td>
+            <td align="center" colspan="2" width="200"><b>HARGA</b></td>
+            <td align="center" colspan="2" width="250"><b>KETERANGAN</b></td>
         </tr>
     </thead>
     <tbody>
@@ -39,8 +31,8 @@ header("Content-Disposition: attachment; filename=Laporan-HPP.xls");
             foreach ($bag['body'] as $det) {
                 echo '<tr height="25">
                         <td>' . $det['nama_barang'] . '</td>
-                        <td>' . $det['satuan'] . '</td>
-                        <td>' . $det['jumlah'] . '</td>
+                        <td align="center">' . $det['satuan'] . '</td>
+                        <td align="right">' . $det['jumlah'] . '</td>
                         <td colspan="2"></td>
                         <td colspan="2"></td>
                         <td colspan="2">' . $det['ket'] . '</td>
@@ -53,13 +45,13 @@ header("Content-Disposition: attachment; filename=Laporan-HPP.xls");
         <tr>
             <td>Note</td>
             <td colspan="3">PREPARED</td>
-            <td colspan="2">CHECKED</td>
-            <td colspan="3">APPROVED</td>
+            <td colspan="3">CHECKED</td>
+            <td colspan="2">APPROVED</td>
         </tr>
         <tr>
             <td height="100"></td>
             <td height="100" colspan="3"></td>
-            <td height="100" colspan="2"></td>
+            <td height="100" colspan="3"></td>
             <td height="100" colspan="2"></td>
         </tr>
     </tfoo>
