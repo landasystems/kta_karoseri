@@ -179,5 +179,8 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
             $scope.form.wo = data.wo;
             $scope.form.supplier = data.sup;
         });
-    }
+    };
+    $scope.excel = function(id){
+        window.location = 'api/web/bbm/exceldet/'+id;
+    };
 });

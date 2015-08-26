@@ -198,25 +198,17 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="detail in detBom| filter : cari" style="margin:0px;padding:0px;">
-                                <!--<td  style="margin:0px;padding:0px;width:25%">-->
                                 <td>    
                                     {{detail.bagian.jabatan}}
-                                    <!--<input type="text" class="form-control" ng-model="detail.bagian.jabatan" required disabled="true"/>-->
                                 </td>
-                                <!--<td style="margin:0px;padding:0px;width:25%">-->
                                 <td>
                                     {{detail.barang.nm_barang}}
-                                    <!--<input type="text" class="form-control" ng-model="detail.barang.nm_barang" required disabled="true"/>-->
                                 </td>
-                                <!--<td  style="margin:0px;padding:0px;">-->
                                 <td>    
                                     {{detail.qty}}
-                                    <!--<input type="text" class="form-control" ng-model="detail.qty" ng-disabled="is_view">-->
                                 </td>
-                                <!--<td  style="margin:0px;padding:0px;">-->
                                 <td>
                                     {{detail.ket}}
-                                    <!--<input type="text" class="form-control" ng-model="detail.ket" ng-disabled="is_view">-->
                                 </td>
                                 <td style="margin:0px;padding:0px;" ng-hide="is_view">
                                     <div class="btn-group pull-right" role="group">
