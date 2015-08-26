@@ -42,6 +42,7 @@ $config = [
             ],
         ],
         'db' => require(__DIR__ . '/db.php'),
+        'dbabsensi' => require(__DIR__ . '/dbabsensi.php'),
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
