@@ -91,6 +91,7 @@ foreach ($models as $key => $val) {
         <th valign="top">TANGGAL</th>
         <th valign="top">NO BBM</th>
         <th valign="top">KODE BARANG</th>
+        <th>NAMA BARANG</th>
         <th>SAT</th>
         <th>JUMLAH</th>
         <th>HARGA SATUAN</th>
@@ -103,11 +104,11 @@ foreach ($models as $key => $val) {
     foreach ($data as $key) {
         $status_bayar = ($key['title']['status_bayar'] == 0) ? 'Tunai' : 'Kredit';
         ?>
-        <tr><td style="background-color: rgb(226, 222, 222)" colspan="10"><b><?= $status_bayar ?></b></td></tr>
+        <tr><td style="background-color: rgb(226, 222, 222)" colspan="11"><b><?= $status_bayar ?></b></td></tr>
                     <?php
                     foreach ($key['nota'] as $keys) {
                         ?>
-            <tr><td colspan="10"><?= $keys['title'] ?></td></tr>
+            <tr><td colspan="11"><?= $keys['title'] ?></td></tr>
             <?php
             foreach ($keys['body'] as $val) {
                 ?>
@@ -120,6 +121,7 @@ foreach ($models as $key => $val) {
                     <td><?= $val['jml'] ?></td>
                     <td><?= $val['harga'] ?></td>
                     <td><?= $val['jenis_brg'] ?></td>
+                    <td><?= $val['surat_jalan'] ?></td>
                     <td><?= $val['nota'] ?></td>
                     <td><?= $val['nama_supplier'] ?></td>
                 </tr>
