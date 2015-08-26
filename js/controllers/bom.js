@@ -85,6 +85,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
             alert("Something gone wrong");
         }
     };
+    
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
@@ -278,6 +279,7 @@ app.controller('modalCtrl', function($scope, Data, $modalInstance, form) {
             });
         }
     }
+    
     $scope.cariBarang = function($query) {
         if ($query.length >= 3) {
             Data.get('barang/cari', {barang: $query}).then(function(data) {
@@ -285,6 +287,7 @@ app.controller('modalCtrl', function($scope, Data, $modalInstance, form) {
             });
         }
     }
+    
     $scope.formmodal = form;
 
     $scope.cancel = function() {

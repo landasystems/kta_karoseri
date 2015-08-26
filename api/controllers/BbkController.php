@@ -192,6 +192,7 @@ class BbkController extends Controller {
         $query->from('trans_bbk')
                 ->select("no_bbk")
                 ->where('no_bbk like "%' . $param['nama'] . '%"')
+                ->orderBy('no_bbk DESC')
                 ->limit(15);
 
         $command = $query->createCommand();

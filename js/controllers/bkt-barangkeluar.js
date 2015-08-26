@@ -17,9 +17,9 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
 
     $scope.kalkulasi = function(sisa, stok, jml_keluar) {
         $scope.sisa_pengambilan = sisa - jml_keluar;
-        $scope.stok_sekarang = stok - jml_keluar;
         if ($scope.sisa_pengambilan > 0) {
             $scope.sisa_pengambilan = $scope.sisa_pengambilan;
+            $scope.stok_sekarang = stok - jml_keluar;
         } else {
             $scope.sisa_pengambilan = 0;
             toaster.pop('error', "Sisa pengambilan bahan telah habis");
