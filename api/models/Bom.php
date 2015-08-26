@@ -16,21 +16,19 @@ use Yii;
  * @property integer $umur
  * @property string $gambar
  */
-class Bom extends \yii\db\ActiveRecord
-{
+class Bom extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'trans_standar_bahan';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['kd_bom', 'kd_chassis', 'kd_model', 'tgl_buat'], 'required'],
             [['tgl_buat'], 'safe'],
@@ -46,8 +44,7 @@ class Bom extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'kd_bom' => 'Kd Bom',
             'kd_chassis' => 'Kd Chassis',
@@ -59,4 +56,9 @@ class Bom extends \yii\db\ActiveRecord
             'gambar' => 'Gambar',
         ];
     }
+
+    public function getChassis() {
+        return $this->hasOne(Barang::className(), ['kd_chassis' => 'kd_chassis']);
+    }
+
 }

@@ -93,7 +93,7 @@ class NotifbarangController extends Controller {
         return true;
     }
 
-    public function actionIndex() {
+    public function actionIndex($id) {
         //init variable
 //        $params = $_REQUEST;
 //        $filter = array();
@@ -149,7 +149,7 @@ class NotifbarangController extends Controller {
                 $sppDet = DetSpp::find()
                         ->where(['no_spp' => $val->no_spp])
                         ->all();
-                foreach($sppDet as $keys => $dat){
+                foreach ($sppDet as $keys => $dat) {
                     $data[$keyy] = $dat->barang->attributes;
                     $data[$keyy]['no_spp'] = $val->no_spp;
                     $data[$keyy]['status'] = 'Belum ada PO';
@@ -157,14 +157,14 @@ class NotifbarangController extends Controller {
                 }
             }
         }
-        
+
 //        Yii::error($data);
         //nyari PO yang belum BBM
 //        
         $transPo = TransPo::find()->where('tanggal >="' . $a . '"')->indexBy('nota')->all();
-        foreach($transPo as $key => $val){
+        foreach ($transPo as $key => $val) {
             $cariBbm = TransBbm::find()
-                    ->where('no_po="' . $val->nota. '"')
+                    ->where('no_po="' . $val->nota . '"')
                     ->all();
             //masukin yg gak ketemu
             if (empty($cariPo)) {
@@ -172,7 +172,7 @@ class NotifbarangController extends Controller {
                 $sppDet = DetailPo::find()
                         ->where(['nota' => $val->nota])
                         ->all();
-                foreach($sppDet as $keys => $dat){
+                foreach ($sppDet as $keys => $dat) {
                     $data[$keyy] = $dat->barang->attributes;
                     $data[$keyy]['no_spp'] = $val->spp;
                     $data[$keyy]['status'] = 'Belum diterima';
@@ -180,29 +180,25 @@ class NotifbarangController extends Controller {
                 }
             }
         }
-        
+
         //Barang Minimal
         $barang = Barang::find()
                 ->where('kat like "rutin" AND saldo <= min')
                 ->all();
-        
-        foreach($barang as $key => $val){
+
+        foreach ($barang as $key => $val) {
             $data[$keyy] = $val->attributes;
             $data[$keyy]['status'] = 'Belum ada SPP';
             $keyy++;
         }
-//        Yii::error($barang);
-//        if (!empty($transSpp)) {
-//            foreach ($transSpp as $key => $val) {
-//                if(!empty($gakKetemu[$key])){
-//                    
-//                }
-//            }
-//        }
+        Yii::error($data);
         $totalItems = count($data);
         $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        if ($id) {
+            return $this->render("excel", ['data' => $data, 'totalItems' => $totalItems]);
+        } else {
+            echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        }
     }
 
     public function actionView($id) {
@@ -340,7 +336,6 @@ class NotifbarangController extends Controller {
 //        $models = $command->queryAll();
 //        return $this->render("excel", ['models' => $models]);
 //    }
-//
 //    public function actionListbarang() {
 //        $query = new Query();
 //        $query->from('barang')

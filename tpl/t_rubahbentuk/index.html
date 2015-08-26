@@ -7,7 +7,6 @@
             <div class="panel-heading">
                 <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                    <!--<button type="button" class="btn btn-default fa fa-file-excel-o" ng-show="!isCollapsed">&nbsp;Export Excel</button>-->
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>
@@ -101,6 +100,9 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 {{formtitle}} 
+                <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-show="is_view">
+                    <button type="button" class="btn btn-success fa fa-print" ng-print print-element-id="printArea" ng-disabled="status == '0'">&nbsp;Print</button>
+                </div> 
             </div>
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation">
@@ -220,6 +222,123 @@
                     </div>
                 </form>
             </div>
+        </div>
+    </div>
+
+    <div id="printArea">
+        <div align="center">
+            <table style="width: 300px;">
+                <tr>
+                    <td align="left" valign="top"><img src="img/logo.png"></td>
+                    <td align="right" valign="top">
+                        <H1 style="font-style: italic; font-weight: bolder; color: red; margin: 0px;">TUGASANDA</H1>
+                        <h5 style="margin:0px;">CARROSERIE</h5>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="center">
+                        <H3 style="margin:0px; margin-top: 5px;"><u>SURAT - KETERANGAN</u></H3>
+                        <p style="margin:0px;">No.</p>
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <table>
+                <tr>
+                    <td colspan="3">MENERANGKAN KENDARAAN DENGAN DATA-DATA :</td>
+                </tr>
+                <tr>
+                    <td>Pemilik</td>
+                    <td width="1">:</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Alamat</td>
+                    <td width="1">:</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>No. Polisi</td>
+                    <td width="1">:</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Merk / Thn. Pembuatan</td>
+                    <td width="1">:</td>
+                    <td>{{form.merk}} / {{form.tgl| date:"yyyy"}}</td>
+                </tr>
+                <tr>
+                    <td>No. Chassis / No. Mesin</td>
+                    <td width="1">:</td>
+                    <td>{{form.no_chassis}} / {{form.no_mesin}}</td>
+                </tr>
+                <tr>
+                    <td>Bentuk Lama</td>
+                    <td width="1">:</td>
+                    <td>CHASSIS</td>
+                </tr>
+                <tr>
+                    <td>Warna Lama</td>
+                    <td width="1">:</td>
+                    <td>{{form.warna_lama}}</td>
+                </tr>
+                <tr>
+                    <td>Bentuk Baru</td>
+                    <td width="1">:</td>
+                    <td>{{form.bentuk_baru}}</td>
+                </tr>
+                <tr>
+                    <td>Warna Baru</td>
+                    <td width="1">:</td>
+                    <td>{{form.warna_baru}}</td>
+                </tr>
+                <tr>
+                    <td>Keterangan</td>
+                    <td width="1">:</td>
+                    <td>{{form.ket}}</td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Kami buat menurut ketentuan dan peraturan berdasarkan Undang-Undang yang berlaku / S. K. Dirjen Perhubungan Darat.</p>
+                        <p style="margin: 0px;">Demikian surat keterangan ini kami buat, untuk dipergunakan seperlunya.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <table width="100%">
+                            <tr>
+                                <td colspan="50%">
+
+                                </td>
+                                <td align="right">
+                                    <p>Sukorejo, ..................................................</p>
+                                    <br><br>
+                                    <p align="">( Dewi Rochmawati )</p>
+                                    <br>
+                                </td>
+                            </tr>
+                        </table>        
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p style="margin: 0px;">Ijin Usaha Dinas Perindustrian</p>
+                        <p style="margin: 0px;">Prop. Dati I Jatim.</p>
+                        <p style="margin: 0px;">Terdaftar pada Konwil VIII</p>
+                        <p style="margin: 0px;">Ditjendat Prop. Jatim</p>
+                        <p style="margin: 0px;">Anggota ASKINDO Jakarta</p>
+                    </td>
+                    <td colspan="2">
+                        <p style="margin: 0px;"></p>
+                        <p style="margin: 0px;"></p>
+                        <p style="margin: 0px;">No. 187 / M / SK / IMLDE / XI / 90</p>
+                        <p style="margin: 0px;">No. 551.23/3918/8KL.94/XII/104/2012</p>
+                        <p style="margin: 0px;">No. 002 / S.Kep. / D.RH. / 1983</p>
+                        <p style="margin: 0px;">No. 09/ D.P.P / III / 2003</p>
+                    </td>
+                </tr>
+            </table>
+            <br>
         </div>
     </div>
 </div>

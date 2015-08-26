@@ -41,6 +41,16 @@ app.controller('returbarangmasukCtrl', function ($scope, Data, toaster) {
             window.location = 'api/web/bbm/excel';
         });
     }
+    $scope.excel = function () {
+        Data.get('bbm/rekap', paramRef).then(function (data) {
+            window.location = 'api/web/bbm/excel';
+        });
+    }
+    $scope.excelRekap = function () {
+        Data.get('bbm/rekap', paramRef).then(function (data) {
+            window.location = 'api/web/bbm/excelrekap';
+        });
+    }
    
 
 

@@ -7,6 +7,7 @@
             <div class="panel-heading">
                 <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
+                    <button type="button" class="btn btn-info fa fa-copy" ng-click="copy();">&nbsp;Salin BBK</button>
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>
@@ -46,7 +47,6 @@
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th st-sort="tanggal">#</th>
                             <th st-sort="no_bbk">No. BBK</th>
                             <th st-sort="tanggal">Tanggal</th>
                             <th st-sort="no_wo">No. Wo</th>
@@ -58,9 +58,6 @@
                     </thead>
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
-                            <td><label class="i-checks">
-                                    <input type="checkbox" ng-model="form.no_bkk[row.no_bkk]" ><i></i> 
-                                </label></td>
                             <td>{{row.no_bbk}}</td>
                             <td>{{row.tanggal| date}}</td>
                             <td>{{row.no_wo}}</td>
@@ -69,20 +66,20 @@
                             <td>{{row.petugas}}</td>
                             <td>
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
-                                    <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);"></button>
+                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)" title="Edit BBK"></button>
+                                    <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" title="Hapus BBK"></button>
                                 </div> 
                             </td>
                         </tr>
                     </tbody>
                     <tbody ng-show="isLoading">
                         <tr>
-                            <td colspan="8" class="text-center">Loading ... </td>
+                            <td colspan="7" class="text-center">Loading ... </td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="8"></td>
+                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="7"></td>
                         </tr>
                 </table>		
             </div>
@@ -93,12 +90,33 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 {{formtitle}} 
+                <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-show="is_view">
+                    <button type="button" class="btn btn-primary fa fa-print" ng-print print-element-id="printArea" ng-disabled="form.status == 1" ng-click="print(form.no_bbk)">&nbsp;Print</button>
+                </div>
             </div>
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation">
                     <div class="col-md-12">
                         <div class="row">
                             <div class="col-md-6 col-sm-12">
+                                <div class="form-group" ng-if="is_copy">
+                                    <label class="col-sm-3 control-label">Cari BBK</label>
+                                    <div class="col-sm-9">
+                                        <div class="input-group">
+                                            <ui-select on-select="copyData(form.kode_asli,form.no_bbk)" ng-model="form.kode_asli" ng-disabled="is_view" theme="bootstrap">
+                                                <ui-select-match>{{$select.selected.no_bbk}}</ui-select-match>
+                                                <ui-select-choices refresh="cariBbk($select.search)" repeat="val in resultBbk">
+                                                    {{val.no_bbk}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            <span class="input-group-btn">
+                                                <button ng-click="form.kode_asli = undefined" class="btn btn-default">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">No. BBK</label>
                                     <div class="col-sm-9">
@@ -120,7 +138,7 @@
                                     <label class="col-sm-3 control-label">No Wo</label>
                                     <div class="col-sm-9">
                                         <div class="input-group">
-                                            <ui-select ng-model="form.no_wo" ng-disabled="is_view" theme="bootstrap" on-select="detailstok(form.no_wo, '')">
+                                            <ui-select ng-model="form.no_wo" ng-disabled="is_view" theme="bootstrap" >
                                                 <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
                                                 <ui-select-choices refresh="cariWo($select.search)" repeat="val in results">
                                                     {{val.no_wo}}
@@ -138,7 +156,7 @@
                                     <label class="col-sm-3 control-label">Bagian</label>
                                     <div class="col-sm-9">
                                         <div class="input-group">
-                                            <ui-select ng-model="form.kd_jab" ng-disabled="is_view" theme="bootstrap">
+                                            <ui-select ng-model="form.kd_jab" ng-disabled="is_view" theme="bootstrap" >
                                                 <ui-select-match>{{$select.selected.jabatan}}</ui-select-match>
                                                 <ui-select-choices refresh="cariJabatan($select.search)" repeat="val in resultsjabatan">
                                                     {{val.jabatan}}
@@ -202,17 +220,20 @@
                                         <tr>
                                             <th>Barang</th>
                                             <th style="width:100px">Jumlah</th>
+                                            <!--<th style="width:100px">Satuan</th>-->
                                             <th style="width:400px">Keterangan</th>
-                                            <td width="79" ng-show="is_view != true"></td>
+                                            <td width="50" ng-show="is_view != true" style="margin:0px;padding:0px;" >
+                                                <button ng-click="addDetail(detail)" style="width:50px;"  class="btn btn-success" ng-disabled="is_view" title="Tambah Detail"><i class="fa fa-plus"></i></button>
+                                            </td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr style="margin:0px;padding:0px;" ng-repeat="detail in detailBbk">
                                             <td style="margin:0px;padding:0px;">
                                                 <div class="input-group">
-                                                    <ui-select on-select="detailstok(form.no_wo, $item)" ng-disabled="is_view" ng-model="detail.kd_barang" theme="bootstrap">
+                                                    <ui-select on-select="detailstok(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang)" ng-disabled="is_view" ng-model="detail.kd_barang" theme="bootstrap">
                                                         <ui-select-match>{{$select.selected.nm_barang}}</ui-select-match>
-                                                        <ui-select-choices refresh="cariBarang($select.search)" repeat="val in resultsbarang">
+                                                        <ui-select-choices refresh="listBarang($select.search, form.no_wo, form.kd_jab)" repeat="val in resultsbarang">
                                                             {{val.nm_barang}}
                                                         </ui-select-choices>
                                                     </ui-select>
@@ -223,12 +244,16 @@
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control" required ng-change=""></td>
+                                            <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control" 
+                                                                                       ng-keyup="
+                                                                                       kalkulasi(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang, detail.jml); 
+                                                                                       (sisa_pengambilan > 0) ? detail.jml = detail.jml : detail.jml = 0;
+                                                                                       (sisa_pengambilan >= 0) ? sisa_pengambilan = sisa_pengambilan  : sisa_pengambilan = 0;
+                                                                                       "></td>
+                                            <!--<td>{{detail.satuan}}</td>-->
                                             <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control"></td>
                                             <td  style="margin:0px;padding:0px;" ng-show="is_view != true">
-                                                <button ng-click="addDetail(detail)" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-plus"></i></button>
-                                                <button ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view" ng-if="$index == 0"><i class="fa fa-trash-o"></i></button>
-                                                <button ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view" ng-if="$index > 0" style="width:100%"><i class="fa fa-trash-o"></i></button>
+                                                <button ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view" style="width:50px;" title="Hapus Detail"><i class="fa fa-trash-o"></i></button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -244,5 +269,57 @@
                 </form>
             </div>
         </div>
+    </div>
+
+    <div id="printArea">
+        <table width="100%" class="no-border">
+            <tr>
+                <td width="50%">
+                    PT. KARYA TUGAS ANDA <br>
+                    Sukorejo - Pasuruan
+                </td>
+                <td valign="top">
+                    NO. DOC : FR-WHS-004-REV.00
+                </td>
+            </tr>
+        </table>
+        <br>
+        <center>
+            *** BUKTI BARANG KELUAR***
+        </center>
+        <br>
+        <table class="no-border">
+            <tr>
+                <td width="100">NO. WO</td>
+                <td width="2">:</td>
+                <td>{{form.no_wo.no_wo}}</td>
+            </tr>
+            <tr>
+                <td>NO. BBK</td>
+                <td width="2">:</td>
+                <td>{{form.no_bbk}}</td>
+            </tr>
+        </table>
+        <br>
+        <table class="print-detail" border="1">
+            <thead>
+                <tr>
+                    <td>No.</td>
+                    <td>Nama Barang</td>
+                    <td>Jml</td>
+                    <td>Sat</td>
+                    <td>Keterangan</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="detail in detailBbk">
+                    <td>{{$index + 1}}</td>
+                    <td>{{detail.kd_barang.nm_barang}}</td>
+                    <td>{{detail.jml}}</td>
+                    <td>{{detail.satuan}}</td>
+                    <td>{{detail.ket}}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>

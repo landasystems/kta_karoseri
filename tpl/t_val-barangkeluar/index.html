@@ -19,15 +19,11 @@
                             <label class="col-sm-2 control-label">Kode Bom</label>
                             <div class="col-sm-3">
                                 <input st-search="kd_bom" class="form-control"/>
-
                             </div>
                             <label class="col-sm-2 control-label">Merk</label>
                             <div class="col-sm-3">
                                 <input st-search="merk" class="form-control"/>
-
                             </div>
-
-
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Tipe</label>
@@ -38,65 +34,45 @@
                             <label class="col-sm-2 control-label">Model</label>
                             <div class="col-sm-3">
                                 <input st-search="model" class="form-control"/>
-
                             </div>
-
-
                         </div>
-
-                        <div class="form-group">
-
-
-
-                        </div>
-
                     </div>
                 </div>
                 <div class="table-responsive">
 
                     <table class="table table-striped table-hover" >
                         <thead>
-                        <tr>
-                            <th st-sort="tanggal">#</th>
-                            <th st-sort="no_bbk">No. BBK</th>
-                            <th st-sort="tanggal">Tanggal</th>
-                            
-                            <th st-sort="no_wo">No. Wo</th>
-                            <th st-sort="bagian">Bagian</th>
-                            <th st-sort="penerima">Penerima</th>
-                            <th st-sort="petugas">Petugas</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody ng-show="!isLoading">
-                        <tr ng-repeat="row in displayed" >
-                            <td><label class="i-checks">
+                            <tr>
+                                <th st-sort="tanggal">#</th>
+                                <th st-sort="no_bbk">No. BBK</th>
+                                <th st-sort="tanggal">Tanggal</th>
+                                <th st-sort="no_wo">No. Wo</th>
+                                <th st-sort="bagian">Bagian</th>
+                                <th st-sort="penerima">Penerima</th>
+                                <th st-sort="petugas">Petugas</th>
+                            </tr>
+                        </thead>
+                        <tbody ng-show="!isLoading">
+                            <tr ng-repeat="row in displayed" >
+                                <td><label class="i-checks">
                                         <input type="checkbox" ng-model="form.no_bbk[row.no_bbk]" ><i></i> 
                                     </label></td>
-                                     <td>{{row.no_bbk}}</td>
-                            <td>{{row.tanggal| date}}</td>
-                           
-                            <td>{{row.no_wo}}</td>
-                            <td>{{row.bagian}}</td>
-                            <td>{{row.penerima}}</td>
-                            <td>{{row.petugas}}</td>
-                            <td>
-                                <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
-                                    <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);"></button>
-                                </div> 
-                            </td>
-                        </tr>
-                    </tbody>
+                                <td>{{row.no_bbk}}</td>
+                                <td>{{row.tanggal| date}}</td>
+                                <td>{{row.no_wo}}</td>
+                                <td>{{row.bagian}}</td>
+                                <td>{{row.penerima}}</td>
+                                <td>{{row.petugas}}</td>
+                            </tr>
+                        </tbody>
                         <tbody ng-show="isLoading">
                             <tr>
-                                <td colspan="4" class="text-center">Loading ... </td>
+                                <td colspan="7" class="text-center">Loading ... </td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="2" class="text-center" st-pagination="" st-items-by-page="20" st-template="tpl/blocks/pagination.custom.html">
-                                </td>
+                                <td colspan="7" class="text-center" st-pagination="" st-items-by-page="20" st-template="tpl/blocks/pagination.custom.html"></td>
                             </tr>
                     </table>
 

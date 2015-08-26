@@ -45,11 +45,11 @@ foreach ($data as $value) {
                     </tr>';
             foreach ($bag['body'] as $det) {
                 echo '<tr height="25">
-                        <td>' . $det['kode_barang'] . '</td>
+                        <td align="center">' . $det['kode_barang'] . '</td>
                         <td>' . $det['nama_barang'] . '</td>
-                        <td>' . $det['satuan'] . '</td>
-                        <td>' . $det['qty'] . '</td>
-                        <td>' . $det['harga'] . '</td>
+                        <td align="center">' . $det['satuan'] . '</td>
+                        <td align="center">' . $det['qty'] . '</td>
+                        <td align="right">' . $det['harga'] . '</td>
                         <td>' . $det['ket'] . '</td>
                     </tr>';
             }

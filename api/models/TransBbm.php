@@ -15,25 +15,23 @@ use Yii;
  * @property string $penerima
  * @property string $no_wo
  */
-class TransBbm extends \yii\db\ActiveRecord
-{
+class TransBbm extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'trans_bbm';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['no_bbm'], 'required'],
             [['tgl_nota'], 'safe'],
-            [['no_bbm'], 'string', 'max' => 15],
+            [['no_bbm','no_po'], 'string', 'max' => 15],
             [['surat_jalan'], 'string', 'max' => 20],
             [['kd_suplier', 'no_wo'], 'string', 'max' => 10],
             [['pengirim', 'penerima'], 'string', 'max' => 50],
@@ -44,8 +42,7 @@ class TransBbm extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'no_bbm' => 'No Bbm',
             'tgl_nota' => 'Tgl Nota',
@@ -56,4 +53,9 @@ class TransBbm extends \yii\db\ActiveRecord
             'no_wo' => 'No Wo',
         ];
     }
+
+    public function getSupplier() {
+        return $this->hasOne(Supplier::className(), ['kd_supplier' => 'kd_suplier']);
+    }
+
 }

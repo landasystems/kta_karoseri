@@ -22,43 +22,17 @@ app.controller('notifUnitCtrl', function ($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
         paramRef = param;
-        Data.get('notifunit', param).then(function (data) {
+        Data.get('notifunit/index/0', param).then(function (data) {
             $scope.displayed = data.data;
+            console.log($scope.displayed);
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
 
         $scope.isLoading = false;
     };
-
-//    $scope.excel = function () {
-//        Data.get('modelkendaraan', paramRef).then(function (data) {
-//            window.location = 'api/web/modelkendaraan/excel';
-//        });
-//    }
-
-//    $scope.create = function (form) {
-//        $scope.is_create = true;
-//        $scope.is_edit = true;
-//        $scope.is_view = false;
-//        $scope.formtitle = "Form Tambah Data";
-//        $scope.form = {};
-//        Data.get('modelkendaraan/kode').then(function (data) {
-//            $scope.form.kd_model = data.kode;
-//        });
-//    };
-//    $scope.update = function (form) {
-//        $scope.is_create = false;
-//        $scope.is_edit = true;
-//        $scope.is_view = false;
-//        $scope.formtitle = "Edit Data : " + form.kd_model;
-//        $scope.form = form;
-//    };
-//    $scope.view = function (form) {
-//        $scope.is_edit = true;
-//        $scope.is_view = true;
-//        $scope.formtitle = "Lihat Data : " + form.kd_model;
-//        $scope.form = form;
-//    };
+    $scope.excel = function () {
+        window.location = 'api/web/notifunit/index/1';
+    };
     $scope.cancel = function () {
         if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
             $scope.callServer(tableStateRef);

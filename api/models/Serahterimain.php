@@ -71,4 +71,7 @@ class Serahterimain extends \yii\db\ActiveRecord
             'status' => 'Status',
         ];
     }
+    public function getWarna() {
+        return $this->hasOne(Warna::className(), ['kd_warna' => 'kd_warna']);
+    }
 }

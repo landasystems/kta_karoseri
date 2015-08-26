@@ -29,6 +29,8 @@ class BbkController extends Controller {
                     'listbbk' => ['get'],
                     'detailstok' => ['post'],
                     'rekap' => ['get'],
+                    'listbarang' => ['post'],
+                    'print' => ['get'],
                 ],
             ]
         ];
@@ -56,22 +58,93 @@ class BbkController extends Controller {
         return true;
     }
 
+    public function actionPrint() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $update = TransBbk::updateAll(array('status' => 1), 'no_bbk = "' . $params['no_bbk'] . '"');
+    }
+
+    public function actionListbarang() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        if (!empty($params['no_wo']) and !empty($params['kd_jab'])) {
+            //cek optional bom
+            $optional = \app\models\TransAdditionalBom::findAll(['no_wo' => $params['no_wo']['no_wo']]);
+
+            //jika tidak ada optional
+            if (empty($optional) or count($optional) == 0) {
+                $query = new Query;
+                $query->from('det_standar_bahan as dsb')
+                        ->join('LEFT JOIN', 'barang as b', 'b.kd_barang = dsb.kd_barang')
+                        ->join('LEFT JOIN', 'tbl_jabatan as tj', 'tj.id_jabatan = dsb.kd_jab')
+                        ->join('LEFT JOIN', 'spk', 'spk.kd_bom = dsb.kd_bom')
+                        ->join('LEFT JOIN', 'wo_masuk as wm', 'spk.no_spk = wm.no_spk')
+                        ->select('b.saldo as stok, wm.no_wo as no_wo, b.kd_barang as kd_barang, '
+                                . 'b.nm_barang as nm_barang, tj.id_jabatan as kd_jabatan, '
+                                . 'tj.jabatan as bagian, dsb.qty as jml, dsb.ket as ket')
+                        ->where('b.nm_barang like "%' . $params['nama'] . '%" and wm.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_jab']['id_jabatan'] . '"');
+                $command = $query->createCommand();
+                $models = $command->queryAll();
+            } else {
+                $query = new Query;
+                $query->from('det_additional_bom as dsb')
+                        ->join('JOIN', 'barang as b', 'b.kd_barang = dsb.kd_barang')
+                        ->join('JOIN', 'tbl_jabatan as tj', 'tj.id_jabatan = dsb.kd_jab')
+                        ->join('JOIN', 'spk', 'spk.kd_bom = dsb.kd_bom')
+                        ->join('JOIN', 'wo_masuk as wm', 'spk.no_spk = wm.no_spk')
+                        ->select('b.saldo as stok, wm.no_wo as no_wo, b.kd_barang as kd_barang, '
+                                . 'b.nm_barang as nm_barang, tj.id_jabatan as kd_jabatan, '
+                                . 'tj.jabatan as bagian, dsb.qty as jml, dsb.ket as ket')
+                        ->where('b.nm_barang like "%' . $params['nama'] . '%" and dsb.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_jab']['id_jabatan'] . '"');
+
+                $command = $query->createCommand();
+                $models = $command->queryAll();
+            }
+
+            $queryBbk = new Query;
+            $queryBbk->from('trans_bbk as tb')
+                    ->join('JOIN', 'det_bbk as db', 'tb.no_bbk = db.no_bbk')
+                    ->select('db.kd_barang, db.jml')
+                    ->where('tb.no_wo = "' . $params['no_wo']['no_wo'] . '" and tb.kd_jab = "' . $params['kd_jab']['id_jabatan'] . '"');
+
+            $commandBbk = $queryBbk->createCommand();
+            $modelsBbk = $commandBbk->queryAll();
+
+
+
+            $detBbk = array();
+            foreach ($modelsBbk as $valBbk) {
+                $detBbk[$valBbk['kd_barang']]['jml_keluar'] = isset($detBbk[$valBbk['kd_barang']]['jml']) ? $detBbk[$valBbk['kd_barang']]['jml'] + $valBbk['jml'] : $valBbk['jml'];
+            }
+
+            $det = array();
+            $i = 0;
+            foreach ($models as $val) {
+                $det[$i]['kd_barang'] = $val['kd_barang'];
+                $det[$i]['nm_barang'] = $val['nm_barang'];
+                $det[$i]['stok_sekarang'] = $val['stok'];
+                $det[$i]['sisa_pengambilan'] = isset($detBbk[$val['kd_barang']]['jml_keluar']) ? $val['jml'] - $detBbk[$val['kd_barang']]['jml_keluar'] : $val['jml'];
+                $i++;
+            }
+
+            echo json_encode(array('status' => 1, 'data' => $det));
+        }
+    }
+
     public function actionKode() {
         $query = new Query;
         $query->from('trans_bbk')
                 ->select('*')
                 ->orderBy('no_bbk DESC')
                 ->limit(1);
+        $command = $query->createCommand();
+        $models = $command->query()->read();
 
-        $cek = TransBbk::findOne('no_bbk = "BK' . date("y") . '0001"');
+        $cek = TransBbk::findOne('no_bbk = "BK' . date("y") . '00001"');
         if (empty($cek)) {
-            $command = $query->createCommand();
-            $models = $command->query()->read();
-            $urut = substr($models['no_bbk'], 4) + 1;
-            $kode = substr('0000' . $urut, strlen($urut));
+            $urut = substr($models['no_bbk'], -5) + 1;
+            $kode = substr('00000' . $urut, strlen($urut));
             $kode = "BK" . date("y") . $kode;
         } else {
-            $kode = "BK" . date("y") . "0001";
+            $kode = "BK" . date("y") . "00001";
         }
         $this->setHeader(200);
 
@@ -192,11 +265,13 @@ class BbkController extends Controller {
                 ->limit(1);
         $command = $query->createCommand();
         $jabatan = $command->query()->read();
+
         $query = new Query;
         $query->from('tbl_karyawan')
                 ->select('nik, nama')
                 ->where('nik = "' . $model->penerima . '"')
                 ->limit(1);
+
         $command = $query->createCommand();
         $penerima = $command->query()->read();
 
@@ -205,17 +280,20 @@ class BbkController extends Controller {
         $model->no_wo = array('no_wo' => $model->no_wo);
 
         $detail = DetBbk::find()->where('no_bbk="' . $model->no_bbk . '"')->all();
+
         $i = 0;
         $det = array();
         foreach ($detail as $val) {
             $query->from('barang')
-                    ->select('kd_barang, nm_barang')
+                    ->select('kd_barang, nm_barang, satuan')
                     ->where('kd_barang = "' . $val['kd_barang'] . '"')
                     ->limit(1);
             $command = $query->createCommand();
-            $det[$i]['jml'] = $val['jml'];
-            $det[$i]['ket'] = $val['ket'];
             $barang = $command->query()->read();
+
+            $det[$i]['jml'] = $val['jml'];
+            $det[$i]['satuan'] = $barang['satuan'];
+            $det[$i]['ket'] = $val['ket'];
             $det[$i]['kd_barang'] = isset($barang) ? $barang : '';
             $i++;
         }
@@ -344,7 +422,7 @@ class BbkController extends Controller {
         header('Content-type: ' . $content_type);
         header('X-Powered-By: ' . "Nintriva <nintriva.com>");
     }
-    
+
     public function actionRekap() {
         //init variable
         $params = $_REQUEST;
@@ -375,11 +453,11 @@ class BbkController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('view_bbk_rekap as rvb')
-                ->join('JOIN','tbl_karyawan as tbk','tbk.nik = rvb.penerima')
-                ->join('LEFT JOIN','tbl_jabatan as tbj','tbj.id_jabatan = tbk.jabatan')
+                ->join('JOIN', 'tbl_karyawan as tbk', 'tbk.nik = rvb.penerima')
+                ->join('LEFT JOIN', 'tbl_jabatan as tbj', 'tbj.id_jabatan = tbk.jabatan')
                 ->orderBy($sort)
                 ->select("rvb.*,tbk.nama,tbj.jabatan");
-                
+
 //                ->from('trans_bbk as trbk')
 //                ->join('JOIN','det_bbk as detbk','detbk.no_bbk = trbk.no_bbk')
 //                ->join('LEFT JOIN','barang as brg','brg.kd_barang = detbk.kd_barang')
@@ -387,7 +465,6 @@ class BbkController extends Controller {
 //                ->join('JOIN','tbl_jabatan as tbj','tbj.id_jabatan = trbk.kd_jab')
 //                ->orderBy($sort)
 //                ->select("trbk.*,detbk.*,brg.satuan,brg.nm_barang,tbk.nama,tbj.jabatan");
-
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
@@ -397,8 +474,8 @@ class BbkController extends Controller {
                     $start = date("Y-m-d", strtotime($value[0]));
                     $end = date("Y-m-d", strtotime($value[1]));
                     $query->andFilterWhere(['between', 'rvb.tanggal', $start, $end]);
-                }else{
-                $query->andFilterWhere(['like', $key, $val]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
                 }
             }
         }
@@ -410,13 +487,13 @@ class BbkController extends Controller {
         $query->offset(null);
         session_start();
         $_SESSION['query'] = $query;
-        
+
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
-    
-     public function actionExcel() {
+
+    public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
         $command = $query->createCommand();
