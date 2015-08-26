@@ -83,9 +83,10 @@ class RubahbentukController extends Controller {
                 ->from('rubah_bentuk as rb')
                 ->join('Left Join', 'view_wo_spk as vws', 'rb.no_wo = vws.no_wo')
                 ->join('Left Join', 'spk', 'vws.no_spk = spk.no_spk')
+                ->join('left Join', 'warna', 'vws.kd_warna = warna.kd_warna')
 //            ->select("rb.tgl, vws.no_wo, rb.kd_rubah, vws.merk, vws.tipe, rb.bentuk_baru, vws.no_chassis, vws.nm_customer");
                 ->orderBy($sort)
-                ->select("*");
+                ->select("*, warna.warna as warna_lama");
 
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);

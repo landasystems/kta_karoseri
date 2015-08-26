@@ -27,6 +27,8 @@ class BbmController extends Controller {
                     'kode' => ['get'],
                     'excel' => ['get'],
                     'excelrekap' => ['get'],
+
+                    'exceldet' => ['get'],
                     'rekap' => ['get'],
                     'petugas' => ['get'],
                     'listbbk' => ['get'],
@@ -389,12 +391,20 @@ class BbmController extends Controller {
         $models = $command->queryAll();
         return $this->render("/expretur/bbm", ['models' => $models,'filter'=>$filter]);
     }
+
     public function actionExcelrekap() {
         session_start();
         $query = $_SESSION['query'];
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/rekapbbm", ['models' => $models]);
+    }
+
+    public function actionExceldet($id) {
+        $model = $this->findModel($id);
+        $detail = DetBbm::findAll(['no_bbm' => $id]);
+//        Yii::error($detail);
+        return $this->render('reportExcel', ['model'=> $model,'detail'=> $detail]);
     }
 
 }

@@ -68,7 +68,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
                 $scope.rBom = data.data;
             });
         }
-    }
+    };
     $scope.addDetail = function(detail) {
         $scope.detBom.unshift({
             kd_jab: '',

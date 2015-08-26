@@ -15,25 +15,23 @@ use Yii;
  * @property string $tgl_kontrak
  * @property integer $stat
  */
-class WoMasuk extends \yii\db\ActiveRecord
-{
+class WoMasuk extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'wo_masuk';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['no_wo'], 'required'],
             [['kondisi', 'stat'], 'integer'],
-            [['in_spk_marketing', 'tgl_kontrak','tgl_keluar'], 'safe'],
+            [['in_spk_marketing', 'tgl_kontrak', 'tgl_keluar'], 'safe'],
             [['kd_titipan', 'no_spk', 'no_wo', 'foto'], 'string', 'max' => 10],
             [['no_wo'], 'unique']
         ];
@@ -42,8 +40,7 @@ class WoMasuk extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'kd_titipan' => 'Kd Titipan',
             'no_spk' => 'No Spk',
@@ -54,4 +51,8 @@ class WoMasuk extends \yii\db\ActiveRecord
             'stat' => 'Stat',
         ];
     }
+    public function getSpkaroseri() {
+        return $this->hasOne(Spkaroseri::className(), ['no_spk' => 'no_spk']);
+    }
+
 }

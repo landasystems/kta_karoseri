@@ -1006,6 +1006,19 @@ angular.module('app')
                                                 );
                                             }]
                                     }})
+                                .state('notif.barangkeluar', {
+                                    url: '/barangkeluar',
+                                    templateUrl: 'tpl/n_barangkeluar/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/n_barangkeluar.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
 
                     }
                 ]);

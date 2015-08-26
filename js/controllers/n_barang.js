@@ -22,7 +22,7 @@ app.controller('notifBarangCtrl', function ($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
         paramRef = param;
-        Data.get('notifbarang', param).then(function (data) {
+        Data.get('notifbarang/index/0', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
@@ -59,6 +59,12 @@ app.controller('notifBarangCtrl', function ($scope, Data, toaster) {
 //        $scope.formtitle = "Lihat Data : " + form.kd_model;
 //        $scope.form = form;
 //    };
+
+    $scope.excel = function () {
+//        if(form != undefined){
+        window.location = 'api/web/notifunit/index/1';
+//        }
+    };
     $scope.cancel = function () {
         if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
             $scope.callServer(tableStateRef);

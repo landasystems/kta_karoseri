@@ -19,13 +19,11 @@ app.controller('wokeluarCtrl', function($scope, Data, toaster) {
     $scope.getnowo = function (wo) {
         Data.post('wokeluar/getnowo/', wo).then(function (data) {
             $scope.form = data.nowo;
-            console.log(data.nowo);
 
         });
     };
 
     $scope.pilih = function(form, $item) {
-        console.log($item.customer);
         form.customer = $item.customer;
         form.pemilik = $item.pemilik;
         form.sales = $item.sales;

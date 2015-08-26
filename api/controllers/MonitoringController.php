@@ -17,7 +17,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class NotifunitController extends Controller {
+class MonitoringController extends Controller {
 
     public function behaviors() {
         return [
