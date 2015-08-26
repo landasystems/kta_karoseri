@@ -28,6 +28,7 @@ class SpkController extends Controller {
                     'customer' => ['post'],
                     'jabatan' => ['post'],
                     'kode' => ['get'],
+                    'updtst' => ['get'],
                 ],
             ]
         ];
@@ -209,7 +210,7 @@ class SpkController extends Controller {
                 ->join('JOIN', 'view_wo_spk as vw', 'trans_spkerja.no_wo = vw.no_wo')
                 ->join('JOIN', 'tbl_jabatan', 'trans_spkerja.kd_jab = tbl_jabatan.id_jabatan')
                 ->orderBy($sort)
-                ->select("trans_spkerja.id as id_spk,trans_spkerja.no_wo,vw.nm_customer, vw.model,tbl_jabatan.jabatan");
+                ->select("trans_spkerja.id as id_spk,trans_spkerja.no_wo,vw.nm_customer, vw.model,tbl_jabatan.jabatan, vw.merk, vw.tipe");
 
         //filter
         if (isset($params['filter'])) {
@@ -245,11 +246,11 @@ class SpkController extends Controller {
                 ->join('JOIN', 'view_wo_spk as vw', 'trans_spkerja.no_wo = vw.no_wo')
                 ->join('JOIN', 'tbl_jabatan', 'trans_spkerja.kd_jab = tbl_jabatan.id_jabatan')
                 ->where(' trans_spkerja.no_wo = "' . $model['no_wo'] . '"')
-                ->select("trans_spkerja.id as id_spk,trans_spkerja.no_wo,vw.nm_customer, vw.model,tbl_jabatan.jabatan");
+                ->select("trans_spkerja.id as id_spk,trans_spkerja.no_wo,vw.nm_customer, vw.model,tbl_jabatan.jabatan, vw.merk, vw.tipe");
         $command2 = $query2->createCommand();
         $models2 = $command2->query()->read();
 
-        $data = ['nm_customer' => $models2['nm_customer'], 'model' => $models2['model']];
+        $data = ['nm_customer' => $models2['nm_customer'], 'model' => $models2['model'],'merk' => $models2['merk'],'tipe' => $models2['tipe']];
         //no wo
         $nowo = Spk::find()
                 ->where(['id' => $model['id']])
@@ -391,7 +392,11 @@ class SpkController extends Controller {
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
     }
-
+      public function actionUpdtst($id) {
+        $model = Spk::findOne(['id' => $id]);
+        $model->status = 1;
+        $model->save();
+    }
     public function actionDelete($id) {
         $model = $this->findModel($id);
         $deleteDetail = DetSpkerja::deleteAll(['no_wo' => $model['no_wo']]);
