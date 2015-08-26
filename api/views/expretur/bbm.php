@@ -25,9 +25,19 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
             <td> : </td>
         </tr>
         <tr>
-            <td>Periode</td>
-            <td> : </td>
-        </tr>
+                <td>Periode</td>
+                <?php
+                if (!empty($filter['tgl_nota'])) {
+                    $value = explode(' - ', $filter['tgl_nota']);
+                    $start = date("d/m/Y", strtotime($value[0]));
+                    $end = date("d/m/Y", strtotime($value[1]));
+                } else {
+                    $start = '';
+                    $end = '';
+                }
+                ?>
+                <td> : <?php echo $start . ' - ' . $end ?></td>
+            </tr>
         <tr>
             <td>Cetak</td>
             <td> : <?php echo date('d/m/Y') ?></td>

@@ -123,10 +123,11 @@ class BomController extends Controller {
         $models = $command->query()->read();
 
         if (empty($models)) {
-            $kode = 'BOM' . date("y") . '00001';
+            $kode = 'BOM' . date("y") . '0001';
         } else {
-            $lastKode = substr($models['kd_bom'], -5) + 1;
-            $kode = 'BOM' . date("y") . substr('0000' . $lastKode, -5);
+            $lastKode = substr($models['kd_bom'], -4) + 1;
+            $kode = substr('0000' . $lastKode, strlen($lastKode));
+            $kode = 'BOM' . date("y") . substr('0000' . $lastKode, -4);
         }
         $this->setHeader(200);
 
@@ -137,7 +138,7 @@ class BomController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "trans_standar_bahan.kd_bom ASC";
+        $sort = "trans_standar_bahan.kd_bom DESC";
         $offset = 0;
         $limit = 10;
 
@@ -211,6 +212,7 @@ class BomController extends Controller {
                     ->join('JOIN', 'spk', 'spk.kd_bom = dts.kd_bom')
                     ->join('JOIN', 'wo_masuk as wm', 'wm.no_spk  = spk.no_spk')
                     ->join('JOIN', 'trans_standar_bahan as tsb', 'tsb.kd_bom  = spk.kd_bom')
+                    ->order('brg.nm_barang ASC')
                     ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
 
             //filter
@@ -279,8 +281,6 @@ class BomController extends Controller {
                     ->join('JOIN', 'det_bbk as db', 'tb.no_bbk = db.no_bbk')
                     ->select('db.kd_barang, db.jml');
 
-
-
             //filter
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
@@ -340,7 +340,7 @@ class BomController extends Controller {
         $bbk->offset(null);
         $commandbbk = $bbk->createCommand();
         $modelbbk = $commandbbk->queryAll();
-        
+
 //        print_r($modelbbk);
 
         return $this->render("/expretur/r_bomwo", ['models' => $models, 'filter' => $filter, 'modelbbk' => $modelbbk]);

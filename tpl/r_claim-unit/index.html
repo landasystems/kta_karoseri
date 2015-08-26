@@ -18,34 +18,38 @@
 
                             <div class="form-group">
                                 <div class="control-group">
-                                    <label class="col-sm-2 control-label">Periode</label>
+                                    <label class="col-sm-2 control-label">Periode Tgl Penanganan</label>
                                     <div class="col-sm-3">
-                                        <input placeholder="Tanggal Periode" date-range-picker class="form-control" st-search="tgl_periode" type="text"  ng-model="tanggal">
+                                        <input placeholder="Periode Tanggal Penanganan" date-range-picker class="form-control" st-search="tgl_periode" type="text"  ng-model="tanggal">
                                     </div>
                                     <label class="col-sm-2 control-label">No WO</label>
-                                <div class="col-sm-3">
-                                    <input placeholder="Nomor WO" st-search="dum.no_wo" class="form-control"/>
-                                </div>
-                                    
+                                    <div class="col-sm-3">
+                                        <input placeholder="Nomor WO" st-search="dc.no_wo" class="form-control"/>
+                                    </div>
+
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="control-group">
-                                    
-                                    <label class="col-sm-2 control-label">No Chassis</label>
-                                <div class="col-sm-3">
-                                    <input placeholder="Nomor chasssis" st-search="sti.no_chassis" class="form-control"/>
-                                </div>
+
+                                    <label class="col-sm-2 control-label">kategori</label>
+                                    <div class="col-sm-3">
+                                        <select stInputEvent="change" st-search="kategori" class="form-control">
+                                            <option value="all">All</option>
+                                            <option value="in">Interior</option>
+                                            <option value="ex">Exterior</option>
+                                        </select>
+                                    </div>
                                     <label class="col-sm-2 control-label">Nama Customer</label>
-                                <div class="col-sm-3">
-                                    <input placeholder="Nama Customer" st-search="cus.nm_customer" class="form-control"/>
-                                </div>
-                                    
+                                    <div class="col-sm-3">
+                                        <input placeholder="Nama Customer" st-search="vws.nm_customer" class="form-control"/>
+                                    </div>
+
                                 </div>
                             </div>
                             <!--</div>-->
-                            
-                            
+
+
                         </div>
                     </div>
                 </div>
@@ -57,6 +61,7 @@
                         <tr>
 
                             <th st-sort="dc.no_wo">NO WO</th>
+                            <th st-sort="dc.tgl_pelaksanaan">Tgl Penanganan</th>
                             <th st-sort="ch.jenis">Jenis Kendaraan</th>
                             <th st-sort="ch.model_chassis">Model</th>
                             <th st-sort="vws.nm_customer">Customer</th>
@@ -66,6 +71,7 @@
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed">
                             <td>{{row.no_wo}}</td>
+                            <td>{{row.tgl_pelaksanaan| date:'dd - MMM - yyyy'}}</td>
                             <td>{{row.jenis}}</td>
                             <td>{{row.model_chassis}}</td>
                             <td>{{row.nm_customer}}</td>
@@ -94,6 +100,6 @@
 
     <!--PRINT-->
 
-    
+
 
 </div>

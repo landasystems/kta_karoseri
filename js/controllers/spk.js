@@ -23,6 +23,12 @@ app.controller('spkCtrl', function($scope, Data, toaster) {
             alert("Something gone wrong");
         }
     };
+    $scope.updt_st = function ($id) {
+        console.log($id);
+        Data.get('womasuk/updtst/' + $id).then(function (data) {
+//            $scope.callServer(tableStateRef);
+        });
+    }
 
     $scope.cariProduk = function($query) {
         if ($query.length >= 3) {

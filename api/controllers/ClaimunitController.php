@@ -18,6 +18,7 @@ class ClaimunitController extends Controller {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'view' => ['get'],
+                    'excel' => ['get'],
                     'rekap' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
@@ -51,7 +52,7 @@ class ClaimunitController extends Controller {
 
         return true;
     }
-    
+
     public function actionRekap() {
         //init variable
         $params = $_REQUEST;
@@ -85,18 +86,26 @@ class ClaimunitController extends Controller {
                 ->join('JOIN', 'jenis_komplain as jk', 'jk.kd_jns = dc.kd_jns')
                 ->join('JOIN', 'view_wo_spk as vws', 'vws.no_wo = dc.no_wo')
                 ->join('LEFT JOIN', 'chassis as ch', 'ch.kd_chassis = vws.kd_chassis')
+                ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
+                ->join('LEFT JOIN', 'tbl_karyawan as tbk', 'tbk.nik = spk.nik')
                 ->orderBy($sort)
-                ->select("dc.*,jk.*,ch.*,vws.nm_customer");
+                ->select("dc.*,jk.*,ch.*,vws.nm_customer,vws.model,tbk.lokasi_kntr,tbk.nama");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                if ($key == 'tgl_periode') {
+                if (isset($key) && $key == 'kategori') {
+                    if ($val == 'in') {
+                        $query->andWhere("jk.stat = 'Interior'");
+                    } elseif ($val == 'ex') {
+                        $query->andWhere("jk.stat = 'Eksterior'");
+                    }
+                } else if ($key == 'tgl_periode') {
                     $value = explode(' - ', $val);
                     $start = date("Y-m-d", strtotime($value[0]));
                     $end = date("Y-m-d", strtotime($value[1]));
-                    $query->andFilterWhere(['between', 'b.tgl', $start, $end]);
+                    $query->andFilterWhere(['between', 'dc.tgl_pelaksanaan', $start, $end]);
                 } else {
                     $query->andFilterWhere(['like', $key, $val]);
                 }
@@ -118,7 +127,6 @@ class ClaimunitController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
-
 
     public function actionSisagaransi() {
         $params = json_decode(file_get_contents("php://input"), true);
@@ -275,6 +283,15 @@ class ClaimunitController extends Controller {
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
-}
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
 
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/rekapclaim", ['models' => $models, 'filter' => $filter]);
+    }
+
+}
 ?>

@@ -41,6 +41,11 @@ app.controller('rekapwomasukCtrl', function($scope, Data, toaster) {
             window.location = 'api/web/rekap/excelwomasuk';
         });
     }
+    $scope.excel2 = function() {
+        Data.get('rekap/rekapwomasuk', paramRef).then(function(data) {
+            window.location = 'api/web/rekap/excelwomasuk2';
+        });
+    }
 
 
 

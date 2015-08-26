@@ -26,6 +26,8 @@ class BbmController extends Controller {
                     'delete' => ['delete'],
                     'kode' => ['get'],
                     'excel' => ['get'],
+                    'excelrekap' => ['get'],
+
                     'exceldet' => ['get'],
                     'rekap' => ['get'],
                     'petugas' => ['get'],
@@ -162,10 +164,12 @@ class BbmController extends Controller {
                 ->from('det_bbm as db')
                 ->join('JOIN', 'trans_bbm as tb', 'tb.no_bbm= db.no_bbm')
                 ->join('LEFT JOIN', 'supplier as su', 'tb.kd_suplier= su.kd_supplier')
+                ->join('LEFT JOIN', 'trans_po as po', 'tb.no_po= po.nota')
+                ->join('LEFT JOIN', 'trans_spp as spp', 'spp.no_spp= po.spp')
                 ->join('JOIN', 'barang', 'barang.kd_barang = db.kd_barang')
                 ->join('LEFT JOIN', 'jenis_brg as jb', 'barang.jenis = jb.kd_jenis')
                 ->orderBy($sort)
-                ->select("tb.tgl_nota as tanggal_nota, db.no_bbm as no_bbm, barang.kd_barang as kd_barang, barang.nm_barang,
+                ->select("spp.no_spp,po.nota,tb.tgl_nota as tanggal_nota, db.no_bbm as no_bbm, barang.kd_barang as kd_barang, barang.nm_barang,
                     barang.satuan, db.jumlah as jumlah, tb.surat_jalan, db.no_po, su.nama_supplier, db.keterangan");
 //filter
 
@@ -197,6 +201,7 @@ class BbmController extends Controller {
         $query->offset(null);
         session_start();
         $_SESSION['query'] = $query;
+        $_SESSION['filter'] = $filter;
 
         $this->setHeader(200);
 
@@ -381,9 +386,10 @@ class BbmController extends Controller {
     public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/bbm", ['models' => $models]);
+        return $this->render("/expretur/bbm", ['models' => $models,'filter'=>$filter]);
     }
 
     public function actionExcelrekap() {
