@@ -9,18 +9,29 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
     $scope.jenis_kmp = [];
     $scope.bagian = '-';
 
-    $scope.detailstok = function(no_wo, kd_barang) {
-        var data = {
-            no_wo: no_wo,
-            kd_barang: kd_barang.kd_barang,
-        };
-        Data.post('bbk/detailstok', data).then(function(data) {
-            $scope.sisa_pengambilan = data.data.sisa_pengambilan;
-            $scope.stok_sekarang = data.data.stok_sekarang;
+    $scope.print = function(no_bbk) {
+        Data.get('bbk/print', {no_bbk: no_bbk}).then(function(data) {
+            $scope.form.satus = 1;
         });
     }
 
-    $scope.detailstok('', '');
+    $scope.kalkulasi = function(sisa, stok, jml_keluar) {
+        $scope.sisa_pengambilan = sisa - jml_keluar;
+        $scope.stok_sekarang = stok - jml_keluar;
+        if ($scope.sisa_pengambilan > 0) {
+            $scope.sisa_pengambilan = $scope.sisa_pengambilan;
+        } else {
+            $scope.sisa_pengambilan = 0;
+            toaster.pop('error', "Sisa pengambilan bahan telah habis");
+        }
+    }
+
+    $scope.detailstok = function(sisa, stok) {
+        $scope.sisa_pengambilan = sisa;
+        $scope.stok_sekarang = stok;
+    }
+
+    $scope.detailstok(0, 0);
 
     $scope.cariWo = function($query) {
         if ($query.length >= 3) {
@@ -46,9 +57,9 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
         }
     }
 
-    $scope.cariBarang = function($query) {
-        if ($query.length >= 3) {
-            Data.get('barang/cari', {barang: $query}).then(function(data) {
+    $scope.listBarang = function($query, no_wo, kd_jab) {
+        if ($query.length >= 1) {
+            Data.post('bbk/listbarang', {nama: $query, no_wo: no_wo, kd_jab: kd_jab}).then(function(data) {
                 $scope.resultsbarang = data.data;
             });
         }
@@ -62,19 +73,19 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
         })
     };
 
-    $scope.listBarang = function(no_wo, kd_jab) {
-        Data.post('bbk/listbarang', {no_wo: no_wo, kd_jab: kd_jab}).then(function(data) {
-            if (jQuery.isEmptyObject(data.data)) {
-                $scope.detailBbk = [{
-                        kd_barang: '',
-                        jml: '',
-                        ket: '',
-                    }];
-            } else {
-                $scope.detailBbk = data.data;
-            }
-        });
-    }
+//    $scope.listBarang = function(no_wo, kd_jab) {
+//        Data.post('bbk/listbarang', {no_wo: no_wo, kd_jab: kd_jab}).then(function(data) {
+//            if (jQuery.isEmptyObject(data.data)) {
+//                $scope.detailBbk = [{
+//                        kd_barang: '',
+//                        jml: '',
+//                        ket: '',
+//                    }];
+//            } else {
+//                $scope.detailBbk = data.data;
+//            }
+//        });
+//    }
 
     $scope.removeRow = function(paramindex) {
         var comArr = eval($scope.detailBbk);
@@ -148,6 +159,7 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
     $scope.create = function(form) {
         $scope.is_edit = true;
         $scope.is_view = false;
+        $scope.is_copy = false;
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
@@ -162,14 +174,17 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
                 jml: '',
                 ket: '',
             }];
+        $scope.form.tanggal = new Date();
     };
 
     $scope.update = function(form) {
         $scope.is_edit = true;
         $scope.is_view = false;
+        $scope.is_copy = false;
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.no_bbk;
         $scope.form = form;
+        $scope.form.tanggal = new Date(form.tanggal);
         $scope.selected(form.no_bbk, '');
     };
 
@@ -178,6 +193,7 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.no_bbk;
         $scope.form = form;
+        $scope.form.tanggal = new Date(form.tanggal);
         $scope.selected(form.no_bbk, '');
     };
 
@@ -199,6 +215,7 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
     };
 
     $scope.cancel = function() {
+        $scope.is_copy = false;
         $scope.is_edit = false;
         $scope.is_view = false;
     };

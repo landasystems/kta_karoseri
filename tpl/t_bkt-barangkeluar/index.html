@@ -66,8 +66,8 @@
                             <td>{{row.petugas}}</td>
                             <td>
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
-                                    <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);"></button>
+                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)" title="Edit BBK"></button>
+                                    <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" title="Hapus BBK"></button>
                                 </div> 
                             </td>
                         </tr>
@@ -91,7 +91,7 @@
             <div class="panel-heading">
                 {{formtitle}} 
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-show="is_view">
-                    <button type="button" class="btn btn-primary fa fa-print" ng-print print-element-id="printArea" ng-disabled="status == 0">&nbsp;Print</button>
+                    <button type="button" class="btn btn-primary fa fa-print" ng-print print-element-id="printArea" ng-disabled="form.status == 1" ng-click="print(form.no_bbk)">&nbsp;Print</button>
                 </div>
             </div>
             <div class="panel-body">
@@ -138,7 +138,7 @@
                                     <label class="col-sm-3 control-label">No Wo</label>
                                     <div class="col-sm-9">
                                         <div class="input-group">
-                                            <ui-select ng-model="form.no_wo" ng-disabled="is_view" theme="bootstrap" on-select="listBarang(form.no_wo, form.kd_jab); detailstok(form.no_wo, '')">
+                                            <ui-select ng-model="form.no_wo" ng-disabled="is_view" theme="bootstrap" >
                                                 <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
                                                 <ui-select-choices refresh="cariWo($select.search)" repeat="val in results">
                                                     {{val.no_wo}}
@@ -156,7 +156,7 @@
                                     <label class="col-sm-3 control-label">Bagian</label>
                                     <div class="col-sm-9">
                                         <div class="input-group">
-                                            <ui-select ng-model="form.kd_jab" ng-disabled="is_view" theme="bootstrap" on-select="listBarang(form.no_wo, form.kd_jab)">
+                                            <ui-select ng-model="form.kd_jab" ng-disabled="is_view" theme="bootstrap" >
                                                 <ui-select-match>{{$select.selected.jabatan}}</ui-select-match>
                                                 <ui-select-choices refresh="cariJabatan($select.search)" repeat="val in resultsjabatan">
                                                     {{val.jabatan}}
@@ -220,18 +220,20 @@
                                         <tr>
                                             <th>Barang</th>
                                             <th style="width:100px">Jumlah</th>
-                                            <th style="width:100px">Satuan</th>
+                                            <!--<th style="width:100px">Satuan</th>-->
                                             <th style="width:400px">Keterangan</th>
-                                            <td width="79" ng-show="is_view != true"></td>
+                                            <td width="50" ng-show="is_view != true" style="margin:0px;padding:0px;" >
+                                                <button ng-click="addDetail(detail)" style="width:50px;"  class="btn btn-success" ng-disabled="is_view" title="Tambah Detail"><i class="fa fa-plus"></i></button>
+                                            </td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr style="margin:0px;padding:0px;" ng-repeat="detail in detailBbk">
                                             <td style="margin:0px;padding:0px;">
                                                 <div class="input-group">
-                                                    <ui-select on-select="detailstok(form.no_wo, $item)" ng-disabled="is_view" ng-model="detail.kd_barang" theme="bootstrap">
+                                                    <ui-select on-select="detailstok(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang)" ng-disabled="is_view" ng-model="detail.kd_barang" theme="bootstrap">
                                                         <ui-select-match>{{$select.selected.nm_barang}}</ui-select-match>
-                                                        <ui-select-choices refresh="cariBarang($select.search)" repeat="val in resultsbarang">
+                                                        <ui-select-choices refresh="listBarang($select.search, form.no_wo, form.kd_jab)" repeat="val in resultsbarang">
                                                             {{val.nm_barang}}
                                                         </ui-select-choices>
                                                     </ui-select>
@@ -242,13 +244,16 @@
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control" required ng-change=""></td>
-                                            <td>{{detail.satuan}}</td>
+                                            <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control" 
+                                                                                       ng-keyup="
+                                                                                       kalkulasi(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang, detail.jml); 
+                                                                                       (sisa_pengambilan > 0) ? detail.jml = detail.jml : detail.jml = 0;
+                                                                                       (sisa_pengambilan >= 0) ? sisa_pengambilan = sisa_pengambilan  : sisa_pengambilan = 0;
+                                                                                       "></td>
+                                            <!--<td>{{detail.satuan}}</td>-->
                                             <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control"></td>
                                             <td  style="margin:0px;padding:0px;" ng-show="is_view != true">
-                                                <button ng-click="addDetail(detail)" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-plus"></i></button>
-                                                <button ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view" ng-if="$index == 0"><i class="fa fa-trash-o"></i></button>
-                                                <button ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view" ng-if="$index > 0" style="width:100%"><i class="fa fa-trash-o"></i></button>
+                                                <button ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view" style="width:50px;" title="Hapus Detail"><i class="fa fa-trash-o"></i></button>
                                             </td>
                                         </tr>
                                     </tbody>
