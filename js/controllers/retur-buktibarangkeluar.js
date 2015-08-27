@@ -8,6 +8,16 @@ app.controller('returbbkCtrl', function($scope, Data, toaster) {
     $scope.jenis_kmp = [];
     $scope.bagian = '-';
 
+    $scope.kalkulasi = function(jml_bbk, jml_keluar) {
+        var selisih = jml_bbk - jml_keluar;
+        if (selisih > 0) {
+            $scope.form.jml = selisih;
+        } else {
+            $scope.form.jml = 0;
+            toaster.pop('error', "Jumlah retur tidak boleh melebihi jumlah BBK");
+        }
+    }
+
     $scope.cariBbk = function($query) {
         if ($query.length >= 3) {
             Data.get('bbk/listbbk', {nama: $query}).then(function(data) {
@@ -17,7 +27,7 @@ app.controller('returbbkCtrl', function($scope, Data, toaster) {
     }
 
     $scope.cariBarang = function($query, no_bbk) {
-        if ($query.length >= 3) {
+        if ($query.length >= 1) {
             Data.post('returbbk/barangkeluar', {barang: $query, no_bbk: no_bbk}).then(function(data) {
                 $scope.resultsbarang = data.data;
             });
@@ -56,6 +66,7 @@ app.controller('returbbkCtrl', function($scope, Data, toaster) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.form.tgl = new Date();
         $scope.detailBbk = [{
                 kd_barang: '',
                 jml: '',
@@ -106,6 +117,7 @@ app.controller('returbbkCtrl', function($scope, Data, toaster) {
     $scope.selected = function(id) {
         Data.get('returbbk/view/' + id).then(function(data) {
             $scope.form = data.data;
+            $scope.form.tgl = new Date($scope.form.tgl);
             if (jQuery.isEmptyObject(data.detail)) {
                 $scope.detailBbk = [{
                         kd_barang: '',

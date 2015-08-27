@@ -5,13 +5,19 @@ header("Content-Disposition: attachment; filename=Laporan-HPP.xls");
 <table border="1" width="100%">
     <thead>
         <tr valign="top">
-            <td align="center" rowspan="2"><h2>BILL OF <br>MATERIAL</h2></td>
-            <td>Produk</td>
-            <td colspan="7">: <?php echo $model['merk'] ?></td>
-        </tr>
-        <tr>
-            <td>Merk / Tipe</td>
-            <td colspan="7">: <?php echo $model['model'] . '/' . $model['tipe'] ?></td>
+            <td align="center"><h2>BILL OF <br>MATERIAL</h2></td>
+            <td colspan="8">
+                <table width="600">
+                    <tr>
+                        <td>Produk</td>
+                        <td width="500">: <?php echo $model['merk'] ?></td>
+                    </tr>
+                    <tr>
+                        <td>Model / Type</td>
+                        <td width="500">: <?php echo $model['model'] . '/' . $model['tipe'] ?></td>
+                    </tr>
+                </table>
+            </td>
         </tr>
         <tr>
             <td align="center"><b>NAMA MATERIAL</b></td>

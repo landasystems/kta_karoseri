@@ -12,6 +12,14 @@ app.controller('pergerakanBrgCtrl', function($scope, Data) {
         });
     }
 
+    $scope.cariBarang = function($query) {
+        if ($query.length >= 3) {
+            Data.get('barang/cari', {barang: $query}).then(function(data) {
+                $scope.resultsbarang = data.data;
+            });
+        }
+    }
+
     $scope.view = function(form) {
         $scope.show_detail = true;
         Data.post('barang/rekappergerakan', form).then(function(data) {

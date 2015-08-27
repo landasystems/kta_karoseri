@@ -7,6 +7,7 @@
             <div class="panel-heading">
                 <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
+                    <button type="button" class="btn btn-success fa fa-check"  ng-click="modal()">&nbsp;Pengecualian BBK</button>
                     <button type="button" class="btn btn-info fa fa-copy" ng-click="copy();">&nbsp;Salin BBK</button>
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
@@ -90,6 +91,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 {{formtitle}} 
+                <button ng-click="modal()" class="btn btn-info" title="Pengecualian Bukti Barang Keluar">Pengecualian BBK</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-show="is_view">
                     <button type="button" class="btn btn-primary fa fa-print" ng-print print-element-id="printArea" ng-disabled="form.status == 1" ng-click="print(form.no_bbk)">&nbsp;Print</button>
                 </div>

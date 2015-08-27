@@ -212,7 +212,7 @@ class BomController extends Controller {
                     ->join('JOIN', 'spk', 'spk.kd_bom = dts.kd_bom')
                     ->join('JOIN', 'wo_masuk as wm', 'wm.no_spk  = spk.no_spk')
                     ->join('JOIN', 'trans_standar_bahan as tsb', 'tsb.kd_bom  = spk.kd_bom')
-                    ->order('brg.nm_barang ASC')
+                    ->order('tjb.jabatan ASC, brg.nm_barang ASC')
                     ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
 
             //filter
@@ -388,6 +388,7 @@ class BomController extends Controller {
         $det = BomDet::find()
                 ->with(['jabatan', 'barang'])
                 ->where(['kd_bom' => $models['kd_bom']])
+                ->orderBy('jabtan.jabatan ASC, barang.nm_barang ASC')
                 ->all();
 
         session_start();
