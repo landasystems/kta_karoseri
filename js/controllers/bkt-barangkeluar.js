@@ -1,4 +1,4 @@
-app.controller('bbkCtrl', function($scope, Data, toaster) {
+app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
 //init data
     var tableStateRef;
     $scope.displayed = [];
@@ -14,6 +14,19 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
             $scope.form.satus = 1;
         });
     }
+
+    $scope.modal = function(form) {
+        var modalInstance = $modal.open({
+            templateUrl: 'tpl/t_bkt-barangkeluar/modal.html',
+            controller: 'modalCtrl',
+            size: 'lg',
+            resolve: {
+                form: function() {
+                    return form;
+                }
+            }
+        });
+    };
 
     $scope.kalkulasi = function(sisa, stok, jml_keluar) {
         $scope.sisa_pengambilan = sisa - jml_keluar;
@@ -251,5 +264,56 @@ app.controller('bbkCtrl', function($scope, Data, toaster) {
             }
         });
     }
+});
+
+app.controller('modalCtrl', function($scope, Data, $modalInstance, form) {
+
+    $scope.open1 = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened1 = true;
+    };
+
+    $scope.cariWo = function($query) {
+        if ($query.length >= 3) {
+            Data.get('wo/wospk', {nama: $query}).then(function(data) {
+                $scope.results = data.data;
+            });
+        }
+    }
+
+    $scope.cariBagian = function($query) {
+        if ($query.length >= 3) {
+            Data.get('jabatan/cari', {nama: $query}).then(function(data) {
+                $scope.resultsjabatan = data.data;
+            });
+        }
+    }
+
+    $scope.cariBarang = function($query) {
+        if ($query.length >= 3) {
+            Data.get('barang/cari', {barang: $query}).then(function(data) {
+                $scope.resultsbarang = data.data;
+            });
+        }
+    }
+
+    $scope.simpan = function(form) {
+        var url = ($scope.is_create == true) ? 'bbk/create' : 'bbk/update/' + form.no_bbk;
+        Data.post(url, data).then(function(result) {
+            if (result.status == 0) {
+                toaster.pop('error', "Terjadi Kesalahan", result.errors);
+            } else {
+                $scope.is_edit = false;
+                $scope.callServer(tableStateRef); //reload grid ulang
+                toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
+            }
+        });
+        $modalInstance.dismiss('cancel');
+    };
+
+    $scope.cancel = function() {
+        $modalInstance.dismiss('cancel');
+    };
 
 })
