@@ -1,6 +1,7 @@
-app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
-//init data
+app.controller('poCtrl', function ($scope, Data, toaster) {
+    //init data
     var tableStateRef;
+
     $scope.displayed = [];
     $scope.form = {};
     $scope.is_edit = false;
@@ -8,12 +9,14 @@ app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
     $scope.is_view = false;
     $scope.is_create = false;
     $scope.msg = '';
+
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
         var limit = tableState.pagination.number || 10;
         var param = {offset: offset, limit: limit};
+
         if (tableState.sort.predicate) {
             param['sort'] = tableState.sort.predicate;
             param['order'] = tableState.sort.reverse;
@@ -26,11 +29,15 @@ app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
+
         $scope.isLoading = false;
     };
+
     Data.get('po/listsupplier').then(function (data) {
         $scope.listsupplier = data.data;
     });
+
+
     $scope.updt_st = function ($id) {
         Data.get('po/updtst/' + $id).then(function (data) {
 //            $scope.callServer(tableStateRef);
@@ -40,8 +47,8 @@ app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
     $scope.cariSpp = function ($query) {
 
         if ($query.length >= 3) {
-            Data.get('sppnonrutin/cari', {nama: $query}).then(function (data) {
-//                console.log(data.data);
+            Data.get('po/spp', {nama: $query}).then(function (data) {
+                console.log(data.data);
                 $scope.resultsspp = data.data;
             });
         }
@@ -55,15 +62,25 @@ app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
         }
     }
 
-    
+    $scope.cariBarang = function ($query1, $query2) {
+
+        if ($query1.length >= 3) {
+            Data.get('po/brgspp', {namabrg: $query1, nospp: $query2}).then(function (data) {
+                $scope.resultsbrg = data.data;
+            });
+        }
+    }
+
+    $scope.pilih = function (detail, $item) {
+        detail.harga = $item.harga;
+        detail.satuan = $item.satuan;
+
+    }
     $scope.pilihspp = function (detsPo, $item) {
-        Data.get('po/spp', {nama: $item}).then(function (data) {
-//             console.log(data.data)
-            $scope.detsPo = data.data;
-            
-           
-        $scope.subtotal();
-        });
+         Data.get('po/cari', {nama: $item}).then(function (data) {
+             console.log(data.data)
+                detsPo = data.data;
+            });
 //        detail.harga = $item.harga;
 //        detail.satuan = $item.satuan;
     }
@@ -72,6 +89,7 @@ app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
     $scope.subtotal = function () {
         var total = 0;
         var sub_total = 0;
+
         angular.forEach($scope.detsPo, function (detail) {
             var jml = (detail.jml) ? parseInt(detail.jml) : 0;
             var hrg = (detail.harga) ? parseInt(detail.harga) : 0;
@@ -80,9 +98,11 @@ app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
             total += sub_total;
         })
         $scope.form.total = total;
+
         //diskon
         var diskon = $scope.form.nilai_diskon;
         var nilai_diskon = ((diskon / 100) * total);
+
         //ppn
         if ($scope.form.status_ppn == "0") {
             var nilai_ppn = ((10 / 100) * total);
@@ -92,38 +112,45 @@ app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
         var total_dp = $scope.form.dp;
         var total_seluruh = ((total - nilai_diskon) + nilai_ppn);
         var sisa_bayar = (total_seluruh - total_dp);
+
         $scope.form.ppn = Math.ceil(nilai_ppn);
         $scope.form.diskon = Math.ceil(nilai_diskon);
         $scope.form.total_dibayar = Math.ceil(total_seluruh);
         $scope.form.sisa_dibayar = Math.ceil(sisa_bayar);
+
     }
 
-    
+
+
     $scope.addDetail = function () {
         var newDet = {
             nota: '',
             kode_barang: '',
-            qty: '',
+            jml: '',
             harga: '',
             diterima: '',
             ket: '',
             tgl_pengiriman: ''
         }
         $scope.detsPo.unshift(newDet);
+
     };
+
 //detail
     $scope.detsPo = {
         nota: '',
         kode_barang: '',
-        qty: '',
+        jml: '',
         harga: '',
         diterima: '0',
         ket: '',
         tgl_pengiriman: ''
     };
+
 //remove
     $scope.removeRow = function (paramindex) {
         var comArr = eval($scope.detsPo);
+
         if (comArr.length > 1) {
             $scope.detsPo.splice(paramindex, 1);
             $scope.subtotal();
@@ -131,13 +158,25 @@ app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
             alert("Something gone wrong");
         }
     };
+
 //datepicker
     $scope.open1 = function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
         $scope.opened1 = true;
     };
-   
+
+
+    $scope.setStatus = function () {
+        $scope.openedDet = -1;
+    };
+
+    $scope.openDet = function ($event, $index) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.openedDet = $index;
+    };
+
     var satuan = {0: "nol", 1: "satu", 2: "dua", 3: "tiga", 4: "empat", 5: "lima", 6: "enam", 7: "tujuh", 8: "delapan", 9: "sembilan"};
     var belasan = {10: "sepuluh", 11: "sebelas", 12: "dua belas", 13: "tiga belas", 14: "empat belas", 15: "lima belas", 16: "enam belas", 17: "tujuh belas", 18: "delapan belas", 19: "sembilan belas"};
     var puluhan = {2: "dua puluh", 3: "tiga puluh", 4: "empat puluh", 5: "lima puluh", 6: "enam puluh", 7: "tujuh puluh", 8: "delapan puluh", 9: "sembilan puluh"};
@@ -152,9 +191,11 @@ app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
         {name: "ribu", size: 3},
         {name: "ratus", size: 2}
     ];
+
     $scope.keKata = function (num) {
         var parts = [], minusStr = "";
         var satuantr = num.toString();
+
         if (satuantr.length < 1) {
             return "";
         }
@@ -174,6 +215,7 @@ app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
         }
 
         num = parseInt(satuantr, 10);
+
         if (num >= 20) {
             var puluhantr = puluhan[Math.floor(num / 10)];
             if (num % 10 !== 0) {
@@ -210,39 +252,31 @@ app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
         $scope.form.status_ppn = '0';
         $scope.form.ppn = '0';
         $scope.form.dikirim_ke = 'PT KARYA TUGAS ANDA';
+
     };
+
+
     $scope.update = function (nota) {
         $scope.is_print = false;
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
-        $scope.formtitle = "Edit Data : " + nota;
+        $scope.formtitle = "Edit Data : " + nota
+        $scope.form.tanggal = new Date(nota.tanggal);
         $scope.selected(nota);
+
     };
+
     $scope.view = function (nota) {
         $scope.is_print = true;
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + nota;
+        $scope.form.tanggal = new Date(nota.tanggal);
         $scope.selected(nota);
-    };
-    $scope.modal = function (detsPo, detail) {
-        var modalInstance = $modal.open({
-            templateUrl: 'tpl/t_purchase-order/modal.html',
-            controller: 'modalCtrl',
-            size: 'lg',
-            resolve: {
-                form: function () {
-                    var data = {
-                        detsPo: detsPo,
-                        detail: detail
 
-                    };
-                    return data;
-                }
-            }
-        });
     };
+
     $scope.save = function (form, detail) {
         var data = {
             formpo: form,
@@ -259,6 +293,7 @@ app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
             }
         });
+
     };
     $scope.cancel = function () {
         if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
@@ -274,6 +309,7 @@ app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
             });
         }
     };
+
     $scope.selected = function (id) {
         Data.get('po/view/' + id).then(function (data) {
             $scope.form = data.data;
@@ -281,6 +317,7 @@ app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
             $scope.msg = data.msg;
             $scope.form.terbilang = $scope.keKata(data.data.total_dibayar) + ' RUPIAH';
             $scope.detsPo = data.detail;
+//            $scope.detsPo.tanggal_pengiriman = new Date(data.detail.data_barang.tanggal_pengiriman);
             $scope.form.dp = (data.data.dp == undefined) ? '0' : data.data.dp;
             $scope.form.ppn = (data.data.ppn == undefined) ? '0' : data.data.ppn;
             $scope.form.bayar = (data.data.bayar == '1') ? '1' : '0';
@@ -289,73 +326,10 @@ app.controller('poCtrl', function ($scope, Data, toaster,$modal) {
             $scope.form.status_ppn = (data.data.ppn == '0') ? '1' : '0';
             $scope.form.jatuh_tempo = (data.data.jatuh_tempo == undefined) ? '0' : data.data.jatuh_tempo;
             $scope.form.nilai_diskon = (data.data.diskon != undefined) ? ((data.data.diskon / data.data.total) * 100) : '0';
-            $scope.form.tanggal = new Date(data.data.tanggal);
             $scope.subtotal();
         });
+
     }
 
 
-});
-
-///// modal controller
-app.controller('modalCtrl', function ($scope, Data, $modalInstance, form) {
-
-  $scope.cariBarang = function ($query1, $query2) {
-
-        if ($query1.length >= 3) {
-            Data.get('po/brgspp', {namabrg: $query1, nospp: $query2}).then(function (data) {
-                $scope.resultsbrg = data.data;
-            });
-        }
-    }
-
-    $scope.pilih = function (detail, $item) {
-        detail.harga = $item.harga;
-        detail.satuan = $item.satuan;
-    }
-    
-     $scope.setStatus = function () {
-        $scope.openedDet = -1;
-    };
-    
-    $scope.open2 = function ($event) {
-        $event.preventDefault();
-        $event.stopPropagation();
-        $scope.opened2 = true;
-    };
-
-    
-
-    $scope.formmodal = form.detail;
-//        console.log(form.detail)
-    
-//    var data = {
-//            
-//        };
-    
-//    $scope.woMasuk = [];
-//    $scope.woSelected = function (formmodal, woMasuk, items) {
-//        for (var i = form.sppDet.length - 1; i >= 0; i--) {
-//            if (form.sppDet[i].kd_barang == form.detail.kd_barang) {
-//                form.sppDet.splice(i, 1);
-//            }
-//        }
-//        var mongo = form.sppDet;
-//        var index = mongo.indexOf(form.detail);
-//        var data = {
-//            barang: formmodal.barang,
-//            qty: formmodal.qty,
-//            ket: formmodal.ket,
-//            p: formmodal.p,
-//            no_wo: items.no_wo
-//        };
-//        if (woMasuk.length == 1) {
-//            mongo[index] = data;
-//        } else {
-//            mongo.unshift(data);
-//        }
-//    };
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
-});
+})

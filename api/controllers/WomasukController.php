@@ -115,7 +115,7 @@ class WomasukController extends Controller {
 
         if (empty($asu)) {
             if ($models['jenis'] == 'Mini Bus') {
-                $kode = 'NB-' . date("y") . '0001';
+                $kode = 'NV-' . date("y") . '0001';
             } else {
                 $kode = 'NV-' . date("y") . '0001';
             }
@@ -124,7 +124,7 @@ class WomasukController extends Controller {
             if ($models['jenis'] == 'Mini Bus') {
                 $kode = 'NB-' . date("y") . substr('000' . $lastKode, -4);
             } else {
-                $kode = 'NV-' . date("y") . substr('000' . $lastKode, -4);
+                $kode = 'NB-' . date("y") . substr('000' . $lastKode, -4);
             }
         }
         $code = 'fgdfgd';
@@ -213,7 +213,7 @@ class WomasukController extends Controller {
 //                ->join('LEFT JOIN', 'small_eks', 'wo_masuk.no_wo = small_eks.no_wo') // customer
 //                ->join('LEFT JOIN', 'mini_eks', 'wo_masuk.no_wo = mini_eks.no_wo') // customer
 //                ->join('JOIN', 'model', 'spk.kd_model = model.kd_model') // customer
-//                ->join('JOIN', 'serah_terima_in', 'spk.no_spk = serah_terima_in.no_spk') // customer
+                ->join('JOIN', 'serah_terima_in', 'spk.no_spk = serah_terima_in.no_spk') // customer
 //                ->join('JOIN', 'warna', 'serah_terima_in.kd_warna = warna.kd_warna') // customer
                 ->orderBy($sort)
                 ->select("*");
@@ -230,6 +230,12 @@ class WomasukController extends Controller {
                     $query->andFilterWhere(['like', 'wo_masuk.' . $key, $val]);
                 } elseif ($key == 'nm_customer') {
                     $query->andFilterWhere(['like', 'customer.' . $key, $val]);
+                } elseif ($key == 'kd_titipan') {
+                    $query->andFilterWhere(['like', 'serah_terima_in.' . $key, $val]);
+                } elseif ($key == 'no_chassis') {
+                    $query->andFilterWhere(['like', 'serah_terima_in.' . $key, $val]);
+                } elseif ($key == 'no_mesin') {
+                    $query->andFilterWhere(['like', 'serah_terima_in.' . $key, $val]);
                 }
             }
         }

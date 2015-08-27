@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\User;
+use app\models\AbsensiEmp;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -20,6 +21,7 @@ class SiteController extends Controller {
                     'login' => ['post'],
                     'logout' => ['get'],
                     'session' => ['get'],
+                    'coba' => ['get'],
                 ],
             ]
         ];
@@ -55,6 +57,10 @@ class SiteController extends Controller {
     public function actionLogout() {
         session_start();
         session_destroy();
+    }
+    public function actionCoba() {
+        $aa = AbsensiEmp::find()->limit(10)->all();
+        print_r($aa);
     }
     
     public function actionLogin() {
