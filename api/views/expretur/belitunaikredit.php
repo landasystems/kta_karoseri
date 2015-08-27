@@ -54,7 +54,7 @@ foreach ($models as $key => $val) {
                 <td>PERIODE</td>
                 <?php
                 if (!empty($filter['tanggal'])) {
-                    $value = explode(' - ', $filter['tgl_periode']);
+                    $value = explode(' - ', $filter['tanggal']);
                     $start = date("d/m/Y", strtotime($value[0]));
                     $end = date("d/m/Y", strtotime($value[1]));
                 } else {

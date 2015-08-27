@@ -107,9 +107,11 @@ class PoController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('trans_po')
+                ->join('JOIN', 'detail_po', 'detail_po.nota = trans_po.nota')
                 ->join('JOIN', 'supplier', 'supplier.kd_supplier = trans_po.suplier')
+                ->join('LEFT JOIN', 'barang', 'barang.kd_barang = detail_po.kd_barang')
                 ->orderBy($sort)
-                ->select("trans_po.*,supplier.nama_supplier");
+                ->select("trans_po.*,supplier.nama_supplier,barang.nm_barang");
 
         //filter
         if (isset($params['filter'])) {
@@ -128,7 +130,11 @@ class PoController extends Controller {
         $i = 0;
         foreach ($models as $key => $val) {
             $data[$key] = $val;
-            $data[$i]['bayar'] = ($val == '0') ? 'Tunai' : 'Kredit';
+            if ($data[$i]['bayar'] == '0') {
+                $data[$i]['bayar'] = 'Tunai';
+            } else {
+                $data[$i]['bayar'] = 'Kredit';
+            }
             $sup = \app\models\Supplier::find()
                     ->where(['kd_supplier' => $data[$i]['suplier']])
                     ->One();
@@ -202,6 +208,11 @@ class PoController extends Controller {
                     $query->andFilterWhere(['like', 'trans_po.' . $key, $val]);
                 } else if ($key == 'nama_supplier') {
                     $query->andFilterWhere(['like', 'supplier.' . $key, $val]);
+                } else if ($key == 'nm_barang') {
+                    $query->andFilterWhere(['like', 'barang.' . $key, $val]);
+                } else if ($key == 'trans_po.bayar') {
+//                        $query->where("trans_po.".$key." ='.$val.'");
+                    $query->andFilterWhere(['=', $key, $val]);
                 }
             }
         }
@@ -228,7 +239,11 @@ class PoController extends Controller {
         $i = 0;
         foreach ($models as $key => $val) {
             $data[$key] = $val;
-            $data[$i]['bayar'] = ($val == '0') ? 'Tunai' : 'Kredit';
+            if ($data[$i]['bayar'] == '0') {
+                $data[$i]['bayar'] = 'Tunai';
+            } else {
+                $data[$i]['bayar'] = 'Kredit';
+            }
             $i++;
         }
 
@@ -425,7 +440,7 @@ class PoController extends Controller {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('trans_po')
-                ->join('LEFT JOIN','supplier', 'trans_po.suplier=supplier.kd_supplier')
+                ->join('LEFT JOIN', 'supplier', 'trans_po.suplier=supplier.kd_supplier')
                 ->select("*")
                 ->where(['like', 'nota', $params['nama']])
                 ->limit(10);
@@ -438,13 +453,14 @@ class PoController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models));
     }
+
     public function actionSelect() {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('det_spp')
 //                ->join('LEFT JOIN','supplier', 'trans_po.suplier=supplier.kd_supplier')
                 ->select("*")
-                ->where('det_spp.no_spp ='.$param)
+                ->where('det_spp.no_spp =' . $param)
                 ->limit(10);
 
         $command = $query->createCommand();
