@@ -20,8 +20,6 @@ class ValidasibkkController extends Controller {
                     'index' => ['get'],
                     'view' => ['get'],
                     'create' => ['post'],
-                    'update' => ['post'],
-                    'delete' => ['delete'],
                 ],
             ]
         ];
@@ -54,7 +52,7 @@ class ValidasibkkController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "no_bbk DESC";
+        $sort = "ab.id DESC";
         $offset = 0;
         $limit = 10;
 
@@ -79,12 +77,11 @@ class ValidasibkkController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('trans_bbk as tb')
-                ->leftJoin('tbl_karyawan as tk', 'tb.penerima = tk.nik')
-                ->leftJoin('tbl_jabatan as tj', 'tj.id_jabatan  = tb.kd_jab')
-                ->where('tb.status = 0')
+                ->from('autentikasi_bbk as ab')
+                ->leftJoin('barang as b', 'b.kd_barang = ab.kd_barang')
+                ->where('ab.status = 0')
                 ->orderBy($sort)
-                ->select("tb.*, tk.nama as penerima, tj.jabatan as bagian");
+                ->select("ab.*, b.nm_barang");
 
         //filter
         if (isset($params['filter'])) {
@@ -103,48 +100,14 @@ class ValidasibkkController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
-    public function actionView($id) {
-
-        $model = $this->findModel($id);
-
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-    }
-
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-//        Yii::error($params);
-        $centang = $params['no_bbk'];
-        
-        foreach($centang as $key => $val){
-            $status = TransBbk::findOne($key);
-            $status->status=1;
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = \app\models\AutentikasiBbk::findOne($key);
+            $status->status = 1;
             $status->save();
-            
-        }
-//        $model = new Validasibom();
-//        $model->attributes = $params;
-
-//        if ($status->save()) {
-//            $this->setHeader(200);
-//            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-//        } else {
-//            $this->setHeader(400);
-//            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-//        }
-    }
-
-    
-    public function actionDelete($id) {
-        $model = $this->findModel($id);
-
-        if ($model->delete()) {
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-        } else {
-
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
     }
 

@@ -56,7 +56,7 @@
                 <div class="input-group">
                     <ui-select ng-model="form.kd_barang" theme="bootstrap" style="width: 100%">
                         <ui-select-match>{{$select.selected.nm_barang}}</ui-select-match>
-                        <ui-select-choices refresh="cariBarang($select.search)" repeat="val in resultsbarang">
+                        <ui-select-choices refresh="listBarang($select.search, form.no_wo, form.kd_kerja)" repeat="val in resultsbarang">
                             {{val.nm_barang}}
                         </ui-select-choices>
                     </ui-select>

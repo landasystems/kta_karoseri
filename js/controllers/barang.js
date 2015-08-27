@@ -5,7 +5,6 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
         queueLimit: 1,
         removeAfterUpload: true,
     });
-
     uploader.filters.push({
         name: 'imageFilter',
         fn: function(item) {
@@ -13,7 +12,6 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
     });
-
     //init data;
     var tableStateRef;
     var paramRef;
@@ -21,7 +19,6 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
-
     $scope.qty = function(max, saldo) {
         var qty = max - saldo;
         $scope.form.qty = qty;
@@ -39,7 +36,6 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
         var offset = tableState.pagination.start || 0;
         var limit = tableState.pagination.number || 10;
         var param = {offset: offset, limit: limit};
-
         if (tableState.sort.predicate) {
             param['sort'] = tableState.sort.predicate;
             param['order'] = tableState.sort.reverse;
@@ -52,12 +48,16 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
-
         $scope.isLoading = false;
     };
     $scope.excel = function() {
         Data.get('barang', paramRef).then(function(data) {
             window.location = 'api/web/barang/excel';
+        });
+    };
+    $scope.kode = function(kd_jenis) {
+        Data.get('barang/kode', {kd_jenis: kd_jenis}).then(function(data) {
+            $scope.form.kd_barang = data.kode;
         });
     }
     $scope.create = function(form) {
@@ -66,11 +66,9 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
-        Data.get('barang/kode').then(function(data) {
-            $scope.form.kd_barang = data.kode;
-        });
     };
     $scope.update = function(form) {
+        $scope.selectJenis(form);
         $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = false;
@@ -79,12 +77,19 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.qty(form.max, form.saldo);
     };
     $scope.view = function(form) {
+        $scope.selectJenis(form);
         $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.nm_barang;
-        $scope.form = form;
         $scope.qty(form.max, form.saldo);
+    };
+    $scope.selectJenis = function(form) {
+        $scope.form.jenis = {
+            kd_jenis: form.kd_jenis,
+            jenis_brg: form.jenis_brg,
+            kd: form.kd,
+        }
     };
     $scope.save = function(form) {
         if ($scope.uploader.queue.length > 0) {
@@ -118,5 +123,6 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
-    };
+    }
+    ;
 });

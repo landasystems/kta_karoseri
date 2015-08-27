@@ -126,10 +126,13 @@
                                 <label class="col-sm-4 control-label">Customer</label>
                                 <div class="col-sm-8">
                                     <div class="input-group">
-                                        <ui-select ng-model="form.kd_customer" ng-disabled="is_view" title="{{$select.selected.alamat1}}" theme="bootstrap">
-                                            <ui-select-match>{{$select.selected.nm_customer}}</ui-select-match>
-                                            <ui-select-choices refresh="cariCustomer($select.search)" repeat="val in rCustomer">
-                                                <span title="{{val.alamat1}}"> {{val.nm_customer}}
+                                        <ui-select ng-model="form.kd_customer" ng-disabled="is_view" theme="bootstrap">
+                                            <ui-select-match placeholder="Cari Customer">{{$select.selected.nm_customer}}</ui-select-match>
+                                            <ui-select-choices group-by="'group'" refresh="cariCustomer($select.search)" repeat="val in rCustomer">
+                                                <div ng-bind-html="val.nm_customer | highlight: $select.search"></div>
+                                                <small>
+                                                    <span ng-bind-html="val.alamat1"></span>
+                                                </small>
                                             </ui-select-choices>
                                         </ui-select>
                                         <span class="input-group-btn">

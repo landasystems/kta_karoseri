@@ -91,9 +91,9 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 {{formtitle}} 
-                <button ng-click="modal()" class="btn btn-info" title="Pengecualian Bukti Barang Keluar">Pengecualian BBK</button>
-                <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-show="is_view">
-                    <button type="button" class="btn btn-primary fa fa-print" ng-print print-element-id="printArea" ng-disabled="form.status == 1" ng-click="print(form.no_bbk)">&nbsp;Print</button>
+                <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
+                    <button type="button" class="btn btn-success fa fa-check"  ng-click="modal()">&nbsp;Pengecualian BBK</button>
+                    <button type="button" class="btn btn-primary fa fa-print"  ng-show="is_view" ng-print print-element-id="printArea" ng-disabled="form.status == 1" ng-click="print(form.no_bbk)">&nbsp;Print</button>
                 </div>
             </div>
             <div class="panel-body">
