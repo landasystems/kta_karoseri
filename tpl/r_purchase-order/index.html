@@ -19,11 +19,19 @@
 
                             <div class="form-group">
                                 <div class="control-group">
-                                    <label class="col-sm-2 control-label">Periode</label>
+                                    <label class="col-sm-1 control-label">Periode</label>
                                     <div class="col-sm-3">
                                         <input placeholder="Tanggal Periode" date-range-picker class="form-control" st-search="tanggal" type="text"  ng-model="tanggals">
                                     </div>
-                                    <label class="col-sm-2 control-label">Status</label>
+                                    <label class="col-sm-1 control-label">Status</label>
+                                    <div class="col-sm-3">
+                                        <select stInputEvent="change" st-search="trans_po.bayar" class="form-control" >
+                                            <option value="">-Pilih Status Bayar-</option>
+                                            <option value="0">Tunai</option>
+                                            <option value="1">Kredit</option>
+                                        </select>
+                                    </div>
+                                    <label class="col-sm-1 control-label">Status</label>
                                     <div class="col-sm-3">
                                         <select stInputEvent="change" st-search="kategori" class="form-control">
                                             <option value="all">All</option>
@@ -36,21 +44,21 @@
                             </div>
                             <!--</div>-->
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">No.PO</label>
+                                <label class="col-sm-1 control-label">No.PO</label>
                                 <div class="col-sm-3">
                                     <input placeholder="Nomor PO" st-search="nota" class="form-control"/>
                                 </div>
-                                <label class="col-sm-2 control-label">No.SPP</label>
+                                <label class="col-sm-1 control-label">No.SPP</label>
                                 <div class="col-sm-3">
                                     <input placeholder="Nomor SPP" st-search="spp" class="form-control"/>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Supplier</label>
+                                <label class="col-sm-1 control-label">Supplier</label>
                                 <div class="col-sm-3">
                                     <input placeholder="Nama Supplier" st-search="nama_supplier" class="form-control"/>
                                 </div>
-                                <label class="col-sm-2 control-label">Barang</label>
+                                <label class="col-sm-1 control-label">Barang</label>
                                 <div class="col-sm-3">
                                     <input placeholder="Nama Barang" st-search="nm_barang" class="form-control"/>
 
