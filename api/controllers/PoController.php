@@ -30,6 +30,7 @@ class PoController extends Controller {
                     'excel' => ['get'],
                     'excelbeli' => ['get'],
                     'excelpantau' => ['get'],
+                    'excelfluktuasi' => ['get'],
                     'brgspp' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
@@ -179,14 +180,14 @@ class PoController extends Controller {
                 ->limit($limit)
                 ->from('detail_po as dpo')
                 ->join('JOIN', 'trans_po', 'trans_po.nota = dpo.nota')
-                ->join('JOIN', 'det_spp', "det_spp.no_spp = trans_po.spp and det_spp.kd_barang = dpo.kd_barang")
+                ->join('RIGHT JOIN', 'det_spp', "det_spp.no_spp = trans_po.spp and det_spp.kd_barang = dpo.kd_barang")
                 ->join('LEFT JOIN', 'supplier', 'supplier.kd_supplier = trans_po.suplier')
                 ->join('JOIN', 'det_bbm', 'det_bbm.no_po = trans_po.nota and det_bbm.kd_barang = dpo.kd_barang')
                 ->join('LEFT JOIN', 'trans_bbm', 'trans_bbm.no_bbm = det_bbm.no_bbm')
                 ->join('JOIN', 'barang', 'barang.kd_barang = dpo.kd_barang')
                 ->join('LEFT JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
                 ->orderBy($sort)
-                ->select("dpo.*,det_spp.*,trans_po.* ,jenis_brg.jenis_brg, supplier.nama_supplier,trans_bbm.surat_jalan,det_bbm.tgl_terima, det_bbm.no_bbm, barang.nm_barang, barang.satuan");
+                ->select("dpo.*,det_spp.*,trans_po.* ,jenis_brg.jenis_brg, supplier.nama_supplier,trans_bbm.surat_jalan,det_bbm.tgl_terima, det_bbm.no_bbm, barang.nm_barang, barang.satuan,barang.harga as hrg_barang");
         //filter
 
         if (isset($params['filter'])) {
@@ -504,7 +505,7 @@ class PoController extends Controller {
         $filter = $_SESSION['filter'];
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/po", ['models' => $models]);
+        return $this->render("/expretur/po", ['models' => $models, 'filter' => $filter]);
     }
 
     public function actionExcelbeli() {
@@ -513,7 +514,7 @@ class PoController extends Controller {
         $filter = $_SESSION['filter'];
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/belitunaikredit", ['models' => $models]);
+        return $this->render("/expretur/belitunaikredit", ['models' => $models, 'filter' => $filter]);
     }
     public function actionExcelpantau() {
         session_start();
@@ -521,7 +522,16 @@ class PoController extends Controller {
         $filter = $_SESSION['filter'];
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/rekappantau", ['models' => $models]);
+        return $this->render("/expretur/rekappantau", ['models' => $models, 'filter' => $filter]);
+    }
+    public function actionExcelfluktuasi() {
+        session_start();
+        $query = $_SESSION['query'];
+//        $query->Where("dpo.hargda != barang.harga");
+        $filter = $_SESSION['filter'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/rekapfluktuasiharga", ['models' => $models, 'filter' => $filter]);
     }
 
 }
