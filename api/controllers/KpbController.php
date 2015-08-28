@@ -50,12 +50,12 @@ class KpbController extends Controller {
 
     public function actionSimpanprint() {
         $param = json_decode(file_get_contents("php://input"), true);
-        \Yii::error($param);
         $kpb = new Kpb;
         $kpb->no_wo = $param['no_wo'];
         $kpb->kd_jab = $param['kd_jab'];
         $kpb->status = 1;
         $kpb->save();
+        echo json_encode(array('status' => 0, 'error_code' => 400, 'data' => 'Anda telah mencetak kartu pengambilan bahan, hubungi admin untuk mencetak ulang'), JSON_PRETTY_PRINT);
     }
 
     public function actionJabkpb() {
@@ -96,7 +96,7 @@ class KpbController extends Controller {
         } else {
             $list = $models;
         }
-        
+
         session_start();
 
         if ($cek == 1 and $_SESSION['user']['id'] != "-1") {

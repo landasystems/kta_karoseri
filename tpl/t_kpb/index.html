@@ -40,7 +40,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label"></label>
                         <div class="col-sm-4">
-                            <button type="button" class="btn btn-primary fa fa-print" ng-click="simpanPrint(form.no_wo.no_wo, form.kd_jabatan)" ng-print print-element-id="printArea" ng-disabled="status == 0">&nbsp;Print</button>
+                            <button type="button" class="btn btn-primary fa fa-print" ng-click="simpanPrint(form.no_wo.no_wo, form.kd_jabatan)" ng-print print-element-id="printArea" ng-disabled="status == 0 && user.id != 1">&nbsp;Print</button>
                         </div>
                     </div>
                     <div class="form-group" ng-if="detail.length > 0">

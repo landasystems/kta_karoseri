@@ -33,6 +33,7 @@ class BbkController extends Controller {
                     'listbarang' => ['post'],
                     'print' => ['get'],
                     'pengecualian' => ['post'],
+                    'bukaprint' => ['post'],
                 ],
             ]
         ];
@@ -60,6 +61,17 @@ class BbkController extends Controller {
         return true;
     }
 
+    public function actionBukaprint() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['no_bbk'];
+
+        foreach ($centang as $key => $val) {
+            $status = TransBbk::findOne($key);
+            $status->status = 0;
+            $status->save();
+        }
+    }
+
     public function actionPengecualian() {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new AutentikasiBbk;
@@ -80,7 +92,9 @@ class BbkController extends Controller {
 
     public function actionPrint() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $update = TransBbk::updateAll(array('status' => 1), 'no_bbk = "' . $params['no_bbk'] . '"');
+        $update = TransBbk::findOne($_GET['no_bbk']);
+        $update->status = 1;
+        $update->save();
     }
 
     public function actionListbarang() {

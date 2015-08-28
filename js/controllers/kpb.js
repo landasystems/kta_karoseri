@@ -5,13 +5,17 @@ app.controller('kpbCtrl', function($scope, Data, toaster) {
     $scope.status = 0;
     $scope.msg = '';
 
+    Data.get('pengguna/profile').then(function(data) {
+        $scope.user = data.data;
+    });
+
     $scope.simpanPrint = function(no_wo, kd_jab) {
         var data = {
             no_wo: no_wo,
             kd_jab: kd_jab,
         }
         Data.post('kpb/simpanprint', data).then(function(data) {
-
+            $scope.msg = data;
         });
     }
 
@@ -19,6 +23,7 @@ app.controller('kpbCtrl', function($scope, Data, toaster) {
         if ($query.length >= 3) {
             Data.get('wo/wospk', {nama: $query}).then(function(data) {
                 $scope.results = data.data;
+                $scope.status = 1;
             });
         }
     }
