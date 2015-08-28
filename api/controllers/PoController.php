@@ -30,7 +30,6 @@ class PoController extends Controller {
                     'excel' => ['get'],
                     'excelbeli' => ['get'],
                     'brgspp' => ['get'],
-                    'spp' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -108,9 +107,11 @@ class PoController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('trans_po')
+                ->join('JOIN', 'detail_po', 'detail_po.nota = trans_po.nota')
                 ->join('JOIN', 'supplier', 'supplier.kd_supplier = trans_po.suplier')
+                ->join('LEFT JOIN', 'barang', 'barang.kd_barang = detail_po.kd_barang')
                 ->orderBy($sort)
-                ->select("trans_po.*,supplier.nama_supplier");
+                ->select("trans_po.*,supplier.nama_supplier,barang.nm_barang");
 
         //filter
         if (isset($params['filter'])) {
@@ -129,7 +130,11 @@ class PoController extends Controller {
         $i = 0;
         foreach ($models as $key => $val) {
             $data[$key] = $val;
-            $data[$i]['bayar'] = ($val == '0') ? 'Tunai' : 'Kredit';
+            if ($data[$i]['bayar'] == '0') {
+                $data[$i]['bayar'] = 'Tunai';
+            } else {
+                $data[$i]['bayar'] = 'Kredit';
+            }
             $sup = \app\models\Supplier::find()
                     ->where(['kd_supplier' => $data[$i]['suplier']])
                     ->One();
@@ -175,10 +180,11 @@ class PoController extends Controller {
                 ->join('JOIN', 'trans_po', 'trans_po.nota = dpo.nota')
                 ->join('JOIN', 'supplier', 'supplier.kd_supplier = trans_po.suplier')
                 ->join('JOIN', 'det_bbm', 'det_bbm.no_po = trans_po.nota and det_bbm.kd_barang = dpo.kd_barang')
+                ->join('LEFT JOIN', 'trans_bbm', 'trans_bbm.no_bbm = det_bbm.no_bbm')
                 ->join('JOIN', 'barang', 'barang.kd_barang = dpo.kd_barang')
                 ->join('JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
                 ->orderBy($sort)
-                ->select("dpo.* ,trans_po.* ,jenis_brg.jenis_brg, supplier.nama_supplier, det_bbm.no_bbm, barang.nm_barang, barang.satuan");
+                ->select("dpo.* ,trans_po.* ,jenis_brg.jenis_brg, supplier.nama_supplier,trans_bbm.surat_jalan,det_bbm.tgl_terima, det_bbm.no_bbm, barang.nm_barang, barang.satuan");
         //filter
 
         if (isset($params['filter'])) {
@@ -202,16 +208,22 @@ class PoController extends Controller {
                     $query->andFilterWhere(['like', 'trans_po.' . $key, $val]);
                 } else if ($key == 'nama_supplier') {
                     $query->andFilterWhere(['like', 'supplier.' . $key, $val]);
+                } else if ($key == 'nm_barang') {
+                    $query->andFilterWhere(['like', 'barang.' . $key, $val]);
+                } else if ($key == 'trans_po.bayar') {
+//                        $query->where("trans_po.".$key." ='.$val.'");
+                    $query->andFilterWhere(['=', $key, $val]);
                 }
             }
         }
-        Yii::error($query);
+//        Yii::error($query);
         $data = $this->retRekap($query);
 
         $query->limit(null);
         $query->offset(null);
         session_start();
         $_SESSION['query'] = $query;
+        $_SESSION['filter'] = $filter;
 
         $this->setHeader(200);
 
@@ -227,7 +239,11 @@ class PoController extends Controller {
         $i = 0;
         foreach ($models as $key => $val) {
             $data[$key] = $val;
-            $data[$i]['bayar'] = ($val == '0') ? 'Tunai' : 'Kredit';
+            if ($data[$i]['bayar'] == '0') {
+                $data[$i]['bayar'] = 'Tunai';
+            } else {
+                $data[$i]['bayar'] = 'Kredit';
+            }
             $i++;
         }
 
@@ -336,7 +352,7 @@ class PoController extends Controller {
                 $det = new DetailPo();
                 $det->attributes = $val;
                 $det->kd_barang = $val['data_barang']['kd_barang'];
-                $det->tgl_pengiriman = date("Y-m-d", strtotime($val['tgl_pengiriman']));
+                $det->tgl_pengiriman = date("Y-m-d", strtotime($val['data_barang']['tgl_pengiriman']));
                 $det->nota = $model->nota;
                 $det->save();
             }
@@ -438,35 +454,22 @@ class PoController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $models));
     }
 
-    public function actionSpp() {
+    public function actionSelect() {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('det_spp')
-                ->join('JOIN', 'trans_spp', 'det_spp.no_spp = trans_spp.no_spp')
-                ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
-//                ->join('LEFT JOIN','detail_po','detail_po.kd_barang = barang.kd_barang')
-                ->where(['=', 'det_spp.no_spp', $params['nama']])
-                ->select("det_spp.kd_barang,det_spp.no_spp,det_spp.ket,det_spp.qty as jml,barang.nm_barang, barang.satuan, barang.harga");
+//                ->join('LEFT JOIN','supplier', 'trans_po.suplier=supplier.kd_supplier')
+                ->select("*")
+                ->where('det_spp.no_spp =' . $param)
+                ->limit(10);
 
         $command = $query->createCommand();
         $models = $command->queryAll();
-
-        $totalItems = $query->count();
-        $data = array();
-        foreach ($models as $key => $val) {
-            $data[$key] = $val;
-            $data[$key]['data_barang'] = [
-                'kd_barang' => $val['kd_barang'],
-                'nm_barang' => $val['nm_barang'],
-                'satuan' => $val['satuan'],
-                'harga' => $val['harga'],
-            ];
-        }
-//        Yii::error($models);
+        Yii::error($models);
 
         $this->setHeader(200);
-//        echo print_r($params);
-        echo json_encode(array('status' => 1, 'total' => $totalItems, 'data' => $data));
+
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionBrgspp() {

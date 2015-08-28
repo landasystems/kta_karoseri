@@ -54,7 +54,7 @@ class RubahbentukController extends Controller {
 
         $params = $_REQUEST;
         $filter = array();
-        $sort = "rb.kd_rubah ASC";
+        $sort = "rb.kd_rubah DESC";
         $offset = 0;
         $limit = 10;
         if (isset($params['limit']))
@@ -84,7 +84,6 @@ class RubahbentukController extends Controller {
                 ->join('Left Join', 'view_wo_spk as vws', 'rb.no_wo = vws.no_wo')
                 ->join('Left Join', 'spk', 'vws.no_spk = spk.no_spk')
                 ->join('left Join', 'warna', 'vws.kd_warna = warna.kd_warna')
-//            ->select("rb.tgl, vws.no_wo, rb.kd_rubah, vws.merk, vws.tipe, rb.bentuk_baru, vws.no_chassis, vws.nm_customer");
                 ->orderBy($sort)
                 ->select("*, warna.warna as warna_lama");
 

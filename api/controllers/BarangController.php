@@ -82,10 +82,14 @@ class BarangController extends Controller {
         $bbm->from('det_bbm')
                 ->join('Join', 'barang', 'barang.kd_barang = det_bbm.kd_barang')
                 ->select("det_bbm.tgl_terima, barang.kd_barang, barang.nm_barang, barang.satuan, barang.min, barang.saldo, det_bbm.jumlah")
+                ->orderBy('barang.nm_barang')
                 ->where('det_bbm.tgl_terima >= "' . $tglStart . '" and det_bbm.tgl_terima <= "' . $tglEnd . '"');
 
-        if (isset($params['kd_barang']))
-            $bbm->andWhere(['det_bbm.kd_barang']);
+//        if (isset($params['kd_barang']))
+//            $bbm->andFilterWhere('=', 'det_bbm.kd_barang', $params['kd_barang']);
+
+        if (isset($params['barang']))
+            $bbm->andFilterWhere(['det_bbm.kd_barang' => $params['barang']['kd_barang']]);
 
         $commandBBM = $bbm->createCommand();
         $modelBBM = $commandBBM->queryAll();
@@ -107,10 +111,11 @@ class BarangController extends Controller {
                 ->join('Join', 'trans_bbk', 'trans_bbk.no_bbk = det_bbk.no_bbk')
                 ->join('Join', 'barang', 'barang.kd_barang = det_bbk.kd_barang')
                 ->select("barang.kd_barang, barang.nm_barang, barang.satuan, barang.min, barang.saldo, det_bbk.jml, trans_bbk.tanggal")
+                ->orderBy('barang.nm_barang')
                 ->where('trans_bbk.tanggal >= "' . $tglStart . '" and trans_bbk.tanggal <= "' . $tglEnd . '"');
 
-        if (isset($params['kd_barang']))
-            $bbk->andWhere(['det_bbk.kd_barang']);
+        if (isset($params['barang']))
+            $bbk->andWhere(['det_bbk.kd_barang' => $params['barang']['kd_barang']]);
 
         $commandBBK = $bbk->createCommand();
         $modelBBK = $commandBBK->queryAll();
@@ -132,7 +137,6 @@ class BarangController extends Controller {
         $_SESSION['queryBbm'] = $bbm;
         $_SESSION['queryBbk'] = $bbk;
         $_SESSION['periode'] = $tglStart . ' - ' . $tglEnd;
-        $_SESSION['tanggal'] = $tgl;
         echo json_encode(array('status' => 1, 'data' => $data));
     }
 
@@ -176,8 +180,9 @@ class BarangController extends Controller {
         }
 
         $tgl = $_SESSION['tanggal'];
+        $periode = $_SESSION['periode'];
 //        print_r($bbm);
-        return $this->render("/expretur/pergerakanbarang", ['models' => $data, 'tgl' => $tgl]);
+        return $this->render("/expretur/pergerakanbarang", ['models' => $data, 'tgl' => $tgl, 'periode' => $periode]);
     }
 
     public function actionJenis() {
@@ -194,23 +199,28 @@ class BarangController extends Controller {
     }
 
     public function actionKode() {
-        $query = new Query;
-        $query->from('barang')
-                ->select('*')
-                ->orderBy('kd_barang DESC')
-                ->limit(1);
-
-        $command = $query->createCommand();
-        $models = $command->query()->read();
-        if (empty($models)) {
-            $kode = '100001';
-        } else {
-            $kode = $models['kd_barang'] + 1;
-        }
-        Yii::error($command->query());
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'kode' => $kode));
+        $params = json_decode(file_get_contents("php://input"), true);
+//        print_r($params);
+        Yii::error($params);
+        ////        $query = new Query;
+//
+//        $jenisBarang = \app\models\JenisBrg::findOne(['kd_jenis' => $params['kd_jenis']]);
+//
+//        $query->from('barang')
+//                ->select('*')
+//                ->orderBy('kd_barang DESC')
+//                ->where(['jenis' => $params['kd_jenis']])
+//                ->limit(1);
+//
+//        $command = $query->createCommand();
+//        $models = $command->query()->read();
+//        if (empty($models)) {
+//            $kode = $jenisBarang['kd_jenis'] . '00001';
+//        } else {
+//            $kode = $models['kd_barang'] + 1;
+//        }
+//        $this->setHeader(200);
+//        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionIndex() {
@@ -245,7 +255,7 @@ class BarangController extends Controller {
                 ->from(['barang', 'jenis_brg'])
                 ->where('barang.jenis = jenis_brg.kd_jenis')
                 ->orderBy($sort)
-                ->select("barang.*, jenis_brg.jenis_brg");
+                ->select("barang.*, jenis_brg.*");
 
 //filter
         if (isset($params['filter'])) {
@@ -283,6 +293,7 @@ class BarangController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new Barang();
         $model->attributes = $params;
+        $model->jenis = $params['jenis']['kd_jenis'];
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -298,6 +309,8 @@ class BarangController extends Controller {
         $model = $this->findModel($id);
         $ft = $model->foto;
         $model->attributes = $params;
+        $model->jenis = $params['jenis']['kd_jenis'];
+
         if (empty($model->foto)) {
             $model->foto = $ft;
         }

@@ -32,6 +32,11 @@
                             <input st-search="supplier.nama_supplier" class="form-control"/>
 
                         </div>
+                        <label class="col-sm-2 control-label">Nama Barang</label>
+                        <div class="col-sm-3">
+                            <input st-search="barang.nm_barang" class="form-control"/>
+
+                        </div>
 
                     </div>
                 </div>
@@ -202,57 +207,60 @@
                                         <th style="text-align: center;">Jumlah</th>
                                         <th style="text-align: center;">Tgl Pengiriman</th>
                                         <th style="text-align: center;">Keterangan</th>
-                                        <th style="margin:0px;padding:0px;" ng-hide="is_view == true">
-                                            <button ng-click="addDetail()" title="Tambah Data" class="btn btn-success"  style="width: 100%" ng-disabled="is_view"><i class="fa fa-plus"></i></button>
-                                        </th>
+                                        <th style="margin:0px;padding:0px;" ng-hide="is_view == true"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="detail in detsPo">
 
                                         <td>
-                                            {{detail.data_barang.nm_barang}}
+                                            <div class="input-group">
+                                                <ui-select on-select="pilih(detail, $item)" ng-model="detail.data_barang" theme="bootstrap">
+                                                    <ui-select-match>{{$select.selected.nm_barang}}</ui-select-match>
+                                                    <ui-select-choices refresh="cariBarang($select.search,form.listspp.no_spp)" repeat="val in resultsbrg">
+                                                         {{val.nm_barang}}
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                                <span class="input-group-btn">
+                                                    <button ng-click="detail.kode_barang = undefined" class="btn btn-default">
+                                                        <span class="glyphicon glyphicon-trash"></span>
+                                                    </button>
+                                                </span>
+                                                <!--<input type="text" class="form-control" ng-model="detail.data_barang.nm_barang" ng-disabled="is_view" ng-readonly="true">-->
+                                        </div>
                                         </td>
-                                        <td style="width:70px;text-align: right;">
-                                            {{detail.jml}}
-                                            <!--<input type="text" class="form-control" ng-model="detail.qty" ng-change="subtotal()" ng-disabled="is_view" ng-readonly="is_edit == false" required>-->
+                                        <td>
+                                            <input style="width:70px;" type="text" class="form-control" ng-model="detail.jml" ng-change="subtotal()" ng-disabled="is_view" ng-readonly="is_edit == false" required>
                                         </td>
-                                        <td style="width:50px;text-align: center;"> 
-                                            {{detail.data_barang.satuan}}
-                                            <!--<input type="text" class="form-control" ng-model="detail.satuan" ng-disabled="is_view" ng-readonly="true">-->
+                                        <td> 
+                                            <input type="text" class="form-control" ng-model="detail.data_barang.satuan" ng-disabled="is_view" ng-readonly="true">
                                         </td>
-                                        <td style="width:180px;text-align:right;">
-                                            {{detail.data_barang.harga}}
-                                            <!--                                            <div class="input-group" style="margin:0px;">
-                                                                                            <span class="input-group-addon">Rp</span>
-                                                                                            <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.harga" ng-disabled="is_view" ng-readonly="is_edit == false">
-                                                                                        </div>-->
+                                        <td>
+                                            <div class="input-group" style="margin:0px;">
+                                                <span class="input-group-addon">Rp</span>
+                                                <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.harga" ng-disabled="is_view" ng-readonly="is_edit == false">
+                                            </div>
                                         </td>
-                                        <td style="width:180px;text-align: right">
-                                            {{detail.jumlah}}
-                                            <!--                                            <div class="input-group" style="margin:0px;">
-                                                                                            <span class="input-group-addon">Rp</span>
-                                                                                            <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.jumlah" ng-disabled="is_view" ng-readonly="true">
-                                                                                        </div>-->
-                                        </td>
-
-                                        <td style="width:200px; text-align: center;">
-                                            {{detail.tgl_pengiriman | date:'dd - MMM - yyyy'}}
-                                            <!--                                            <div class="input-group">
-                                                                                            <input type="text" class="form-control"   ng-model="detail.tgl_pengiriman" ng-disabled="is_view" ng-readonly="true">
-                                                                                            <span class="input-group-addon">
-                                                                                                <i class="fa fa-calendar-o"></i>
-                                                                                            </span>
-                                                                                        </div>-->
-
+                                        <td style="width:180px;">
+                                            <div class="input-group" style="margin:0px;">
+                                                <span class="input-group-addon">Rp</span>
+                                                <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.jumlah" ng-disabled="is_view" ng-readonly="true">
+                                            </div>
                                         </td>
                                         <td style="width:200px;">
-                                            {{detail.ket}}
-                                            <!--<input type="text" class="form-control"   ng-model="detail.ket" ng-disabled="is_view" ng-readonly="is_edit == false">-->
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="detail.data_barang.tgl_pengiriman" is-open="openedDet == $index" ng-change="setStatus()" ng-click="openDet($event, $index)"/>
+                                                <span class="input-group-addon">
+                                                    <i class="glyphicon glyphicon-calendar"></i>
+                                                </span>
+                                            </div>
                                         </td>
-                                        <td ng-hide="is_view == true" style="width:95px;text-align: center; margin:0px;">
-                                            <button ng-click="modal(detsPo, detail)" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
-                                            <button ng-click="removeRow($index)" title="Hapus Data" class="btn btn-danger"  ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
+                                        <td style="width:200px;">
+                                            <input type="text" class="form-control"   ng-model="detail.ket" ng-disabled="is_view" ng-readonly="is_edit == false">
+                                        </td>
+                                        <td ng-hide="is_view == true" style="width:50px;text-align: center;">
+                                            <button ng-click="addDetail()" title="Tambah Data" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-plus"></i></button>
+                                            <button ng-click="removeRow($index)" title="Hapus Data" class="btn btn-danger" ng-show="$index > 0" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
                                         </td>
                                     </tr>
                                 </tbody>

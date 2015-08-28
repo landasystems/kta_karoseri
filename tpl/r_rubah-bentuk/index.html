@@ -23,6 +23,12 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
+                                        <label class="col-md-3">Nama Customer</label>
+                                        <div class="col-md-9">
+                                            <input placeholder="Nama Customer" class="form-control" st-search="vws.nm_customer" type="text">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <label class="col-md-3">No. Wo.</label>
                                         <div class="col-md-9">
                                             <input placeholder="Nomor Wo." class="form-control" st-search="rb.no_wo" type="text">
@@ -58,25 +64,23 @@
                     <thead>
                         <tr>
                             <th st-sort="rb.kd_rubah">Kode Rubah</th>
+                            <th st-sort="vws.nm_customer">Customer</th>
                             <th st-sort="rb.no_wo">No. Wo</th>
                             <th st-sort="vws.jenis">Jenis</th>
-                            <th st-sort="vws.merk">Merk</th>
-                            <th st-sort="vws.tipe">Type</th>
-                            <th st-sort="rb.tgl">Tgl Pembuatan</th>
+                            <th>Merk / Tipe</th>
                             <th st-sort="rb.pengajuan">Tgl Pengajuan</th>
-                            <th st-sort="rb.terima">Tgl Terima</th>
+                            <th st-sort="rb.tgl">Tgl Pembuatan</th>
                         </tr>
                     </thead>
                     <tbody ng-show="!isLoading">
-                        <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
+                        <tr ng-repeat="row in displayed">
                             <td>{{row.kd_rubah}}</td>
+                            <td>{{row.nm_customer}}</td>
                             <td>{{row.no_wo}}</td>
                             <td>{{row.jenis}}</td>
-                            <td>{{row.merk}}</td>
-                            <td>{{row.tipe}}</td>
-                            <td>{{row.tgl| date}}</td>
+                            <td>{{row.merk}} / {{row.tipe}}</td>
                             <td>{{row.pengajuan| date}}</td>
-                            <td>{{row.terima| date}}</td>
+                            <td>{{row.tgl| date}}</td>
                         </tr>
                     </tbody>
                     <tbody ng-show="isLoading">

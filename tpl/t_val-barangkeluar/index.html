@@ -43,36 +43,35 @@
                     <table class="table table-striped table-hover" >
                         <thead>
                             <tr>
-                                <th st-sort="tanggal">#</th>
-                                <th st-sort="no_bbk">No. BBK</th>
-                                <th st-sort="tanggal">Tanggal</th>
-                                <th st-sort="no_wo">No. Wo</th>
-                                <th st-sort="bagian">Bagian</th>
-                                <th st-sort="penerima">Penerima</th>
-                                <th st-sort="petugas">Petugas</th>
+                                <th>#</th>
+                                <th st-sort="ab.no_wo">No. Wo</th>
+                                <th st-sort="ab.kd_barang">Kode Barang</th>
+                                <th st-sort="b.nm_barang">Nama Barang</th>
+                                <th st-sort="ab.jml">Jumlah</th>
+                                <th st-sort="ab.ket">Keterangan</th>
                             </tr>
                         </thead>
                         <tbody ng-show="!isLoading">
                             <tr ng-repeat="row in displayed" >
                                 <td><label class="i-checks">
-                                        <input type="checkbox" ng-model="form.no_bbk[row.no_bbk]" ><i></i> 
-                                    </label></td>
-                                <td>{{row.no_bbk}}</td>
-                                <td>{{row.tanggal| date}}</td>
+                                        <input type="checkbox" ng-model="form.id[row.id]"><i></i> 
+                                    </label>
+                                </td>
                                 <td>{{row.no_wo}}</td>
-                                <td>{{row.bagian}}</td>
-                                <td>{{row.penerima}}</td>
-                                <td>{{row.petugas}}</td>
+                                <td>{{row.kd_barang}}</td>
+                                <td>{{row.nm_barang}}</td>
+                                <td>{{row.jml}}</td>
+                                <td>{{row.ket}}</td>
                             </tr>
                         </tbody>
                         <tbody ng-show="isLoading">
                             <tr>
-                                <td colspan="7" class="text-center">Loading ... </td>
+                                <td colspan="6" class="text-center">Loading ... </td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="7" class="text-center" st-pagination="" st-items-by-page="20" st-template="tpl/blocks/pagination.custom.html"></td>
+                                <td colspan="6" class="text-center" st-pagination="" st-items-by-page="20" st-template="tpl/blocks/pagination.custom.html"></td>
                             </tr>
                     </table>
 

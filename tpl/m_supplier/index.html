@@ -33,6 +33,11 @@
                             <input st-search="cp" class="form-control"/>
 
                         </div>
+                        <label class="col-sm-2 control-label">Keterangan</label>
+                        <div class="col-sm-3">
+                            <input st-search="ket" class="form-control"/>
+
+                        </div>
 
                     </div>
                 </div>
@@ -72,7 +77,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="6" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html">
+                            <td colspan="7" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html">
                             </td>
                         </tr>
                 </table>		
@@ -93,11 +98,11 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Kode Supplier</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" ng-model="form.kd_supplier" ng-disabled="is_view" required ng-readonly="true"/>
+                            <input type="text" class="form-control" ng-model="form.kd_supplier" ng-disabled="is_view"  ng-readonly="true"/>
                         </div>
                        <label class="col-sm-2 control-label">Hp</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" ng-model="form.hp" ng-disabled="is_view" required >
+                            <input type="text" class="form-control" ng-model="form.hp" ng-disabled="is_view"  >
                         </div>
                        
                     </div>
@@ -110,7 +115,7 @@
                          
                         <label class="col-sm-2 control-label">Email</label>
                         <div class="col-sm-4">
-                            <input type="email" class="form-control" ng-model="form.email" ng-disabled="is_view" required >
+                            <input type="email" class="form-control" ng-model="form.email" ng-disabled="is_view"  >
                         </div>
                     </div>
                     <div class="form-group">
@@ -120,7 +125,7 @@
                         </div>
                         <label class="col-sm-2 control-label">Telpon</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" ng-model="form.telp" ng-disabled="is_view" required>
+                            <input type="text" class="form-control" ng-model="form.telp" ng-disabled="is_view" >
                         </div>
 
 
@@ -128,11 +133,11 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Fax</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" ng-model="form.fax" ng-disabled="is_view" required >
+                            <input type="text" class="form-control" ng-model="form.fax" ng-disabled="is_view"  >
                         </div>
                         <label class="col-sm-2 control-label">NPWP</label>
                         <div class="col-sm-4">
-                            <input type="text" class="form-control" ng-model="form.npwp" ng-disabled="is_view" required >
+                            <input type="text" class="form-control" ng-model="form.npwp" ng-disabled="is_view"  >
                         </div>
                     </div>
                     <div class="form-group">
@@ -143,7 +148,7 @@
                         </div>
                          <label class="col-sm-2 control-label">Keterangan</label>
                         <div class="col-sm-4">
-                            <textarea class="form-control" rows="6" ng-model="form.ket" ng-disabled="is_view" required ></textarea>
+                            <textarea class="form-control" rows="6" ng-model="form.ket" ng-disabled="is_view"  ></textarea>
                            
                         </div>
                     </div>

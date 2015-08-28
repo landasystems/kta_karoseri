@@ -40,7 +40,8 @@ foreach ($models as $key => $val) {
 
 <table border="1">
     <tr>
-        <th valign="top">No PO</th>
+        <th style="text-align: center;">No</th>
+        <th valign="top">No WO</th>
         <th valign="top">Model</th>
         <th valign="top">Customer</th>
         <th>Area</th>
@@ -57,9 +58,11 @@ foreach ($models as $key => $val) {
         <th>Biaya Total</th>
     </tr>
     <?php
+    $n=1;
     foreach ($data as $key) {
         ?>
-        <tr>
+    <tr>
+            <td valign="top"><?=$n?></td>
             <td valign="top"><?php echo $key['title']['no_wo'] ?></td>
             <td valign="top"><?php echo $key['title']['model'] ?></td>
             <td valign="top"><?php echo $key['title']['nm_customer'] ?></td>
@@ -77,6 +80,7 @@ foreach ($models as $key => $val) {
             <td style="text-align: right">&nbsp;<?php echo $key['body']['total'] ?></td>
         </tr>
         <?php
+        $n++;
     }
     ?>
 </table>

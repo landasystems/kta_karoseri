@@ -100,6 +100,28 @@
                     <div class="row">
                         <div class="col-md-4 col-sm-12">
                             <div class="form-group">
+                                <label class="col-sm-2 control-label">Jenis</label>
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        <ui-select on-select="kode(form.kd_jenis)" ng-disabled="is_view" ng-model="form.jenis" theme="bootstrap">
+                                            <ui-select-match>{{$select.selected.jenis_brg}}</ui-select-match>
+                                            <ui-select-choices refresh="cariJenis($select.search)" repeat="jenis in jenis_brg">
+                                                {{jenis.jenis_brg}}
+                                            </ui-select-choices>
+                                        </ui-select>
+                                        <span class="input-group-btn">
+                                            <button ng-click="detail.kd_barang = undefined" class="btn btn-default">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                    <!--<select class="form-control" ng-model="form.jenis" ng-disabled="is_view" required ng-change="kode(form.kd_jenis)" ng-options="jenis.kd_jenis as jenis.jenis_brg for jenis in jenis_brg">-->
+                                    <!--<option value="">-Pilih Jenis-</option>-->
+                                    <!--<option ng-repeat="jenis in jenis_brg">{{jenis.jenis_brg}}</option>-->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label class="col-sm-2 control-label">Kode</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" ng-model="form.kd_barang" ng-disabled="is_view" readonly>
@@ -109,15 +131,6 @@
                                 <label class="col-sm-2 control-label">Nama</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" ng-model="form.nm_barang" ng-disabled="is_view" required>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">Jenis</label>
-                                <div class="col-sm-10">
-                                    <select class="form-control" ng-model="form.jenis" ng-disabled="is_view" required>
-                                        <option value="">-Pilih Jenis-</option>
-                                        <option ng-repeat="jenis in jenis_brg" value="{{jenis.kd_jenis}}">{{jenis.jenis_brg}}</option>
-                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -147,7 +160,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Max</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" ng-model="form.max" ng-disabled="is_view" required ng-keyup="qty(form.max, form.saldo)" readonly>
+                                    <input type="text" class="form-control" ng-model="form.max" ng-disabled="is_view" required ng-keyup="qty(form.max, form.saldo)">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -165,7 +178,7 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Qty</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" ng-model="form.qty" ng-disabled="is_view" required>
+                                    <input type="text" class="form-control" ng-model="form.qty" ng-disabled="is_view" required readonly>
                                 </div>
                             </div>
                         </div>
@@ -183,5 +196,4 @@
             </div>
         </div>
     </div>
-
 </div>

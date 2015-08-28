@@ -17,7 +17,7 @@
                                     <label class="col-sm-3 control-label">No Wo</label>
                                     <div class="col-sm-9">
                                         <div class="input-group">
-                                            <ui-select on-select="pilihWo($item)" ng-model="form.no_wo" ng-disabled="is_view" theme="bootstrap">
+                                            <ui-select on-select="pilihWo($item)" ng-model="form.no_wo" ng-disabled="is_view" theme="bootstrap" required>
                                                 <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
                                                 <ui-select-choices refresh="cariWo($select.search)" repeat="val in results">
                                                     {{val.no_wo}}
@@ -34,7 +34,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Customer</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" readonly ng-model="form.nm_customer" ng-disabled="is_view" required placeholder="Nama Customer">
+                                        <input type="text" class="form-control" readonly ng-model="form.nm_customer" required placeholder="Nama Customer">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -97,11 +97,11 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group" ng-show="form.stat == 'Eksterior'">
+                                <div class="form-group">
                                     <label class="col-sm-3 control-label">Bagian</label>
                                     <div class="col-sm-9">
                                         <select ng-model="form.bag" ng-disabled="is_view" class="form-control" ng-change="jenisKmp(form.stat, form.bag)">
-                                            <option value="-">-Pilih Bagian-</option>
+                                            <option value="">-Pilih Bagian-</option>
                                             <option value="Depan">Depan</option>
                                             <option value="Samping Kanan">Samping Kanan</option>
                                             <option value="Samping Kiri">Samping Kiri</option>
@@ -113,13 +113,10 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group" ng-show="form.stat == 'Eksterior'">
+                                <div class="form-group">
                                     <label class="col-sm-3 control-label">Jenis Komplain</label>
                                     <div class="col-sm-9">
-                                        <select class="form-control" ng-model="form.kd_jns" ng-disabled="is_view" required data-ng-options="o.kd_jns as o.jns_komplain for o in jenis_kmp">
-                                            <!--                                            <option value="">-Pilih Status-</option>
-                                                                                        <option value="{{jns_komplain.kd_jns}}" ng-repeat="jns_komplain in jenis_kmp">{{jns_komplain.jns_komplain}}</option>-->
-                                        </select>
+                                        <select class="form-control" ng-model="form.kd_jns" ng-disabled="is_view" required data-ng-options="o.kd_jns as o.jns_komplain for o in jenis_kmp"></select>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -195,9 +192,9 @@
                                     </div>
                                 </div>
                                 <div align="center">
-                                    <button class="btn btn-success fa fa-plus" ng-click="tambah(form)">Tambah</button>
-                                    <button class="btn btn-primary fa fa-save" ng-click="save(form)">Simpan</button>
-                                    <button class="btn btn-danger fa fa-trash" ng-click="delete(form)">Hapus</button>
+                                    <button class="btn btn-success fa fa-plus" ng-click="tambah(form)"> Tambah</button>
+                                    <button class="btn btn-primary fa fa-save" ng-click="save(form)"> Simpan</button>
+                                    <button class="btn btn-danger fa fa-trash" ng-click="delete(form)"> Hapus</button>
                                 </div>
                             </div>
                         </div>
