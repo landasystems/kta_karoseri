@@ -199,23 +199,28 @@ class BarangController extends Controller {
     }
 
     public function actionKode() {
-        $query = new Query;
-        $query->from('barang')
-                ->select('*')
-                ->orderBy('kd_barang DESC')
-                ->limit(1);
-
-        $command = $query->createCommand();
-        $models = $command->query()->read();
-        if (empty($models)) {
-            $kode = '100001';
-        } else {
-            $kode = $models['kd_barang'] + 1;
-        }
-        Yii::error($command->query());
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'kode' => $kode));
+        $params = json_decode(file_get_contents("php://input"), true);
+//        print_r($params);
+        Yii::error($params);
+        ////        $query = new Query;
+//
+//        $jenisBarang = \app\models\JenisBrg::findOne(['kd_jenis' => $params['kd_jenis']]);
+//
+//        $query->from('barang')
+//                ->select('*')
+//                ->orderBy('kd_barang DESC')
+//                ->where(['jenis' => $params['kd_jenis']])
+//                ->limit(1);
+//
+//        $command = $query->createCommand();
+//        $models = $command->query()->read();
+//        if (empty($models)) {
+//            $kode = $jenisBarang['kd_jenis'] . '00001';
+//        } else {
+//            $kode = $models['kd_barang'] + 1;
+//        }
+//        $this->setHeader(200);
+//        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionIndex() {
@@ -250,7 +255,7 @@ class BarangController extends Controller {
                 ->from(['barang', 'jenis_brg'])
                 ->where('barang.jenis = jenis_brg.kd_jenis')
                 ->orderBy($sort)
-                ->select("barang.*, jenis_brg.jenis_brg");
+                ->select("barang.*, jenis_brg.*");
 
 //filter
         if (isset($params['filter'])) {
@@ -288,6 +293,7 @@ class BarangController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new Barang();
         $model->attributes = $params;
+        $model->jenis = $params['jenis']['kd_jenis'];
 
         if ($model->save()) {
             $this->setHeader(200);
@@ -303,6 +309,8 @@ class BarangController extends Controller {
         $model = $this->findModel($id);
         $ft = $model->foto;
         $model->attributes = $params;
+        $model->jenis = $params['jenis']['kd_jenis'];
+
         if (empty($model->foto)) {
             $model->foto = $ft;
         }

@@ -8,6 +8,7 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
     $scope.is_copy = false;
     $scope.jenis_kmp = [];
     $scope.bagian = '-';
+    $scope.tgl_cetak = new Date();
 
     $scope.print = function(no_bbk) {
         Data.get('bbk/print', {no_bbk: no_bbk}).then(function(data) {
@@ -29,12 +30,10 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
     };
 
     $scope.kalkulasi = function(sisa, stok, jml_keluar) {
-        $scope.sisa_pengambilan = sisa - jml_keluar;
-        if ($scope.sisa_pengambilan > 0) {
-            $scope.sisa_pengambilan = $scope.sisa_pengambilan;
+        if (sisa - jml_keluar >= 0) {
+            $scope.sisa_pengambilan = sisa - jml_keluar;
             $scope.stok_sekarang = stok - jml_keluar;
         } else {
-            $scope.sisa_pengambilan = 0;
             toaster.pop('error', "Sisa pengambilan bahan telah habis");
         }
     }
@@ -85,20 +84,6 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
             ket: '',
         })
     };
-
-//    $scope.listBarang = function(no_wo, kd_jab) {
-//        Data.post('bbk/listbarang', {no_wo: no_wo, kd_jab: kd_jab}).then(function(data) {
-//            if (jQuery.isEmptyObject(data.data)) {
-//                $scope.detailBbk = [{
-//                        kd_barang: '',
-//                        jml: '',
-//                        ket: '',
-//                    }];
-//            } else {
-//                $scope.detailBbk = data.data;
-//            }
-//        });
-//    }
 
     $scope.removeRow = function(paramindex) {
         var comArr = eval($scope.detailBbk);
@@ -170,10 +155,6 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
     };
 
     $scope.create = function(form) {
-        $scope.is_edit = true;
-        $scope.is_view = false;
-        $scope.is_copy = false;
-        $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
         Data.get('pengguna/profile').then(function(data) {
@@ -188,6 +169,10 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
                 ket: '',
             }];
         $scope.form.tanggal = new Date();
+        $scope.is_edit = true;
+        $scope.is_view = false;
+        $scope.is_copy = false;
+        $scope.is_create = true;
     };
 
     $scope.update = function(form) {
@@ -266,7 +251,18 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
     }
 });
 
-app.controller('modalCtrl', function($scope, Data, $modalInstance, form) {
+app.controller('modalCtrl', function($scope, Data, $modalInstance, form, toaster) {
+
+    $scope.form = {
+        no_wo: '',
+        kd_kerja: '',
+        kd_barang: '',
+        tgl: '',
+        jml: '',
+        ket: '',
+    }
+
+    $scope.form.tgl = new Date();
 
     $scope.open1 = function($event) {
         $event.preventDefault();
@@ -290,22 +286,21 @@ app.controller('modalCtrl', function($scope, Data, $modalInstance, form) {
         }
     }
 
-    $scope.cariBarang = function($query) {
-        if ($query.length >= 3) {
-            Data.get('barang/cari', {barang: $query}).then(function(data) {
+    $scope.listBarang = function($query, no_wo, kd_jab) {
+        if ($query.length >= 1) {
+            Data.post('bbk/listbarang', {nama: $query, no_wo: no_wo, kd_jab: kd_jab}).then(function(data) {
                 $scope.resultsbarang = data.data;
             });
         }
     }
 
     $scope.simpan = function(form) {
-        var url = ($scope.is_create == true) ? 'bbk/create' : 'bbk/update/' + form.no_bbk;
-        Data.post(url, data).then(function(result) {
+        var url = 'bbk/pengecualian';
+        Data.post(url, form).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
                 $scope.is_edit = false;
-                $scope.callServer(tableStateRef); //reload grid ulang
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
             }
         });

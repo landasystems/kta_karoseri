@@ -56,7 +56,7 @@ class JnskomplainController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_jns ASC";
+        $sort = "kd_jns DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);

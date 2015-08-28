@@ -27,7 +27,6 @@ class BbmController extends Controller {
                     'kode' => ['get'],
                     'excel' => ['get'],
                     'excelrekap' => ['get'],
-
                     'exceldet' => ['get'],
                     'rekap' => ['get'],
                     'petugas' => ['get'],
@@ -127,6 +126,14 @@ class BbmController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->queryAll();
+        foreach ($models as $key => $val) {
+            $po = \app\models\TransPo::findOne($val['no_po']);
+            $wo = \app\models\Womasuk::findOne($val['no_wo']);
+            $models[$key]['po'] = (!empty($po)) ? $po->attributes : array();
+            $models[$key]['wo'] = (!empty($wo)) ? $wo->attributes : array();
+            $models[$key]['supplier'] = (!empty($po)) ? $po->supplier->attributes : array();
+        }
+//        Yii::error($models);
         $totalItems = $query->count();
         $this->setHeader(200);
 
@@ -389,7 +396,7 @@ class BbmController extends Controller {
         $filter = $_SESSION['filter'];
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/bbm", ['models' => $models,'filter'=>$filter]);
+        return $this->render("/expretur/bbm", ['models' => $models, 'filter' => $filter]);
     }
 
     public function actionExcelrekap() {
@@ -404,7 +411,7 @@ class BbmController extends Controller {
         $model = $this->findModel($id);
         $detail = DetBbm::findAll(['no_bbm' => $id]);
 //        Yii::error($detail);
-        return $this->render('reportExcel', ['model'=> $model,'detail'=> $detail]);
+        return $this->render('reportExcel', ['model' => $model, 'detail' => $detail]);
     }
 
 }
