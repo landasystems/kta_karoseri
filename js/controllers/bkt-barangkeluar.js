@@ -9,11 +9,25 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
     $scope.jenis_kmp = [];
     $scope.bagian = '-';
     $scope.tgl_cetak = new Date();
+    $scope.gantiStatus = {};
 
-    $scope.print = function(no_bbk) {
+    $scope.bukaPrint = function(form) {
+        if (confirm("Apa anda yakin akan memproses item ini ?")) {
+            Data.post('bbk/bukaprint/', {no_bbk: form}).then(function(result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan");
+                } else {
+                    toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
+                }
+            });
+        }
+    }
+
+    $scope.simpanPrint = function(no_bbk) {
         Data.get('bbk/print', {no_bbk: no_bbk}).then(function(data) {
-            $scope.form.satus = 1;
+
         });
+        $scope.form.satus = 1;
     }
 
     $scope.modal = function(form) {
