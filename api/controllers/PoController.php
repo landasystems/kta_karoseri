@@ -29,6 +29,7 @@ class PoController extends Controller {
                     'updtst' => ['get'],
                     'excel' => ['get'],
                     'excelbeli' => ['get'],
+                    'excelpantau' => ['get'],
                     'brgspp' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
@@ -178,13 +179,14 @@ class PoController extends Controller {
                 ->limit($limit)
                 ->from('detail_po as dpo')
                 ->join('JOIN', 'trans_po', 'trans_po.nota = dpo.nota')
-                ->join('JOIN', 'supplier', 'supplier.kd_supplier = trans_po.suplier')
+                ->join('JOIN', 'det_spp', "det_spp.no_spp = trans_po.spp and det_spp.kd_barang = dpo.kd_barang")
+                ->join('LEFT JOIN', 'supplier', 'supplier.kd_supplier = trans_po.suplier')
                 ->join('JOIN', 'det_bbm', 'det_bbm.no_po = trans_po.nota and det_bbm.kd_barang = dpo.kd_barang')
                 ->join('LEFT JOIN', 'trans_bbm', 'trans_bbm.no_bbm = det_bbm.no_bbm')
                 ->join('JOIN', 'barang', 'barang.kd_barang = dpo.kd_barang')
-                ->join('JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
+                ->join('LEFT JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
                 ->orderBy($sort)
-                ->select("dpo.* ,trans_po.* ,jenis_brg.jenis_brg, supplier.nama_supplier,trans_bbm.surat_jalan,det_bbm.tgl_terima, det_bbm.no_bbm, barang.nm_barang, barang.satuan");
+                ->select("dpo.*,det_spp.*,trans_po.* ,jenis_brg.jenis_brg, supplier.nama_supplier,trans_bbm.surat_jalan,det_bbm.tgl_terima, det_bbm.no_bbm, barang.nm_barang, barang.satuan");
         //filter
 
         if (isset($params['filter'])) {
@@ -486,7 +488,7 @@ class PoController extends Controller {
                     ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang ')
                     ->where('det_spp.no_spp =' . $param['nospp'])
                     ->andWhere(['LIKE', 'nm_barang', $param['namabrg']])
-                    ->select("det_spp.no_spp,det_spp.kd_barang,barang.*");
+                    ->select("det_spp.no_spp,det_spp.qty as jml,det_spp.kd_barang,barang.*");
         }
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -499,6 +501,7 @@ class PoController extends Controller {
     public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/po", ['models' => $models]);
@@ -507,9 +510,18 @@ class PoController extends Controller {
     public function actionExcelbeli() {
         session_start();
         $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/belitunaikredit", ['models' => $models]);
+    }
+    public function actionExcelpantau() {
+        session_start();
+        $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/rekappantau", ['models' => $models]);
     }
 
 }
