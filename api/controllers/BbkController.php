@@ -98,7 +98,7 @@ class BbkController extends Controller {
                         ->join('LEFT JOIN', 'spk', 'spk.kd_bom = dsb.kd_bom')
                         ->join('LEFT JOIN', 'wo_masuk as wm', 'spk.no_spk = wm.no_spk')
                         ->select('b.saldo as stok, wm.no_wo as no_wo, b.kd_barang as kd_barang, '
-                                . 'b.nm_barang as nm_barang, tj.id_jabatan as kd_jabatan, '
+                                . 'b.nm_barang as nm_barang, b.satuan, tj.id_jabatan as kd_jabatan, '
                                 . 'tj.jabatan as bagian, dsb.qty as jml, dsb.ket as ket')
                         ->where('b.nm_barang like "%' . $params['nama'] . '%" and wm.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_jab']['id_jabatan'] . '"');
                 $command = $query->createCommand();
@@ -111,7 +111,7 @@ class BbkController extends Controller {
                         ->join('JOIN', 'spk', 'spk.kd_bom = dsb.kd_bom')
                         ->join('JOIN', 'wo_masuk as wm', 'spk.no_spk = wm.no_spk')
                         ->select('b.saldo as stok, wm.no_wo as no_wo, b.kd_barang as kd_barang, '
-                                . 'b.nm_barang as nm_barang, tj.id_jabatan as kd_jabatan, '
+                                . 'b.nm_barang as nm_barang, b.satuan, tj.id_jabatan as kd_jabatan, '
                                 . 'tj.jabatan as bagian, dsb.qty as jml, dsb.ket as ket')
                         ->where('b.nm_barang like "%' . $params['nama'] . '%" and dsb.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_jab']['id_jabatan'] . '"');
 
@@ -154,6 +154,7 @@ class BbkController extends Controller {
             $i = 0;
             foreach ($models as $val) {
                 $det[$i]['kd_barang'] = $val['kd_barang'];
+                $det[$i]['satuan'] = $val['satuan'];
                 $det[$i]['nm_barang'] = $val['nm_barang'];
                 if (isset($detPengecualian[$val['kd_barang']])) {
                     $val['jml'] = $detPengecualian[$val['kd_barang']]['jml'];

@@ -100,7 +100,7 @@ class SpkaroseriController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "no_spk ASC";
+        $sort = "no_spk DESC";
         $offset = 0;
         $limit = 10;
 

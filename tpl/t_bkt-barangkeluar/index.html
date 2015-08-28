@@ -93,7 +93,8 @@
                 {{formtitle}} 
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
                     <button type="button" class="btn btn-success fa fa-check"  ng-click="modal()">&nbsp;Pengecualian BBK</button>
-                    <button type="button" class="btn btn-primary fa fa-print"  ng-show="is_view" ng-print print-element-id="printArea" ng-disabled="form.status == 1" ng-click="print(form.no_bbk)">&nbsp;Print</button>
+                    <!--<button type="button" class="btn btn-primary fa fa-print"  ng-show="is_view" ng-print print-element-id="printArea" ng-disabled="form.status == 1" ng-click="print(form.no_bbk)">&nbsp;Print</button>-->
+                    <button type="button" class="btn btn-primary fa fa-print"  ng-show="is_view" ng-print print-element-id="printArea" ng-click="print(form.no_bbk)">&nbsp;Print</button>
                 </div>
             </div>
             <div class="panel-body">
@@ -222,18 +223,18 @@
                                         <tr>
                                             <th>Barang</th>
                                             <th style="width:100px">Jumlah</th>
-                                            <!--<th style="width:100px">Satuan</th>-->
+                                            <th style="width:100px">Satuan</th>
                                             <th style="width:400px">Keterangan</th>
-                                            <td width="50" ng-show="is_view != true" style="margin:0px;padding:0px;" >
+                                            <th width="50" ng-show="is_view != true" style="margin:0px;padding:0px;" >
                                                 <button ng-click="addDetail(detail)" style="width:50px;"  class="btn btn-success" ng-disabled="is_view" title="Tambah Detail"><i class="fa fa-plus"></i></button>
-                                            </td>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr style="margin:0px;padding:0px;" ng-repeat="detail in detailBbk">
                                             <td style="margin:0px;padding:0px;">
                                                 <div class="input-group">
-                                                    <ui-select on-select="detailstok(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang)" ng-disabled="is_view" ng-model="detail.kd_barang" theme="bootstrap">
+                                                    <ui-select on-select="detail.satuan = detail.kd_barang.satuan; detailstok(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang)" ng-disabled="is_view" ng-model="detail.kd_barang" theme="bootstrap">
                                                         <ui-select-match>{{$select.selected.nm_barang}}</ui-select-match>
                                                         <ui-select-choices refresh="listBarang($select.search, form.no_wo, form.kd_jab)" repeat="val in resultsbarang">
                                                             {{val.nm_barang}}
@@ -246,15 +247,17 @@
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control" 
-                                                                                       ng-keyup="
-                                                                                       kalkulasi(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang, detail.jml); 
-                                                                                       (sisa_pengambilan > 0) ? detail.jml = detail.jml : detail.jml = 0;
-                                                                                       (sisa_pengambilan >= 0) ? sisa_pengambilan = sisa_pengambilan  : sisa_pengambilan = 0;
-                                                                                       "></td>
-                                            <!--<td>{{detail.satuan}}</td>-->
+                                            <td style="margin:0px;padding:0px;">
+                                                <input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control" 
+                                                       ng-keyup="
+                                                       kalkulasi(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang, detail.jml); 
+                                                       (sisa_pengambilan > 0) ? detail.jml = detail.jml : detail.jml = 0;
+                                                       (sisa_pengambilan >= 0) ? sisa_pengambilan = sisa_pengambilan  : sisa_pengambilan = 0;
+                                                       ">
+                                            </td>
+                                            <td>{{detail.satuan}}</td>
                                             <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control"></td>
-                                            <td  style="margin:0px;padding:0px;" ng-show="is_view != true">
+                                            <td  style="margin:0px;padding:0px;">
                                                 <button ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view" style="width:50px;" title="Hapus Detail"><i class="fa fa-trash-o"></i></button>
                                             </td>
                                         </tr>
@@ -273,55 +276,79 @@
         </div>
     </div>
 
-    <div id="printArea">
-        <table width="100%" class="no-border">
-            <tr>
-                <td width="50%">
-                    PT. KARYA TUGAS ANDA <br>
-                    Sukorejo - Pasuruan
-                </td>
-                <td valign="top">
-                    NO. DOC : FR-WHS-004-REV.00
-                </td>
-            </tr>
-        </table>
-        <br>
-        <center>
-            *** BUKTI BARANG KELUAR***
-        </center>
-        <br>
-        <table class="no-border">
-            <tr>
-                <td width="100">NO. WO</td>
-                <td width="2">:</td>
-                <td>{{form.no_wo.no_wo}}</td>
-            </tr>
-            <tr>
-                <td>NO. BBK</td>
-                <td width="2">:</td>
-                <td>{{form.no_bbk}}</td>
-            </tr>
-        </table>
-        <br>
-        <table class="print-detail" border="1">
-            <thead>
+    <div id="printArea" ng-if="is_view">
+        <div style="margin-top: 0px">
+            <table width="100%" class="no-border">
                 <tr>
-                    <td>No.</td>
-                    <td>Nama Barang</td>
-                    <td>Jml</td>
-                    <td>Sat</td>
-                    <td>Keterangan</td>
+                    <td width="50%">
+                        PT. KARYA TUGAS ANDA <br>
+                        Sukorejo - Pasuruan
+                    </td>
+                    <td valign="top">
+                        NO. DOC : FR-WHS-004-REV.00
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="detail in detailBbk">
-                    <td>{{$index + 1}}</td>
-                    <td>{{detail.kd_barang.nm_barang}}</td>
-                    <td>{{detail.jml}}</td>
-                    <td>{{detail.satuan}}</td>
-                    <td>{{detail.ket}}</td>
+            </table>
+            <br>
+            <center>
+                *** BUKTI BARANG KELUAR ***
+            </center>
+            <br>
+            <table class="no-border">
+                <tr>
+                    <td width="100">NO. WO</td>
+                    <td width="2">:</td>
+                    <td>{{form.no_wo.no_wo}}</td>
+                    <td width="40%" rowspan="2">{{form.kd_jab.jabatan}}<td>
                 </tr>
-            </tbody>
+                <tr>
+                    <td>NO. BBK</td>
+                    <td width="2">:</td>
+                    <td>{{form.no_bbk}}</td>
+                </tr>
+            </table>
+            <br>
+            <table class="print-detail" border="1">
+                <thead>
+                    <tr>
+                        <td>No.</td>
+                        <td>Nama Barang</td>
+                        <td>Jml</td>
+                        <td>Sat</td>
+                        <td>Keterangan</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="detail in detailBbk">
+                        <td>{{$index + 1}}</td>
+                        <td>{{detail.kd_barang.nm_barang}}</td>
+                        <td>{{detail.jml}}</td>
+                        <td>{{detail.satuan}}</td>
+                        <td>{{detail.ket}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <br><br>
+        <table style="margin-bottom: 0px;">
+            <tr>
+                <td width="25%"></td>
+                <td width="50%"></td>
+                <td width="25%" align="center">Sukorejo, {{tgl_cetak| date}}</td>
+            </tr>
+            <tr>
+                <td align="center">Dikeluarkan Oleh :</td>
+                <td></td>
+                <td align="center">Yang menerima :</td>
+            </tr>
+            <tr>
+                <td colspan="3" height="50"></td>
+            </tr>
+            <tr>
+                <td align="center">{{form.petugas}}</td>
+                <td></td>
+                <td align="center">{{form.penerima.nama}}</td>
+            </tr>
         </table>
     </div>
 </div>

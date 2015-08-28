@@ -8,6 +8,7 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
     $scope.is_copy = false;
     $scope.jenis_kmp = [];
     $scope.bagian = '-';
+    $scope.tgl_cetak = new Date();
 
     $scope.print = function(no_bbk) {
         Data.get('bbk/print', {no_bbk: no_bbk}).then(function(data) {
@@ -154,10 +155,6 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
     };
 
     $scope.create = function(form) {
-        $scope.is_edit = true;
-        $scope.is_view = false;
-        $scope.is_copy = false;
-        $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
         Data.get('pengguna/profile').then(function(data) {
@@ -172,6 +169,10 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
                 ket: '',
             }];
         $scope.form.tanggal = new Date();
+        $scope.is_edit = true;
+        $scope.is_view = false;
+        $scope.is_copy = false;
+        $scope.is_create = true;
     };
 
     $scope.update = function(form) {
