@@ -99,7 +99,7 @@ class KpbController extends Controller {
 
         session_start();
 
-        if ($cek == 1 and $_SESSION['user']['id'] != "-1") {
+        if ($cek == 1 and $_SESSION['user']['id'] != "1") {
             $msg = 'Kartu pengambilan bahan sudah dicetak, silahkan menghubungi admin untuk mencetak ulang';
             $print = 0;
         } else {

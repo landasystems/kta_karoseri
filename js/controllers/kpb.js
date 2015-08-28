@@ -46,6 +46,7 @@ app.controller('kpbCtrl', function($scope, Data, toaster) {
         Data.post('kpb/listbahan', dt).then(function(data) {
             $scope.detail = data.data;
             $scope.status = data.print;
+            console.log($scope.status);
             $scope.msg = data.msg;
         });
     }
