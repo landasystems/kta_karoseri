@@ -1,6 +1,6 @@
 <?php
 header("Content-type: application/vnd-ms-excel");
-//header("Content-Disposition: attachment; filename=excel-rekap-ujimutu.xls");
+header("Content-Disposition: attachment; filename=excel-rekap-pemantauan-penerimaan-barang.xls");
 ?>
 
 
@@ -69,17 +69,23 @@ header("Content-type: application/vnd-ms-excel");
     <?php
     $no = 1;
     foreach ($models as $key) {
+        if ($key['p'] == '0000-00-00') {
+            $key['p'] = '';
+        }
+        if($key['a'] == '0000-00-00'){
+            $key['a'] = '';
+        }
         ?>
         <tr>
             <td><?= $no ?></td>
-            <td><?=$key['nota']?></td>
-            <td><?=$key['kd_barang']?></td>
-            <td><?=$key['nm_barang']?></td>
-            <td><?=$key['satuan']?></td>
-            <td><?=$key['jml']?></td>
-            <td><?=$key['jatuh_tempo']?></td>
-            <td><?=$key['p']?></td>
-            <td><?=$key['a']?></td>
+            <td><?= $key['nota'] ?></td>
+            <td><?= $key['kd_barang'] ?></td>
+            <td><?= $key['nm_barang'] ?></td>
+            <td><?= $key['satuan'] ?></td>
+            <td><?= $key['jml'] ?></td>
+            <td><?= $key['jatuh_tempo'] ?></td>
+            <td><?= $key['p'] ?></td>
+            <td><?= $key['a'] ?></td>
             <td></td>
         </tr>
         <?php
