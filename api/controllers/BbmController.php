@@ -114,7 +114,7 @@ class BbmController extends Controller {
                 ->join('LEFT JOIN', 'supplier as su', 'tb.kd_suplier= su.kd_supplier')
 //                ->leftJoin('tbl_jabatan as tj', 'tj.id_jabatan  = tb.kd_jab')
                 ->orderBy($sort)
-                ->select("tb.*,su.nama_supplier as nm_supplier");
+                ->select("tb.*,su.nama_supplier as nama_supplier");
 
         //filter
         if (isset($params['filter'])) {
