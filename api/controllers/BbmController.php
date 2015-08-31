@@ -129,11 +129,15 @@ class BbmController extends Controller {
         foreach ($models as $key => $val) {
             $po = \app\models\TransPo::findOne($val['no_po']);
             $wo = \app\models\Womasuk::findOne($val['no_wo']);
+            
+            if(!empty($po))
+                $supplier = \app\models\Supplier::findOne($po->suplier);
+            
             $models[$key]['po'] = (!empty($po)) ? $po->attributes : array();
             $models[$key]['wo'] = (!empty($wo)) ? $wo->attributes : array();
-            $models[$key]['supplier'] = (!empty($po)) ? $po->supplier->attributes : array();
+            $models[$key]['supplier'] = (!empty($supplier)) ? $supplier->attributes : array();
         }
-//        Yii::error($models);
+        Yii::error($models);
         $totalItems = $query->count();
         $this->setHeader(200);
 
