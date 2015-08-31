@@ -289,6 +289,7 @@ app.controller('modalCtrl', function($scope, Data, $modalInstance, form) {
     }
     
     $scope.formmodal = form;
+    console.log(form);
 
     $scope.cancel = function() {
         $modalInstance.dismiss('cancel');

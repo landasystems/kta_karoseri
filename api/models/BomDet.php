@@ -13,21 +13,19 @@ use Yii;
  * @property string $ket
  * @property string $kd_jab
  */
-class BomDet extends \yii\db\ActiveRecord
-{
+class BomDet extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'det_standar_bahan';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['kd_bom', 'qty'], 'required'],
             [['qty'], 'number'],
@@ -40,8 +38,7 @@ class BomDet extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'kd_bom' => 'Kd Bom',
             'kd_barang' => 'Kd Barang',
@@ -50,11 +47,13 @@ class BomDet extends \yii\db\ActiveRecord
             'kd_jab' => 'Kd Jab',
         ];
     }
-    
+
     public function getJabatan() {
         return $this->hasOne(Jabatan::className(), ['id_jabatan' => 'kd_jab']);
     }
+
     public function getBarang() {
         return $this->hasOne(Barang::className(), ['kd_barang' => 'kd_barang']);
     }
+
 }

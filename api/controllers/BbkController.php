@@ -179,6 +179,19 @@ class BbkController extends Controller {
             }
 
             echo json_encode(array('status' => 1, 'data' => $det));
+        } else {
+            $query = new Query;
+            $query->from('barang')
+                    ->select("*")
+                    ->orderBy('kd_barang ASC')
+                    ->where('nm_barang like "%' . $params['nama'] . '%"');
+
+            $command = $query->createCommand();
+            $models = $command->queryAll();
+
+            $this->setHeader(200);
+
+            echo json_encode(array('status' => 1, 'data' => $models));
         }
     }
 
