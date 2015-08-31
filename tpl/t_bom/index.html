@@ -191,8 +191,8 @@
                             <tr>
                                 <th>Bagian</th>
                                 <th>Barang</th>
-                                <th width="75">Qty</th>
-                                <th>Keterangan</th>
+                                <th width="100">Qty / Satuan</th>
+                                <th width="300">Keterangan</th>
                                 <th width="80" ng-hide="is_view"  style="margin:0px;padding:0px;"><button ng-click="addDetail(detail)" class="btn btn-success" ng-disabled="is_view" style="width: 100%" title="Tambah Detail"><i class="fa fa-plus-square"></i></button></th>
                             </tr>
                         </thead>
@@ -202,10 +202,10 @@
                                     {{detail.bagian.jabatan}}
                                 </td>
                                 <td>
-                                    {{detail.barang.nm_barang}}
+                                    {{detail.barang.nm_barang}} 
                                 </td>
                                 <td>    
-                                    {{detail.qty}}
+                                    {{detail.qty}} {{detail.barang.satuan}}
                                 </td>
                                 <td>
                                     {{detail.ket}}
