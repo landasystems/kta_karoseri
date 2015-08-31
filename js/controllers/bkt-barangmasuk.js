@@ -127,8 +127,10 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
                 $scope.is_edit = false;
-                $scope.callServer(tableStateRef); //reload grid ulang
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
+                $scope.view();
+                $scope.callServer(tableStateRef); //reload grid ulang
+                
             }
         });
 

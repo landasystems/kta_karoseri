@@ -121,7 +121,7 @@
                                 <label class="col-sm-3 control-label">Tanggal Transaksi</label>
                                 <div class="col-sm-8">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_nota" is-open="opened1" ng-click="open1($event)"/>
+                                        <input type="text" ng-readonly="is_view" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_nota" is-open="opened1" ng-click="open1($event)"/>
                                         <span class="input-group-addon">
                                             <i class="fa fa-calendar-o"></i>
                                         </span>
@@ -132,7 +132,7 @@
                                 <label class="col-sm-3 control-label">No PO</label>
                                 <div class="col-sm-8">
                                     <div class="input-group" style="width:100%">
-                                        <ui-select on-select="getPo(form,$item)" ng-model="form.po" theme="bootstrap">
+                                        <ui-select on-select="getPo(form,$item)" ng-readonly="is_view" ng-model="form.po" theme="bootstrap">
                                             <ui-select-match>{{$select.selected.nota}}</ui-select-match>
                                             <ui-select-choices refresh="cariPo($select.search)" repeat="po in listPo">
                                                 {{po.nota}}
@@ -150,7 +150,7 @@
                                 <label class="col-sm-3 control-label">No WO</label>
                                 <div class="col-sm-8">
                                     <div class="input-group" style="width:100%">
-                                        <ui-select ng-model="form.wo" theme="bootstrap">
+                                        <ui-select ng-model="form.wo" ng-readonly="is_view" theme="bootstrap">
                                             <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
                                             <ui-select-choices refresh="cariWo($select.search)" repeat="wo in listWo">
                                                 {{wo.no_wo}}
@@ -178,7 +178,7 @@
                                 <label class="col-sm-4 control-label">Pengirim</label>
                                 <div class="col-sm-8">
                                     <div class="input-group" style="width:100%">
-                                        <input type="text" ng-model="form.pengirim" class="form-control">
+                                        <input type="text" ng-readonly="is_view" ng-model="form.pengirim" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -186,7 +186,7 @@
                                 <label class="col-sm-4 control-label">Penerima</label>
                                 <div class="col-sm-8">
                                     <div class="input-group" style="width:100%">
-                                        <input type="text" ng-model="form.penerima" class="form-control">
+                                        <input type="text" ng-readonly="is_view" ng-model="form.penerima" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -194,7 +194,7 @@
                                 <label class="col-sm-4 control-label">No Surat Jalan</label>
                                 <div class="col-sm-8">
                                     <div class="input-group" style="width:100%">
-                                        <input type="text" ng-model="form.surat_jalan" class="form-control">
+                                        <input type="text" ng-readonly="is_view" ng-model="form.surat_jalan" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -219,7 +219,7 @@
                             <tr ng-repeat="detail in detBbm">
                                 <td>
                                     <div class="input-group" style="width:100%">
-                                        <ui-select ng-model="detail.barang" theme="bootstrap">
+                                        <ui-select ng-readonly="is_view" ng-model="detail.barang" theme="bootstrap">
                                             <ui-select-match>{{$select.selected.kd_barang}} - {{$select.selected.nm_barang}}</ui-select-match>
                                             <ui-select-choices refresh="cariBarang($select.search)" repeat="barang in results">
                                                 {{barang.kd_barang}} - {{barang.nm_barang}}
@@ -233,14 +233,14 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <input type="text" ng-model="detail.keterangan" class="form-control">
+                                    <input type="text" ng-readonly="is_view" ng-model="detail.keterangan" class="form-control">
                                 </td>
                                 <td>
-                                    <input type="text" ng-pattern="/^[0-9]+$/" ng-model="detail.jumlah" class="form-control">
+                                    <input type="text" ng-readonly="is_view" ng-pattern="/^[0-9]+$/" ng-model="detail.jumlah" class="form-control">
                                 </td>
                                 <td>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="detail.tgl_terima" is-open="openedDet == $index" ng-change="setStatus()" ng-click="openDet($event, $index)"/>
+                                        <input type="text" class="form-control" ng-readonly="is_view" datepicker-popup="dd-MM-yyyy" ng-model="detail.tgl_terima" is-open="openedDet == $index" ng-change="setStatus()" ng-click="openDet($event, $index)"/>
                                         <span class="input-group-addon">
                                             <i class="fa fa-calendar-o"></i>
                                         </span>
