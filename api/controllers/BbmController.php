@@ -85,7 +85,7 @@ class BbmController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "no_bbm DESC";
+        $sort = "tb.no_bbm DESC";
         $offset = 0;
         $limit = 10;
 
@@ -112,9 +112,10 @@ class BbmController extends Controller {
                 ->limit($limit)
                 ->from('trans_bbm as tb')
                 ->join('LEFT JOIN', 'supplier as su', 'tb.kd_suplier= su.kd_supplier')
+                ->join('JOIN', 'det_bbm', 'tb.no_bbm = det_bbm.no_bbm')
 //                ->leftJoin('tbl_jabatan as tj', 'tj.id_jabatan  = tb.kd_jab')
                 ->orderBy($sort)
-                ->select("tb.*,su.nama_supplier as nm_supplier");
+                ->select("tb.*,su.nama_supplier as nm_supplier,det_bbm.no_po");
 
         //filter
         if (isset($params['filter'])) {
@@ -129,9 +130,12 @@ class BbmController extends Controller {
         foreach ($models as $key => $val) {
             $po = \app\models\TransPo::findOne($val['no_po']);
             $wo = \app\models\Womasuk::findOne($val['no_wo']);
+            $supplier = \app\models\Supplier::findOne($po->suplier);
             $models[$key]['po'] = (!empty($po)) ? $po->attributes : array();
             $models[$key]['wo'] = (!empty($wo)) ? $wo->attributes : array();
-            $models[$key]['supplier'] = (!empty($po)) ? $po->supplier->attributes : array();
+            $models[$key]['supplier'] = (!empty($supplier)) ? $supplier->attributes : array();
+
+//            $models[$key]['supplier'] = (!empty($po)) ? $po->supplier->attributes : array();
         }
 //        Yii::error($models);
         $totalItems = $query->count();
@@ -198,7 +202,7 @@ class BbmController extends Controller {
                 }
             }
         }
-        Yii::error($query);
+
         $command = $query->createCommand();
         $models = $command->queryAll();
 //        Yii::error($models);
@@ -218,28 +222,51 @@ class BbmController extends Controller {
     public function actionView($id) {
 
         $model = $this->findModel($id);
+        $querydet = new Query;
+        $querydet->from('det_bbm')
+                ->select('*')
+                ->where('no_bbm="' . $id . '"')
+                ->limit(1);
+
+        $commanddet = $querydet->createCommand();
+        $det = $commanddet->query()->read();
+        
+Yii::error($det);
+
         $data = $model->attributes;
         $querySup = new Query;
         $querySup->select("*")
                 ->from('supplier')
                 ->where('kd_supplier="' . $model->kd_suplier . '"');
         $commandSup = $querySup->createCommand();
-        $sup = $commandSup->queryOne();
+        $sup = $commandSup->query()->read();
+
 
         $queryWo = new Query;
         $queryWo->from('wo_masuk')
 //                ->select('id_jabatan, jabatan')
-                ->where('no_wo = "' . $model->no_wo . '"')
+                ->where('no_wo = "' . $det->no_wo . '"')
                 ->limit(1);
         $command2 = $queryWo->createCommand();
         $wo = $command2->queryOne();
+
+        // trans po
+        $querypo = new Query;
+        $querypo->from('trans_po')
+//                ->select('id_jabatan, jabatan')
+                ->where('nota = "' . $model->no_po . '"')
+                ->limit(1);
+        $command3 = $querypo->createCommand();
+        $po = $command3->queryOne();
+
+
         $queryDet = new Query;
         $queryDet->from('det_bbm')
                 ->select('det_bbm.*, det_bbm.no_po as po')
                 ->where('no_bbm = "' . $model->no_bbm . '"');
         $commandDet = $queryDet->createCommand();
         $detail = $commandDet->queryAll();
-
+        $detais= array();
         foreach ($detail as $key => $ab) {
             $queryBrg = new Query;
             $queryBrg->from('barang')
@@ -247,7 +274,7 @@ class BbmController extends Controller {
                     ->where('kd_barang = "' . $ab['kd_barang'] . '"');
             $commandBrg = $queryBrg->createCommand();
             $Brg = $commandBrg->queryOne();
-            $detail[$key]['barang'] = $Brg;
+            $detais[$key]['barang'] = $Brg;
 
 //            $query = DetBbm::find()->
 //                    where('no_bbm="' . $ab['no_bbm'] . '"')
@@ -260,7 +287,7 @@ class BbmController extends Controller {
 
 //        Yii::error($detail);
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $data, 'sup' => $sup, 'wo' => $wo, 'details' => $detail), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data,'po'=>$po, 'sup' => $sup['nama_supplier'], 'wo' => $wo, 'details' => $detais), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
