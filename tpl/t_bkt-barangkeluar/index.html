@@ -102,7 +102,8 @@
                 {{formtitle}} 
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
                     <button type="button" class="btn btn-success fa fa-check"  ng-click="modal()">&nbsp;Pengecualian BBK</button>
-                    <button type="button" class="btn btn-primary fa fa-print"  ng-show="is_view" ng-print print-element-id="printArea" ng-click="print(form.no_bbk)" ng-disabled="form.status == '1' && user.id != '1'">&nbsp;Print</button>
+                    <button type="button" class="btn btn-info fa fa-print"  ng-show="is_view" ng-print print-element-id="printArea" ng-click="print(form.no_bbk)" ng-disabled="form.status == '1' && user.id != '1'">&nbsp;Print</button>
+                    <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-show="is_view" ng-click="create();">&nbsp;Tambah Data</button>
                 </div>
             </div>
             <div class="panel-body">
@@ -121,7 +122,7 @@
                                                 </ui-select-choices>
                                             </ui-select>
                                             <span class="input-group-btn">
-                                                <button ng-click="form.kode_asli = undefined" class="btn btn-default">
+                                                <button ng-click="form.kode_asli = undefined" class="btn btn-default" ng-disabled="is_view">
                                                     <span class="glyphicon glyphicon-trash"></span>
                                                 </button>
                                             </span>
@@ -156,7 +157,7 @@
                                                 </ui-select-choices>
                                             </ui-select>
                                             <span class="input-group-btn">
-                                                <button ng-click="form.no_wo = undefined" class="btn btn-default">
+                                                <button ng-click="form.no_wo = undefined" class="btn btn-default" ng-disabled="is_view">
                                                     <span class="glyphicon glyphicon-trash"></span>
                                                 </button>
                                             </span>
@@ -174,7 +175,7 @@
                                                 </ui-select-choices>
                                             </ui-select>
                                             <span class="input-group-btn">
-                                                <button ng-click="form.kd_jab = undefined" class="btn btn-default">
+                                                <button ng-click="form.kd_jab = undefined" class="btn btn-default" ng-disabled="is_view">
                                                     <span class="glyphicon glyphicon-trash"></span>
                                                 </button>
                                             </span>
@@ -192,7 +193,7 @@
                                                 </ui-select-choices>
                                             </ui-select>
                                             <span class="input-group-btn">
-                                                <button ng-click="form.penerima = undefined" class="btn btn-default">
+                                                <button ng-click="form.penerima = undefined" class="btn btn-default" ng-disabled="is_view">
                                                     <span class="glyphicon glyphicon-trash"></span>
                                                 </button>
                                             </span>
@@ -249,7 +250,7 @@
                                                         </ui-select-choices>
                                                     </ui-select>
                                                     <span class="input-group-btn">
-                                                        <button ng-click="detail.kd_barang = undefined" class="btn btn-default">
+                                                        <button ng-click="detail.kd_barang = undefined" class="btn btn-default" ng-disabled="is_view">
                                                             <span class="glyphicon glyphicon-trash"></span>
                                                         </button>
                                                     </span>
@@ -258,14 +259,11 @@
                                             <td style="margin:0px;padding:0px;">
                                                 <input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control" 
                                                        ng-keyup="
-                                                       kalkulasi(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang, detail.jml); 
-                                                       (sisa_pengambilan > 0) ? detail.jml = detail.jml : detail.jml = 0;
-                                                       (sisa_pengambilan >= 0) ? sisa_pengambilan = sisa_pengambilan  : sisa_pengambilan = 0;
-                                                       ">
+                                                       kalkulasi(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang, detail.jml); ">
                                             </td>
                                             <td>{{detail.satuan}}</td>
                                             <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control"></td>
-                                            <td  style="margin:0px;padding:0px;">
+                                            <td  style="margin:0px;padding:0px;" ng-show="is_view != true">
                                                 <button ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view" style="width:50px;" title="Hapus Detail"><i class="fa fa-trash-o"></i></button>
                                             </td>
                                         </tr>
