@@ -9,13 +9,13 @@ app.controller('stiCtrl', function($scope, Data, toaster) {
 //    Data.get('bstk/nowo').then(function (data) {
 //        $scope.list_wo = data.list_wo;
 //    });
-    $scope.cariSpk = function($query) {
-        if ($query.length >= 3) {
-            Data.get('spkaroseri/cari', {nama: $query}).then(function(data) {
-                $scope.kdSpk = data.data;
-            });
-        }
-    };
+//    $scope.cariSpk = function($query) {
+//        if ($query.length >= 3) {
+//            Data.get('spkaroseri/cari', {nama: $query}).then(function(data) {
+//                $scope.kdSpk = data.data;
+//            });
+//        }
+//    };
     Data.get('chassis/merk').then(function(data) {
         $scope.listMerk = data.data;
     });
@@ -33,9 +33,9 @@ app.controller('stiCtrl', function($scope, Data, toaster) {
         });
     };
     
-    $scope.getSpk = function(form, items) {
-        form.no_spk = items.no_spk;
-    };
+//    $scope.getSpk = function(form, items) {
+//        form.no_spk = items.no_spk;
+//    };
     $scope.cariCustomer = function($query) {
         if ($query.length >= 3) {
             Data.get('customer/cari', {nama: $query}).then(function(data) {

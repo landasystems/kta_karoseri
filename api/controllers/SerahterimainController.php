@@ -70,7 +70,7 @@ class SerahterimainController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tgl_terima DESC";
+        $sort = "se.tgl_terima DESC";
         $offset = 0;
         $limit = 10;
 
@@ -95,11 +95,12 @@ class SerahterimainController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('serah_terima_in as se')
-                ->join('JOIN', 'customer as cu', 'se.kd_cust = cu.kd_cust')
-                ->join('JOIN', 'warna as wa', 'se.kd_warna = wa.kd_warna')
-                ->join('JOIN', 'chassis as ch', 'se.kd_chassis= ch.kd_chassis')
+                ->join('LEFT JOIN', 'customer as cu', 'se.kd_cust = cu.kd_cust')
+                ->join('LEFT JOIN', 'warna as wa', 'se.kd_warna = wa.kd_warna')
+                ->join('LEFT JOIN', 'chassis as ch', 'se.kd_chassis= ch.kd_chassis')
+                ->join('LEFT JOIN', 'view_wo_spk as vi', 'vi.kd_titipan= se.kd_titipan')
                 ->orderBy($sort)
-                ->select("se.*,cu.*,wa.*,ch.*");
+                ->select("se.*,cu.*,wa.*,ch.*,vi.no_wo as no_wo");
 
         //filter
         if (isset($params['filter'])) {
