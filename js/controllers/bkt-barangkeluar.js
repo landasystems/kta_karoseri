@@ -10,6 +10,7 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
     $scope.bagian = '-';
     $scope.tgl_cetak = new Date();
     $scope.gantiStatus = {};
+    $scope.is_print = 0;
 
     $scope.bukaPrint = function(form) {
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
@@ -25,9 +26,8 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
 
     $scope.simpanPrint = function(no_bbk) {
         Data.get('bbk/print', {no_bbk: no_bbk}).then(function(data) {
-
+            $scope.is_print = 1;
         });
-        $scope.form.satus = 1;
     }
 
     $scope.modal = function(form) {
@@ -250,6 +250,7 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
     $scope.selected = function(id, id_baru) {
         Data.get('bbk/view/' + id).then(function(data) {
             $scope.form = data.data;
+            $scope.is_print = $scope.form.status;
 
             if (id_baru != '') {
                 $scope.form.no_bbk = id_baru;

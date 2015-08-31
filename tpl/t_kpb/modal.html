@@ -1,0 +1,38 @@
+<div class="modal-header">
+    <h3 class="modal-title">Form Buka Cetak Kartu Pengambilan Bahan</h3>
+</div>
+<div class="modal-body">
+    <form name="modalform" class="form-horizontal form-validation">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">No Wo.</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <ui-select on-select="listBagian($item.kd_bom)" ng-model="form.no_wo"  theme="bootstrap">
+                        <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
+                        <ui-select-choices refresh="cariWo($select.search)" repeat="val in results">
+                            {{val.no_wo}}
+                        </ui-select-choices>
+                    </ui-select>
+                    <span class="input-group-btn">
+                        <button ng-click="form.no_wo = undefined" class="btn btn-default">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </button>
+                    </span>
+                </div> 
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Bagian</label>
+            <div class="col-sm-9">
+                <select class="form-control" ng-model="form.kd_jabatan" required ng-change="listBahan(form.no_wo, form.kd_jabatan)">
+                    <option value="">.: Pilih Bagian :.</option>
+                    <option ng-repeat="jab in jabatan" value="{{jab.id_jabatan}}">{{jab.jabatan}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">                  
+            <button class="btn btn-primary" ng-click="cancel()">Close Form</button>
+            <button class="btn btn-success" ng-click="bukaPrint(form.no_wo.no_wo, form.kd_jabatan)">Simpan</button>
+        </div>
+    </form>
+</div>

@@ -16,8 +16,9 @@ foreach ($models as $val) {
     $i++;
 }
 ?>
+<link href="../../../css/print.css" rel="stylesheet" type="text/css" />
 <div style="margin-top: 30px; margin-left: 30px;">
-    <table width="100%" border="1">
+    <table width="100%" class="print-detail" border="1">
         <thead>
             <tr>
                 <td rowspan="3" width="100"><img src="../../../img/logo.png" alt="." style="display: inline"></td>
@@ -27,7 +28,7 @@ foreach ($models as $val) {
                     Kode Dokumen :
                 </td>
                 <td colspan="4" rowspan="3" valign="top">
-                    Cetak : <?php echo date("d-M-Y")?>
+                    Cetak : <?php echo date("d-M-Y") ?>
                 </td>
                 <td height="25" colspan="2">
                     Disetujui
@@ -65,29 +66,29 @@ foreach ($models as $val) {
             foreach ($data as $value) {
                 ?>
                 <tr>
-                    <td colspan="2" valign="top"><?php echo $value['in_chasis'] ?></td>
-                    <td valign="top"><?php echo $value['model'] ?></td>
-                    <td valign="top"><?php echo $value['merk_tipe'] ?></td>
-                    <td valign="top"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td colspan="2"></td>
+                    <td colspan="2" valign="top"  style="border-bottom: none;"><?php echo $value['in_chasis'] ?></td>
+                    <td valign="top"  style="border-bottom: none;"><?php echo $value['model'] ?></td>
+                    <td valign="top"  style="border-bottom: none;"><?php echo $value['merk_tipe'] ?></td>
+                    <td valign="top"  style="border-bottom: none;"></td>
+                    <td  style="border-bottom: none;"></td>
+                    <td  style="border-bottom: none;"></td>
+                    <td  style="border-bottom: none;"></td>
+                    <td  style="border-bottom: none;"></td>
+                    <td style="border-bottom: none;" colspan="2"></td>
                 </tr>
                 <?php
                 foreach ($value['body'] as $scedule) {
                     ?>
-                <tr>
-                        <td colspan="2" valign="top" style="border-top: none;"></td>
-                        <td valign="top" style="border-top: none;"></td>
-                        <td valign="top" style="border-top: none;"></td>
-                        <td valign="top" style="border-top: none;" align="left"><?php echo $scedule['proses'] ?></td>
-                        <td valign="top" style="border-top: none;" align="right"><?php echo $scedule['ps'] ?></td>
-                        <td valign="top" style="border-top: none;" align="right"><?php echo $scedule['pf'] ?></td>
-                        <td valign="top" style="border-top: none;" align="right"><?php echo $scedule['as'] ?></td>
-                        <td valign="top" style="border-top: none;" align="right"><?php echo $scedule['af'] ?></td>
-                        <td colspan="2" valign="top" style="border-top: none;"><?php echo $scedule['keterangan'] ?></td>
+                    <tr>
+                        <td colspan="2" valign="top" style="border-top: none; border-bottom: none;"></td>
+                        <td valign="top" style="border-top: none; border-bottom: none;"></td>
+                        <td valign="top" style="border-top: none; border-bottom: none;"></td>
+                        <td valign="top" style="border-top: none; border-bottom: none;" align="left"><?php echo $scedule['proses'] ?></td>
+                        <td valign="top" style="border-top: none; border-bottom: none;" align="right"><?php echo $scedule['ps'] ?></td>
+                        <td valign="top" style="border-top: none; border-bottom: none;" align="right"><?php echo $scedule['pf'] ?></td>
+                        <td valign="top" style="border-top: none; border-bottom: none;" align="right"><?php echo $scedule['as'] ?></td>
+                        <td valign="top" style="border-top: none; border-bottom: none;" align="right"><?php echo $scedule['af'] ?></td>
+                        <td colspan="2" valign="top" style="border-top: none; border-bottom: none;"><?php echo $scedule['keterangan'] ?></td>
                     </tr>
                     <?php
                 }
