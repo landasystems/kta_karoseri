@@ -102,7 +102,7 @@
             <div class="panel-heading">
                 {{formtitle}}
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-hide="is_view == false">
-                    <button type="button" class="btn btn-primary fa fa-file-excel-o" ng-click="excel(form.no_bbm)" ng-show="is_view == true">&nbsp;Lihat & Export Excel Laporan</button>
+                    <button type="button" class="btn btn-primary fa fa-print" ng-print print-element-id="printArea"  ng-show="is_view == true">&nbsp;Cetak BBM</button>
                 </div>
             </div>
 
@@ -186,7 +186,7 @@
                                 <label class="col-sm-4 control-label">Penerima</label>
                                 <div class="col-sm-8">
                                     <div class="input-group" style="width:100%">
-                                        <input ng-readonly="true" type="text" ng-model="form.penerima" class="form-control">
+                                        <input type="text" ng-model="form.penerima" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -246,21 +246,6 @@
                                         </span>
                                     </div>
                                 </td>
-                                <!--                                <td>
-                                                                    <div class="input-group">
-                                                                        <ui-select ng-model="detail.no_wo" theme="bootstrap">
-                                                                            <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
-                                                                            <ui-select-choices refresh="cariWo($select.search)" repeat="wo in listWo">
-                                                                                {{wo.no_wo}}
-                                                                            </ui-select-choices>
-                                                                        </ui-select>
-                                                                        <span class="input-group-btn">
-                                                                            <button ng-click="detail.no_wo = undefined" class="btn btn-default">
-                                                                                <span class="glyphicon glyphicon-trash"></span>
-                                                                            </button>
-                                                                        </span>
-                                                                    </div>
-                                                                </td>-->
                                 <td>
                                     <button ng-disabled="is_view" ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-arrows"></i></button>
                                     <button ng-disabled="is_view" ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0"><i class="fa fa-trash-o"></i></button>
@@ -276,5 +261,93 @@
                 </form>
             </div>
         </div>
+    </div>
+    <div id="printArea" ng-show="is_view">
+        <style>
+                    .detail-barang td{
+                        border-top: 1px;
+                        border-left: 1px;
+                        border-bottom: 1px;
+                        border-right: 1px;
+                        border:1px;
+                        border-style:solid;
+                    }
+        </style>
+        <div style="margin-top: 0px">
+            <table width="100%" class="no-border">
+                <tr>
+                    <td width="50%">
+                        PT. KARYA TUGAS ANDA <br>
+                        Sukorejo - Pasuruan
+                    </td>
+                    <td valign="top">
+                        NO. DOC : FR-WHS-004-REV.00
+                    </td>
+                </tr>
+            </table>
+            <br>
+            <center>
+                <h4>*** BUKTI BARANG MASUK ***</h4>
+            </center>
+            <br>
+            <center>
+                FR-WHS-003.REV.00
+            </center>
+            <br>
+            <div class="joke" border="1">
+                <table class="detail-barang" border="1px" style="border-collapse: collapse;width:100%">
+                    <tr>
+                        <td style="border-bottom: 1px;width: 40%" colspan="2" border="1">
+                            Tanggal : 2015-08-12<br>
+                            No. BBM : BM1502088<br>
+                            No. PO : PCH150034<br>
+                        </td>
+                        <td style="border-top:none !important;border-bottom:none !important;"></td>
+                        <td style="border:1px;width:55%" colspan="3">
+                            Dari : PERDANA - JL. TEMBAAN 57 C - SURABAYA            </td>
+                    </tr>
+                </table>
+            </div>
+            <br>
+            <table border="1" class="detail-barang" style="border-collapse: collapse;width: 100%">
+                <thead>
+                    <tr>
+                        <th style="text-align: center;">No</th>
+                        <th style="text-align: center;">Nama Barang</th>
+                        <th style="text-align: center;">Qty</th>
+                        <th style="text-align: center;">Kode Barang</th>
+                        <th style="text-align: center;" colspan="2">Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td style="text-align: center;">1</td><td>PIPA KOTAK 20 X 40 X 1,8 MM X 6 M</td><td style="text-align: center;">13</td><td style="text-align: center;">700135</td><td colspan="2">asdfasd</td></tr><tr><td style="text-align: center;">2</td><td>MUR M - 8 KOTAK</td><td style="text-align: center;">11</td><td style="text-align: center;">700113</td><td colspan="2">agdfas a</td></tr>    </tbody>
+            </table>
+            <br>
+            <table border="1" class="detail-barang" style="width:100%;border-collapse: collapse;">
+                <tr>
+                    <td colspan="2" rowspan="3" style="height: 100px;font-">Catatan : </td>
+                    <td style="text-align: center;">PIMPINAN</td>
+                    <td style="text-align: center;">INSPEKSI</td>
+                    <td style="text-align: center;">ADM. GUDANG</td>
+                    <td style="text-align: center;">DISERAHKAN</td>
+                </tr>
+                <tr>
+                    <td style="height: 60px !important;"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>TGL : </td>
+                    <td>TGL : </td>
+                    <td>TGL : </td>
+                    <td>TGL : </td>
+                </tr>
+            </table>
+            1. Supplier ; 2. Keuangan ; 3. Gudang
+
+
+        </div>
+
     </div>
 </div>
