@@ -114,7 +114,7 @@ class BbmController extends Controller {
                 ->join('LEFT JOIN', 'supplier as su', 'tb.kd_suplier= su.kd_supplier')
 //                ->leftJoin('tbl_jabatan as tj', 'tj.id_jabatan  = tb.kd_jab')
                 ->orderBy($sort)
-                ->select("tb.*,su.nama_supplier as nm_supplier");
+                ->select("tb.*,su.nama_supplier as nama_supplier");
 
         //filter
         if (isset($params['filter'])) {
@@ -129,9 +129,13 @@ class BbmController extends Controller {
         foreach ($models as $key => $val) {
             $po = \app\models\TransPo::findOne($val['no_po']);
             $wo = \app\models\Womasuk::findOne($val['no_wo']);
+            
+            if(!empty($po))
+                $supplier = \app\models\Supplier::findOne($po->suplier);
+            
             $models[$key]['po'] = (!empty($po)) ? $po->attributes : array();
             $models[$key]['wo'] = (!empty($wo)) ? $wo->attributes : array();
-            $models[$key]['supplier'] = (!empty($po)) ? $po->supplier->attributes : array();
+            $models[$key]['supplier'] = (!empty($supplier)) ? $supplier->attributes : array();
         }
 //        Yii::error($models);
         $totalItems = $query->count();
@@ -265,7 +269,7 @@ class BbmController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-//        Yii::error($params);
+        
         $model = new TransBbm();
         $model->attributes = $params['form'];
         $findNumber = TransBbm::find()->orderBy('no_bbm DESC')->one();
@@ -274,6 +278,7 @@ class BbmController extends Controller {
         $model->no_bbm = 'BM' . date('y', strtotime($model->tgl_nota)) . substr('00000' . ($lastNumber + 1), -5);
         $model->kd_suplier = $params['form']['kd_supplier'];
         $model->no_wo = $params['form']['wo']['no_wo'];
+        $model->no_po = (isset($params['form']['po']['nota'])) ? $params['form']['po']['nota'] : NULL;
 
         if ($model->save()) {
             $detailBbm = $params['detBbm'];
@@ -281,7 +286,7 @@ class BbmController extends Controller {
                 $det = new DetBbm();
                 $det->attributes = $val;
                 $det->kd_barang = $val['barang']['kd_barang'];
-                $det->no_po = $params['form']['po']['nota'];
+//                $det->no_po = $params['form']['po']['nota'];
                 $det->no_bbm = $model->no_bbm;
                 $det->save();
 
@@ -302,9 +307,11 @@ class BbmController extends Controller {
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
+//        Yii::error($params);
         $model->attributes = $params['form'];
         $model->kd_suplier = $params['form']['supplier']['kd_supplier'];
         $model->no_wo = $params['form']['wo']['no_wo'];
+        $model->no_po = (isset($params['form']['po']['nota'])) ? $params['form']['po']['nota'] : NULL;
 
         if ($model->save()) {
             $detailBbm = $params['detBbm'];
@@ -315,7 +322,7 @@ class BbmController extends Controller {
                 }
                 $det->attributes = $val;
                 $det->kd_barang = $val['barang']['kd_barang'];
-                $det->no_po = (isset($params['form']['po']['nota'])) ? $params['form']['po']['nota'] : '-';
+//                $det->no_po = (isset($params['form']['po']['nota'])) ? $params['form']['po']['nota'] : '-';
                 $det->no_bbm = $model->no_bbm;
                 $det->save();
 

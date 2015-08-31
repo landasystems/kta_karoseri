@@ -8,9 +8,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
     $scope.is_create = false;
     $scope.detBbm = [];
     $scope.openedDet = -1;
-//    Data.get('bstk/nowo').then(function (data) {
-//        $scope.list_wo = data.list_wo;
-//    });
+
     $scope.open1 = function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
@@ -38,7 +36,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
             });
         }
     };
-    $scope.getPo = function(form,item){
+    $scope.getPo = function (form, item) {
         form.nama_supplier = item.nama_supplier;
         form.kd_supplier = item.kd_supplier;
     };
@@ -74,7 +72,6 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
 
         Data.get('bbm', param).then(function (data) {
             $scope.displayed = data.data;
-//            $scope.displayed.tgl_terima = new Date(data.data.tgl_terima);
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
 
@@ -97,12 +94,11 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
                 tgl_terima: '',
                 no_po: '',
             }];
-        Data.get('bbm/kode',form).then(function(data){
+        Data.get('bbm/kode', form).then(function (data) {
             $scope.form.no_bbm = data.kode;
         });
-        Data.get('pengguna/profile').then(function(data) {
+        Data.get('pengguna/profile').then(function (data) {
             $scope.form.penerima = data.data.nama;
-//            console.log(data);
         });
     };
     $scope.update = function (form) {
@@ -126,7 +122,6 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
             detBbm: detBbm
         };
         var url = ($scope.is_create == true) ? 'bbm/create/' : 'bbm/update/' + form.no_bbm;
-//        var url = (form.no_bbm !== undefined) ? 'bbm/update/' + form.no_bbm : 'bbm/create';
         Data.post(url, data).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -174,7 +169,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
             $scope.detBbm = data.details;
         });
     };
-    $scope.excel = function(id){
-        window.location = 'api/web/bbm/exceldet/'+id;
+    $scope.excel = function (id) {
+        window.location = 'api/web/bbm/exceldet/' + id;
     };
 });
