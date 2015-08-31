@@ -171,13 +171,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
     };
     $scope.getDetail = function (id) {
         Data.get('bbm/view/' + id).then(function (data) {
-            $scope.form = data.data;
             $scope.detBbm = data.details;
-            console.log(data.data);
-           
-//            $scope.detBbm.barang = data.details;
-            $scope.form.wo = data.wo;
-            $scope.form.supplier = data.sup;
         });
     };
     $scope.excel = function(id){
