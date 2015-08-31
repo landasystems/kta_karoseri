@@ -4,6 +4,8 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Jabatan;
+use app\models\AbsensiEmp;
+use app\models\AbsensiEttLog;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -25,6 +27,7 @@ class JabatanController extends Controller {
                     'delete' => ['delete'],
                     'kode' => ['get'],
                     'listkaryawan' => ['get'],
+                    'listkaryawanabsent' => ['get'],
                     'listkaryawansales' => ['get'],
                     'cari' => ['get'],
                 ],
@@ -53,6 +56,35 @@ class JabatanController extends Controller {
         }
 
         return true;
+    }
+
+    public function actionListkaryawanabsent() {
+
+        $absen = AbsensiEttLog::find()
+                ->joinWith('karyawan')
+                ->select("emp.first_name, emp.pin, date(scan_date) as scan_date")
+                ->where('date(scan_date) = "' . date("Y-m-d") . '"')
+                ->limit(100)
+                ->all();
+
+        $sudahAbsen = array();
+        foreach ($absen as $key => $val) {
+            $sudahAbsen[] = $val['karyawan']['nik'];
+        }
+
+        $param = $_REQUEST;
+        $query = new Query;
+        $query->from('tbl_karyawan')
+                ->select("nik, nama")
+                ->where('nama like "%' . $param['nama'] . '%"')
+                ->andWhere(['nik' => $sudahAbsen]);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionListkaryawan() {

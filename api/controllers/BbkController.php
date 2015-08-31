@@ -74,19 +74,21 @@ class BbkController extends Controller {
 
     public function actionPengecualian() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new AutentikasiBbk;
-        $model->attributes = $params;
-        $model->no_wo = $params['no_wo']['no_wo'];
-        $model->kd_barang = $params['kd_barang']['kd_barang'];
-        $model->kd_kerja = $params['kd_kerja']['id_jabatan'];
-        $model->status = 0;
+        if (isset($params['no_wo'])) {
+            $model = new AutentikasiBbk;
+            $model->attributes = $params;
+            $model->no_wo = $params['no_wo']['no_wo'];
+            $model->kd_barang = $params['kd_barang']['kd_barang'];
+            $model->kd_kerja = $params['kd_kerja']['id_jabatan'];
+            $model->status = 0;
 
-        if ($model->save()) {
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-        } else {
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+            if ($model->save()) {
+                $this->setHeader(200);
+                echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+            } else {
+                $this->setHeader(400);
+                echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+            }
         }
     }
 
@@ -189,9 +191,18 @@ class BbkController extends Controller {
             $command = $query->createCommand();
             $models = $command->queryAll();
 
+            $det = array();
+            foreach ($models as $key => $val) {
+                $det[$key]['kd_barang'] = $val['kd_barang'];
+                $det[$key]['satuan'] = $val['satuan'];
+                $det[$key]['nm_barang'] = $val['nm_barang'];
+                $det[$key]['stok_sekarang'] = $val['saldo'];
+                $det[$key]['sisa_pengambilan'] = 0;
+            }
+
             $this->setHeader(200);
 
-            echo json_encode(array('status' => 1, 'data' => $models));
+            echo json_encode(array('status' => 1, 'data' => $det));
         }
     }
 
@@ -373,7 +384,7 @@ class BbkController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new TransBbk();
         $model->attributes = $params['bbk'];
-        $model->tanggal = date("Y-m-d");
+        $model->tanggal = date("Y-m-d", strtotime($params['bbk']['tanggal']));
         $model->status = 0;
         $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '-';
         $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '-';
@@ -406,7 +417,7 @@ class BbkController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = TransBbk::find()->where('no_bbk="' . $id . '"')->one();
         $model->attributes = $params['bbk'];
-        $model->tanggal = date("Y-m-d");
+        $model->tanggal = date("Y-m-d", strtotime($params['bbk']['tanggal']));
         $model->status = 0;
         $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '-';
         $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '-';
