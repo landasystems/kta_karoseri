@@ -385,21 +385,28 @@ class BomController extends Controller {
         $models = $command->query()->read();
         $models['kd_model'] = array('kd_model' => $models['kd_model'], 'model' => $models['model']);
 
-        $det = BomDet::find()
-                ->with(['jabatan', 'barang'])
-                ->where(['kd_bom' => $models['kd_bom']])
-                ->orderBy('jabtan.jabatan ASC, barang.nm_barang ASC')
-                ->all();
+        $det = new Query;
+        $det->from('det_standar_bahan as dst')
+                ->join('LEFT JOIN', 'tbl_jabatan as j', 'j.id_jabatan = dst.kd_jab')
+                ->join('LEFT JOIN', 'barang as b', 'b.kd_barang = dst.kd_barang')
+                ->where('dst.kd_bom = "' . $models['kd_bom'] . '"')
+                ->orderBy('j.jabatan ASC, b.nm_barang ASC')
+                ->select('dst.*, j.jabatan, b.nm_barang, b.satuan, b.harga');
+        $commandDet = $det->createCommand();
+        $detBom = $commandDet->queryAll();
+
 
         session_start();
         $_SESSION['bom'] = $query;
         $_SESSION['kd_bom'] = $models['kd_bom'];
 
         $detail = array();
-        foreach ($det as $key => $val) {
-            $detail[$key] = $val->attributes;
-            $detail[$key]['bagian'] = (isset($val->jabatan)) ? $val->jabatan->attributes : [];
-            $detail[$key]['barang'] = (isset($val->barang)) ? $val->barang->attributes : [];
+        foreach ($detBom as $key => $val) {
+            $detail[$key]['kd_bom'] = $val['kd_bom'];
+            $detail[$key]['qty'] = $val['qty'];
+            $detail[$key]['ket'] = $val['ket'];
+            $detail[$key]['bagian'] = array('id_jabatan' => $val['kd_jab'], 'jabatan' => $val['jabatan']);
+            $detail[$key]['barang'] = array('kd_barang' => $val['kd_barang'], 'nm_barang' => $val['nm_barang'], 'satuan' => $val['satuan'], 'harga' => $val['harga']);
         }
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $models, 'detail' => $detail), JSON_PRETTY_PRINT);
