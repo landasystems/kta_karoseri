@@ -19,29 +19,26 @@ use Yii;
  * @property string $rowguid
  * @property integer $io_mode_update
  */
-class AbsensiEttLog extends \yii\db\ActiveRecord
-{
+class AbsensiEttLog extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'att_log';
     }
 
     /**
      * @return \yii\db\Connection the database connection used by this AR class.
      */
-    public static function getDb()
-    {
+    public static function getDb() {
         return Yii::$app->get('dbabsensi');
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['sn', 'scan_date', 'pin', 'verify_mode', 'work_code', 'rowguid'], 'required'],
             [['scan_date'], 'safe'],
@@ -54,8 +51,7 @@ class AbsensiEttLog extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'att_id' => 'Att ID',
             'sn' => 'Sn',
@@ -70,4 +66,9 @@ class AbsensiEttLog extends \yii\db\ActiveRecord
             'io_mode_update' => 'Io Mode Update',
         ];
     }
+
+    public function getKaryawan() {
+        return $this->hasOne(AbsensiEmp::className(), ['pin' => 'pin']);
+    }
+
 }

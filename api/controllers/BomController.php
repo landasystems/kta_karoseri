@@ -390,7 +390,7 @@ class BomController extends Controller {
                 ->join('LEFT JOIN', 'tbl_jabatan as j', 'j.id_jabatan = dst.kd_jab')
                 ->join('LEFT JOIN', 'barang as b', 'b.kd_barang = dst.kd_barang')
                 ->where('dst.kd_bom = "' . $models['kd_bom'] . '"')
-                ->orderBy('j.jabatan ASC, b.nm_barang ASC')
+                ->orderBy('j.urutan_produksi ASC, b.nm_barang ASC')
                 ->select('dst.*, j.jabatan, b.nm_barang, b.satuan, b.harga');
         $commandDet = $det->createCommand();
         $detBom = $commandDet->queryAll();
