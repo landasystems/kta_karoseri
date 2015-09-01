@@ -21,7 +21,8 @@
                                     </ui-select-choices>
                                 </ui-select>
                                 <span class="input-group-btn">
-                                    <button ng-click="form.no_wo = undefined" class="btn btn-default">
+                                    <button ng-click="form.no_wo = undefined;
+                                            jabatan = []" class="btn btn-default">
                                         <span class="glyphicon glyphicon-trash"></span>
                                     </button>
                                 </span>
@@ -40,7 +41,8 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label"></label>
                         <div class="col-sm-4">
-                            <button type="button" class="btn btn-primary fa fa-print" ng-click="simpanPrint(form.no_wo.no_wo, form.kd_jabatan)" ng-print print-element-id="printArea" ng-disabled="status == 0 && user.id != 1">&nbsp;Print</button>
+                            <button type="button" class="btn btn-primary fa fa-print" ng-click="simpanPrint(form.no_wo.no_wo, form.kd_jabatan)" ng-print print-element-id="printArea" ng-disabled="status == 1">&nbsp;Print</button>
+                            <button type="button" class="btn btn-success fa fa-check"  ng-click="modal()">&nbsp;Buka Print Out</button>
                         </div>
                     </div>
                     <div class="form-group" ng-if="detail.length > 0">
@@ -78,7 +80,7 @@
     <div id="printArea">
         <h2 align="center">
             KARTU PENGAMBILAN BAHAN (KPB) <BR>
-            SMALL BUS
+            {{form.no_wo.jenis| uppercase}}
         </h2><br>
         <p>NO WO : {{form.no_wo.no_wo}}
         <table class="print-detail" style="font-size: 9pt">

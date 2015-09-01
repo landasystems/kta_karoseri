@@ -102,13 +102,16 @@
                 {{formtitle}} 
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
                     <button type="button" class="btn btn-success fa fa-check"  ng-click="modal()">&nbsp;Pengecualian BBK</button>
-                    <button type="button" class="btn btn-info fa fa-print"  ng-show="is_view" ng-print print-element-id="printArea" ng-click="print(form.no_bbk)" ng-disabled="form.status == '1' && user.id != '1'">&nbsp;Print</button>
+                    <button type="button" class="btn btn-info fa fa-print"  ng-show="is_view" ng-print print-element-id="printArea" ng-click="simpanPrint(form.no_bbk)" ng-disabled="is_print == 1 && user.id != 1">&nbsp;Print</button>
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-show="is_view" ng-click="create();">&nbsp;Tambah Data</button>
                 </div>
             </div>
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation">
                     <div class="col-md-12">
+                        <div class="alert alert-danger" ng-if="is_print == 1">
+                            <p>Nota Bukti Barang Keluar hanya boleh dicetak 1 kali, silahkan hubungi admin untuk mencetak ulang </p>
+                        </div>
                         <div class="row">
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group" ng-if="is_copy">
