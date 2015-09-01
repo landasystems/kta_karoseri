@@ -231,8 +231,6 @@ class BbmController extends Controller {
 
         $commanddet = $querydet->createCommand();
         $det = $commanddet->query()->read();
-        
-Yii::error($det);
 
         $data = $model->attributes;
         $querySup = new Query;
