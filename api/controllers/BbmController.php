@@ -276,7 +276,7 @@ Yii::error($det);
             $commandBrg = $queryBrg->createCommand();
             $Brg = $commandBrg->queryOne();
             $detais[$key]['barang'] = $Brg;
-
+//
 //            $query = DetBbm::find()->
 //                    where('no_bbm="' . $ab['no_bbm'] . '"')
 //                    ->limit(1)
