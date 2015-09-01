@@ -34,6 +34,7 @@ class PoController extends Controller {
                     'brgspp' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
+                    'bukaprint' => ['post'],
                     'delete' => ['delete'],
                 ],
             ]
@@ -109,18 +110,22 @@ class PoController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('trans_po')
-                ->join('JOIN', 'detail_po', 'detail_po.nota = trans_po.nota')
+//                ->join('JOIN', 'detail_po', 'detail_po.nota = trans_po.nota')
                 ->join('JOIN', 'supplier', 'supplier.kd_supplier = trans_po.suplier')
-                ->join('LEFT JOIN', 'barang', 'barang.kd_barang = detail_po.kd_barang')
+//                ->join('RIGHT JOIN', 'barang', 'barang.kd_barang = detail_po.kd_barang')
                 ->orderBy($sort)
-                ->select("trans_po.*,supplier.nama_supplier,barang.nm_barang");
+                ->select("trans_po.*,supplier.nama_supplier");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-
-                $query->andFilterWhere(['like', $key, $val]);
+//                if ($key = 'nama_barang') {
+//                   $det_po = DetailPo::find()
+//                            ->where("like ")
+//                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+//                }
             }
         }
 
@@ -318,12 +323,12 @@ class PoController extends Controller {
             $no++;
         }
         session_start();
-        if ($cek == 1 and $_SESSION['user']['id'] != "-1") {
+        if ($cek == 1 and $_SESSION['user']['id'] != "1") {
             $msg = 'Detail PO sudah dicetak, silahkan menghubungi admin untuk mencetak ulang';
-            $print = 0;
-        } else {
-            $msg = '';
             $print = 1;
+        } elseif ($cek == 0) {
+            $msg = '';
+            $print = 0;
         }
 
         $this->setHeader(200);
@@ -334,6 +339,17 @@ class PoController extends Controller {
         $model = TransPo::findOne(['nota' => $id]);
         $model->status = 1;
         $model->save();
+    }
+
+    public function actionBukaprint() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['nota'];
+
+        foreach ($centang as $key => $val) {
+            $status = TransPo::findOne($key);
+            $status->status = 0;
+            $status->save();
+        }
     }
 
     public function actionCreate() {
@@ -453,7 +469,7 @@ class PoController extends Controller {
         Yii::error($models);
 
         $this->setHeader(200);
-        
+
         echo json_encode(array('status' => 1, 'data' => $models));
     }
 
@@ -516,6 +532,7 @@ class PoController extends Controller {
         $models = $command->queryAll();
         return $this->render("/expretur/belitunaikredit", ['models' => $models, 'filter' => $filter]);
     }
+
     public function actionExcelpantau() {
         session_start();
         $query = $_SESSION['query'];
@@ -524,6 +541,7 @@ class PoController extends Controller {
         $models = $command->queryAll();
         return $this->render("/expretur/rekappantau", ['models' => $models, 'filter' => $filter]);
     }
+
     public function actionExcelfluktuasi() {
         session_start();
         $query = $_SESSION['query'];
