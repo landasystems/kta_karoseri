@@ -24,7 +24,7 @@ class BarangController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'jenis' => ['get'],
-                    'kode' => ['get'],
+                    'kode' => ['post'],
                     'cari' => ['get'],
                     'rekappergerakan' => ['post'],
                     'excelpergerakan' => ['get'],
@@ -201,26 +201,29 @@ class BarangController extends Controller {
     public function actionKode() {
         $params = json_decode(file_get_contents("php://input"), true);
 //        print_r($params);
-        Yii::error($params);
+//        Yii::error($params);
         ////        $query = new Query;
 //
 //        $jenisBarang = \app\models\JenisBrg::findOne(['kd_jenis' => $params['kd_jenis']]);
 //
-//        $query->from('barang')
-//                ->select('*')
-//                ->orderBy('kd_barang DESC')
-//                ->where(['jenis' => $params['kd_jenis']])
-//                ->limit(1);
-//
-//        $command = $query->createCommand();
-//        $models = $command->query()->read();
-//        if (empty($models)) {
-//            $kode = $jenisBarang['kd_jenis'] . '00001';
-//        } else {
-//            $kode = $models['kd_barang'] + 1;
-//        }
-//        $this->setHeader(200);
-//        echo json_encode(array('status' => 1, 'kode' => $kode));
+        $query = new Query;
+        $query->from('barang')
+                ->select('*')
+                ->orderBy('kd_barang DESC')
+                ->where(['jenis' => $params['kd_jenis']['kd_jenis']])
+                ->limit(1);
+
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+
+        if (empty($models)) {
+            $kode = $params['kd_jenis']['kd'] . '00001';
+        } else {
+            $kode = $models['kd_barang'] + 1;
+        }
+
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionIndex() {
@@ -230,7 +233,7 @@ class BarangController extends Controller {
         $sort = "kd_barang ASC";
         $offset = 0;
         $limit = 10;
-        //        Yii::error($params);
+
         //limit & offset pagination
         if (isset($params['limit']))
             $limit = $params['limit'];
@@ -248,7 +251,7 @@ class BarangController extends Controller {
             }
         }
 
-//create query
+        //create query
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
@@ -257,7 +260,7 @@ class BarangController extends Controller {
                 ->orderBy($sort)
                 ->select("barang.*, jenis_brg.*");
 
-//filter
+        //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {

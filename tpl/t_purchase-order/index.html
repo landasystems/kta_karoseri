@@ -7,6 +7,7 @@
             <div class="panel-heading">
                 <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
+                    <button type="button" class="btn btn-warning fa fa-print" ng-show="user.id == '1'" ng-click="bukaPrint(gantiStatus)">&nbsp;Buka Print Out</button>
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>
@@ -45,6 +46,7 @@
                 <table class="table table-striped table-hover" >
                     <thead>
                         <tr>
+                            <th ng-show="user.id == '1'">&nbsp;#</th>
                             <th st-sort="nota">Nomor Po</th>
                             <th st-sort="spp">No SPP</th>
                             <th st-sort="tanggal">tanggal</th>
@@ -54,6 +56,11 @@
                     </thead>
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row.nota)">
+                            <td ng-show="user.id == '1'">
+                                <label class="i-checks">
+                                    <input type="checkbox" ng-model="gantiStatus[row.nota]" ><i></i> 
+                                </label>
+                            </td>
                             <td>{{row.nota}}</td>
                             <td>{{row.spp}}</td>
                             <td>{{row.tanggal| date}}</td>
@@ -68,13 +75,14 @@
                     </tbody>
                     <tbody ng-show="isLoading">
                         <tr>
-                            <td colspan="4" class="text-center">Loading ... </td>
+                            <td colspan="5" class="text-center" ng-if="user.id == 1">Loading ... </td>
+                            <td colspan="4" class="text-center" ng-if="user.id != 1">Loading ... </td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="6" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html">
-                            </td>
+                            <td colspan="6" ng-if="user.id != 1" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html"></td>
+                            <td colspan="7" ng-if="user.id == 1" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html"></td>
                         </tr>
                 </table>		
             </div>
@@ -88,7 +96,7 @@
             <div class="panel-heading">
                 {{formtitle}}
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-hide="is_print == false">
-                    <button type="button" class="btn btn-primary fa fa-print" ng-click="updt_st(form.nota)" ng-print print-element-id="printArea" ng-disabled="status == '0'">&nbsp;Print</button>
+                    <button type="button" class="btn btn-primary fa fa-print" ng-click="updt_st(form.nota)" ng-print print-element-id="printArea" ng-disabled="form.status == '1' && user.id != '1'">&nbsp;Print</button>
                 </div> 
             </div>
             <div class="panel-body">
@@ -218,7 +226,7 @@
                                                 <ui-select on-select="pilih(detail, $item)" ng-model="detail.data_barang" theme="bootstrap">
                                                     <ui-select-match>{{$select.selected.nm_barang}}</ui-select-match>
                                                     <ui-select-choices refresh="cariBarang($select.search,form.listspp.no_spp)" repeat="val in resultsbrg">
-                                                         {{val.nm_barang}}
+                                                        {{val.nm_barang}}
                                                     </ui-select-choices>
                                                 </ui-select>
                                                 <span class="input-group-btn">
@@ -227,7 +235,7 @@
                                                     </button>
                                                 </span>
                                                 <!--<input type="text" class="form-control" ng-model="detail.data_barang.nm_barang" ng-disabled="is_view" ng-readonly="true">-->
-                                        </div>
+                                            </div>
                                         </td>
                                         <td>
                                             <input style="width:70px;" type="text" class="form-control" ng-model="detail.jml" ng-change="subtotal()" ng-disabled="is_view" ng-readonly="is_edit == false" required>

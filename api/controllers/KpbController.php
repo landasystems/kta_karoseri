@@ -23,6 +23,7 @@ class KpbController extends Controller {
                     'jabkpb' => ['get'],
                     'listbahan' => ['post'],
                     'simpanprint' => ['post'],
+                    'bukaprint' => ['post'],
                 ],
             ]
         ];
@@ -50,12 +51,30 @@ class KpbController extends Controller {
 
     public function actionSimpanprint() {
         $param = json_decode(file_get_contents("php://input"), true);
-        \Yii::error($param);
-        $kpb = new Kpb;
+        $cek = Kpb::find()->where(['no_wo' => $param['no_wo'], 'kd_jab' => $param['kd_jab']])->one();
+        if (empty($cek)) {
+            $kpb = new Kpb;
+        } else {
+            $kpb = $cek;
+        }
         $kpb->no_wo = $param['no_wo'];
         $kpb->kd_jab = $param['kd_jab'];
         $kpb->status = 1;
         $kpb->save();
+        echo json_encode(array('status' => 0, 'error_code' => 400, 'msg' => 'Anda telah mencetak kartu pengambilan bahan, hubungi admin untuk mencetak ulang', 'print' => 1), JSON_PRETTY_PRINT);
+    }
+
+    public function actionBukaprint() {
+        $param = json_decode(file_get_contents("php://input"), true);
+        $kpb = Kpb::updateAll(['status' => 0], ['no_wo' => $param['no_wo'], 'kd_jab' => $param['kd_jab']]);
+
+        if ($kpb) {
+            $this->setHeader(200);
+            echo json_encode(array('status' => 1, 'msg' => '', 'print' => 0), JSON_PRETTY_PRINT);
+        } else {
+            $this->setHeader(400);
+            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => 'Terjadi kesalahan'), JSON_PRETTY_PRINT);
+        }
     }
 
     public function actionJabkpb() {
@@ -77,7 +96,7 @@ class KpbController extends Controller {
     public function actionListbahan() {
         $param = json_decode(file_get_contents("php://input"), true);
 
-        //cek apakah sdh di print
+//cek apakah sdh di print
         $cek = Kpb::find()->where(['no_wo' => $param['kd_bom']['no_wo'], 'kd_jab' => $param['kd_jab'], 'status' => 1])->count();
 
         $query = new Query;
@@ -96,15 +115,15 @@ class KpbController extends Controller {
         } else {
             $list = $models;
         }
-        
+
         session_start();
 
-        if ($cek == 1 and $_SESSION['user']['id'] != "-1") {
-            $msg = 'Kartu pengambilan bahan sudah dicetak, silahkan menghubungi admin untuk mencetak ulang';
-            $print = 0;
+        if ($cek == 1 and $_SESSION['user']['id'] != "1") {
+            $msg = 'Kartu pengambilan bahan hanya boleh dicetak 1 kali, silahkan menghubungi admin untuk mencetak ulang';
+            $print = 1;
         } else {
             $msg = '';
-            $print = 1;
+            $print = 0;
         }
 
         $this->setHeader(200);

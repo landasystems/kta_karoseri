@@ -71,6 +71,7 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
             }
         });
     };
+
     $scope.delete = function(row) {
         var wo = row.no_wo;
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {

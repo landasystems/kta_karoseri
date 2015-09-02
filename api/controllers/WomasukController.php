@@ -1150,10 +1150,22 @@ class WomasukController extends Controller {
                 ->join('LEFT JOIN', 'spk as sp', ' wo.no_spk= sp.no_spk')
                 ->join('LEFT JOIN', 'model as mo', ' mo.kd_model= sp.kd_model')
                 ->where(['like', 'wo.no_wo', $params['nama']])
-                ->select("wo.no_wo as no_wo,ch.merk as merk, mo.model as model");
+                ->limit(10)
+                ->select("wo.no_wo as no_wo,ch.merk as merk,ch.jenis as jenis, mo.model as model");
 
         $command = $query->createCommand();
         $models = $command->queryAll();
+        foreach($models as $key => $val){
+            if(strtolower($val['jenis'])  == "mini bus"){
+                $miniExt = Minieks::find()->where('no_wo="'.$val['no_wo'].'"')->one();
+                $models[$key]['kd_warna'] = (!empty($miniExt->waarna->kd_warna)) ? $miniExt->waarna->kd_warna : '';
+                $models[$key]['warna'] = (!empty($miniExt->waarna->warna)) ? $miniExt->waarna->warna : '';
+            }elseif(strtolower($val['jenis']) == "small bus"){
+                $smallExt = Smalleks::find()->where('no_wo="'.$val['no_wo'].'"')->one();
+                $models[$key]['kd_warna'] = (!empty($smallExt->waarna->kd_warna)) ? $smallExt->waarna->kd_warna : '';
+                $models[$key]['warna'] = (!empty($smallExt->waarna->warna)) ? $smallExt->waarna->warna : '';
+            }
+        }
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $models));
     }

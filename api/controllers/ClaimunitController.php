@@ -57,7 +57,7 @@ class ClaimunitController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "dc.no_wo ASC";
+        $sort = "dc.no_wo DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -121,7 +121,6 @@ class ClaimunitController extends Controller {
         session_start();
         $_SESSION['query'] = $query;
         $_SESSION['filter'] = $filter;
-//        
 
         $this->setHeader(200);
 
@@ -142,10 +141,10 @@ class ClaimunitController extends Controller {
 
         if (!empty($tglDelivery)) {
             $query = new Query;
-            $query->select('SELECT DATE_ADD("' . $tglDelivery . '", INTERVAL 1 YEAR) as tgl');
+            $query->select('SELECT DATE_ADD("' . $tglDelivery['tgl_delivery'] . '", INTERVAL 1 YEAR) as tgl');
             $tglAkhirGaransi = $query->createCommand()->query()->read();
 
-            $query->select('SELECT DATEDIFF("' . $tglDelivery . '", "' . date("Y-m-d") . '") as sisa');
+            $query->select('SELECT DATEDIFF("' . $tglAkhirGaransi['tgl'] . '", "' . date("Y-m-d") . '") as sisa');
             $s = $query->createCommand()->query()->read();
 
             $sisa = $s['sisa'];
@@ -158,8 +157,12 @@ class ClaimunitController extends Controller {
     public function actionJeniskomplain() {
         $query = new Query;
         $query->from('jenis_komplain')
-                ->select("*")
-                ->where('stat="' . $_GET['status'] . '" and bag="' . $_GET['bagian'] . '"');
+                ->select("*");
+
+        if (empty($_GET['bagian']) or $_GET['bagian'] == 'undefined')
+            $query->where('stat="' . $_GET['status'] . '"');
+        else
+            $query->where('stat="' . $_GET['status'] . '" and bag="' . $_GET['bagian'] . '"');
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -203,35 +206,43 @@ class ClaimunitController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new DetClaim();
-        $model->attributes = $params;
+        if (isset($params['no_wo'])) {
+            $model = new DetClaim();
+            $model->attributes = $params;
 
-        if (isset($params['no_wo']['no_wo']))
-            $model->no_wo = $params['no_wo']['no_wo'];
+            if (isset($params['no_wo']['no_wo']))
+                $model->no_wo = $params['no_wo']['no_wo'];
 
-        if ($model->save()) {
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+            if ($model->save()) {
+                $this->setHeader(200);
+                echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+            } else {
+                $this->setHeader(400);
+                echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+            }
         } else {
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => 'Pastikan no wo telah terisi'), JSON_PRETTY_PRINT);
         }
     }
 
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = $this->findModel($id);
-        $model->attributes = $params;
+        if (isset($params['no_wo'])) {
+            $model = $this->findModel($id);
+            $model->attributes = $params;
 
-        if (isset($params['no_wo']['no_wo']))
-            $model->no_wo = $params['no_wo']['no_wo'];
+            if (isset($params['no_wo']['no_wo']))
+                $model->no_wo = $params['no_wo']['no_wo'];
 
-        if ($model->save()) {
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+            if ($model->save()) {
+                $this->setHeader(200);
+                echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+            } else {
+                $this->setHeader(400);
+                echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+            }
         } else {
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => 'Pastikan no wo telah terisi'), JSON_PRETTY_PRINT);
         }
     }
 
@@ -294,4 +305,5 @@ class ClaimunitController extends Controller {
     }
 
 }
+
 ?>

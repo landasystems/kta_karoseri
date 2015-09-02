@@ -17,6 +17,8 @@ app.controller('bstkCtrl', function ($scope, Data, toaster) {
         form.no_wo = items.no_wo;
         form.merk = items.merk;
         form.model = items.model;
+        form.kd_warna = items.kd_warna;
+        form.warna = items.warna;
     };
     Data.get('bstk/warna').then(function (data) {
         $scope.list_warna = data.list_warna;
@@ -62,7 +64,6 @@ app.controller('bstkCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.no_wo;
         $scope.form = form;
-        console.log(form);
     };
     $scope.view = function (form) {
         $scope.is_edit = true;

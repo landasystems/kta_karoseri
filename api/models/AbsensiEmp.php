@@ -44,29 +44,26 @@ use Yii;
  * @property integer $status_syn_fcs
  * @property string $stamp_sync
  */
-class AbsensiEmp extends \yii\db\ActiveRecord
-{
+class AbsensiEmp extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'emp';
     }
 
     /**
      * @return \yii\db\Connection the database connection used by this AR class.
      */
-    public static function getDb()
-    {
+    public static function getDb() {
         return Yii::$app->get('dbabsensi');
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['cab_id_auto', 'dept_id_auto', 'func_id_auto', 'gender', 'married', 'is_spouse', 'dependent', 'emp_status', 'priv', 'status_kerja', 'bulan_kontrak', 'status_syn_fcs'], 'integer'],
             [['birth_date', 'begin_date', 'resign_date', 'lastupdate_date', 'tgl_habis_kontrak', 'tgl_mulai_training', 'tgl_mulai_kontrak', 'tgl_mulai_tetap'], 'safe'],
@@ -86,8 +83,7 @@ class AbsensiEmp extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'emp_id_auto' => 'Emp Id Auto',
             'nik' => 'Nik',
@@ -127,4 +123,5 @@ class AbsensiEmp extends \yii\db\ActiveRecord
             'stamp_sync' => 'Stamp Sync',
         ];
     }
+
 }

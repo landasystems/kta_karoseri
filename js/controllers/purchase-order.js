@@ -38,17 +38,31 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     });
 
 
+    $scope.bukaPrint = function (form) {
+        if (confirm("Apa anda yakin akan memproses item ini ?")) {
+            Data.post('po/bukaprint/', {nota: form}).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan");
+                } else {
+                    toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
+                }
+            });
+        }
+    }
+
     $scope.updt_st = function ($id) {
         Data.get('po/updtst/' + $id).then(function (data) {
 //            $scope.callServer(tableStateRef);
+            $scope.form.status = 1;
         });
+
     }
 
     $scope.cariSpp = function ($query) {
 
         if ($query.length >= 3) {
-            Data.get('po/spp', {nama: $query}).then(function (data) {
-                console.log(data.data);
+            Data.get('spprutin/cari', {nama: $query}).then(function (data) {
+//                console.log(data.data);
                 $scope.resultsspp = data.data;
             });
         }
@@ -73,14 +87,15 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 
     $scope.pilih = function (detail, $item) {
         detail.harga = $item.harga;
+        detail.jml = $item.jml;
         detail.satuan = $item.satuan;
-
+        $scope.subtotal();
     }
     $scope.pilihspp = function (detsPo, $item) {
-         Data.get('po/cari', {nama: $item}).then(function (data) {
-             console.log(data.data)
-                detsPo = data.data;
-            });
+        Data.get('po/cari', {nama: $item}).then(function (data) {
+            console.log(data.data)
+            detsPo = data.data;
+        });
 //        detail.harga = $item.harga;
 //        detail.satuan = $item.satuan;
     }
@@ -289,7 +304,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
                 $scope.is_edit = false;
-                $scope.callServer(tableStateRef); //reload grid ulang
+                $scope.view(result.data.nota);
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
             }
         });

@@ -38,6 +38,12 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
+                            <label class="col-sm-3 control-label">Kode Barang</label>
+                            <div class="col-sm-9">
+                                <input st-search="kd_barang" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-3 control-label">Nama Barang</label>
                             <div class="col-sm-9">
                                 <input st-search="nm_barang" class="form-control"/>
@@ -103,7 +109,7 @@
                                 <label class="col-sm-2 control-label">Jenis</label>
                                 <div class="col-sm-10">
                                     <div class="input-group">
-                                        <ui-select on-select="kode(form.kd_jenis)" ng-disabled="is_view" ng-model="form.jenis" theme="bootstrap">
+                                        <ui-select on-select="kode($select.selected)" ng-disabled="is_view" ng-model="form.jenis" theme="bootstrap">
                                             <ui-select-match>{{$select.selected.jenis_brg}}</ui-select-match>
                                             <ui-select-choices refresh="cariJenis($select.search)" repeat="jenis in jenis_brg">
                                                 {{jenis.jenis_brg}}
@@ -115,10 +121,6 @@
                                             </button>
                                         </span>
                                     </div>
-                                    <!--<select class="form-control" ng-model="form.jenis" ng-disabled="is_view" required ng-change="kode(form.kd_jenis)" ng-options="jenis.kd_jenis as jenis.jenis_brg for jenis in jenis_brg">-->
-                                    <!--<option value="">-Pilih Jenis-</option>-->
-                                    <!--<option ng-repeat="jenis in jenis_brg">{{jenis.jenis_brg}}</option>-->
-                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">

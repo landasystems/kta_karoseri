@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\User;
 use app\models\AbsensiEmp;
+use app\models\AbsensiEttLog;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -58,11 +59,25 @@ class SiteController extends Controller {
         session_start();
         session_destroy();
     }
+
     public function actionCoba() {
-        $aa = AbsensiEmp::find()->limit(10)->all();
-        print_r($aa);
+        $absen = AbsensiEttLog::find()
+                ->joinWith('karyawan')
+                ->select("emp.first_name, emp.pin, date(scan_date) as scan_date")
+//                ->where('date(scan_date) = "' . date("Y-m-d") . '"')
+                ->limit(100)
+                ->all();
+
+        foreach ($absen as $key => $val) {
+//            print_r($val) . '<br>';
+            echo isset($val['karyawan']['first_name']) ? $val['karyawan']['first_name'] : '-' . '<br>';
+        }
+
+//        echo json_encode($absen->pin);
+//        $aa = AbsensiEmp::find()->limit(10)->all();
+//        print_r($absen);
     }
-    
+
     public function actionLogin() {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = User::find()->where(['username' => $params['username'], 'password' => sha1($params['password'])])->one();
@@ -75,7 +90,7 @@ class SiteController extends Controller {
             $akses = (isset($model->roles->akses)) ? $model->roles->akses : '[]';
             $_SESSION['user']['akses'] = json_decode($akses);
             $_SESSION['user']['settings'] = json_decode($model->settings);
-            
+
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($_SESSION)), JSON_PRETTY_PRINT);
         } else {
