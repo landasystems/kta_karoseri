@@ -408,9 +408,9 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
 
         return item;
     };
-     $scope.tagTransform letter = function(newTag) {
+     $scope.tagTransformplavon = function(newTag) {
         var item = {
-            letter: newTag,
+            plavon: newTag,
         };
 
         return item;
