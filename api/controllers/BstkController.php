@@ -184,21 +184,6 @@ class BstkController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
-    public function actionWarna() {
-        $query = new Query;
-        $query->from('warna')
-                ->select("*")
-                ->where('kd_warna <> ""')
-                ->orderBy('kd_warna');
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'list_warna' => $models));
-    }
-
     public function actionView($id) {
 
         $model = $this->findModel($id);

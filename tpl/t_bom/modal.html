@@ -25,7 +25,7 @@
             <label class="col-sm-2 control-label">Barang</label>
             <div class="col-sm-10">
                 <div class="input-group">
-                    <ui-select ng-model="formmodal.barang" theme="bootstrap" style="width: 100%">
+                    <ui-select ng-model="formmodal.barang" theme="bootstrap" style="width: 100%" ng-selected="formmodal.satuan = $select.selected.satuan">
                         <ui-select-match>{{$select.selected.nm_barang}}</ui-select-match>
                         <ui-select-choices refresh="cariBarang($select.search)" repeat="val in resultsbarang">
                             {{val.nm_barang}}
@@ -42,7 +42,12 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">Qty</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" ng-model="formmodal.qty" style="width:70px">
+                <div class="col-md-2" style="padding-left: 0px;">
+                    <input type="text" class="form-control" ng-model="formmodal.qty" style="width:70px">
+                </div>
+                <div class="col-md-10">
+                    <p class="form-control-static">{{formmodal.satuan}}</p>
+                </div>
             </div>
         </div>
         <div class="form-group">

@@ -117,7 +117,6 @@ class ValidasibomController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        print_r($params);
         $centang = $params['kd_bom'];
         
         foreach($centang as $key => $val){

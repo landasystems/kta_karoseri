@@ -15,21 +15,19 @@ use Yii;
  * @property string $petugas
  * @property integer $status
  */
-class TransBbk extends \yii\db\ActiveRecord
-{
+class TransBbk extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'trans_bbk';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['no_bbk'], 'required'],
             [['tanggal'], 'safe'],
@@ -43,8 +41,7 @@ class TransBbk extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'no_bbk' => 'No Bbk',
             'no_wo' => 'No Wo',
@@ -55,4 +52,13 @@ class TransBbk extends \yii\db\ActiveRecord
             'status' => 'Status',
         ];
     }
+
+//    public function getPenerima() {
+////        return $this->hasOne(Karyawan::className(), ['nik' => 'penerima']);
+//    }
+    
+    public function getBagian() {
+        return $this->hasOne(Jabatan::className(), ['id_jabatan' => 'kd_jab']);
+    }
+
 }

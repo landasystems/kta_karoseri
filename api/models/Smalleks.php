@@ -78,4 +78,7 @@ class Smalleks extends \yii\db\ActiveRecord
             'lain2' => 'Lain2',
         ];
     }
+    public function getWaarna(){
+        return $this->hasOne(Warna::className(), ['kd_warna' => 'warna']);
+    }
 }

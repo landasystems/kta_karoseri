@@ -40,7 +40,7 @@
                 <table class="table table-striped table-hover" >
                     <thead>
                         <tr>
-                            <th st-sort="w.no_wo">No WO</th>
+                            <th st-sort="b.no_wo">No WO</th>
                             <th st-sort="c.kd_chassis">Merk / Type</th>
                             <th st-sort="m.model">Model</th>
                             <th st-sort="b.tgl">Tanggal BSTK</th>
@@ -81,27 +81,30 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 {{formtitle}}
+                <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-hide="is_view == false">
+                    <button type="button" class="btn btn-primary fa fa-print" ng-print print-element-id="printArea"  ng-show="is_view == true">&nbsp;Cetak BSTK</button>
+                </div>
             </div>
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation">
                     <div class="form-group">
-                            <label class="col-sm-2 control-label">No WO</label>
-                            <div class="col-sm-10">
-                                <div class="input-group">
-                                    <ui-select on-select="getWo(form,$item)" ng-model="form.wo" theme="bootstrap" required ng-disabled="is_view" >
-                                        <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
-                                        <ui-select-choices refresh="cariWo($select.search)" repeat="val in noWo">
-                                            {{val.no_wo}}
-                                        </ui-select-choices>
-                                    </ui-select>
-                                    <span class="input-group-btn">
-                                        <button ng-click="form.wo = undefined" class="btn btn-default">
-                                            <span class="glyphicon glyphicon-trash"></span>
-                                        </button>
-                                    </span>
-                                </div>
+                        <label class="col-sm-2 control-label">No WO</label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <ui-select on-select="getWo(form,$item)" ng-model="form.wo" theme="bootstrap" required ng-disabled="is_view" >
+                                    <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
+                                    <ui-select-choices refresh="cariWo($select.search)" repeat="val in noWo">
+                                        {{val.no_wo}}
+                                    </ui-select-choices>
+                                </ui-select>
+                                <span class="input-group-btn">
+                                    <button ng-click="form.wo = undefined" class="btn btn-default">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </button>
+                                </span>
                             </div>
                         </div>
+                    </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Merk/ Type</label>
                         <div class="col-sm-10">
@@ -121,12 +124,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Kode Warna</label>
+                        <label class="col-sm-2 control-label">Warna</label>
                         <div class="col-sm-10">
-                            <select class="form-control" ng-disabled="is_view" style="width:100%" ng-model="form.kd_warna" data-placeholder="-Pilih Kode Warna-" required>
-                                <option value="">-Pilih Kode Warna-</option>
-                                <option ng-repeat="warnalist in list_warna" value="{{warnalist.kd_warna}}">{{warnalist.kd_warna}} - {{warnalist.warna}}</option>
-                            </select>
+                            <input type="text" class="form-control" ng-model="form.warna" ng-disabled ng-readonly="true" >
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
@@ -137,5 +137,64 @@
                 </form>
             </div>
         </div>
+    </div>
+    <div id="printArea" ng-show="is_view">
+        <style>
+            .detail-barang{
+                border-collapse: collapse;
+            }
+            .detail-barang td{
+                padding:0px;
+                border-top: 1px;
+                border-left: 1px;
+                border-bottom: 1px;
+                border-right: 1px;
+                border:1px;
+                border-collapse: collapse;
+                border-style:solid;
+                
+            }
+            .detail-barang th{
+                padding:0px;
+                border-top: 1px;
+                border-left: 1px;
+                border-bottom: 1px;
+                border-right: 1px;
+                border:1px;
+                border-collapse: collapse;
+                border-style:solid;
+                font-weight: normal !important;
+            }
+        </style>
+        <table style="width:98%" class="detail-barang">
+            <thead>
+                <tr>
+                    <th rowspan="3" style="text-align: center;width: 40%">
+                        <h3>BUKTI SERAH TERIMA KENDARAAN</h3><br>
+                                NO.DOKUMEN : FR.SS.007 REV 00
+                    </th>
+                    <th style="text-align: center;width:10%">Disiapkan Oleh</th>
+                    <th style="text-align: center;width:10%">Diketahui Oleh</th>
+                    <th style="text-align: center;width:10%">Disetujui Oleh</th>
+                    <th style="text-align: center;width:10%">Dikirim Oleh</th>
+                    <th style="text-align: center;width:10%">Diterima Oleh</th>
+                </tr>
+                <tr style="text-align: center;height: 80px;vertical-align: bottom;">
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <th>TGL:......</th>
+                    <th>TGL:......</th>
+                    <th>TGL:......</th>
+                    <th>TGL:......</th>
+                    <th>TGL:......</th>
+                </tr>
+            </thead>
+        </table>
+
     </div>
 </div>

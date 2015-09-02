@@ -23,10 +23,6 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
         var qty = max - saldo;
         $scope.form.qty = qty;
     }
-    $scope.jenis_barang = {
-        minimumInputLength: 3,
-        allowClear: true,
-    }
     Data.get('barang/jenis').then(function(data) {
         $scope.jenis_brg = data.jenis_brg;
     });
@@ -56,7 +52,7 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
         });
     };
     $scope.kode = function(kd_jenis) {
-        Data.get('barang/kode', {kd_jenis: kd_jenis}).then(function(data) {
+        Data.post('barang/kode', {kd_jenis: kd_jenis}).then(function(data) {
             $scope.form.kd_barang = data.kode;
         });
     }
@@ -68,15 +64,16 @@ app.controller('barangCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.form = {};
     };
     $scope.update = function(form) {
+        $scope.form = form;
         $scope.selectJenis(form);
         $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.nm_barang;
-        $scope.form = form;
         $scope.qty(form.max, form.saldo);
     };
     $scope.view = function(form) {
+        $scope.form = form;
         $scope.selectJenis(form);
         $scope.is_create = false;
         $scope.is_edit = true;

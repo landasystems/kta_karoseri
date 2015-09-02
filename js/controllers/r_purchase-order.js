@@ -46,6 +46,16 @@ app.controller('returpoCtrl', function ($scope, Data, toaster) {
             window.location = 'api/web/po/excelbeli';
         });
     }
+    $scope.excelpantau = function () {
+        Data.get('po/rekap', paramRef).then(function (data) {
+            window.location = 'api/web/po/excelpantau';
+        });
+    }
+    $scope.excelfluktuasi = function () {
+        Data.get('po/rekap', paramRef).then(function (data) {
+            window.location = 'api/web/po/excelfluktuasi';
+        });
+    }
 
 
     $scope.updt_st = function ($id) {

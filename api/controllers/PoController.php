@@ -29,9 +29,12 @@ class PoController extends Controller {
                     'updtst' => ['get'],
                     'excel' => ['get'],
                     'excelbeli' => ['get'],
+                    'excelpantau' => ['get'],
+                    'excelfluktuasi' => ['get'],
                     'brgspp' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
+                    'bukaprint' => ['post'],
                     'delete' => ['delete'],
                 ],
             ]
@@ -107,18 +110,22 @@ class PoController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('trans_po')
-                ->join('JOIN', 'detail_po', 'detail_po.nota = trans_po.nota')
+//                ->join('JOIN', 'detail_po', 'detail_po.nota = trans_po.nota')
                 ->join('JOIN', 'supplier', 'supplier.kd_supplier = trans_po.suplier')
-                ->join('LEFT JOIN', 'barang', 'barang.kd_barang = detail_po.kd_barang')
+//                ->join('RIGHT JOIN', 'barang', 'barang.kd_barang = detail_po.kd_barang')
                 ->orderBy($sort)
-                ->select("trans_po.*,supplier.nama_supplier,barang.nm_barang");
+                ->select("trans_po.*,supplier.nama_supplier");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-
-                $query->andFilterWhere(['like', $key, $val]);
+//                if ($key = 'nama_barang') {
+//                   $det_po = DetailPo::find()
+//                            ->where("like ")
+//                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+//                }
             }
         }
 
@@ -178,13 +185,14 @@ class PoController extends Controller {
                 ->limit($limit)
                 ->from('detail_po as dpo')
                 ->join('JOIN', 'trans_po', 'trans_po.nota = dpo.nota')
-                ->join('JOIN', 'supplier', 'supplier.kd_supplier = trans_po.suplier')
+                ->join('RIGHT JOIN', 'det_spp', "det_spp.no_spp = trans_po.spp and det_spp.kd_barang = dpo.kd_barang")
+                ->join('LEFT JOIN', 'supplier', 'supplier.kd_supplier = trans_po.suplier')
                 ->join('JOIN', 'det_bbm', 'det_bbm.no_po = trans_po.nota and det_bbm.kd_barang = dpo.kd_barang')
                 ->join('LEFT JOIN', 'trans_bbm', 'trans_bbm.no_bbm = det_bbm.no_bbm')
                 ->join('JOIN', 'barang', 'barang.kd_barang = dpo.kd_barang')
-                ->join('JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
+                ->join('LEFT JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
                 ->orderBy($sort)
-                ->select("dpo.* ,trans_po.* ,jenis_brg.jenis_brg, supplier.nama_supplier,trans_bbm.surat_jalan,det_bbm.tgl_terima, det_bbm.no_bbm, barang.nm_barang, barang.satuan");
+                ->select("dpo.*,det_spp.*,trans_po.* ,jenis_brg.jenis_brg, supplier.nama_supplier,trans_bbm.surat_jalan,det_bbm.tgl_terima, det_bbm.no_bbm, barang.nm_barang, barang.satuan,barang.harga as hrg_barang");
         //filter
 
         if (isset($params['filter'])) {
@@ -315,12 +323,12 @@ class PoController extends Controller {
             $no++;
         }
         session_start();
-        if ($cek == 1 and $_SESSION['user']['id'] != "-1") {
+        if ($cek == 1 and $_SESSION['user']['id'] != "1") {
             $msg = 'Detail PO sudah dicetak, silahkan menghubungi admin untuk mencetak ulang';
-            $print = 0;
-        } else {
-            $msg = '';
             $print = 1;
+        } elseif ($cek == 0) {
+            $msg = '';
+            $print = 0;
         }
 
         $this->setHeader(200);
@@ -331,6 +339,17 @@ class PoController extends Controller {
         $model = TransPo::findOne(['nota' => $id]);
         $model->status = 1;
         $model->save();
+    }
+
+    public function actionBukaprint() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['nota'];
+
+        foreach ($centang as $key => $val) {
+            $status = TransPo::findOne($key);
+            $status->status = 0;
+            $status->save();
+        }
     }
 
     public function actionCreate() {
@@ -486,7 +505,7 @@ class PoController extends Controller {
                     ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang ')
                     ->where('det_spp.no_spp =' . $param['nospp'])
                     ->andWhere(['LIKE', 'nm_barang', $param['namabrg']])
-                    ->select("det_spp.no_spp,det_spp.kd_barang,barang.*");
+                    ->select("det_spp.no_spp,det_spp.qty as jml,det_spp.kd_barang,barang.*");
         }
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -499,17 +518,38 @@ class PoController extends Controller {
     public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/po", ['models' => $models]);
+        return $this->render("/expretur/po", ['models' => $models, 'filter' => $filter]);
     }
 
     public function actionExcelbeli() {
         session_start();
         $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/belitunaikredit", ['models' => $models]);
+        return $this->render("/expretur/belitunaikredit", ['models' => $models, 'filter' => $filter]);
+    }
+
+    public function actionExcelpantau() {
+        session_start();
+        $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/rekappantau", ['models' => $models, 'filter' => $filter]);
+    }
+
+    public function actionExcelfluktuasi() {
+        session_start();
+        $query = $_SESSION['query'];
+//        $query->Where("dpo.hargda != barang.harga");
+        $filter = $_SESSION['filter'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/rekapfluktuasiharga", ['models' => $models, 'filter' => $filter]);
     }
 
 }
