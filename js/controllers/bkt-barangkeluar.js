@@ -105,7 +105,7 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
             kd_barang: '',
             jml: '',
             ket: '',
-        })
+        });
     };
 
     $scope.removeRow = function(paramindex) {

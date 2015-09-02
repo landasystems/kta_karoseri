@@ -223,15 +223,6 @@ class BbmController extends Controller {
     public function actionView($id) {
 
         $model = $this->findModel($id);
-//        $querydet = new Query;
-//        $querydet->from('det_bbm')
-//                ->select('*')
-//                ->where('no_bbm="' . $id . '"')
-//                ->limit(1);
-//
-//        $commanddet = $querydet->createCommand();
-//        $det = $commanddet->query()->read();
-//
         $data = $model->attributes;
         $querySup = new Query;
         $querySup->select("*")
@@ -239,50 +230,6 @@ class BbmController extends Controller {
                 ->where('kd_supplier="' . $model->kd_suplier . '"');
         $commandSup = $querySup->createCommand();
         $sup = $commandSup->query()->read();
-//
-//
-//        $queryWo = new Query;
-//        $queryWo->from('wo_masuk')
-////                ->select('id_jabatan, jabatan')
-//                ->where('no_wo = "' . $det->no_wo . '"')
-//                ->limit(1);
-//        $command2 = $queryWo->createCommand();
-//        $wo = $command2->queryOne();
-////
-////        // trans po
-//        $querypo = new Query;
-//        $querypo->from('trans_po')
-////                ->select('id_jabatan, jabatan')
-//                ->where('nota = "' . $model->no_po . '"')
-//                ->limit(1);
-//        $command3 = $querypo->createCommand();
-//        $po = $command3->queryOne();
-//
-//        $queryDet = new Query;
-//        $queryDet->from('det_bbm')
-//                ->select('det_bbm.*, det_bbm.no_po as po')
-//                ->where('no_bbm = "' . $model->no_bbm . '"');
-//        $commandDet = $queryDet->createCommand();
-//        $detail = $commandDet->queryAll();
-//        $det= array();
-//        foreach ($detail as $key => $ab) {
-//            $queryBrg = new Query;
-//            $queryBrg->from('barang')
-//                    ->select('*')
-//                    ->where('kd_barang = "' . $ab['kd_barang'] . '"');
-//            $commandBrg = $queryBrg->createCommand();
-//            $Brg = $commandBrg->queryOne();
-//            $det[$key]['barang'] = $Brg;
-//            $det[$key] = $ab;
-////
-////            $query = DetBbm::find()->
-////                    where('no_bbm="' . $ab['no_bbm'] . '"')
-////                    ->limit(1)
-////                    ->one();
-////            if (!empty($query)) {
-////                $detail[$key]['po'] = $query->attributes;
-////            }
-//        }
 
         $det = DetBbm::find()
                 ->with(['barang'])
@@ -295,12 +242,11 @@ class BbmController extends Controller {
             $detail[$key] = $val->attributes;
 
             $namaBarang = (isset($val->barang->nm_barang)) ? $val->barang->nm_barang : '';
-           
+
             $detail[$key]['barang'] = ['kd_barang' => $val->kd_barang, 'nm_barang' => $namaBarang];
-            
         }
 
-        
+
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $data, 'sup' => $sup, 'details' => $detail), JSON_PRETTY_PRINT);
     }
@@ -321,17 +267,18 @@ class BbmController extends Controller {
         if ($model->save()) {
             $detailBbm = $params['detBbm'];
             foreach ($detailBbm as $val) {
-                $det = new DetBbm();
-                $det->attributes = $val;
-                $det->kd_barang = $val['barang']['kd_barang'];
-//                $det->no_po = $params['form']['po']['nota'];
-                $det->no_bbm = $model->no_bbm;
-                $det->save();
+                if(isset($val['barang']['kd_barang'])) {
+                    $det = new DetBbm();
+                    $det->attributes = $val;
+                    $det->kd_barang = $val['barang']['kd_barang'];
+                    $det->no_bbm = $model->no_bbm;
+                    $det->save();
 
-                //update stok barang
-                $barang = Barang::find()->where('kd_barang="' . $det->kd_barang . '"')->one();
-                $barang->saldo += $det->jumlah;
-                $barang->save();
+                    //update stok barang
+                    $barang = Barang::find()->where('kd_barang="' . $det->kd_barang . '"')->one();
+                    $barang->saldo += $det->jumlah;
+                    $barang->save();
+                }
             }
 
             $this->setHeader(200);
@@ -346,8 +293,8 @@ class BbmController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params['form'];
-        $model->kd_suplier = $params['form']['supplier']['kd_supplier'];
-        $model->no_wo = $params['form']['wo']['no_wo'];
+        $model->kd_suplier = isset($params['form']['supplier']['kd_supplier']) ? $params['form']['supplier']['kd_supplier'] : '-';
+        $model->no_wo = (isset($params['form']['wo']['no_wo'])) ? $params['form']['wo']['no_wo'] : '-';
         $model->no_po = (isset($params['form']['po']['nota'])) ? $params['form']['po']['nota'] : NULL;
 
         if ($model->save()) {

@@ -395,16 +395,18 @@ class BbkController extends Controller {
         if ($model->save()) {
             $detailBbk = $params['detailBbk'];
             foreach ($detailBbk as $val) {
-                $det = new DetBbk();
-                $det->attributes = $val;
-                $det->kd_barang = $val['kd_barang']['kd_barang'];
-                $det->no_bbk = $model->no_bbk;
-                $det->save();
+                if (isset($val['kd_barang']['kd_barang'])) {
+                    $det = new DetBbk();
+                    $det->attributes = $val;
+                    $det->kd_barang = $val['kd_barang']['kd_barang'];
+                    $det->no_bbk = $model->no_bbk;
+                    $det->save();
 
-                //update stok barang
-                $barang = Barang::find()->where('kd_barang="' . $det->kd_barang . '"')->one();
-                $barang->saldo -= $det->jml;
-                $barang->save();
+                    //update stok barang
+                    $barang = Barang::find()->where('kd_barang="' . $det->kd_barang . '"')->one();
+                    $barang->saldo -= $det->jml;
+                    $barang->save();
+                }
             }
 
             $this->setHeader(200);
@@ -440,16 +442,18 @@ class BbkController extends Controller {
             //isi detail dengan yang baru
             $detailBbk = $params['detailBbk'];
             foreach ($detailBbk as $val) {
-                $det = new DetBbk();
-                $det->attributes = $val;
-                $det->kd_barang = $val['kd_barang']['kd_barang'];
-                $det->no_bbk = $model->no_bbk;
-                $det->save();
+                if (isset($val['kd_barang']['kd_barang'])) {
+                    $det = new DetBbk();
+                    $det->attributes = $val;
+                    $det->kd_barang = $val['kd_barang']['kd_barang'];
+                    $det->no_bbk = $model->no_bbk;
+                    $det->save();
 
-                //update stok barang
-                $barang = Barang::find()->where('kd_barang="' . $det->kd_barang . '"')->one();
-                $barang->saldo -= $det->jml;
-                $barang->save();
+                    //update stok barang
+                    $barang = Barang::find()->where('kd_barang="' . $det->kd_barang . '"')->one();
+                    $barang->saldo -= $det->jml;
+                    $barang->save();
+                }
             }
 
             $this->setHeader(200);

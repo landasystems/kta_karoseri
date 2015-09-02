@@ -107,6 +107,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.no_bbm;
         $scope.form = form;
+        $scope.form.tgl_nota = new Date(form.tgl_nota);
         $scope.getDetail(form.no_bbm);
     };
     $scope.view = function (form) {
