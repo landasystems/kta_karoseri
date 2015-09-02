@@ -1,12 +1,7 @@
+
 <?php
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-?>
-<?php
-header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-retur-Barang_Masuk.xls");
+//header("Content-type: application/vnd-ms-excel");
+//header("Content-Disposition: attachment; filename=excel-retur-Barang_Masuk.xls");
 ?>
 <h3>PT. KARYA TUGAS ANDA</h3>
 Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
@@ -60,7 +55,37 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
 
 </tr>
 </table>
+<?php
+$data = array();
+$i = 0;
+foreach ($models as $key => $val) {
+    $data[$val['lokasi_kntr']]['title']['lokasi'] = $val['lokasi_kntr'];
+    $data[$val['lokasi_kntr']]['sales'][$val['nik']]['s'] = $val['nama'];
+    $data[$val['lokasi_kntr']]['sales']['jenis'][$val['nik']][$val['jenis']]['jenis'] = $val['jenis'];
 
+//    $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['tgl_terima'] = $val['tgl_terima'];
+//    $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['jml_unit'] = $val['jml_unit'];
+//    $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['no_wo'] = $val['no_wo'];
+//    $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['model'] = $val['model'];
+//    $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['merk'] = $val['merk'];
+//    $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['tipe'] = $val['tipe'];
+//    $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['nama'] = $val['nama'];
+//    $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['tgl_keluar'] = $val['tgl_keluar'];
+    $i++;
+}
+foreach($data as $key){
+    echo $key['title']['lokasi'].'<br>';
+    
+    foreach($key['sales'] as $val){
+//        echo $val['sales'].'<br>';
+        print_r($val[]);
+        
+//        foreach($val['jenis'] as $val2){
+//            echo $val2['jenis'];
+//        }
+    }
+}
+?>
 <table border="1">
     <tr>
         <th   st-sort="tgl_nota">#</th>

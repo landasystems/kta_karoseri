@@ -171,10 +171,12 @@ class DeliveryController extends Controller {
                 ->join('JOIN', 'customer', 'dev.kd_cust = customer.kd_cust')
                 ->join('JOIN', 'view_wo_spk as vws', 'dev.no_wo = vws.no_wo')
                 ->join('JOIN', 'spk', 'spk.no_spk = vws.no_spk')
+                ->join('JOIN ', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
                 ->join('JOIN', 'chassis', 'chassis.kd_chassis = spk.kd_chassis')
                 ->join('JOIN', 'model', 'model.kd_model = spk.kd_model')
+                ->where('tk.department="DPRT005"')
                 ->orderBy($sort)
-                ->select("dev.*, spk.jml_unit, customer.nm_customer, model.model, chassis.merk, chassis.tipe");
+                ->select("dev.*, tk.lokasi_kntr,tk.nama,tk.nik, spk.jml_unit, customer.nm_customer, model.model, chassis.merk, chassis.tipe, chassis.jenis");
 //filter
 
         if (isset($params['filter'])) {
