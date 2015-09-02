@@ -62,7 +62,7 @@
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
                             <td ng-show="user.id == 1">
-                                <label class="i-checks">
+                                <label class="i-checks" ng-show="row.status == 1">
                                     <input type="checkbox" ng-model="gantiStatus[row.no_bbk]" ><i></i> 
                                 </label>
                             </td>
@@ -102,14 +102,14 @@
                 {{formtitle}} 
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
                     <button type="button" class="btn btn-success fa fa-check"  ng-click="modal()">&nbsp;Pengecualian BBK</button>
-                    <button type="button" class="btn btn-info fa fa-print"  ng-show="is_view" ng-print print-element-id="printArea" ng-click="simpanPrint(form.no_bbk)" ng-disabled="is_print == 1 && user.id != 1">&nbsp;Print</button>
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-show="is_view" ng-click="create();">&nbsp;Tambah Data</button>
+                    <button type="button" class="btn btn-info fa fa-print"  ng-show="is_view" ng-print print-element-id="printArea" ng-click="simpanPrint(form.no_bbk)" ng-disabled="is_print == 1 && user.id != 1">&nbsp;Print</button>
                 </div>
             </div>
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation">
                     <div class="col-md-12">
-                        <div class="alert alert-danger" ng-if="is_print == 1">
+                        <div class="alert alert-danger" ng-show="is_view">
                             <p>Nota Bukti Barang Keluar hanya boleh dicetak 1 kali, silahkan hubungi admin untuk mencetak ulang </p>
                         </div>
                         <div class="row">
@@ -286,77 +286,77 @@
     </div>
 
     <div id="printArea" ng-if="is_view">
-        <div style="margin-top: 0px">
+        <div style="margin-top: 0px;">
             <table width="100%" class="no-border">
                 <tr>
-                    <td width="50%">
+                    <td width="50%" id="print">
                         PT. KARYA TUGAS ANDA <br>
                         Sukorejo - Pasuruan
                     </td>
-                    <td valign="top">
+                    <td valign="top" id="print">
                         NO. DOC : FR-WHS-004-REV.00
                     </td>
                 </tr>
             </table>
             <br>
-            <center>
+            <center id="print">
                 *** BUKTI BARANG KELUAR ***
             </center>
             <br>
             <table class="no-border">
                 <tr>
-                    <td width="100">NO. WO</td>
-                    <td width="2">:</td>
-                    <td>{{form.no_wo.no_wo}}</td>
-                    <td width="40%" rowspan="2">{{form.kd_jab.jabatan}}<td>
+                    <td width="100" id="print">NO. WO</td>
+                    <td width="2" id="print">:</td>
+                    <td id="print">{{form.no_wo.no_wo}}</td>
+                    <td width="40%" rowspan="2" id="print">{{form.kd_jab.jabatan}}<td>
                 </tr>
                 <tr>
-                    <td>NO. BBK</td>
-                    <td width="2">:</td>
-                    <td>{{form.no_bbk}}</td>
+                    <td id="print">NO. BBK</td>
+                    <td width="2" id="print">:</td>
+                    <td id="print">{{form.no_bbk}}</td>
                 </tr>
             </table>
             <br>
             <table class="print-detail" border="1">
                 <thead>
                     <tr>
-                        <td>No.</td>
-                        <td>Nama Barang</td>
-                        <td>Jml</td>
-                        <td>Sat</td>
-                        <td>Keterangan</td>
+                        <td id="print">No.</td>
+                        <td id="print">Nama Barang</td>
+                        <td id="print">Jml</td>
+                        <td id="print">Sat</td>
+                        <td id="print">Keterangan</td>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="detail in detailBbk">
-                        <td>{{$index + 1}}</td>
-                        <td>{{detail.kd_barang.nm_barang}}</td>
-                        <td>{{detail.jml}}</td>
-                        <td>{{detail.satuan}}</td>
-                        <td>{{detail.ket}}</td>
+                        <td id="print">{{$index + 1}}</td>
+                        <td id="print">{{detail.kd_barang.nm_barang}}</td>
+                        <td id="print">{{detail.jml}}</td>
+                        <td id="print">{{detail.satuan}}</td>
+                        <td id="print">{{detail.ket}}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <br><br>
+        <br>
         <table style="margin-bottom: 0px;">
             <tr>
                 <td width="25%"></td>
                 <td width="50%"></td>
-                <td width="25%" align="center">Sukorejo, {{tgl_cetak| date}}</td>
+                <td width="25%" align="center" id="print">Sukorejo, {{tgl_cetak| date}}</td>
             </tr>
             <tr>
-                <td align="center">Dikeluarkan Oleh :</td>
+                <td align="center" id="print">Dikeluarkan Oleh :</td>
                 <td></td>
-                <td align="center">Yang menerima :</td>
+                <td align="center" id="print">Yang menerima :</td>
             </tr>
             <tr>
-                <td colspan="3" height="50"></td>
+                <td colspan="3"></td>
             </tr>
             <tr>
-                <td align="center">{{form.petugas}}</td>
+                <td align="center" id="print">{{form.petugas}}</td>
                 <td></td>
-                <td align="center">{{form.penerima.nama}}</td>
+                <td align="center" id="print">{{form.penerima.nama}}</td>
             </tr>
         </table>
     </div>

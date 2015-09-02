@@ -46,4 +46,9 @@ class DetBbk extends \yii\db\ActiveRecord
             'ket' => 'Ket',
         ];
     }
+    
+    public function getBarang() {
+        return $this->hasOne(Barang::className(), ['kd_barang' => 'kd_barang']);
+    }
+    
 }

@@ -264,14 +264,14 @@
     </div>
     <div id="printArea" ng-show="is_view">
         <style>
-                    .detail-barang td{
-                        border-top: 1px;
-                        border-left: 1px;
-                        border-bottom: 1px;
-                        border-right: 1px;
-                        border:1px;
-                        border-style:solid;
-                    }
+            .detail-barang td{
+                border-top: 1px;
+                border-left: 1px;
+                border-bottom: 1px;
+                border-right: 1px;
+                border:1px;
+                border-style:solid;
+            }
         </style>
         <div style="margin-top: 0px">
             <table width="100%" class="no-border">
@@ -321,13 +321,13 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="detail in detBbm">
-                        <td style="text-align: center;">{{$index+1 }}</td>
+                        <td style="text-align: center;">{{$index + 1}}</td>
                         <td>{{detail.barang.nm_barang}}</td>
-                        <td style="text-align: center;">{{detail.keterangan}}</td>
                         <td style="text-align: center;">{{detail.jumlah}}</td>
-                        <td colspan="2">{{detail.tgl_terima}}</td>
+                        <td style="text-align: center;">{{detail.barang.kd_barang}}</td>
+                        <td colspan="2">{{detail.keterangan}}</td>
                     </tr>
-                    
+
                 </tbody>
             </table>
             <br>

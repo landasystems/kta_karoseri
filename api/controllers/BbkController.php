@@ -333,16 +333,12 @@ class BbkController extends Controller {
     }
 
     public function actionView($id) {
-
-        $model = TransBbk::find()->where('no_bbk="' . $id . '"')->one();
-
-        $query = new Query;
-        $query->from('tbl_jabatan')
-                ->select('id_jabatan, jabatan')
-                ->where('id_jabatan = "' . $model->kd_jab . '"')
-                ->limit(1);
-        $command = $query->createCommand();
-        $jabatan = $command->query()->read();
+        $model = TransBbk::find()
+                        ->leftJoin('tbl_karyawan as tk', 'trans_bbk.penerima = tk.nik')
+                        ->leftJoin('tbl_jabatan as tj', 'tj.id_jabatan  = trans_bbk.kd_jab')
+                        ->select("trans_bbk.*, tk.nik, tk.nama")
+//                        ->with(['penerima', 'bagian'])
+                        ->where('no_bbk="' . $id . '"')->one();
 
         $query = new Query;
         $query->from('tbl_karyawan')
@@ -353,26 +349,32 @@ class BbkController extends Controller {
         $command = $query->createCommand();
         $penerima = $command->query()->read();
 
-        $model->kd_jab = isset($jabatan) ? $jabatan : '';
-        $model->penerima = isset($penerima) ? $penerima : '';
+        $model->kd_jab = array('id_jabatan' => isset($model->bagian->id_jabatan) ? $model->bagian->id_jabatan : '-', 'jabatan' => isset($model->bagian->jabatan) ? $model->bagian->jabatan : '-');
+//        $model->penerima = array('nik' => isset($model->nik) ? $model->nik : '-', 'nama' => isset($model->nama) ? $model->nama : '-');
+        $model->penerima = $penerima;
         $model->no_wo = array('no_wo' => $model->no_wo);
 
-        $detail = DetBbk::find()->where('no_bbk="' . $model->no_bbk . '"')->all();
+        $detail = DetBbk::find()
+                        ->with('barang')
+                        ->where('no_bbk="' . $model->no_bbk . '"')->all();
 
         $i = 0;
         $det = array();
         foreach ($detail as $val) {
-            $query->from('barang')
-                    ->select('kd_barang, nm_barang, satuan')
-                    ->where('kd_barang = "' . $val['kd_barang'] . '"')
-                    ->limit(1);
-            $command = $query->createCommand();
-            $barang = $command->query()->read();
+            $kd_barang = '';
+            $nm_barang = '';
+            $satuan = '';
+
+            if (isset($val->barang->kd_barang)) {
+                $kd_barang = $val->barang->kd_barang;
+                $nm_barang = $val->barang->nm_barang;
+                $satuan = $val->barang->satuan;
+            }
 
             $det[$i]['jml'] = $val['jml'];
-            $det[$i]['satuan'] = $barang['satuan'];
+            $det[$i]['satuan'] = $satuan;
             $det[$i]['ket'] = $val['ket'];
-            $det[$i]['kd_barang'] = isset($barang) ? $barang : '';
+            $det[$i]['kd_barang'] = array('kd_barang' => $kd_barang, 'nm_barang' => $nm_barang, 'satuan' => $satuan);
             $i++;
         }
 

@@ -132,3 +132,41 @@ span.label{width: 180px;display: inline-table;}
 .no-border tfoot td{
     border: none;
 }
+
+/*Print*/
+.print-detail{
+    border-collapse: collapse;
+}
+
+.print-detail th, td{
+    border: 1px solid  #333;
+}
+
+.print-detail tfoot td{
+    border: 0px;
+}
+
+.print_dot table { border: none;} 
+.print_dot th { border: none; }
+.print_dot td { border: none; }
+.print_dot th,td { border: none;}
+.print_dot tfoot { border: none; }
+
+#nota_print{
+    margin: 2px;
+    padding:2px;
+    line-height: 5px;
+    font-size: 12px;        
+    /*font-family: monospace;*/
+    page-break-after: avoid;
+}
+
+#print{        
+    padding-left: 0px;
+    font-size: 16px;        
+    /*line-height: 0px;*/
+    margin: 0px;
+    padding: 0px;
+    font-family: monospace;        
+}
+
