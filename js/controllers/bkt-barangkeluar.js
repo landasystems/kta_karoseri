@@ -19,6 +19,7 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
                     toaster.pop('error', "Terjadi Kesalahan");
                 } else {
                     toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
+                    $scope.callServer(tableStateRef); //reload grid ulang
                 }
             });
         }
@@ -104,7 +105,7 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
             kd_barang: '',
             jml: '',
             ket: '',
-        })
+        });
     };
 
     $scope.removeRow = function(paramindex) {
@@ -234,6 +235,7 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
     };
 
     $scope.cancel = function() {
+        $scope.callServer(tableStateRef); //reload grid ulang
         $scope.is_copy = false;
         $scope.is_edit = false;
         $scope.is_view = false;
@@ -250,6 +252,7 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
     $scope.selected = function(id, id_baru) {
         Data.get('bbk/view/' + id).then(function(data) {
             $scope.form = data.data;
+            console.log($scope.form);
             $scope.is_print = $scope.form.status;
 
             if (id_baru != '') {

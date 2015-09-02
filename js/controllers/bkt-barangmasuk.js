@@ -107,6 +107,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.no_bbm;
         $scope.form = form;
+        $scope.form.tgl_nota = new Date(form.tgl_nota);
         $scope.getDetail(form.no_bbm);
     };
     $scope.view = function (form) {
@@ -128,7 +129,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
             } else {
                 $scope.is_edit = false;
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
-                $scope.view();
+                $scope.view(result.data);
                 $scope.callServer(tableStateRef); //reload grid ulang
                 
             }
@@ -169,6 +170,9 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
     $scope.getDetail = function (id) {
         Data.get('bbm/view/' + id).then(function (data) {
             $scope.detBbm = data.details;
+            $scope.form.nm_supplier = data.sup.nama_supplier;
+            $scope.form.alamat_supplier = data.sup.alamat;
+            console.log(data);
         });
     };
     $scope.excel = function (id) {

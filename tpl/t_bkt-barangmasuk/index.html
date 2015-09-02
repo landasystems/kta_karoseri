@@ -81,7 +81,7 @@
                     </tbody>
                     <tbody ng-show="isLoading">
                         <tr>
-                            <td colspan="4" class="text-center">Loading ... </td>
+                            <td colspan="9" class="text-center">Loading ... </td>
                         </tr>
                     </tbody>
                     <tfoot>
@@ -121,7 +121,7 @@
                                 <label class="col-sm-3 control-label">Tanggal Transaksi</label>
                                 <div class="col-sm-8">
                                     <div class="input-group">
-                                        <input type="text" ng-readonly="is_view" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_nota" is-open="opened1" ng-click="open1($event)"/>
+                                        <input type="text" ng-disabled="is_view" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_nota" is-open="opened1" ng-click="open1($event)"/>
                                         <span class="input-group-addon">
                                             <i class="fa fa-calendar-o"></i>
                                         </span>
@@ -132,7 +132,7 @@
                                 <label class="col-sm-3 control-label">No PO</label>
                                 <div class="col-sm-8">
                                     <div class="input-group" style="width:100%">
-                                        <ui-select on-select="getPo(form,$item)" ng-readonly="is_view" ng-model="form.po" theme="bootstrap">
+                                        <ui-select on-select="getPo(form,$item)" ng-disabled="is_view" ng-model="form.po" theme="bootstrap">
                                             <ui-select-match>{{$select.selected.nota}}</ui-select-match>
                                             <ui-select-choices refresh="cariPo($select.search)" repeat="po in listPo">
                                                 {{po.nota}}
@@ -150,7 +150,7 @@
                                 <label class="col-sm-3 control-label">No WO</label>
                                 <div class="col-sm-8">
                                     <div class="input-group" style="width:100%">
-                                        <ui-select ng-model="form.wo" ng-readonly="is_view" theme="bootstrap">
+                                        <ui-select ng-model="form.wo" ng-disabled="is_view" theme="bootstrap">
                                             <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
                                             <ui-select-choices refresh="cariWo($select.search)" repeat="wo in listWo">
                                                 {{wo.no_wo}}
@@ -178,7 +178,7 @@
                                 <label class="col-sm-4 control-label">Pengirim</label>
                                 <div class="col-sm-8">
                                     <div class="input-group" style="width:100%">
-                                        <input type="text" ng-readonly="is_view" ng-model="form.pengirim" class="form-control">
+                                        <input type="text" ng-disabled="is_view" ng-model="form.pengirim" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -186,7 +186,7 @@
                                 <label class="col-sm-4 control-label">Penerima</label>
                                 <div class="col-sm-8">
                                     <div class="input-group" style="width:100%">
-                                        <input type="text" ng-readonly="is_view" ng-model="form.penerima" class="form-control">
+                                        <input type="text" ng-disabled="is_view" ng-model="form.penerima" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -194,61 +194,61 @@
                                 <label class="col-sm-4 control-label">No Surat Jalan</label>
                                 <div class="col-sm-8">
                                     <div class="input-group" style="width:100%">
-                                        <input type="text" ng-readonly="is_view" ng-model="form.surat_jalan" class="form-control">
+                                        <input type="text" ng-disabled="is_view" ng-model="form.surat_jalan" class="form-control">
                                     </div>
                                 </div>
                             </div>
 
                         </div>
                     </div>
-                    <div class="line line-dashed b-b line-lg pull-in"></div>
-                    <label class="col-sm-1 control-label" style="font-weight: bold">Detail BBM</label>
+                    <label class="control-label" style="font-weight: bold" align='left'>Detail BBM</label>
                     <!--{{listBarang}}-->
                     <table class="table table-bordered det-trans">
                         <thead>
                             <tr>
-                                <th style="text-align: center; font-weight: bold;width:30%">Barang</th>
+                                <th style="text-align: center; font-weight: bold;">Barang</th>
                                 <th style="text-align: center; font-weight: bold;width: 25%">Keterangan</th>
                                 <th style="text-align: center; font-weight: bold;width: 20%">Jml</th>
                                 <th style="text-align: center; font-weight: bold;width:20%">Delivery</th>
                                 <!--<th style="text-align: center; font-weight: bold;width:20%">No WO</th>-->
-                                <th></th>
+                                <th width="30" ng-show="is_view != true" style="margin:0px;padding:0px;">
+                                    <button ng-disabled="is_view" ng-click="addDetail()" class="btn btn-success"><i class="fa fa-plus"></i></button>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr ng-repeat="detail in detBbm">
                                 <td>
-                                    <div class="input-group" style="width:100%">
-                                        <ui-select ng-readonly="is_view" ng-model="detail.barang" theme="bootstrap">
+                                    <!--<div class="input-group" style="width:100%">-->
+                                        <ui-select uiselect-autofocus="open" ng-disabled="is_view" ng-model="detail.barang" theme="bootstrap">
                                             <ui-select-match>{{$select.selected.kd_barang}} - {{$select.selected.nm_barang}}</ui-select-match>
                                             <ui-select-choices refresh="cariBarang($select.search)" repeat="barang in results">
                                                 {{barang.kd_barang}} - {{barang.nm_barang}}
                                             </ui-select-choices>
                                         </ui-select>
-                                        <span class="input-group-btn">
-                                            <button ng-click="detail.barang = undefined" class="btn btn-default">
-                                                <span class="glyphicon glyphicon-trash"></span>
-                                            </button>
-                                        </span>
-                                    </div>
+                        <!--                                        <span class="input-group-btn">
+                                                                    <button ng-click="detail.barang = undefined" class="btn btn-default">
+                                                                        <span class="glyphicon glyphicon-trash"></span>
+                                                                    </button>
+                                                                </span>-->
+                                    <!--</div>-->
                                 </td>
                                 <td>
-                                    <input type="text" ng-readonly="is_view" ng-model="detail.keterangan" class="form-control">
+                                    <input type="text" ng-disabled="is_view" ng-model="detail.keterangan" class="form-control">
                                 </td>
                                 <td>
-                                    <input type="text" ng-readonly="is_view" ng-pattern="/^[0-9]+$/" ng-model="detail.jumlah" class="form-control">
+                                    <input type="text" ng-disabled="is_view" ng-pattern="/^[0-9]+$/" ng-model="detail.jumlah" class="form-control" ng-enter="addDetail();">
                                 </td>
                                 <td>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" ng-readonly="is_view" datepicker-popup="dd-MM-yyyy" ng-model="detail.tgl_terima" is-open="openedDet == $index" ng-change="setStatus()" ng-click="openDet($event, $index)"/>
+                                        <input type="text" class="form-control" ng-disabled="is_view" datepicker-popup="dd-MM-yyyy" ng-model="detail.tgl_terima" is-open="openedDet == $index" ng-enter="addDetail();" ng-change="setStatus()" ng-click="openDet($event, $index)"/>
                                         <span class="input-group-addon">
                                             <i class="fa fa-calendar-o"></i>
                                         </span>
                                     </div>
                                 </td>
-                                <td>
-                                    <button ng-disabled="is_view" ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0"><i class="fa fa-arrows"></i></button>
-                                    <button ng-disabled="is_view" ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0"><i class="fa fa-trash-o"></i></button>
+                                <td ng-show="is_view != true" >
+                                    <button ng-disabled="is_view" ng-click="removeRow($index)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
                                 </td>
                             </tr>
                         </tbody>
@@ -264,14 +264,14 @@
     </div>
     <div id="printArea" ng-show="is_view">
         <style>
-                    .detail-barang td{
-                        border-top: 1px;
-                        border-left: 1px;
-                        border-bottom: 1px;
-                        border-right: 1px;
-                        border:1px;
-                        border-style:solid;
-                    }
+            .detail-barang td{
+                border-top: 1px;
+                border-left: 1px;
+                border-bottom: 1px;
+                border-right: 1px;
+                border:1px;
+                border-style:solid;
+            }
         </style>
         <div style="margin-top: 0px">
             <table width="100%" class="no-border">
@@ -298,13 +298,13 @@
                 <table class="detail-barang" border="1px" style="border-collapse: collapse;width:100%">
                     <tr>
                         <td style="border-bottom: 1px;width: 40%" colspan="2" border="1">
-                            Tanggal : 2015-08-12<br>
-                            No. BBM : BM1502088<br>
-                            No. PO : PCH150034<br>
+                            Tanggal : {{form.tgl_nota}}<br>
+                            No. BBM : {{form.no_bbm}}<br>
+                            No. PO : {{form.no_po}}<br>
                         </td>
                         <td style="border-top:none !important;border-bottom:none !important;"></td>
                         <td style="border:1px;width:55%" colspan="3">
-                            Dari : PERDANA - JL. TEMBAAN 57 C - SURABAYA            </td>
+                            Dari : {{form.nm_supplier}} - {{form.alamat_supplier}}           </td>
                     </tr>
                 </table>
             </div>
@@ -320,7 +320,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td style="text-align: center;">1</td><td>PIPA KOTAK 20 X 40 X 1,8 MM X 6 M</td><td style="text-align: center;">13</td><td style="text-align: center;">700135</td><td colspan="2">asdfasd</td></tr><tr><td style="text-align: center;">2</td><td>MUR M - 8 KOTAK</td><td style="text-align: center;">11</td><td style="text-align: center;">700113</td><td colspan="2">agdfas a</td></tr>    </tbody>
+                    <tr ng-repeat="detail in detBbm">
+                        <td style="text-align: center;">{{$index + 1}}</td>
+                        <td>{{detail.barang.nm_barang}}</td>
+                        <td style="text-align: center;">{{detail.jumlah}}</td>
+                        <td style="text-align: center;">{{detail.barang.kd_barang}}</td>
+                        <td colspan="2">{{detail.keterangan}}</td>
+                    </tr>
+
+                </tbody>
             </table>
             <br>
             <table border="1" class="detail-barang" style="width:100%;border-collapse: collapse;">
