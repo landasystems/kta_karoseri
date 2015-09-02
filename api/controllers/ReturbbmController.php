@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\ReturBbm;
+use app\models\Returbbm;
 use app\models\Barang;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -59,7 +59,7 @@ class ReturbbmController extends Controller {
         $query = new Query;
         if ($params['no_bbm']['no_bbm'] != "") {
             $query->from('barang, det_bbm')
-                    ->select("barang.kd_barang, barang.nm_barang, det_bbm.jml")
+                    ->select("barang.kd_barang, barang.nm_barang, det_bbm.jumlah")
                     ->where(['like', 'barang.nm_barang', $params['barang']])
                     ->orWhere(['like', 'barang.kd_barang', $params['barang']])
                     ->andWhere("barang.nm_barang != '-' && barang.kd_barang != '-'")
@@ -98,7 +98,7 @@ class ReturbbmController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tgl DESC";
+        $sort = "rb.no_retur_bbm DESC";
         $offset = 0;
         $limit = 10;
 
@@ -222,7 +222,7 @@ class ReturbbmController extends Controller {
 
     public function actionView($id) {
 
-        $model = ReturBbm::find()->where('no_retur_bbm="' . $id . '"')->one();
+        $model = Returbbm::find()->where('no_retur_bbm="' . $id . '"')->one();
 
         $query = new Query;
         $query->from('barang')
@@ -233,14 +233,14 @@ class ReturbbmController extends Controller {
         $barang = $command->query()->read();
 
         $query = new Query;
-        $query->from('trans_bbm')
-                ->select('no_bbm')
-                ->where('no_bbm = "' . $model->no_bbm . '"')
-                ->limit(1);
+        $query->from('det_bbm')
+                ->select('sum(jumlah) as jumlah')
+                ->where('kd_barang = "' . $model->kd_barang . '" and no_bbm = "' . $model->no_bbm . '"');
         $command = $query->createCommand();
-        $bbk = $command->query()->read();
-        $model->kd_barang = isset($barang) ? $barang : '-';
-        $model->no_bbm = isset($bbk) ? $bbk : '-';
+        $bbm = $command->query()->read();
+
+        $model->kd_barang = array('kd_barang' => $barang['kd_barang'], 'nm_barang' => $barang['nm_barang'], 'jumlah' => empty($bbm['jumlah']) ? 0 : $bbm['jumlah']);
+        $model->no_bbm = array('no_bbm' => $model->no_bbm);
 
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -248,7 +248,7 @@ class ReturbbmController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new ReturBbm();
+        $model = new Returbbm;
         $model->attributes = $params;
         $model->kd_barang = $params['kd_barang']['kd_barang'];
         $model->no_bbm = $params['no_bbm']['no_bbm'];
@@ -270,7 +270,6 @@ class ReturbbmController extends Controller {
 
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
-//        print_r($params);
         $model = ReturBbm::find()->where('no_retur_bbm="' . $id . '"')->one();
         if ($model->alasan == 'Tidak Sesuai') {
             //kembalikan stok barang ke semula
@@ -353,14 +352,15 @@ class ReturbbmController extends Controller {
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
+
     public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
         $filter = $_SESSION['filter'];
-        
+
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/returbbm", ['models' => $models,'filter'=>$filter]);
+        return $this->render("/expretur/returbbm", ['models' => $models, 'filter' => $filter]);
     }
 
 }

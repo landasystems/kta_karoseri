@@ -5,9 +5,9 @@
     <div class="wrapper-md" ng-show="!is_edit">
         <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
             <div class="panel-heading">
-                <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian & Export Data</button>
+                <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                    <button type="button" class="btn btn-default fa fa-file-excel-o" ng-show="!isCollapsed">&nbsp;Export Excel</button>
+                    <!--<button type="button" class="btn btn-default fa fa-file-excel-o" ng-show="!isCollapsed">&nbsp;Export Excel</button>-->
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>
@@ -16,7 +16,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">No BBM</label>
                         <div class="col-sm-3">
-                            <input st-search="no_bbm" class="form-control"/>
+                            <input st-search="tb.no_bbm" class="form-control"/>
                         </div>
                         <label class="col-sm-2 control-label">Nama Supplier</label>
                         <div class="col-sm-3">
@@ -26,18 +26,18 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">No WO</label>
                         <div class="col-sm-3">
-                            <input st-search="no_wo" class="form-control"/>
+                            <input st-search="tb.no_wo" class="form-control"/>
                         </div>
                         <label class="col-sm-2 control-label">Surat Jalan</label>
                         <div class="col-sm-3">
-                            <input st-search="surat_jalan" class="form-control"/>
+                            <input st-search="tb.surat_jalan" class="form-control"/>
 
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">No PO</label>
                         <div class="col-sm-3">
-                            <input st-search="no_po" class="form-control"/>
+                            <input st-search="tb.no_po" class="form-control"/>
                         </div>
                         <label class="col-sm-2 control-label">Jenis Pembayaran</label>
                         <div class="col-sm-3">

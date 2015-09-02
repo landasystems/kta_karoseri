@@ -9,12 +9,14 @@ app.controller('returbbkCtrl', function($scope, Data, toaster) {
     $scope.bagian = '-';
 
     $scope.kalkulasi = function(jml_bbk, jml_keluar) {
-        var selisih = jml_bbk - jml_keluar;
-        if (selisih > 0) {
-            $scope.form.jml = selisih;
-        } else {
-            $scope.form.jml = 0;
-            toaster.pop('error', "Jumlah retur tidak boleh melebihi jumlah BBK");
+        if (jml_keluar.length >= 1) {
+            var selisih = jml_bbk - jml_keluar;
+            if (selisih >= 0) {
+                $scope.form.jml = selisih;
+            } else {
+                $scope.form.jml = 0;
+                toaster.pop('error', "Jumlah retur tidak boleh melebihi jumlah BBK");
+            }
         }
     }
 
@@ -82,12 +84,13 @@ app.controller('returbbkCtrl', function($scope, Data, toaster) {
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.no_bbk;
         $scope.form = form;
+        $scope.form.tgl = new Date(form.tgl);
         $scope.selected(form.no_retur_bbk);
     };
     $scope.view = function(form) {
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.no_wo;
+        $scope.formtitle = "Lihat Data : " + form.no_bbk;
         $scope.form = form;
         $scope.selected(form.no_retur_bbk);
     };
