@@ -16,7 +16,7 @@
                     <div class="form-group">
 
 
-                       
+
                         <div class="col-sm-4">
                             <input st-search="no_spk" placeholder="No SPK" class="form-control"/>
                         </div>
@@ -306,55 +306,136 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Plat Body</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="eks.plat_body" ng-disabled="is_view" placeholder="Plat Body">
+                                                    <ui-select tagging="tagTransformplat"   tagging-label="false" ng-model="eks.plat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.plat_body}}</ui-select-match>
+                                                        <ui-select-choices repeat="plat in list_plat | filter:$select.search" >
+                                                            <small>
+                                                                {{plat.plat_body}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="eks.plat_body" ng-disabled="is_view" placeholder="Plat Body">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Ventilasi Atas</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="eks.ventilasi_atas" ng-disabled="is_view" placeholder="Ventilasi Atas">
+                                                    <ui-select tagging="tagTransformventilasi"   tagging-label="false" ng-model="eks.ventilasi" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.ventilasi_atas}}</ui-select-match>
+                                                        <ui-select-choices repeat="v in list_ventilasi | filter:$select.search" >
+                                                            <small>
+                                                                {{v.ventilasi_atas}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="eks.ventilasi_atas" ng-disabled="is_view" placeholder="Ventilasi Atas">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Kaca Spion</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="eks.kaca_spion" ng-disabled="is_view" placeholder="Kaca Spion">
+                                                    <ui-select tagging="tagTransformspion"   tagging-label="false" ng-model="eks.spion" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.kaca_spion}}</ui-select-match>
+                                                        <ui-select-choices repeat="s in list_spion | filter:$select.search" >
+                                                            <small>
+                                                                {{s.kaca_spion}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="eks.kaca_spion" ng-disabled="is_view" placeholder="Kaca Spion">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Kaca Depan</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="eks.kaca_depan" ng-disabled="is_view" placeholder="Kaca Depan">
+                                                    <ui-select tagging="tagTransformkdepan"   tagging-label="false" ng-model="eks.kdepan" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.kaca_depan}}</ui-select-match>
+                                                        <ui-select-choices repeat="kd in list_kdepan | filter:$select.search" >
+                                                            <small>
+                                                                {{kd.kaca_depan}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="eks.kaca_depan" ng-disabled="is_view" placeholder="Kaca Depan">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Kaca Belakang</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="eks.kaca_belakang" ng-disabled="is_view" placeholder="Kaca Belakang">
+                                                    <ui-select tagging="tagTransformkbelakang"   tagging-label="false" ng-model="eks.kbelakang" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.kaca_belakang}}</ui-select-match>
+                                                        <ui-select-choices repeat="kb in list_kbelakang | filter:$select.search" >
+                                                            <small>
+                                                                {{kb.kaca_belakang}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="eks.kaca_belakang" ng-disabled="is_view" placeholder="Kaca Belakang">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Kaca Samping</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="eks.kaca_samping" ng-disabled="is_view" placeholder="Kaca Samping">
+                                                    <ui-select tagging="tagTransformksamping"   tagging-label="false" ng-model="eks.ksamping" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.kaca_samping}}</ui-select-match>
+                                                        <ui-select-choices repeat="ks in list_ksamping | filter:$select.search" >
+                                                            <small>
+                                                                {{ks.kaca_samping}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="eks.ksamping" ng-disabled="is_view" placeholder="Kaca Samping">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Lampu Depan</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="eks.lampu_depan" ng-disabled="is_view" placeholder="Lampu Depan">
+                                                    <ui-select tagging="tagTransformldepan"   tagging-label="false" ng-model="eks.ldepan" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.lampu_depan}}</ui-select-match>
+                                                        <ui-select-choices repeat="ld in list_ldepan | filter:$select.search" >
+                                                            <small>
+                                                                {{ld.lampu_depan}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="eks.lampu_depan" ng-disabled="is_view" placeholder="Lampu Depan">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Lampu Belakang</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="eks.lampu_belakang" ng-disabled="is_view" placeholder="Lampu Belakang">
+                                                     <ui-select tagging="tagTransformlbelakang"   tagging-label="false" ng-model="eks.lbelakang" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.lampu_belakang}}</ui-select-match>
+                                                        <ui-select-choices repeat="lb in list_lbelakang | filter:$select.search" >
+                                                            <small>
+                                                                {{lb.lampu_belakang}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="eks.lampu_belakang" ng-disabled="is_view" placeholder="Lampu Belakang">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Pintu Depan</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="eks.pintu_depan" ng-disabled="is_view" placeholder="Pintu Depan">
+                                                    <ui-select tagging="tagTransformpdepan"   tagging-label="false" ng-model="eks.pdepan" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.pintu_depan}}</ui-select-match>
+                                                        <ui-select-choices repeat="pd in list_pdepan | filter:$select.search" >
+                                                            <small>
+                                                                {{pd.pintu_depan}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="eks.pintu_depan" ng-disabled="is_view" placeholder="Pintu Depan">-->
                                                 </div>
                                             </div>
                                         </td>
@@ -362,25 +443,61 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Pintu Penumpang</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="eks.pintu_penumpang" ng-disabled="is_view" placeholder="Pintu Penumpang">
+                                                     <ui-select tagging="tagTransformppenumpang"   tagging-label="false" ng-model="eks.ppenumpang" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.pintu_penumpang}}</ui-select-match>
+                                                        <ui-select-choices repeat="pp in list_ppenumpang | filter:$select.search" >
+                                                            <small>
+                                                                {{pp.pintu_penumpang}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="eks.pintu_penumpang" ng-disabled="is_view" placeholder="Pintu Penumpang">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Pintu Bagasi Samping</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="eks.pintu_bagasi_samping" ng-disabled="is_view" placeholder="Pintu Bagasi Samping">
+                                                    <ui-select tagging="tagTransformpbagasi"   tagging-label="false" ng-model="eks.pbagasi" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.pintu_bagasi_samping}}</ui-select-match>
+                                                        <ui-select-choices repeat="pb in list_pbagasi | filter:$select.search" >
+                                                            <small>
+                                                                {{pb.pintu_bagasi_samping}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="eks.pintu_bagasi_samping" ng-disabled="is_view" placeholder="Pintu Bagasi Samping">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Pintu Belakang</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="eks.pintu_belakang" ng-disabled="is_view" placeholder="Pintu Belakang">
+                                                    <ui-select tagging="tagTransformpbelakang"   tagging-label="false" ng-model="eks.pbelakang" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.pintu_belakang}}</ui-select-match>
+                                                        <ui-select-choices repeat="pb in list_pbelakang | filter:$select.search" >
+                                                            <small>
+                                                                {{pb.pintu_belakang}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="eks.pintu_belakang" ng-disabled="is_view" placeholder="Pintu Belakang">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Wyper Set</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="eks.wyper_set" ng-disabled="is_view" placeholder="Wyper Set">
+                                                    <ui-select tagging="tagTransformwyper"   tagging-label="false" ng-model="eks.wyper" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.wyper_set}}</ui-select-match>
+                                                        <ui-select-choices repeat="w in list_wyper | filter:$select.search" >
+                                                            <small>
+                                                                {{w.wyper_set}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="eks.wyper_set" ng-disabled="is_view" placeholder="Wyper Set">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -394,16 +511,7 @@
 
                                                             </small>
                                                         </ui-select-choices>
-                                                    </ui-select>
-                                                    <!--                                                    <ui-select  ng-model="eks.warna" theme="bootstrap" style="width: 245px; margin-top: 2px; margin-bottom: 1px;">
-                                                                                                            <ui-select-match placeholder="Cari Warna">{{$select.selected.warna}}</ui-select-match>
-                                                                                                            <ui-select-choices group-by="'group'" repeat="warna in list_warna | filter: $select.search">
-                                                                                                                <div ng-bind-html="warna.warna | highlight: $select.search"></div>
-                                                    
-                                                                                                            </ui-select-choices>
-                                                                                                        </ui-select>-->
-                                                    <!--<input type="text" class="form-control" ng-model="form.warna" ng-disabled="is_view" placeholder="Warna">-->
-                                                </div>
+                                                    </ui-select> </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Warna 2</label>
@@ -416,27 +524,36 @@
 
                                                             </small>
                                                         </ui-select-choices>
-                                                    </ui-select>
-                                                    <!--                                                    <ui-select  ng-model="eks.warna2" theme="bootstrap" style="width: 245px; margin-top: 2px; margin-bottom: 1px;">
-                                                                                                            <ui-select-match placeholder="Cari Warna">{{$select.selected.warna}}</ui-select-match>
-                                                                                                            <ui-select-choices group-by="'group'" repeat="warna in list_warna | filter: $select.search">
-                                                                                                                <div ng-bind-html="warna.warna | highlight: $select.search"></div>
-                                                    
-                                                                                                            </ui-select-choices>
-                                                                                                        </ui-select>-->
-                                                    <!--<input type="text" class="form-control" ng-model="form.warna2" ng-disabled="is_view" placeholder="Warna 2">-->
-                                                </div>
+                                                    </ui-select></div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Strip</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="eks.strip" ng-disabled="is_view" placeholder="Strip">
+                                                    <ui-select tagging="tagTransformstrip"   tagging-label="false" ng-model="eks.strip" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.strip}}</ui-select-match>
+                                                        <ui-select-choices repeat="s in list_strip | filter:$select.search" >
+                                                            <small>
+                                                                {{s.strip}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="eks.strip" ng-disabled="is_view" placeholder="Strip">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Letter</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="eks.letter" ng-disabled="is_view" placeholder="Letter">
+                                                    <ui-select tagging="tagTransformletter"   tagging-label="false" ng-model="eks.letter" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.letter}}</ui-select-match>
+                                                        <ui-select-choices repeat="l in list_letter | filter:$select.search" >
+                                                            <small>
+                                                                {{l.letter}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="eks.letter" ng-disabled="is_view" placeholder="Letter">-->
                                                 </div>
                                             </div>
                                         </td>
@@ -459,7 +576,16 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Plavon</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="inter.plavon" ng-disabled="is_view" placeholder="Plavon">
+                                                    <ui-select tagging="tagTransformplavon"   tagging-label="false" ng-model="inter.plavon" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.letter}}</ui-select-match>
+                                                        <ui-select-choices repeat="l in list_plavon | filter:$select.search" >
+                                                            <small>
+                                                                {{l.plavon}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="inter.plavon" ng-disabled="is_view" placeholder="Plavon">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
