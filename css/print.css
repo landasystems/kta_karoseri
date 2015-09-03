@@ -170,3 +170,24 @@ span.label{width: 180px;display: inline-table;}
     font-family: monospace;        
 }
 
+#print_bbk{        
+    padding-left: 0px;
+    font-size: 9pt;        
+    /*line-height: 0px;*/
+    margin: 0px;
+    padding: 0px;
+    letter-spacing: 3pt;
+    font-family: monospace;        
+}
+.print_bbk_td{
+    font-size: 9pt;
+    boder-top:1px solid #333;
+    letter-spacing: 3pt;
+    vertical-align: top;
+}
+.print-bbk-detail{
+    margin-bottom: 2px;
+    boder-top:1px solid #333;
+    border-left: none; 
+    border-right: none;
+}
