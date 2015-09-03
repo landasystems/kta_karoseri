@@ -24,15 +24,15 @@ foreach ($models as $key => $val) {
     $data[$val['no_wo']]['stat'][$val['stat']]['title'] = $val['stat'];
 //
     $data[$val['no_wo']]['stat'][$val['stat']]['body']['tgl'] = isset($data[$val['no_wo']]['stat'][$val['stat']]['body']['tgl']) ? $data[$val['no_wo']]['stat'][$val['stat']]['body']['tgl'] . $val['tgl'] . '<br>' : $val['tgl'] . '<br>';
-//    $data[$val['no_wo']]['body']['tgl_pelaksanaan'] = isset($data[$val['no_wo']]['body']['tgl_pelaksanaan']) ? $data[$val['no_wo']]['body']['tgl_pelaksanaan'] . $val['tgl_pelaksanaan'] . '<br>' : $val['tgl_pelaksanaan'] . '<br>';
-//    $data[$val['no_wo']]['body']['pelaksana'] = isset($data[$val['no_wo']]['body']['pelaksana']) ? $data[$val['no_wo']]['body']['pelaksana'] . $val['pelaksana'] . '<br>' : $val['pelaksana'] . '<br>';
-//    $data[$val['no_wo']]['body']['jns_komplain'] = isset($data[$val['no_wo']]['body']['jns_komplain']) ? $data[$val['no_wo']]['body']['jns_komplain'] . $val['jns_komplain'] . '<br>' : $val['jns_komplain'] . '<br>';
-//    $data[$val['no_wo']]['body']['problem'] = isset($data[$val['no_wo']]['body']['problem']) ? $data[$val['no_wo']]['body']['problem'] . $val['problem'] . '<br>' : $val['problem'] . '<br>';
-//    $data[$val['no_wo']]['body']['solusi'] = isset($data[$val['no_wo']]['body']['solusi']) ? $data[$val['no_wo']]['body']['solusi'] . $val['solusi'] . '<br>' : $val['solusi'] . '<br>';
-//    $data[$val['no_wo']]['body']['biaya_mat'] = isset($data[$val['no_wo']]['body']['biaya_mat']) ? $data[$val['no_wo']]['body']['biaya_mat'] . $val['biaya_mat'] . '<br>' : $val['biaya_mat'] . '<br>';
-//    $data[$val['no_wo']]['body']['biaya_tk'] = isset($data[$val['no_wo']]['body']['biaya_tk']) ? $data[$val['no_wo']]['body']['biaya_tk'] . $val['biaya_tk'] . '<br>' : $val['biaya_tk'] . '<br>';
-//    $data[$val['no_wo']]['body']['biaya_spd'] = isset($data[$val['no_wo']]['body']['biaya_spd']) ? $data[$val['no_wo']]['body']['biaya_spd'] . $val['biaya_spd'] . '<br>' : $val['biaya_spd'] . '<br>';
-//    $data[$val['no_wo']]['body']['total'] = isset($data[$val['no_wo']]['body']['total']) ? $data[$val['no_wo']]['body']['total'] . ($val['biaya_mat'] + $val['biaya_tk'] + $val['biaya_spd']) . '<br>' : ($val['biaya_mat'] + $val['biaya_tk'] + $val['biaya_spd']) . '<br>';
+    $data[$val['no_wo']]['stat'][$val['stat']]['body']['tgl_pelaksanaan'] = isset($data[$val['no_wo']]['stat'][$val['stat']]['body']['tgl_pelaksanaan']) ? $data[$val['no_wo']]['stat'][$val['stat']]['body']['tgl_pelaksanaan'] . $val['tgl_pelaksanaan'] . '<br>' : $val['tgl_pelaksanaan'] . '<br>';
+    $data[$val['no_wo']]['stat'][$val['stat']]['body']['pelaksana'] = isset($data[$val['no_wo']]['stat'][$val['stat']]['body']['pelaksana']) ? $data[$val['no_wo']]['stat'][$val['stat']]['body']['pelaksana'] . $val['pelaksana'] . '<br>' : $val['pelaksana'] . '<br>';
+    $data[$val['no_wo']]['stat'][$val['stat']]['body']['jns_komplain'] = isset($data[$val['no_wo']]['stat'][$val['stat']]['body']['jns_komplain']) ? $data[$val['no_wo']]['stat'][$val['stat']]['body']['jns_komplain'] .'- '. $val['jns_komplain'] . '<br>' : '- '.$val['jns_komplain'] . '<br>';
+    $data[$val['no_wo']]['stat'][$val['stat']]['body']['problem'] = isset($data[$val['no_wo']]['stat'][$val['stat']]['body']['problem']) ? $data[$val['no_wo']]['stat'][$val['stat']]['body']['problem'] .'- '. $val['problem'] . '<br>' : '- '.$val['problem'] . '<br>';
+    $data[$val['no_wo']]['stat'][$val['stat']]['body']['solusi'] = isset($data[$val['no_wo']]['stat'][$val['stat']]['body']['solusi']) ? $data[$val['no_wo']]['stat'][$val['stat']]['body']['solusi'] . '- '.$val['solusi'] . '<br>' : '- '.$val['solusi'] . '<br>';
+    $data[$val['no_wo']]['stat'][$val['stat']]['body']['biaya_mat'] = isset($data[$val['no_wo']]['stat'][$val['stat']]['body']['biaya_mat']) ? $data[$val['no_wo']]['stat'][$val['stat']]['body']['biaya_mat'] . $val['biaya_mat'] . '<br>' : $val['biaya_mat'] . '<br>';
+    $data[$val['no_wo']]['stat'][$val['stat']]['body']['biaya_tk'] = isset($data[$val['no_wo']]['stat'][$val['stat']]['body']['biaya_tk']) ? $data[$val['no_wo']]['stat'][$val['stat']]['body']['biaya_tk'] . $val['biaya_tk'] . '<br>' : $val['biaya_tk'] . '<br>';
+    $data[$val['no_wo']]['stat'][$val['stat']]['body']['biaya_spd'] = isset($data[$val['no_wo']]['stat'][$val['stat']]['body']['biaya_spd']) ? $data[$val['no_wo']]['stat'][$val['stat']]['body']['biaya_spd'] . $val['biaya_spd'] . '<br>' : $val['biaya_spd'] . '<br>';
+    $data[$val['no_wo']]['stat'][$val['stat']]['body']['total'] = isset($data[$val['no_wo']]['stat'][$val['stat']]['body']['total']) ? $data[$val['no_wo']]['stat'][$val['stat']]['body']['total'] . ($val['biaya_mat'] + $val['biaya_tk'] + $val['biaya_spd']) . '<br>' : ($val['biaya_mat'] + $val['biaya_tk'] + $val['biaya_spd']) . '<br>';
 
 
     $i++;
@@ -80,25 +80,51 @@ foreach ($models as $key => $val) {
             <td></td>
             <td></td>
         </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><?php echo $key['body']['tgl'] ?></td>
-            <td><?php //echo $key['body']['tgl_pelaksanaan'] ?></td>
-            <td><?php// echo $key['body']['pelaksana'] ?></td>
-            <td><?php// echo $key['body']['jns_komplain'] ?></td>
-            <td><?php// echo $key['body']['problem'] ?></td>
-            <td><?php //echo $key['body']['solusi'] ?></td>
-            <td style="text-align: right">&nbsp;<?php //echo $key['body']['biaya_mat'] ?></td>
-            <td style="text-align: right">&nbsp;<?php //echo $key['body']['biaya_tk'] ?></td>
-            <td style="text-align: right">&nbsp;<?php// echo $key['body']['biaya_spd'] ?></td>
-            <td style="text-align: right">&nbsp;<?php// echo $key['body']['total'] ?></td>
-        </tr>
         <?php
+        foreach ($key['stat'] as $val) {
+            ?>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><b><?=$val['title']?></b></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <?php
+//            foreach ($val['body'] as $vals) {
+                ?>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><?=$val['body']['tgl']?></td>
+                    <td><?=$val['body']['tgl_pelaksanaan']?></td>
+                    <td><?=$val['body']['pelaksana']?></td>
+                    <td><?=$val['body']['jns_komplain']?></td>
+                    <td><?=$val['body']['problem']?></td>
+                    <td><?=$val['body']['solusi']?></td>
+                    <td style="text-align: right">&nbsp;<?=$val['body']['biaya_mat']?></td>
+                    <td style="text-align: right">&nbsp;<?=$val['body']['biaya_tk']?></td>
+                    <td style="text-align: right">&nbsp;<?=$val['body']['biaya_spd']?></td>
+                    <td style="text-align: right">&nbsp;<?=$val['body']['total']?></td>
+                </tr>
+                <?php
+//            }
+        }
         $n++;
     }
     ?>
