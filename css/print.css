@@ -48,9 +48,9 @@ a[href^="#"]:after, a[href^="javascript:"]:after {content: "";}
 
 /* Table */
 table { margin: 1px; text-align:left; width:100%} 
-th { border-bottom: 1px solid #333;  font-weight: bold; text-align: center }
+/*th { border-top: 1px solid #333;  font-weight: bold; text-align: center }
 td { border-bottom: 1px solid #333; }
-th,td { padding: 4px 10px; }
+th,td { padding: 4px 10px; }*/
 tfoot { font-style: italic; }
 caption { background: #fff; margin-bottom:2em; text-align:left; }
 thead {display: table-header-group;}
@@ -173,7 +173,6 @@ span.label{width: 180px;display: inline-table;}
 #print_bbk{        
     padding-left: 0px;
     font-size: 9pt;        
-    /*line-height: 0px;*/
     margin: 0px;
     padding: 0px;
     letter-spacing: 3pt;
@@ -181,13 +180,14 @@ span.label{width: 180px;display: inline-table;}
 }
 .print_bbk_td{
     font-size: 9pt;
-    boder-top:1px solid #333;
+    /*    boder-top:1px solid #333;*/
+    border-bottom: 1px #000 solid;
     letter-spacing: 3pt;
     vertical-align: top;
 }
 .print-bbk-detail{
     margin-bottom: 2px;
-    boder-top:1px solid #333;
+    margin-top: 2px;
     border-left: none; 
     border-right: none;
 }

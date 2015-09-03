@@ -262,7 +262,7 @@
                                     <td style="margin:0px;padding:0px;">
                                         <input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control"
                                                ng-keyup="
-                                                                   kalkulasi(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang, detail.jml);">
+                                               kalkulasi(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang, detail.jml);">
                                     </td>
                                     <td>{{detail.satuan}}</td>
                                     <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control" ng-enter="addDetail(detail);" event-focus-id="0"></td>
@@ -315,7 +315,7 @@
                 </tr>
             </table>
             <br>
-            <table class="print-bbk-detail" border="1" style="margin-bottom: 2px;border-left: none; border-right: none;">
+            <table style="border-top: 1px #000 solid;">
                 <thead>
                     <tr>
                         <td class="print_bbk_td">&nbsp;No.</td>
@@ -337,26 +337,26 @@
                     </tr>
                 </tbody>
             </table>
+            <table style="margin-bottom: 0px;width:14cm; margin-top: 20px;">
+                <tr>
+                    <td width="45%"></td>
+                    <td width="10%"></td>
+                    <td width="45%" align="center" id="print_bbk">Sukorejo, {{tgl_cetak| date}}</td>
+                </tr>
+                <tr>
+                    <td align="center" id="print_bbk">Dikeluarkan Oleh :</td>
+                    <td></td>
+                    <td align="center" id="print_bbk">Yang Menerima :</td>
+                </tr>
+                <tr>
+                    <td colspan="3"><br><br></td>
+                </tr>
+                <tr>
+                    <td align="center" id="print_bbk">{{form.petugas}}</td>
+                    <td></td>
+                    <td align="center" id="print_bbk">{{form.penerima.nama}}</td>
+                </tr>
+            </table>
         </div>
-        <table style="margin-bottom: 0px;width:14cm; margin-top: 20px;">
-            <tr>
-                <td width="45%"></td>
-                <td width="10%"></td>
-                <td width="45%" align="center" id="print_bbk">Sukorejo, {{tgl_cetak| date}}</td>
-            </tr>
-            <tr>
-                <td align="center" id="print_bbk">Dikeluarkan Oleh :</td>
-                <td></td>
-                <td align="center" id="print_bbk">Yang menerima :</td>
-            </tr>
-            <tr>
-                <td colspan="3"></td>
-            </tr>
-            <tr>
-                <td align="center" id="print_bbk">{{form.petugas}}</td>
-                <td></td>
-                <td align="center" id="print_bbk">{{form.penerima.nama}}</td>
-            </tr>
-        </table>
     </div>
 </div>
