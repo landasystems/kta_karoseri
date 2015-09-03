@@ -286,7 +286,17 @@
     </div>
 
     <div id="printArea" ng-if="is_view">
-        <div style="margin-top: 0px;width:14cm;">
+        <style>
+            /*            @page { 
+                            size:9cm; 
+                            margin: 0cm ;
+                            margin-top: 0px;
+                            margin-top: 0xm;
+                            margin-left: 0cm;
+                        }*/
+            /*@page { size : portrait }*/
+        </style>
+        <div style="width: 12cm; margin-top: 0cm;" id="kertas_bbk">
             <table width="100%" class="no-border" style="margin-bottom: 10px;">
                 <tr>
                     <td width="50%" id="print_bbk">
@@ -301,7 +311,7 @@
             <center id="print_bbk">
                 *** BUKTI BARANG KELUAR ***
             </center>
-            <table class="no-border" style="margin-top: 10px;">
+            <table width="100%" class="no-border" style="margin-top: 10px;">
                 <tr>
                     <td width="90" id="print_bbk">NO. WO</td>
                     <td width="2" id="print_bbk">:</td>
@@ -315,29 +325,32 @@
                 </tr>
             </table>
             <br>
-            <table style="border-top: 1px #000 solid;">
+            <table width="100%">
                 <thead>
                     <tr>
-                        <td class="print_bbk_td">&nbsp;No.</td>
-                        <td class="print_bbk_td">&nbsp; Kode</td>
-                        <td class="print_bbk_td">&nbsp; Nama Barang</td>
-                        <td class="print_bbk_td"> &nbsp;Jml</td>
-                        <td class="print_bbk_td"> &nbsp;Sat</td>
-                        <td class="print_bbk_td"> &nbsp;Ket</td>
+                        <td class="print_bbk_td" style="border-bottom: 1px #000 solid;border-top: 1px #000 solid;" align="center">&nbsp;No.</td>
+                        <td class="print_bbk_td" style="border-bottom: 1px #000 solid;border-top: 1px #000 solid;" align="center">&nbsp; Kode</td>
+                        <td class="print_bbk_td" style="border-bottom: 1px #000 solid;border-top: 1px #000 solid;" align="center">&nbsp; Nama Barang</td>
+                        <td class="print_bbk_td" style="border-bottom: 1px #000 solid;border-top: 1px #000 solid;" align="center"> &nbsp;Jml</td>
+                        <!--<td class="print_bbk_td" style="border-bottom: 1px #000 solid;"> &nbsp;Sat</td>-->
+                        <!--<td class="print_bbk_td"> &nbsp;Ket</td>-->
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="detail in detailBbk" >
-                        <td class="print_bbk_td">&nbsp;{{$index + 1}}</td>
-                        <td class="print_bbk_td">&nbsp;{{detail.kd_barang.kd_barang}} &nbsp;</td>
+                        <td class="print_bbk_td" align="center">&nbsp;{{$index + 1}}</td>
+                        <td class="print_bbk_td" align="center">&nbsp;{{detail.kd_barang.kd_barang}} &nbsp;</td>
                         <td class="print_bbk_td">&nbsp;{{detail.kd_barang.nm_barang}}</td>
-                        <td class="print_bbk_td">&nbsp;{{detail.jml}}</td>
-                        <td class="print_bbk_td">&nbsp;{{detail.satuan}} &nbsp;</td>
-                        <td class="print_bbk_td">&nbsp;{{detail.ket}}</td>
+                        <td class="print_bbk_td" align="center">&nbsp;{{detail.jml}} {{detail.satuan}} </td>
+                        <!--<td class="print_bbk_td">&nbsp;{{detail.satuan}} &nbsp;</td>-->
+                        <!--<td class="print_bbk_td">&nbsp;{{detail.ket}}</td>-->
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="border-top: 1px #000 solid;"></td>
                     </tr>
                 </tbody>
             </table>
-            <table style="margin-bottom: 0px;width:14cm; margin-top: 20px;">
+            <table width="100%" style="margin-bottom: 0px; margin-top: 20px;">
                 <tr>
                     <td width="45%"></td>
                     <td width="10%"></td>

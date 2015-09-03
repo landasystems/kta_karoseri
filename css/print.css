@@ -163,7 +163,7 @@ span.label{width: 180px;display: inline-table;}
 
 #print{        
     padding-left: 0px;
-    font-size: 16px;        
+    font-size: 14px;        
     /*line-height: 0px;*/
     margin: 0px;
     padding: 0px;
@@ -172,18 +172,31 @@ span.label{width: 180px;display: inline-table;}
 
 #print_bbk{        
     padding-left: 0px;
-    font-size: 9pt;        
+    font-size: 13.5pt;        
     margin: 0px;
     padding: 0px;
-    letter-spacing: 3pt;
+    /*letter-spacing: 1pt;*/
+    font-family: monospace;        
+}
+#print_bbm{        
+    padding-left: 0px;
+    font-size: 11.5pt;        
+    margin: 0px;
+    padding: 0px;
+    /*letter-spacing: 1pt;*/
     font-family: monospace;        
 }
 .print_bbk_td{
-    font-size: 9pt;
-    /*    boder-top:1px solid #333;*/
-    border-bottom: 1px #000 solid;
-    letter-spacing: 3pt;
+    font-size: 13.5pt;
     vertical-align: top;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+.print_bbm_td{
+    font-size: 13.5pt;
+    vertical-align: top;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
 }
 .print-bbk-detail{
     margin-bottom: 2px;
