@@ -172,7 +172,7 @@ span.label{width: 180px;display: inline-table;}
 
 #print_bbk{        
     padding-left: 0px;
-    font-size: 13.5pt;        
+    font-size: 12pt;        
     margin: 0px;
     padding: 0px;
     /*letter-spacing: 1pt;*/
@@ -187,7 +187,7 @@ span.label{width: 180px;display: inline-table;}
     font-family: monospace;        
 }
 .print_bbk_td{
-    font-size: 13.5pt;
+    font-size: 12pt;
     vertical-align: top;
     margin-bottom: 0px;
     padding-bottom: 0px;
