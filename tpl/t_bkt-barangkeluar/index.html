@@ -262,7 +262,7 @@
                                     <td style="margin:0px;padding:0px;">
                                         <input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control"
                                                ng-keyup="
-                                                                   kalkulasi(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang, detail.jml);">
+                                               kalkulasi(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang, detail.jml);">
                                     </td>
                                     <td>{{detail.satuan}}</td>
                                     <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control" ng-enter="addDetail(detail);" event-focus-id="0"></td>
@@ -286,7 +286,17 @@
     </div>
 
     <div id="printArea" ng-if="is_view">
-        <div style="margin-top: 0px;width:14cm;">
+        <style>
+            /*            @page { 
+                            size:9cm; 
+                            margin: 0cm ;
+                            margin-top: 0px;
+                            margin-top: 0xm;
+                            margin-left: 0cm;
+                        }*/
+            /*@page { size : portrait }*/
+        </style>
+        <div style="width: 12cm; margin-top: 0cm;" id="kertas_bbk">
             <table width="100%" class="no-border" style="margin-bottom: 10px;">
                 <tr>
                     <td width="50%" id="print_bbk">
@@ -301,7 +311,7 @@
             <center id="print_bbk">
                 *** BUKTI BARANG KELUAR ***
             </center>
-            <table class="no-border" style="margin-top: 10px;">
+            <table width="100%" class="no-border" style="margin-top: 10px;">
                 <tr>
                     <td width="90" id="print_bbk">NO. WO</td>
                     <td width="2" id="print_bbk">:</td>
@@ -315,48 +325,51 @@
                 </tr>
             </table>
             <br>
-            <table class="print-bbk-detail" border="1" style="margin-bottom: 2px;border-left: none; border-right: none;">
+            <table width="100%">
                 <thead>
                     <tr>
-                        <td class="print_bbk_td">&nbsp;No.</td>
-                        <td class="print_bbk_td">&nbsp; Kode</td>
-                        <td class="print_bbk_td">&nbsp; Nama Barang</td>
-                        <td class="print_bbk_td"> &nbsp;Jml</td>
-                        <td class="print_bbk_td"> &nbsp;Sat</td>
-                        <td class="print_bbk_td"> &nbsp;Ket</td>
+                        <td class="print_bbk_td" style="border-bottom: 1px #000 solid;border-top: 1px #000 solid;" align="center">&nbsp;No.</td>
+                        <td class="print_bbk_td" style="border-bottom: 1px #000 solid;border-top: 1px #000 solid;" align="center">&nbsp; Kode</td>
+                        <td class="print_bbk_td" style="border-bottom: 1px #000 solid;border-top: 1px #000 solid;" align="center">&nbsp; Nama Barang</td>
+                        <td class="print_bbk_td" style="border-bottom: 1px #000 solid;border-top: 1px #000 solid;" align="center"> &nbsp;Jml</td>
+                        <!--<td class="print_bbk_td" style="border-bottom: 1px #000 solid;"> &nbsp;Sat</td>-->
+                        <!--<td class="print_bbk_td"> &nbsp;Ket</td>-->
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="detail in detailBbk" >
-                        <td class="print_bbk_td">&nbsp;{{$index + 1}}</td>
-                        <td class="print_bbk_td">&nbsp;{{detail.kd_barang.kd_barang}} &nbsp;</td>
+                        <td class="print_bbk_td" align="center">&nbsp;{{$index + 1}}</td>
+                        <td class="print_bbk_td" align="center">&nbsp;{{detail.kd_barang.kd_barang}} &nbsp;</td>
                         <td class="print_bbk_td">&nbsp;{{detail.kd_barang.nm_barang}}</td>
-                        <td class="print_bbk_td">&nbsp;{{detail.jml}}</td>
-                        <td class="print_bbk_td">&nbsp;{{detail.satuan}} &nbsp;</td>
-                        <td class="print_bbk_td">&nbsp;{{detail.ket}}</td>
+                        <td class="print_bbk_td" align="center">&nbsp;{{detail.jml}} {{detail.satuan}} </td>
+                        <!--<td class="print_bbk_td">&nbsp;{{detail.satuan}} &nbsp;</td>-->
+                        <!--<td class="print_bbk_td">&nbsp;{{detail.ket}}</td>-->
+                    </tr>
+                    <tr>
+                        <td colspan="4" style="border-top: 1px #000 solid;"></td>
                     </tr>
                 </tbody>
             </table>
+            <table width="100%" style="margin-bottom: 0px; margin-top: 20px;">
+                <tr>
+                    <td width="45%"></td>
+                    <td width="10%"></td>
+                    <td width="45%" align="center" id="print_bbk">Sukorejo, {{tgl_cetak| date}}</td>
+                </tr>
+                <tr>
+                    <td align="center" id="print_bbk">Dikeluarkan Oleh :</td>
+                    <td></td>
+                    <td align="center" id="print_bbk">Yang Menerima :</td>
+                </tr>
+                <tr>
+                    <td colspan="3"><br><br></td>
+                </tr>
+                <tr>
+                    <td align="center" id="print_bbk">{{form.petugas}}</td>
+                    <td></td>
+                    <td align="center" id="print_bbk">{{form.penerima.nama}}</td>
+                </tr>
+            </table>
         </div>
-        <table style="margin-bottom: 0px;width:14cm; margin-top: 20px;">
-            <tr>
-                <td width="45%"></td>
-                <td width="10%"></td>
-                <td width="45%" align="center" id="print_bbk">Sukorejo, {{tgl_cetak| date}}</td>
-            </tr>
-            <tr>
-                <td align="center" id="print_bbk">Dikeluarkan Oleh :</td>
-                <td></td>
-                <td align="center" id="print_bbk">Yang menerima :</td>
-            </tr>
-            <tr>
-                <td colspan="3"></td>
-            </tr>
-            <tr>
-                <td align="center" id="print_bbk">{{form.petugas}}</td>
-                <td></td>
-                <td align="center" id="print_bbk">{{form.penerima.nama}}</td>
-            </tr>
-        </table>
     </div>
 </div>

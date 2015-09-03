@@ -220,37 +220,37 @@
                             <tr ng-repeat="detail in detBbm">
                                 <td>
                                     <!--<div class="input-group" style="width:100%">-->
-                                        <ui-select uiselect-autofocus="open" ng-disabled="is_view" ng-model="detail.barang" theme="bootstrap">
-                                            <ui-select-match>{{$select.selected.kd_barang}} - {{$select.selected.nm_barang}}</ui-select-match>
-                                            <ui-select-choices refresh="cariBarang($select.search)" repeat="barang in results">
-                                                {{barang.kd_barang}} - {{barang.nm_barang}}
-                                            </ui-select-choices>
-                                        </ui-select>
+                        <ui-select uiselect-autofocus="open" ng-disabled="is_view" ng-model="detail.barang" theme="bootstrap">
+                            <ui-select-match>{{$select.selected.kd_barang}} - {{$select.selected.nm_barang}}</ui-select-match>
+                            <ui-select-choices refresh="cariBarang($select.search)" repeat="barang in results">
+                                {{barang.kd_barang}} - {{barang.nm_barang}}
+                            </ui-select-choices>
+                        </ui-select>
                         <!--                                        <span class="input-group-btn">
                                                                     <button ng-click="detail.barang = undefined" class="btn btn-default">
                                                                         <span class="glyphicon glyphicon-trash"></span>
                                                                     </button>
                                                                 </span>-->
-                                    <!--</div>-->
-                                </td>
-                                <td>
-                                    <input type="text" ng-disabled="is_view" ng-model="detail.keterangan" class="form-control">
-                                </td>
-                                <td>
-                                    <input type="text" ng-disabled="is_view" ng-pattern="/^[0-9]+$/" ng-model="detail.jumlah" class="form-control" ng-enter="addDetail();">
-                                </td>
-                                <td>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" ng-disabled="is_view" datepicker-popup="dd-MM-yyyy" ng-model="detail.tgl_terima" is-open="openedDet == $index" ng-enter="addDetail();" ng-change="setStatus()" ng-click="openDet($event, $index)"/>
-                                        <span class="input-group-addon">
-                                            <i class="fa fa-calendar-o"></i>
-                                        </span>
-                                    </div>
-                                </td>
-                                <td ng-show="is_view != true" >
-                                    <button ng-disabled="is_view" ng-click="removeRow($index)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
-                                </td>
-                            </tr>
+                        <!--</div>-->
+                        </td>
+                        <td>
+                            <input type="text" ng-disabled="is_view" ng-model="detail.keterangan" class="form-control">
+                        </td>
+                        <td>
+                            <input type="text" ng-disabled="is_view" ng-pattern="/^[0-9]+$/" ng-model="detail.jumlah" class="form-control" ng-enter="addDetail();">
+                        </td>
+                        <td>
+                            <div class="input-group">
+                                <input type="text" class="form-control" ng-disabled="is_view" datepicker-popup="dd-MM-yyyy" ng-model="detail.tgl_terima" is-open="openedDet == $index" ng-enter="addDetail();" ng-change="setStatus()" ng-click="openDet($event, $index)"/>
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar-o"></i>
+                                </span>
+                            </div>
+                        </td>
+                        <td ng-show="is_view != true" >
+                            <button ng-disabled="is_view" ng-click="removeRow($index)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                        </td>
+                        </tr>
                         </tbody>
                     </table>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
@@ -263,99 +263,76 @@
         </div>
     </div>
     <div id="printArea" ng-show="is_view">
-        <style>
-            .detail-barang td{
-                border-top: 1px;
-                border-left: 1px;
-                border-bottom: 1px;
-                border-right: 1px;
-                border:1px;
-                border-style:solid;
-            }
-        </style>
-        <div style="margin-top: 0px">
+        <div style="margin-top: 0px; width:21.5cm; height: 14cm;">
             <table width="100%" class="no-border">
                 <tr>
-                    <td width="50%">
+                    <td width="50%" id="print_bbm">
                         PT. KARYA TUGAS ANDA <br>
-                        Sukorejo - Pasuruan
-                    </td>
-                    <td valign="top">
-                        NO. DOC : FR-WHS-004-REV.00
+                        Jl. Raya Sukorejo No. 01<br>
+                        Sukorejo - Pasuruan 
                     </td>
                 </tr>
             </table>
-            <br>
             <center>
-                <h4>*** BUKTI BARANG MASUK ***</h4>
+                <h4 id="print_bbm" style="margin: 0px; padding: 0px; font-weight: normal;">BUKTI BARANG MASUK</h4>
             </center>
-            <br>
-            <center>
+            <center id="print_bbm">
                 FR-WHS-003.REV.00
             </center>
-            <br>
-            <div class="joke" border="1">
-                <table class="detail-barang" border="1px" style="border-collapse: collapse;width:100%">
-                    <tr>
-                        <td style="border-bottom: 1px;width: 40%" colspan="2" border="1">
-                            Tanggal : {{form.tgl_nota}}<br>
-                            No. BBM : {{form.no_bbm}}<br>
-                            No. PO : {{form.no_po}}<br>
-                        </td>
-                        <td style="border-top:none !important;border-bottom:none !important;"></td>
-                        <td style="border:1px;width:55%" colspan="3">
-                            Dari : {{form.nm_supplier}} - {{form.alamat_supplier}}           </td>
-                    </tr>
-                </table>
-            </div>
-            <br>
-            <table border="1" class="detail-barang" style="border-collapse: collapse;width: 100%">
+            <table style="width:100%;">
+                <tr>
+                    <td id="print_bbm" style="border: 1px #000 solid;width: 35%; padding: 10px;">
+                        Tanggal : {{form.tgl_nota| date:"dd-MM-yyyy"}}<br>
+                        No. BBM : {{form.no_bbm}}<br>
+                        No. PO : {{form.no_po}}<br>
+                    </td>
+                    <td></td>
+                    <td style="border: 1px #000 solid;width: 62%; vertical-align: top; padding: 10px;" id="print_bbm">
+                        Dari : {{form.nm_supplier}} - {{form.alamat_supplier}}           </td>
+                </tr>
+            </table>
+            <table width="100%" style="margin-top: 5px; border: 1px #000 solid;">
                 <thead>
                     <tr>
-                        <th style="text-align: center;">No</th>
-                        <th style="text-align: center;">Nama Barang</th>
-                        <th style="text-align: center;">Qty</th>
-                        <th style="text-align: center;">Kode Barang</th>
-                        <th style="text-align: center;" colspan="2">Keterangan</th>
+                        <td style="text-align: center; border-right: 1px #000 solid;border-bottom: 1px #000 solid;" class="print_bbk_td" id="print_bbm">No</td>
+                        <td style="text-align: center; border-right: 1px #000 solid;border-bottom: 1px #000 solid;" class="print_bbk_td" id="print_bbm">Nama Barang</td>
+                        <td style="text-align: center; border-right: 1px #000 solid;border-bottom: 1px #000 solid;" class="print_bbk_td" id="print_bbm">Qty</td>
+                        <td style="text-align: center; border-right: 1px #000 solid;border-bottom: 1px #000 solid;" class="print_bbk_td" id="print_bbm">Kode Barang</td>
+                        <td style="text-align: center;border-bottom: 1px #000 solid;" class="print_bbk_td" id="print_bbm">Keterangan</td>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="detail in detBbm">
-                        <td style="text-align: center;">{{$index + 1}}</td>
-                        <td>{{detail.barang.nm_barang}}</td>
-                        <td style="text-align: center;">{{detail.jumlah}}</td>
-                        <td style="text-align: center;">{{detail.barang.kd_barang}}</td>
-                        <td colspan="2">{{detail.keterangan}}</td>
+                        <td style="text-align: center;" class="print_bbm_td" id="print_bbm">{{$index + 1}}</td>
+                        <td class="print_bbm_td" id="print_bbm">{{detail.barang.nm_barang}}</td>
+                        <td style="text-align: center;" class="print_bbm_td" id="print_bbm">{{detail.jumlah}}</td>
+                        <td style="text-align: center;" class="print_bbm_td" id="print_bbm">{{detail.barang.kd_barang}}</td>
+                        <td class="print_bbm_td" id="print_bbm" style="border-right: none;">{{detail.keterangan}}</td>
                     </tr>
-
                 </tbody>
             </table>
-            <br>
-            <table border="1" class="detail-barang" style="width:100%;border-collapse: collapse;">
+            <table class="detail-barang" style="width:100%;border-collapse: collapse;border-right: 1px #000 solid; border-left: 1px #000 solid; border-bottom:  1px #000 solid; ">
                 <tr>
-                    <td colspan="2" rowspan="3" style="height: 100px;font-">Catatan : </td>
-                    <td style="text-align: center;">PIMPINAN</td>
-                    <td style="text-align: center;">INSPEKSI</td>
-                    <td style="text-align: center;">ADM. GUDANG</td>
-                    <td style="text-align: center;">DISERAHKAN</td>
+                    <td rowspan="3" id="print_bbm" style="vertical-align: top; padding: 5px; border-right: 1px #000 solid;">Catatan : </td>
+                    <td style="text-align: center; width: 15%; padding: 5px; border-right: 1px #000 solid; border-bottom: 1px #000 solid;" id="print_bbm">PIMPINAN</td>
+                    <td style="text-align: center; width: 15%; padding: 5px; border-right: 1px #000 solid; border-bottom: 1px #000 solid;" id="print_bbm">INSPEKSI</td>
+                    <td style="text-align: center; width: 15%; padding: 5px; border-right: 1px #000 solid; border-bottom: 1px #000 solid;" id="print_bbm">ADM. GUDANG</td>
+                    <td style="text-align: center; width: 15%; padding: 5px; border-bottom: 1px #000 solid;" id="print_bbm">DISERAHKAN</td>
                 </tr>
                 <tr>
-                    <td style="height: 60px !important;"></td>
+                    <td><br><br></td>
                     <td></td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td>TGL : </td>
-                    <td>TGL : </td>
-                    <td>TGL : </td>
-                    <td>TGL : </td>
+                    <td id="print_bbm" style="padding: 5px;border-top: 1px #000 solid;border-right: 1px #000 solid;">TGL : </td>
+                    <td id="print_bbm" style="padding: 5px;border-top: 1px #000 solid;border-right: 1px #000 solid;">TGL : </td>
+                    <td id="print_bbm" style="padding: 5px;border-top: 1px #000 solid;border-right: 1px #000 solid;">TGL : </td>
+                    <td id="print_bbm" style="padding: 5px;border-top: 1px #000 solid;">TGL : </td>
                 </tr>
             </table>
-            1. Supplier ; 2. Keuangan ; 3. Gudang
-
-
+            <p id="print_bbm">1. Supplier ; 2. Keuangan ; 3. Gudang</p>
         </div>
-
     </div>
 </div>
