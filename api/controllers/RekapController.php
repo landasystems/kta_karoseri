@@ -81,12 +81,13 @@ class RekapController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('view_wo_spk as vws')
+                ->join('JOIN', 'wo_masuk', 'wo_masuk.no_wo = vws.no_wo')
                 ->join('JOIN', 'chassis', 'chassis.kd_chassis = vws.kd_chassis')
                 ->join('JOIN', 'customer', 'customer.kd_cust = vws.kd_cust')
                 ->join('JOIN', 'serah_terima_in as sti', 'sti.no_spk = vws.no_spk')
                 ->join('JOIN', 'spk', 'vws.no_spk = spk.no_spk')
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                ->where('tk.department="DPRT005"')
+                ->where('tk.department="DPRT005" and wo_masuk.tgl_keluar IS NOT NULL')
                 ->orderBy($sort)
                 ->select("sti.tgl_terima, tk.nama, customer.nm_customer, customer.provinsi, sti.kd_titipan, vws.no_wo, chassis.merk, chassis.tipe, sti.no_chassis,sti.no_mesin, spk.total_harga, spk.no_spk, chassis.jenis");
 //filter

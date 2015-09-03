@@ -30,11 +30,28 @@ class BbmController extends Controller {
                     'exceldet' => ['get'],
                     'rekap' => ['get'],
                     'petugas' => ['get'],
-                    'listbbk' => ['get'],
+                    'listbbm' => ['get'],
                     'detailstok' => ['post'],
                 ],
             ]
         ];
+    }
+
+    public function actionListbbm() {
+        $param = $_REQUEST;
+        $query = new Query;
+        $query->from('trans_bbm')
+                ->select("no_bbm")
+                ->where('no_bbm like "%' . $param['nama'] . '%"')
+                ->orderBy('no_bbm DESC')
+                ->limit(15);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function beforeAction($event) {
@@ -267,7 +284,7 @@ class BbmController extends Controller {
         if ($model->save()) {
             $detailBbm = $params['detBbm'];
             foreach ($detailBbm as $val) {
-                if(isset($val['barang']['kd_barang'])) {
+                if (isset($val['barang']['kd_barang'])) {
                     $det = new DetBbm();
                     $det->attributes = $val;
                     $det->kd_barang = $val['barang']['kd_barang'];
@@ -331,7 +348,7 @@ class BbmController extends Controller {
             $detail = DetBbm::find()->where('no_bbm = "' . $model->no_bbm . '"')->all();
             foreach ($detail as $detbbk) {
                 $barang = Barang::find()->where('kd_barang="' . $detbbk->kd_barang . '"')->one();
-                $barang->saldo -= $detbbk->jml;
+                $barang->saldo -= $detbbk->jumlah;
                 $barang->save();
             }
 

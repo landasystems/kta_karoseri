@@ -153,7 +153,7 @@ class RubahbentukController extends Controller {
             $lastKode = substr($show['kd_rubah'], 0, 4) + 1;
             $kode = substr('0000' . $lastKode, -4) . "/TA III/SKJ/" . date("d/m/y", strtotime($params['tgl']));
         }
-        \Yii::error($params['tgl']);
+//        \Yii::error($params['tgl']);
         $model->attributes = $params;
         $model->kd_rubah = $kode;
         $model->no_wo = $params['no_wo']['no_wo'];

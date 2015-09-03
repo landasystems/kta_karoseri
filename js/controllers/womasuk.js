@@ -99,23 +99,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         }
     };
 
-    $scope.getSpk = function(form, items) {
-        form.no_spk = items.no_spk;
-
-        Data.post('womasuk/getspk/', form).then(function(data) {
-            form.merk = data.spk.merk;
-            form.model_chassis = data.spk.model_chassis;
-            form.jenis = data.spk.jenis;
-            form.tipe = data.spk.tipe;
-            form.model = data.spk.model;
-            form.sales = data.spk.nama;
-            form.no_wo = data.code;
-            form.customer = data.spk.nm_customer;
-            form.pemilik = data.spk.nm_pemilik;
-
-
-        });
-    };
+   
     $scope.getTitipan = function(form, items) {
         form.kd_titipan = items.kd_titipan;
         Data.post('womasuk/getsti/', form).then(function(data) {
@@ -258,6 +242,179 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
 
         });
     }
+     $scope.getSpk = function(form, items) {
+        form.no_spk = items.no_spk;
+
+        Data.post('womasuk/getspk/', form).then(function(data) {
+            form.merk = data.spk.merk;
+            form.model_chassis = data.spk.model_chassis;
+            form.jenis = data.spk.jenis;
+            form.tipe = data.spk.tipe;
+            form.model = data.spk.model;
+            form.sales = data.spk.nama;
+            form.no_wo = data.code;
+            form.customer = data.spk.nm_customer;
+            form.pemilik = data.spk.nm_pemilik;
+            
+            // INTERIOR
+             $scope.list_plat = data.eksterior.plat;
+             $scope.list_ventilasi = data.eksterior.ventilasi;
+             $scope.list_spion = data.eksterior.spion;
+             $scope.list_kdepan = data.eksterior.kdepan;
+             $scope.list_kbelakang = data.eksterior.kbelakang;
+             $scope.list_ksamping = data.eksterior.ksamping;
+             $scope.list_ldepan = data.eksterior.ldepan;
+             $scope.list_lbelakang = data.eksterior.lbelakang;
+             $scope.list_pdepan = data.eksterior.pdepan;
+             $scope.list_ppenumpang = data.eksterior.ppenumpang;
+             $scope.list_pbagasi = data.eksterior.pbagasi;
+             $scope.list_pbelakang = data.eksterior.pbelakang;
+             $scope.list_wyper = data.eksterior.wyper;
+             $scope.list_akarat = data.eksterior.akarat;
+             $scope.list_strip = data.eksterior.strip;
+             $scope.list_letter = data.eksterior.letter;
+             
+             // INTERIOR
+             $scope.list_plavon = data.interior.plavon;
+             $scope.list_trimming = data.interior.trimming;
+             $scope.list_duchting = data.interior.duchting;
+             $scope.list_lplavon = data.interior.lplavon;
+             $scope.list_lantai = data.interior.lantai;
+             $scope.list_karpet = data.interior.karpet;
+             $scope.list_seat1 = data.interior.seat1;
+             $scope.list_seat2 = data.interior.seat2;
+             $scope.list_seat3 = data.interior.seat3;
+             $scope.list_seat4 = data.interior.seat4;
+             $scope.list_seat5 = data.interior.seat5;
+             $scope.list_total_seat = data.interior.total_seat;
+             $scope.list_ac = data.interior.ac;
+             
+             $scope.list_bagasi_dalam = data.interior.bagasi_dalam;
+             $scope.list_bagasi_dalam = data.interior.bagasi_dalam;
+             $scope.list_dashboard = data.interior.dashboard;
+             $scope.list_peredam = data.interior.peredam;
+             $scope.list_pegangan_atas = data.interior.pegangan_tangan_atas;
+             $scope.list_pengaman_penumpang = data.interior.pengaman_penumpang;
+             $scope.list_pengaman_kaca = data.interior.pengaman_kaca;
+             $scope.list_pengaman_driver = data.interior.pengaman_driver;
+             $scope.list_gordyn = data.interior.gordyn;
+             $scope.list_driver_fan = data.interior.driver_fan;
+             $scope.list_radio_tape = data.interior.radio_tape;
+             $scope.list_spek_seat = data.interior.spek_seat;
+             $scope.list_driver_seat = data.interior.driver_seat;
+             $scope.list_cover_seat = data.interior.cover_seat;
+             $scope.list_optional_seat = data.interior.optional_seat;
+              
+             console.log(data);
+
+
+        });
+    };
+     $scope.tagTransformplat = function(newTag) {
+        var item = {
+            plat_body: newTag,
+        };
+
+        return item;
+    };
+     $scope.tagTransformventilasi = function(newTag) {
+        var item = {
+            ventilasi_atas: newTag,
+        };
+
+        return item;
+    };
+     $scope.tagTransformkdepan = function(newTag) {
+        var item = {
+            kaca_depan: newTag,
+        };
+
+        return item;
+    };
+     $scope.tagTransformkbelakang = function(newTag) {
+        var item = {
+            kaca_belakang: newTag,
+        };
+
+        return item;
+    };
+     $scope.tagTransformksamping = function(newTag) {
+        var item = {
+            kaca_samping: newTag,
+        };
+
+        return item;
+    };
+     $scope.tagTransformldepan = function(newTag) {
+        var item = {
+            lampu_depan: newTag,
+        };
+
+        return item;
+    };
+     $scope.tagTransformlbelakang = function(newTag) {
+        var item = {
+            lampu_belakang: newTag,
+        };
+
+        return item;
+    };
+     $scope.tagTransformpdepan = function(newTag) {
+        var item = {
+            pintu_depan: newTag,
+        };
+
+        return item;
+    };
+     $scope.tagTransformppenumpang = function(newTag) {
+        var item = {
+            pintu_penumpang: newTag,
+        };
+
+        return item;
+    };
+     $scope.tagTransformpbagasi = function(newTag) {
+        var item = {
+            pintu_bagasi_samping: newTag,
+        };
+
+        return item;
+    };
+     $scope.tagTransformpbelakang = function(newTag) {
+        var item = {
+            pintu_balakang: newTag,
+        };
+
+        return item;
+    };
+     $scope.tagTransformwyper = function(newTag) {
+        var item = {
+            wyper_set: newTag,
+        };
+
+        return item;
+    };
+     $scope.tagTransformstrip = function(newTag) {
+        var item = {
+            strip: newTag,
+        };
+
+        return item;
+    };
+     $scope.tagTransformletter = function(newTag) {
+        var item = {
+            letter: newTag,
+        };
+
+        return item;
+    };
+     $scope.tagTransformplavon = function(newTag) {
+        var item = {
+            plavon: newTag,
+        };
+
+        return item;
+    };
 
 
 })

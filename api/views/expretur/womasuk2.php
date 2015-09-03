@@ -1,6 +1,6 @@
 <?php
-header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-rekap-bstk.xls");
+//header("Content-type: application/vnd-ms-excel");
+//header("Content-Disposition: attachment; filename=excel-rekap-bstk.xls");
 ?>
 <h3>PT. KARYA TUGAS ANDA</h3>
 Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
@@ -8,7 +8,7 @@ Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
 Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
 <hr>
 <br>
-<center><b>LAPORAN CHASSIS IN</b></center>
+<center><b>LAPORAN WO MASUK</b></center>
 <br><br>
 
 

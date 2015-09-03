@@ -85,7 +85,7 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
             alert("Something gone wrong");
         }
     };
-    
+
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
@@ -279,7 +279,7 @@ app.controller('modalCtrl', function($scope, Data, $modalInstance, form) {
             });
         }
     }
-    
+
     $scope.cariBarang = function($query) {
         if ($query.length >= 3) {
             Data.get('barang/cari', {barang: $query}).then(function(data) {
@@ -287,7 +287,7 @@ app.controller('modalCtrl', function($scope, Data, $modalInstance, form) {
             });
         }
     }
-    
+
     $scope.formmodal = form;
     console.log(form);
 
@@ -303,13 +303,22 @@ app.controller('rekapBomCtrl', function($scope, Data) {
     var paramRef;
 
     $scope.jenis = '';
+    $scope.is_show = false;
+    $scope.no_wo = '';
 
     $scope.rekap = function() {
         $scope.jenis = 'rekap';
+        $scope.is_show = false;
     }
 
     $scope.rekapRealisasiWo = function() {
         $scope.jenis = 'realisasi_wo';
+        $scope.is_show = false;
+    }
+
+    $scope.rekapRealisasiModel = function() {
+        $scope.jenis = 'realisasi_model';
+        $scope.is_show = false;
     }
 
     $scope.callServer = function callServer(tableState) {
@@ -320,7 +329,7 @@ app.controller('rekapBomCtrl', function($scope, Data) {
         var param = {offset: offset, limit: limit};
         if (tableState.sort.predicate) {
             param['sort'] = tableState.sort.predicate;
-            param['order'] = tableState.sort.reverse;
+//            param['order'] = tableState.sort.reverse;
         }
         if (tableState.search.predicateObject) {
             param['filter'] = tableState.search.predicateObject;
@@ -366,14 +375,31 @@ app.controller('rekapBomCtrl', function($scope, Data) {
         });
     }
 
-
-    $scope.cariWo = function($query) {
-        if ($query.length >= 3) {
-            Data.get('wo/wospk', {nama: $query}).then(function(data) {
-                $scope.results = data.data;
-            });
+    $scope.callServer3 = function callServer(tableState) {
+        tableStateRef = tableState;
+        $scope.isLoading = true;
+        var offset = tableState.pagination.start || 0;
+        var limit = tableState.pagination.number || 10;
+        var param = {offset: offset, limit: limit};
+        if (tableState.sort.predicate) {
+            param['sort'] = tableState.sort.predicate;
+            param['order'] = tableState.sort.reverse;
         }
-    }
+        if (tableState.search.predicateObject) {
+            param['filter'] = tableState.search.predicateObject;
+        }
+        paramRef = param;
+        Data.get('bom/rekaprealisasiwo', param).then(function(data) {
+            $scope.displayed = data.data;
+            tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
+        });
+        $scope.isLoading = false;
+    };
 
+    $scope.excelRekapRealisasiWo = function() {
+        Data.get('bom/rekaprealisasiwo', paramRef).then(function(data) {
+            window.location = 'api/web/bom/excelrealisasiwo';
+        });
+    }
 
 })

@@ -8,7 +8,7 @@ Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
 Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
 <hr>
 <br>
-<center><b>LAPORAN CHASSIS IN</b></center>
+<center><b>LAPORAN UNIT OUT</b></center>
 <br><br>
 
 
