@@ -157,43 +157,38 @@ span.label{width: 180px;display: inline-table;}
     padding:2px;
     line-height: 5px;
     font-size: 12px;        
-    /*font-family: monospace;*/
     page-break-after: avoid;
 }
 
 #print{        
     padding-left: 0px;
     font-size: 14px;        
-    /*line-height: 0px;*/
     margin: 0px;
     padding: 0px;
     font-family: monospace;        
 }
 
 #print_bbk{        
-    padding-left: 0px;
-    font-size: 8pt;        
+    font-size: 9pt;    
+    letter-spacing: 1pt;
     margin: 0px;
     padding: 0px;
-    /*letter-spacing: 1pt;*/
-    font-family: monospace;        
+    font-family: Arial;        
 }
 #print_bbm{        
-    font-size: 8pt;      
-    /*letter-spacing: 1pt;*/
-    font-family: monospace;        
+    font-size: 10pt;      
+    letter-spacing: 1pt;
+    margin: 0px;
+    padding: 0px;
+    font-family: Arial;        
 }
 .print_bbk_td{
-    font-size: 8pt;
+    font-size: 9pt;
     vertical-align: top;
+    font-family: Arial;      
 }
 .print_bbm_td{
-    font-size: 8pt;
+    font-size: 10pt;
     vertical-align: top;
-}
-.print-bbk-detail{
-    margin-bottom: 2px;
-    margin-top: 2px;
-    border-left: none; 
-    border-right: none;
+    font-family: Arial;
 }

@@ -286,75 +286,60 @@
     </div>
 
     <div id="printArea" ng-if="is_view">
-        <style>
-            /*            @page { 
-                            size:9cm; 
-                            margin: 0cm ;
-                            margin-top: 0px;
-                            margin-top: 0xm;
-                            margin-left: 0cm;
-                        }*/
-            /*@page { size : portrait }*/
-        </style>
-        <div style="width: 13cm;" id="kertas_bbk">
-            <table width="100%" class="no-border">
+        <div style="width: 10cm; margin: 0px;">
+            <table width="100%" style="height: 1cm;">
                 <tr>
                     <td width="50%" id="print_bbk">
                         PT. KARYA TUGAS ANDA <br>
                         Sukorejo - Pasuruan
                     </td>
-                    <td valign="top" style="text-align: right;" id="print_bbk">
-                        NO. DOC : FR-WHS-004-REV.00
+                    <td valign="top" style="text-align: right; font-size: 8pt;" id="print_bbk">
+                        NO DOC FR-WHS-004-REV.00
                     </td>
                 </tr>
             </table>
             <center id="print_bbk">
                 *** BUKTI BARANG KELUAR ***
             </center>
-            <table width="100%" class="no-border" style="margin-top: 10px;">
-                <tr>
-                    <td width="90" id="print_bbk">NO. WO</td>
-                    <td width="2" id="print_bbk">:</td>
-                    <td id="print_bbk">{{form.no_wo.no_wo}}</td>
-                    <td style="width:49%; text-align: right;" rowspan="2" id="print_bbk">{{form.kd_jab.jabatan}}<td>
-                </tr>
-                <tr>
-                    <td id="print_bbk">NO. BBK</td>
-                    <td width="2" id="print_bbk">:</td>
-                    <td id="print_bbk">{{form.no_bbk}}</td>
+            <table width="100%" style="margin-top: 5px;height: 0.8cm;">
+                <tr id="print_bbk">
+                    <td id="print_bbk" width="30%">NO WO {{form.no_wo.no_wo}}</td>
+                    <td id="print_bbk" width="30%">No BBK {{form.no_bbk}}</td>
+                    <td id="print_bbk">{{form.kd_jab.jabatan}}</td>
                 </tr>
             </table>
-            <br>
-            <table width="100%">
-                <thead>
-                    <tr>
-                        <td class="print_bbk_td" style="border-bottom: 1px #000 solid;border-top: 1px #000 solid;" align="center">&nbsp;No.</td>
-                        <td class="print_bbk_td" style="border-bottom: 1px #000 solid;border-top: 1px #000 solid;" align="center">&nbsp; Kode</td>
-                        <td class="print_bbk_td" style="border-bottom: 1px #000 solid;border-top: 1px #000 solid;" align="center">&nbsp; Nama Barang</td>
-                        <td class="print_bbk_td" style="border-bottom: 1px #000 solid;border-top: 1px #000 solid;" align="center"> &nbsp;Jml</td>
-                        <!--<td class="print_bbk_td" style="border-bottom: 1px #000 solid;"> &nbsp;Sat</td>-->
-                        <!--<td class="print_bbk_td"> &nbsp;Ket</td>-->
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="detail in detailBbk" >
-                        <td class="print_bbk_td" align="center">&nbsp;{{$index + 1}}</td>
-                        <td class="print_bbk_td" align="center">&nbsp;{{detail.kd_barang.kd_barang}} &nbsp;</td>
-                        <td class="print_bbk_td">&nbsp;{{detail.kd_barang.nm_barang}}</td>
-                        <td class="print_bbk_td" align="center">&nbsp;{{detail.jml}} {{detail.satuan}} </td>
-                        <!--<td class="print_bbk_td">&nbsp;{{detail.satuan}} &nbsp;</td>-->
-                        <!--<td class="print_bbk_td">&nbsp;{{detail.ket}}</td>-->
-                    </tr>
-                    <tr>
-                        <td colspan="4" style="border-top: 1px #000 solid;"></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div style="height: 7cm">
+                <table width="100%" style="border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-top: 1px #000 solid; border-bottom: 1px #000 solid; height: 0.5cm;">
+                            <td class="print_bbk_td" style="border-right: 1px #000 solid; width: 0.7cm;" align="center">No.</td>
+                            <td class="print_bbk_td" style="border-right: 1px #000 solid; width: 1.6cm;" align="center">Kode</td>
+                            <td class="print_bbk_td" style="border-right: 1px #000 solid; width: 3cm;" align="center">Nama Barang</td>
+                            <td class="print_bbk_td" style="border-right: 1px #000 solid; width: 0.8cm;" align="center">Jml</td>
+                            <td class="print_bbk_td" style="border-right: 1px #000 solid; width: 0.8cm;" align="center">Sat</td>
+                            <td class="print_bbk_td" style="width: 2.2cm;" align="center">Ket</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="detail in detailBbk" >
+                            <td class="print_bbk_td" align="center">{{$index + 1}}</td>
+                            <td class="print_bbk_td" align="center">{{detail.kd_barang.kd_barang}}</td>
+                            <td class="print_bbk_td">{{detail.kd_barang.nm_barang}}</td>
+                            <td class="print_bbk_td" align="center">{{detail.jml}}</td>
+                            <td class="print_bbk_td" align="center">{{detail.satuan}}</td>
+                            <td class="print_bbk_td">{{detail.ket}}</td>
+                        </tr>
+                        <tr style="border-top: 1px #000 solid;">
+                            <td colspan="6" style=""></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <table width="100%" style="margin-bottom: 0px; margin-top: 20px;">
                 <tr>
-                    <td width="45%"></td>
-                    <td width="10%"></td>
-                    <td width="45%" align="center" id="print_bbk">Sukorejo, {{tgl_cetak| date}}</td>
+                    <td width="40%"></td>
+                    <td width="6%"></td>
+                    <td width="47%" align="center" id="print_bbk">Sukorejo, {{tgl_cetak| date}}</td>
                 </tr>
                 <tr>
                     <td align="center" id="print_bbk">Dikeluarkan Oleh :</td>

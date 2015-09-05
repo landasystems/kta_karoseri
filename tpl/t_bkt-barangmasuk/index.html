@@ -263,7 +263,7 @@
         </div>
     </div>
     <div id="printArea" ng-show="is_view">
-        <div style="margin-top: 0px; width: 100%; ">
+        <div style="margin: 0px; width: 19.8cm;">
             <table width="100%" class="no-border">
                 <tr>
                     <td width="50%" id="print_bbm">
@@ -279,57 +279,67 @@
             <center id="print_bbm">
                 FR-WHS-003.REV.00
             </center>
-            <table style="width:100%;">
-                <tr>
-                    <td id="print_bbm" style="border: 1px #000 solid;width: 35%; padding: 10px;">
-                        Tanggal : {{form.tgl_nota| date:"dd-MM-yyyy"}}<br>
-                        No. BBM : {{form.no_bbm}}<br>
-                        No. PO : {{form.no_po}}<br>
-                    </td>
-                    <td></td>
-                    <td style="border: 1px #000 solid;width: 62%; vertical-align: top; padding: 10px;" id="print_bbm">
-                        Dari : {{form.nm_supplier}} - {{form.alamat_supplier}}           </td>
-                </tr>
-            </table>
-            <table width="100%" style="margin-top: 5px; border: 1px #000 solid;">
+            <table width="100%" style="height: 1.5 cm;">
                 <thead>
                     <tr>
-                        <td style="text-align: center; border-right: 1px #000 solid;border-bottom: 1px #000 solid;" class="print_bbk_td" id="print_bbm">No</td>
-                        <td style="text-align: center; border-right: 1px #000 solid;border-bottom: 1px #000 solid;" class="print_bbk_td" id="print_bbm">Nama Barang</td>
-                        <td style="text-align: center; border-right: 1px #000 solid;border-bottom: 1px #000 solid;" class="print_bbk_td" id="print_bbm">Qty</td>
-                        <td style="text-align: center; border-right: 1px #000 solid;border-bottom: 1px #000 solid;" class="print_bbk_td" id="print_bbm">Kode Barang</td>
-                        <td style="text-align: center;border-bottom: 1px #000 solid;" class="print_bbk_td" id="print_bbm">Keterangan</td>
+                        <td id="print_bbm" style="border: 1px #000 solid;width: 35%; padding: 2px;">
+                            Tanggal : {{form.tgl_nota| date:"dd-MM-yyyy"}}<br>
+                            No. BBM : {{form.no_bbm}}<br>
+                            No. PO : {{form.no_po}}<br>
+                        </td>
+                        <td></td>
+                        <td style="border: 1px #000 solid; width: 62%; vertical-align: top; padding: 2px;" id="print_bbm">
+                            Dari : {{form.nm_supplier}} - {{form.alamat_supplier}}           
+                        </td>
+                    </tr>
+                </thead>
+            </table>
+            <table width="100%" style="height: 5cm; margin-top: 3px; border: 1px #000 solid;  border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <td style="width: 1cm; text-align: center; border-right: 1px #000 solid;border-bottom: 1px #000 solid; height: 10px;" class="print_bbm_td">No</td>
+                        <td style="width: 7cm; text-align: center; border-right: 1px #000 solid;border-bottom: 1px #000 solid; height: 10px;" class="print_bbm_td">Nama Barang</td>
+                        <td style="width: 2cm; text-align: center; border-right: 1px #000 solid;border-bottom: 1px #000 solid; height: 10px;" class="print_bbm_td">Qty</td>
+                        <td style="width: 3.5cm; text-align: center; border-right: 1px #000 solid;border-bottom: 1px #000 solid; height: 10px;" class="print_bbm_td">Kode Barang</td>
+                        <td style="width: 6cm; text-align: center;border-bottom: 1px #000 solid;height: 10px;" class="print_bbm_td">Keterangan</td>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="detail in detBbm">
-                        <td style="text-align: center;" class="print_bbm_td" id="print_bbm">{{$index + 1}}</td>
-                        <td class="print_bbm_td" id="print_bbm">{{detail.barang.nm_barang}}</td>
-                        <td style="text-align: center;" class="print_bbm_td" id="print_bbm">{{detail.jumlah}}</td>
-                        <td style="text-align: center;" class="print_bbm_td" id="print_bbm">{{detail.barang.kd_barang}}</td>
-                        <td class="print_bbm_td" id="print_bbm" style="border-right: none;">{{detail.keterangan}}</td>
+                    <tr ng-repeat="detail in detBbm" style="height: 10px;">
+                        <td style="height: 10px; text-align: center; border-right: 1px #000 solid;" class="print_bbm_td">{{$index + 1}}</td>
+                        <td style="border-right: 1px #000 solid;" class="print_bbm_td">{{detail.barang.nm_barang}}</td>
+                        <td style="text-align: center; border-right: 1px #000 solid;" class="print_bbm_td">{{detail.jumlah}}</td>
+                        <td style="text-align: center; border-right: 1px #000 solid;" class="print_bbm_td">{{detail.barang.kd_barang}}</td>
+                        <td class="print_bbm_td" style="border-right: none;">{{detail.keterangan}}</td>
+                    </tr>
+                    <tr>
+                        <td style="border-right: 1px #000 solid;"></td>
+                        <td style="border-right: 1px #000 solid;"></td>
+                        <td style="border-right: 1px #000 solid;"></td>
+                        <td style="border-right: 1px #000 solid;"></td>
+                        <td style="border-right: 1px #000 solid;"></td>
                     </tr>
                 </tbody>
             </table>
-            <table class="detail-barang" style="width:100%;border-collapse: collapse;border-right: 1px #000 solid; border-left: 1px #000 solid; border-bottom:  1px #000 solid; ">
+            <table style="height: 3cm; width:100%; border-collapse: collapse; border:  1px #000 solid; margin-top: 2px;">
                 <tr>
-                    <td rowspan="3" id="print_bbm" style="vertical-align: top; padding: 5px; border-right: 1px #000 solid;">Catatan : </td>
-                    <td style="text-align: center; width: 15%; padding: 5px; border-right: 1px #000 solid; border-bottom: 1px #000 solid;" id="print_bbm">PIMPINAN</td>
-                    <td style="text-align: center; width: 15%; padding: 5px; border-right: 1px #000 solid; border-bottom: 1px #000 solid;" id="print_bbm">INSPEKSI</td>
-                    <td style="text-align: center; width: 15%; padding: 5px; border-right: 1px #000 solid; border-bottom: 1px #000 solid;" id="print_bbm">ADM. GUDANG</td>
-                    <td style="text-align: center; width: 15%; padding: 5px; border-bottom: 1px #000 solid;" id="print_bbm">DISERAHKAN</td>
+                    <td rowspan="3" class="print_bbm_td" style="height: 10px; width: 8cm; vertical-align: top; padding: 2px; border-right: 1px #000 solid;">Catatan : </td>
+                    <td class="print_bbm_td" style="height: 10px; width: 3cm;text-align: center; padding: 2px; border-right: 1px #000 solid; border-bottom: 1px #000 solid;">PIMPINAN</td>
+                    <td class="print_bbm_td" style="height: 10px; width: 3cm;text-align: center; padding: 2px; border-right: 1px #000 solid; border-bottom: 1px #000 solid;">INSPEKSI</td>
+                    <td class="print_bbm_td" style="height: 10px; width: 3cm;text-align: center; padding: 2px; border-right: 1px #000 solid; border-bottom: 1px #000 solid;">ADM. GUDANG</td>
+                    <td class="print_bbm_td" style="height: 10px; width: 3cm;text-align: center; padding: 2px; border-bottom: 1px #000 solid;">DISERAHKAN</td>
                 </tr>
                 <tr>
-                    <td><br><br></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td style="border-right: 1px #000 solid;"><br><br></td>
+                    <td style="border-right: 1px #000 solid;"></td>
+                    <td style="border-right: 1px #000 solid;"></td>
+                    <td style="border-right: 1px #000 solid;"></td>
                 </tr>
                 <tr>
-                    <td id="print_bbm" style="padding: 5px;border-top: 1px #000 solid;border-right: 1px #000 solid;">TGL : </td>
-                    <td id="print_bbm" style="padding: 5px;border-top: 1px #000 solid;border-right: 1px #000 solid;">TGL : </td>
-                    <td id="print_bbm" style="padding: 5px;border-top: 1px #000 solid;border-right: 1px #000 solid;">TGL : </td>
-                    <td id="print_bbm" style="padding: 5px;border-top: 1px #000 solid;">TGL : </td>
+                    <td class="print_bbm_td" style="height: 10px; padding: 2px;border-top: 1px #000 solid;border-right: 1px #000 solid;" >TGL : </td>
+                    <td class="print_bbm_td" style="height: 10px; padding: 2px;border-top: 1px #000 solid;border-right: 1px #000 solid;" >TGL : </td>
+                    <td class="print_bbm_td" style="height: 10px; padding: 2px;border-top: 1px #000 solid;border-right: 1px #000 solid;" >TGL : </td>
+                    <td class="print_bbm_td" style="height: 10px; padding: 2px;border-top: 1px #000 solid;" class="print_bbm_td">TGL : </td>
                 </tr>
             </table>
             <p id="print_bbm">1. Supplier ; 2. Keuangan ; 3. Gudang</p>
