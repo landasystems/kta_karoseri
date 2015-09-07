@@ -15,9 +15,9 @@
                             <td>
                                 <div class="input-group-btn dropdown" dropdown="">
                                     <button type="button" class="btn btn-danger" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Realisasi Standart Pemakaian Bahan <span class="caret"></span></button>
-                                    <ul class="dropdown-menu">
+                                    <ul class="dropdown-menu" style="width: 270px;background-color: #F7F7F7;">
                                         <li><a href="#" ng-click="rekapRealisasiWo()">Per Wo</a></li>
-                                        <li><a href="#">Per Model</a></li>
+                                        <li><a href="#" ng-click="rekapRealisasiModel()">Per Model</a></li>
                                     </ul>
                                 </div>
                             </td>
@@ -27,24 +27,26 @@
                 <div style="margin-top: 25px">
                     <div ng-if="jenis == 'rekap'" ng-hide="paginations == 0" st-pipe="callServer" st-table="displayed">
                         <div class="row">
+                            <h4 class="page-header col-md-12">Rekap Bill Off Material</h4>
                             <div class="form-horizontal">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-md-3">No. Wo</label>
                                         <div class="col-md-9">
-                                            <input placeholder="No. Wo" class="form-control" st-search="wm.no_wo" type="text">
+                                            <input placeholder="No. Wo" class="form-control" st-search="wm.no_wo" ng-model="no_wo" type="text">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-3"></label>
                                         <div class="col-md-9">
-                                            <button type="button" class="btn btn-success fa fa-file-excel-o" ng-disabled="!displayed.length" ng-click="excelRekap()">&nbsp; Export Laporan Rekap BOM</button>
+                                            <button type="button" class="btn btn-info fa fa-eye-slash" ng-click="is_show = true">Tampilkan Data</button>
+                                            <button type="button" class="btn btn-success fa fa-file-excel-o" ng-disabled="!displayed.length" ng-click="excelRekap()">&nbsp; Export Laporan</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" ng-show='is_show == true && no_wo.length >= 1'>
                             <div class="table-responsive">
                                 <table class="table table-striped table-hover" >
                                     <thead>
@@ -64,7 +66,7 @@
                                             <td>{{row.nm_barang}}</td>
                                             <td>{{row.satuan}}</td>
                                             <td>{{row.qty}}</td>
-                                            <td align="right">{{row.harga | currency}}</td>
+                                            <td align="right">{{row.harga| currency}}</td>
                                         </tr>
                                     </tbody>
                                     <tbody ng-show="isLoading">
@@ -83,23 +85,25 @@
                     <div ng-if="jenis == 'realisasi_wo'" ng-hide="paginations == 0" st-pipe="callServer2" st-table="displayed">
                         <div class="row">
                             <div class="form-horizontal">
+                                <h4 class="page-header col-md-12">Rekap Realisasi Standar Pemakaian Bahan Per WO</h4>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-md-3">No. Wo</label>
                                         <div class="col-md-9">
-                                            <input placeholder="No. Wo" class="form-control" st-search="wm.no_wo" type="text">
+                                            <input placeholder="No. Wo" class="form-control" st-search="wm.no_wo" ng-model="no_wo" type="text">
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-3"></label>
                                         <div class="col-md-9">
-                                            <button type="button" class="btn btn-success fa fa-file-excel-o"  ng-click="excelRekapRealisasiWo()">&nbsp; Export Laporan Realisasi Standard Pemakaian Bahan Per WO</button>
+                                            <button type="button" class="btn btn-info fa fa-eye-slash" ng-click="is_show = true">Tampilkan Data</button>
+                                            <button type="button" class="btn btn-success fa fa-file-excel-o"  ng-click="excelRekapRealisasiWo()">&nbsp; Export Laporan</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" ng-show='is_show == true && no_wo.length >= 1'>
                             <div class="table-responsive">
                                 <table class="table table-striped table-hover" >
                                     <thead>
@@ -121,7 +125,66 @@
                                             <td>{{row.satuan}}</td>
                                             <td>{{row.qty}}</td>
                                             <td>{{row.jml_keluar}}</td>
-                                            <td align="right">{{row.harga | currency}}</td>
+                                            <td align="right">{{row.harga| currency}}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody ng-show="isLoading">
+                                        <tr>
+                                            <td colspan="7" class="text-center">Loading ... </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="7"></td>
+                                        </tr>
+                                </table>			
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-if="jenis == 'realisasi_model'" ng-hide="paginations == 0" st-pipe="callServer3" st-table="displayed">
+                        <div class="row">
+                            <h4 class="page-header col-md-12">Rekap Realisasi Standar Pemakaian Bahan Per Model</h4>
+                            <div class="form-horizontal">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-md-3">No. Wo</label>
+                                        <div class="col-md-9">
+                                            <input placeholder="No. Wo" class="form-control" st-search="wm.no_wo" type="text">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-3"></label>
+                                        <div class="col-md-9">
+                                            <button type="button" class="btn btn-info fa fa-eye-slash" ng-click="is_show = true">Tampilkan Data</button>
+                                            <button type="button" class="btn btn-success fa fa-file-excel-o"  ng-click="excelRekapRealisasiWo()">&nbsp; Export Laporan</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" ng-show='is_show'>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover" >
+                                    <thead>
+                                        <tr>
+                                            <th>No. Wo</th>
+                                            <th>Bagian</th>
+                                            <th>Barang</th>
+                                            <th>Satuan</th>
+                                            <th>Standar</th>
+                                            <th>Realisasi</th>
+                                            <th>Harga</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody ng-show="!isLoading">
+                                        <tr ng-repeat="row in displayed">
+                                            <td>{{row.no_wo}}</td>
+                                            <td>{{row.jabatan}}</td>
+                                            <td>{{row.nm_barang}}</td>
+                                            <td>{{row.satuan}}</td>
+                                            <td>{{row.qty}}</td>
+                                            <td>{{row.jml_keluar}}</td>
+                                            <td align="right">{{row.harga| currency}}</td>
                                         </tr>
                                     </tbody>
                                     <tbody ng-show="isLoading">

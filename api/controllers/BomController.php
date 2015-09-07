@@ -188,9 +188,8 @@ class BomController extends Controller {
     public function actionRekap() {
         //init variable
         $params = $_REQUEST;
-
         if (isset($params['filter'])) {
-
+            $no_wo = json_decode(file_get_contents("php://input"), true);
             $filter = array();
             $sort = "dts.kd_bom ASC";
             $offset = 0;
@@ -202,18 +201,37 @@ class BomController extends Controller {
             if (isset($params['offset']))
                 $offset = $params['offset'];
 
-            //create query
-            $query = new Query;
-            $query->offset($offset)
-                    ->limit($limit)
-                    ->from('det_standar_bahan as dts')
-                    ->join('JOIN', 'barang as brg', 'dts.kd_barang = brg.kd_barang')
-                    ->join('JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
-                    ->join('JOIN', 'spk', 'spk.kd_bom = dts.kd_bom')
-                    ->join('JOIN', 'wo_masuk as wm', 'wm.no_spk  = spk.no_spk')
-                    ->join('JOIN', 'trans_standar_bahan as tsb', 'tsb.kd_bom  = spk.kd_bom')
-                    ->order('tjb.jabatan ASC, brg.nm_barang ASC')
-                    ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
+            //cek optional BOM
+            $optional = \app\models\TransAdditionalBom::findAll(['no_wo' => $no_wo['filter']['wm.no_wo']]);
+
+            //jika tidak ada optional ambil dari trans_standar_bahan
+            if (empty($optional) or count($optional) == 0) {
+                //create query
+                $query = new Query;
+                $query->offset($offset)
+                        ->limit($limit)
+                        ->from('det_standar_bahan as dts')
+                        ->join('JOIN', 'barang as brg', 'dts.kd_barang = brg.kd_barang')
+                        ->join('JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
+                        ->join('JOIN', 'spk', 'spk.kd_bom = dts.kd_bom')
+                        ->join('JOIN', 'wo_masuk as wm', 'wm.no_spk  = spk.no_spk')
+                        ->join('JOIN', 'trans_standar_bahan as tsb', 'tsb.kd_bom  = spk.kd_bom')
+                        ->orderBy('tjb.urutan_produksi ASC, brg.nm_barang ASC')
+                        ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
+            } else {
+                //create query
+                $query = new Query;
+                $query->offset($offset)
+                        ->limit($limit)
+                        ->from('det_additional_bom as dts')
+                        ->join('JOIN', 'barang as brg', 'dts.kd_barang = brg.kd_barang')
+                        ->join('JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
+                        ->join('JOIN', 'spk', 'spk.kd_bom = dts.kd_bom')
+                        ->join('JOIN', 'wo_masuk as wm', 'wm.no_spk  = spk.no_spk')
+                        ->join('JOIN', 'trans_additional_bom as tsb', 'tsb.kd_bom  = spk.kd_bom')
+                        ->orderBy('tjb.urutan_produksi ASC, brg.nm_barang ASC')
+                        ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
+            }
 
             //filter
             $filter = (array) json_decode($params['filter']);
@@ -250,9 +268,8 @@ class BomController extends Controller {
     public function actionRekaprealisasiwo() {
         //init variable
         $params = $_REQUEST;
-
         if (isset($params['filter'])) {
-
+            $no_wo = json_decode(file_get_contents("php://input"), true);
             $filter = array();
             $sort = "dts.kd_bom ASC";
             $offset = 0;
@@ -264,17 +281,37 @@ class BomController extends Controller {
             if (isset($params['offset']))
                 $offset = $params['offset'];
 
-            //create query
-            $query = new Query;
-            $query->offset($offset)
-                    ->limit($limit)
-                    ->from('det_standar_bahan as dts')
-                    ->join('LEFT JOIN', 'barang as brg', 'dts.kd_barang = brg.kd_barang')
-                    ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
-                    ->join('LEFT JOIN', 'spk', 'spk.kd_bom = dts.kd_bom')
-                    ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_spk  = spk.no_spk')
-                    ->join('LEFT JOIN', 'trans_standar_bahan as tsb', 'tsb.kd_bom  = spk.kd_bom')
-                    ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
+            //cek optional BOM
+            $optional = \app\models\TransAdditionalBom::findAll(['no_wo' => $no_wo['filter']['wm.no_wo']]);
+
+            //jika tidak ada optional ambil dari trans_standar_bahan
+            if (empty($optional) or count($optional) == 0) {
+                //create query
+                $query = new Query;
+                $query->offset($offset)
+                        ->limit($limit)
+                        ->from('det_standar_bahan as dts')
+                        ->join('LEFT JOIN', 'barang as brg', 'dts.kd_barang = brg.kd_barang')
+                        ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
+                        ->join('LEFT JOIN', 'spk', 'spk.kd_bom = dts.kd_bom')
+                        ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_spk  = spk.no_spk')
+                        ->join('LEFT JOIN', 'trans_standar_bahan as tsb', 'tsb.kd_bom  = spk.kd_bom')
+                        ->orderBy('tjb.urutan_produksi ASC, brg.nm_barang ASC')
+                        ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
+            } else {
+                //create query
+                $query = new Query;
+                $query->offset($offset)
+                        ->limit($limit)
+                        ->from('det_additional_bom as dts')
+                        ->join('LEFT JOIN', 'barang as brg', 'dts.kd_barang = brg.kd_barang')
+                        ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
+                        ->join('LEFT JOIN', 'spk', 'spk.kd_bom = dts.kd_bom')
+                        ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_spk  = spk.no_spk')
+                        ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.kd_bom  = spk.kd_bom')
+                        ->orderBy('tjb.urutan_produksi ASC, brg.nm_barang ASC')
+                        ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
+            }
 
             $queryBbk = new Query;
             $queryBbk->from('trans_bbk as tb')
@@ -284,7 +321,7 @@ class BomController extends Controller {
             //filter
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->where(['=', $key, $val]);
+                $query->where(['like', $key, $val]);
                 $queryBbk->where(['=', 'tb.no_wo', $val]);
             }
 
@@ -323,6 +360,8 @@ class BomController extends Controller {
             $this->setHeader(200);
 
             echo json_encode(array('status' => 1, 'data' => $detBom, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        } else {
+            echo 'bb';
         }
     }
 

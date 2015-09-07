@@ -8,7 +8,7 @@ Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
 Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
 <hr>
 <br>
-<center><b>LAPORAN CHASSIS IN</b></center>
+<center><b>LAPORAN WO MASUK</b></center>
 <br><br>
 
 
@@ -25,7 +25,7 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
     </td>
     <td colspan="4" style="border: 1px solid #000000">
         <table>
-            
+
             <tr>
                 <td>Periode</td>
                 <?php
@@ -90,20 +90,27 @@ foreach ($models as $key => $val) {
         <th>MERK/TYPE</th>
     </tr>
     <?php
+       $jml = 1;
+         $grandtotal = 0;
     foreach ($data as $keys) {
+     
+         
         ?>
-        <tr><td colspan="9" style="text-align: left;background-color: #008000;color:#ffffff;"><?= $keys['title']['pro']; ?>&nbsp;</td></tr>
+        <tr><td colspan="9" style="text-align: left;background-color: bisque;color:#000;"><?= $keys['title']['pro']; ?>&nbsp;</td></tr>
 
         <?php
         $no = 0;
         $total = 0;
+       
+        
         foreach ($keys['customer'] as $val1) {
-            echo'<tr><td colspan="9" style="text-align: left;background-color: chartreuse;">' . $val1['customer'] . '</td></tr>';
+            echo'<tr><td colspan="9" style="text-align: left;background-color: darkkhaki;">' . $val1['customer'] . '</td></tr>';
             foreach ($val1['body'] as $val) {
+                $total += $jml;
                 ?>
                 <tr>
                     <td><?= $val['kd_titipan']; ?>&nbsp;</td>
-                    <td><?= $val['jml_unit']; ?></td>
+                    <td><center>1</center></td>
                     <td><?= $val['no_wo']; ?></td>
                     <td><?= $val['no_chassis']; ?></td>
                     <td><?= $val['no_mesin']; ?></td>
@@ -111,12 +118,24 @@ foreach ($models as $key => $val) {
                     <td><?= $val['market']; ?></td>
                     <td><?= $val['model']; ?></td>
                     <td><?= $val['merk']; ?> <?= $val['tipe']; ?></td>
-                    
+
 
                 </tr>
                 <?php
             }
+            echo'<tr>
+                <th> Total</th>
+                <th>'.$total.' </th>
+                <th colspan="7"> </th>
+                </tr>';
+            $grandtotal += $total;
         }
+      
     }
+       echo'<tr>
+                <th>Grand Total</th>
+                <th>'.$grandtotal.'</th>
+                    <th colspan="7"> </th>
+                </tr>';
     ?>
 </table>

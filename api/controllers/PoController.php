@@ -25,6 +25,7 @@ class PoController extends Controller {
                     'listbarang' => ['get'],
                     'listspp' => ['get'],
                     'kode' => ['get'],
+                    'test' => ['get'],
                     'cari' => ['get'],
                     'updtst' => ['get'],
                     'excel' => ['get'],
@@ -120,12 +121,14 @@ class PoController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-//                if ($key = 'nama_barang') {
-//                   $det_po = DetailPo::find()
-//                            ->where("like ")
-//                } else {
-                    $query->andFilterWhere(['like', $key, $val]);
-//                }
+                if ($key == 'nm_barang') {
+                    $brg = $this->searchBrg($val);
+                    foreach ($brg as $brg_val){
+                        $query->orFilterWhere(['=','trans_po.nota',$brg_val]);
+                    }
+                } else {
+                $query->andFilterWhere(['like', $key, $val]);
+                }
             }
         }
 
@@ -185,7 +188,7 @@ class PoController extends Controller {
                 ->limit($limit)
                 ->from('detail_po as dpo')
                 ->join('JOIN', 'trans_po', 'trans_po.nota = dpo.nota')
-                ->join('RIGHT JOIN', 'det_spp', "det_spp.no_spp = trans_po.spp and det_spp.kd_barang = dpo.kd_barang")
+                ->join('LEFT JOIN', 'det_spp', "det_spp.no_spp = trans_po.spp and det_spp.kd_barang = dpo.kd_barang")
                 ->join('LEFT JOIN', 'supplier', 'supplier.kd_supplier = trans_po.suplier')
                 ->join('JOIN', 'det_bbm', 'det_bbm.no_po = trans_po.nota and det_bbm.kd_barang = dpo.kd_barang')
                 ->join('LEFT JOIN', 'trans_bbm', 'trans_bbm.no_bbm = det_bbm.no_bbm')
@@ -256,6 +259,30 @@ class PoController extends Controller {
         }
 
         return ['data' => $data, 'totalItems' => $totalItems];
+    }
+
+    public function searchBrg($id) {
+        $patern = $id;
+        $query = new Query;
+        $query->from('detail_po as dpo')
+                ->select("*")
+                ->join('JOIN', 'barang', 'barang.kd_barang = dpo.kd_barang')
+//                ->orderBy('')
+//                ->where("barang.nm_barang LIKE %".$patern."%")
+                ->select('dpo.nota, barang.nm_barang');
+        $query->andFilterWhere(['like', 'barang.nm_barang', $patern]);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $data = array();
+        foreach($models as $key){
+            $data[]= $key['nota'];
+        }
+        
+
+        $this->setHeader(200);
+
+      return $data;
     }
 
     public function actionListsupplier() {

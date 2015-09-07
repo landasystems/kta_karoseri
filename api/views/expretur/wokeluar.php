@@ -1,6 +1,6 @@
 <?php
-header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-rekap-bstk.xls");
+//header("Content-type: application/vnd-ms-excel");
+//header("Content-Disposition: attachment; filename=excel-rekap-bstk.xls");
 ?>
 <h3>PT. KARYA TUGAS ANDA</h3>
 Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
@@ -8,7 +8,7 @@ Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
 Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
 <hr>
 <br>
-<center><b>LAPORAN CHASSIS IN</b></center>
+<center><b>LAPORAN WO KELUAR</b></center>
 <br><br>
 
 
@@ -90,20 +90,23 @@ foreach ($models as $key => $val) {
         <th>KETERANGAN</th>
     </tr>
     <?php
+    $jml =1;
+   
+    $grandtotal= 0;
     foreach ($data as $keys) {
         ?>
-        <tr><td colspan="8" style="text-align: left;background-color: #008000;color:#ffffff;"><?= $keys['title']['pro']; ?>&nbsp;</td></tr>
+        <tr><td colspan="8" style="text-align: left;background-color: bisque;color:#000;"><?= $keys['title']['pro']; ?>&nbsp;</td></tr>
 
         <?php
-        $no = 0;
-        $total = 0;
+         $total = 0;
         foreach ($keys['customer'] as $val1) {
-            echo'<tr><td colspan="8" style="text-align: left;background-color: chartreuse;">' . $val1['customer'] . '</td></tr>';
+            echo'<tr><td colspan="8" style="text-align: left;background-color: darkkhaki;">' . $val1['customer'] . '</td></tr>';
             foreach ($val1['body'] as $val) {
+                $total += $jml;
                 ?>
                 <tr>
                     <td><?= Yii::$app->landa->date2Ind($val['tgl_terima']); ?>&nbsp;</td>
-                    <td><?= $val['jml_unit']; ?></td>
+                    <td><center>1</center></td>
                     <td><?= $val['no_wo']; ?></td>
                     <td><?= $val['model']; ?></td>
                     <td><?= $val['merk']; ?> <?= $val['tipe']; ?></td>
@@ -114,7 +117,21 @@ foreach ($models as $key => $val) {
                 </tr>
                 <?php
             }
+            echo'<tr>
+                <th> Total</th>
+                <th>' . $total . ' </th>
+                <th colspan="7"> </th>
+                </tr>';
+            echo'<tr>
+                <th colspan="9">&nbsp;</th>
+                </tr>';
+            $grandtotal += $total;
         }
     }
+    echo'<tr>
+                <th>Grand Total</th>
+                <th>' . $grandtotal . '</th>
+                    <th colspan="7"> </th>
+                </tr>';
     ?>
 </table>
