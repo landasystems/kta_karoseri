@@ -1,17 +1,17 @@
 /* loader ajax */
 angular.module('app')
-        .directive('uiButterbar', ['$rootScope', '$anchorScroll', function($rootScope, $anchorScroll) {
+        .directive('uiButterbar', ['$rootScope', '$anchorScroll', function ($rootScope, $anchorScroll) {
                 return {
                     restrict: 'AC',
                     template: '<span class="bar"></span>',
-                    link: function(scope, el, attrs) {
+                    link: function (scope, el, attrs) {
                         el.addClass('butterbar hide');
-                        scope.$on('$stateChangeStart', function(event) {
+                        scope.$on('$stateChangeStart', function (event) {
                             $anchorScroll();
                             el.removeClass('hide').addClass('active');
                         });
-                        scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState) {
-                            event.targetScope.$watch('$viewContentLoaded', function() {
+                        scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState) {
+                            event.targetScope.$watch('$viewContentLoaded', function () {
                                 el.addClass('hide').removeClass('active');
                             })
                         });
@@ -21,20 +21,20 @@ angular.module('app')
 
 /* Html from JSON*/
 angular.module('app')
-        .filter('thisHtml', ['$sce', function($sce) {
-                return function(text) {
+        .filter('thisHtml', ['$sce', function ($sce) {
+                return function (text) {
                     return $sce.trustAsHtml(text);
                 };
             }]);
 
 /*pagination text*/
 angular.module('app')
-        .directive('pageSelect', function() {
+        .directive('pageSelect', function () {
             return {
                 restrict: 'E',
                 template: '<input type="text" class="select-page" ng-model="inputPage" ng-change="selectPage(inputPage)">',
-                link: function(scope, element, attrs) {
-                    scope.$watch('currentPage', function(c) {
+                link: function (scope, element, attrs) {
+                    scope.$watch('currentPage', function (c) {
                         scope.inputPage = c;
                     });
                 }
@@ -43,22 +43,22 @@ angular.module('app')
 
 /*fullscreen*/
 angular.module('app')
-        .directive('uiFullscreen', ['$document', '$window', function($document, $window) {
+        .directive('uiFullscreen', ['$document', '$window', function ($document, $window) {
                 return {
                     restrict: 'AC',
                     template: '<i class="fa fa-expand fa-fw text"></i><i class="fa fa-compress fa-fw text-active"></i>',
-                    link: function(scope, el, attr) {
+                    link: function (scope, el, attr) {
                         el.addClass('hide');
                         // disable on ie11
                         if (screenfull.enabled && !navigator.userAgent.match(/Trident.*rv:11\./)) {
                             el.removeClass('hide');
                         }
-                        el.on('click', function() {
+                        el.on('click', function () {
                             var target;
                             attr.target && (target = $(attr.target)[0]);
                             screenfull.toggle(target);
                         });
-                        $document.on(screenfull.raw.fullscreenchange, function() {
+                        $document.on(screenfull.raw.fullscreenchange, function () {
                             if (screenfull.isFullscreen) {
                                 el.addClass('active');
                             } else {
@@ -73,7 +73,7 @@ angular.module('app')
 /*directive print*/
 function printDirective() {
     function link(scope, element, attrs) {
-        element.on('click', function() {
+        element.on('click', function () {
             var elemToPrint = document.getElementById(attrs.printElementId);
             if (elemToPrint) {
                 printElement(elemToPrint);
@@ -83,7 +83,7 @@ function printDirective() {
     function printElement(elem) {
         var popupWin = window.open('', '_blank', 'width=1000,height=700');
         popupWin.document.open()
-        popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print()">' + elem.innerHTML + '</html>');
+        popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print();window.close();">' + elem.innerHTML + '</html>');
         popupWin.document.close();
     }
     return {
@@ -91,49 +91,15 @@ function printDirective() {
         restrict: 'A'
     };
 }
-
-//Directive key press
-app.directive('ngEnter', function() {
-    return function(scope, element, attrs) {
-        element.bind("keydown keypress", function(event) {
-            if (event.which === 13) {
-                scope.$apply(function() {
-                    scope.$eval(attrs.ngEnter);
-                });
-
-                event.preventDefault();
-            }
-        });
-    };
-});
-
-//focus
-app.directive("uiselectAutofocus", function ($timeout) {
-    return {
-        restrict: 'A',
-        require: 'uiSelect',
-        link: function (scope, elem, attr) {
-            $timeout(function() {
-                var input = elem.find('input');
-
-                if (attr.uiselectAutofocus == 'open')
-                    input.click();
-
-                input.focus()
-            }, 0);
-        }
-    }
-});
-
 angular.module('app').directive('ngPrint', [printDirective]);
 
 /*scroll ke atas*/
 angular.module('app')
-        .directive('uiScroll', ['$location', '$anchorScroll', function($location, $anchorScroll) {
+        .directive('uiScroll', ['$location', '$anchorScroll', function ($location, $anchorScroll) {
                 return {
                     restrict: 'AC',
-                    link: function(scope, el, attr) {
-                        el.on('click', function(e) {
+                    link: function (scope, el, attr) {
+                        el.on('click', function (e) {
                             $location.hash(attr.uiScroll);
                             $anchorScroll();
                         });
@@ -143,16 +109,16 @@ angular.module('app')
 
 /* toogle class */
 angular.module('app')
-        .directive('uiToggleClass', ['$timeout', '$document', function($timeout, $document) {
+        .directive('uiToggleClass', ['$timeout', '$document', function ($timeout, $document) {
                 return {
                     restrict: 'AC',
-                    link: function(scope, el, attr) {
-                        el.on('click', function(e) {
+                    link: function (scope, el, attr) {
+                        el.on('click', function (e) {
                             e.preventDefault();
                             var classes = attr.uiToggleClass.split(','),
                                     targets = (attr.target && attr.target.split(',')) || Array(el),
                                     key = 0;
-                            angular.forEach(classes, function(_class) {
+                            angular.forEach(classes, function (_class) {
                                 var target = targets[(targets.length && key)];
                                 (_class.indexOf('*') !== -1) && magic(_class, target);
                                 $(target).toggleClass(_class);
