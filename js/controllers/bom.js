@@ -405,9 +405,20 @@ app.controller('rekapBomCtrl', function($scope, Data) {
 //        var limit = tableState.pagination.number || 10;
         Data.get('bom/rekaprealisasimodel', param).then(function(data) {
             $scope.r_bomModel = data.data;
+            $scope.totalItems = $scope.r_bomModel.length;
+            $scope.currentPage = 1;
+            $scope.numPerPage = 5;
 //            tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
 //        $scope.isLoading = false;
+    };
+
+    $scope.paginate = function(value) {
+        var begin, end, index;
+        begin = ($scope.currentPage - 1) * $scope.numPerPage;
+        end = begin + $scope.numPerPage;
+        index = $scope.r_bomModel.indexOf(value);
+        return (begin <= index && index < end);
     };
 
 

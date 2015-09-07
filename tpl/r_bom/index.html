@@ -230,7 +230,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat="row in r_bomModel">
+                                        <tr ng-repeat="row in r_bomModel ">
                                             <td>{{row.no_wo}}</td>
                                             <td>{{row.jabatan}}</td>
                                             <td>{{row.nm_barang}}</td>
@@ -242,8 +242,12 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <!--<td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="7"></td>-->
-                                        </tr>
+                                    <pagination total-items="totalItems" ng-model="currentPage"
+                                                max-size="5" boundary-links="true"
+                                                items-per-page="numPerPage" class="pagination-sm">
+                                    </pagination>
+                                    <!--<td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="7"></td>-->
+                                    </tr>
                                     </tfoot>
                                 </table>			
                             </div>
