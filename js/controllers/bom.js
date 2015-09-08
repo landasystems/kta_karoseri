@@ -5,7 +5,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
         queueLimit: 1,
         removeAfterUpload: true,
     });
-
     uploader.filters.push({
         name: 'imageFilter',
         fn: function(item) {
@@ -13,30 +12,25 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
     });
-
     Data.get('chassis/merk').then(function(data) {
         $scope.listMerk = data.data;
     });
-
     $scope.typeChassis = function(merk) {
         Data.get('chassis/tipe?merk=' + merk).then(function(data) {
             $scope.listTipe = data.data;
         });
     };
-
     $scope.getchassis = function(merk, tipe) {
         Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function(data) {
             $scope.form.kd_chassis = data.kode;
             $scope.form.jenis = data.jenis;
         });
     };
-
     $scope.open1 = function($event) {
         $event.preventDefault();
         $event.stopPropagation();
         $scope.opened1 = true;
     };
-
     $scope.cariModel = function($query) {
         if ($query.length >= 3) {
             Data.get('modelkendaraan/listmodel', {nama: $query}).then(function(data) {
@@ -44,7 +38,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
             });
         }
     };
-
     $scope.cariBarang = function($query) {
         if ($query.length >= 3) {
             Data.get('barang/cari', {barang: $query}).then(function(data) {
@@ -52,7 +45,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
             });
         }
     };
-
     //init data;
     var tableStateRef;
     var paramRef;
@@ -61,7 +53,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
     $scope.is_view = false;
     $scope.is_create = false;
     $scope.is_copy = false;
-
     $scope.cariBom = function($query) {
         if ($query.length >= 3) {
             Data.get('bom/cari', {nama: $query}).then(function(data) {
@@ -85,8 +76,8 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
             alert("Something gone wrong");
         }
     };
-
     $scope.callServer = function callServer(tableState) {
+        console.log(tableState);
         tableStateRef = tableState;
         $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
@@ -106,7 +97,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
         });
         $scope.isLoading = false;
     };
-
     $scope.excel = function() {
         Data.get('bom', paramRef).then(function(data) {
             window.location = 'api/web/bom/excel';
@@ -231,7 +221,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
         Data.get('bom/view/' + id).then(function(data) {
 
             $scope.form = data.data;
-
             if (kd_bom_baru != '') {
                 $scope.form.kd_bom = kd_bom_baru;
                 $scope.form.tgl_buat = '';
@@ -263,10 +252,8 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
             }
         });
     };
-
     if ($stateParams.form != null) { //pengecekan jika ada pencarian, dilempar ke view
         $scope.view($stateParams.form);
-
     }
 })
 
@@ -290,22 +277,20 @@ app.controller('modalCtrl', function($scope, Data, $modalInstance, form) {
 
     $scope.formmodal = form;
     console.log(form);
-
     $scope.cancel = function() {
         $modalInstance.dismiss('cancel');
     };
-
 })
 
 app.controller('rekapBomCtrl', function($scope, Data) {
     //init data;
-    var tableStateRef;
     var paramRef;
-
+    $scope.tableStateRef = '';
     $scope.jenis = '';
     $scope.is_show = false;
     $scope.no_wo = '';
-
+    $scope.r_bomModel = [];
+    $scope.form = {};
     $scope.rekap = function() {
         $scope.jenis = 'rekap';
         $scope.is_show = false;
@@ -322,14 +307,13 @@ app.controller('rekapBomCtrl', function($scope, Data) {
     }
 
     $scope.callServer = function callServer(tableState) {
-        tableStateRef = tableState;
+        $scope.tableStateRef = tableState;
         $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
         var limit = tableState.pagination.number || 10;
         var param = {offset: offset, limit: limit};
         if (tableState.sort.predicate) {
             param['sort'] = tableState.sort.predicate;
-//            param['order'] = tableState.sort.reverse;
         }
         if (tableState.search.predicateObject) {
             param['filter'] = tableState.search.predicateObject;
@@ -341,7 +325,6 @@ app.controller('rekapBomCtrl', function($scope, Data) {
         });
         $scope.isLoading = false;
     };
-
     $scope.excelRekap = function() {
         Data.get('bom/rekap', paramRef).then(function(data) {
             window.location = 'api/web/bom/excel';
@@ -349,7 +332,7 @@ app.controller('rekapBomCtrl', function($scope, Data) {
     }
 
     $scope.callServer2 = function callServer(tableState) {
-        tableStateRef = tableState;
+        $scope.tableStateRef = tableState;
         $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
         var limit = tableState.pagination.number || 10;
@@ -368,38 +351,75 @@ app.controller('rekapBomCtrl', function($scope, Data) {
         });
         $scope.isLoading = false;
     };
-
     $scope.excelRekapRealisasiWo = function() {
         Data.get('bom/rekaprealisasiwo', paramRef).then(function(data) {
             window.location = 'api/web/bom/excelrealisasiwo';
         });
     }
 
-    $scope.callServer3 = function callServer(tableState) {
-        tableStateRef = tableState;
-        $scope.isLoading = true;
-        var offset = tableState.pagination.start || 0;
-        var limit = tableState.pagination.number || 10;
-        var param = {offset: offset, limit: limit};
-        if (tableState.sort.predicate) {
-            param['sort'] = tableState.sort.predicate;
-            param['order'] = tableState.sort.reverse;
-        }
-        if (tableState.search.predicateObject) {
-            param['filter'] = tableState.search.predicateObject;
-        }
-        paramRef = param;
-        Data.get('bom/rekaprealisasiwo', param).then(function(data) {
-            $scope.displayed = data.data;
-            tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
+    $scope.excelRekapRealisasiModel = function() {
+        Data.get('bom/rekaprealisasiwo', paramRef).then(function(data) {
+            window.location = 'api/web/bom/excelrealisasiwo';
         });
-        $scope.isLoading = false;
+    };
+    $scope.wo = [{
+        }];
+    Data.get('chassis/merk').then(function(data) {
+        $scope.listMerk = data.data;
+    });
+    $scope.typeChassis = function(merk) {
+        Data.get('chassis/tipe?merk=' + merk).then(function(data) {
+            $scope.listTipe = data.data;
+        });
+    };
+    $scope.getchassis = function(merk, tipe) {
+        Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function(data) {
+            $scope.form.kd_chassis = data.kode;
+            $scope.form.jenis = data.jenis;
+        });
+    };
+    $scope.getNowo = function(kd_chassis, model) {
+        var data = {
+            kd_chassis: kd_chassis,
+            model: model,
+        }
+        Data.get('bom/womodel', data).then(function(data) {
+            $scope.wo = data.data;
+        });
+    };
+    $scope.cariModel = function($query) {
+        if ($query.length >= 3) {
+            Data.get('modelkendaraan/listmodel', {nama: $query}).then(function(data) {
+                $scope.results = data.data;
+            });
+        }
     };
 
-    $scope.excelRekapRealisasiWo = function() {
-        Data.get('bom/rekaprealisasiwo', paramRef).then(function(data) {
-            window.location = 'api/web/bom/excelrealisasiwo';
+//    $scope.tmp = [];
+    $scope.r_bomModel = [];
+
+    $scope.tmpBomModel = function callServer(tableState) {
+        var param = $scope.form.no_wo;
+//        $scope.tableStateRef = tableState;
+//        var offset = tableState.pagination.start || 0;
+//        var limit = tableState.pagination.number || 10;
+        Data.get('bom/rekaprealisasimodel', param).then(function(data) {
+            $scope.r_bomModel = data.data;
+            $scope.totalItems = $scope.r_bomModel.length;
+            $scope.currentPage = 1;
+            $scope.numPerPage = 5;
+//            tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
-    }
+//        $scope.isLoading = false;
+    };
+
+    $scope.paginate = function(value) {
+        var begin, end, index;
+        begin = ($scope.currentPage - 1) * $scope.numPerPage;
+        end = begin + $scope.numPerPage;
+        index = $scope.r_bomModel.indexOf(value);
+        return (begin <= index && index < end);
+    };
+
 
 })

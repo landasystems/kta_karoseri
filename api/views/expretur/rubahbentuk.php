@@ -1,6 +1,6 @@
 <?php
 header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-retur-rubah-bentuk.xls");
+header("Content-Disposition: attachment; filename=excel-rubah-bentuk.xls");
 ?>
 <div style="margin-top: 30px; margin-left: 30px;">
     <table width="100%" border="1">

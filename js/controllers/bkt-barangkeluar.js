@@ -11,6 +11,7 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
     $scope.tgl_cetak = new Date();
     $scope.gantiStatus = {};
     $scope.is_print = 0;
+    $scope.err_pengambilan = false;
 
     $scope.bukaPrint = function(form) {
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
@@ -47,15 +48,17 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
     $scope.kalkulasi = function(sisa, stok, jml_keluar) {
         if (typeof $scope.form.no_wo != "undefined") {
             if (sisa - jml_keluar >= 0) {
-
+                $scope.err_pengambilan = false;
                 $scope.sisa_pengambilan = sisa - jml_keluar;
                 $scope.stok_sekarang = stok - jml_keluar;
                 ($scope.sisa_pengambilan > 0) ? $scope.detailBbk.jml = $scope.detailBbk.jml : $scope.detailBbk.jml = 0;
                 ($scope.sisa_pengambilan >= 0) ? $scope.sisa_pengambilan = $scope.sisa_pengambilan : $scope.sisa_pengambilan = 0;
             } else {
+                $scope.err_pengambilan = true;
                 toaster.pop('error', "Sisa pengambilan bahan telah habis");
             }
         } else {
+            $scope.err_pengambilan = false;
             $scope.sisa_pengambilan = 0;
             $scope.stok_sekarang = stok - jml_keluar;
         }
@@ -101,11 +104,15 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
     }
 
     $scope.addDetail = function(detail) {
-        $scope.detailBbk.unshift({
-            kd_barang: '',
-            jml: '',
-            ket: '',
-        });
+        if ($scope.err_pengambilan == false) {
+            $scope.detailBbk.unshift({
+                kd_barang: '',
+                jml: '',
+                ket: '',
+            });
+        } else {
+            toaster.pop('error', "Sisa pengambilan bahan telah habis");
+        }
     };
 
     $scope.removeRow = function(paramindex) {

@@ -226,119 +226,23 @@
     </div>
 
     <div id="printArea">
-        <div align="center">
-            <table style="width: 300px;">
-                <tr>
-                    <td align="left" valign="top"><img src="img/logo.png"></td>
-                    <td align="right" valign="top">
-                        <H1 style="font-style: italic; font-weight: bolder; color: red; margin: 0px;">TUGASANDA</H1>
-                        <h5 style="margin:0px;">CARROSERIE</h5>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2" align="center">
-                        <H3 style="margin:0px; margin-top: 5px;"><u>SURAT - KETERANGAN</u></H3>
-                        <p style="margin:0px;">No. {{form.kd_rubah}}</p>
-                    </td>
-                </tr>
-            </table>
-            <br>
-            <table>
-                <tr>
-                    <td colspan="3">MENERANGKAN KENDARAAN DENGAN DATA-DATA :</td>
-                </tr>
-                <tr>
-                    <td>Pemilik</td>
-                    <td width="1">:</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Alamat</td>
-                    <td width="1">:</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>No. Polisi</td>
-                    <td width="1">:</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Merk / Thn. Pembuatan</td>
-                    <td width="1">:</td>
-                    <td>{{form.merk}} / {{form.tgl| date:"yyyy"}}</td>
-                </tr>
-                <tr>
-                    <td>No. Chassis / No. Mesin</td>
-                    <td width="1">:</td>
-                    <td>{{form.no_chassis}} / {{form.no_mesin}}</td>
-                </tr>
-                <tr>
-                    <td>Bentuk Lama</td>
-                    <td width="1">:</td>
-                    <td>CHASSIS</td>
-                </tr>
-                <tr>
-                    <td>Warna Lama</td>
-                    <td width="1">:</td>
-                    <td>DIPPING</td>
-                </tr>
-                <tr>
-                    <td>Bentuk Baru</td>
-                    <td width="1">:</td>
-                    <td>{{form.bentuk_baru}}</td>
-                </tr>
-                <tr>
-                    <td>Warna Baru</td>
-                    <td width="1">:</td>
-                    <td>{{form.warna_baru}}</td>
-                </tr>
-                <tr>
-                    <td>Keterangan</td>
-                    <td width="1">:</td>
-                    <td>{{form.ket}}</td>
-                </tr>
-                <tr>
-                    <td colspan="3">
-                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Kami buat menurut ketentuan dan peraturan berdasarkan Undang-Undang yang berlaku / S. K. Dirjen Perhubungan Darat.</p>
-                        <p style="margin: 0px;">Demikian surat keterangan ini kami buat, untuk dipergunakan seperlunya.</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="3">
-                        <table width="100%">
-                            <tr>
-                                <td colspan="50%">
+        <style>
+            .print{
+                font-size: 9pt; 
+                font-family: Arial
+            }
+        </style>
+        <p class="print" style="position: absolute; left: 2.5cm; margin-top: 7.9cm /*6.8cm*/">Pemilik</p>
+        <p class="print" style="position: absolute; left: 2.5cm; margin-top: 8.8cm /*0.7cm*/ /*0.5cm*/">Alamat</p>
+        <p class="print" style="position: absolute; left: 2.5cm; margin-top: 9.48cm /*0.7cm*/ /*0.3cm*/">No Polisi</p>
+        <p class="print" style="position: absolute; left: 2.5cm; margin-top: 10.25cm /*0.7cm*/ /*0.3cm*/">ISUZU</p>
+        <p class="print" style="position: absolute; left: 2.5cm; margin-top: 11.05cm /*0.7cm*/ /*0.3cm*/">{{form.no_chassis}}/{{form.no_mesin}}</p>
+        <p class="print" style="position: absolute; left: 2.5cm; margin-top: 11.8cm /*0.7cm*/ /*0.5cm*/">CHASSIS</p>
+        <p class="print" style="position: absolute; left: 2.5cm; margin-top: 12.6cm /*0.8cm*/ /*0.5cm*/">DIPPING</p>
+        <p class="print" style="position: absolute; left: 2.5cm; margin-top: 13.4cm /*0.8cm*/ /*0.6cm*/">{{form.bentuk_baru}}</p>
+        <p class="print" style="position: absolute; left: 2.5cm; margin-top: 14.3cm /*0.8cm*//*0.2cm*/">{{form.warna_baru}}</p>
+        <p class="print" style="position: absolute; left: 2.5cm; margin-top: 15.0cm /*0.8cm*//*0.3cm*/">{{form.ket}}</p>
+        <p class="print" style="position: absolute; left: 9.5cm; margin-top: 18.8cm /*4.2cm*/">{{form.tgl| date}}</p>
 
-                                </td>
-                                <td align="right">
-                                    <p>Sukorejo, ..................................................</p>
-                                    <br><br>
-                                    <p align="">( Dewi Rochmawati )</p>
-                                    <br>
-                                </td>
-                            </tr>
-                        </table>        
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p style="margin: 0px;">Ijin Usaha Dinas Perindustrian</p>
-                        <p style="margin: 0px;">Prop. Dati I Jatim.</p>
-                        <p style="margin: 0px;">Terdaftar pada Konwil VIII</p>
-                        <p style="margin: 0px;">Ditjendat Prop. Jatim</p>
-                        <p style="margin: 0px;">Anggota ASKINDO Jakarta</p>
-                    </td>
-                    <td colspan="2">
-                        <p style="margin: 0px;"></p>
-                        <p style="margin: 0px;"></p>
-                        <p style="margin: 0px;">No. 187 / M / SK / IMLDE / XI / 90</p>
-                        <p style="margin: 0px;">No. 551.23/3918/8KL.94/XII/104/2012</p>
-                        <p style="margin: 0px;">No. 002 / S.Kep. / D.RH. / 1983</p>
-                        <p style="margin: 0px;">No. 09/ D.P.P / III / 2003</p>
-                    </td>
-                </tr>
-            </table>
-            <br>
-        </div>
     </div>
 </div>
