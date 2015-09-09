@@ -1,4 +1,4 @@
-app.controller('rolesCtrl', function ($scope, Data, toaster) {
+app.controller('rolesCtrl', function($scope, Data, toaster) {
     //init data
     var tableStateRef;
     var paramRef;
@@ -21,7 +21,7 @@ app.controller('rolesCtrl', function ($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
         paramRef = param;
-        Data.get('roles', param).then(function (data) {
+        Data.get('roles', param).then(function(data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
@@ -29,13 +29,13 @@ app.controller('rolesCtrl', function ($scope, Data, toaster) {
         $scope.isLoading = false;
     };
 
-    $scope.excel = function () {
-        Data.get('roles', paramRef).then(function (data) {
+    $scope.excel = function() {
+        Data.get('roles', paramRef).then(function(data) {
             window.location = 'api/web/roles/excel';
         });
     }
 
-    $scope.create = function (form) {
+    $scope.create = function(form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
@@ -43,24 +43,24 @@ app.controller('rolesCtrl', function ($scope, Data, toaster) {
         $scope.form.akses = {};
     };
 
-    $scope.update = function (form) {
+    $scope.update = function(form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.nama;
         $scope.form = form;
         $scope.form.akses = JSON.parse($scope.form.akses);
     };
-    $scope.view = function (form) {
+    $scope.view = function(form) {
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.nama;
         $scope.form = form;
         $scope.form.akses = JSON.parse($scope.form.akses);
     };
-    $scope.save = function (form) {
+    $scope.save = function(form) {
         var url = (form.id > 0) ? 'roles/update/' + form.id : 'roles/create';
         form.akses = JSON.stringify(form.akses);
-        Data.post(url, form).then(function (result) {
+        Data.post(url, form).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
@@ -70,7 +70,7 @@ app.controller('rolesCtrl', function ($scope, Data, toaster) {
             }
         });
     };
-    $scope.cancel = function () {
+    $scope.cancel = function() {
         if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
             $scope.callServer(tableStateRef);
         }
@@ -78,31 +78,31 @@ app.controller('rolesCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
     };
 
-    $scope.trash = function (row) {
+    $scope.trash = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS item ini ?")) {
             row.is_deleted = 1;
-            Data.post('roles/update/' + row.id, row).then(function (result) {
+            Data.post('roles/update/' + row.id, row).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
-    $scope.restore = function (row) {
+    $scope.restore = function(row) {
         if (confirm("Apa anda yakin akan MERESTORE item ini ?")) {
             row.is_deleted = 0;
-            Data.post('roles/update/' + row.id, row).then(function (result) {
+            Data.post('roles/update/' + row.id, row).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
-    $scope.delete = function (row) {
+    $scope.delete = function(row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('roles/delete/' + row.id).then(function (result) {
+            Data.delete('roles/delete/' + row.id).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
 
-    $scope.checkAll = function (module, valueCheck) {
+    $scope.checkAll = function(module, valueCheck) {
         var akses = {
             "master_roles": false,
             "master_user": false,
@@ -123,6 +123,7 @@ app.controller('rolesCtrl', function ($scope, Data, toaster) {
             "transaksi_bom": false,
             "transaksi_validasibom": false,
             "transaksi_tambahitem": false,
+            "transaksi_cekbom": false,
             "transaksi_sti": false,
             "transaksi_pembatalanchasis": false,
             "transaksi_spesanankaroseri": false,
@@ -181,7 +182,7 @@ app.controller('rolesCtrl', function ($scope, Data, toaster) {
             "notif_abk": false,
             "notif_monitoring": false,
         }
-        angular.forEach($scope.form.akses, function ($value, $key) {
+        angular.forEach($scope.form.akses, function($value, $key) {
             if ($key.indexOf(module) >= 0)
                 $scope.form.akses[$key] = valueCheck;
         });
