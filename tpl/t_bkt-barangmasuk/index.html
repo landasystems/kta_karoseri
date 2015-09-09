@@ -7,7 +7,6 @@
             <div class="panel-heading">
                 <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                    <!--<button type="button" class="btn btn-default fa fa-file-excel-o" ng-show="!isCollapsed">&nbsp;Export Excel</button>-->
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>
@@ -102,7 +101,7 @@
             <div class="panel-heading">
                 {{formtitle}}
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-hide="is_view == false">
-                    <button type="button" class="btn btn-primary fa fa-print" ng-print print-element-id="printArea"  ng-show="is_view == true">&nbsp;Cetak BBM</button>
+                    <button type="button" class="btn btn-primary fa fa-print" ng-print print-element-id="printArea"  ng-show="is_view == true">&nbsp;Print</button>
                 </div>
             </div>
 
@@ -202,7 +201,6 @@
                         </div>
                     </div>
                     <label class="control-label" style="font-weight: bold" align='left'>Detail BBM</label>
-                    <!--{{listBarang}}-->
                     <table class="table table-bordered det-trans">
                         <thead>
                             <tr>
@@ -210,7 +208,6 @@
                                 <th style="text-align: center; font-weight: bold;width: 25%">Keterangan</th>
                                 <th style="text-align: center; font-weight: bold;width: 20%">Jml</th>
                                 <th style="text-align: center; font-weight: bold;width:20%">Delivery</th>
-                                <!--<th style="text-align: center; font-weight: bold;width:20%">No WO</th>-->
                                 <th width="30" ng-show="is_view != true" style="margin:0px;padding:0px;">
                                     <button ng-disabled="is_view" ng-click="addDetail()" class="btn btn-success"><i class="fa fa-plus"></i></button>
                                 </th>
@@ -219,19 +216,12 @@
                         <tbody>
                             <tr ng-repeat="detail in detBbm">
                                 <td>
-                                    <!--<div class="input-group" style="width:100%">-->
                         <ui-select uiselect-autofocus="open" ng-disabled="is_view" ng-model="detail.barang" theme="bootstrap">
                             <ui-select-match>{{$select.selected.kd_barang}} - {{$select.selected.nm_barang}}</ui-select-match>
                             <ui-select-choices refresh="cariBarang($select.search)" repeat="barang in results">
                                 {{barang.kd_barang}} - {{barang.nm_barang}}
                             </ui-select-choices>
                         </ui-select>
-                        <!--                                        <span class="input-group-btn">
-                                                                    <button ng-click="detail.barang = undefined" class="btn btn-default">
-                                                                        <span class="glyphicon glyphicon-trash"></span>
-                                                                    </button>
-                                                                </span>-->
-                        <!--</div>-->
                         </td>
                         <td>
                             <input type="text" ng-disabled="is_view" ng-model="detail.keterangan" class="form-control">
@@ -308,7 +298,7 @@
                     <tr ng-repeat="detail in detBbm" style="height: 10px;">
                         <td style="height: 10px; text-align: center; border-right: 1px #000 solid;" class="print_bbm_td">{{$index + 1}}</td>
                         <td style="border-right: 1px #000 solid;" class="print_bbm_td">{{detail.barang.nm_barang}}</td>
-                        <td style="text-align: center; border-right: 1px #000 solid;" class="print_bbm_td">{{detail.jumlah}}</td>
+                        <td style="text-align: center; border-right: 1px #000 solid;" class="print_bbm_td">{{detail.jumlah}} {{detail.barang.satuan}}</td>
                         <td style="text-align: center; border-right: 1px #000 solid;" class="print_bbm_td">{{detail.barang.kd_barang}}</td>
                         <td class="print_bbm_td" style="border-right: none;">{{detail.keterangan}}</td>
                     </tr>

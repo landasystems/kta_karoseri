@@ -7,7 +7,6 @@
             <div class="panel-heading">
                 <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                    <!--<button type="button" class="btn btn-default fa fa-file-excel-o" ng-show="!isCollapsed">&nbsp;Export Excel</button>-->
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>
@@ -75,9 +74,6 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 {{formtitle}} 
-                <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-show="is_view">
-                    <button type="button" class="btn btn-success fa fa-file-excel-o" ng-click="excelTrans(form.kd_bom)" ng-print print-element-id="printArea" ng-disabled="status == '0'">&nbsp;Export Lap. HPP</button>
-                </div>
             </div>
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation">
@@ -155,7 +151,7 @@
                             <label class="col-sm-4 control-label">Model</label>
                             <div class="col-sm-8">
                                 <div class="input-group">
-                                    <ui-select ng-model="form.model" theme="bootstrap" ng-disabled="is_view" >
+                                    <ui-select ng-model="form.kd_model" theme="bootstrap" ng-disabled="is_view" >
                                         <ui-select-match>{{$select.selected.model}}</ui-select-match>
                                         <ui-select-choices refresh="cariModel($select.search)" repeat="val in results">
                                             {{val.model}}
@@ -206,7 +202,7 @@
                                     {{detail.bagian.jabatan}}
                                 </td>
                                 <td>
-                                    {{detail.barang.nm_barang}}
+                                    {{detail.barang.nm_barang}} 
                                 </td>
                                 <td>    
                                     {{detail.qty}}

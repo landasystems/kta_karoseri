@@ -126,16 +126,21 @@ app.controller('tambahItemCtrl', function($scope, Data, toaster, FileUploader, $
         $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = false;
-        $scope.form = form;
-        $scope.formtitle = "Edit Data : " + $scope.form.kd_bom;
+        $scope.formtitle = "Lihat Data : " + form.no_wo;
+        Data.get('chassis/tipe?merk=' + form.merk).then(function(data) {
+            $scope.listTipe = data.data;
+        });
         $scope.selected(form.id);
     };
     $scope.view = function(form) {
+        $scope.is_copy = false;
         $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.form = form;
-        $scope.formtitle = "Lihat Data : " + $scope.form.kd_bom;
+        $scope.formtitle = "Lihat Data : " + form.no_wo;
+        Data.get('chassis/tipe?merk=' + form.merk).then(function(data) {
+            $scope.listTipe = data.data;
+        });
         $scope.selected(form.id);
     };
     $scope.save = function(form, detail) {
@@ -177,6 +182,8 @@ app.controller('tambahItemCtrl', function($scope, Data, toaster, FileUploader, $
     };
     $scope.selected = function(id) {
         Data.get('additionalbom/view/' + id).then(function(data) {
+            $scope.form = data.data;
+            $scope.form.tgl_buat = new Date();
             if (jQuery.isEmptyObject(data.detail)) {
                 $scope.detTambahItem = [
                     {
@@ -201,6 +208,10 @@ app.controller('tambahItemCtrl', function($scope, Data, toaster, FileUploader, $
     $scope.selected2 = function(kd_bom) {
         Data.get('bom/view/' + kd_bom).then(function(data) {
             $scope.form = data.data;
+            $scope.form.kd_bom = {
+                kd_bom: data.data.kd_bom,
+            };
+            $scope.form.tgl_buat = new Date();
             if (jQuery.isEmptyObject(data.detail)) {
                 $scope.detTambahItem = [
                     {
