@@ -206,8 +206,7 @@
                                         <div class="form-group">
                                             <label class="col-md-4"></label>
                                             <div class="col-md-8">
-                                                <button type="submit" class="btn btn-info fa fa-eye-slash" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="is_show = true;
-                                                            tmpBomModel()">&nbsp;Tampilkan Data</button>
+                                                <button type="submit" class="btn btn-info fa fa-eye-slash" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="is_show = true;tmpBomModel()">&nbsp;Tampilkan Data</button>
                                                 <button type="button" class="btn btn-success fa fa-file-excel-o"  ng-click="excelRekapRealisasiWo()">&nbsp; Export Laporan</button>
                                             </div>
                                         </div>
@@ -217,7 +216,7 @@
                         </div>
                         <div class="row">
                             <div class="table-responsive" >
-                                <table class="table table-striped table-hover" st-table="r_bomModel">
+                                <table st-safe-src="r_bomModelSrc" st-table="r_bomModel" class="table table-striped table-hover">
                                     <thead>
                                         <tr>
                                             <th>No. Wo</th>
@@ -230,7 +229,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat="row in r_bomModel ">
+                                        <tr ng-repeat="row in r_bomModel">
                                             <td>{{row.no_wo}}</td>
                                             <td>{{row.jabatan}}</td>
                                             <td>{{row.nm_barang}}</td>
@@ -242,38 +241,8 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                    <pagination total-items="totalItems" ng-model="currentPage"
-                                                max-size="5" boundary-links="true"
-                                                items-per-page="numPerPage" class="pagination-sm">
-                                    </pagination>
-                                    <!--<td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="7"></td>-->
-                                    </tr>
-                                    </tfoot>
-                                </table>
-
-                                <table st-table="displayed2" class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th st-ratio="20" st-sort="firstName">first name</th>
-                                            <th st-ratio="20" st-sort="lastName">last name</th>
-                                            <th st-ratio="10" st-sort="age">age</th>
-                                            <th st-ratio="30" st-sort="email">email</th>
-                                            <th st-ratio="20" st-sort="balance">balance</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr ng-repeat="row in displayed2">
-                                            <td st-ratio="20">{{row.firstName}}</td>
-                                            <td st-ratio="20">{{row.lastName| uppercase}}</td>
-                                            <td st-ratio="10">{{row.age}}</td>
-                                            <td st-ratio="30">{{row.email}}</td>
-                                            <td st-ratio="20">{{row.balance| currency}}</td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
                                             <td colspan="5" class="text-center">
-                                                <div  st-items-by-page="20" st-pagination=""></div>
+                                                <div st-items-by-page="20" st-pagination=""></div>
                                             </td>
                                         </tr>
                                     </tfoot>
