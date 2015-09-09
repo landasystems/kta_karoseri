@@ -1019,6 +1019,19 @@ angular.module('app')
                                                 );
                                             }]
                                     }})
+                                .state('transaksi.tglspp', {
+                                    url: '/tglspp',
+                                    templateUrl: 'tpl/t_tglspp/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/tglspp.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
 
                     }
                 ]);

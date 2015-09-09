@@ -102,6 +102,9 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 {{formtitle}} 
+                <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-hide="is_print == false">
+                    <button type="button" class="btn btn-primary fa fa-print"   ng-print print-element-id="printArea" ng-disabled="status == '0'">&nbsp;Print</button>
+                </div>
             </div>
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation ">
@@ -185,7 +188,7 @@
                                                 <label class="col-sm-3 control-label">Tanggal Masuk</label>
                                                 <div class="col-sm-6">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_terima" ng-readonly="true" is-open="opened1" ng-click="open1($event)"/>
+                                                        <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_terima" is-open="opened1" ng-click="open1($event)"/>
                                                         <span class="input-group-addon">
                                                             <i class="fa fa-calendar-o"></i>
                                                         </span>
@@ -411,7 +414,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Lampu Belakang</label>
                                                 <div class="col-sm-8">
-                                                     <ui-select tagging="tagTransformlbelakang"   tagging-label="false" ng-model="eks.lbelakang" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformlbelakang"   tagging-label="false" ng-model="eks.lbelakang" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.lampu_belakang}}</ui-select-match>
                                                         <ui-select-choices repeat="lb in list_lbelakang | filter:$select.search" >
                                                             <small>
@@ -443,7 +446,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Pintu Penumpang</label>
                                                 <div class="col-sm-8">
-                                                     <ui-select tagging="tagTransformppenumpang"   tagging-label="false" ng-model="eks.ppenumpang" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformppenumpang"   tagging-label="false" ng-model="eks.ppenumpang" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.pintu_penumpang}}</ui-select-match>
                                                         <ui-select-choices repeat="pp in list_ppenumpang | filter:$select.search" >
                                                             <small>
@@ -577,7 +580,7 @@
                                                 <label class="col-sm-3 control-label">Plavon</label>
                                                 <div class="col-sm-8">
                                                     <ui-select tagging="tagTransformplavon"   tagging-label="false" ng-model="inter.plavon" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
-                                                        <ui-select-match placeholder="">{{$select.selected.letter}}</ui-select-match>
+                                                        <ui-select-match placeholder="">{{$select.selected.plavon}}</ui-select-match>
                                                         <ui-select-choices repeat="l in list_plavon | filter:$select.search" >
                                                             <small>
                                                                 {{l.plavon}} 
@@ -591,49 +594,121 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Trimming Deck</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="inter.trimming_deck" ng-disabled="is_view" placeholder="Plavon">
+                                                    <ui-select tagging="tagTransformtrimming"   tagging-label="false" ng-model="inter.trimming" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.trimming_deck}}</ui-select-match>
+                                                        <ui-select-choices repeat="l in list_trimming | filter:$select.search" >
+                                                            <small>
+                                                                {{l.trimming_deck}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="inter.trimming_deck" ng-disabled="is_view" placeholder="Plavon">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Duchting Louver</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="inter.duchting_louver" ng-disabled="is_view" placeholder="Duchting Louver">
+                                                    <ui-select tagging="tagTransformduchting"   tagging-label="false" ng-model="inter.duchting" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.duchting_louver}}</ui-select-match>
+                                                        <ui-select-choices repeat="l in list_duchting | filter:$select.search" >
+                                                            <small>
+                                                                {{l.duchting_louver}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="inter.duchting_louver" ng-disabled="is_view" placeholder="Duchting Louver">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Lampu Plavon</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="inter.lampu_plavon" ng-disabled="is_view" placeholder="Lampu Plavon">
+                                                    <ui-select tagging="tagTransformlplavon"   tagging-label="false" ng-model="inter.lplavon" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.lampu_plavon}}</ui-select-match>
+                                                        <ui-select-choices repeat="l in list_lplavon | filter:$select.search" >
+                                                            <small>
+                                                                {{l.lampu_plavon}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="inter.lampu_plavon" ng-disabled="is_view" placeholder="Lampu Plavon">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Lantai</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="inter.lantai" ng-disabled="is_view" placeholder="Lantai">
+                                                    <ui-select tagging="tagTransformlantai"   tagging-label="false" ng-model="inter.lantai" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.lantai}}</ui-select-match>
+                                                        <ui-select-choices repeat="l in list_lantai | filter:$select.search" >
+                                                            <small>
+                                                                {{l.lantai}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="inter.lantai" ng-disabled="is_view" placeholder="Lantai">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Karpet</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="inter.karpet" ng-disabled="is_view" placeholder="Karpet">
+                                                    <ui-select tagging="tagTransformkarpet"   tagging-label="false" ng-model="inter.karpet" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.karpet}}</ui-select-match>
+                                                        <ui-select-choices repeat="l in list_karpet | filter:$select.search" >
+                                                            <small>
+                                                                {{l.karpet}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="inter.karpet" ng-disabled="is_view" placeholder="Karpet">-->
                                                 </div>
                                             </div>
                                             <div class="form-group" ng-show="form.jenis == 'Small Bus'">
                                                 <label class="col-sm-3 control-label">Bagasi Dalam </label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="inter.bagasi_dalam" ng-disabled="is_view" placeholder="Bagasi Dalam">
-                                                </div>p
+                                                    <ui-select tagging="tagTransformbdalam"   tagging-label="false" ng-model="inter.bdalam" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.bagasi_dalam}}</ui-select-match>
+                                                        <ui-select-choices repeat="l in list_bagasi_dalam | filter:$select.search" >
+                                                            <small>
+                                                                {{l.bagasi_dalam}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="inter.bagasi_dalam" ng-disabled="is_view" placeholder="Bagasi Dalam">-->
+                                                </div>
                                             </div>
                                             <div class="form-group" ng-show="form.jenis == 'Small Bus'">
                                                 <label class="col-sm-3 control-label">Dashboard</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="inter.dashboard" ng-disabled="is_view" placeholder="Dashboard">
+                                                    <ui-select tagging="tagTransformdashboard"   tagging-label="false" ng-model="inter.dashboard" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.dashboard}}</ui-select-match>
+                                                        <ui-select-choices repeat="l in list_dashboard | filter:$select.search" >
+                                                            <small>
+                                                                {{l.dashboard}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="inter.dashboard" ng-disabled="is_view" placeholder="Dashboard">-->
                                                 </div>
                                             </div>
                                             <div class="form-group" ng-show="form.jenis == 'Small Bus'">
                                                 <label class="col-sm-3 control-label">Peredam</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="inter.peredam" ng-disabled="is_view" placeholder="Peredam">
+                                                    <ui-select tagging="tagTransformperedam"   tagging-label="false" ng-model="inter.peredam" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.peredam}}</ui-select-match>
+                                                        <ui-select-choices repeat="l in list_peredam | filter:$select.search" >
+                                                            <small>
+                                                                {{l.peredam}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="inter.peredam" ng-disabled="is_view" placeholder="Peredam">-->
                                                 </div>
                                             </div>
                                         </td>
@@ -644,55 +719,136 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Pegangan Tangan Atas</label>
                                                     <div class="col-sm-8">
-                                                        <input type="text" class="form-control" ng-model="inter.pegangan_tangan_atas" ng-disabled="is_view" placeholder="Pegangan Tangan Atas">
+                                                        <ui-select tagging="tagTransformpegangan_atas"   tagging-label="false" ng-model="inter.pegangan_atas" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                            <ui-select-match placeholder="">{{$select.selected.pegangan_tangan_atas}}</ui-select-match>
+                                                            <ui-select-choices repeat="l in list_pegangan_atas | filter:$select.search" >
+                                                                <small>
+                                                                    {{l.pegangan_tangan_atas}} 
+
+                                                                </small>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                        <!--<input type="text" class="form-control" ng-model="inter.pegangan_tangan_atas" ng-disabled="is_view" placeholder="Pegangan Tangan Atas">-->
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Pengaman Penumpang</label>
                                                     <div class="col-sm-8">
-                                                        <input type="text" class="form-control" ng-model="inter.pengaman_penumpang" ng-disabled="is_view" placeholder="Pengaman Penumpang">
+                                                        <ui-select tagging="tagTransformpengaman_penumpang"   tagging-label="false" ng-model="inter.pengaman_penumpang" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                            <ui-select-match placeholder="">{{$select.selected.pengaman_penumpang}}</ui-select-match>
+                                                            <ui-select-choices repeat="l in list_pengaman_penumpang | filter:$select.search" >
+                                                                <small>
+                                                                    {{l.pengaman_penumpang}} 
+
+                                                                </small>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                        <!--<input type="text" class="form-control" ng-model="inter.pengaman_penumpang" ng-disabled="is_view" placeholder="Pengaman Penumpang">-->
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Pengaman Kaca Samping</label>
                                                     <div class="col-sm-8">
-                                                        <input type="text" class="form-control" ng-model="inter.pengaman_kaca_samping" ng-disabled="is_view" placeholder="Pengaman Kaca Samping">
+                                                        <ui-select tagging="tagTransformpengaman_kaca"   tagging-label="false" ng-model="inter.pengaman_kaca" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                            <ui-select-match placeholder="">{{$select.selected.pengaman_kaca_samping}}</ui-select-match>
+                                                            <ui-select-choices repeat="l in list_pengaman_kaca | filter:$select.search" >
+                                                                <small>
+                                                                    {{l.pengaman_kaca_samping}} 
+
+                                                                </small>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                        <!--<input type="text" class="form-control" ng-model="inter.pengaman_kaca_samping" ng-disabled="is_view" placeholder="Pengaman Kaca Samping">-->
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Pengaman Driver</label>
                                                     <div class="col-sm-8">
-                                                        <input type="text" class="form-control" ng-model="inter.pengaman_driver" ng-disabled="is_view" placeholder="Pengaman Driver">
+                                                        <ui-select tagging="tagTransformpengaman_driver"   tagging-label="false" ng-model="inter.pengaman_driver" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                            <ui-select-match placeholder="">{{$select.selected.pengaman_driver}}</ui-select-match>
+                                                            <ui-select-choices repeat="l in list_pengaman_driver | filter:$select.search" >
+                                                                <small>
+                                                                    {{l.pengaman_driver}} 
+
+                                                                </small>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                        <!--<input type="text" class="form-control" ng-model="inter.pengaman_driver" ng-disabled="is_view" placeholder="Pengaman Driver">-->
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Gordyn</label>
                                                     <div class="col-sm-8">
-                                                        <input type="text" class="form-control" ng-model="inter.gordyn" ng-disabled="is_view" placeholder="Gordyn">
+                                                        <ui-select tagging="tagTransformgordyn"   tagging-label="false" ng-model="inter.gordyn" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                            <ui-select-match placeholder="">{{$select.selected.gordyn}}</ui-select-match>
+                                                            <ui-select-choices repeat="l in list_gordyn | filter:$select.search" >
+                                                                <small>
+                                                                    {{l.gordyn}} 
+
+                                                                </small>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                        <!--<input type="text" class="form-control" ng-model="inter.gordyn" ng-disabled="is_view" placeholder="Gordyn">-->
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Driver Fan</label>
                                                     <div class="col-sm-8">
-                                                        <input type="text" class="form-control" ng-model="inter.driver_fan" ng-disabled="is_view" placeholder="Driver Fan">
+                                                        <ui-select tagging="tagTransformdriver_fan"   tagging-label="false" ng-model="inter.driver_fan" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                            <ui-select-match placeholder="">{{$select.selected.driver_fan}}</ui-select-match>
+                                                            <ui-select-choices repeat="l in list_driver_fan | filter:$select.search" >
+                                                                <small>
+                                                                    {{l.driver_fan}} 
+
+                                                                </small>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                        <!--<input type="text" class="form-control" ng-model="inter.driver_fan" ng-disabled="is_view" placeholder="Driver Fan">-->
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Radio Tape</label>
                                                     <div class="col-sm-8">
-                                                        <input type="text" class="form-control" ng-model="inter.radio_tape" ng-disabled="is_view" placeholder="Radio Tape">
+                                                        <ui-select tagging="tagTransformradio_tape"   tagging-label="false" ng-model="inter.radio_tape" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                            <ui-select-match placeholder="">{{$select.selected.radio_tape}}</ui-select-match>
+                                                            <ui-select-choices repeat="l in list_radio_tape | filter:$select.search" >
+                                                                <small>
+                                                                    {{l.radio_tape}} 
+
+                                                                </small>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                        <!--<input type="text" class="form-control" ng-model="inter.radio_tape" ng-disabled="is_view" placeholder="Radio Tape">-->
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Speak Seat</label>
                                                     <div class="col-sm-8">
-                                                        <input type="text" class="form-control" ng-model="inter.speak_seat" ng-disabled="is_view" placeholder="Speak Seat">
+                                                        <ui-select tagging="tagTransformspek_seat"   tagging-label="false" ng-model="inter.spek_seat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                            <ui-select-match placeholder="">{{$select.selected.spek_seat}}</ui-select-match>
+                                                            <ui-select-choices repeat="l in list_spek_seat | filter:$select.search" >
+                                                                <small>
+                                                                    {{l.spek_seat}} 
+
+                                                                </small>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                        <!--<input type="text" class="form-control" ng-model="inter.speak_seat" ng-disabled="is_view" placeholder="Speak Seat">-->
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Driver Seat</label>
                                                     <div class="col-sm-8">
-                                                        <input type="text" class="form-control" ng-model="inter.driver_seat" ng-disabled="is_view" placeholder="Driver Seat">
+                                                        <ui-select tagging="tagTransformdriver_seat"   tagging-label="false" ng-model="inter.driver_seat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                            <ui-select-match placeholder="">{{$select.selected.driver_seat}}</ui-select-match>
+                                                            <ui-select-choices repeat="l in list_driver_seat | filter:$select.search" >
+                                                                <small>
+                                                                    {{l.driver_seat}} 
+
+                                                                </small>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                        <!--<input type="text" class="form-control" ng-model="inter.driver_seat" ng-disabled="is_view" placeholder="Driver Seat">-->
                                                     </div>
                                                 </div>
                                             </div>
@@ -703,23 +859,68 @@
                                                     <div class="col-sm-8">
                                                         <div class="input-group">
                                                             <span class="input-group-addon">1</span>
-                                                            <input type="text" class="form-control"  ng-model="inter.konf_seat1" ng-disabled="is_view">
+                                                            <ui-select tagging="tagTransformseat1"   tagging-label="false" ng-model="inter.seat1" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                                <ui-select-match placeholder="">{{$select.selected.konf_seat1}}</ui-select-match>
+                                                                <ui-select-choices repeat="l in list_seat1 | filter:$select.search" >
+                                                                    <small>
+                                                                        {{l.konf_seat1}} 
+
+                                                                    </small>
+                                                                </ui-select-choices>
+                                                            </ui-select>
+                                                            <!--<input type="text" ckonf_seat1lass="form-control"  ng-model="inter.konf_seat1" ng-disabled="is_view">-->
                                                         </div><br>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">2</span>
-                                                            <input type="text" class="form-control"  ng-model="inter.konf_seat2" ng-disabled="is_view">
+                                                            <ui-select tagging="tagTransformseat2"   tagging-label="false" ng-model="inter.seat2" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                                <ui-select-match placeholder="">{{$select.selected.konf_seat2}}</ui-select-match>
+                                                                <ui-select-choices repeat="l in list_seat2 | filter:$select.search" >
+                                                                    <small>
+                                                                        {{l.konf_seat2}} 
+
+                                                                    </small>
+                                                                </ui-select-choices>
+                                                            </ui-select>
+                                                            <!--<input type="text" class="form-control"  ng-model="inter.konf_seat2" ng-disabled="is_view">-->
                                                         </div><br>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">3</span>
-                                                            <input type="text" class="form-control"  ng-model="inter.konf_seat3" ng-disabled="is_view">
+                                                            <ui-select tagging="tagTransformseat3"   tagging-label="false" ng-model="inter.seat3" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                                <ui-select-match placeholder="">{{$select.selected.konf_seat3}}</ui-select-match>
+                                                                <ui-select-choices repeat="l in list_seat3 | filter:$select.search" >
+                                                                    <small>
+                                                                        {{l.konf_seat3}} 
+
+                                                                    </small>
+                                                                </ui-select-choices>
+                                                            </ui-select>
+                                                            <!--<input type="text" class="form-control"  ng-model="inter.konf_seat3" ng-disabled="is_view">-->
                                                         </div><br>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">4</span>
-                                                            <input type="text" class="form-control"  ng-model="inter.konf_seat4" ng-disabled="is_view">
+                                                            <ui-select tagging="tagTransformseat4"   tagging-label="false" ng-model="inter.seat4" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                                <ui-select-match placeholder="">{{$select.selected.konf_seat4}}</ui-select-match>
+                                                                <ui-select-choices repeat="l in list_seat4 | filter:$select.search" >
+                                                                    <small>
+                                                                        {{l.konf_seat4}} 
+
+                                                                    </small>
+                                                                </ui-select-choices>
+                                                            </ui-select>
+                                                            <!--<input type="text" class="form-control"  ng-model="inter.konf_seat4" ng-disabled="is_view">-->
                                                         </div><br>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">5</span>
-                                                            <input type="text" class="form-control"  ng-model="inter.konf_seat5" ng-disabled="is_view">
+                                                            <ui-select tagging="tagTransformseat5"   tagging-label="false" ng-model="inter.seat5" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                                <ui-select-match placeholder="">{{$select.selected.konf_seat5}}</ui-select-match>
+                                                                <ui-select-choices repeat="l in list_seat5 | filter:$select.search" >
+                                                                    <small>
+                                                                        {{l.konf_seat5}} 
+
+                                                                    </small>
+                                                                </ui-select-choices>
+                                                            </ui-select>
+                                                            <!--<input type="text" class="form-control"  ng-model="inter.konf_seat5" ng-disabled="is_view">-->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -729,25 +930,61 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Cover Seat</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="inter.cover_seat" ng-disabled="is_view" placeholder="Cover Seat">
+                                                    <ui-select tagging="tagTransformcover_seat"   tagging-label="false" ng-model="inter.cover_seat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.cover_seat}}</ui-select-match>
+                                                        <ui-select-choices repeat="l in list_cover_seat | filter:$select.search" >
+                                                            <small>
+                                                                {{l.cover_seat}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="inter.cover_seat" ng-disabled="is_view" placeholder="Cover Seat">-->
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group" ng-show="form.jenis == 'Small Bus'" >
                                                 <label class="col-sm-3 control-label">Optional Seat</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="inter.optional_seat" ng-disabled="is_view" placeholder="Optioanl Seat">
+                                                    <ui-select tagging="tagTransformoptional_seat"   tagging-label="false" ng-model="inter.optional_seat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.optional_seat}}</ui-select-match>
+                                                        <ui-select-choices repeat="l in list_optional_seat | filter:$select.search" >
+                                                            <small>
+                                                                {{l.optional_seat}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="inter.optional_seat" ng-disabled="is_view" placeholder="Optioanl Seat">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Total Seat</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control"  ng-model="inter.total_seat" ng-disabled="is_view" placeholder="Total Seat">
+                                                    <ui-select tagging="tagTransformtotal_seat"   tagging-label="false" ng-model="inter.total_seat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.total_seat}}</ui-select-match>
+                                                        <ui-select-choices repeat="l in list_total_seat | filter:$select.search" >
+                                                            <small>
+                                                                {{l.total_seat}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control"  ng-model="inter.total_seat" ng-disabled="is_view" placeholder="Total Seat">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Merk AC</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="inter.merk_ac" ng-disabled="is_view" placeholder="Merk AC">
+                                                    <ui-select tagging="tagTransformac"   tagging-label="false" ng-model="inter.ac" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                        <ui-select-match placeholder="">{{$select.selected.merk_ac}}</ui-select-match>
+                                                        <ui-select-choices repeat="l in list_ac | filter:$select.search" >
+                                                            <small>
+                                                                {{l.merk_ac}} 
+
+                                                            </small>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                    <!--<input type="text" class="form-control" ng-model="inter.merk_ac" ng-disabled="is_view" placeholder="Merk AC">-->
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -772,11 +1009,394 @@
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <div align="center">
                         <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
-                        <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, eks, inter)">&nbsp;Simpan Perubahan</button>
+                        <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view"  ng-click="save(form, eks, inter)">&nbsp;Simpan Perubahan</button>
                     </div>
 
                 </form>
             </div>
         </div>
+    </div>
+    <div id="printArea" ng-show="is_view">
+        <table>
+            <tr>
+                <td colspan="5"><b>WORK ORDER {{form.jenis}}</b></td>
+                <td >FR-PPC-003 Rev 02</td>
+            </tr>
+            <tr>
+                <td colspan="6"><b>I. DATA UNIT</b></td>
+            </tr>
+            <tr>
+                <td>No WO</td>
+                <td colspan="2">: {{form.no_wo}}</td>
+                <td>Model</td>
+                <td colspan="2">: {{form.model}}</td>
+            </tr>
+            <tr>
+                <td>Customer</td>
+                <td colspan="2">: {{form.customer}}</td>
+                <td>No.Rangka</td>
+                <td colspan="2">: {{form.no_chassis}}</td>
+            </tr>
+            <tr>
+                <td>Merk</td>
+                <td colspan="2">: {{form.merk}}</td>
+                <td>No Mesin</td>
+                <td colspan="2">: {{form.no_mesin}}</td>
+            </tr>
+            <tr>
+                <td>type</td>
+                <td colspan="2">: {{form.type}}</td>
+                <td>Tgl Masuk</td>
+                <td colspan="2">: {{form.tgl_terima}}</td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <table border="1" class="table">
+                        <tr>
+                            <td  style="border: 1px solid #0000"><b>II.</b></td>
+                            <td  style="border: 1px solid #0000"><b> SPESIFIKASI</b></td>
+                            <td > URAIAN</td>
+                            <td > V/X</td>
+                            <td >KETERANGAN</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="8" ></td>
+                            <td>Plat Body</td>
+                            <td>{{eks.plat.plat_body}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Ventilasi Atas</td>
+                            <td>{{eks.ventilasi.ventilasi_atas}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Kaca Spion</td>
+                            <td>{{eks.spion.kaca_spion}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Kaca Depan</td>
+                            <td>{{eks.kdepan.kaca_depan}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Kaca Belakang</td>
+                            <td>{{eks.kbelakang.kaca_belakang}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Kaca Samping</td>
+                            <td>{{eks.ksamping.kaca_samping}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Lampu Depan</td>
+                            <td>{{eks.ldepan.lampu_depan}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Lampu Belakang</td>
+                            <td>{{eks.lbelakang.lampu_belakang}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>E</td>
+                            <td>Pintu Depan</td>
+                            <td>{{eks.pdepan.pintu_depan}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>X</td>
+                            <td>Pintu Penumpang</td>
+                            <td>{{eks.ppenumpang.pintu_penumpang}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>T</td>
+                            <td>Pintu Bagasi Samping</td>
+                            <td>{{eks.pbagasi.pintu_bagasi_samping}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>E</td>
+                            <td>Pintu Belakang</td>
+                            <td>{{eks.pbelakang.pintu_belakang}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>R</td>
+                            <td>Wyper Set</td>
+                            <td>{{eks.wyper.wyper_Set}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>I</td>
+                            <td>Anti Karat</td>
+                            <td>{{eks.akarat.anti_karat}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>O</td>
+                            <td>Warna</td>
+                            <td>{{eks.warna.warna}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>R</td>
+                            <td>Strip</td>
+                            <td>{{eks.strip.strip}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2"></td>
+                            <td>Letter</td>
+                            <td>{{eks.letter.letter}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Lain-lain</td>
+                            <td>{{eks.lain2}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <table border="1">
+                        <!--                        <tr>
+                                                    <td  style="border: 1px solid #0000"><b>II.</b></td>
+                                                    <td  style="border: 1px solid #0000"><b> SPESIFIKASI</b></td>
+                                                    <td > URAIAN</td>
+                                                    <td > V/X</td>
+                                                    <td >KETERANGAN</td>
+                                                </tr>-->
+                        <tr>
+                            <td rowspan="8" >g</td>
+                            <td>Plavon</td>
+                            <td>{{inter.plavon.plavon}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr ng-show="form.jenis == 'Small Bus'">
+                            <td>Bagasi Dalam</td>
+                            <td>{{inter.bdalam.bagasi_dalam}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Duchting</td>
+                            <td>{{inter.duchting.duchting}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Trimming</td>
+                            <td>{{inter.trimming.trimming_deck}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Lampu Plavon</td>
+                            <td>{{inter.lplavon.lampu_plavon}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr ng-show="form.jenis == 'Small Bus'">
+                            <td>Dashboard</td>
+                            <td>{{inter.dashboard.dashboard}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr >
+                            <td>Lantai</td>
+                            <td>{{inter.lantai.lantai}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr >
+                            <td>Karpet</td>
+                            <td>{{inter.karpet.karpet}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr ng-show="form.jenis == 'Small Bus'">
+                            <td></td>
+                            <td>Peredam</td>
+                            <td>{{inter.peredam.peredam}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr ng-show="form.jenis == 'Small Bus'">
+                            <td></td>
+                            <td>Peg Tgn Atas</td>
+                            <td>{{inter.pegangan_atas.pegangan_tangan_atas}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr ng-show="form.jenis == 'Small Bus'">
+                            <td></td>
+                            <td>Pengmn Penumpang</td>
+                            <td>{{inter.pegangan_atas.pegangan_tangan_atas}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr ng-show="form.jenis == 'Small Bus'">
+                            <td></td>
+                            <td>Pengmn Kc Smpg</td>
+                            <td>{{inter.pegangan_kaca.pegangan_kaca_samping}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr ng-show="form.jenis == 'Small Bus'">
+                            <td></td>
+                            <td>Pengmn Driver</td>
+                            <td>{{inter.pegangan_diver.pegangan_driver}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr ng-show="form.jenis == 'Small Bus'">
+                            <td></td>
+                            <td>Gordyn</td>
+                            <td>{{inter.gordyn.gordyn}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr ng-show="form.jenis == 'Small Bus'">
+                            <td></td>
+                            <td>Driver Fan</td>
+                            <td>{{inter.driver_fan.driver_fan}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr ng-show="form.jenis == 'Small Bus'">
+                            <td></td>
+                            <td>Radio Tape</td>
+                            <td>{{inter.radio_tape.radio_tape}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr ng-show="form.jenis == 'Small Bus'">
+                            <td></td>
+                            <td>Spek Seat</td>
+                            <td>{{inter.spek_seat.spek_seat}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr ng-show="form.jenis == 'Small Bus'">
+                            <td></td>
+                            <td>Driver Seat</td>
+                            <td>{{inter.driver_seat.driver_seat}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr >
+                            <td></td>
+                            <td>Cover Seat</td>
+                            <td>{{inter.cover_seat.cover_seat}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr >
+                            <td></td>
+                            <td>Optional Seat</td>
+                            <td>{{inter.optional_seat.optional_seat}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr >
+                            <td></td>
+                            <td>Total Seat</td>
+                            <td>{{inter.total_seat.total_seat}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr >
+                            <td></td>
+                            <td>Lain-lain</td>
+                            <td>{{inter.lain2}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr >
+                            <td></td>
+                            <td>AC</td>
+                            <td>{{inter.ac.merk_ac}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <table border="1">
+                        <tr>
+                            <td></td>
+                            <td colspan="2"> STRIP OFF</td>
+                            <td colspan="2"> KOMP</td>
+                            <td colspan="2"> B/W</td>
+                            <td colspan="2"> PUTTY</td>
+                            <td colspan="2"> PAINT</td>
+                            <td colspan="2"> FINISH</td>
+                            <td colspan="2"> FI</td>
+                        </tr>
+                        <tr>
+                            <td><b>P</b></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><b>A</b></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
     </div>
 </div>

@@ -22,7 +22,7 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
     <br><br>
 
     </td>
-    <td rowspan="4" colspan="5" valign="top">
+    <td rowspan="4" colspan="2" valign="top">
         <table>
             <tr>
                 <td>PERIODE</td>
@@ -49,12 +49,11 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
 </tr>
 <tr>
     <td rowspan="2"></td>
-    <td rowspan="2"></td>
 </tr>
 <tr></tr>
 <tr>
     <td>Tgl :</td>
-    <td></td>
+    <td>Tgl :</td>
 </tr>
 </table>
 <table border="1">
