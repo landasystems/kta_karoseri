@@ -1,7 +1,10 @@
 <?php
-header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-rubah-bentuk.xls");
+if (!isset($_GET['print'])) {
+    header("Content-type: application/vnd-ms-excel");
+    header("Content-Disposition: attachment; filename=excel-rubah-bentuk.xls");
+}
 ?>
+
 <div style="margin-top: 30px; margin-left: 30px;">
     <table width="100%" border="1">
         <tr>
@@ -77,3 +80,15 @@ header("Content-Disposition: attachment; filename=excel-rubah-bentuk.xls");
         </tr>
     </table>
 </div>
+<?php
+if (isset($_GET['print'])) {
+    ?>
+    <script type="text/javascript">
+        window.print();
+        setTimeout(function() {
+            window.close();
+        }, 1);
+    </script>
+    <?php
+}
+?>
