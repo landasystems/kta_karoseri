@@ -65,6 +65,7 @@ class BomController extends Controller {
         $query->from('trans_standar_bahan')
                 ->select("*")
                 ->where(['like', 'kd_bom', $params['nama']])
+                ->orderBy('kd_bom DESC')
                 ->limit(25);
 
         $command = $query->createCommand();
@@ -81,6 +82,7 @@ class BomController extends Controller {
                 ->select("trans_standar_bahan.*, chassis.merk")
                 ->where(['like', 'kd_bom', $params['nama']])
                 ->andWhere('status = 1')
+                ->orderBy('kd_bom DESC')
                 ->limit(25);
 
         $command = $query->createCommand();

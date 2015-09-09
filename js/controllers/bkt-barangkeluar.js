@@ -72,31 +72,31 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
     $scope.detailstok(0, 0);
 
     $scope.cariWo = function($query) {
-        if ($query.length >= 3) {
-            Data.get('wo/wospk', {nama: $query}).then(function(data) {
-                $scope.results = data.data;
-            });
-        }
+//        if ($query.length >= 2) {
+        Data.get('wo/wospk', {nama: $query}).then(function(data) {
+            $scope.results = data.data;
+        });
+//        }
     }
 
     $scope.cariJabatan = function($query) {
-        if ($query.length >= 3) {
-            Data.get('jabatan/cari', {nama: $query}).then(function(data) {
-                $scope.resultsjabatan = data.data;
-            });
-        }
+//        if ($query.length >= 2) {
+        Data.get('jabatan/cari', {nama: $query}).then(function(data) {
+            $scope.resultsjabatan = data.data;
+        });
+//        }
     }
 
     $scope.cariKaryawan = function($query) {
-        if ($query.length >= 3) {
-            Data.get('jabatan/listkaryawanabsent', {nama: $query}).then(function(data) {
-                $scope.resultskaryawan = data.data;
-            });
-        }
+//        if ($query.length >= 2) {
+        Data.get('jabatan/listkaryawanabsent', {nama: $query}).then(function(data) {
+            $scope.resultskaryawan = data.data;
+        });
+//        }
     }
 
     $scope.listBarang = function($query, no_wo, kd_jab) {
-        if ($query.length >= 3) {
+        if ($query.length >= 2) {
             Data.post('bbk/listbarang', {nama: $query, no_wo: no_wo, kd_jab: kd_jab}).then(function(data) {
                 $scope.resultsbarang = data.data;
             });

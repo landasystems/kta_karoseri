@@ -167,26 +167,26 @@ span.label{width: 180px;display: inline-table;}
 }
 
 #print_bbk{        
-    font-size: 9pt;    
+    font-size: 8pt;    
     letter-spacing: 1pt;
     margin: 0px;
     padding: 0px;
-    font-family: Arial;        
+    font-family: Sans Serif;        
 }
 #print_bbm{        
     font-size: 10pt;      
     letter-spacing: 1pt;
     margin: 0px;
     padding: 0px;
-    font-family: Arial;        
+    font-family: Sans Serif;        
 }
 .print_bbk_td{
-    font-size: 9pt;
+    font-size: 8pt;
     vertical-align: top;
-    font-family: Arial;      
+    font-family: Sans Serif;      
 }
 .print_bbm_td{
     font-size: 10pt;
     vertical-align: top;
-    font-family: Arial;
+    font-family: Sans Serif;
 }

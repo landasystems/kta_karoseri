@@ -77,7 +77,6 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
         }
     };
     $scope.callServer = function callServer(tableState) {
-        console.log(tableState);
         tableStateRef = tableState;
         $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
