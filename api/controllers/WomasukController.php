@@ -87,6 +87,11 @@ class WomasukController extends Controller {
 
     public function actionGetspk() {
         $params = json_decode(file_get_contents("php://input"), true);
+        if (!empty($params['spk']['no_spk'])) {
+            $spk = $params['spk']['no_spk'];
+        } else {
+            $spk = $params['no_wo'];
+        }
         $query = new Query;
         $query->from('spk')
                 ->join(' JOIN', 'customer as cs', 'spk.kd_customer = cs.kd_cust')
@@ -96,7 +101,7 @@ class WomasukController extends Controller {
 //                ->join(' JOIN', 'warna', 'sti.kd_warna = warna.kd_warna')
                 ->join(' JOIN', 'model', 'model.kd_model = spk.kd_model')
                 ->select("*")
-                ->where('spk.no_spk="' . $params['spk']['no_spk'] . '"');
+                ->where('spk.no_spk="' . $spk . '"');
 
 
         $command = $query->createCommand();
@@ -319,7 +324,7 @@ class WomasukController extends Controller {
                     ->distinct("konf_seat1")
                     ->select("konf_seat1");
             $commandseat1 = $queryseat1->createCommand();
-            $seat1 = $commandseat1->queryAll();
+            $seat_satu = $commandseat1->queryAll();
 
             //SEAT 2
             $queryseat2 = new Query;
@@ -327,7 +332,7 @@ class WomasukController extends Controller {
                     ->distinct("konf_seat2")
                     ->select("konf_seat2");
             $commandseat2 = $queryseat2->createCommand();
-            $seat2 = $commandseat2->queryAll();
+            $seat_dua = $commandseat2->queryAll();
 
             //SEAT 3
             $queryseat3 = new Query;
@@ -335,7 +340,7 @@ class WomasukController extends Controller {
                     ->distinct("konf_seat3")
                     ->select("konf_seat3");
             $commandseat3 = $queryseat3->createCommand();
-            $seat3 = $commandseat3->queryAll();
+            $seat_tiga = $commandseat3->queryAll();
 
             //SEAT 4
             $queryseat4 = new Query;
@@ -343,7 +348,7 @@ class WomasukController extends Controller {
                     ->distinct("konf_seat4")
                     ->select("konf_seat4");
             $commandseat4 = $queryseat4->createCommand();
-            $seat4 = $commandseat4->queryAll();
+            $seat_empat = $commandseat4->queryAll();
 
             //SEAT 5
             $queryseat5 = new Query;
@@ -351,7 +356,7 @@ class WomasukController extends Controller {
                     ->distinct("konf_seat5")
                     ->select("konf_seat5");
             $commandseat5 = $queryseat5->createCommand();
-            $seat5 = $commandseat5->queryAll();
+            $seat_lima = $commandseat5->queryAll();
 
             //COVER SEAT
             $querycover = new Query;
@@ -378,8 +383,8 @@ class WomasukController extends Controller {
             $ac = $commandac->queryAll();
 
             $interior = ['plavon' => $plavon, 'trimming' => $trimming, 'duchting' => $duchting, 'lplavon' => $lplavon, 'lantai' => $lantai,
-                'karpet' => $karpet, 'seat1', $seat1, 'seat2', $seat2, 'seat3', $seat3, 'seat4', $seat4, 'seat5', $seat5,
-                'cover' => $cover, 'total_seat' => $tseat, 'ac' => $ac];
+                'karpet' => $karpet, 'seat_satu' => $seat_satu, 'seat_dua' => $seat_dua, 'seat_tiga' => $seat_tiga, 'seat_empat' => $seat_empat, 'seat_lima' => $seat_lima,
+                'cover_seat' => $cover, 'total_seat' => $tseat, 'ac' => $ac];
         } else {
             //PLAVON
             $queryplavon = new Query;
@@ -432,9 +437,9 @@ class WomasukController extends Controller {
             //DASHBOARD
             $querydashboard = new Query;
             $querydashboard->from('small_int')
-                    ->distinct("lampu_plavon")
-                    ->select("lampu_plavon");
-            $commanddashboard = $querylplavon->createCommand();
+                    ->distinct("dashboard")
+                    ->select("dashboard");
+            $commanddashboard = $querydashboard->createCommand();
             $dashboard = $commanddashboard->queryAll();
 
             //LANTAI
@@ -465,7 +470,7 @@ class WomasukController extends Controller {
             $queryptatas = new Query;
             $queryptatas->from('small_int')
                     ->distinct("pegangan_tangan_atas")
-                    ->select("peredam");
+                    ->select("pegangan_tangan_atas");
             $commandpatas = $queryptatas->createCommand();
             $patas = $commandpatas->queryAll();
 
@@ -577,7 +582,7 @@ class WomasukController extends Controller {
             'pbelakang' => $pbelakang, 'wyper' => $wyper, 'akarat' => $akarat, 'strip' => $strip, 'letter' => $letter];
 
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'spk' => $models, 'code' => $kode, 'eksterior' => $exterior,'interior'=>$interior));
+        echo json_encode(array('status' => 1, 'spk' => $models, 'code' => $kode, 'eksterior' => $exterior, 'interior' => $interior));
     }
 
     public function actionGetsti() {
@@ -845,6 +850,7 @@ class WomasukController extends Controller {
 
     public function actionSelect() {
         $params = json_decode(file_get_contents("php://input"), true);
+//        \Yii::error($params);
         $model = $this->findModel($params['no_wo']);
         $data = $model->attributes;
         $query = new Query;
@@ -886,7 +892,7 @@ class WomasukController extends Controller {
             $eksterior = new Query;
             $eksterior->from('small_eks')
                     ->join('JOIN', 'warna', 'small_eks.warna = warna.kd_warna') // customer
-                    ->select("*")
+                    ->select("warna.*")
                     ->where('no_wo="' . $params['no_wo'] . '"');
 
             $command2 = $eksterior->createCommand();
@@ -894,19 +900,22 @@ class WomasukController extends Controller {
             $eks = array();
             foreach ($models2 as $r) {
                 $eks = $r;
-                $eks['warna'] = ['kd_warna' => $r['kd_warna'], 'warna' => $r['warna']];
-                $eks['warna2'] = ['kd_warna' => $r['kd_warna'], 'warna' => $r['warna2']];
+                $eks['warna'] = $r;
             }
-
-
-            // interior
-            $interior = new Query;
-            $interior->from('small_int')
-                    ->select("*")
+            $eksterior2 = new Query;
+            $eksterior2->from('small_eks')
+                    ->join('JOIN', 'warna', 'small_eks.warna2 = warna.kd_warna') // customer
+                    ->select("warna.*")
                     ->where('no_wo="' . $params['no_wo'] . '"');
 
-            $command3 = $interior->createCommand();
+            $command3 = $eksterior2->createCommand();
             $models3 = $command3->queryAll();
+//            $eks = array();
+            foreach ($models3 as $r) {
+//                $eks = $r;
+                $eks['warna2'] = $r;
+            }
+
         } else {
             // eksterior
             $eksterior = new Query;
@@ -917,17 +926,28 @@ class WomasukController extends Controller {
 
             $command2 = $eksterior->createCommand();
             $models2 = $command2->queryAll();
-            $eks = array();
+//            $eks = array();
             foreach ($models2 as $r) {
                 $eks = $r;
-                $eks['warna'] = ['kd_warna' => $r['kd_warna'], 'warna' => $r['warna']];
-                $eks['warna2'] = ['kd_warna' => $r['warna2'], 'warna' => $r['warna']];
+                $eks['warna'] = $r;
+            }
+            $eksterior2 = new Query;
+            $eksterior2->from('mini_eks')
+                    ->join('JOIN', 'warna', 'mini_eks.warna2 = warna.kd_warna') // customer
+                    ->select("warna.*")
+                    ->where('no_wo="' . $params['no_wo'] . '"');
+
+            $command3 = $eksterior2->createCommand();
+            $models3 = $command3->queryAll();
+            $eks = array();
+            foreach ($models3 as $r) {
+                $eks['warna2'] = $r;
             }
 
             // interior
             $interior = new Query;
             $interior->from('mini_int')
-                    ->select("*")
+                    ->select("warna.*")
                     ->where('no_wo="' . $params['no_wo'] . '"');
 
             $command3 = $interior->createCommand();
@@ -936,6 +956,101 @@ class WomasukController extends Controller {
         $data['spk'] = ['no_spk' => $model['no_spk']];
         $data['no_wo'] = ['no_wo' => $model['no_wo']];
 
+
+        //=================== EKTERIOR===================
+        if ($asu['jenis'] == "Small Bus") {
+            $table = 'small';
+        } else {
+            $table = 'mini';
+        }
+
+        $querydriver_seat = new Query;
+        $querydriver_seat->from($table . '_eks')
+                ->where("no_wo='" . $model['no_wo'] . "'")
+                ->select("*");
+        $commanddriver_seat = $querydriver_seat->createCommand();
+        $driver_seat = $commanddriver_seat->queryAll();
+//        $coba = array();
+        foreach ($driver_seat as $key => $asi) {
+            $eks['plat'] = $asi;
+            $eks['ventilasi'] = $asi;
+            $eks['spion'] = $asi;
+            $eks['kdepan'] = $asi;
+            $eks['kbelakang'] = $asi;
+            $eks['ksamping'] = $asi;
+            $eks['ldepan'] = $asi;
+            $eks['lbelakang'] = $asi;
+            $eks['pdepan'] = $asi;
+            $eks['ppenumpang'] = $asi;
+            $eks['pbagasi'] = $asi;
+            $eks['pbelakang'] = $asi;
+            $eks['wyper'] = $asi;
+            $eks['akarat'] = $asi;
+            $eks['strip'] = $asi;
+            $eks['letter'] = $asi;
+            $eks['lain2'] = $asi['lain2'];
+        }
+//        ============= INTERIOR ===================
+        if ($asu['jenis'] == "Small Bus") {
+            $queryint = new Query;
+            $queryint->from('small_int')
+                    ->where("no_wo='" . $model['no_wo'] . "'")
+                    ->select("*");
+            $commandint = $queryint->createCommand();
+            $as = $commandint->queryAll();
+            foreach ($as as $key => $asa) {
+                $models3['plavon'] = $asa;
+                $models3['bdalam'] = $asa;
+                $models3['duchting'] = $asa;
+                $models3['trimming'] = $asa;
+                $models3['lplavon'] = $asa;
+                $models3['dashboard'] = $asa;
+                $models3['lantai'] = $asa;
+                $models3['karpet'] = $asa;
+                $models3['peredam'] = $asa;
+                $models3['pegangan_atas'] = $asa;
+                $models3['pengaman_penumpang'] = $asa;
+                $models3['pengaman_driver'] = $asa;
+                $models3['pengaman_kaca'] = $asa;
+                $models3['gordyn'] = $asa;
+                $models3['driver_fan'] = $asa;
+                $models3['radio_tape'] = $asa;
+                $models3['spek_seat'] = $asa;
+                $models3['driver_seat'] = $asa;
+                $models3['optional_seat'] = $asa;
+                $models3['total_seat'] = $asa;
+                $models3['cover_seat'] = $asa;
+                $models3['ac'] = $asa;
+                $models3['lain2'] = $asa['lain2'];
+            }
+        } else {
+            $queryint = new Query;
+            $queryint->from('mini_int')
+                    ->where("no_wo='" . $model['no_wo'] . "'")
+                    ->select("*");
+            $commandint = $queryint->createCommand();
+            $as = $commandint->queryAll();
+            foreach ($as as $key => $asa) {
+                $models3['plavon'] = $asa;
+                $models3['bdalam'] = $asa;
+                $models3['duchting'] = $asa;
+                $models3['trimming'] = $asa;
+                $models3['lplavon'] = $asa;
+                $models3['lantai'] = $asa;
+                $models3['karpet'] = $asa;
+                $models3['seat_satu'] = $asa;
+                $models3['seat_dua'] = $asa;
+                $models3['seat_tiga'] = $asa;
+                $models3['seat_empat'] = $asa;
+                $models3['seat_lima'] = $asa;
+                $models3['total_seat'] = $asa;
+                $models3['cover_seat'] = $asa;
+                $models3['ac'] = $asa;
+                $models3['lain2'] = $asa['lain2'];
+            }
+        }
+
+
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $data, 'det' => $asu, 'eksterior' => $eks, 'interior' => $models3), JSON_PRETTY_PRINT);
     }
@@ -943,127 +1058,230 @@ class WomasukController extends Controller {
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
         Yii::error($params);
-//        $model = new Womasuk();
-//        $model->attributes = $params['womasuk'];
-//
-//
-//        if ($model->save()) {
-////            save small eksterior
-//            if ($params['womasuk']['jenis'] == "Small Bus") {
-//                $smaleks = new Smalleks();
-//                $smaleks->attributes = $params['eksterior'];
-//                $smaleks->no_wo = $model->no_wo;
-////                $smaleks->warna = (isset($params['eksterior']['warna']['kd_warna'])) ? $params['eksterior']['warna']['kd_warna'] : '';
-////                $smaleks->warna2 = (isset($params['eksterior']['warna2']['kd_warna'])) ? $params['eksterior']['warna2']['kd_warna'] : '';
-//                //warna 1
-//                $warna = Warna::findOne($params['eksterior']['warna']['kd_warna']);
-//                if (empty($warna)) {
-//                    $warna = new Warna();
-//                }
-//                $warna->attributes = $params;
-//                if ($warna->save()) {
-//                    $smaleks->warna = $warna->kd_warna;
-//                }
-//                //warna 2
-//                $warna = Warna::findOne($params['eksterior']['warna2']['kd_warna']);
-//                if (empty($warna)) {
-//                    $warna = new Warna();
-//                }
-//                $warna->attributes = $params;
-//                if ($warna->save()) {
-//                    $smaleks->warna2 = $warna->kd_warna;
-//                }
-//
-//                $smaleks->save();
-//
-////                save small interior
-//                $smallint = new Smallint();
-//                $smallint->attributes = $params['interior'];
-//                $smallint->no_wo = $model->no_wo;
-//                $smallint->save();
-//            } else {
-//                //  save mini bus ekterior
-//                $minieks = new Minieks();
-//                $minieks->attributes = $params['eksterior'];
-//                $minieks->no_wo = $model->no_wo;
-//                $minieks->warna = (isset($params['eksterior']['warna']['kd_warna'])) ? $params['eksterior']['warna']['kd_warna'] : '';
-//                $minieks->warna2 = (isset($params['eksterior']['warna2']['kd_warna'])) ? $params['eksterior']['warna2']['kd_warna'] : '';
-//                //warna 1
-//                $warna = Warna::findOne($params['eksterior']['warna']['kd_warna']);
-//                if (empty($warna)) {
-//                    $warna = new Warna();
-//                }
-//                $warna->attributes = $params;
-//                if ($warna->save()) {
-//                    $smaleks->warna = $warna->kd_warna;
-//                }
-//                //warna 2
-//                $warna = Warna::findOne($params['eksterior']['warna2']['kd_warna']);
-//                if (empty($warna)) {
-//                    $warna = new Warna();
-//                }
-//                $warna->attributes = $params;
-//                if ($warna->save()) {
-//                    $smaleks->warna2 = $warna->kd_warna;
-//                }
-//
-//                $minieks->save();
-//
-//                // save interior mini bus
-//                $miniint = new Miniint();
-//                $miniint->attributes = $params['interior'];
-//                $miniint->no_wo = $model->no_wo;
-//                $miniint->save();
-//            }
-//            $this->setHeader(200);
-//            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-//        } else {
-//            $this->setHeader(400);
-//            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-//        }
+        $model = new Womasuk();
+        $model->attributes = $params['womasuk'];
+
+
+        if ($model->save()) {
+
+            // EKTERIOR
+            if ($params['womasuk']['jenis'] == "Small Bus") {
+                $table = new Smalleks();
+            } else {
+                $table = new Minieks();
+            }
+            $eks = $table;
+            $eks->nowo = $model->nowo;
+            $eks->plat_body = $params['eksterior']['plat']['plat_body'];
+            $eks->kaca_spion = $params['eksterior']['spion']['kaca_spion'];
+            $eks->kaca_depan = $params['eksterior']['kdepan']['kaca_depan'];
+            $eks->kaca_belakang = $params['eksterior']['kbelakang']['kaca_belakang'];
+            $eks->kaca_samping = $params['eksterior']['ksamping']['kaca_samping'];
+            $eks->lampu_depan = $params['eksterior']['ldepan']['lampu_depan'];
+            $eks->lampu_belakang = $params['eksterior']['lbelakang']['lampu_belakang'];
+            $eks->pintu_depan = $params['eksterior']['pdepan']['pintu_depan'];
+            $eks->pintu_penumpang = $params['eksterior']['ppenumpang']['pintu_penumpang'];
+            $eks->pintu_bagasi_samping = $params['eksterior']['pbagasi']['pintu_bagasi_samping'];
+            $eks->pintu_belakang = $params['eksterior']['pbelakang']['pintu_belakang'];
+            $eks->wyper_set = $params['eksterior']['wyper']['wyper_set'];
+
+            $warna = Warna::findOne($params['eksterior']['warna']['kd_warna']);
+            if (empty($warna)) {
+                $warna = new Warna();
+            }
+            $warna->attributes = $params;
+            if ($warna->save()) {
+                $eks->warna = $warna->kd_warna;
+            }
+            //warna 2
+            $warna = Warna::findOne($params['eksterior']['warna2']['kd_warna']);
+            if (empty($warna)) {
+                $warna = new Warna();
+            }
+            $warna->attributes = $params;
+            if ($warna->save()) {
+                $eks->warna2 = $warna->kd_warna;
+            }
+            $eks->strip = $params['eksterior']['strip']['strip'];
+            $eks->letter = $params['eksterior']['letter']['letter'];
+            $eks->lain2 = $params['eksterior']['lain2'];
+            $eks->save();
+
+            // INTERIOR
+            if ($params['womasuk']['jenis'] == "Mini Bus") {
+                $int = new Miniint();
+                $int->plavon = $params['interior']['plavon']['plavon'];
+                $int->trimming_deck = $params['interior']['trimming']['trimming_deck'];
+                $int->duchting_louver = $params['interior']['duchting']['duchting_louver'];
+                $int->lampu_plavon = $params['interior']['lplavon']['lampu_plavon'];
+                $int->lantai = $params['interior']['lantai']['lantai'];
+                $int->karpet = $params['interior']['karpet']['karpet'];
+                $int->konf_seat1 = $params['interior']['seat1']['konf_seat1'];
+                $int->konf_seat2 = $params['interior']['seat2']['konf_seat2'];
+                $int->konf_seat3 = $params['interior']['seat3']['konf_seat3'];
+                $int->konf_seat4 = $params['interior']['seat4']['konf_seat4'];
+                $int->konf_seat5 = $params['interior']['seat5']['konf_seat5'];
+                $int->konf_seat5 = $params['interior']['seat5']['konf_seat5'];
+                $int->cover_seat = $params['interior']['cover_seat']['cover_seat'];
+                $int->total_seat = $params['interior']['total_seat']['total_seat'];
+                $int->merk_ac = $params['interior']['ac']['merk_ac'];
+                $int->lain2 = $params['interior']['lain2'];
+                $int->save();
+            } else {
+                $int = new Smallint();
+                $int->plavon = $params['interior']['plavon']['plavon'];
+                $int->trimming_deck = $params['interior']['trimming']['trimming_deck'];
+                $int->duchting_louver = $params['interior']['duchting']['duchting_louver'];
+                $int->lampu_plavon = $params['interior']['lplavon']['lampu_plavon'];
+                $int->lantai = $params['interior']['lantai']['lantai'];
+                $int->karpet = $params['interior']['karpet']['karpet'];
+                $int->bagasi_dalam = $params['interior']['bdalam']['bagasi_dalam'];
+                $int->dashboard = $params['interior']['dashboard']['dashboard'];
+                $int->peredam = $params['interior']['peredam']['peredam'];
+                $int->pegangan_tangan_atas = $params['interior']['pegangan_atas']['pegangan_tangan_atas'];
+                $int->pengaman_penumpang = $params['interior']['pengaman_penumpang']['pengaman_penumpang'];
+                $int->pengaman_kaca_samping = $params['interior']['pengaman_kaca']['pengaman_kaca_samping'];
+                $int->pengaman_driver = $params['interior']['pengaman_driver']['pengaman_driver'];
+                $int->gordyn = $params['interior']['gordyn']['gordyn'];
+                $int->driver_fan = $params['interior']['driver_fan']['driver_fan'];
+                $int->radio_tape = $params['interior']['radio_tape']['radio_tape'];
+                $int->spek_seat = $params['interior']['spek_seat']['spek_seat'];
+                $int->driver_seat = $params['interior']['driver_seat']['driver_seat'];
+                $int->cover_seat = $params['interior']['cover_seat']['cover_seat'];
+                $int->optional_seat = $params['interior']['optional_seat']['optional_seat'];
+                $int->total_seat = $params['interior']['total_seat']['total_seat'];
+                $int->merk_ac = $params['interior']['ac']['merk_ac'];
+                $int->lain2 = $params['interior']['lain2'];
+                $int->save();
+            }
+
+            // UPDATE STI CUSTOMER
+            $sti = \app\models\Serahterimain::find($params['titipan']['kd_titipan']);
+            $sti->kd_cust = $params['spk']['kd_customer'];
+            $sti->no_spk = $params['spk']['no_spk'];
+            $sti->save();
+
+
+            $this->setHeader(200);
+            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        } else {
+            $this->setHeader(400);
+            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+        }
     }
 
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($params);
-//        $model = $this->findModel($params['womasuk']['no_wo']);
-        $model = WoMasuk::find()->where('no_wo="' . $params['eksterior']['no_wo'] . '"')->one();
+        
+        $model = $this->findModel($params['womasuk']['no_wo']);
+//        $model = WoMasuk::find()->where('no_wo="' . $params['eksterior']['no_wo'] . '"')->one();
 
         $model->attributes = $params['womasuk'];
 
 
 
         if ($model->save()) {
+            // EKTERIOR
             if ($params['womasuk']['jenis'] == "Small Bus") {
-
-                // small eksterior
-                $smalleks = Smalleks::find()->where('no_wo="' . $model->no_wo . '"')->one();
-                $smalleks->attributes = $params['eksterior'];
-                $smalleks->no_wo = $model->no_wo;
-                $smalleks->warna = (isset($params['eksterior']['warna']['kd_warna'])) ? $params['eksterior']['warna']['kd_warna'] : '';
-                $smalleks->warna2 = (isset($params['eksterior']['warna2']['kd_warna'])) ? $params['eksterior']['warna2']['kd_warna'] : '';
-                $smalleks->save();
-
-                // small interior
-                $smallint = Smallint::find()->where('no_wo="' . $model->no_wo . '"')->one();
-                $smallint->attributes = $params['interior'];
-                $smallint->no_wo = $model->no_wo;
-                $smallint->save();
+                $table = Smalleks::find()->where('no_wo="' . $model->no_wo . '"')->one();;
             } else {
-                // mini eksterior
-                $minieks = Minieks::find()->where('no_wo="' . $model->no_wo . '"')->one();
-                $minieks->attributes = $params['eksterior'];
-                $minieks->no_wo = $model->no_wo;
-                $minieks->warna = (isset($params['eksterior']['warna']['kd_warna'])) ? $params['eksterior']['warna']['kd_warna'] : '';
-                $minieks->warna2 = (isset($params['eksterior']['warna2']['kd_warna'])) ? $params['eksterior']['warna2']['kd_warna'] : '';
-                $minieks->save();
-
-                // mini interior
-                $miniint = Miniint::find()->where('no_wo="' . $model->no_wo . '"')->one();
-                $miniint->attributes = $params['interior'];
-                $miniint->no_wo = $model->no_wo;
-                $miniint->save();
+                $table = Minieks::find()->where('no_wo="' . $model->no_wo . '"')->one();
             }
+            $eks = $table;
+            $eks->no_wo = $model->no_wo;
+            $eks->plat_body = $params['eksterior']['plat']['plat_body'];
+            $eks->kaca_spion = $params['eksterior']['spion']['kaca_spion'];
+            $eks->kaca_depan = $params['eksterior']['kdepan']['kaca_depan'];
+            $eks->kaca_belakang = $params['eksterior']['kbelakang']['kaca_belakang'];
+            $eks->kaca_samping = $params['eksterior']['ksamping']['kaca_samping'];
+            $eks->lampu_depan = $params['eksterior']['ldepan']['lampu_depan'];
+            $eks->lampu_belakang = $params['eksterior']['lbelakang']['lampu_belakang'];
+            $eks->pintu_depan = $params['eksterior']['pdepan']['pintu_depan'];
+            $eks->pintu_penumpang = $params['eksterior']['ppenumpang']['pintu_penumpang'];
+            $eks->pintu_bagasi_samping = $params['eksterior']['pbagasi']['pintu_bagasi_samping'];
+            $eks->pintu_belakang = $params['eksterior']['pbelakang']['pintu_belakang'];
+            $eks->wyper_set = $params['eksterior']['wyper']['wyper_set'];
+
+            $warna = Warna::findOne($params['eksterior']['warna']['kd_warna']);
+            if (empty($warna)) {
+                $warna = new Warna();
+            }
+            $warna->attributes = $params;
+            if ($warna->save()) {
+                $eks->warna = $warna->kd_warna;
+            }
+            //warna 2
+            $warna = Warna::findOne($params['eksterior']['warna2']['kd_warna']);
+            if (empty($warna)) {
+                $warna = new Warna();
+            }
+            $warna->attributes = $params;
+            if ($warna->save()) {
+                $eks->warna2 = $warna->kd_warna;
+            }
+            $eks->strip = $params['eksterior']['strip']['strip'];
+            $eks->letter = $params['eksterior']['letter']['letter'];
+            $eks->lain2 = $params['eksterior']['lain2'];
+            $eks->save();
+            
+            // INTERIOR
+            if ($params['womasuk']['jenis'] == "Mini Bus") {
+                $int = Miniint::find()->where('no_wo="' . $model->no_wo . '"')->one();
+                $int->no_wo = $model->no_wo;
+                $int->plavon = $params['interior']['plavon']['plavon'];
+                $int->trimming_deck = $params['interior']['trimming']['trimming_deck'];
+                $int->duchting_louver = $params['interior']['duchting']['duchting_louver'];
+                $int->lampu_plavon = $params['interior']['lplavon']['lampu_plavon'];
+                $int->lantai = $params['interior']['lantai']['lantai'];
+                $int->karpet = $params['interior']['karpet']['karpet'];
+                $int->konf_seat1 = $params['interior']['seat1']['konf_seat1'];
+                $int->konf_seat2 = $params['interior']['seat2']['konf_seat2'];
+                $int->konf_seat3 = $params['interior']['seat3']['konf_seat3'];
+                $int->konf_seat4 = $params['interior']['seat4']['konf_seat4'];
+                $int->konf_seat5 = $params['interior']['seat5']['konf_seat5'];
+                $int->konf_seat5 = $params['interior']['seat5']['konf_seat5'];
+                $int->cover_seat = $params['interior']['cover_seat']['cover_seat'];
+                $int->total_seat = $params['interior']['total_seat']['total_seat'];
+                $int->merk_ac = $params['interior']['ac']['merk_ac'];
+                $int->lain2 = $params['interior']['lain2'];
+                $int->save();
+            } else {
+                $int = Smallint::find()->where('no_wo="' . $model->no_wo . '"')->one();
+                $int->no_wo = $model->no_wo;
+                $int->plavon = $params['interior']['plavon']['plavon'];
+                $int->trimming_deck = $params['interior']['trimming']['trimming_deck'];
+                $int->duchting_louver = $params['interior']['duchting']['duchting_louver'];
+                $int->lampu_plavon = $params['interior']['lplavon']['lampu_plavon'];
+                $int->lantai = $params['interior']['lantai']['lantai'];
+                $int->karpet = $params['interior']['karpet']['karpet'];
+                $int->bagasi_dalam = $params['interior']['bdalam']['bagasi_dalam'];
+                $int->dashboard = $params['interior']['dashboard']['dashboard'];
+                $int->peredam = $params['interior']['peredam']['peredam'];
+                $int->pegangan_tangan_atas = $params['interior']['pegangan_atas']['pegangan_tangan_atas'];
+                $int->pengaman_penumpang = $params['interior']['pengaman_penumpang']['pengaman_penumpang'];
+                $int->pengaman_kaca_samping = $params['interior']['pengaman_kaca']['pengaman_kaca_samping'];
+                $int->pengaman_driver = $params['interior']['pengaman_driver']['pengaman_driver'];
+                $int->gordyn = $params['interior']['gordyn']['gordyn'];
+                $int->driver_fan = $params['interior']['driver_fan']['driver_fan'];
+                $int->radio_tape = $params['interior']['radio_tape']['radio_tape'];
+                $int->spek_seat = $params['interior']['spek_seat']['spek_seat'];
+                $int->driver_seat = $params['interior']['driver_seat']['driver_seat'];
+                $int->cover_seat = $params['interior']['cover_seat']['cover_seat'];
+                $int->optional_seat = $params['interior']['optional_seat']['optional_seat'];
+                $int->total_seat = $params['interior']['total_seat']['total_seat'];
+                $int->merk_ac = $params['interior']['ac']['merk_ac'];
+                $int->lain2 = $params['interior']['lain2'];
+                $int->save();
+            }
+            
+            // UPDATE STI CUSTOMER
+            $spk = \app\models\Spk::find($params['womasuk']['spk']['no_spk']);
+            $sti = \app\models\Serahterimain::find($params['womasuk']['titipan']['kd_titipan']);
+            $sti->kd_cust = $spk->kd_customer;
+            $sti->no_spk = $spk->no_spk;
+            $sti->save();
+            Yii::error($spk);
+            
 
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -1155,13 +1373,13 @@ class WomasukController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->queryAll();
-        foreach($models as $key => $val){
-            if(strtolower($val['jenis'])  == "mini bus"){
-                $miniExt = Minieks::find()->where('no_wo="'.$val['no_wo'].'"')->one();
+        foreach ($models as $key => $val) {
+            if (strtolower($val['jenis']) == "mini bus") {
+                $miniExt = Minieks::find()->where('no_wo="' . $val['no_wo'] . '"')->one();
                 $models[$key]['kd_warna'] = (!empty($miniExt->waarna->kd_warna)) ? $miniExt->waarna->kd_warna : '';
                 $models[$key]['warna'] = (!empty($miniExt->waarna->warna)) ? $miniExt->waarna->warna : '';
-            }elseif(strtolower($val['jenis']) == "small bus"){
-                $smallExt = Smalleks::find()->where('no_wo="'.$val['no_wo'].'"')->one();
+            } elseif (strtolower($val['jenis']) == "small bus") {
+                $smallExt = Smalleks::find()->where('no_wo="' . $val['no_wo'] . '"')->one();
                 $models[$key]['kd_warna'] = (!empty($smallExt->waarna->kd_warna)) ? $smallExt->waarna->kd_warna : '';
                 $models[$key]['warna'] = (!empty($smallExt->waarna->warna)) ? $smallExt->waarna->warna : '';
             }
