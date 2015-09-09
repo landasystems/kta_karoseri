@@ -14,7 +14,7 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
 
 <table border="1">
     <tr>
-        <td rowspan="4" colspan="3">
+        <td rowspan="4" colspan="2">
             <br>
     <center><b>LAPORAN PENERIAMAAN UJI MUTU</b></center>
     <br><br>
@@ -22,7 +22,7 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
     <br><br>
 
     </td>
-    <td rowspan="4" colspan="5" valign="top">
+    <td rowspan="4" colspan="3" valign="top">
         <table>
             <tr>
                 <td>PERIODE</td>
