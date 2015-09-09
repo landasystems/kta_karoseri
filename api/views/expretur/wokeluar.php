@@ -12,7 +12,7 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
 <br><br>
 
 
-<table>
+<table width="100%" style="border-collapse: collapse">
     <tr>
         <td colspan="2" style="border: 1px solid #000000">
             <br>
@@ -78,7 +78,7 @@ foreach ($models as $key => $val) {
     $i++;
 }
 ?>
-<table border="1">
+<table border="1" width="100%" style="border-collapse: collapse">
     <tr>
         <th>IN CHASIS</th>
         <th>UNIT</th>

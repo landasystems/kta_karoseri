@@ -1,6 +1,6 @@
 <?php
 header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-rekap-Barang_Keluar.xls");
+//header("Content-Disposition: attachment; filename=excel-rekap-Barang_Keluar.xls");
 ?>
 <h3>PT. KARYA TUGAS ANDA</h3>
 Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
@@ -9,7 +9,7 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
 
 
 
-<table>
+<table width="100%" style="border-collapse: collapse;">
     <tr>
         <td colspan="3" style="border: 1px solid #000000">
     <center><b>REKAP BARANG KELUAR</b></center>
@@ -63,7 +63,7 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
 </tr>
 </table>
 
-<table border="1">
+<table width="100%" border="1" style="border-collapse: collapse;">
     <tr>
         <th>#</th>
         <th>TANGGAL</th>
