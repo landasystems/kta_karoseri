@@ -180,7 +180,8 @@ app.controller('rolesCtrl', function ($scope, Data, toaster) {
             "notif_abk": false,
             "notif_monitoring": false,
         }
-        angular.forEach($scope.form.akses, function ($value, $key) {
+        
+        angular.forEach(akses, function ($value, $key) {
             if ($key.indexOf(module) >= 0)
                 $scope.form.akses[$key] = valueCheck;
         });

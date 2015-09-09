@@ -151,7 +151,7 @@
                                             <label class="col-sm-4 control-label">Merk</label>
                                             <div class="col-sm-8">
                                                 <select class="form-control" ng-model="form.merk" ng-change="typeChassis(form.merk);
-                                                            getchassis(form.merk, form.tipe)" ng-disabled="is_view" >
+                                                                getchassis(form.merk, form.tipe)" ng-disabled="is_view" >
                                                     <option value="">-Pilih Merk-</option>
                                                     <option ng-repeat="valMerk in listMerk" value="{{valMerk.merk}}">{{valMerk.merk}}</option>
                                                 </select>
@@ -207,7 +207,7 @@
                                             <label class="col-md-4"></label>
                                             <div class="col-md-8">
                                                 <button type="submit" class="btn btn-info fa fa-eye-slash" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="is_show = true;
-                                                        tmpBomModel(tableStateRef)">&nbsp;Tampilkan Data</button>
+                                                            tmpBomModel()">&nbsp;Tampilkan Data</button>
                                                 <button type="button" class="btn btn-success fa fa-file-excel-o"  ng-click="excelRekapRealisasiWo()">&nbsp; Export Laporan</button>
                                             </div>
                                         </div>
@@ -242,10 +242,42 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
+                                            <td colspan="5" class="text-center">
+                                                <div st-items-by-page="20" st-pagination=""></div>
+                                            </td>
+                                            <!--<div  st-items-by-page="10" st-pagination=""></div>-->
                                             <!--<td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="7"></td>-->
                                         </tr>
                                     </tfoot>
-                                </table>			
+                                </table>
+
+                                <table st-table="displayed2" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th st-ratio="20" st-sort="firstName">first name</th>
+                                            <th st-ratio="20" st-sort="lastName">last name</th>
+                                            <th st-ratio="10" st-sort="age">age</th>
+                                            <th st-ratio="30" st-sort="email">email</th>
+                                            <th st-ratio="20" st-sort="balance">balance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="row in displayed2">
+                                            <td st-ratio="20">{{row.firstName}}</td>
+                                            <td st-ratio="20">{{row.lastName| uppercase}}</td>
+                                            <td st-ratio="10">{{row.age}}</td>
+                                            <td st-ratio="30">{{row.email}}</td>
+                                            <td st-ratio="20">{{row.balance| currency}}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="5" class="text-center">
+                                                <div  st-items-by-page="20" st-pagination=""></div>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
                             </div>
                         </div>
                     </div>
