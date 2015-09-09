@@ -173,22 +173,22 @@ span.label{width: 180px;display: inline-table;}
     letter-spacing: 1pt;
     margin: 0px;
     padding: 0px;
-    font-family: Arial;        
+    font-family: Roman;        
 }
 #print_bbm{        
     font-size: 10pt;      
     letter-spacing: 1pt;
     margin: 0px;
     padding: 0px;
-    font-family: Arial;        
+    font-family: Roman;        
 }
 .print_bbk_td{
     font-size: 9pt;
     vertical-align: top;
-    font-family: Arial;      
+    font-family: Roman;      
 }
 .print_bbm_td{
     font-size: 10pt;
     vertical-align: top;
-    font-family: Arial;
+    font-family: Roman;
 }

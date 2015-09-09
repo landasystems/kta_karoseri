@@ -97,6 +97,11 @@
     </div>
 
     <div class="wrapper-md" ng-show="is_edit">
+        <style>
+            .form-group {
+                margin-bottom: 5px;
+            }
+        </style>
         <div class="panel panel-default">
             <div class="panel-heading">
                 {{formtitle}} 
@@ -153,17 +158,17 @@
                                     <label class="col-sm-3 control-label">No Wo</label>
                                     <div class="col-sm-9">
                                         <div class="input-group">
+                                            <span class="input-group-btn">
+                                                <button ng-click="form.no_wo = undefined" class="btn btn-default" ng-disabled="is_view">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </span>
                                             <ui-select ng-model="form.no_wo" ng-disabled="is_view" theme="bootstrap" >
                                                 <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
                                                 <ui-select-choices refresh="cariWo($select.search)" repeat="val in results">
                                                     {{val.no_wo}}
                                                 </ui-select-choices>
                                             </ui-select>
-                                            <span class="input-group-btn">
-                                                <button ng-click="form.no_wo = undefined" class="btn btn-default" ng-disabled="is_view">
-                                                    <span class="glyphicon glyphicon-trash"></span>
-                                                </button>
-                                            </span>
                                         </div>
                                     </div>
                                 </div>

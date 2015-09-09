@@ -38,11 +38,12 @@ class AdditionalbomController extends Controller {
 
     public function actionCari() {
         $params = $_REQUEST;
-        $query = new Query;
-        $query->from('trans_additional_bom')
-                ->select("*")
-                ->where(['like', 'kd_bom', $params['nama']]);
 
+        $query = new Query;
+        $query->from('view_wo_spk')
+                ->select("kd_bom, merk, tipe, kd_chassis, jenis, kd_model, no_wo, model")
+                ->where(['like', 'no_wo', $params['no_wo']])
+                ->limit(10);
         $command = $query->createCommand();
         $models = $command->queryAll();
         $this->setHeader(200);
@@ -141,7 +142,7 @@ class AdditionalbomController extends Controller {
                 $models[$key]['bom'] = $bom->attributes;
             if (!empty($wo))
                 $models[$key]['wo'] = $wo->attributes;
-            if(!empty($model))
+            if (!empty($model))
                 $models[$key]['modelKendaraan'] = $model->attributes;
         }
 //        Yii::error($models);
