@@ -11,6 +11,7 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
     $scope.tgl_cetak = new Date();
     $scope.gantiStatus = {};
     $scope.is_print = 0;
+    $scope.err_pengambilan = false;
 
     $scope.bukaPrint = function(form) {
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
@@ -47,15 +48,17 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
     $scope.kalkulasi = function(sisa, stok, jml_keluar) {
         if (typeof $scope.form.no_wo != "undefined") {
             if (sisa - jml_keluar >= 0) {
-
+                $scope.err_pengambilan = false;
                 $scope.sisa_pengambilan = sisa - jml_keluar;
                 $scope.stok_sekarang = stok - jml_keluar;
                 ($scope.sisa_pengambilan > 0) ? $scope.detailBbk.jml = $scope.detailBbk.jml : $scope.detailBbk.jml = 0;
                 ($scope.sisa_pengambilan >= 0) ? $scope.sisa_pengambilan = $scope.sisa_pengambilan : $scope.sisa_pengambilan = 0;
             } else {
+                $scope.err_pengambilan = true;
                 toaster.pop('error', "Sisa pengambilan bahan telah habis");
             }
         } else {
+            $scope.err_pengambilan = false;
             $scope.sisa_pengambilan = 0;
             $scope.stok_sekarang = stok - jml_keluar;
         }
@@ -69,31 +72,31 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
     $scope.detailstok(0, 0);
 
     $scope.cariWo = function($query) {
-        if ($query.length >= 3) {
-            Data.get('wo/wospk', {nama: $query}).then(function(data) {
-                $scope.results = data.data;
-            });
-        }
+//        if ($query.length >= 2) {
+        Data.get('wo/wospk', {nama: $query}).then(function(data) {
+            $scope.results = data.data;
+        });
+//        }
     }
 
     $scope.cariJabatan = function($query) {
-        if ($query.length >= 3) {
-            Data.get('jabatan/cari', {nama: $query}).then(function(data) {
-                $scope.resultsjabatan = data.data;
-            });
-        }
+//        if ($query.length >= 2) {
+        Data.get('jabatan/cari', {nama: $query}).then(function(data) {
+            $scope.resultsjabatan = data.data;
+        });
+//        }
     }
 
     $scope.cariKaryawan = function($query) {
-        if ($query.length >= 3) {
-            Data.get('jabatan/listkaryawanabsent', {nama: $query}).then(function(data) {
-                $scope.resultskaryawan = data.data;
-            });
-        }
+//        if ($query.length >= 2) {
+        Data.get('jabatan/listkaryawanabsent', {nama: $query}).then(function(data) {
+            $scope.resultskaryawan = data.data;
+        });
+//        }
     }
 
     $scope.listBarang = function($query, no_wo, kd_jab) {
-        if ($query.length >= 3) {
+        if ($query.length >= 2) {
             Data.post('bbk/listbarang', {nama: $query, no_wo: no_wo, kd_jab: kd_jab}).then(function(data) {
                 $scope.resultsbarang = data.data;
             });
@@ -101,11 +104,15 @@ app.controller('bbkCtrl', function($scope, Data, toaster, $modal) {
     }
 
     $scope.addDetail = function(detail) {
-        $scope.detailBbk.unshift({
-            kd_barang: '',
-            jml: '',
-            ket: '',
-        });
+        if ($scope.err_pengambilan == false) {
+            $scope.detailBbk.unshift({
+                kd_barang: '',
+                jml: '',
+                ket: '',
+            });
+        } else {
+            toaster.pop('error', "Sisa pengambilan bahan telah habis");
+        }
     };
 
     $scope.removeRow = function(paramindex) {

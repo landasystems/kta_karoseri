@@ -48,9 +48,9 @@ a[href^="#"]:after, a[href^="javascript:"]:after {content: "";}
 
 /* Table */
 table { margin: 1px; text-align:left; width:100%} 
-th { border-bottom: 1px solid #333;  font-weight: bold; text-align: center }
+/*th { border-top: 1px solid #333;  font-weight: bold; text-align: center }
 td { border-bottom: 1px solid #333; }
-th,td { padding: 4px 10px; }
+th,td { padding: 4px 10px; }*/
 tfoot { font-style: italic; }
 caption { background: #fff; margin-bottom:2em; text-align:left; }
 thead {display: table-header-group;}
@@ -157,16 +157,38 @@ span.label{width: 180px;display: inline-table;}
     padding:2px;
     line-height: 5px;
     font-size: 12px;        
-    /*font-family: monospace;*/
     page-break-after: avoid;
 }
 
 #print{        
     padding-left: 0px;
-    font-size: 16px;        
-    /*line-height: 0px;*/
+    font-size: 14px;        
     margin: 0px;
     padding: 0px;
     font-family: monospace;        
 }
 
+#print_bbk{        
+    font-size: 8pt;    
+    letter-spacing: 1pt;
+    margin: 0px;
+    padding: 0px;
+    font-family: Sans Serif;        
+}
+#print_bbm{        
+    font-size: 10pt;      
+    letter-spacing: 1pt;
+    margin: 0px;
+    padding: 0px;
+    font-family: Sans Serif;        
+}
+.print_bbk_td{
+    font-size: 8pt;
+    vertical-align: top;
+    font-family: Sans Serif;      
+}
+.print_bbm_td{
+    font-size: 10pt;
+    vertical-align: top;
+    font-family: Sans Serif;
+}

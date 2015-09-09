@@ -15,21 +15,19 @@ use Yii;
  * @property string $alasan
  * @property string $ket
  */
-class ReturBbk extends \yii\db\ActiveRecord
-{
+class ReturBbk extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'retur_bbk';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['no_retur_bbk'], 'required'],
             [['tgl'], 'safe'],
@@ -44,8 +42,7 @@ class ReturBbk extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'no_retur_bbk' => 'No Retur Bbk',
             'tgl' => 'Tgl',
@@ -56,4 +53,5 @@ class ReturBbk extends \yii\db\ActiveRecord
             'ket' => 'Ket',
         ];
     }
+
 }

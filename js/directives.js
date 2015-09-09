@@ -69,6 +69,21 @@ angular.module('app')
                 };
             }]);
 
+//Directive key press
+angular.module('app')
+        .directive('ngEnter', function() {
+            return function(scope, element, attrs) {
+                element.bind("keydown keypress", function(event) {
+                    if (event.which === 13) {
+                        scope.$apply(function() {
+                            scope.$eval(attrs.ngEnter);
+                        });
+
+                        event.preventDefault();
+                    }
+                });
+            };
+        });
 
 /*directive print*/
 function printDirective() {
@@ -83,7 +98,7 @@ function printDirective() {
     function printElement(elem) {
         var popupWin = window.open('', '_blank', 'width=1000,height=700');
         popupWin.document.open()
-        popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print()">' + elem.innerHTML + '</html>');
+        popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print();window.close();">' + elem.innerHTML + '</html>');
         popupWin.document.close();
     }
     return {
@@ -91,40 +106,6 @@ function printDirective() {
         restrict: 'A'
     };
 }
-
-//Directive key press
-app.directive('ngEnter', function() {
-    return function(scope, element, attrs) {
-        element.bind("keydown keypress", function(event) {
-            if (event.which === 13) {
-                scope.$apply(function() {
-                    scope.$eval(attrs.ngEnter);
-                });
-
-                event.preventDefault();
-            }
-        });
-    };
-});
-
-//focus
-app.directive("uiselectAutofocus", function ($timeout) {
-    return {
-        restrict: 'A',
-        require: 'uiSelect',
-        link: function (scope, elem, attr) {
-            $timeout(function() {
-                var input = elem.find('input');
-
-                if (attr.uiselectAutofocus == 'open')
-                    input.click();
-
-                input.focus()
-            }, 0);
-        }
-    }
-});
-
 angular.module('app').directive('ngPrint', [printDirective]);
 
 /*scroll ke atas*/

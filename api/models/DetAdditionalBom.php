@@ -29,7 +29,7 @@ class DetAdditionalBom extends \yii\db\ActiveRecord {
     public function rules() {
         return [
             [['kd_bom', 'qty'], 'required'],
-            [['qty','trans_additional_bom_id'], 'number'],
+            [['qty','tran_additional_bom_id'], 'number'],
             [['kd_bom', 'kd_jab'], 'string', 'max' => 20],
             [['kd_barang'], 'string', 'max' => 10],
             [['ket'], 'string', 'max' => 1000]
@@ -43,7 +43,7 @@ class DetAdditionalBom extends \yii\db\ActiveRecord {
         return [
             'id' => 'ID',
             'kd_bom' => 'Kd Bom',
-            'trans_additional_bom_id' => 'Additional Bom', 
+            'tran_additional_bom_id' => 'Additional Bom', 
             'kd_barang' => 'Kd Barang',
             'qty' => 'Qty',
             'ket' => 'Ket',
@@ -59,7 +59,7 @@ class DetAdditionalBom extends \yii\db\ActiveRecord {
         return $this->hasOne(Barang::className(), ['kd_barang' => 'kd_barang']);
     }
     public function getAdditionalbom() {
-        return $this->hasOne(TransAdditionalBom::className(), ['id' => 'trans_additional_bom_id']);
+        return $this->hasOne(TransAdditionalBom::className(), ['id' => 'tran_additional_bom_id']);
     }
 
 }

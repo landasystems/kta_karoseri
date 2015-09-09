@@ -78,16 +78,16 @@ class ReturbbkController extends Controller {
                 ->select('*')
                 ->orderBy('no_retur_bbk DESC')
                 ->limit(1);
+        $command = $query->createCommand();
+        $models = $command->query()->read();
 
-        $cek = ReturBbk::findOne('no_retur_bbk = "BK' . date("y") . '0001"');
+        $cek = ReturBbk::findOne('no_retur_bbk = "BK' . date("y") . '00001"');
         if (empty($cek)) {
-            $command = $query->createCommand();
-            $models = $command->query()->read();
-            $urut = substr($models['no_retur_bbk'], 2, 4) + 1;
+            $urut = substr($models['no_retur_bbk'], -4) + 1;
             $kode = substr('0000' . $urut, strlen($urut));
             $kode = "RK" . date("y") . $kode;
         } else {
-            $kode = "RK" . date("y") . "0001";
+            $kode = "RK" . date("y") . "00001";
         }
         $this->setHeader(200);
 
@@ -144,11 +144,11 @@ class ReturbbkController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
-    
+
     public function actionRekap() {
         $params = $_REQUEST;
         $filter = array();
-        $sort = "rb.tgl ASC";
+        $sort = "rb.no_retur_bbk DESC";
         $offset = 0;
         $limit = 10;
 
@@ -177,7 +177,6 @@ class ReturbbkController extends Controller {
                 ->join('JOIN', 'trans_bbk as tb', 'tb.no_bbk = rb.no_bbk')
                 ->join('JOIN', 'barang', 'barang.kd_barang = rb.kd_barang')
                 ->join('LEFT JOIN', 'jenis_brg as jb', 'barang.jenis = jb.kd_jenis')
-                
                 ->orderBy($sort)
                 ->select("rb.tgl as tanggal, rb.no_retur_bbk, tb.no_bbk, tb.no_wo, barang.kd_barang, jb.jenis_brg, barang.nm_barang, barang.satuan,
                        rb.ket ");
@@ -187,22 +186,20 @@ class ReturbbkController extends Controller {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
 
-                if (isset($key) && $key == 'tanggal') 
-                    {
+                if (isset($key) && $key == 'tanggal') {
                     $value = explode(' - ', $val);
                     $start = date("Y-m-d", strtotime($value[0]));
                     $end = date("Y-m-d", strtotime($value[1]));
                     $query->andFilterWhere(['between', 'rb.tgl', $start, $end]);
-                }elseif($key == 'no_retur_bbk'){
-                    $query->andFilterWhere(['like', 'rb.'.$key, $val]);
-                } elseif($key == 'no_bbk'){
-                    $query->andFilterWhere(['like', 'tb.'.$key, $val]);
-                } elseif($key == 'nm_barang'){
-                    $query->andFilterWhere(['like', 'barang.'.$key, $val]);
+                } elseif ($key == 'no_retur_bbk') {
+                    $query->andFilterWhere(['like', 'rb.' . $key, $val]);
+                } elseif ($key == 'no_bbk') {
+                    $query->andFilterWhere(['like', 'tb.' . $key, $val]);
+                } elseif ($key == 'nm_barang') {
+                    $query->andFilterWhere(['like', 'barang.' . $key, $val]);
                 }
             }
         }
-        Yii::error($query);
         $command = $query->createCommand();
         $models = $command->queryAll();
 //        Yii::error($models);
@@ -232,14 +229,14 @@ class ReturbbkController extends Controller {
         $barang = $command->query()->read();
 
         $query = new Query;
-        $query->from('trans_bbk')
-                ->select('no_bbk')
-                ->where('no_bbk = "' . $model->no_bbk . '"')
-                ->limit(1);
+        $query->from('det_bbk')
+                ->select('sum(jml) as jumlah')
+                ->where('kd_barang = "' . $model->kd_barang . '" and no_bbk = "' . $model->no_bbk . '"');
         $command = $query->createCommand();
         $bbk = $command->query()->read();
-        $model->kd_barang = isset($barang) ? $barang : '-';
-        $model->no_bbk = isset($bbk) ? $bbk : '-';
+
+        $model->kd_barang = array('kd_barang' => $barang['kd_barang'], 'nm_barang' => $barang['nm_barang'], 'jml' => empty($bbk['jumlah']) ? 0 : $bbk['jumlah']);
+        $model->no_bbk = array('no_bbk' => $model->no_bbk);
 
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -269,7 +266,6 @@ class ReturbbkController extends Controller {
 
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
-//        print_r($params);
         $model = ReturBbk::find()->where('no_retur_bbk="' . $id . '"')->one();
         if ($model->alasan == 'Tidak Sesuai') {
             //kembalikan stok barang ke semula
@@ -352,14 +348,15 @@ class ReturbbkController extends Controller {
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
+
     public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
         $filter = $_SESSION['filter'];
-        
+
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/returbbk", ['models' => $models,'filter'=>$filter]);
+        return $this->render("/expretur/returbbk", ['models' => $models, 'filter' => $filter]);
     }
 
 }

@@ -217,13 +217,14 @@ class UjimutuController extends Controller {
     }
 
     public function actionView($id) {
-
-        $model = $this->findModel($id);
+        Yii::error($id);
+        $model = Ujimutu::find(['kd_uji' => $id]);
+        Yii::error($model);
         $query = new Query;
         $query->from('det_uji_mutu as det')
                 ->join('JOIN', 'view_wo_spk as vms', 'vms.no_wo = det.no_wo')
                 ->select("det.*, vms.no_wo as nowo, vms.merk as merk")
-                ->where("det.kd_uji='" . $model['kd_uji'] . "'");
+                ->where("det.kd_uji='" . $id . "'");
 
         
         $command = $query->createCommand();
@@ -287,16 +288,18 @@ class UjimutuController extends Controller {
     }
 
     public function actionDelete($id) {
-        $model = $this->findModel($id);
+//        Yii::error($id);
+//        $model = $this->findModel($id);
+        $model = Ujimutu::deleteAll(['kd_uji' => $id]);
         $deleteDetail = DetUjimutu::deleteAll(['kd_uji' => $id]);
-        if ($model->delete()) {
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-        } else {
-
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-        }
+//        if ($model->delete()) {
+//            $this->setHeader(200);
+//            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+//        } else {
+//
+//            $this->setHeader(400);
+//            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+//        }
     }
 
     protected function findModel($id) {

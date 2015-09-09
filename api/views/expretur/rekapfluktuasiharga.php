@@ -1,6 +1,13 @@
 <?php
 header("Content-type: application/vnd-ms-excel");
 //header("Content-Disposition: attachment; filename=excel-rekap-fluktuasi-harga.xls");
+$data = array();
+foreach ($models as $keys => $val) {
+    if($keys['hrg_barang'] != $keys['harga']){
+        $data[$keys] = $val;
+    }
+    
+}
 ?>
 
 
@@ -63,7 +70,7 @@ header("Content-type: application/vnd-ms-excel");
     </tr>
     <?php
     $no=1;
-    foreach ($models as $key) {
+    foreach ($data as $key) {
         ?>
         <tr>
             <td valign="top">&nbsp;<?= $no; ?></td>

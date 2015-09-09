@@ -1,6 +1,6 @@
 <?php
 header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-rekap-PO.xls");
+header("Content-Disposition: attachment; filename=excel-SPK.xls");
 ?>
 <br>
 <table width="100%" border="1">
