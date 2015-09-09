@@ -308,6 +308,18 @@ angular.module('app')
                                             }]
                                     }
                                 })
+                                //cek BOM
+                                .state('transaksi.cekbom', {
+                                    url: '/section',
+                                    templateUrl: 'tpl/t_cekbom/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function($ocLazyLoad) {
+                                                return $ocLazyLoad.load('js/controllers/cekbom.js');
+
+                                            }]
+                                    }
+                                })
                                 //Rubah Bentuk
                                 .state('transaksi.rubahbentuk', {
                                     url: '/rubah-bentuk',
@@ -743,9 +755,9 @@ angular.module('app')
                                     templateUrl: 'tpl/r_claim-unit/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function ($ocLazyLoad) {
+                                            function($ocLazyLoad) {
                                                 return $ocLazyLoad.load(['daterangepicker']).then(
-                                                        function () {
+                                                        function() {
                                                             return $ocLazyLoad.load('js/controllers/r_claimunit.js');
                                                         }
                                                 );
@@ -868,9 +880,9 @@ angular.module('app')
                                     templateUrl: 'tpl/r_wo-keluar/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function ($ocLazyLoad) {
+                                            function($ocLazyLoad) {
                                                 return $ocLazyLoad.load(['daterangepicker']).then(
-                                                        function () {
+                                                        function() {
                                                             return $ocLazyLoad.load('js/controllers/r_wokeluar.js');
                                                         }
                                                 );
@@ -974,7 +986,7 @@ angular.module('app')
                                                 );
                                             }]
                                     }})
-                                
+
                                 //notifikasi
                                 .state('notif', {
                                     url: '/notif',
@@ -985,9 +997,9 @@ angular.module('app')
                                     templateUrl: 'tpl/n_barang/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function ($ocLazyLoad) {
+                                            function($ocLazyLoad) {
                                                 return $ocLazyLoad.load([]).then(
-                                                        function () {
+                                                        function() {
                                                             return $ocLazyLoad.load('js/controllers/n_barang.js');
                                                         }
                                                 );
@@ -998,9 +1010,9 @@ angular.module('app')
                                     templateUrl: 'tpl/n_unit/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function ($ocLazyLoad) {
+                                            function($ocLazyLoad) {
                                                 return $ocLazyLoad.load([]).then(
-                                                        function () {
+                                                        function() {
                                                             return $ocLazyLoad.load('js/controllers/n_unit.js');
                                                         }
                                                 );
@@ -1011,10 +1023,23 @@ angular.module('app')
                                     templateUrl: 'tpl/n_barangkeluar/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function ($ocLazyLoad) {
+                                            function($ocLazyLoad) {
                                                 return $ocLazyLoad.load([]).then(
-                                                        function () {
+                                                        function() {
                                                             return $ocLazyLoad.load('js/controllers/n_barangkeluar.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                .state('transaksi.tglspp', {
+                                    url: '/tglspp',
+                                    templateUrl: 'tpl/t_tglspp/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function() {
+                                                            return $ocLazyLoad.load('js/controllers/tglspp.js');
                                                         }
                                                 );
                                             }]

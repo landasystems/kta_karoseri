@@ -65,6 +65,7 @@ class BomController extends Controller {
         $query->from('trans_standar_bahan')
                 ->select("*")
                 ->where(['like', 'kd_bom', $params['nama']])
+                ->orderBy('kd_bom DESC')
                 ->limit(25);
 
         $command = $query->createCommand();
@@ -81,6 +82,7 @@ class BomController extends Controller {
                 ->select("trans_standar_bahan.*, chassis.merk")
                 ->where(['like', 'kd_bom', $params['nama']])
                 ->andWhere('status = 1')
+                ->orderBy('kd_bom DESC')
                 ->limit(25);
 
         $command = $query->createCommand();
@@ -514,6 +516,7 @@ class BomController extends Controller {
             $detail[$val->jabatan->id_jabatan]['nama_jabatan'] = isset($val->jabatan->jabatan) ? $val->jabatan->jabatan : '-';
             $detail[$val->jabatan->id_jabatan]['body'][$i]['nama_barang'] = isset($val->barang->nm_barang) ? $val->barang->nm_barang : '-';
             $detail[$val->jabatan->id_jabatan]['body'][$i]['satuan'] = isset($val->barang->satuan) ? $val->barang->satuan : '-';
+            $detail[$val->jabatan->id_jabatan]['body'][$i]['harga'] = isset($val->barang->harga) ? $val->barang->harga : '0';
             $detail[$val->jabatan->id_jabatan]['body'][$i]['jumlah'] = isset($val->qty) ? $val->qty : '-';
             $detail[$val->jabatan->id_jabatan]['body'][$i]['ket'] = isset($val->ket) ? $val->ket : '-';
             $i++;
@@ -537,7 +540,7 @@ class BomController extends Controller {
                 ->join('LEFT JOIN', 'barang as b', 'b.kd_barang = dst.kd_barang')
                 ->where('dst.kd_bom = "' . $models['kd_bom'] . '"')
                 ->orderBy('j.urutan_produksi ASC, b.nm_barang ASC')
-                ->select('dst.*, j.jabatan, b.nm_barang, b.satuan, b.harga');
+                ->select('dst.*, j.jabatan, b.nm_barang, b.satuan, b.harga as harga_barang, b.harga');
         $commandDet = $det->createCommand();
         $detBom = $commandDet->queryAll();
 

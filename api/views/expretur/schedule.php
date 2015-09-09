@@ -1,6 +1,6 @@
 <?php
-header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-retur-schedule.xls");
+//header("Content-type: application/vnd-ms-excel");
+//header("Content-Disposition: attachment; filename=excel-schedule.xls");
 $data = array();
 $i = 0;
 foreach ($models as $val) {
@@ -17,7 +17,7 @@ foreach ($models as $val) {
 }
 ?>
 <link href="../../../css/print.css" rel="stylesheet" type="text/css" />
-<div style="margin-top: 30px; margin-left: 30px;">
+<div style="margin-top: 30px; margin-left: 30px; margin-right: 30px;">
     <table width="100%" class="print-detail" border="1">
         <thead>
             <tr>

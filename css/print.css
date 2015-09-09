@@ -61,6 +61,7 @@ span.label{width: 180px;display: inline-table;}
 .kanan{float: right;padding:2px 10px;}
 
 .table_po {
+    border-collapse: collapse;
     border-bottom: 1px solid #333; 
     border-left: 1px solid #333; 
     border-right: 1px solid #333; 
@@ -69,17 +70,18 @@ span.label{width: 180px;display: inline-table;}
     width:100%;
 }
 .table_po td{
-    border-right: 1px solid #333; 
+    border: 1px solid #333; 
 }
 .table_po th{
-    border-right: 1px solid #333; 
+    border: 1px solid #333; 
 }
 
-.table_po tr{
+/*.table_po tr{
     border-top: 1px solid #333; 
-}
+}*/
 //tablepo
 .tablepo{
+    border-collapse: collapse;
     border-bottom: 1px solid #333; 
     border-left: 1px solid #333; 
     border-right: 1px solid #333; 
@@ -90,13 +92,9 @@ span.label{width: 180px;display: inline-table;}
 }
 
 .tablepo td{
-    border-right: 1px solid #333;
-
-}
-.tablepo tr{
-    border-top: 1px solid #333; 
+/*    border-top: 1px solid #333; 
     border-bottom: 1px solid #333;
-    border-left: 1px solid #333;
+    border-left: 1px solid #333;*/
     padding-left: 0px;
     padding-right: 0px;
 }
@@ -169,26 +167,26 @@ span.label{width: 180px;display: inline-table;}
 }
 
 #print_bbk{        
-    font-size: 9pt;    
+    font-size: 8pt;    
     letter-spacing: 1pt;
     margin: 0px;
     padding: 0px;
-    font-family: Arial;        
+    font-family: Sans Serif;        
 }
 #print_bbm{        
     font-size: 10pt;      
     letter-spacing: 1pt;
     margin: 0px;
     padding: 0px;
-    font-family: Arial;        
+    font-family: Sans Serif;        
 }
 .print_bbk_td{
-    font-size: 9pt;
+    font-size: 8pt;
     vertical-align: top;
-    font-family: Arial;      
+    font-family: Sans Serif;      
 }
 .print_bbm_td{
     font-size: 10pt;
     vertical-align: top;
-    font-family: Arial;
+    font-family: Sans Serif;
 }

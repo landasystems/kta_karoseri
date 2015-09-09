@@ -1,7 +1,10 @@
 <?php
-header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-retur-rubah-bentuk.xls");
+if (!isset($_GET['print'])) {
+    header("Content-type: application/vnd-ms-excel");
+    header("Content-Disposition: attachment; filename=excel-rubah-bentuk.xls");
+}
 ?>
+
 <div style="margin-top: 30px; margin-left: 30px;">
     <table width="100%" border="1">
         <tr>
@@ -14,7 +17,7 @@ header("Content-Disposition: attachment; filename=excel-retur-rubah-bentuk.xls")
                     <tr height="30">
                         <td width="100">PERIODE</td>
                         <td width="1" width="1">:</td>
-                        <td><?php echo $periode ?></td>
+                        <td align="left"><?php echo $periode ?></td>
                     </tr>
                 </table>
             </td>
@@ -27,7 +30,7 @@ header("Content-Disposition: attachment; filename=excel-retur-rubah-bentuk.xls")
                     <tr height="30">
                         <td width="100">CETAK</td>
                         <td width="1" width="1">:</td>
-                        <td><?php echo date("d-m-y")?></td>
+                        <td align="left"><?php echo date("d-m-y") ?></td>
                     </tr>
                 </table>
             </td>
@@ -73,7 +76,19 @@ header("Content-Disposition: attachment; filename=excel-retur-rubah-bentuk.xls")
         ?>
         <tr height="30">
             <td>Total Unit</td>
-            <td colspan="7"><?php echo $jml ?></td>
+            <td colspan="7" align="left"><?php echo $jml ?></td>
         </tr>
     </table>
 </div>
+<?php
+if (isset($_GET['print'])) {
+    ?>
+    <script type="text/javascript">
+        window.print();
+        setTimeout(function() {
+            window.close();
+        }, 1);
+    </script>
+    <?php
+}
+?>

@@ -2,7 +2,7 @@ app.controller('rekapclaimCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
     var paramRef;
-    
+
     $scope.displayed = [];
     $scope.paginations = 0;
     $scope.is_edit = false;
@@ -29,20 +29,30 @@ app.controller('rekapclaimCtrl', function ($scope, Data, toaster) {
             console.log(data.data);
             $scope.displayedPrint = data.dataPrint;
             $scope.paginations = data.totalItems;
-            if(data.totalItems != 0) {
+            if (data.totalItems != 0) {
                 tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
             }
         });
 
         $scope.isLoading = false;
     };
-    
+
     $scope.excel = function () {
         Data.get('claimunit/rekap', paramRef).then(function (data) {
-            window.location = 'api/web/claimunit/excel';
+//            var a = new window;
+//            a.location = 'http://juuaaancoookkk.com/';
+            window.open('api/web/claimunit/excel?excel=ex');
         });
     }
-   
+    
+    $scope.print = function () {
+        Data.get('claimunit/rekap', paramRef).then(function (data) {
+//            var a = new window;
+//            a.location = 'http://juuaaancoookkk.com/';
+            window.open('api/web/claimunit/excel?excel=print');
+        });
+    }
+
 
 
 })

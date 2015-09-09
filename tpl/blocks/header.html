@@ -123,6 +123,9 @@
                                     <li ng-show="user.akses.transaksi_tambahitem">
                                         <a ui-sref="transaksi.tambahitem"><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Tambahan Items</a>
                                     </li>
+                                    <li ng-show="user.akses.transaksi_cekbom">
+                                        <a ui-sref="transaksi.cekbom"><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Cek BOM</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -228,6 +231,9 @@
                                     <li ng-show="user.akses.transaksi_kpb">
                                         <a ui-sref='transaksi.kpb'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Kartu Pengambilan Bahan</a>
                                     </li>
+                                    <li ng-show="user.akses.transaksi_tglspp">
+                                        <a ui-sref='transaksi.tglspp'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Pengisian Tanggal SPP</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -319,9 +325,9 @@
                                         <li ng-show="user.akses.rekap_wokeluar">
                                             <a ui-sref='rekap.wokeluar'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>WO Keluar</a>
                                         </li>
-<!--                                        <li ng-show="user.akses.rekap_wip">
-                                            <a ui-sref='rekap.wip'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>WIP</a>
-                                        </li>-->
+                                        <!--                                        <li ng-show="user.akses.rekap_wip">
+                                                                                    <a ui-sref='rekap.wip'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>WIP</a>
+                                                                                </li>-->
                                         <li ng-show="user.akses.rekap_womasuk">
                                             <a ui-sref='rekap.womasuk'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>WO Masuk</a>
                                         </li>

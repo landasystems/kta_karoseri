@@ -137,6 +137,7 @@ class BarangController extends Controller {
         $_SESSION['queryBbm'] = $bbm;
         $_SESSION['queryBbk'] = $bbk;
         $_SESSION['periode'] = $tglStart . ' - ' . $tglEnd;
+        $_SESSION['tanggal'] = $tgl;
         echo json_encode(array('status' => 1, 'data' => $data));
     }
 
@@ -179,7 +180,7 @@ class BarangController extends Controller {
             $i++;
         }
 
-        $tgl = $_SESSION['tanggal'];
+        $tgl = isset($_SESSION['tanggal']) ? $_SESSION['tanggal'] : '-';
         $periode = $_SESSION['periode'];
 //        print_r($bbm);
         return $this->render("/expretur/pergerakanbarang", ['models' => $data, 'tgl' => $tgl, 'periode' => $periode]);

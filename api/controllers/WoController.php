@@ -57,7 +57,7 @@ class WoController extends Controller {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('view_wo_spk as vws')
-                ->join('LEFT JOIN','wo_masuk as wm','wm.no_wo = vws.no_wo')
+                ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo = vws.no_wo')
                 ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
                 ->select("vws.*, tk.nama as sales, tk.lokasi_kntr as wilayah, wm.tgl_keluar as tgl_wo_keluar")
@@ -70,7 +70,7 @@ class WoController extends Controller {
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $models));
     }
-    
+
     public function actionWospk() {
         $params = $_REQUEST;
         $query = new Query;
@@ -79,6 +79,7 @@ class WoController extends Controller {
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
                 ->select("vws.*, tk.nama as sales, tk.lokasi_kntr as wilayah")
                 ->where(['like', 'vws.no_wo', $params['nama']])
+                ->orderBy('vws.no_wo DESC')
                 ->limit(20);
         $command = $query->createCommand();
         $models = $command->queryAll();

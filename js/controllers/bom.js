@@ -77,7 +77,6 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
         }
     };
     $scope.callServer = function callServer(tableState) {
-        console.log(tableState);
         tableStateRef = tableState;
         $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
@@ -2588,38 +2587,21 @@ app.controller('rekapBomCtrl', function ($scope, Data) {
 //        var limit = tableState.pagination.number || 10;
         Data.get('bom/rekaprealisasimodel', param).then(function (data) {
             $scope.r_bomModel = data.data;
-
-            for (var j = 0; j < 50; j++) {
-                $scope.displayed2.push(createRandomItem());
-            }
+            $scope.totalItems = $scope.r_bomModel.length;
+            $scope.currentPage = 1;
+            $scope.numPerPage = 5;
 //            tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
 //        $scope.isLoading = false;
     };
 
-    var nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa'],
-            familyName = ['Dupont', 'Germain', 'Delcourt', 'bjip', 'Menez'];
-
-    function createRandomItem() {
-        var
-                firstName = nameList[Math.floor(Math.random() * 4)],
-                lastName = familyName[Math.floor(Math.random() * 4)],
-                age = Math.floor(Math.random() * 100),
-                email = firstName + lastName + '@whatever.com',
-                balance = Math.random() * 3000;
-
-        return{
-            firstName: firstName,
-            lastName: lastName,
-            age: age,
-            email: email,
-            balance: balance
-        };
-    }
-
-
-    $scope.displayed2 = [];
-
+    $scope.paginate = function(value) {
+        var begin, end, index;
+        begin = ($scope.currentPage - 1) * $scope.numPerPage;
+        end = begin + $scope.numPerPage;
+        index = $scope.r_bomModel.indexOf(value);
+        return (begin <= index && index < end);
+    };
 
 
 })

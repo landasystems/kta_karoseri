@@ -39,8 +39,8 @@ header("Content-Disposition: attachment; filename=Laporan-HPP.xls");
                         <td>' . $det['nama_barang'] . '</td>
                         <td align="center">' . $det['satuan'] . '</td>
                         <td align="right">' . $det['jumlah'] . '</td>
-                        <td colspan="2"></td>
-                        <td colspan="2"></td>
+                        <td colspan="2">' . $det['harga'] . '</td>
+                        <td colspan="2">' . $det['harga'] * $det['jumlah'] . '</td>
                         <td colspan="2">' . $det['ket'] . '</td>
                     </tr>';
             }

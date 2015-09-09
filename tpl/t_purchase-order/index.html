@@ -436,7 +436,7 @@
 
 
             <tbody  width="700">
-                <tr>
+                <tr class="table_po tr">
                     <th style="width: 5%">No.</th>
                     <th style="width:54%;">URAIAN</th>
                     <th style="width:5%">KWANTUM</th>
@@ -444,7 +444,7 @@
                     <th >HARGA</th>
                     <th>JUMLAH</th>
                 </tr>
-                <tr ng-repeat="detail in detsPo">
+                <tr class="table_po tr" ng-repeat="detail in detsPo">
                     <td style="text-align:center;">{{detail.data_barang.no}}</td>
                     <td>{{detail.data_barang.nm_barang}}</td>
                     <td style="text-align:center;">{{detail.jml}}</td>
@@ -462,22 +462,22 @@
                         <div>- Pengiriman Tanggal : {{form.tanggal| date:'dd-MMMM-yyyy'}}</div>
                         <div>- Form asli ini berlaku untuk penagihan</div>
                         <div>- Spesifikasi teknis terlampir</div>
-                        <table class="tablepo">
+                        <table class="tablepo" style="border-collapse: collapse;">
                             <tr style="border-top:  1px solid #333;">
-                                <td style="text-align:center;border-top:  1px solid #333;border-left:  1px solid #333;">Pemberi Order</td>
+                                <td style="text-align:center;border-top:  1px solid #333;border-left:none;">Pemberi Order</td>
                                 <td style="text-align:center;border-top:  1px solid #333;">Penerima Order</td>
                             </tr>
                             <tr height="80">
-                                <td style="border-left:  1px solid #333;"></td>
+                                <td style="border-left:  none;"></td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td style="border-left:  1px solid #333;">Tgl :</td>
-                                <td>Tgl :</td>
+                                <td style="border-left:none;border-bottom: none;">Tgl :</td>
+                                <td style="border-bottom: none;">Tgl :</td>
                             </tr>
                         </table>
                     </td>
-                    <td colspan="3" rowspan="3" style="border-right:0px;" valign="top">
+                    <td colspan="3" rowspan="3" style="border-right:none;" valign="top">
                         <div>
                             <div class="kiri">
                                 <div>Total pembelian / biaya </div>
