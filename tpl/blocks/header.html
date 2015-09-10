@@ -271,14 +271,13 @@
                                     <li ng-show="user.akses.rekap_claimunit">
                                         <a ui-sref='rekap.claimunit'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Claim Unit</a>
                                     </li>
-
+                                    <li ng-show="user.akses.rekap_chassisin">
+                                        <a ui-sref='rekap.chassisin'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Chassis In</a>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="col-xs-6">
                                 <ul class="list-unstyled l-h-2x">
-                                    <li ng-show="user.akses.rekap_chassisin">
-                                        <a ui-sref='rekap.chassisin'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Chassis In</a>
-                                    </li>
                                     <li ng-show="user.akses.rekap_deliveryunit">
                                         <a ui-sref='rekap.deliveryunit'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Delivery Unit</a>
                                     </li>
@@ -317,14 +316,15 @@
                                     <li ng-show="user.akses.rekap_suratpesanan">
                                         <a ui-sref='rekap.suratpesanan'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Surat Pesanan</a>
                                     </li>
+                                    <li ng-show="user.akses.rekap_schedule">
+                                        <a ui-sref='rekap.schedule'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Schedule</a>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="col-xs-6">
                                 <ul class="list-unstyled l-h-2x">
                                     <ul class="list-unstyled l-h-2x">
-                                        <li ng-show="user.akses.rekap_schedule">
-                                            <a ui-sref='rekap.schedule'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Schedule</a>
-                                        </li>
+
                                         <li ng-show="user.akses.rekap_wokeluar">
                                             <a ui-sref='rekap.wokeluar'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>WO Keluar</a>
                                         </li>
@@ -372,33 +372,14 @@
             <a href class="dropdown-toggle" dropdown-toggle>
                 <i class="fa fa-bell"></i>
                 <span class="visible-xs-inline">Notifications</span>
-                <!--<span class="badge badge-sm up bg-danger pull-right-xs">2</span>-->
             </a>
             <!-- dropdown -->
             <ul class="dropdown-menu animated fadeInRight w">
-                <!--                <li ng-show="user.akses.notif_bom">
-                                    <a ui-sref='notif.bom'>BOM</a>
-                                </li>
-                                <li ng-show="user.akses.notif_chassismasuk">
-                                    <a ui-sref='notif.chassismasuk'>Chassis Masuk</a>
-                                </li>
-                                <li ng-show="user.akses.notif_wo">
-                                    <a ui-sref='notif.wo'>Work Order</a>
-                                </li>
-                                <li ng-show="user.akses.notif_wip">
-                                    <a ui-sref='notif.wip'>Work In Progress</a>
-                                </li>-->
                 <li ng-show="user.akses.notif_barang">
                     <a ui-sref='notif.barang'>Notifikasi Barang</a>
                 </li>
                 <li ng-show="user.akses.notif_unit">
                     <a ui-sref='notif.unit'>Notifikasi Unit</a>
-                </li>
-                <li ng-show="user.akses.notif_abk">
-                    <a ui-sref='notif.abk'>Autentikasi Barang Keluar</a>
-                </li>
-                <li ng-show="user.akses.notif_monitoring">
-                    <a ui-sref='notif.monitoring'>Monitoring</a>
                 </li>
             </ul>
             <!-- / dropdown -->

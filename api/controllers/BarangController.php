@@ -85,9 +85,6 @@ class BarangController extends Controller {
                 ->orderBy('barang.nm_barang')
                 ->where('det_bbm.tgl_terima >= "' . $tglStart . '" and det_bbm.tgl_terima <= "' . $tglEnd . '"');
 
-//        if (isset($params['kd_barang']))
-//            $bbm->andFilterWhere('=', 'det_bbm.kd_barang', $params['kd_barang']);
-
         if (isset($params['barang']))
             $bbm->andFilterWhere(['det_bbm.kd_barang' => $params['barang']['kd_barang']]);
 
