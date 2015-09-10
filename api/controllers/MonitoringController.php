@@ -3,14 +3,6 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Spkaroseri;
-use app\models\Spk;
-use app\models\Womasuk;
-use app\models\Serahterimain;
-use app\models\TransBbm;
-use app\models\DetSpp;
-use app\models\DetBbm;
-use app\models\DetailPo;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -25,6 +17,7 @@ class MonitoringController extends Controller {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'index' => ['get'],
+                    'excel' => ['get'],
                 ],
             ]
         ];
@@ -34,15 +27,13 @@ class MonitoringController extends Controller {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
-        } elseif (excel(isset($this->actions['*']))) {
+        } elseif (isset($this->actions['*'])) {
             $verbs = $this->actions['*'];
         } else {
             return $event->isValid;
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
-//        Yii::error($allowed);
-
         if (!in_array($verb, $allowed)) {
 
             $this->setHeader(400);
@@ -53,103 +44,80 @@ class MonitoringController extends Controller {
         return true;
     }
 
-    public function actionIndex($id) {
+    public function actionIndex() {
         //init variable
-        $data = [];
-        $no = 0;
-        $a = date('Y-m-d', strtotime('-32 month', strtotime(date('Y-m-d'))));
-        $woMasuk = WoMasuk::find()
-                ->with(['spkaroseri', 'spkaroseri.chassis'])
-                ->where('tgl_kontrak >="' . $a . '"')
-//                ->limit(40)
-                ->orderBy('tgl_kontrak DESC')
-                ->all();
-        if (!empty($woMasuk)) {
-            //cari yang belum ada spek WO
-            foreach ($woMasuk as $key => $val) {
-                $chassis = (!empty($val->spkaroseri->chassis)) ? $val->spkaroseri->chassis->attributes : array();
+        $params = $_REQUEST;
+        $filter = array();
+        $sort = "trans_spp.no_spp DESC";
+        $offset = 0;
+        $limit = 10;
 
-                if (!empty($chassis['jenis']) and strtolower($chassis['jenis']) == 'mini bus') {
-                    $miniInt = \app\models\Miniint::find()
-                            ->where('no_wo="' . $val->no_wo . '"')
-                            ->one();
-                    $miniEks = \app\models\Minieks::find()
-                            ->where('no_wo="' . $val->no_wo . '"')
-                            ->one();
-                    if ((empty($miniInt) or $miniInt->plavon = "-" or $miniInt->plavon = NULL ) AND ( empty($miniEks) or $miniEks->plat_body = "-" or $miniEks->plat_body = NULL )) {
-                        $data[$no] = $val->attributes;
-                        $data[$no]['nm_customer'] = (!empty($val->spkaroseri->customer->nm_customer)) ? $val->spkaroseri->customer->nm_customer : '-';
-                        $data[$no]['status'] = 'Belum Ada Spesifikasi WO';
-                    }
-                } elseif (!empty($chassis['jenis']) and strtolower($chassis['jenis']) == 'small bus') {
-                    $smallInt = \app\models\Smallint::find()
-                            ->where('no_wo="' . $val->no_wo . '"')
-                            ->one();
-                    $smallEks = \app\models\Smalleks::find()
-                            ->where('no_wo="' . $val->no_wo . '"')
-                            ->one();
-                    if ((empty($smallInt) or $smallInt->plavon = "-" or $smallInt->plavon = NULL ) AND ( empty($smallEks) or $smallEks->plat_body = "-" or $smallEks->plat_body = NULL )) {
-                        $data[$no] = $val->attributes;
-                        $data[$no]['nm_customer'] = (!empty($val->spkaroseri->customer->nm_customer)) ? $val->spkaroseri->customer->nm_customer : '-';
-                        $data[$no]['status'] = 'Belum Ada Spesifikasi WO';
-                    }
-                }
-                $no++;
-            }
+        //limit & offset pagination
+        if (isset($params['limit']))
+            $limit = $params['limit'];
+        if (isset($params['offset']))
+            $offset = $params['offset'];
 
-            //cari yang belum ada WIP
-            foreach ($woMasuk as $key => $val) {
-                $findWip = \app\models\Wip::find()
-                        ->where('no_wo="' . $val->no_wo . '"')
-                        ->one();
-                if (empty($findWip)) {
-                    $data[$no] = $val->attributes;
-                    $data[$no]['nm_customer'] = (!empty($val->spkaroseri->customer->nm_customer)) ? $val->spkaroseri->customer->nm_customer : '-';
-                    $data[$no]['status'] = 'Belum Ada WIP';
-                }
-                $no++;
-            }
-
-            //cari yang belum ada STI
-            foreach ($woMasuk as $key => $val) {
-                $findSti = Serahterimain::find()
-                        ->where('kd_titipan="' . $val->kd_titipan . '"')
-                        ->one();
-                if (empty($findSti)) {
-                    $data[$no] = $val->attributes;
-                    $data[$no]['nm_customer'] = (!empty($val->spkaroseri->customer->nm_customer)) ? $val->spkaroseri->customer->nm_customer : '-';
-                    $data[$no]['status'] = 'Belum Ada Serah Terima Internal';
-                }
-                $no++;
+        //sorting
+        if (isset($params['sort'])) {
+            $sort = $params['sort'];
+            if (isset($params['order'])) {
+                if ($params['order'] == "false")
+                    $sort.=" ASC";
+                else
+                    $sort.=" DESC";
             }
         }
-        //cari yg belum ada WO
-        $query = new Query();
-        $query->from('wo_masuk')
-                ->join('RIGHT JOIN', 'spk', '`spk`.`no_spk` = `wo_masuk`.`no_spk`')
-                ->join('lEFT JOIN', 'customer', '`spk`.`kd_customer` = `customer`.`kd_cust`')
-//                ->where("no_proyek='Non Rutin'")
-                ->orderBy('wo_masuk.no_spk ASC')
-                ->limit(10)
-                ->select("*");
+
+        //create query
+        $query = new Query;
+        $query->offset($offset)
+                ->limit($limit)
+                ->from('trans_spp')
+                ->join('JOIN', 'det_spp', 'trans_spp.no_spp = det_spp.no_spp')
+                ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
+                ->join('LEFT JOIN', 'view_wo_spk', 'view_wo_spk.no_wo = det_spp.no_wo')
+                ->orderBy($sort)
+                ->select("trans_spp.*, det_spp.*, barang.nm_barang, view_wo_spk.nm_customer");
+
+        //filter
+        if (isset($params['filter'])) {
+            $filter = (array) json_decode($params['filter']);
+            if (isset($filter['tanggal'])) {
+                $value = explode(' - ', $filter['tanggal']);
+                $start = date("Y-m-d", strtotime($value[0]));
+                $end = date("Y-m-d", strtotime($value[1]));
+                $query->andFilterWhere(['between', 'trans_spp.tgl_trans', $start, $end]);
+            }
+            if (isset($filter['kategori'])) {
+                $query->andFilterWhere(['=', 'trans_spp.no_proyek', $filter['kategori']]);
+            }
+        }
+
+        session_start();
+        $_SESSION['query'] = $query;
+        $_SESSION['periode'] = isset($filter['tanggal']) ? $filter['tanggal'] : '-';
+
         $command = $query->createCommand();
         $models = $command->queryAll();
+        $totalItems = $query->count();
 
-        if (!empty($models)) {
-            foreach ($models as $key => $val) {
-                $data[$no] = $val;
-                $data[$no]['nm_customer'] = (!empty($val['nm_customer'])) ? $val['nm_customer'] : '-';
-                $data[$no]['status'] = 'Belum Ada WO';
-                $no++;
-            }
-        }
         $this->setHeader(200);
-        if ($id) {
-            return $this->render('excel', ['data' => $data]);
-        } else {
-            echo json_encode(array('status' => 1, 'data' => $data), JSON_PRETTY_PRINT);
-        }
 
+        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $query->limit(null);
+        $query->offset(null);
+        $query->select("trans_spp.*, det_spp.*, barang.nm_barang");
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $periode = $_SESSION['periode'];
+
+        return $this->render("/expretur/monitoring", ['models' => $models, 'periode' => $periode]);
     }
 
     private function setHeader($status) {
@@ -177,3 +145,5 @@ class MonitoringController extends Controller {
     }
 
 }
+
+?>

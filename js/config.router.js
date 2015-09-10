@@ -644,7 +644,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load([]).then(
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/monitoring.js');
                                                         }
@@ -1030,19 +1030,6 @@ angular.module('app')
                                                 return $ocLazyLoad.load([]).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/n_unit.js');
-                                                        }
-                                                );
-                                            }]
-                                    }})
-                                .state('notif.barangkeluar', {
-                                    url: '/barangkeluar',
-                                    templateUrl: 'tpl/n_barangkeluar/index.html',
-                                    resolve: {
-                                        deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load([]).then(
-                                                        function() {
-                                                            return $ocLazyLoad.load('js/controllers/n_barangkeluar.js');
                                                         }
                                                 );
                                             }]
