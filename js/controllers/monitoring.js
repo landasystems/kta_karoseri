@@ -19,4 +19,16 @@ app.controller('monitoringCtrl', function($scope, Data, toaster) {
         });
         $scope.isLoading = false;
     };
+
+    $scope.print = function() {
+        Data.get('monitoring', paramRef).then(function(data) {
+            window.open('api/web/monitoring/excel?print=true', "", "width=500");
+        });
+    }
+
+    $scope.export = function() {
+        Data.get('monitoring', paramRef).then(function(data) {
+            window.location = 'api/web/monitoring/excel';
+        });
+    }
 });

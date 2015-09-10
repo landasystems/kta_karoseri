@@ -92,9 +92,9 @@ span.label{width: 180px;display: inline-table;}
 }
 
 .tablepo td{
-/*    border-top: 1px solid #333; 
-    border-bottom: 1px solid #333;
-    border-left: 1px solid #333;*/
+    /*    border-top: 1px solid #333; 
+        border-bottom: 1px solid #333;
+        border-left: 1px solid #333;*/
     padding-left: 0px;
     padding-right: 0px;
 }
@@ -189,4 +189,32 @@ span.label{width: 180px;display: inline-table;}
     font-size: 10pt;
     vertical-align: top;
     font-family: Sans Serif;
+}
+
+.border-left {
+    border-left: 1px #000 solid;
+    padding: 2px;
+}
+
+.border-top {
+    border-top: 1px #000 solid;
+    padding: 2px;
+}
+
+.border-right {
+    border-right: 1px #000 solid;
+    padding: 2px;
+}
+
+.border-bottom {
+    border-bottom: 1px #000 solid;
+    padding: 2px;
+}
+
+.border-all {
+    border-bottom: 1px #000 solid;
+    border-left: 1px #000 solid;
+    border-top: 1px #000 solid;
+    border-right: 1px #000 solid;
+    padding: 2px;
 }

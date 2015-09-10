@@ -17,6 +17,7 @@ class MonitoringController extends Controller {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'index' => ['get'],
+                    'excel' => ['get'],
                 ],
             ]
         ];
@@ -75,8 +76,9 @@ class MonitoringController extends Controller {
                 ->from('trans_spp')
                 ->join('JOIN', 'det_spp', 'trans_spp.no_spp = det_spp.no_spp')
                 ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
+                ->join('LEFT JOIN', 'view_wo_spk', 'view_wo_spk.no_wo = det_spp.no_wo')
                 ->orderBy($sort)
-                ->select("trans_spp.*, det_spp.*, barang.nm_barang");
+                ->select("trans_spp.*, det_spp.*, barang.nm_barang, view_wo_spk.nm_customer");
 
         //filter
         if (isset($params['filter'])) {
@@ -92,6 +94,10 @@ class MonitoringController extends Controller {
             }
         }
 
+        session_start();
+        $_SESSION['query'] = $query;
+        $_SESSION['periode'] = isset($filter['tanggal']) ? $filter['tanggal'] : '-';
+
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
@@ -99,6 +105,19 @@ class MonitoringController extends Controller {
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $query->limit(null);
+        $query->offset(null);
+        $query->select("trans_spp.*, det_spp.*, barang.nm_barang");
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $periode = $_SESSION['periode'];
+
+        return $this->render("/expretur/monitoring", ['models' => $models, 'periode' => $periode]);
     }
 
     private function setHeader($status) {
