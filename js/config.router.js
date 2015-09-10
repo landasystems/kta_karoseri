@@ -638,6 +638,20 @@ angular.module('app')
                                     templateUrl: 'tpl/app.html'
                                 })
                                 //
+                                .state('rekap.monitoring', {
+                                    url: '/barang',
+                                    templateUrl: 'tpl/r_monitoring/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function() {
+                                                            return $ocLazyLoad.load('js/controllers/monitoring.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
                                 .state('rekap.purchaseorder', {
                                     url: '/purchase-order',
                                     templateUrl: 'tpl/r_purchase-order/index.html',

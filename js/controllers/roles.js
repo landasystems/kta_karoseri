@@ -148,6 +148,7 @@ app.controller('rolesCtrl', function($scope, Data, toaster) {
             "transaksi_spk": false,
             "transaksi_kpb": false,
             "transaksi_tglspp": false,
+            "rekap_monitoring": false,
             "rekap_supplier": false,
             "rekap_barang": false,
             "rekap_customer": false,
@@ -182,7 +183,8 @@ app.controller('rolesCtrl', function($scope, Data, toaster) {
             "notif_abk": false,
             "notif_monitoring": false,
         }
-        angular.forEach($scope.form.akses, function($value, $key) {
+        
+        angular.forEach(akses, function ($value, $key) {
             if ($key.indexOf(module) >= 0)
                 $scope.form.akses[$key] = valueCheck;
         });

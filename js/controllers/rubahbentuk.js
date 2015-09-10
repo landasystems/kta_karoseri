@@ -38,7 +38,13 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
         $scope.isLoading = false;
     };
 
-    $scope.excel = function() {
+    $scope.printLapPembuatan = function() {
+        Data.get('rubahbentuk', paramRef).then(function(data) {
+            window.open('api/web/rubahbentuk/excel?print=true', "", "width=500");
+        });
+    }
+
+    $scope.exportLapPembuatan = function() {
         Data.get('rubahbentuk', paramRef).then(function(data) {
             window.location = 'api/web/rubahbentuk/excel';
         });
