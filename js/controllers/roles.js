@@ -148,6 +148,7 @@ app.controller('rolesCtrl', function($scope, Data, toaster) {
             "transaksi_spk": false,
             "transaksi_kpb": false,
             "transaksi_tglspp": false,
+            "rekap_monitoring": false,
             "rekap_supplier": false,
             "rekap_barang": false,
             "rekap_customer": false,
