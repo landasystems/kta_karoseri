@@ -1,4 +1,4 @@
-app.controller('rekapbarangkeluarCtrl', function ($scope, Data, toaster) {
+app.controller('reksppCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
     var paramRef;
@@ -24,7 +24,7 @@ app.controller('rekapbarangkeluarCtrl', function ($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
         paramRef = param;
-        Data.get('bbk/rekap', param).then(function (data) {
+        Data.get('spprutin/rekap', param).then(function (data) {
             $scope.displayed = data.data;
             $scope.displayedPrint = data.dataPrint;
             $scope.paginations = data.totalItems;
@@ -37,13 +37,8 @@ app.controller('rekapbarangkeluarCtrl', function ($scope, Data, toaster) {
     };
     
     $scope.excel = function () {
-        Data.get('bbk/rekap', paramRef).then(function (data) {
-            window.location = 'api/web/bbk/excel';
-        });
-    }
-    $scope.excelbk = function () {
-        Data.get('bbk/rekap', paramRef).then(function (data) {
-            window.location = 'api/web/bbk/excelbk';
+        Data.get('spprutin/rekap', paramRef).then(function (data) {
+            window.location = 'api/web/spprutin/excel';
         });
     }
    

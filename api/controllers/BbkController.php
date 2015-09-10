@@ -23,6 +23,7 @@ class BbkController extends Controller {
                     'index' => ['get'],
                     'view' => ['get'],
                     'excel' => ['get'],
+                    'excelbk' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -101,7 +102,7 @@ class BbkController extends Controller {
 
     public function actionListbarang() {
         $params = json_decode(file_get_contents("php://input"), true);
-        if (!empty($params['no_wo']) and !empty($params['kd_jab'])) {
+        if (!empty($params['no_wo']) and ! empty($params['kd_jab'])) {
             //cek optional bom
             $optional = \app\models\TransAdditionalBom::findAll(['no_wo' => $params['no_wo']['no_wo']]);
 
@@ -571,6 +572,7 @@ class BbkController extends Controller {
         $query->offset(null);
         session_start();
         $_SESSION['query'] = $query;
+        $_SESSION['filter'] = $filter;
 
         $this->setHeader(200);
 
@@ -583,6 +585,16 @@ class BbkController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/rbbk", ['models' => $models]);
+    }
+
+    public function actionExcelbk() {
+        session_start();
+        $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/laporanbk", ['models' => $models, 'filter' => $filter]);
     }
 
     private function _getStatusCodeMessage($status) {
