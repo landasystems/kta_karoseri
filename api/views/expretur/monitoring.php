@@ -1,7 +1,7 @@
 <?php
 if (!isset($_GET['print'])) {
     header("Content-type: application/vnd-ms-excel");
-    header("Content-Disposition: attachment; filename=excel-rubah-bentuk.xls");
+    header("Content-Disposition: attachment; filename=excel-monitoring.xls");
 }
 
 $data = array();
