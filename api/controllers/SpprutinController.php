@@ -25,6 +25,7 @@ class SpprutinController extends Controller {
                     'view' => ['get'],
                     'excel' => ['get'],
                     'detail' => ['get'],
+                    'excelspp' => ['get'],
                     'kode' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
@@ -180,8 +181,9 @@ class SpprutinController extends Controller {
                 ->from('det_spp')
                 ->orderBy($sort)
                 ->join('JOIN', 'trans_spp', 'trans_spp.no_spp = det_spp.no_spp')
+                ->join('LEFT JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
                 ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
-                ->select("det_spp.*,trans_spp.*,barang.nm_barang");
+                ->select("det_spp.*,trans_spp.*,barang.nm_barang,barang.satuan,trans_po.nota");
 
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
@@ -197,7 +199,7 @@ class SpprutinController extends Controller {
                     $value = explode(' - ', $val);
                     $start = date("Y-m-d", strtotime($value[0]));
                     $end = date("Y-m-d", strtotime($value[1]));
-                    $query->andFilterWhere(['between', 'dc.tgl_pelaksanaan', $start, $end]);
+                    $query->andFilterWhere(['between', 'trans_spp.tgl_trans', $start, $end]);
                 } else {
                     $query->andFilterWhere(['like', $key, $val]);
                 }
@@ -207,7 +209,9 @@ class SpprutinController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
-
+        session_start();
+        $_SESSION['query'] = $query;
+        $_SESSION['filter'] = $filter;
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
@@ -388,4 +392,15 @@ class SpprutinController extends Controller {
         echo json_encode(['status' => 1, 'data' => $data, 'count' => $totalItems]);
     }
 
+    public function actionExcelspp() {
+        session_start();
+        $query = $_SESSION['query'];
+        $query->limit(null);
+        $query->offset(null);
+//         Yii::error($query);
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/rekapspp", ['models' => $models]);
+    }
+    
 }

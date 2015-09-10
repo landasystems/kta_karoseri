@@ -38,7 +38,7 @@ app.controller('reksppCtrl', function ($scope, Data, toaster) {
     
     $scope.excel = function () {
         Data.get('spprutin/rekap', paramRef).then(function (data) {
-            window.location = 'api/web/spprutin/excel';
+            window.location = 'api/web/spprutin/excelspp';
         });
     }
    

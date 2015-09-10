@@ -15,14 +15,19 @@
                     <div class="panel-heading">
                         <div class="form-horizontal">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">No SPP</label>
-                                        <div class="col-sm-3">
-                                            <input type="text" st-search="det_spp.no_spp" class="form-control">
+                                        <label class="col-sm-1 control-label">No SPP</label>
+                                        <div class="col-sm-2">
+                                            <input placeholder="No SPP" type="text" st-search="det_spp.no_spp" class="form-control">
                                         </div>
-                                        <label class="col-sm-3 control-label">kategori</label>
-                                        <div class="col-sm-3">
+                                        <label class="col-sm-2 control-label">Periode Tgl Transaksi</label>
+                                        <div class="col-sm-2">
+                                            <input placeholder="Periode Tgl Transaksi" date-range-picker class="form-control" st-search="tgl_periode" type="text"  ng-model="tanggal">
+                                        </div>
+
+                                        <label class="col-sm-2 control-label">Kategori</label>
+                                        <div class="col-sm-2">
                                             <select stInputEvent="change" st-search="kategori" class="form-control">
                                                 <option value="all">Semua</option>
                                                 <option value="rutin">Rutin</option>
