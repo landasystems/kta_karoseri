@@ -1,1 +1,115 @@
-dfsdf
+<div ng-app="app" ng-controller="tglsppCtrl">
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n font-thin h3">Transaksi - Pengisian Tanggal SPP</h1>
+    </div>
+    
+
+    <div class="wrapper-md" >
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                {{formtitle}} 
+            </div>
+            <div class="panel-body">
+                <form name="landaform" class="form-horizontal form-validation ">
+
+                    <div class="col-md-12 col-sm-12">
+                        <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">No Spp</label>
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <ui-select on-select="pilih(form, $item)" ng-model="form.nama" theme="bootstrap" style="width: 230px">
+                                            <ui-select-match>{{$select.selected.no_spp}}</ui-select-match>
+                                            <ui-select-choices refresh="cariWo($select.search)" repeat="val in list_spp">
+                                                {{val.no_spp}}
+                                            </ui-select-choices>
+                                        </ui-select>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-5 control-label">Tanggal Pengiriman</label>
+                                <div class="col-sm-5">
+                                   <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.a" is-open="opened1" ng-click="open1($event)"/>
+                                </div>
+                            </div>
+                           
+                        </div>
+                            
+                    </div>
+                    <div class="col-md-12 col-sm-12">
+                        <tabset justified="true" class="tab-container">
+
+
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th></th>
+                                    <th>Kode Barang</th>
+                                    <th>Nama Barang</th>
+                                    <th>Satuan</th>
+                                    <th>Min</th>
+                                    <th>Max</th>
+                                    <th>Saldo</th>
+                                    <th>Qty</th>
+                                    <th>P</th>
+                                    <th>A</th>
+                                </tr>
+                                <tr ng-repeat="det in detSpp">
+                                    <td><label class="i-checks">
+                                        <input type="checkbox" ng-model="asu[det.id]" ><i></i> 
+                                    </label></td>
+                                    <td >
+                                        {{det.kd_barang}}
+                                    </td>
+                                    <td >
+                                        {{det.barang.nm_barang}}
+                                    </td>
+                                    <td >
+                                        {{det.barang.satuan}}
+                                    </td>
+                                    <td >
+                                        {{det.barang.min}}
+                                    </td>
+                                    <td >
+                                        {{det.barang.max}}
+                                    </td>
+                                    <td >
+                                        {{det.barang.saldo}}
+                                    </td>
+                                    <td >
+                                        {{det.barang.qty}}
+                                    </td>
+                                    <td >
+                                        {{det.p}}
+                                    </td>
+                                    <td >
+                                        {{det.a}}
+                                    </td>
+                                    
+
+                                </tr>
+
+                            </table>
+                        </tabset>
+                        <div class="line line-dashed b-b line-lg pull-in"></div>
+                        <div align="center">
+                            
+                            <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, asu)">&nbsp;Simpan Perubahan</button>
+                        </div>
+
+
+                    </div>
+
+
+
+
+
+
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
