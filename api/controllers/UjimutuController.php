@@ -217,8 +217,9 @@ class UjimutuController extends Controller {
     }
 
     public function actionView($id) {
-        Yii::error($id);
-        $model = Ujimutu::find(['kd_uji' => $id]);
+//        Yii::error($id);
+        $model = Ujimutu::findOne(['kd_uji' => $id]);
+//        $model = $this->findModel($id);
         Yii::error($model);
         $query = new Query;
         $query->from('det_uji_mutu as det')
@@ -346,6 +347,7 @@ class UjimutuController extends Controller {
         $models = $command->queryAll();
         return $this->render("/expretur/rekapujimutu", ['models' => $models,'filter'=>$filter]);
     }
+        
 
 }
 

@@ -256,7 +256,6 @@ class BbmController extends Controller {
         $detail = array();
         foreach ($det as $key => $val) {
             $detail[$key] = $val->attributes;
-
             $namaBarang = (isset($val->barang->nm_barang)) ? $val->barang->nm_barang : '';
             $satuan = (isset($val->barang->satuan)) ? $val->barang->satuan : '';
 

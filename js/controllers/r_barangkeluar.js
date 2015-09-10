@@ -41,6 +41,11 @@ app.controller('rekapbarangkeluarCtrl', function ($scope, Data, toaster) {
             window.location = 'api/web/bbk/excel';
         });
     }
+    $scope.excelbk = function () {
+        Data.get('bbk/rekap', paramRef).then(function (data) {
+            window.location = 'api/web/bbk/excelbk';
+        });
+    }
    
 
 

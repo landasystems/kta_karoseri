@@ -20,6 +20,7 @@ class SpprutinController extends Controller {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'index' => ['get'],
+                    'rekap' => ['get'],
                     'cari' => ['get'],
                     'view' => ['get'],
                     'excel' => ['get'],
@@ -132,6 +133,79 @@ class SpprutinController extends Controller {
                 ->orderBy($sort)
                 ->select("*");
 
+        if (isset($params['filter'])) {
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+
+                $query->andFilterWhere(['like', 'trans_spp.' . $key, $val]);
+            }
+        }
+        //filter
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $totalItems = $query->count();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+
+    public function actionRekap() {
+        //init variable
+        $params = $_REQUEST;
+        $filter = array();
+        $sort = "tgl_trans DESC";
+        $offset = 0;
+        $limit = 10;
+        //        Yii::error($params);
+        //limit & offset pagination
+        if (isset($params['limit']))
+            $limit = $params['limit'];
+        if (isset($params['offset']))
+            $offset = $params['offset'];
+
+        //sorting
+        if (isset($params['sort'])) {
+            $sort = $params['sort'];
+            if (isset($params['order'])) {
+                if ($params['order'] == "false")
+                    $sort.=" ASC";
+                else
+                    $sort.=" DESC";
+            }
+        }
+
+        //create query
+        $query = new Query;
+        $query->offset($offset)
+//                ->where("no_proyek='Rutin'")
+                ->limit($limit)
+                ->from('det_spp')
+                ->orderBy($sort)
+                ->join('JOIN', 'trans_spp', 'trans_spp.no_spp = det_spp.no_spp')
+                ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
+                ->select("det_spp.*,trans_spp.*,barang.nm_barang");
+
+        if (isset($params['filter'])) {
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+
+                if (isset($key) && $key == 'kategori') {
+                    if ($val == 'rutin') {
+                        $query->andWhere("trans_spp.no_proyek='Rutin'");
+                    } elseif ($val == 'nonrutin') {
+                        $query->andWhere("trans_spp.no_proyek='Non Rutin'");
+                    }
+                } else if ($key == 'tgl_periode') {
+                    $value = explode(' - ', $val);
+                    $start = date("Y-m-d", strtotime($value[0]));
+                    $end = date("Y-m-d", strtotime($value[1]));
+                    $query->andFilterWhere(['between', 'dc.tgl_pelaksanaan', $start, $end]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+                }
+            }
+        }
         //filter
         $command = $query->createCommand();
         $models = $command->queryAll();

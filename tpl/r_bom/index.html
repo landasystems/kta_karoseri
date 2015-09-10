@@ -151,7 +151,7 @@
                                             <label class="col-sm-4 control-label">Merk</label>
                                             <div class="col-sm-8">
                                                 <select class="form-control" ng-model="form.merk" ng-change="typeChassis(form.merk);
-                                                            getchassis(form.merk, form.tipe)" ng-disabled="is_view" >
+                                                                getchassis(form.merk, form.tipe)" ng-disabled="is_view" >
                                                     <option value="">-Pilih Merk-</option>
                                                     <option ng-repeat="valMerk in listMerk" value="{{valMerk.merk}}">{{valMerk.merk}}</option>
                                                 </select>
@@ -206,8 +206,7 @@
                                         <div class="form-group">
                                             <label class="col-md-4"></label>
                                             <div class="col-md-8">
-                                                <button type="submit" class="btn btn-info fa fa-eye-slash" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="is_show = true;
-                                                        tmpBomModel(tableStateRef)">&nbsp;Tampilkan Data</button>
+                                                <button type="submit" class="btn btn-info fa fa-eye-slash" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="is_show = true;tmpBomModel()">&nbsp;Tampilkan Data</button>
                                                 <button type="button" class="btn btn-success fa fa-file-excel-o"  ng-click="excelRekapRealisasiWo()">&nbsp; Export Laporan</button>
                                             </div>
                                         </div>
@@ -217,7 +216,7 @@
                         </div>
                         <div class="row">
                             <div class="table-responsive" >
-                                <table class="table table-striped table-hover" st-table="r_bomModel">
+                                <table st-safe-src="r_bomModelSrc" st-table="r_bomModel" class="table table-striped table-hover">
                                     <thead>
                                         <tr>
                                             <th>No. Wo</th>
@@ -230,7 +229,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat="row in r_bomModel ">
+                                        <tr ng-repeat="row in r_bomModel">
                                             <td>{{row.no_wo}}</td>
                                             <td>{{row.jabatan}}</td>
                                             <td>{{row.nm_barang}}</td>
@@ -242,14 +241,12 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                    <pagination total-items="totalItems" ng-model="currentPage"
-                                                max-size="5" boundary-links="true"
-                                                items-per-page="numPerPage" class="pagination-sm">
-                                    </pagination>
-                                    <!--<td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="7"></td>-->
-                                    </tr>
+                                            <td colspan="5" class="text-center">
+                                                <div st-items-by-page="20" st-pagination=""></div>
+                                            </td>
+                                        </tr>
                                     </tfoot>
-                                </table>			
+                                </table>
                             </div>
                         </div>
                     </div>
