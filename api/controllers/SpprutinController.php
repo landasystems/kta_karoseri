@@ -20,6 +20,7 @@ class SpprutinController extends Controller {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'index' => ['get'],
+                    'rekap' => ['get'],
                     'cari' => ['get'],
                     'view' => ['get'],
                     'excel' => ['get'],
@@ -50,7 +51,7 @@ class SpprutinController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models));
     }
-    
+
     public function actionKode() {
         $query = new Query;
         $query->from('trans_spp')
@@ -129,6 +130,79 @@ class SpprutinController extends Controller {
                 ->orderBy($sort)
                 ->select("*");
 
+        if (isset($params['filter'])) {
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+
+                $query->andFilterWhere(['like', 'trans_spp.' . $key, $val]);
+            }
+        }
+        //filter
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $totalItems = $query->count();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+
+    public function actionRekap() {
+        //init variable
+        $params = $_REQUEST;
+        $filter = array();
+        $sort = "tgl_trans DESC";
+        $offset = 0;
+        $limit = 10;
+        //        Yii::error($params);
+        //limit & offset pagination
+        if (isset($params['limit']))
+            $limit = $params['limit'];
+        if (isset($params['offset']))
+            $offset = $params['offset'];
+
+        //sorting
+        if (isset($params['sort'])) {
+            $sort = $params['sort'];
+            if (isset($params['order'])) {
+                if ($params['order'] == "false")
+                    $sort.=" ASC";
+                else
+                    $sort.=" DESC";
+            }
+        }
+
+        //create query
+        $query = new Query;
+        $query->offset($offset)
+//                ->where("no_proyek='Rutin'")
+                ->limit($limit)
+                ->from('det_spp')
+                ->orderBy($sort)
+                ->join('JOIN', 'trans_spp', 'trans_spp.no_spp = det_spp.no_spp')
+                ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
+                ->select("det_spp.*,trans_spp.*,barang.nm_barang");
+
+        if (isset($params['filter'])) {
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+
+                if (isset($key) && $key == 'kategori') {
+                    if ($val == 'rutin') {
+                        $query->andWhere("trans_spp.no_proyek='Rutin'");
+                    } elseif ($val == 'nonrutin') {
+                        $query->andWhere("trans_spp.no_proyek='Non Rutin'");
+                    }
+                } else if ($key == 'tgl_periode') {
+                    $value = explode(' - ', $val);
+                    $start = date("Y-m-d", strtotime($value[0]));
+                    $end = date("Y-m-d", strtotime($value[1]));
+                    $query->andFilterWhere(['between', 'dc.tgl_pelaksanaan', $start, $end]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+                }
+            }
+        }
         //filter
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -181,11 +255,11 @@ class SpprutinController extends Controller {
         Yii::error($params);
         $model = TransSpp::findOne($params['form']['no_spp']);
 //        $model->attributes = $params;
-        if(empty($model)){
+        if (empty($model)) {
             $model = new TransSpp();
             $model->no_spp = $params['form']['no_spp'];
         }
-        
+
         $tgl_trans = date('Y-m-d', strtotime($params['form']['tgl_trans']));
         $model->tgl_trans = $tgl_trans;
         $model->tgl1 = date('Y-m-d', strtotime($params['form']['periode']['startDate']));
@@ -215,8 +289,8 @@ class SpprutinController extends Controller {
 
     public function actionDelete($id) {
         $model = $this->findModel($id);
-        $deleteDetail = DetSpp::deleteAll('no_spp="'.$id.'"');
-        
+        $deleteDetail = DetSpp::deleteAll('no_spp="' . $id . '"');
+
         if ($model->delete()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -297,21 +371,21 @@ class SpprutinController extends Controller {
         $this->setHeader(200);
         echo json_encode(['status' => 1, 'details' => $detail]);
     }
-    
-    public function actionRequiredpurchase(){
+
+    public function actionRequiredpurchase() {
         $model = Barang::find()
                 ->where('kat like "rutin%"')
                 ->andWhere('qty <= min')
                 ->all();
         $data = [];
-        if(!empty($model)){
-            foreach($model as $key=> $val){
+        if (!empty($model)) {
+            foreach ($model as $key => $val) {
                 $data[$key]['barang'] = $val->attributes;
             }
         }
         $totalItems = count($data);
         $this->setHeader(200);
-        echo json_encode(['status' => 1, 'data' => $data,'count' => $totalItems]);
+        echo json_encode(['status' => 1, 'data' => $data, 'count' => $totalItems]);
     }
 
 }

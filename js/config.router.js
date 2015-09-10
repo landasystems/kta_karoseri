@@ -694,6 +694,8 @@ angular.module('app')
                                             }]
                                     }})
                                 //
+                               
+                                //
                                 .state('rekap.barangmasuk', {
                                     url: '/barang-masuk',
                                     templateUrl: 'tpl/r_barang-masuk/index.html',
@@ -742,9 +744,9 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load([]).then(
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
                                                         function() {
-                                                            return $ocLazyLoad.load('js/controllers/isidewe.js');
+                                                            return $ocLazyLoad.load('js/controllers/r_spp.js');
                                                         }
                                                 );
                                             }]
