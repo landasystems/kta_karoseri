@@ -97,15 +97,9 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
         });
         $scope.isLoading = false;
     };
-    $scope.excel = function() {
+    $scope.printTrans = function() {
         Data.get('bom', paramRef).then(function(data) {
-            window.location = 'api/web/bom/excel';
-        });
-    }
-
-    $scope.excel = function() {
-        Data.get('bom', paramRef).then(function(data) {
-            window.location = 'api/web/bom/excel';
+            window.open('api/web/bom/exceltrans?print=true');
         });
     }
 
@@ -389,7 +383,6 @@ app.controller('rekapBomCtrl', function($scope, Data) {
             });
         }
     };
-
     $scope.r_bomModelSrc = [];
     $scope.r_bomModel = [];
     $scope.tmpBomModel = function(form) {

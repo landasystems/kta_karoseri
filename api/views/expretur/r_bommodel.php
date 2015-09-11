@@ -1,10 +1,12 @@
 <?php
-//header("Content-type: application/vnd-ms-excel");
-//header("Content-Disposition: attachment; filename=excel-bom.xls");
+if (!isset($_GET['print'])) {
+    header("Content-type: application/vnd-ms-excel");
+    header("Content-Disposition: attachment; filename=excel-bom-model.xls");
+}
 ?>
 <link href="../../../css/print.css" rel="stylesheet" type="text/css" />
 <div style="width:24cm">
-    <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;" width="100%">
+    <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;" width="100%" border="1">
         <thead>
             <tr>
                 <td rowspan="2" width="30%" class="border-right">
@@ -22,17 +24,17 @@
                         <tr>
                             <td>Merk</td>
                             <td width="5">:</td>
-                            <td></td>
+                            <td><?php echo isset($filter['merk']) ? $filter['merk'] : ''; ?></td>
                         </tr>
                         <tr>
                             <td>Type</td>
                             <td width="5">:</td>
-                            <td></td>
+                            <td><?php echo isset($filter['tipe']) ? $filter['tipe'] : ''; ?></td>
                         </tr>
                         <tr>
                             <td>Model</td>
                             <td width="5">:</td>
-                            <td></td>
+                            <td><?php echo isset($filter['kd_model']['model']) ? $filter['kd_model']['model'] : ''; ?></td>
                         </tr>
                     </table>
                 </td>
@@ -49,16 +51,16 @@
             </tr>
         </thead>
     </table>
-    <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 11px; margin-top: -2px;" width="100%">
+    <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 11px; margin-top: -2px;" width="100%" border="1">
         <thead>
             <tr>
-                <td class="border-left" align="center" width="100">KODE BARANG</td>
+                <td class="border-left" align="center" width="80">KODE BARANG</td>
                 <td class="border-left" align="center">NAMA BARANG</td>
                 <td class="border-left" align="center">SAT</td>
                 <td class="border-left" align="center">STANDAR</td>
                 <?php
                 for ($i = 0; $i < 5; $i++) {
-                    echo '<td width="80" class="border-left border-right" align="center">' . (isset($no_wo[$i]) ? $no_wo[$i] : '-') . '</td>';
+                    echo '<td width="70" class="border-left border-right" align="center">' . (isset($no_wo[$i]) ? $no_wo[$i] : '-') . '</td>';
                 }
                 ?>
             </tr>
@@ -90,3 +92,15 @@
         </thead>
     </table>
 </div>
+<?php
+if (isset($_GET['print'])) {
+    ?>
+    <script type="text/javascript">
+        window.print();
+        setTimeout(function() {
+            window.close();
+        }, 1);
+    </script>
+    <?php
+}
+?>

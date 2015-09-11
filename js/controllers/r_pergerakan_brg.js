@@ -1,15 +1,28 @@
-app.controller('pergerakanBrgCtrl', function($scope, Data) {
+app.controller('pergerakanBrgCtrl', function($scope, Data, toaster) {
 
     var tableStateRef;
     var paramRef;
     $scope.form = {};
     $scope.show_detail = false;
-    $scope.displayed = {};
+
+    $scope.print = function(form) {
+        if ('tanggal' in form && form.tanggal.startDate != null) {
+            Data.post('barang/rekappergerakan', form).then(function(data) {
+                window.open('api/web/barang/excelpergerakan?print=true', "", "width=500");
+            });
+        } else {
+            toaster.pop('error', "Terjadi Kesalahan", "Masukkan periode terlebih dahulu");
+        }
+    }
 
     $scope.excel = function(form) {
-        Data.post('barang/rekappergerakan', form).then(function(data) {
-            window.location = 'api/web/barang/excelpergerakan';
-        });
+        if ('tanggal' in form && form.tanggal.startDate != null) {
+            Data.post('barang/rekappergerakan', form).then(function(data) {
+                window.location = 'api/web/barang/excelpergerakan';
+            });
+        } else {
+            toaster.pop('error', "Terjadi Kesalahan", "Masukkan periode terlebih dahulu");
+        }
     }
 
     $scope.cariBarang = function($query) {
@@ -20,11 +33,20 @@ app.controller('pergerakanBrgCtrl', function($scope, Data) {
         }
     }
 
+    $scope.listSrc = [];
+    $scope.list = [];
     $scope.view = function(form) {
-        $scope.show_detail = true;
-        Data.post('barang/rekappergerakan', form).then(function(data) {
-            $scope.displayed = data.data;
-        });
+        if ('tanggal' in form && form.tanggal.startDate != null) {
+            $scope.show_detail = true;
+            Data.post('barang/rekappergerakan', form).then(function(data) {
+                $scope.listSrc = [];
+                angular.forEach(data.data, function($value, $key) {
+                    $scope.listSrc.push($value);
+                });
+            });
+        } else {
+            toaster.pop('error', "Terjadi Kesalahan", "Masukkan periode terlebih dahulu");
+        }
     }
 
 })
