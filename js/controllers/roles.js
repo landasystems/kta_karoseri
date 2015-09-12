@@ -174,17 +174,11 @@ app.controller('rolesCtrl', function($scope, Data, toaster) {
             "rekap_historybarang": false,
             "rekap_historyunit": false,
             "rekap_historywip": false,
-            "notif_bom": false,
-            "notif_chassismasuk": false,
-            "notif_wo": false,
-            "notif_wip": false,
             "notif_barang": false,
             "notif_unit": false,
-            "notif_abk": false,
-            "notif_monitoring": false,
         }
-        
-        angular.forEach(akses, function ($value, $key) {
+
+        angular.forEach(akses, function($value, $key) {
             if ($key.indexOf(module) >= 0)
                 $scope.form.akses[$key] = valueCheck;
         });

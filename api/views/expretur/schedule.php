@@ -1,6 +1,6 @@
 <?php
-//header("Content-type: application/vnd-ms-excel");
-//header("Content-Disposition: attachment; filename=excel-schedule.xls");
+header("Content-type: application/vnd-ms-excel");
+header("Content-Disposition: attachment; filename=excel-schedule.xls");
 $data = array();
 $i = 0;
 foreach ($models as $val) {

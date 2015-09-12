@@ -32,6 +32,7 @@ class BbmController extends Controller {
                     'petugas' => ['get'],
                     'listbbm' => ['get'],
                     'detailstok' => ['post'],
+                    'excelserahterima' => ['get'],
                 ],
             ]
         ];
@@ -231,6 +232,7 @@ class BbmController extends Controller {
         session_start();
         $_SESSION['query'] = $query;
         $_SESSION['filter'] = $filter;
+        $_SESSION['periode'] = isset($filter['tgl_nota']) ? $filter['tgl_nota'] : '';
 
         $this->setHeader(200);
 
@@ -412,6 +414,16 @@ class BbmController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/rekapbbm", ['models' => $models]);
+    }
+
+    public function actionExcelserahterima() {
+        session_start();
+        $query = $_SESSION['query'];
+        $periode = $_SESSION['periode'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        return $this->render("/expretur/serahterimabbm", ['models' => $models, 'periode' => $periode]);
     }
 
     public function actionExceldet($id) {
