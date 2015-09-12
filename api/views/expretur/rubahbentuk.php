@@ -4,73 +4,73 @@ if (!isset($_GET['print'])) {
     header("Content-Disposition: attachment; filename=excel-rubah-bentuk.xls");
 }
 ?>
-
-<div style="margin-top: 30px; margin-left: 30px;">
-    <table width="100%" border="1">
+<link rel="stylesheet" href="../../../css/print.css" type="text/css" />
+<div style="width:26cm">
+    <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;" width="100%">
         <tr>
-            <td colspan="4" rowspan="5" align="center">
+            <td colspan="4" rowspan="5" align="center" class="border-all" width="40%">
                 <h3>LAPORAN PEMBUATAN RUBAH BENTUK</h3>
                 No. Dokumen : FR-SS-013
             </td>
-            <td colspan="2">
-                <table width="100%">
-                    <tr height="30">
+            <td colspan="2" class="border-all">
+                <table width="100%" style="font-size: 12px;">
+                    <tr height="10">
                         <td width="100">PERIODE</td>
                         <td width="1" width="1">:</td>
                         <td align="left"><?php echo $periode ?></td>
                     </tr>
                 </table>
             </td>
-            <td>DIBUAT</td>
-            <td>DIPERIKSA</td>
+            <td class="border-all">DIBUAT</td>
+            <td class="border-all">DIPERIKSA</td>
         </tr>
         <tr>
-            <td colspan="2">
-                <table width="100%">
-                    <tr height="30">
+            <td colspan="2" class="border-all">
+                <table width="100%" style="font-size: 12px;">
+                    <tr height="10">
                         <td width="100">CETAK</td>
                         <td width="1" width="1">:</td>
-                        <td align="left"><?php echo date("d-m-y") ?></td>
+                        <td align="left"><?php echo date("d-m-Y") ?></td>
                     </tr>
                 </table>
             </td>
-            <td rowspan="3"></td>
-            <td rowspan="3"></td>
+            <td rowspan="3" class="border-all"></td>
+            <td rowspan="3" class="border-all"></td>
         </tr>
         <tr height="30">
-            <td colspan="2"></td>
+            <td colspan="2" class="border-all" height="10"></td>
         </tr>
         <tr height="30">
-            <td colspan="2"></td>
+            <td colspan="2" class="border-all" height="10"></td>
         </tr>
         <tr height="30">
-            <td colspan="2"></td>
-            <td></td>
-            <td></td>
+            <td colspan="2" class="border-all" height="10"></td>
+            <td class="border-all" height="10"></td>
+            <td class="border-all" height="10"></td>
         </tr>
         <tr>
-            <td align="center">PEMBUATAN WO</td>
-            <td align="center">WO</td>
-            <td align="center">PEMBUATAN</td>
-            <td align="center">NO. REGISTER</td>
-            <td align="center">MERK TYPE</td>
-            <td align="center">BENTUK BARU</td>
-            <td align="center">CHASSIS</td>
-            <td align="center">CUSTOMER</td>
+            <td align="center" class="border-all" width="50">PEMBUATAN WO</td>
+            <td align="center" class="border-all">WO</td>
+            <td align="center" class="border-all">PEMBUATAN</td>
+            <td align="center" class="border-all">NO. REGISTER</td>
+            <td align="center" class="border-all">MERK TYPE</td>
+            <td align="center" class="border-all">BENTUK BARU</td>
+            <td align="center" class="border-all">CHASSIS</td>
+            <td align="center" class="border-all">CUSTOMER</td>
         </tr>
         <?php
         $jml = 0;
         foreach ($models as $val) {
             $jml += $val['jml_unit'];
             echo '<tr>';
-            echo '<td></td>';
-            echo '<td align="center">' . $val['no_wo'] . '</td>';
-            echo '<td align="right">' . date("d-M-Y", strtotime($val['tgl'])) . '&emsp;</td>';
-            echo '<td align="left">' . $val['kd_rubah'] . '</td>';
-            echo '<td align="left">' . $val['merk'] . ' ' . $val['tipe'] . '</td>';
-            echo '<td align="left">' . $val['bentuk_baru'] . '</td>';
-            echo '<td align="center">' . $val['no_chassis'] . '</td>';
-            echo '<td align="left">' . $val['nm_customer'] . '</td>';
+            echo '<td  class="border-all"></td>';
+            echo '<td align="center"  class="border-all">' . $val['no_wo'] . '</td>';
+            echo '<td align="right"  class="border-all">' . date("d-M-Y", strtotime($val['tgl'])) . '&emsp;</td>';
+            echo '<td align="left"  class="border-all">' . $val['kd_rubah'] . '</td>';
+            echo '<td align="left"  class="border-all">' . $val['merk'] . ' ' . $val['tipe'] . '</td>';
+            echo '<td align="left"  class="border-all">' . $val['bentuk_baru'] . '</td>';
+            echo '<td align="center"  class="border-all">' . $val['no_chassis'] . '</td>';
+            echo '<td align="left"  class="border-all">' . $val['nm_customer'] . '</td>';
             echo '</tr>';
         }
         ?>

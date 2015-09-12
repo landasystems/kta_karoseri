@@ -176,7 +176,7 @@
                                     <div class="input-group">
                                         <ui-select on-select="getCustomer(form,$item)" ng-model="form.customer" required theme="bootstrap" ng-disabled="is_view" >
                                             <ui-select-match>{{$select.selected.nm_customer}}</ui-select-match>
-                                            <ui-select-choices refresh="cariCustomer($select.search)" repeat="val in kdCust">
+                                            <ui-select-choices refresh="cariCustomer($select.search)" repeat="val in sCUstomer">
                                                 <span title ="{{val.alamat1}}"> {{val.nm_customer}}</span>
                                             </ui-select-choices>
                                         </ui-select>
