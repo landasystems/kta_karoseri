@@ -33,7 +33,7 @@ class WoMasuk extends \yii\db\ActiveRecord {
             [['kondisi', 'stat'], 'integer'],
             [['in_spk_marketing', 'tgl_kontrak', 'tgl_keluar'], 'safe'],
             [['kd_titipan', 'no_spk', 'no_wo', 'foto'], 'string', 'max' => 10],
-            [['no_wo'], 'unique']
+            
         ];
     }
 
