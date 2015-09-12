@@ -38,6 +38,7 @@ class WomasukController extends Controller {
                     'getspk' => ['post'],
                     'getsti' => ['post'],
                     'select' => ['post'],
+                    'bukaprint' => ['post'],
                 ],
             ]
         ];
@@ -84,7 +85,11 @@ class WomasukController extends Controller {
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $models));
     }
-
+    
+    public function actionBukaprint() {
+       $params = json_decode(file_get_contents("php://input"), true);
+       \Yii::error($params);
+    }
     public function actionGetspk() {
         $params = json_decode(file_get_contents("php://input"), true);
         if (!empty($params['spk']['no_spk'])) {
@@ -666,9 +671,10 @@ class WomasukController extends Controller {
 //                ->join('LEFT JOIN', 'small_eks', 'wo_masuk.no_wo = small_eks.no_wo') // customer
 //                ->join('LEFT JOIN', 'mini_eks', 'wo_masuk.no_wo = mini_eks.no_wo') // customer
 //                ->join('JOIN', 'model', 'spk.kd_model = model.kd_model') // customer
-                ->join('JOIN', 'serah_terima_in', 'spk.no_spk = serah_terima_in.no_spk') // customer
+                ->join('JOIN', 'serah_terima_in', 'wo_masuk.kd_titipan = serah_terima_in.kd_titipan') // customer
 //                ->join('JOIN', 'warna', 'serah_terima_in.kd_warna = warna.kd_warna') // customer
                 ->orderBy($sort)
+//                ->groupBy('no_wo')
                 ->select("*");
 
         //filter
@@ -915,7 +921,6 @@ class WomasukController extends Controller {
 //                $eks = $r;
                 $eks['warna2'] = $r;
             }
-
         } else {
             // eksterior
             $eksterior = new Query;
@@ -947,7 +952,7 @@ class WomasukController extends Controller {
             // interior
             $interior = new Query;
             $interior->from('mini_int')
-                    ->select("warna.*")
+                    ->select("*")
                     ->where('no_wo="' . $params['no_wo'] . '"');
 
             $command3 = $interior->createCommand();
@@ -1060,11 +1065,13 @@ class WomasukController extends Controller {
         Yii::error($params);
         $model = new Womasuk();
         $model->attributes = $params['womasuk'];
+        $model->no_spk = $params['womasuk']['spk']['no_spk'];
 
 
         if ($model->save()) {
 
             // EKTERIOR
+            if(!empty($params['eksterior'])){
             if ($params['womasuk']['jenis'] == "Small Bus") {
                 $table = new Smalleks();
             } else {
@@ -1106,8 +1113,10 @@ class WomasukController extends Controller {
             $eks->letter = $params['eksterior']['letter']['letter'];
             $eks->lain2 = $params['eksterior']['lain2'];
             $eks->save();
-
+            }
+            
             // INTERIOR
+            if(!empty($params['interior'])){
             if ($params['womasuk']['jenis'] == "Mini Bus") {
                 $int = new Miniint();
                 $int->plavon = $params['interior']['plavon']['plavon'];
@@ -1154,11 +1163,12 @@ class WomasukController extends Controller {
                 $int->lain2 = $params['interior']['lain2'];
                 $int->save();
             }
+            }
 
             // UPDATE STI CUSTOMER
-            $sti = \app\models\Serahterimain::find($params['titipan']['kd_titipan']);
-            $sti->kd_cust = $params['spk']['kd_customer'];
-            $sti->no_spk = $params['spk']['no_spk'];
+            $sti = \app\models\Serahterimain::find()->where('kd_titipan="' . $params['womasuk']['titipan']['kd_titipan'] . '"')->one();
+            $sti->kd_cust = $params['womasuk']['spk']['kd_customer'];
+            $sti->no_spk = $params['womasuk']['spk']['no_spk'];
             $sti->save();
 
 
@@ -1172,7 +1182,7 @@ class WomasukController extends Controller {
 
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        
+
         $model = $this->findModel($params['womasuk']['no_wo']);
 //        $model = WoMasuk::find()->where('no_wo="' . $params['eksterior']['no_wo'] . '"')->one();
 
@@ -1183,13 +1193,15 @@ class WomasukController extends Controller {
         if ($model->save()) {
             // EKTERIOR
             if ($params['womasuk']['jenis'] == "Small Bus") {
-                $table = Smalleks::find()->where('no_wo="' . $model->no_wo . '"')->one();;
+                $table = Smalleks::find()->where('no_wo="' . $model->no_wo . '"')->one();
+                ;
             } else {
                 $table = Minieks::find()->where('no_wo="' . $model->no_wo . '"')->one();
             }
             $eks = $table;
             $eks->no_wo = $model->no_wo;
             $eks->plat_body = $params['eksterior']['plat']['plat_body'];
+            $eks->ventilasi_atas = $params['eksterior']['ventilasi']['ventilasi_atas'];
             $eks->kaca_spion = $params['eksterior']['spion']['kaca_spion'];
             $eks->kaca_depan = $params['eksterior']['kdepan']['kaca_depan'];
             $eks->kaca_belakang = $params['eksterior']['kbelakang']['kaca_belakang'];
@@ -1202,16 +1214,19 @@ class WomasukController extends Controller {
             $eks->pintu_belakang = $params['eksterior']['pbelakang']['pintu_belakang'];
             $eks->wyper_set = $params['eksterior']['wyper']['wyper_set'];
 
-            $warna = Warna::findOne($params['eksterior']['warna']['kd_warna']);
-            if (empty($warna)) {
-                $warna = new Warna();
+            if (!empty($params['eksterior']['warna']['kd_warna'])) {
+                $warna = Warna::find()->where('kd_warna="' . $params['eksterior']['warna']['kd_warna'] . '"')->one();
+                if (empty($warna)) {
+                    $warna = new Warna();
+                }
+                $warna->attributes = $params;
+                if ($warna->save()) {
+                    $eks->warna = $warna->kd_warna;
+                }
             }
-            $warna->attributes = $params;
-            if ($warna->save()) {
-                $eks->warna = $warna->kd_warna;
-            }
+            if (!empty($params['eksterior']['warna2']['kd_warna'])) {
             //warna 2
-            $warna = Warna::findOne($params['eksterior']['warna2']['kd_warna']);
+            $warna = Warna::find()->where('kd_warna="' . $params['eksterior']['warna2']['kd_warna'] . '"')->one();
             if (empty($warna)) {
                 $warna = new Warna();
             }
@@ -1219,11 +1234,12 @@ class WomasukController extends Controller {
             if ($warna->save()) {
                 $eks->warna2 = $warna->kd_warna;
             }
+            }
             $eks->strip = $params['eksterior']['strip']['strip'];
             $eks->letter = $params['eksterior']['letter']['letter'];
             $eks->lain2 = $params['eksterior']['lain2'];
             $eks->save();
-            
+
             // INTERIOR
             if ($params['womasuk']['jenis'] == "Mini Bus") {
                 $int = Miniint::find()->where('no_wo="' . $model->no_wo . '"')->one();
@@ -1273,15 +1289,15 @@ class WomasukController extends Controller {
                 $int->lain2 = $params['interior']['lain2'];
                 $int->save();
             }
-            
+
             // UPDATE STI CUSTOMER
-            $spk = \app\models\Spk::find($params['womasuk']['spk']['no_spk']);
-            $sti = \app\models\Serahterimain::find($params['womasuk']['titipan']['kd_titipan']);
+//            $spk = \app\models\Spk::findOne('no_spk='.$params['womasuk']['spk']['no_spk']);
+            $spk = \app\models\Spkaroseri::find()->where('no_spk=' . $params['womasuk']['spk']['no_spk'])->one();
+            $sti = \app\models\Serahterimain::find()->where('kd_titipan="' . $params['womasuk']['titipan']['kd_titipan'] . '"')->one();
             $sti->kd_cust = $spk->kd_customer;
             $sti->no_spk = $spk->no_spk;
             $sti->save();
-            Yii::error($spk);
-            
+
 
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);

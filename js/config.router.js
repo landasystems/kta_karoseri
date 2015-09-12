@@ -1039,9 +1039,9 @@ angular.module('app')
                                     templateUrl: 'tpl/t_tglspp/index.html',
                                     resolve: {
                                         deps: ['$ocLazyLoad',
-                                            function($ocLazyLoad) {
-                                                return $ocLazyLoad.load([]).then(
-                                                        function() {
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
+                                                        function () {
                                                             return $ocLazyLoad.load('js/controllers/tglspp.js');
                                                         }
                                                 );

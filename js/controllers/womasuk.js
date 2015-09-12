@@ -20,6 +20,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.is_view = false;
     $scope.is_create = false;
     $scope.is_create = false;
+    $scope.form = {};
 
     $scope.open1 = function($event) {
         $event.preventDefault();
@@ -146,6 +147,20 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.formtitle = "Lihat Data : " + form.no_wo;
         $scope.form = form;
         $scope.selected(form);
+    };
+     $scope.buka = function (form) {
+        console.log(form);
+        if (confirm("Apa anda yakin akan memproses item ini ?")) {
+            Data.post('womasuk/bukaprint/', form).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan");
+                } else {
+                    $scope.is_edit = false;
+                    $scope.callServer(tableStateRef); //reload grid ulang
+                    toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
+                }
+            });
+        }
     };
     $scope.save = function(form, eks, inter) {
         if ($scope.uploader.queue.length > 0) {

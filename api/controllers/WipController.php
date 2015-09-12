@@ -84,7 +84,7 @@ class WipController extends Controller {
 
     public function actionGetnowo() {
         $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($params);
+//        Yii::error($params);
         $query2 = new Query;
         $query2->from('det_wip as wip')
                 ->join('JOIN', 'bagian', 'bagian.kd_bag = wip.kd_kerja')

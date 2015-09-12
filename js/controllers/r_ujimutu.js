@@ -41,6 +41,11 @@ app.controller('rekapujimutuCtrl', function ($scope, Data, toaster) {
             window.location = 'api/web/ujimutu/excel';
         });
     }
+    $scope.excel2 = function () {
+        Data.get('ujimutu/rekap', paramRef).then(function (data) {
+            window.location = 'api/web/ujimutu/excel2';
+        });
+    }
    
 
 

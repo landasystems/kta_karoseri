@@ -28,9 +28,11 @@ class SpprutinController extends Controller {
                     'kode' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
+                    'updatetgl' => ['post'],
                     'delete' => ['delete'],
                     'listbarang' => ['get'],
                     'requiredpurchase' => ['get'],
+                    'getdetail' => ['post'],
                 ],
             ]
         ];
@@ -39,6 +41,7 @@ class SpprutinController extends Controller {
     public function actionCari() {
 
         $params = $_REQUEST;
+
         $query = new Query;
         $query->from('trans_spp')
                 ->select("no_spp,no_proyek")
@@ -250,9 +253,34 @@ class SpprutinController extends Controller {
         }
     }
 
+    public function actionUpdatetgl() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        \Yii::error($params);
+        foreach ($params['asu'] as $key => $data) {
+//            $model = DetSpp::find(['no_spp' => $params['wip']['nama']['no_spp'], 'kd_barang' => $key])->all();
+            $model = DetSpp::findOne($key);
+            $model->a = date('Y-m-d', strtotime($params['wip']['a']));
+            $model->save();
+        }
+        //list
+        $detSpp = DetSpp::find()
+                ->with(['wo', 'barang'])
+                ->where(['no_spp' => $params['wip']['nama']['no_spp']])
+                ->all();
+        $detail = array();
+        foreach ($detSpp as $key => $val) {
+            $detail[$key] = $val->attributes;
+            $detail[$key]['wo'] = (isset($val->wo)) ? $val->wo->attributes : [];
+            $detail[$key]['barang'] = (isset($val->barang)) ? $val->barang->attributes : [];
+        }
+        $this->setHeader(200);
+        echo json_encode(['status' => 1, 'details' => $detail]);
+        
+    }
+
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($params);
+
         $model = TransSpp::findOne($params['form']['no_spp']);
 //        $model->attributes = $params;
         if (empty($model)) {
@@ -361,6 +389,22 @@ class SpprutinController extends Controller {
         $detSpp = DetSpp::find()
                 ->with(['wo', 'barang'])
                 ->where(['no_spp' => $id])
+                ->all();
+        $detail = array();
+        foreach ($detSpp as $key => $val) {
+            $detail[$key] = $val->attributes;
+            $detail[$key]['wo'] = (isset($val->wo)) ? $val->wo->attributes : [];
+            $detail[$key]['barang'] = (isset($val->barang)) ? $val->barang->attributes : [];
+        }
+        $this->setHeader(200);
+        echo json_encode(['status' => 1, 'details' => $detail]);
+    }
+
+    public function actionGetdetail() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $detSpp = DetSpp::find()
+                ->with(['wo', 'barang'])
+                ->where(['no_spp' => $params['nama']['no_spp']])
                 ->all();
         $detail = array();
         foreach ($detSpp as $key => $val) {
