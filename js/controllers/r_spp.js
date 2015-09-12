@@ -41,6 +41,11 @@ app.controller('reksppCtrl', function ($scope, Data, toaster) {
             window.location = 'api/web/spprutin/excelspp';
         });
     }
+    $scope.print = function() {
+        Data.get('spprutin/rekap', paramRef).then(function(data) {
+            window.open('api/web/spprutin/excelspp?print=true');
+        });
+    }
    
 
 

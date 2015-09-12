@@ -24,6 +24,7 @@ class SpprutinController extends Controller {
                     'cari' => ['get'],
                     'view' => ['get'],
                     'excel' => ['get'],
+                    'print' => ['get'],
                     'detail' => ['get'],
                     'excelspp' => ['get'],
                     'kode' => ['get'],
@@ -362,10 +363,14 @@ class SpprutinController extends Controller {
     }
 
     public function actionDetail($id) {
+
         $detSpp = DetSpp::find()
                 ->with(['wo', 'barang'])
                 ->where(['no_spp' => $id])
                 ->all();
+        session_start();
+        $_SESSION['nospp'] = $id;
+
         $detail = array();
         foreach ($detSpp as $key => $val) {
             $detail[$key] = $val->attributes;
@@ -395,12 +400,31 @@ class SpprutinController extends Controller {
     public function actionExcelspp() {
         session_start();
         $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
         $query->limit(null);
         $query->offset(null);
 //         Yii::error($query);
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/rekapspp", ['models' => $models]);
+        return $this->render("/expretur/rekapspp", ['models' => $models, 'filter' => $filter]);
     }
-    
+
+    public function actionPrint() {
+        session_start();
+        $nospp = $_SESSION['nospp'];
+
+        $query = new Query;
+        $query->where("det_spp.no_spp='" . $nospp . "'")
+                ->from('det_spp')
+                ->join('JOIN', 'trans_spp', 'trans_spp.no_spp = det_spp.no_spp')
+                ->join('LEFT JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
+                ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
+                ->join('LEFT JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
+                ->select("det_spp.*,trans_spp.*,jenis_brg.jenis_brg,barang.min,barang.max,barang.nm_barang,barang.satuan,trans_po.nota");
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/laporanspprutin", ['models' => $models,'id' => $nospp]);
+    }
+
 }

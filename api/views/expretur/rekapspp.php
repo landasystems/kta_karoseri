@@ -1,6 +1,8 @@
 <?php
+if (!isset($_GET['print'])) {
 header("Content-type: application/vnd-ms-excel");
-//header("Content-Disposition: attachment; filename=excel-rekap-ujimutu.xls");
+header("Content-Disposition: attachment; filename=excel-rekap-spp.xls");
+}
 ?>
 
 <?php
@@ -29,54 +31,80 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
 <br>
 <center><b>LAPORAN SURAT PERINTAH PEMBELIAN</b></center>
 <br><br>
-
-
-
-<table border="1" width="100%">
+<?php
+if($filter['kategori'] == 'rutin'){
+    $jns_spp = "Rutin";
+}else if($filter['kategori'] == 'nonrutin'){
+    $jns_spp = "Non Rutin";
+}else{
+    $jns_spp = "Rutin & Non Rutin";
+}
+?>
+<b>Jenis SPP : <?=$jns_spp?></b>
+<br><br>
+<link rel="stylesheet" href="../../../css/print.css" type="text/css" />
+<table style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;" width="100%">
     <tr>
-        <th>No SPP</th>
-        <th>Tanggal</th>
-        <th>No PO</th>
-        <th>Kode Barang</th>
-        <th>Nama Barang</th>
-        <th>Satuan</th>
-        <th>Qty</th>
-        <th>Plan</th>
-        <th>Actual</th>
-        <th>Keterangan</th>
+        <th rowspan="2" class="border-right border-bottom" style="text-align: center;">No SPP</th>
+        <th rowspan="2" class="border-right border-bottom" style="text-align: center;">Tanggal</th>
+        <th rowspan="2" class="border-right border-bottom" style="text-align: center;">No PO</th>
+        <th rowspan="2" class="border-right border-bottom" style="text-align: center;">Kode Barang</th>
+        <th rowspan="2" class="border-right border-bottom" style="text-align: center;" >Nama Barang</th>
+        <th rowspan="2" class="border-right border-bottom" style="text-align: center;">Satuan</th>
+        <th rowspan="2" class="border-right border-bottom" style="text-align: center;">Qty</th>
+        <th colspan="2" class="border-right border-bottom" style="text-align: center;">Tanggal</th>
+        <th rowspan="2" class="border-right border-bottom" style="text-align: center;">Keterangan</th>
+    </tr>
+    <tr>
+        
+        
+        <th class="border-right border-bottom" style="text-align: center;">Plan</th>
+        <th class="border-right border-bottom" style="text-align: center;">Actual</th>
     </tr>
     <?php
     foreach ($data as $key) {
         ?>
         <tr>
-            <td valign="top">&nbsp;<?= $key['title']['no_spp']; ?></td>
-            <td valign="top"><?= date('d m Y', strtotime($key['title']['tgl_trans'])) ?></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td class="border-right border-bottom" valign="top">&nbsp;<?= $key['title']['no_spp']; ?></td>
+            <td  class="border-right border-bottom" valign="top"><?= date('d-m-Y', strtotime($key['title']['tgl_trans'])) ?></td>
+            <td class="border-right border-bottom"></td>
+            <td class="border-right border-bottom"></td>
+            <td class="border-right border-bottom"></td>
+            <td class="border-right border-bottom"></td>
+            <td class="border-right border-bottom"></td>
+            <td class="border-right border-bottom"></td>
+            <td class="border-right border-bottom"></td>
+            <td class="border-right border-bottom"></td>
         </tr>
         <?php
         foreach ($key['body'] as $keys) {
             ?>
             <tr>
-                <td></td>
-                <td></td>
-                <td valign="top"><?= $keys['nota'] ?></td>
-                <td valign="top"><?= $keys['kd_barang'] ?></td>
-                <td valign="top"><?= $keys['nm_barang']; ?></td>
-                <td valign="top"><?= $keys['satuan']; ?></td>
-                <td valign="top">&nbsp;<?= $keys['qty']; ?></td>
-                <td valign="top">&nbsp;<?= $keys['p']; ?></td>
-                <td valign="top">&nbsp;<?= $keys['a']; ?></td>
-                <td valign="top"><?= $keys['ket']; ?></td>
+                <td class="border-right border-bottom"></td>
+                <td class="border-right border-bottom"></td>
+                <td style="text-align: center;" class="border-right border-bottom" valign="top"><?= $keys['nota'] ?></td>
+                <td style="text-align: center;" class="border-right border-bottom" valign="top"><?= $keys['kd_barang'] ?></td>
+                <td class="border-right border-bottom" valign="top"><?= $keys['nm_barang']; ?></td>
+                <td style="text-align: center;" class="border-right border-bottom" valign="top"><?= $keys['satuan']; ?></td>
+                <td style="text-align: center;" class="border-right border-bottom" valign="top">&nbsp;<?= $keys['qty']; ?></td>
+                <td class="border-right border-bottom"valign="top">&nbsp;<?= date('d-m-Y', strtotime($keys['p'])); ?></td>
+                <td class="border-right border-bottom" valign="top">&nbsp;<?= date('d-m-Y', strtotime($keys['a'])); ?></td>
+                <td class="border-right border-bottom" valign="top"><?= $keys['ket']; ?></td>
             </tr>
             <?php
         }
     }
     ?>
 </table>
+<?php
+if (isset($_GET['print'])) {
+    ?>
+    <script type="text/javascript">
+        window.print();
+        setTimeout(function() {
+            window.close();
+        }, 1);
+    </script>
+    <?php
+}
+?>

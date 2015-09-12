@@ -1,6 +1,7 @@
 app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
     //init data
     var tableStateRef;
+    var paramRef;
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
@@ -26,7 +27,7 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
     $scope.requiredPurchase = function (form) {
         Data.get('spprutin/requiredpurchase', form).then(function (data) {
             $scope.sppDet = data.data;
-            
+
         });
     };
 
@@ -44,7 +45,7 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         if (tableState.search.predicateObject) {
             param['filter'] = tableState.search.predicateObject;
         }
-
+        paramRef = param;
         Data.get('spprutin', param).then(function (data) {
             $scope.displayed = data.data;
 //            $scope.displayed.tgl_terima = new Date(data.data.tgl_terima);
@@ -53,6 +54,18 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
 
         $scope.isLoading = false;
     };
+
+    $scope.excel = function () {
+        Data.get('spprutin', paramRef).then(function (data) {
+            window.location = 'api/web/spprutin/print';
+        });
+    }
+    $scope.print = function () {
+        Data.get('spprutin', paramRef).then(function (data) {
+            window.open('api/web/spprutin/print?printlap=true');
+        });
+    }
+
 
     $scope.create = function (form) {
         $scope.is_create = true;
@@ -103,6 +116,8 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         });
 
     };
+
+
     $scope.cancel = function () {
         $scope.is_edit = false;
         $scope.is_view = false;
