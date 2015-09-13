@@ -37,14 +37,63 @@ app.controller('rekapclaimCtrl', function ($scope, Data, toaster) {
         $scope.isLoading = false;
     };
 
+
+//    Data.get('claimunit/char').then(function (data) {
+
+        $scope.chartConfigEx = {
+            options: {
+                chart: {
+                    type: 'bar'
+                }
+            },
+            series: [
+                {"name": "KOMPLAIN EKSTERIOR", "data": [2, 45, 33, 47]}
+            ],
+            title: {
+                text: 'JENIS KOMPLAIN EKSTERIOR'
+            },
+            credits: {
+                enabled: false
+            },
+            xAxis: {
+                categories: ['Africa', 'America', 'Asia', 'Europe'],
+            },
+            loading: false
+        }
+
+
+        $scope.chartConfigIn = {
+            options: {
+                chart: {
+                    type: 'bar'
+                }
+            },
+            series: [
+                {"name": "KOMPLAIN INTERIOR", "data": [2, 45, 33, 47]}
+            ],
+            title: {
+                text: 'JENIS KOMPLAIN INTERIOR'
+            },
+            credits: {
+                enabled: false
+            },
+            xAxis: {
+                categories: ['Africa', 'America', 'Asia', 'Europe'],
+            },
+            loading: false
+        }
+
+//    });
+
     $scope.excel = function () {
         Data.get('claimunit/rekap', paramRef).then(function (data) {
 //            var a = new window;
 //            a.location = 'http://juuaaancoookkk.com/';
             window.open('api/web/claimunit/excel?excel=ex');
+//            window.open('api/web/claimunit/char');
         });
     }
-    
+
     $scope.print = function () {
         Data.get('claimunit/rekap', paramRef).then(function (data) {
 //            var a = new window;
