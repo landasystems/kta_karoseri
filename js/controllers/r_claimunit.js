@@ -40,48 +40,48 @@ app.controller('rekapclaimCtrl', function ($scope, Data, toaster) {
 
 //    Data.get('claimunit/char').then(function (data) {
 
-        $scope.chartConfigEx = {
-            options: {
-                chart: {
-                    type: 'bar'
-                }
-            },
-            series: [
-                {"name": "KOMPLAIN EKSTERIOR", "data": [2, 45, 33, 47]}
-            ],
-            title: {
-                text: 'JENIS KOMPLAIN EKSTERIOR'
-            },
-            credits: {
-                enabled: false
-            },
-            xAxis: {
-                categories: ['Africa', 'America', 'Asia', 'Europe'],
-            },
-            loading: false
-        }
+    $scope.chartConfigEx = {
+        options: {
+            chart: {
+                type: 'bar'
+            }
+        },
+        series: [
+            {"name": "KOMPLAIN EKSTERIOR", "data": [2, 45, 33, 47]}
+        ],
+        title: {
+            text: 'JENIS KOMPLAIN EKSTERIOR'
+        },
+        credits: {
+            enabled: false
+        },
+        xAxis: {
+            categories: ['Africa', 'America', 'Asia', 'Europe'],
+        },
+        loading: false
+    }
 
 
-        $scope.chartConfigIn = {
-            options: {
-                chart: {
-                    type: 'bar'
-                }
-            },
-            series: [
-                {"name": "KOMPLAIN INTERIOR", "data": [2, 45, 33, 47]}
-            ],
-            title: {
-                text: 'JENIS KOMPLAIN INTERIOR'
-            },
-            credits: {
-                enabled: false
-            },
-            xAxis: {
-                categories: ['Africa', 'America', 'Asia', 'Europe'],
-            },
-            loading: false
-        }
+    $scope.chartConfigIn = {
+        options: {
+            chart: {
+                type: 'bar'
+            }
+        },
+        series: [
+            {"name": "KOMPLAIN INTERIOR", "data": [2, 45, 33, 47]}
+        ],
+        title: {
+            text: 'JENIS KOMPLAIN INTERIOR'
+        },
+        credits: {
+            enabled: false
+        },
+        xAxis: {
+            categories: ['Africa', 'America', 'Asia', 'Europe'],
+        },
+        loading: false
+    }
 
 //    });
 
