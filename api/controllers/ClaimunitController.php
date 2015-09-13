@@ -325,7 +325,7 @@ class ClaimunitController extends Controller {
                 $ex['jumlah'][$e] = (int) $val['jumlah'];
                 $e++;
             } else {
-                $in['jns_komplain'][$i] = $val['jns_komplain']." (".$val['bag'].")";
+                $in['jns_komplain'][$i] = $val['jns_komplain'];
                 $in['jumlah'][$i] = (int) $val['jumlah'];
                 $i++;
             }
