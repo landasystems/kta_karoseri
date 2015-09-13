@@ -38,52 +38,59 @@ app.controller('rekapclaimCtrl', function ($scope, Data, toaster) {
     };
 
 
-//    Data.get('claimunit/char').then(function (data) {
+    Data.get('claimunit/char').then(function (data) {
 
-    $scope.chartConfigEx = {
-        options: {
-            chart: {
-                type: 'bar'
-            }
-        },
-        series: [
-            {"name": "KOMPLAIN EKSTERIOR", "data": [2, 45, 33, 47]}
-        ],
-        title: {
-            text: 'JENIS KOMPLAIN EKSTERIOR'
-        },
-        credits: {
-            enabled: false
-        },
-        xAxis: {
-            categories: ['Africa', 'America', 'Asia', 'Europe'],
-        },
-        loading: false
-    }
+        var exjumlah = data.Eksterior.jumlah;
+        var exjeniskmp = data.Eksterior.jns_komplain;
+        var injumlah = data.Interior.jumlah;
+        var injeniskmp = data.Interior.jns_komplain;
 
+//    console.log(injeniskmp);
+        $scope.chartConfigEx = {
+            options: {
+                chart: {
+                    type: 'bar'
+                }
+            },
+            series: [
+                {"name": "JUMLAH KOMPLAIN EKSTERIOR", "data": exjumlah}
+            ],
+            title: {
+                text: 'JENIS KOMPLAIN EKSTERIOR'
+            },
+            credits: {
+                enabled: false
+            },
+            xAxis: {
+                categories: exjeniskmp,
+            },
+            loading: false
+        }
 
-    $scope.chartConfigIn = {
-        options: {
-            chart: {
-                type: 'bar'
-            }
-        },
-        series: [
-            {"name": "KOMPLAIN INTERIOR", "data": [2, 45, 33, 47]}
-        ],
-        title: {
-            text: 'JENIS KOMPLAIN INTERIOR'
-        },
-        credits: {
-            enabled: false
-        },
-        xAxis: {
-            categories: ['Africa', 'America', 'Asia', 'Europe'],
-        },
-        loading: false
-    }
+        
+        $scope.chartConfigIn = {
+            options: {
+                chart: {
+                    type: 'bar'
+                }
+            },
+            series: [
+                {
+                    "name": "JUMLAH KOMPLAIN INTERIOR", "data": injumlah}
+            ],
+            title: {
+                text: 'JENIS KOMPLAIN INTERIOR'
+            },
+            credits: {
+                enabled: false
+            },
+            xAxis: {
+                categories: injeniskmp,
+            },
+            loading: false
+        }
 
-//    });
+    });
 
     $scope.excel = function () {
         Data.get('claimunit/rekap', paramRef).then(function (data) {

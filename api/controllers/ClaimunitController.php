@@ -309,7 +309,7 @@ class ClaimunitController extends Controller {
         session_start();
         $query = $_SESSION['query'];
         $query->groupBy("dc.kd_jns")
-                ->select("jk.stat,jk.jns_komplain,count(dc.kd_jns) as jumlah");
+                ->select("jk.stat,jk.bag,jk.jns_komplain,count(dc.kd_jns) as jumlah");
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -321,12 +321,12 @@ class ClaimunitController extends Controller {
         foreach ($models as $key => $val) {
 
             if ($val['stat'] == 'Eksterior') {
-                $ex['jns_komplain'][$e] = $val['jns_komplain'];
-                $ex['jumlah'][$e] = $val['jumlah'];
+                $ex['jns_komplain'][$e] = $val['jns_komplain']." (".$val['bag'].")";
+                $ex['jumlah'][$e] = (int) $val['jumlah'];
                 $e++;
             } else {
-                $in['jns_komplain'][$i] = $val['jns_komplain'];
-                $in['jumlah'][$i] = $val['jumlah'];
+                $in['jns_komplain'][$i] = $val['jns_komplain']." (".$val['bag'].")";
+                $in['jumlah'][$i] = (int) $val['jumlah'];
                 $i++;
             }
         }
