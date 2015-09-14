@@ -1,6 +1,6 @@
 <?php
 header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-rekap-fluktuasi-harga.xls");
+header("Content-Disposition: attachment; filename=excel-Laporan-spp-rutin.xls");
 
 ?>
 
