@@ -156,7 +156,6 @@ class BbmController extends Controller {
             $models[$key]['wo'] = (!empty($wo)) ? $wo->attributes : array();
             $models[$key]['supplier'] = (!empty($supplier)) ? $supplier->attributes : array();
         }
-//        Yii::error($models);
         $totalItems = $query->count();
         $this->setHeader(200);
 
@@ -201,8 +200,7 @@ class BbmController extends Controller {
                 ->orderBy($sort)
                 ->select("spp.no_spp,po.nota,tb.tgl_nota as tanggal_nota, db.no_bbm as no_bbm, barang.kd_barang as kd_barang, barang.nm_barang,
                     barang.satuan, db.jumlah as jumlah, tb.surat_jalan, db.no_po, su.nama_supplier, db.keterangan");
-//filter
-
+        //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
@@ -224,7 +222,6 @@ class BbmController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->queryAll();
-//        Yii::error($models);
         $totalItems = $query->count();
 
         $query->limit(null);

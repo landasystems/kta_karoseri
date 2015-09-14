@@ -1,8 +1,8 @@
 <?php
-header("Content-type: application/vnd-ms-excel");
+//header("Content-type: application/vnd-ms-excel");
 //header("Content-Disposition: attachment; filename=excel-retur-Barang_Masuk.xls");
 ?>
-<h3>PT. KARYA TUGAS ANDA</h3>
+<h3>PT. KaaaARYA TUGAS ANDA</h3>
 Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
 <br>
 Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com

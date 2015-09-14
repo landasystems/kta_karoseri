@@ -1,4 +1,4 @@
-app.controller('returbarangmasukCtrl', function($scope, Data, toaster) {
+app.controller('returbarangmasukCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
     var paramRef;
@@ -24,7 +24,7 @@ app.controller('returbarangmasukCtrl', function($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
         paramRef = param;
-        Data.get('bbm/rekap', param).then(function(data) {
+        Data.get('bbm/rekap', param).then(function (data) {
             $scope.displayed = data.data;
             $scope.displayedPrint = data.dataPrint;
             $scope.paginations = data.totalItems;
@@ -36,29 +36,36 @@ app.controller('returbarangmasukCtrl', function($scope, Data, toaster) {
         $scope.isLoading = false;
     };
 
-    $scope.excel = function() {
-        Data.get('bbm/rekap', paramRef).then(function(data) {
+    $scope.excel = function () {
+        Data.get('bbm/rekap', paramRef).then(function (data) {
             window.location = 'api/web/bbm/excel';
         });
     }
-    $scope.excel = function() {
-        Data.get('bbm/rekap', paramRef).then(function(data) {
-            window.location = 'api/web/bbm/excel';
+    $scope.print = function () {
+        Data.get('bbm/rekap', paramRef).then(function (data) {
+            window.open('api/web/bbm/excel?print=true', "", "width=500");
         });
     }
-    $scope.excelRekap = function() {
-        Data.get('bbm/rekap', paramRef).then(function(data) {
+
+    $scope.excelRekap = function () {
+        Data.get('bbm/rekap', paramRef).then(function (data) {
             window.location = 'api/web/bbm/excelrekap';
         });
     }
-    $scope.printSerahTerima = function() {
-        Data.get('bbm/rekap', paramRef).then(function(data) {
-            window.open('api/web/bbm/excelserahterima?print=true', "", "width=500");
+    $scope.printRekap = function () {
+        Data.get('bbm/rekap', paramRef).then(function (data) {
+            window.open('api/web/bbm/excelrekap?print=true', "", "width=500");
         });
     }
-    $scope.excelSerahTerima = function() {
-        Data.get('bbm/rekap', paramRef).then(function(data) {
-           window.location = 'api/web/bbm/excelserahterima';
+
+    $scope.excelSerahTerima = function () {
+        Data.get('bbm/rekap', paramRef).then(function (data) {
+            window.location = 'api/web/bbm/excelserahterima';
+        });
+    }
+    $scope.printSerahTerima = function () {
+        Data.get('bbm/rekap', paramRef).then(function (data) {
+            window.open('api/web/bbm/excelserahterima?print=true', "", "width=500");
         });
     }
 })
