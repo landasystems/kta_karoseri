@@ -44,9 +44,11 @@ class SpprutinController extends Controller {
     public function actionExcelmonitoring() {
         session_start();
         $query = $_SESSION['query'];
+        $query->join('LEFT JOIN', 'trans_bbm', 'trans_bbm.no_po = trans_po.nota');
+//        $query->join('LEFT JOIN', 'det_bbm', 'det_bbm.kd_barang = det_spp.kd_barang and det_bbm.no_po = trans_po.no_po');
         $query->limit(null);
         $query->offset(null);
-        $query->select("trans_spp.*, det_spp.*, barang.nm_barang");
+        $query->select("trans_spp.*, det_spp.*, trans_po.tanggal as tgl_pch,barang.nm_barang, trans_bbm.tgl_nota as tgl_realisasi");
         $command = $query->createCommand();
         $models = $command->queryAll();
         $periode = $_SESSION['periode'];
@@ -167,19 +169,19 @@ class SpprutinController extends Controller {
     }
 
     public function actionRekap() {
-        
+
         $params = $_REQUEST;
         $filter = array();
         $sort = "tgl_trans DESC";
         $offset = 0;
         $limit = 10;
-        
+
         if (isset($params['limit']))
             $limit = $params['limit'];
         if (isset($params['offset']))
             $offset = $params['offset'];
 
-        
+
         if (isset($params['sort'])) {
             $sort = $params['sort'];
             if (isset($params['order'])) {
@@ -189,7 +191,7 @@ class SpprutinController extends Controller {
                     $sort.=" DESC";
             }
         }
-        
+
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)

@@ -3,7 +3,6 @@ if (!isset($_GET['print'])) {
 //    header("Content-type: application/vnd-ms-excel");
 //    header("Content-Disposition: attachment; filename=excel-monitoring.xls");
 }
-print_r($models);
 $data = array();
 $i = 0;
 foreach ($models as $val) {
@@ -12,9 +11,9 @@ foreach ($models as $val) {
     $data[$val['no_wo']]['body'][$i]['kd_barang'] = $val['kd_barang'];
     $data[$val['no_wo']]['body'][$i]['nm_barang'] = $val['nm_barang'];
     $data[$val['no_wo']]['body'][$i]['ket'] = $val['ket'];
-    $data[$val['no_wo']]['body'][$i]['inv'] = '';
-    $data[$val['no_wo']]['body'][$i]['pch'] = '';
-    $data[$val['no_wo']]['body'][$i]['realisasi'] = '';
+    $data[$val['no_wo']]['body'][$i]['inv'] = isset($val['tgl_nota']) ? date("d/m/y", strtotime($val['tgl_nota'])) : '-';
+    $data[$val['no_wo']]['body'][$i]['pch'] = isset($val['tgl_pch']) ? date("d/m/y", strtotime($val['tgl_pch'])) : '-';
+    $data[$val['no_wo']]['body'][$i]['realisasi'] = isset($val['tgl_realisasi']) ? date("d/m/y", strtotime($val['tgl_realisasi'])) : '-';
     $i++;
 }
 ?>
