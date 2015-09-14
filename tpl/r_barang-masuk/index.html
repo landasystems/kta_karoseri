@@ -12,17 +12,17 @@
                     <div class="col-md-8 col-sm-12">
                         <div class="btn-group pull-right" role="group">
                             <div class="pull-right dropdown" style="margin-top: 0px" dropdown="">
-                                <button type="button" class="btn btn-info" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Serah Terima BBM <span class="caret"></span></button>
-                                <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 260px;">
-                                    <li><a href="#" ng-click="printSerahTerima()">Cetak</a></li>
-                                    <li><a href="#" ng-click="excelSerahTerima()">Export Excel</a></li>
-                                </ul>
-                            </div>
-                            <div class="pull-right dropdown" style="margin-top: 0px" dropdown="">
                                 <button type="button" class="btn btn-danger" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Rekap BBM <span class="caret"></span></button>
                                 <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 260px;">
                                     <li><a href="#" ng-click="printRekap()">Cetak</a></li>
                                     <li><a href="#" ng-click="excelRekap()">Export Excel</a></li>
+                                </ul>
+                            </div>
+                            <div class="pull-right dropdown" style="margin-top: 0px" dropdown="">
+                                <button type="button" class="btn btn-info" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Serah Terima BBM <span class="caret"></span></button>
+                                <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 260px;">
+                                    <li><a href="#" ng-click="printSerahTerima()">Cetak</a></li>
+                                    <li><a href="#" ng-click="excelSerahTerima()">Export Excel</a></li>
                                 </ul>
                             </div>
                             <div class="pull-right dropdown" style="margin-top: 0px" dropdown="">
@@ -32,15 +32,12 @@
                                     <li><a href="#" ng-click="excel()">Export Excel</a></li>
                                 </ul>
                             </div>
-                            <!--<button type="button" class="btn btn-danger fa fa-file-excel-o" ng-show="!isCollapsed" ng-click="excelRekap();">&nbsp;&nbsp;</button>-->
-                            <!--<button type="button" class="btn btn-success fa fa-file-excel-o" ng-show="!isCollapsed" ng-click="excel();">&nbsp;&nbsp;Export Excel Barang Masuk</button>-->
                         </div> 
                     </div>
                 </div>
             </div>
 
             <div class="panel-body">
-
                 <div class="panel panel-info" style="text-align: center">
                     <div class="panel-heading">
                         <div class="form-horizontal">
@@ -51,30 +48,30 @@
                                     <div class="col-sm-3">
                                         <input placeholder="Tanggal Periode" date-range-picker class="form-control" st-search="tgl_nota" type="text"  ng-model="tanggal">
                                     </div>
-                                    <label class="col-sm-2 control-label">Supplier</label>
-                                    <div class="col-sm-3">
-                                        <input placeholder="Nama Supplier" st-search="nama_supplier" class="form-control"/>
-                                    </div>
 
+                                    <label class="col-sm-2 control-label">Kategori</label>
+                                    <div class="col-sm-3">
+                                        <select st-search="kat" class="form-control">
+                                            <option value="">.:Pilih Jenis:.</option>
+                                            <option value="Rutin">Rutin</option>
+                                            <option value="Non Rutin">Non Rutin</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="control-group">
 
-                                    <label class="col-sm-2 control-label">No BBM</label>
+                                    <label class="col-sm-2 control-label">Supplier</label>
                                     <div class="col-sm-3">
-                                        <input placeholder="Nama Supplier" st-search="no_bbm" class="form-control"/>
+                                        <input placeholder="Nama Supplier" st-search="nama_supplier" class="form-control"/>
                                     </div>
                                     <label class="col-sm-2 control-label">Nama Barang</label>
                                     <div class="col-sm-3">
                                         <input placeholder="Nama Supplier" st-search="nm_barang" class="form-control"/>
                                     </div>
-
                                 </div>
                             </div>
-                            <!--</div>-->
-
-
                         </div>
                     </div>
                 </div>
@@ -86,15 +83,15 @@
                         <tr>
 
                             <th st-sort="tgl_nota">Tanggal</th>
-                            <th st-sort="spp">No BBM</th>
-                            <th st-sort="spp">KODE BRG</th>
-                            <th st-sort="spp">NAMA BARANG</th>
-                            <th st-sort="spp">SAT</th>
-                            <th st-sort="spp">JML</th>
-                            <th st-sort="spp">SURAT JALAN</th>
-                            <th st-sort="spp">PO</th>
-                            <th st-sort="nama_supplier">SUPPLIER</th>
-                            <th st-sort="spp">KET</th>
+                            <th st-sort="tb.no_bbm">No BBM</th>
+                            <th st-sort="barang.kd_barang">KODE BRG</th>
+                            <th st-sort="barang.nm_barang">NAMA BARANG</th>
+                            <th st-sort="barang.sat">SAT</th>
+                            <th st-sort="db.jumlah">JML</th>
+                            <th st-sort="tb.surat_jalan">SURAT JALAN</th>
+                            <th st-sort="db.no_po">PO</th>
+                            <th st-sort="su.nama_supplier">SUPPLIER</th>
+                            <th st-sort="db.keterangan">KET</th>
                         </tr>
                     </thead>
                     <tbody ng-show="!isLoading">

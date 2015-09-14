@@ -2,12 +2,16 @@ app.controller('rekapreturbarangmasukCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
     var paramRef;
-    
+
     $scope.displayed = [];
     $scope.paginations = 0;
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
+
+    Data.get('barang/jenis').then(function (data) {
+        $scope.jenis_brg = data.jenis_brg;
+    });
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -28,20 +32,24 @@ app.controller('rekapreturbarangmasukCtrl', function ($scope, Data, toaster) {
             $scope.displayed = data.data;
             $scope.displayedPrint = data.dataPrint;
             $scope.paginations = data.totalItems;
-            if(data.totalItems != 0) {
+            if (data.totalItems != 0) {
                 tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
             }
         });
 
         $scope.isLoading = false;
     };
-    
+
     $scope.excel = function () {
         Data.get('returbbm/rekap', paramRef).then(function (data) {
             window.location = 'api/web/returbbm/excel';
         });
     }
-   
 
+    $scope.print = function () {
+        Data.get('returbbm/rekap', paramRef).then(function (data) {
+            window.open('api/web/returbbm/excel?print=true', "", "width=500");
+        });
+    }
 
 })

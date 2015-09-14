@@ -216,6 +216,8 @@ class BbmController extends Controller {
                     $query->andFilterWhere(['like', 'tb.' . $key, $val]);
                 } elseif ($key == 'nm_barang') {
                     $query->andFilterWhere(['like', 'barang.' . $key, $val]);
+                } elseif ($key == 'kat') {
+                    $query->andFilterWhere(['=', 'barang.kat', $val]);
                 }
             }
         }

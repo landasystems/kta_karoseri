@@ -224,3 +224,7 @@ span.label{width: 180px;display: inline-table;}
     background-image: url(../img/print.png);
     background-repeat: repeat;
 }
+
+td, th{
+    vertical-align: top;
+}
