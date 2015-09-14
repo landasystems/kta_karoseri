@@ -20,6 +20,7 @@ class ClaimunitController extends Controller {
                     'view' => ['get'],
                     'excel' => ['get'],
                     'rekap' => ['get'],
+                    'char' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -302,6 +303,35 @@ class ClaimunitController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/rekapclaim", ['models' => $models, 'filter' => $filter]);
+    }
+
+    public function actionChar() {
+        session_start();
+        $query = $_SESSION['query'];
+        $query->groupBy("dc.kd_jns")
+                ->select("jk.stat,jk.bag,jk.jns_komplain,count(dc.kd_jns) as jumlah");
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $ex = array();
+        $in = array();
+        $e = 0;
+        $i = 0;
+        foreach ($models as $key => $val) {
+
+            if ($val['stat'] == 'Eksterior') {
+                $ex['jns_komplain'][$e] = $val['jns_komplain']." (".$val['bag'].")";
+                $ex['jumlah'][$e] = (int) $val['jumlah'];
+                $e++;
+            } else {
+                $in['jns_komplain'][$i] = $val['jns_komplain'];
+                $in['jumlah'][$i] = (int) $val['jumlah'];
+                $i++;
+            }
+        }
+
+        return json_encode(array('Interior' => $in, 'Eksterior' => $ex), JSON_PRETTY_PRINT);
     }
 
 }

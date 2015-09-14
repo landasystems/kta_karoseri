@@ -1,6 +1,6 @@
 <?php
-//header("Content-type: application/vnd-ms-excel");
-//header("Content-Disposition: attachment; filename=excel-bukti-barang-masuk.xls");
+header("Content-type: application/vnd-ms-excel");
+header("Content-Disposition: attachment; filename=excel-bukti-barang-masuk.xls");
 ?>
 <script type="text/css">
     .joke{
@@ -30,7 +30,7 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
             </td>
             <td style="border-top:none !important;border-bottom:none !important;"></td>
             <td style="border:1px;width:55%" colspan="3">
-                Dari : <?= $model->supplier->nama_supplier ?> - <?= $model->supplier->alamat?>
+                Dari : <?= $model->supplier->nama_supplier ?> - <?= $model->supplier->alamat ?>
             </td>
         </tr>
     </table>
