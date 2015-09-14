@@ -253,7 +253,7 @@ class BbmController extends Controller {
                 ->orderBy('id')
                 ->where(['no_bbm' => $model->no_bbm])
                 ->all();
-        Yii::error($det);
+//        Yii::error($det);
         $detail = array();
         foreach ($det as $key => $val) {
             $detail[$key] = $val->attributes;
