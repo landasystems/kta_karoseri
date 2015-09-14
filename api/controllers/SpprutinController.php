@@ -44,11 +44,8 @@ class SpprutinController extends Controller {
     public function actionExcelmonitoring() {
         session_start();
         $query = $_SESSION['query'];
-        $query->join('LEFT JOIN', 'trans_bbm', 'trans_bbm.no_po = trans_po.nota');
-//        $query->join('LEFT JOIN', 'det_bbm', 'det_bbm.kd_barang = det_spp.kd_barang and det_bbm.no_po = trans_po.no_po');
         $query->limit(null);
         $query->offset(null);
-        $query->select("trans_spp.*, det_spp.*, trans_po.tanggal as tgl_pch,barang.nm_barang, trans_bbm.tgl_nota as tgl_realisasi");
         $command = $query->createCommand();
         $models = $command->queryAll();
         $periode = $_SESSION['periode'];
@@ -200,7 +197,10 @@ class SpprutinController extends Controller {
                 ->join('JOIN', 'det_spp', 'trans_spp.no_spp = det_spp.no_spp')
                 ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
                 ->join('JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
-                ->select("det_spp.*,trans_spp.*,barang.nm_barang,barang.satuan,trans_po.nota");
+                ->join('LEFT JOIN', 'trans_bbm', 'trans_bbm.no_po = trans_po.nota')
+                ->join('LEFT JOIN', 'det_bbm', 'det_bbm.kd_barang = det_spp.kd_barang and det_bbm.no_bbm = trans_bbm.no_bbm')
+                ->join('LEFT JOIN', 'view_wo_spk', 'view_wo_spk.no_wo = det_spp.no_wo')
+                ->select("det_spp.*,trans_spp.*,barang.nm_barang,barang.satuan,trans_po.nota,trans_po.tanggal as tgl_pch,det_bbm.tgl_terima as tgl_realisasi,view_wo_spk.nm_customer");
 
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
