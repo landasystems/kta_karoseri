@@ -20,16 +20,21 @@ class SpprutinController extends Controller {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'index' => ['get'],
+                    'rekap' => ['get'],
                     'cari' => ['get'],
                     'view' => ['get'],
                     'excel' => ['get'],
+                    'print' => ['get'],
                     'detail' => ['get'],
+                    'excelspp' => ['get'],
                     'kode' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
+                    'updatetgl' => ['post'],
                     'delete' => ['delete'],
                     'listbarang' => ['get'],
                     'requiredpurchase' => ['get'],
+                    'getdetail' => ['post'],
                 ],
             ]
         ];
@@ -38,6 +43,7 @@ class SpprutinController extends Controller {
     public function actionCari() {
 
         $params = $_REQUEST;
+
         $query = new Query;
         $query->from('trans_spp')
                 ->select("no_spp,no_proyek")
@@ -50,7 +56,7 @@ class SpprutinController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models));
     }
-    
+
     public function actionKode() {
         $query = new Query;
         $query->from('trans_spp')
@@ -129,11 +135,87 @@ class SpprutinController extends Controller {
                 ->orderBy($sort)
                 ->select("*");
 
+        if (isset($params['filter'])) {
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+
+                $query->andFilterWhere(['like', 'trans_spp.' . $key, $val]);
+            }
+        }
         //filter
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
 
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+
+    public function actionRekap() {
+        //init variable
+        $params = $_REQUEST;
+        $filter = array();
+        $sort = "tgl_trans DESC";
+        $offset = 0;
+        $limit = 10;
+        //        Yii::error($params);
+        //limit & offset pagination
+        if (isset($params['limit']))
+            $limit = $params['limit'];
+        if (isset($params['offset']))
+            $offset = $params['offset'];
+
+        //sorting
+        if (isset($params['sort'])) {
+            $sort = $params['sort'];
+            if (isset($params['order'])) {
+                if ($params['order'] == "false")
+                    $sort.=" ASC";
+                else
+                    $sort.=" DESC";
+            }
+        }
+
+        //create query
+        $query = new Query;
+        $query->offset($offset)
+//                ->where("no_proyek='Rutin'")
+                ->limit($limit)
+                ->from('det_spp')
+                ->orderBy($sort)
+                ->join('JOIN', 'trans_spp', 'trans_spp.no_spp = det_spp.no_spp')
+                ->join('LEFT JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
+                ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
+                ->select("det_spp.*,trans_spp.*,barang.nm_barang,barang.satuan,trans_po.nota");
+
+        if (isset($params['filter'])) {
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+
+                if (isset($key) && $key == 'kategori') {
+                    if ($val == 'rutin') {
+                        $query->andWhere("trans_spp.no_proyek='Rutin'");
+                    } elseif ($val == 'nonrutin') {
+                        $query->andWhere("trans_spp.no_proyek='Non Rutin'");
+                    }
+                } else if ($key == 'tgl_periode') {
+                    $value = explode(' - ', $val);
+                    $start = date("Y-m-d", strtotime($value[0]));
+                    $end = date("Y-m-d", strtotime($value[1]));
+                    $query->andFilterWhere(['between', 'trans_spp.tgl_trans', $start, $end]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+                }
+            }
+        }
+        //filter
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $totalItems = $query->count();
+        session_start();
+        $_SESSION['query'] = $query;
+        $_SESSION['filter'] = $filter;
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
@@ -176,16 +258,41 @@ class SpprutinController extends Controller {
         }
     }
 
+    public function actionUpdatetgl() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        \Yii::error($params);
+        foreach ($params['asu'] as $key => $data) {
+//            $model = DetSpp::find(['no_spp' => $params['wip']['nama']['no_spp'], 'kd_barang' => $key])->all();
+            $model = DetSpp::findOne($key);
+            $model->a = date('Y-m-d', strtotime($params['wip']['a']));
+            $model->save();
+        }
+        //list
+        $detSpp = DetSpp::find()
+                ->with(['wo', 'barang'])
+                ->where(['no_spp' => $params['wip']['nama']['no_spp']])
+                ->all();
+        $detail = array();
+        foreach ($detSpp as $key => $val) {
+            $detail[$key] = $val->attributes;
+            $detail[$key]['wo'] = (isset($val->wo)) ? $val->wo->attributes : [];
+            $detail[$key]['barang'] = (isset($val->barang)) ? $val->barang->attributes : [];
+        }
+        $this->setHeader(200);
+        echo json_encode(['status' => 1, 'details' => $detail]);
+        
+    }
+
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($params);
+
         $model = TransSpp::findOne($params['form']['no_spp']);
 //        $model->attributes = $params;
-        if(empty($model)){
+        if (empty($model)) {
             $model = new TransSpp();
             $model->no_spp = $params['form']['no_spp'];
         }
-        
+
         $tgl_trans = date('Y-m-d', strtotime($params['form']['tgl_trans']));
         $model->tgl_trans = $tgl_trans;
         $model->tgl1 = date('Y-m-d', strtotime($params['form']['periode']['startDate']));
@@ -215,8 +322,8 @@ class SpprutinController extends Controller {
 
     public function actionDelete($id) {
         $model = $this->findModel($id);
-        $deleteDetail = DetSpp::deleteAll('no_spp="'.$id.'"');
-        
+        $deleteDetail = DetSpp::deleteAll('no_spp="' . $id . '"');
+
         if ($model->delete()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -284,9 +391,29 @@ class SpprutinController extends Controller {
     }
 
     public function actionDetail($id) {
+
         $detSpp = DetSpp::find()
                 ->with(['wo', 'barang'])
                 ->where(['no_spp' => $id])
+                ->all();
+        session_start();
+        $_SESSION['nospp'] = $id;
+
+        $detail = array();
+        foreach ($detSpp as $key => $val) {
+            $detail[$key] = $val->attributes;
+            $detail[$key]['wo'] = (isset($val->wo)) ? $val->wo->attributes : [];
+            $detail[$key]['barang'] = (isset($val->barang)) ? $val->barang->attributes : [];
+        }
+        $this->setHeader(200);
+        echo json_encode(['status' => 1, 'details' => $detail]);
+    }
+
+    public function actionGetdetail() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $detSpp = DetSpp::find()
+                ->with(['wo', 'barang'])
+                ->where(['no_spp' => $params['nama']['no_spp']])
                 ->all();
         $detail = array();
         foreach ($detSpp as $key => $val) {
@@ -297,21 +424,51 @@ class SpprutinController extends Controller {
         $this->setHeader(200);
         echo json_encode(['status' => 1, 'details' => $detail]);
     }
-    
-    public function actionRequiredpurchase(){
+
+    public function actionRequiredpurchase() {
         $model = Barang::find()
                 ->where('kat like "rutin%"')
                 ->andWhere('qty <= min')
                 ->all();
         $data = [];
-        if(!empty($model)){
-            foreach($model as $key=> $val){
+        if (!empty($model)) {
+            foreach ($model as $key => $val) {
                 $data[$key]['barang'] = $val->attributes;
             }
         }
         $totalItems = count($data);
         $this->setHeader(200);
-        echo json_encode(['status' => 1, 'data' => $data,'count' => $totalItems]);
+        echo json_encode(['status' => 1, 'data' => $data, 'count' => $totalItems]);
+    }
+
+    public function actionExcelspp() {
+        session_start();
+        $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
+        $query->limit(null);
+        $query->offset(null);
+//         Yii::error($query);
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/rekapspp", ['models' => $models, 'filter' => $filter]);
+    }
+
+    public function actionPrint() {
+        session_start();
+        $nospp = $_SESSION['nospp'];
+
+        $query = new Query;
+        $query->where("det_spp.no_spp='" . $nospp . "'")
+                ->from('det_spp')
+                ->join('JOIN', 'trans_spp', 'trans_spp.no_spp = det_spp.no_spp')
+                ->join('LEFT JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
+                ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
+                ->join('LEFT JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
+                ->select("det_spp.*,trans_spp.*,jenis_brg.jenis_brg,barang.min,barang.max,barang.nm_barang,barang.satuan,trans_po.nota");
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/laporanspprutin", ['models' => $models,'id' => $nospp]);
     }
 
 }

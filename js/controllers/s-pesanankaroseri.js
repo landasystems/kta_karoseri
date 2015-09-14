@@ -48,15 +48,10 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
         }
 
         var jml_harga = (harga_karoseri * jml) + harga_optional;
-
         $scope.form.jml_harga = jml_harga;
-
         total = jml_harga + ppn;
-
         $scope.form.total_harga = total;
-
         var sisa = total - $scope.form.uang_muka;
-
         $scope.form.sisa_bayar = sisa;
     }
 
@@ -118,6 +113,7 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
         });
         $scope.isLoading = false;
     };
+
     $scope.create = function(form) {
         $scope.is_edit = true;
         $scope.is_view = false;
@@ -130,6 +126,7 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
                 ket: '',
             }];
     };
+
     $scope.update = function(form) {
         $scope.is_edit = true;
         $scope.is_view = false;
@@ -142,6 +139,7 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
             $scope.form.is_ppn = "1";
         }
     };
+
     $scope.view = function(form) {
         $scope.is_edit = true;
         $scope.is_view = true;
@@ -150,6 +148,7 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
         $scope.selected(form.no_spk);
         $scope.form = form;
     };
+
     $scope.save = function(form) {
         var url = ($scope.is_create == true) ? 'spkaroseri/create' : 'spkaroseri/update/' + form.no_spk;
         Data.post(url, form).then(function(result) {
@@ -162,6 +161,7 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
             }
         });
     };
+
     $scope.cancel = function() {
         $scope.is_edit = false;
         $scope.is_view = false;
@@ -209,6 +209,12 @@ app.controller('rekapSpk', function($scope, Data) {
     $scope.excel = function() {
         Data.get('spkaroseri/rekap', paramRef).then(function(data) {
             window.location = 'api/web/spkaroseri/excel';
+        });
+    }
+
+    $scope.print = function() {
+        Data.get('spkaroseri/rekap', paramRef).then(function(data) {
+            window.open('api/web/spkaroseri/excel');
         });
     }
 

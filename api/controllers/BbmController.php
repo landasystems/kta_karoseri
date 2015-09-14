@@ -32,6 +32,7 @@ class BbmController extends Controller {
                     'petugas' => ['get'],
                     'listbbm' => ['get'],
                     'detailstok' => ['post'],
+                    'excelserahterima' => ['get'],
                 ],
             ]
         ];
@@ -231,6 +232,7 @@ class BbmController extends Controller {
         session_start();
         $_SESSION['query'] = $query;
         $_SESSION['filter'] = $filter;
+        $_SESSION['periode'] = isset($filter['tgl_nota']) ? $filter['tgl_nota'] : '';
 
         $this->setHeader(200);
 
@@ -253,14 +255,13 @@ class BbmController extends Controller {
                 ->orderBy('id')
                 ->where(['no_bbm' => $model->no_bbm])
                 ->all();
-//        Yii::error($det);
         $detail = array();
         foreach ($det as $key => $val) {
             $detail[$key] = $val->attributes;
-
             $namaBarang = (isset($val->barang->nm_barang)) ? $val->barang->nm_barang : '';
+            $satuan = (isset($val->barang->satuan)) ? $val->barang->satuan : '';
 
-            $detail[$key]['barang'] = ['kd_barang' => $val->kd_barang, 'nm_barang' => $namaBarang];
+            $detail[$key]['barang'] = ['kd_barang' => $val->kd_barang, 'nm_barang' => $namaBarang, 'satuan' => $satuan];
         }
 
 
@@ -413,6 +414,16 @@ class BbmController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/rekapbbm", ['models' => $models]);
+    }
+
+    public function actionExcelserahterima() {
+        session_start();
+        $query = $_SESSION['query'];
+        $periode = $_SESSION['periode'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        return $this->render("/expretur/serahterimabbm", ['models' => $models, 'periode' => $periode]);
     }
 
     public function actionExceldet($id) {

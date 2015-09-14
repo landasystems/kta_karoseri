@@ -76,10 +76,20 @@
     <div class="wrapper-md" ng-show="is_edit">
         <div class="panel panel-default">
             <div class="panel-heading">
-                {{formtitle}} 
-                <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-show="is_view">
-                    <button type="button" class="btn btn-success fa fa-file-excel-o" ng-click="excelTrans(form.kd_bom)" ng-print print-element-id="printArea" ng-disabled="status == '0'">&nbsp;Export Lap. HPP</button>
-                </div> 
+                <div class="row">
+                    <div class="col-md-3 col-sm-12">
+                        {{formtitle}} 
+                    </div>
+                    <div class="col-md-9 col-sm-12" align="right">
+                        <div class="pull-right dropdown" style="margin-top: 0px" dropdown="">
+                            <button type="button" class="btn btn-info" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Laporan HPP <span class="caret"></span></button>
+                            <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 269px;">
+                                <li><a href="#" ng-click="printTrans(form.kd_bom)">Cetak</a></li>
+                                <li><a href="#" ng-click="excelTrans(form.kd_bom)">Export Excel</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation">

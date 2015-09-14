@@ -1,6 +1,9 @@
 <?php
-header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-bom.xls");
+if (!isset($_GET['print'])) {
+    header("Content-type: application/vnd-ms-excel");
+    header("Content-Disposition: attachment; filename=excel-bom.xls");
+}
+
 $i = 0;
 
 $detBbk = array();
@@ -68,6 +71,18 @@ foreach ($data as $value) {
         }
         ?>
     </table>
+    <?php
+}
+?>
+<?php
+if (isset($_GET['print'])) {
+    ?>
+    <script type="text/javascript">
+        window.print();
+        setTimeout(function() {
+            window.close();
+        }, 1);
+    </script>
     <?php
 }
 ?>

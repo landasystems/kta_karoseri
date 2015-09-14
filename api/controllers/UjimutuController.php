@@ -29,6 +29,7 @@ class UjimutuController extends Controller {
                     'cari' => ['get'],
                     'rekap' => ['get'],
                     'excel' => ['get'],
+                    'excel2' => ['get'],
                 ],
             ]
         ];
@@ -177,12 +178,12 @@ class UjimutuController extends Controller {
                 ->from('det_uji_mutu as dum')
                 ->join('JOIN','trans_uji_mutu as tum','tum.kd_uji = dum.kd_uji')
                 ->join('JOIN','rubah_bentuk as rb','rb.no_wo = dum.no_wo')
-                ->join('JOIN','wo_masuk as wm','wm.no_wo = dum.no_wo')
-                ->join('LEFT JOIN','serah_terima_in as sti','sti.no_spk = wm.no_spk')
-                ->join('LEFT JOIN','chassis as ch','ch.kd_chassis = sti.kd_chassis')
-                ->join('LEFT JOIN','customer as cus','cus.kd_cust = sti.kd_cust')
+                ->join('JOIN','view_wo_spk as vwm','vwm.no_wo = dum.no_wo')
+//                ->join('LEFT JOIN','serah_terima_in as sti','sti.no_spk = wm.no_spk')
+//                ->join('LEFT JOIN','chassis as ch','ch.kd_chassis = sti.kd_chassis')
+//                ->join('LEFT JOIN','customer as cus','cus.kd_cust = sti.kd_cust')
                 ->orderBy($sort)
-                ->select("dum.*,rb.tgl as tanggal_rubah, tum.tgl,ch.merk,ch.tipe,sti.no_chassis, cus.nm_customer");
+                ->select("dum.*,rb.tgl as tanggal_rubah, tum.tgl,vwm.merk,vwm.tipe,vwm.no_chassis, vwm.nm_customer");
 
         //filter
         if (isset($params['filter'])) {
@@ -217,8 +218,9 @@ class UjimutuController extends Controller {
     }
 
     public function actionView($id) {
-        Yii::error($id);
-        $model = Ujimutu::find(['kd_uji' => $id]);
+//        Yii::error($id);
+        $model = Ujimutu::findOne(['kd_uji' => $id]);
+//        $model = $this->findModel($id);
         Yii::error($model);
         $query = new Query;
         $query->from('det_uji_mutu as det')
@@ -346,6 +348,16 @@ class UjimutuController extends Controller {
         $models = $command->queryAll();
         return $this->render("/expretur/rekapujimutu", ['models' => $models,'filter'=>$filter]);
     }
+    public function actionExcel2() {
+        session_start();
+        $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/rekapujimutu2", ['models' => $models, 'filter' => $filter]);
+    }
+        
 
 }
 

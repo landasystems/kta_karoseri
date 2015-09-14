@@ -97,15 +97,9 @@ app.controller('bomCtrl', function($scope, Data, toaster, FileUploader, $statePa
         });
         $scope.isLoading = false;
     };
-    $scope.excel = function() {
+    $scope.printTrans = function() {
         Data.get('bom', paramRef).then(function(data) {
-            window.location = 'api/web/bom/excel';
-        });
-    }
-
-    $scope.excel = function() {
-        Data.get('bom', paramRef).then(function(data) {
-            window.location = 'api/web/bom/excel';
+            window.open('api/web/bom/exceltrans?print=true');
         });
     }
 
@@ -289,7 +283,7 @@ app.controller('rekapBomCtrl', function($scope, Data) {
     $scope.jenis = '';
     $scope.is_show = false;
     $scope.no_wo = '';
-    $scope.r_bomModel = [];
+    $scope.wo = [{}];
     $scope.form = {};
     $scope.rekap = function() {
         $scope.jenis = 'rekap';
@@ -357,13 +351,8 @@ app.controller('rekapBomCtrl', function($scope, Data) {
         });
     }
 
-    $scope.excelRekapRealisasiModel = function() {
-        Data.get('bom/rekaprealisasiwo', paramRef).then(function(data) {
-            window.location = 'api/web/bom/excelrealisasiwo';
-        });
-    };
-    $scope.wo = [{
-        }];
+    //realisasi model
+
     Data.get('chassis/merk').then(function(data) {
         $scope.listMerk = data.data;
     });
@@ -394,32 +383,21 @@ app.controller('rekapBomCtrl', function($scope, Data) {
             });
         }
     };
-
-//    $scope.tmp = [];
+    $scope.r_bomModelSrc = [];
     $scope.r_bomModel = [];
-
-    $scope.tmpBomModel = function callServer(tableState) {
-        var param = $scope.form.no_wo;
-//        $scope.tableStateRef = tableState;
-//        var offset = tableState.pagination.start || 0;
-//        var limit = tableState.pagination.number || 10;
-        Data.get('bom/rekaprealisasimodel', param).then(function(data) {
-            $scope.r_bomModel = data.data;
-            $scope.totalItems = $scope.r_bomModel.length;
-            $scope.currentPage = 1;
-            $scope.numPerPage = 5;
-//            tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
+    $scope.tmpBomModel = function(form) {
+        var data = form;
+        Data.post('bom/rekaprealisasimodel', data).then(function(data) {
+            $scope.r_bomModelSrc = [];
+            angular.forEach(data.data, function($value, $key) {
+                $scope.r_bomModelSrc.push($value);
+            });
         });
-//        $scope.isLoading = false;
     };
-
-    $scope.paginate = function(value) {
-        var begin, end, index;
-        begin = ($scope.currentPage - 1) * $scope.numPerPage;
-        end = begin + $scope.numPerPage;
-        index = $scope.r_bomModel.indexOf(value);
-        return (begin <= index && index < end);
+    $scope.excelRekapRealisasiModel = function() {
+        var data = $scope.form;
+        Data.post('bom/rekaprealisasimodel', data).then(function(data) {
+            window.location = 'api/web/bom/excelrealisasimodel';
+        });
     };
-
-
 })

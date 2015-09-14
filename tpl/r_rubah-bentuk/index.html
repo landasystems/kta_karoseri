@@ -4,10 +4,21 @@
     </div>
     <div class="wrapper-md" ng-show="!is_edit">
         <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
-            <div class="panel-heading">.:: Rekap Rubah Bentuk
-                <div class="btn-group pull-right" role="group" style="margin-top: -4px; margin-right: 18px;">
-                    <button type="button" class="btn btn-success fa fa-file-excel-o" ng-show="!isCollapsed" ng-click="excel();">&nbsp;&nbsp;Exp Laporan Rubah Bentuk</button>
-                </div> 
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        .:: Rekap Rubah Bentuk
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <div class="pull-right dropdown" style="margin-top: 0px" dropdown="">
+                            <button type="button" class="btn btn-info" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">LAP. PEMBUATAN RUBAH BENTUK <span class="caret"></span></button>
+                            <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 273px;">
+                                <li><a href="#" ng-click="printLapPembuatan()">Cetak</a></li>
+                                <li><a href="#" ng-click="exportLapPembuatan()">Export Excel</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="panel-body">

@@ -97,6 +97,11 @@
     </div>
 
     <div class="wrapper-md" ng-show="is_edit">
+        <style>
+            .form-group {
+                margin-bottom: 5px;
+            }
+        </style>
         <div class="panel panel-default">
             <div class="panel-heading">
                 {{formtitle}} 
@@ -153,36 +158,29 @@
                                     <label class="col-sm-3 control-label">No Wo</label>
                                     <div class="col-sm-9">
                                         <div class="input-group">
+                                            <span class="input-group-btn">
+                                                <button ng-click="form.no_wo = undefined" class="btn btn-default" ng-disabled="is_view">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </span>
                                             <ui-select ng-model="form.no_wo" ng-disabled="is_view" theme="bootstrap" >
                                                 <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
                                                 <ui-select-choices refresh="cariWo($select.search)" repeat="val in results">
                                                     {{val.no_wo}}
                                                 </ui-select-choices>
                                             </ui-select>
-                                            <span class="input-group-btn">
-                                                <button ng-click="form.no_wo = undefined" class="btn btn-default" ng-disabled="is_view">
-                                                    <span class="glyphicon glyphicon-trash"></span>
-                                                </button>
-                                            </span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Bagian</label>
                                     <div class="col-sm-9">
-                                        <!--<div class="input-group">-->
                                         <ui-select ng-model="form.kd_jab" ng-disabled="is_view" theme="bootstrap" >
                                             <ui-select-match>{{$select.selected.jabatan}}</ui-select-match>
                                             <ui-select-choices refresh="cariJabatan($select.search)" repeat="val in resultsjabatan">
                                                 {{val.jabatan}}
                                             </ui-select-choices>
                                         </ui-select>
-                                        <!--                                            <span class="input-group-btn">
-                                                                                        <button ng-click="form.kd_jab = undefined" class="btn btn-default" ng-disabled="is_view">
-                                                                                            <span class="glyphicon glyphicon-trash"></span>
-                                                                                        </button>
-                                                                                    </span>-->
-                                        <!--</div>-->
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -195,12 +193,6 @@
                                                 {{val.nama}}
                                             </ui-select-choices>
                                         </ui-select>
-                                        <!--                                            <span class="input-group-btn">
-                                                                                        <button ng-click="form.penerima = undefined" class="btn btn-default" ng-disabled="is_view">
-                                                                                            <span class="glyphicon glyphicon-trash"></span>
-                                                                                        </button>
-                                                                                    </span>-->
-                                        <!--</div>-->
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -245,19 +237,12 @@
                                     <tbody>
                                         <tr style="margin:0px;padding:0px;" ng-repeat="detail in detailBbk">
                                             <td style="margin:0px;padding:0px;">
-                                                <!--<div class="input-group">-->
                                     <ui-select uiselect-autofocus="open" on-select="detail.satuan = detail.kd_barang.satuan; detailstok(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang)" ng-disabled="is_view" ng-model="detail.kd_barang" theme="bootstrap">
                                         <ui-select-match>{{$select.selected.nm_barang}}</ui-select-match>
                                         <ui-select-choices refresh="listBarang($select.search, form.no_wo, form.kd_jab)" repeat="val in resultsbarang">
                                             {{val.nm_barang}}
                                         </ui-select-choices>
                                     </ui-select>
-                                    <!--                                                    <span class="input-group-btn">
-                                                                                            <button ng-click="detail.kd_barang = undefined" class="btn btn-default" ng-disabled="is_view">
-                                                                                                <span class="glyphicon glyphicon-trash"></span>
-                                                                                            </button>
-                                                                                        </span>-->
-                                    <!--</div>-->
                                     </td>
                                     <td style="margin:0px;padding:0px;">
                                         <input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control"
@@ -265,7 +250,7 @@
                                                kalkulasi(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang, detail.jml);">
                                     </td>
                                     <td>{{detail.satuan}}</td>
-                                    <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control" ng-enter="addDetail(detail);" event-focus-id="0"></td>
+                                    <td style="margin:0px;padding:0px;"><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control" ng-enter="addDetail('');" event-focus-id="0"></td>
                                     <td  style="margin:0px;padding:0px;" ng-show="is_view != true">
                                         <button ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view" style="width:50px;" title="Hapus Detail"><i class="fa fa-trash-o"></i></button>
                                     </td>
@@ -286,8 +271,8 @@
     </div>
 
     <div id="printArea" ng-if="is_view">
-        <div style="width: 10cm; margin: 0px;">
-            <table width="100%" style="height: 1cm;">
+        <div style="width: 11.1cm; margin: 0px;">
+            <table style="width: 11.1cm; height: 1cm;">
                 <tr>
                     <td width="50%" id="print_bbk">
                         PT. KARYA TUGAS ANDA <br>
@@ -301,14 +286,14 @@
             <center id="print_bbk">
                 *** BUKTI BARANG KELUAR ***
             </center>
-            <table width="100%" style="margin-top: 5px;height: 0.8cm;">
+            <table style="width: 11.1cm; margin-top: 5px;height: 0.8cm;">
                 <tr id="print_bbk">
                     <td id="print_bbk" width="30%">NO WO {{form.no_wo.no_wo}}</td>
                     <td id="print_bbk" width="30%">No BBK {{form.no_bbk}}</td>
                     <td id="print_bbk">{{form.kd_jab.jabatan}}</td>
                 </tr>
             </table>
-            <div style="height: 7cm">
+            <div>
                 <table width="100%" style="border-collapse: collapse;">
                     <thead>
                         <tr style="border-top: 1px #000 solid; border-bottom: 1px #000 solid; height: 0.5cm;">
@@ -335,7 +320,7 @@
                     </tbody>
                 </table>
             </div>
-            <table width="100%" style="margin-bottom: 0px; margin-top: 20px;">
+            <table style="width: 11.1cm; margin-bottom: 0px;">
                 <tr>
                     <td width="40%"></td>
                     <td width="6%"></td>
@@ -347,7 +332,7 @@
                     <td align="center" id="print_bbk">Yang Menerima :</td>
                 </tr>
                 <tr>
-                    <td colspan="3"><br><br></td>
+                    <td colspan="3"><br></td>
                 </tr>
                 <tr>
                     <td align="center" id="print_bbk">{{form.petugas}}</td>

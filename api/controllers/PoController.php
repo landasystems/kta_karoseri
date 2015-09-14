@@ -353,7 +353,7 @@ class PoController extends Controller {
         if ($cek == 1 and $_SESSION['user']['id'] != "1") {
             $msg = 'Detail PO sudah dicetak, silahkan menghubungi admin untuk mencetak ulang';
             $print = 1;
-        } elseif ($cek == 0) {
+        } else{
             $msg = '';
             $print = 0;
         }
@@ -572,7 +572,8 @@ class PoController extends Controller {
     public function actionExcelfluktuasi() {
         session_start();
         $query = $_SESSION['query'];
-//        $query->Where("dpo.hargda != barang.harga");
+         $query->groupBy('dpo.harga');
+//         Yii::error($query);
         $filter = $_SESSION['filter'];
         $command = $query->createCommand();
         $models = $command->queryAll();

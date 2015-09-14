@@ -5,9 +5,8 @@
     <div class="wrapper-md" ng-show="!is_edit">
         <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
             <div class="panel-heading">
-                <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian & Export Data</button>
+                <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                    <!--<button type="button" class="btn btn-default fa fa-file-excel-o" ng-show="!isCollapsed">&nbsp;Export Excel</button>-->
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>
@@ -75,25 +74,22 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 {{formtitle}} 
-                <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-show="is_view">
-                    <button type="button" class="btn btn-success fa fa-file-excel-o" ng-click="excelTrans(form.kd_bom)" ng-print print-element-id="printArea" ng-disabled="status == '0'">&nbsp;Export Lap. HPP</button>
-                </div>
             </div>
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation">
                     <div class="col-md-4 col-sm-12">
                         <div class="form-group">
-                            <label class="col-sm-4 control-label">Kode Bom</label>
+                            <label class="col-sm-4 control-label">Kode BOM</label>
                             <div class="col-sm-8">
                                 <div class="input-group">
-                                    <ui-select on-select="getChassis(form,$item)" ng-model="form.bom" required theme="bootstrap" ng-disabled="is_view" >
+                                    <ui-select on-select="selectBom(form.kd_bom)" ng-model="form.kd_bom" ng-disabled="is_view" theme="bootstrap">
                                         <ui-select-match>{{$select.selected.kd_bom}}</ui-select-match>
-                                        <ui-select-choices refresh="cariBagian($select.search)" repeat="val in kdBom">
+                                        <ui-select-choices refresh="cariBom($select.search)" repeat="val in rBom">
                                             {{val.kd_bom}}
                                         </ui-select-choices>
                                     </ui-select>
                                     <span class="input-group-btn">
-                                        <button ng-click="form.bom = undefined" class="btn btn-default">
+                                        <button ng-click="form.kode_asli = undefined" class="btn btn-default">
                                             <span class="glyphicon glyphicon-trash"></span>
                                         </button>
                                     </span>
@@ -130,22 +126,14 @@
                     </div>
                     <div class="col-md-4 col-sm-12">
                         <div class="form-group">
-                            <label class="col-sm-4 control-label">No WO</label>
-                            <!--{{form.wo}}-->
+                            <label class="col-sm-4 control-label">No Wo</label>
                             <div class="col-sm-8">
-                                <div class="input-group">
-                                    <ui-select on-select="getWo(form,$item)" ng-model="form.wo" theme="bootstrap" required ng-disabled="is_view" >
-                                        <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
-                                        <ui-select-choices refresh="cariWo($select.search)" repeat="val in noWo">
-                                            {{val.no_wo}}
-                                        </ui-select-choices>
-                                    </ui-select>
-                                    <span class="input-group-btn">
-                                        <button ng-click="form.wo = undefined" class="btn btn-default">
-                                            <span class="glyphicon glyphicon-trash"></span>
-                                        </button>
-                                    </span>
-                                </div>
+                                <ui-select multiple ng-model="form.no_wo" theme="bootstrap">
+                                    <ui-select-match  placeholder="Pilih No Wo">{{$item.no_wo}}</ui-select-match>
+                                    <ui-select-choices refresh="cariWo($select.search)" repeat="no_wo in noWo | filter: $select.search">
+                                        {{no_wo.no_wo}}
+                                    </ui-select-choices>
+                                </ui-select>
                             </div>
                         </div>
                         <div class="form-group">
@@ -163,7 +151,7 @@
                             <label class="col-sm-4 control-label">Model</label>
                             <div class="col-sm-8">
                                 <div class="input-group">
-                                    <ui-select ng-model="form.modelKendaraan" theme="bootstrap" ng-disabled="is_view" >
+                                    <ui-select ng-model="form.kd_model" theme="bootstrap" ng-disabled="is_view" >
                                         <ui-select-match>{{$select.selected.model}}</ui-select-match>
                                         <ui-select-choices refresh="cariModel($select.search)" repeat="val in results">
                                             {{val.model}}
@@ -210,25 +198,17 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="detail in detTambahItem| filter : cari" style="margin:0px;padding:0px;">
-                                <!--<td  style="margin:0px;padding:0px;width:25%">-->
                                 <td>    
                                     {{detail.bagian.jabatan}}
-                                    <!--<input type="text" class="form-control" ng-model="detail.bagian.jabatan" required disabled="true"/>-->
                                 </td>
-                                <!--<td style="margin:0px;padding:0px;width:25%">-->
                                 <td>
-                                    {{detail.barang.nm_barang}}
-                                    <!--<input type="text" class="form-control" ng-model="detail.barang.nm_barang" required disabled="true"/>-->
+                                    {{detail.barang.nm_barang}} 
                                 </td>
-                                <!--<td  style="margin:0px;padding:0px;">-->
                                 <td>    
                                     {{detail.qty}}
-                                    <!--<input type="text" class="form-control" ng-model="detail.qty" ng-disabled="is_view">-->
                                 </td>
-                                <!--<td  style="margin:0px;padding:0px;">-->
                                 <td>
                                     {{detail.ket}}
-                                    <!--<input type="text" class="form-control" ng-model="detail.ket" ng-disabled="is_view">-->
                                 </td>
                                 <td style="margin:0px;padding:0px;" ng-hide="is_view">
                                     <div class="btn-group pull-right" role="group">

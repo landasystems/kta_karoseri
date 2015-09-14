@@ -23,6 +23,7 @@ class BbkController extends Controller {
                     'index' => ['get'],
                     'view' => ['get'],
                     'excel' => ['get'],
+                    'excelbk' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -122,14 +123,14 @@ class BbkController extends Controller {
             } else {
                 $query = new Query;
                 $query->from('det_additional_bom as dsb')
-                        ->join('JOIN', 'barang as b', 'b.kd_barang = dsb.kd_barang')
-                        ->join('JOIN', 'tbl_jabatan as tj', 'tj.id_jabatan = dsb.kd_jab')
-                        ->join('JOIN', 'spk', 'spk.kd_bom = dsb.kd_bom')
-                        ->join('JOIN', 'wo_masuk as wm', 'spk.no_spk = wm.no_spk')
+                        ->join('LEFT JOIN', 'barang as b', 'dsb.kd_barang = b.kd_barang')
+                        ->join('LEFT JOIN', 'tbl_jabatan as tj', 'tj.id_jabatan = dsb.kd_jab')
+                        ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dsb.tran_additional_bom_id')
+                        ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo  = tsb.no_wo')
                         ->select('b.saldo as stok, wm.no_wo as no_wo, b.kd_barang as kd_barang, '
                                 . 'b.nm_barang as nm_barang, b.satuan, tj.id_jabatan as kd_jabatan, '
                                 . 'tj.jabatan as bagian, dsb.qty as jml, dsb.ket as ket')
-                        ->where('b.nm_barang like "%' . $params['nama'] . '%" and dsb.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_jab']['id_jabatan'] . '"');
+                        ->where('b.nm_barang like "%' . $params['nama'] . '%" and wm.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_jab']['id_jabatan'] . '"');
 
                 $command = $query->createCommand();
                 $models = $command->queryAll();
@@ -571,6 +572,7 @@ class BbkController extends Controller {
         $query->offset(null);
         session_start();
         $_SESSION['query'] = $query;
+        $_SESSION['filter'] = $filter;
 
         $this->setHeader(200);
 
@@ -583,6 +585,16 @@ class BbkController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/rbbk", ['models' => $models]);
+    }
+
+    public function actionExcelbk() {
+        session_start();
+        $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/laporanbk", ['models' => $models, 'filter' => $filter]);
     }
 
     private function _getStatusCodeMessage($status) {

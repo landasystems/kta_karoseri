@@ -1,20 +1,14 @@
 <?php
 header("Content-type: application/vnd-ms-excel");
-//header("Content-Disposition: attachment; filename=excel-rekap-fluktuasi-harga.xls");
-$data = array();
-foreach ($models as $keys => $val) {
-    if($keys['hrg_barang'] != $keys['harga']){
-        $data[$keys] = $val;
-    }
-    
-}
+header("Content-Disposition: attachment; filename=excel-Laporan-spp-rutin.xls");
+
 ?>
 
 
 
 <table border="1">
     <tr>
-        <td rowspan="4" colspan="3">
+        <td rowspan="4" colspan="2">
             <br>
     <center><b>FLUKTUASI HARGA</b></center>
     <br><br>
@@ -22,7 +16,7 @@ foreach ($models as $keys => $val) {
     <br><br>
 
     </td>
-    <td rowspan="4" colspan="5" valign="top">
+    <td rowspan="4" colspan="3" valign="top">
         <table>
             <tr>
                 <td>Departemen Purchassing</td>
@@ -70,7 +64,7 @@ foreach ($models as $keys => $val) {
     </tr>
     <?php
     $no=1;
-    foreach ($data as $key) {
+    foreach ($models as $key) {
         ?>
         <tr>
             <td valign="top">&nbsp;<?= $no; ?></td>
