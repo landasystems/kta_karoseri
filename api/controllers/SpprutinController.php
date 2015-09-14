@@ -199,9 +199,8 @@ class SpprutinController extends Controller {
                 ->from('trans_spp')
                 ->join('JOIN', 'det_spp', 'trans_spp.no_spp = det_spp.no_spp')
                 ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
-                ->join('JOIN', 'view_wo_spk', 'view_wo_spk.no_wo = det_spp.no_wo')
                 ->join('JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
-                ->select("det_spp.*,trans_spp.*,barang.nm_barang,barang.satuan,trans_po.nota,view_wo_spk.nm_customer");
+                ->select("det_spp.*,trans_spp.*,barang.nm_barang,barang.satuan,trans_po.nota");
 
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);

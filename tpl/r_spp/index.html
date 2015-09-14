@@ -63,6 +63,7 @@
                     <thead>
                         <tr>
                             <th st-sort="det_spp.no_spp">No SPP</th>
+                            <th st-sort="trans_spp.tgl_trans">Tgl Trans</th>
                             <th st-sort="det_spp.kd_barang">Kode Barang</th>
                             <th st-sort="barang.nm_barang">Nama Barang</th>
                             <th st-sort="det_spp.qty">Jumlah</th>
@@ -73,6 +74,7 @@
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
                             <td>{{row.no_spp}}</td>
+                            <td>{{row.tgl_trans | date:'dd-MM-yyyy'}}</td>
                             <td>{{row.kd_barang}}</td>
                             <td>{{row.nm_barang}}</td>
                             <td>{{row.qty}}</td>
