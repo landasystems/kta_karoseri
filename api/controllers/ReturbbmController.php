@@ -150,7 +150,7 @@ class ReturbbmController extends Controller {
     public function actionRekap() {
         $params = $_REQUEST;
         $filter = array();
-        $sort = "rb.tgl ASC";
+        $sort = "rb.tgl DESC";
         $offset = 0;
         $limit = 10;
 
@@ -203,6 +203,8 @@ class ReturbbmController extends Controller {
                     $query->andFilterWhere(['like', 'barang.' . $key, $val]);
                 } elseif ($key == 'surat_jalan') {
                     $query->andFilterWhere(['like', 'barang.' . $key, $val]);
+                } elseif ($key == 'jenis_brg') {
+                    $query->andFilterWhere(['like', 'jb.' . $key, $val]);
                 }
             }
         }

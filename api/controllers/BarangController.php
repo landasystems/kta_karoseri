@@ -133,7 +133,7 @@ class BarangController extends Controller {
         session_start();
         $_SESSION['queryBbm'] = $bbm;
         $_SESSION['queryBbk'] = $bbk;
-        $_SESSION['periode'] = $tglStart . ' - ' . $tglEnd;
+        $_SESSION['periode'] = date("d/m/Y",  strtotime($tglStart)) . ' - ' . date("d/m/Y",  strtotime($tglEnd));
         $_SESSION['tanggal'] = $tgl;
         echo json_encode(array('status' => 1, 'data' => $data));
     }
