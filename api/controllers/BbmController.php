@@ -42,7 +42,7 @@ class BbmController extends Controller {
         $param = $_REQUEST;
         $query = new Query;
         $query->from('trans_bbm')
-                ->select("no_bbm")
+                ->select("no_bbm, surat_jalan")
                 ->where('no_bbm like "%' . $param['nama'] . '%"')
                 ->orderBy('no_bbm DESC')
                 ->limit(15);
