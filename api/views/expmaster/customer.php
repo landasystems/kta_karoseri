@@ -1,6 +1,8 @@
 <?php
-header("Content-type: application/vnd-ms-excel");
-//header("Content-Disposition: attachment; filename=excel-master-customer.xls");
+if (!isset($_GET['printlap'])) {
+    header("Content-type: application/vnd-ms-excel");
+    header("Content-Disposition: attachment; filename=excel-master-customer.xls");
+}
 ?>
 <?php
 $data = array();
@@ -18,6 +20,15 @@ foreach ($models as $val) {
     $i++;
 }
 ?>
+<style type="text/css">
+    @media print{
+        .back-grey{
+            background-color:rgb(226, 222, 222) !important;;
+            background-image: url("../../../img/print.png");
+            background-repeat: repeat;
+        }
+    }
+</style>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
 <div style="width:26cm">
     <center><h3>Data Master Customer</h3>
@@ -40,7 +51,7 @@ foreach ($models as $val) {
         <?php
         foreach ($data as $val) {
             ?>
-            <tr><td class="border-bottom border-right" colspan="8" style="background-color: rgb(226, 222, 222)"><b>&nbsp;<?= $val['title']['market'] ?></b></td></tr>
+            <tr><td class="border-all back-grey" colspan="8" style="background-color:rgb(226, 222, 222);"><b>&nbsp;<?= $val['title']['market'] ?></b></td></tr>
             <?php
             foreach ($val['body'] as $arr) {
                 ?>
@@ -52,7 +63,7 @@ foreach ($models as $val) {
                     <td class="border-bottom border-right" width="90px">&nbsp;<?= $arr['telp'] ?></td>
                     <td class="border-bottom border-right">&nbsp;<?= $arr['hp'] ?></td>
                     <td class="border-bottom border-right"><?= $arr['email'] ?></td>
-                    <td class="border-bottom border-right">&nbsp;<?= $arr['cp'] ?></td>
+                    <td class="border-bottom border-right" width="90px">&nbsp;<?= $arr['cp'] ?></td>
 
                 </tr>
                 <?php
@@ -61,3 +72,15 @@ foreach ($models as $val) {
         ?>
     </table>
 </div>
+<?php
+if (isset($_GET['printlap'])) {
+    ?>
+    <script type="text/javascript">
+        window.print();
+        setTimeout(function () {
+            window.close();
+        }, 1);
+    </script>
+    <?php
+}
+?>

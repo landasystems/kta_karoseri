@@ -48,6 +48,11 @@ app.controller('customerCtrl', function ($scope, Data, toaster) {
             window.location = 'api/web/customer/excel';
         });
     }
+    $scope.print = function () {
+        Data.get('customer', paramRef).then(function (data) {
+            window.open('api/web/customer/excel?printlap=true');
+        });
+    }
     $scope.create = function (form) {
         $scope.is_create = true;
         $scope.is_edit = true;
