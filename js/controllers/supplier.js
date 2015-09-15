@@ -69,7 +69,8 @@ app.controller('supplierCtrl', function ($scope, Data, toaster) {
         $scope.form = form;
     };
     $scope.save = function (form) {
-        var url = ($scope.is_create == true) ? 'supplier/create' : 'supplier/update/' + form.kd_chassis;
+        console.log(form.kd_chassis);
+        var url = ($scope.is_create == true) ? 'supplier/create' : 'supplier/update/' + form.kd_supplier;
         Data.post(url, form).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
