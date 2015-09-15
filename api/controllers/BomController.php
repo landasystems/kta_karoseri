@@ -463,7 +463,7 @@ class BomController extends Controller {
                 }
 
                 foreach ($models as $val) {
-                    $jKeluar = isset($detBbk[$val['kd_barang']]) ? $detBbk[$val['kd_barang']]['jml'] : ' ';
+                    $jKeluar = isset($detBbk[$val['kd_barang']]) ? $detBbk[$val['kd_barang']]['jml'] : 0;
 
                     //jika dari optional dan barang sudah ada dari bom asli
 //                    if ($optional == true) {
@@ -553,7 +553,7 @@ class BomController extends Controller {
                 }
 
                 foreach ($models as $val) {
-                    $jKeluar = isset($detBbk[$val['kd_barang']]['jml']) ? $detBbk[$val['kd_barang']]['jml'] : ' ';
+                    $jKeluar = isset($detBbk[$val['kd_barang']]['jml']) ? $detBbk[$val['kd_barang']]['jml'] : 0;
                     $detBom[$i]['no_wo'] = $val['no_wo'];
                     $detBom[$i]['kd_barang'] = $val['kd_barang'];
                     $detBom[$i]['nm_barang'] = $val['nm_barang'];

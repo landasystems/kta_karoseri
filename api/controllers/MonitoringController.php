@@ -107,19 +107,6 @@ class MonitoringController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
-    public function actionExcel() {
-        session_start();
-        $query = $_SESSION['query'];
-        $query->limit(null);
-        $query->offset(null);
-        $query->select("trans_spp.*, det_spp.*, barang.nm_barang");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        $periode = $_SESSION['periode'];
-
-        return $this->render("/expretur/monitoring", ['models' => $models, 'periode' => $periode]);
-    }
-
     private function setHeader($status) {
 
         $status_header = 'HTTP/1.1 ' . $status . ' ' . $this->_getStatusCodeMessage($status);

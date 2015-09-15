@@ -9,11 +9,11 @@ if (!isset($_GET['print'])) {
     <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;" width="100%" border="1">
         <thead>
             <tr>
-                <td colspan="3" rowspan="2" align="center" class="border-all">
+                <td colspan="3" rowspan="2" align="center" class="border-all" width="30%">
                     <h2 style="font-size: 18px;">LAPORAN STOK BAHAN MINGGUAN</h2>
-                    <p>No. Dokumen : FR-WHS-001.REEV.00</p>
+                    <p>No. Dokumen : FR-WHS-011.REV.00</p>
                 </td>
-                <td rowspan="2" colspan="6" valign="top" width="50%" class="border-all">
+                <td rowspan="2" colspan="6" valign="top" class="border-all">
                     <table style="font-size: 12px;">
                         <tr valign="top">
                             <td width="75">Nomor</td>
@@ -29,31 +29,31 @@ if (!isset($_GET['print'])) {
                         </tr>
                     </table>
                 </td>
-                <td align="center" valign="top" height="15" colspan="2" class="border-right border-bottom">Dibuat Oleh</td>
-                <td align="center" valign="top" colspan="2" class="border-right border-bottom">Diperiksa Oleh</td>
-                <td align="center" valign="top" colspan="2" class="border-right border-bottom">Disetujui Oleh</td>
+                <td width="12%" align="center" valign="top" height="15" colspan="2" class="border-right border-bottom">Dibuat Oleh</td>
+                <td width="12%" align="center" valign="top" colspan="2" class="border-right border-bottom">Diperiksa Oleh</td>
+                <td width="12%" align="center" valign="top" colspan="2" class="border-right border-bottom">Disetujui Oleh</td>
             </tr>
             <tr height="75">
-                <td colspan="2"></td>
-                <td colspan="2"></td>
-                <td colspan="2"></td>
+                <td colspan="2" class="border-all"></td>
+                <td colspan="2" class="border-all"></td>
+                <td colspan="2" class="border-all"></td>
             </tr>
     </table>
     <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px; margin-top: -2px;" width="100%" border="1">
         <tr>
-            <th rowspan="3" align="center">NO</th>
-            <th rowspan="3" align="center">KODE BARANG</th>
-            <th rowspan="3" align="center">NAMA BARANG</th>
-            <th rowspan="3" align="center">SAT</th>
-            <th rowspan="3" align="center">STOK MINIM</th>
-            <th rowspan="3" align="center">STOK AWAL</th>
-            <th colspan="7" align="center">MUTASI</th>
-            <th rowspan="3" align="center">SALDO AKHIR</th>
-            <th rowspan="3" align="center">OPNAME</th>
+            <th rowspan="3" align="center" style="vertical-align:middle">NO</th>
+            <th rowspan="3" align="center" width="100" style="vertical-align:middle">KODE BARANG</th>
+            <th rowspan="3" align="center" style="vertical-align:middle">NAMA BARANG</th>
+            <th rowspan="3" align="center" style="vertical-align:middle">SAT</th>
+            <th rowspan="3" align="center" style="vertical-align:middle">STOK MINIM</th>
+            <th rowspan="3" align="center" style="vertical-align:middle">SALDO AWAL</th>
+            <th colspan="7" align="center" style="vertical-align:middle">MUTASI</th>
+            <th rowspan="3" align="center" style="vertical-align:middle">SALDO AKHIR</th>
+            <th rowspan="3" align="center" style="vertical-align:middle">OPNAME</th>
         </tr>
         <tr>
-            <th rowspan="2" align="center">MASUK</th>
-            <th colspan="6" align="center">KELUAR</th>
+            <th rowspan="2" align="center" style="vertical-align:middle">MASUK</th>
+            <th colspan="6" align="center" style="vertical-align:middle">KELUAR</th>
         </tr>
         <tr>
             <?php
