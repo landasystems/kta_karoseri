@@ -1,7 +1,7 @@
 <?php
 if (!isset($_GET['print'])) {
-    header("Content-type: application/vnd-ms-excel");
-    header("Content-Disposition: attachment; filename=excel-bom-model.xls");
+//    header("Content-type: application/vnd-ms-excel");
+//    header("Content-Disposition: attachment; filename=excel-bom-model.xls");
 }
 ?>
 <link href="../../../css/print.css" rel="stylesheet" type="text/css" />
@@ -12,7 +12,7 @@ if (!isset($_GET['print'])) {
                 <td rowspan="2" width="30%" class="border-right">
                     <h6 style="margin: 0px; padding: 0px; font-size: 16px; font-weight: normal;" align="center">REALISASI STANDART</h6>
                     <h3 style="margin: 0px; padding: 0px;" align="center">PEMAKAIAN BAHAN</h3>
-                    <p align="center">No. Dokumen. FR-WHS-006.REV.00</p>
+                    <p align="center">No. Dokumen : FR-WHS-006.REV.00</p>
                 </td>
                 <td rowspan="2">
                     <table style="font-size: 12px;">
@@ -60,7 +60,7 @@ if (!isset($_GET['print'])) {
                 <td class="border-left" align="center">STANDAR</td>
                 <?php
                 for ($i = 0; $i < 5; $i++) {
-                    echo '<td width="70" class="border-left border-right" align="center">' . (isset($no_wo[$i]) ? $no_wo[$i] : '-') . '</td>';
+                    echo '<td width="80" class="border-left border-right" align="center">Wo. ' . (isset($no_wo[$i]) ? $no_wo[$i] : '-') . '</td>';
                 }
                 ?>
             </tr>
@@ -68,7 +68,7 @@ if (!isset($_GET['print'])) {
             $no = 1;
             foreach ($data as $val) {
                 echo '<tr>';
-                echo '<td colspan="9" class="border-top" style="background-color:#DFDFDF">' . $val['title'] . '</td>';
+                echo '<td colspan="9" class="border-top" style="background-color:#DFDFDF"><b>' . $val['title'] . '</b></td>';
                 echo '</tr>';
                 foreach ($val['body'] as $vDet) {
                     echo '<tr>';
@@ -81,7 +81,7 @@ if (!isset($_GET['print'])) {
                         if (isset($vDet['jml_keluar'][$wo])) {
                             echo '<td align="center" class="border-right border-bottom">' . $vDet['jml_keluar'][$no_wo[$i]] . '</td>';
                         } else {
-                            echo '<td align="center" class="border-right border-bottom"></td>';
+                            echo '<td align="center" class="border-right border-bottom">0</td>';
                         }
                     }
                     echo '</tr>';
@@ -95,12 +95,12 @@ if (!isset($_GET['print'])) {
 <?php
 if (isset($_GET['print'])) {
     ?>
-    <script type="text/javascript">
-        window.print();
-        setTimeout(function() {
-            window.close();
-        }, 1);
-    </script>
+    <script type="text/javascript">//
+//        window.print();
+//        setTimeout(function() {
+//            window.close();
+//        }, 1);
+//    </script>
     <?php
 }
 ?>

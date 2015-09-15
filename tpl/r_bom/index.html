@@ -151,7 +151,7 @@
                                             <label class="col-sm-4 control-label">Merk</label>
                                             <div class="col-sm-8">
                                                 <select class="form-control" ng-model="form.merk" ng-change="typeChassis(form.merk);
-                                                            getchassis(form.merk, form.tipe)" ng-disabled="is_view" >
+                                                                getchassis(form.merk, form.tipe)" ng-disabled="is_view" >
                                                     <option value="">-Pilih Merk-</option>
                                                     <option ng-repeat="valMerk in listMerk" value="{{valMerk.merk}}">{{valMerk.merk}}</option>
                                                 </select>
@@ -206,9 +206,23 @@
                                         <div class="form-group">
                                             <label class="col-md-4"></label>
                                             <div class="col-md-8">
-                                                <button type="submit" class="btn btn-info fa fa-eye-slash" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="is_show = true;
-                                                        tmpBomModel(form)">&nbsp;Tampilkan Data</button>
-                                                <button type="button" class="btn btn-success fa fa-file-excel-o"  ng-click="excelRekapRealisasiModel()">&nbsp; Export Laporan</button>
+                                                <table>
+                                                    <tr>
+                                                        <td>
+                                                            <button type="submit" class="btn btn-info btn-lg fa fa-eye-slash" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="is_show = true;
+                                                                        tmpBomModel(form)">&nbsp;Tampilkan Data</button>
+                                                        </td>
+                                                        <td>
+                                                            <div class="pull-left dropdown" style="margin-top: 0px" dropdown="">
+                                                                <button type="button" class="btn btn-success" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Barang Masuk <span class="caret"></span></button>
+                                                                <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 260px;">
+                                                                    <li><a href="#" ng-click="printRekapRealisasiModel()">Cetak</a></li>
+                                                                    <li><a href="#" ng-click="excelRekapRealisasiModel()">Export Excel</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
