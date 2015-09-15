@@ -28,13 +28,13 @@ foreach ($models as $val) {
         <td class="border-right border-bottom"  rowspan="4" colspan="2">
             <br>
     <center><b>SURAT PERINTAH PEMBELIAN</b></center>
-    <br><center><h1>RUTIN</h1></center>
-    <center>No Dokument :  FR-INV-013 Rev.03</center>
+    <br><center><h1>NON RUTIN</h1></center>
+    <center>No Dokument :  FR-INV-014 Rev.01</center>
     <br><br>
 
     </td>
     <td class="border-right border-bottom"  rowspan="4" colspan="3" valign="top">
-        <table>
+        <table style="font-size: 12px;">
             <tr>
                 <td>No. SPP</td>
                 <td> : <?= $id ?></td>

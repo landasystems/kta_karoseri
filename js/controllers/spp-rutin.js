@@ -83,10 +83,7 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.no_spp;
-        $scope.form = form;
-        var start = new Date(form.tgl1);
-        var end = new Date(form.tgl2);
-        $scope.form.periode = {startDate: start, endDate: end};
+
         $scope.getDetail(form.no_spp);
     };
     $scope.view = function (form) {
@@ -156,7 +153,21 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
     };
     $scope.getDetail = function (id) {
         Data.get('spprutin/detail/' + id).then(function (data) {
+            var start = new Date(data.data.tgl1);
+            var end = new Date(data.data.tgl2);
+            
+            $scope.form = data.data;
+            $scope.form.periode = {
+                startDate: start,
+                endDate: end
+            };
+            console.log(start);
+            console.log(end);
             $scope.sppDet = data.details;
+            
+            
+
+
         });
     };
     $scope.modal = function (form) {
