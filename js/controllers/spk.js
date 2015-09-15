@@ -36,6 +36,13 @@ app.controller('spkCtrl', function($scope, Data, toaster) {
             });
         }
     }
+    $scope.cariOrang = function($query) {
+        if ($query.length >= 3) {
+            Data.get('jabatan/listkaryawan', {nama: $query}).then(function(data) {
+                $scope.results = data.data;
+            });
+        }
+    }
     Data.post('spk/jabatan').then(function(data) {
         $scope.sJabatan = data.jabatan;
     });

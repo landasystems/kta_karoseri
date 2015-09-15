@@ -41,7 +41,11 @@ app.controller('rekapwokeluarCtrl', function($scope, Data, toaster) {
             window.location = 'api/web/rekap/excelwokeluar';
         });
     }
-
+    $scope.print = function() {
+        Data.get('rekap/rekapwokeluar', paramRef).then(function(data) {
+            window.open('api/web/rekap/excelwokeluar?print=true', "", "width=500");
+        });
+    }
 
 
 })

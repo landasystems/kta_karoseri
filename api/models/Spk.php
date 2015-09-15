@@ -29,7 +29,7 @@ class Spk extends \yii\db\ActiveRecord
         return [
             [['status'], 'integer'],
             [['no_wo'], 'string', 'max' => 10],
-            [['kd_jab'], 'string', 'max' => 20]
+            [['kd_jab','nik'], 'string', 'max' => 20]
         ];
     }
 
@@ -42,6 +42,7 @@ class Spk extends \yii\db\ActiveRecord
             'no_wo' => 'No Wo',
             'kd_jab' => 'Kd Jab',
             'status' => 'Status',
+            'nik' => 'PIC',
         ];
     }
 }

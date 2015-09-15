@@ -16,6 +16,11 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $event.stopPropagation();
         $scope.opened1 = true;
     };
+    $scope.open2 = function ($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened2 = true;
+    };
     $scope.setStatus = function () {
         $scope.openedDet = -1;
     };

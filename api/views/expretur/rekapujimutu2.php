@@ -1,19 +1,15 @@
 <?php
-//header("Content-type: application/vnd-ms-excel");
-//header("Content-Disposition: attachment; filename=excel-rekap-ujimutu.xls");
+if (!isset($_GET['print'])) {
+header("Content-type: application/vnd-ms-excel");
+header("Content-Disposition: attachment; filename=excel-rekap-ujimutu.xls");
+}
 ?>
-<h3>PT. KARYA TUGAS ANDA</h3>
-Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
-<br>
-Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
-<hr>
-<br>
-<center><b>LAPORAN PENGUJIAN UJI MUTU</b></center>
-<br><br>
 
 
-<table border="1">
+<table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
     <tr>
+        <td colspan="9">
+            <tr>
         <td rowspan="4" colspan="2">
             <br>
     <center><b> PENGAJUAN UJI MUTU</b></center>
@@ -22,7 +18,7 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
     <br><br>
 
     </td>
-    <td rowspan="4" colspan="3" valign="top">
+    <td rowspan="4" colspan="4" valign="top">
         <table>
             <tr>
                 <td>PERIODE</td>
@@ -59,8 +55,8 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
     <td>Sales Suport Sect Head</td>
     <td>Finance Dept Head</td>
 </tr>
-</table>
-<table border="1">
+        </td>
+    </tr>
     <tr>
         <th rowspan="2">NO</th>
         <th rowspan="2">WO</th>
@@ -77,22 +73,30 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
     </tr>
     <?php
     $no=0;
-    $kelas1='';
-    $kelas2='';
-    $kelas3='';
+    $kelas1=0;
+    $kelas2=0;
+    $kelas3=0;
+    $td='';
+    $total=0;
     foreach ($models as $key) {
         $no++;
         if($key['kelas']==1){
-            $biaya = 148000;
-            $kelas1 = 'v';
+            $kelas1 += 148000;
+            $td = '<td>'.Yii::$app->landa->rp(148000).'</td>
+                <td>-</td>
+                <td>-</td>';
         }
         if($key['kelas']==2){
-            $biaya = 138000;
-            $kelas2 = 'v';
+            $kelas2 += 138000;
+            $td = '<td>-</td>
+                <td>'.Yii::$app->landa->rp(138000).'</td>
+                <td>-</td>';
         }
         if($key['kelas']==3){
-            $biaya = 138000;
-            $kelas3 = 'v';
+            $kelas3 += 138000;
+             $td = '<td>-</td>
+                <td>-</td>
+                <td>'.Yii::$app->landa->rp(138000).'</td>';
         }
         ?>
         <tr>
@@ -102,12 +106,39 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
         <td valign="top">&nbsp;<?=$key['bentuk_baru'];?></td>
         <td valign="top">&nbsp;<?=$key['no_chassis'];?></td>
         <td valign="top">&nbsp;<?=$key['nm_customer'];?></td>
-        <td valign="top">&nbsp;<?=$kelas1;?></td>
-        <td valign="top">&nbsp;<?=$kelas2;?></td>
-        <td valign="top">&nbsp;<?=$kelas3;?></td>
+        <?php echo $td; ?>
         </tr>
         <?php
     }
     ?>
+        <tr>
+            <th colspan="6" style="text-align: left">Total</th>
+            <td ><?php echo  Yii::$app->landa->rp($kelas1); ?></td>
+            <td><?php echo  Yii::$app->landa->rp($kelas2); ?></td>
+            <td><?php echo  Yii::$app->landa->rp($kelas3); ?></td>
+        </tr>
+        <tr>
+            <th colspan="6" style="text-align: left">Administrasi</th>
+            <td colspan="3"><?= Yii::$app->landa->rp(50000) ?></td>
+        </tr>
+        <tr>
+            <th colspan="6" style="text-align: left">Grand Total</th>
+            <td colspan="3"><?php 
+            $total = ($kelas1+$kelas2+$kelas3)+50000;
+            echo Yii::$app->landa->rp($total); 
+            ?> </td>
+        </tr>
 </table>
+<?php
+if (isset($_GET['print'])) {
+    ?>
+    <script type="text/javascript">
+        window.print();
+        setTimeout(function () {
+            window.close();
+        }, 1);
+    </script>
+    <?php
+}
+?>
 

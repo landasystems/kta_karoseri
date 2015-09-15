@@ -6,8 +6,22 @@
         <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
             <div class="panel-heading">.:: Rekap Barang Keluar
                 <div class="btn-group pull-right" role="group" style="margin-top: -4px; margin-right: 13px;">
-                    <button type="button" class="btn btn-success fa fa-file-excel-o" ng-show="!isCollapsed" ng-click="excel();">&nbsp;&nbsp;Laporan Barang Keluar</button>
-                    <button type="button" class="btn btn-primary fa fa-file-excel-o" ng-show="!isCollapsed" ng-click="excelbk();">&nbsp;&nbsp;Laporan Rekap Barang Keluar</button>
+                    <!--<button type="button" class="btn btn-success fa fa-file-excel-o" ng-show="!isCollapsed" ng-click="excel();">&nbsp;&nbsp;Laporan Barang Keluar</button>-->
+                    <!--<button type="button" class="btn btn-primary fa fa-file-excel-o" ng-show="!isCollapsed" ng-click="excelbk();">&nbsp;&nbsp;Laporan Rekap Barang Keluar</button>-->
+                    <div class="pull-right dropdown" style="margin-top: -4px" dropdown="">
+                        <button type="button" class="btn btn-danger" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. BBK <span class="caret"></span></button>
+                        <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 260px;">
+                            <li><a href="#" ng-click="print()">Cetak</a></li>
+                            <li><a href="#" ng-click="excel()">Export Excel</a></li>
+                        </ul>
+                    </div> &nbsp;&nbsp;&nbsp;
+                    <div class="pull-right dropdown" style="margin-top: -4px" dropdown="">
+                        <button type="button" class="btn btn-danger" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Rekap BBK <span class="caret"></span></button>
+                        <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 260px;">
+                            <li><a href="#" ng-click="printbk()">Cetak</a></li>
+                            <li><a href="#" ng-click="excelbk()">Export Excel</a></li>
+                        </ul>
+                    </div>&nbsp;&nbsp;&nbsp;
                 </div> 
             </div>
 
@@ -15,8 +29,8 @@
 
                 <div class="panel panel-info" style="text-align: center">
                     <div class="panel-heading">
-                        <div class="form-horizontal">
 
+                        <div class="form-horizontal">
                             <div class="form-group">
                                 <div class="control-group">
                                     <label class="col-sm-2 control-label">Periode</label>
