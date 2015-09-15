@@ -245,7 +245,7 @@ class SpprutinController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-//        Yii::error($params);
+        Yii::error($params);
         $model = new TransSpp();
         $model->no_spp = $params['form']['no_spp'];
         $model->tgl_trans = $tgl_trans;
@@ -274,7 +274,7 @@ class SpprutinController extends Controller {
 
     public function actionUpdatetgl() {
         $params = json_decode(file_get_contents("php://input"), true);
-        \Yii::error($params);
+//        Yii::error($params);
         foreach ($params['asu'] as $key => $data) {
 //            $model = DetSpp::find(['no_spp' => $params['wip']['nama']['no_spp'], 'kd_barang' => $key])->all();
             $model = DetSpp::findOne($key);
@@ -298,7 +298,7 @@ class SpprutinController extends Controller {
 
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-
+        Yii::error($params);
         $model = TransSpp::findOne($params['form']['no_spp']);
 //        $model->attributes = $params;
         if (empty($model)) {

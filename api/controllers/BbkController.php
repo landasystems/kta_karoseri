@@ -157,7 +157,7 @@ class BbkController extends Controller {
                     ->select('ab.jml, ab.kd_barang')
                     ->where('ab.no_wo = "' . $params['no_wo']['no_wo'] . '" '
                             . 'and ab.kd_kerja = "' . $params['kd_jab']['id_jabatan'] . '"'
-                            . 'and ab.status = 1 and ab.diambil = 0');
+                            . 'and ab.status = 1');
 
             $commandPengecualian = $queryPengecualian->createCommand();
             $modelsPengecualian = $commandPengecualian->queryAll();

@@ -1,18 +1,14 @@
 <?php
+if (!isset($_GET['print'])) {
 header("Content-type: application/vnd-ms-excel");
 header("Content-Disposition: attachment; filename=excel-rekap-ujimutu.xls");
+}
 ?>
-<h3>PT. KARYA TUGAS ANDA</h3>
-Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
-<br>
-Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
-<hr>
-<br>
-<center><b>LAPORAN REKAP UJI MUTU</b></center>
-<br><br>
 
 
-<table border="1">
+
+<table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
+    
     <tr>
         <td rowspan="4" colspan="2">
             <br>
@@ -23,7 +19,7 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
 
     </td>
     <td rowspan="4" colspan="3" valign="top">
-        <table>
+        <table style="font-size: 12px;">
             <tr>
                 <td>PERIODE</td>
                 <?php
@@ -56,7 +52,7 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
     <td>Tgl :</td>
 </tr>
 </table>
-<table border="1">
+<table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
     <tr>
         <th>WO</th>
         <th>Pembuatan RB</th>
@@ -67,12 +63,15 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
         <th>Customer</th>
     </tr>
     <?php
+    $jml=1;
+    $total=0;
     foreach ($models as $key) {
+        $total += $jml;
         ?>
         <tr>
         <td valign="top">&nbsp;<?=$key['no_wo'];?></td>
-        <td valign="top"><?=date('d m Y', strtotime($key['tanggal_rubah']))?></td>
-        <td valign="top"><?=date('d m Y', strtotime($key['tgl']))?></td>
+        <td valign="top"><?=date('d/m/Y', strtotime($key['tanggal_rubah']))?></td>
+        <td valign="top"><?=date('d/m/Y', strtotime($key['tgl']))?></td>
         <td valign="top">&nbsp;<?=$key['kd_uji'];?></td>
         <td valign="top">&nbsp;<?=$key['merk'];?>/<?=$key['tipe'];?></td>
         <td valign="top">&nbsp;<?=$key['no_chassis'];?></td>
@@ -80,5 +79,19 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
         </tr>
         <?php
     }
+    echo'<tr><th>Total</th>
+        <th colspan="6" textalign="left" style="text-align: left;">&nbsp;&nbsp;&nbsp;'.$total.'</th>';
     ?>
 </table>
+<?php
+if (isset($_GET['print'])) {
+    ?>
+    <script type="text/javascript">
+        window.print();
+        setTimeout(function () {
+            window.close();
+        }, 1);
+    </script>
+    <?php
+}
+?>

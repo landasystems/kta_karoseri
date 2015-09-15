@@ -46,6 +46,16 @@ app.controller('rekapujimutuCtrl', function ($scope, Data, toaster) {
             window.location = 'api/web/ujimutu/excel2';
         });
     }
+    $scope.print = function() {
+        Data.get('ujimutu/rekap', paramRef).then(function(data) {
+            window.open('api/web/ujimutu/excel?print=true', "", "width=500");
+        });
+    }
+    $scope.print2 = function() {
+        Data.get('ujimutu/rekap', paramRef).then(function(data) {
+            window.open('api/web/ujimutu/excel2?print=true', "", "width=500");
+        });
+    }
    
 
 
