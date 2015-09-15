@@ -92,7 +92,7 @@ class RubahbentukController extends Controller {
             foreach ($filter as $key => $val) {
                 if ($key == 'tgl') {
                     $tgl = explode(" - ", $val);
-                    $_SESSION['periode'] = $key;
+//                    $_SESSION['periode'] = $key;
                     $start = date("Y-m-d", strtotime($tgl[0]));
                     $end = date("Y-m-d", strtotime($tgl[1]));
                     $query->andFilterWhere(['between', 'rb.tgl', $start, $end]);
@@ -107,6 +107,7 @@ class RubahbentukController extends Controller {
         $totalItems = $query->count();
         session_start();
         $_SESSION['query'] = $query;
+        $_SESSION['periode'] = isset($start) ? date("d/m/y", strtotime($start)) . '-' . date("d/m/y", strtotime($end)) : '-';
 
         $this->setHeader(200);
 

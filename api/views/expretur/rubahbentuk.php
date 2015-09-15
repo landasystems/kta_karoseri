@@ -5,10 +5,10 @@ if (!isset($_GET['print'])) {
 }
 ?>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
-<div style="width:26cm">
+<div style="width:24cm">
     <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;" width="100%">
         <tr>
-            <td colspan="4" rowspan="5" align="center" class="border-all" width="40%">
+            <td colspan="4" rowspan="5" align="center" class="border-all" width="40%" style="vertical-align: middle; text-align: center">
                 <h3>LAPORAN PEMBUATAN RUBAH BENTUK</h3>
                 No. Dokumen : FR-SS-013
             </td>
@@ -21,8 +21,8 @@ if (!isset($_GET['print'])) {
                     </tr>
                 </table>
             </td>
-            <td class="border-all">DIBUAT</td>
-            <td class="border-all">DIPERIKSA</td>
+            <td class="border-all" heigh="15" width="15%" style="vertical-align: middle; text-align: center">DIBUAT</td>
+            <td class="border-all" width="15%" style="vertical-align: middle; text-align: center">DIPERIKSA</td>
         </tr>
         <tr>
             <td colspan="2" class="border-all">
@@ -75,8 +75,8 @@ if (!isset($_GET['print'])) {
         }
         ?>
         <tr height="30">
-            <td>Total Unit</td>
-            <td colspan="7" align="left"><?php echo $jml ?></td>
+            <td class="border-all" style="vertical-align: middle; text-align: center">Total Unit</td>
+            <td colspan="7" style="vertical-align: middle; text-align: left"><?php echo $jml ?></td>
         </tr>
     </table>
 </div>
