@@ -77,7 +77,6 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
         }
     };
     $scope.callServer = function callServer(tableState) {
-        console.log(tableState);
         tableStateRef = tableState;
         $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
@@ -215,6 +214,7 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
         Data.get('bom/view/' + id).then(function (data) {
 
             $scope.form = data.data;
+            $scope.form.tgl_buat = new Date($scope.form.tgl_buat);
             if (kd_bom_baru != '') {
                 $scope.form.kd_bom = kd_bom_baru;
                 $scope.form.tgl_buat = '';
@@ -270,7 +270,6 @@ app.controller('modalCtrl', function ($scope, Data, $modalInstance, form) {
     }
 
     $scope.formmodal = form;
-    console.log(form);
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
@@ -324,7 +323,11 @@ app.controller('rekapBomCtrl', function ($scope, Data) {
             window.location = 'api/web/bom/excel';
         });
     }
-
+    $scope.printRekap = function () {
+        Data.get('bom/rekap', paramRef).then(function (data) {
+            window.open('api/web/bom/excel?print=true', "", "width=500");
+        });
+    }
     $scope.callServer2 = function callServer(tableState) {
         $scope.tableStateRef = tableState;
         $scope.isLoading = true;
@@ -348,6 +351,11 @@ app.controller('rekapBomCtrl', function ($scope, Data) {
     $scope.excelRekapRealisasiWo = function () {
         Data.get('bom/rekaprealisasiwo', paramRef).then(function (data) {
             window.location = 'api/web/bom/excelrealisasiwo';
+        });
+    }
+    $scope.printRekapRealisasiWo = function () {
+        Data.get('bom/rekaprealisasiwo', paramRef).then(function (data) {
+            window.open('api/web/bom/excelrealisasiwo?print=true', "", "width=500");
         });
     }
 

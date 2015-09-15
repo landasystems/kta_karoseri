@@ -1,7 +1,7 @@
 <?php
 if (!isset($_GET['print'])) {
-//    header("Content-type: application/vnd-ms-excel");
-//    header("Content-Disposition: attachment; filename=excel-bom-model.xls");
+    header("Content-type: application/vnd-ms-excel");
+    header("Content-Disposition: attachment; filename=excel-bom-model.xls");
 }
 ?>
 <link href="../../../css/print.css" rel="stylesheet" type="text/css" />
@@ -68,7 +68,7 @@ if (!isset($_GET['print'])) {
             $no = 1;
             foreach ($data as $val) {
                 echo '<tr>';
-                echo '<td colspan="9" class="border-top" style="background-color:#DFDFDF"><b>' . $val['title'] . '</b></td>';
+                echo '<td colspan="9" class="border-all back-grey"><b>' . $val['title'] . '</b></td>';
                 echo '</tr>';
                 foreach ($val['body'] as $vDet) {
                     echo '<tr>';
@@ -96,10 +96,10 @@ if (!isset($_GET['print'])) {
 if (isset($_GET['print'])) {
     ?>
     <script type="text/javascript">//
-//        window.print();
-//        setTimeout(function() {
-//            window.close();
-//        }, 1);
+        window.print();
+        setTimeout(function() {
+            window.close();
+        }, 1);
 //    </script>
     <?php
 }

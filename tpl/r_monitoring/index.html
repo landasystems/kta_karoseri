@@ -15,8 +15,13 @@
                             <div class="col-sm-9">
                                 <select st-search="kategori" class="form-control">
                                     <option value="">.: Pilih Kategori :.</option>
-                                    <option value="RUTIN">SPP Rutin</option>
-                                    <option value="Non Rutin">SPP Non Rutin</option>
+                                    <option value="bbm">Bukti Barang Masuk</option>
+                                    <option value="bbk">Bukti Barang Keluar</option>
+                                    <option value="retur bbm">Retur Bukti Barang Masuk</option>
+                                    <option value="retur bbk">Retur Bukti Barang Keluar</option>
+                                    <option value="spp rutin">SPP Rutin</option>
+                                    <option value="spp non rutin">SPP Non Rutin</option>
+                                    <option value="po">Purchase Order</option>
                                 </select>
                             </div>
                         </div>
@@ -33,30 +38,30 @@
                         <table class="table table-striped table-hover" >
                             <thead>
                                 <tr>
-                                    <th st-sort="trans_spp.no_spp">Kode</th>
-                                    <th st-sort="nm_barang">Uraian</th>
-                                    <th st-sort="qty">Jumlah</th>
-                                    <th st-sort="no_proyek">Status</th>
-                                    <th st-sort="tgl_trans">Tanggal SPP</th>
+                                    <th st-sort="kode">Kode</th>
+                                    <th st-sort="uraian">Uraian</th>
+                                    <th st-sort="jumlah">Jumlah</th>
+                                    <th st-sort="kategori">Status</th>
+                                    <th st-sort="tanggal">Tanggal</th>
                                 </tr>
                             </thead>
                             <tbody ng-show="!isLoading">
                                 <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
-                                    <td>{{row.no_spp}}</td>
-                                    <td>{{row.nm_barang}}</td>
-                                    <td>{{row.qty}}</td>
-                                    <td>SPP {{row.no_proyek}}</td>
-                                    <td>{{row.tgl_trans| date}}</td>
+                                    <td>{{row.kode}}</td>
+                                    <td>{{row.uraian}}</td>
+                                    <td>{{row.jumlah}}</td>
+                                    <td>{{row.kategori}}</td>
+                                    <td>{{row.tanggal| date}}</td>
                                 </tr>
                             </tbody>
                             <tbody ng-show="isLoading">
                                 <tr>
-                                    <td colspan="9" class="text-center">Loading ... </td>
+                                    <td colspan="5" class="text-center">Loading ... </td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="9"></td>
+                                    <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="5"></td>
                                 </tr>
                             </tfoot>
                         </table>	

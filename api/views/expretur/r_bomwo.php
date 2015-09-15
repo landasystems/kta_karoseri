@@ -28,58 +28,73 @@ foreach ($models as $val) {
     $i++;
 }
 ?>
-<h3>PT. KARYA TUGAS ANDA</h3>
-Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
-<br>
-Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
-<hr>
-<br>
-<center><b>REALISASI BILL OF MATERIAL</b></center>
-<br>
-<br>
-<?php
-foreach ($data as $value) {
-    ?>
-    <b>NO WO : <?php echo isset($value['no_wo']) ? $value['no_wo'] : '-' ?></b>
-    <br><br><br>
-    <table width="100%" style="padding: 5px;" border="1">
-        <tr height="25">
-            <td>Kode Barang</td>
-            <td>Nama Barang</td>
-            <td>Satuan</td>
-            <td>Harga</td>
-            <td>Standar</td>
-            <td>Realisasi</td>
-            <td>Keterangan</td>
-        </tr>
-        <?php
-        foreach ($value['jab'] as $key => $bag) {
-            echo '<tr height="25">
-                        <td colspan="7" style="background-color: rgb(226, 222, 222)">' . $bag['jabatan'] . '</td>
-                    </tr>';
-            foreach ($bag['body'] as $det) {
-                echo '<tr height="25">
-                        <td align="center">' . $det['kode_barang'] . '</td>
-                        <td>' . $det['nama_barang'] . '</td>
-                        <td align="right">' . $det['harga'] . '</td>
-                        <td align="center">' . $det['satuan'] . '</td>
-                        <td align="center">' . $det['qty'] . '</td>
-                        <td align="center">' . $det['jml_keluar'] . '</td>
-                        <td>' . $det['ket'] . '</td>
-                    </tr>';
-            }
-        }
-        ?>
-    </table>
+<link rel="stylesheet" href="../../../css/print.css" type="text/css" />
+<div style="width:26cm">
     <?php
-}
-?>
+    if (isset($_GET['print'])) {
+        ?>
+        <table>
+            <tr>
+                <td width="80"><img src="../../../img/logo.png"></td>
+                <td valign="top">
+                    <b style="font-size: 18px; margin:0px; padding:0px;">PT KARYA TUGAS ANDA</b>
+                    <p style="font-size: 13px; margin:0px; padding:0px;">Jl. Raya Sukorejo No. 1 Sukorejo 67161, Pasuruan Jawa Timur</p>
+                    <p style="font-size: 13px; margin:0px; padding:0px;">Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com</p>
+                </td>
+            </tr>
+        </table>
+        <hr>
+        <?php
+    }
+    ?>
+    <center>
+        <b style="margin:0px; padding:0px; font-size:16px;">REALISASI BILL OF MATERIAL</b>
+    </center>  
+    <?php
+    foreach ($data as $value) {
+        ?>
+        <br>
+        <b style="font-size:13px;">NO WO : <?php echo isset($value['no_wo']) ? $value['no_wo'] : '-' ?></b>
+        <br><br>
+        <table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
+            <tr height="25">
+                <th class="border-all" align="center">Kode Barang</th>
+                <th class="border-all" align="center">Nama Barang</th>
+                <th class="border-all" align="center">Satuan</th>
+                <th class="border-all" align="center">Harga</th>
+                <th class="border-all" align="center">Standar</th>
+                <th class="border-all" align="center">Realisasi</th>
+                <th class="border-all" align="center">Keterangan</th>
+            </tr>
+            <?php
+            foreach ($value['jab'] as $key => $bag) {
+                echo '<tr>
+                        <td colspan="7" class="back-grey border-all"><b>' . $bag['jabatan'] . '</b></td>
+                    </tr>';
+                foreach ($bag['body'] as $det) {
+                    echo '<tr height="25">
+                        <td align="center" class="border-all">' . $det['kode_barang'] . '</td>
+                        <td class="border-all">' . $det['nama_barang'] . '</td>
+                        <td class="border-all" align="right">' . $det['harga'] . '</td>
+                        <td class="border-all" align="center">' . $det['satuan'] . '</td>
+                        <td class="border-all" align="center">' . $det['qty'] . '</td>
+                        <td class="border-all" align="center">' . $det['jml_keluar'] . '</td>
+                        <td class="border-all">' . $det['ket'] . '</td>
+                    </tr>';
+                }
+            }
+            ?>
+        </table>
+        <?php
+    }
+    ?>
+</div>
 <?php
 if (isset($_GET['print'])) {
     ?>
     <script type="text/javascript">
         window.print();
-        setTimeout(function() {
+        setTimeout(function () {
             window.close();
         }, 1);
     </script>
