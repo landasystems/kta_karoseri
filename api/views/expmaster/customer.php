@@ -20,15 +20,6 @@ foreach ($models as $val) {
     $i++;
 }
 ?>
-<style type="text/css">
-    @media print{
-        .back-grey{
-            background-color:rgb(226, 222, 222) !important;;
-            background-image: url("../../../img/print.png");
-            background-repeat: repeat;
-        }
-    }
-</style>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
 <div style="width:26cm">
     <center><h3>Data Master Customer</h3>
