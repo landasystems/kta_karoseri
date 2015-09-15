@@ -866,10 +866,10 @@
                                                     <div class="col-sm-8">
                                                         <div class="input-group">
                                                             <span class="input-group-addon">1</span>
-                                                            <ui-select tagging="tagTransformseat1"   tagging-label="false" ng-model="inter.seat1" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
-                                                                <ui-select-match placeholder="">{{$select.selected.konf_seat1}}</ui-select-match>
+                                                            <ui-select tagging="tagTransformseat1"   tagging-label="false" ng-model="inter.seat1" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                                <ui-select-match style="width:100px;" placeholder="">{{$select.selected.konf_seat1}}</ui-select-match>
                                                                 <ui-select-choices repeat="l in list_seat1 | filter:$select.search" >
-                                                                    <small>
+                                                                    <small style="width:100px;">
                                                                         {{l.konf_seat1}} 
 
                                                                     </small>

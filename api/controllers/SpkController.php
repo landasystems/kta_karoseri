@@ -207,10 +207,12 @@ class SpkController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('trans_spkerja')
+                ->join('LEFT JOIN', 'tbl_karyawan', 'trans_spkerja.nik = tbl_karyawan.nik')
                 ->join('JOIN', 'view_wo_spk as vw', 'trans_spkerja.no_wo = vw.no_wo')
                 ->join('JOIN', 'tbl_jabatan', 'trans_spkerja.kd_jab = tbl_jabatan.id_jabatan')
+               
                 ->orderBy($sort)
-                ->select("trans_spkerja.id as id_spk,trans_spkerja.no_wo,vw.nm_customer, vw.model,tbl_jabatan.jabatan, vw.merk, vw.tipe");
+                ->select("tbl_karyawan.nama,trans_spkerja.id as id_spk,trans_spkerja.no_wo,vw.nm_customer, vw.model,tbl_jabatan.jabatan, vw.merk, vw.tipe");
 
         //filter
         if (isset($params['filter'])) {
@@ -259,6 +261,17 @@ class SpkController extends Controller {
         $data['no_wo'] = [
             'no_wo' => $no_wo
         ];
+        
+        //PIC
+        $pic = \app\models\Karyawan::find()
+                ->where(['nik' => $model['nik']])
+                ->One();
+        $nik = (isset($pic->nik)) ? $pic->nik : '';
+        $nama = (isset($pic->nama)) ? $pic->nama : '';
+        $data['pic'] = [
+            'nik' => $nik,
+            'nama' => $nama
+        ];
 
         $query3 = new Query;
         $query3->from('tbl_jabatan')
@@ -297,6 +310,7 @@ class SpkController extends Controller {
         Yii::error($params);
         $model = new Spk();
         $model->no_wo = $params['spk']['no_wo']['no_wo'];
+        $model->nik = $params['spk']['pic']['nik'];
         $model->kd_jab = $params['spk']['jabatan']['id_jabatan'];
         $model->status = 0;
 
@@ -347,6 +361,7 @@ class SpkController extends Controller {
         Yii::error($params);
         $model = $this->findModel($id);
         $model->no_wo = $params['spk']['no_wo']['no_wo'];
+        $model->nik = $params['spk']['pic']['nik'];
         $model->kd_jab = $params['spk']['jabatan']['id_jabatan'];
 
 

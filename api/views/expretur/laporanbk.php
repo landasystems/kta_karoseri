@@ -1,6 +1,8 @@
 <?php
+if (!isset($_GET['print'])) {
 header("Content-type: application/vnd-ms-excel");
 header("Content-Disposition: attachment; filename=excel-rekap-Barang_Keluar.xls");
+}
 ?>
 
 <?php
@@ -23,16 +25,28 @@ $i++;
     
 }
 ?>
-<h3>PT. KARYA TUGAS ANDA</h3>
-Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
-<br>
-Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
-
-
-<hr>
+<link rel="stylesheet" href="../../../css/print.css" type="text/css" />
+<div style="width:26cm">
+    <?php
+    if (isset($_GET['print'])) {
+        ?>
+        <table>
+            <tr>
+                <td width="80"><img src="../../../img/logo.png"></td>
+                <td valign="top">
+                    <b style="font-size: 18px; margin:0px; padding:0px;">PT KARYA TUGAS ANDA</b>
+                    <p style="font-size: 13px; margin:0px; padding:0px;">Jl. Raya Sukorejo No. 1 Sukorejo 67161, Pasuruan Jawa Timur</p>
+                    <p style="font-size: 13px; margin:0px; padding:0px;">Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com</p>
+                </td>
+            </tr>
+        </table>
+        <hr>
+        <?php
+    }
+    ?>
 <center><b>Rekap Bukti Barang Keluar</b></center>
 
-<table width="100%" border="1" style="border-collapse: collapse;">
+ <table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
 
 
     <tr>
@@ -79,3 +93,15 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
     }
     ?>
 </table>
+<?php
+if (isset($_GET['print'])) {
+    ?>
+    <script type="text/javascript">
+        window.print();
+        setTimeout(function () {
+            window.close();
+        }, 1);
+    </script>
+    <?php
+}
+?>

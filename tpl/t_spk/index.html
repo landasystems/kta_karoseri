@@ -47,7 +47,8 @@
                     <thead>
                         <tr>
                             <th st-sort="kd_chassis">NO WO</th>
-                            <th st-sort="nama_supplier">customr</th>
+                            <th st-sort="nama_supplier">PIC</th>
+                            <th st-sort="nama_supplier">customer</th>
                             <th st-sort="cp">model</th>
                             <th st-sort="telpon">bagian</th>
                         </tr>
@@ -55,6 +56,7 @@
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
                             <td>{{row.no_wo}}</td>
+                            <td>{{row.nama}}</td>
                             <td>{{row.nm_customer}}</td>
                             <td>{{row.model}}</td>
                             <td>{{row.jabatan}}</td>
@@ -100,9 +102,6 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">NO WO</label>
                             <div class="col-sm-8">
-                                <!--                                <select class="form-control" ui-select2="" ui-jq="chosen" ng-change="getcustomer(form)" ng-model="form.no_wo" ng-disabled="is_view" >
-                                                                     <option ng-repeat="customer in sNowo" value="{{customer.no_wo}}">{{customer.no_wo}}</option>
-                                                                </select>-->
                                 <div class="input-group">
                                     <ui-select on-select="pilih(form, $item)" ng-model="form.no_wo" theme="bootstrap">
                                         <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
@@ -118,11 +117,30 @@
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Customer</label>
                             <div class="col-sm-8">
 
                                 <input type="text" class="form-control" ng-model="form.nm_customer" ng-disabled="is_view" ng-readonly="is_create == false" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">PIC</label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <ui-select  ng-model="form.pic" theme="bootstrap">
+                                        <ui-select-match>{{$select.selected.nama}}</ui-select-match>
+                                        <ui-select-choices refresh="cariOrang($select.search)" repeat="val in results">
+                                            {{val.nama}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <span class="input-group-btn">
+                                        <button ng-click="form.pic = undefined" class="btn btn-default">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </button>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -147,18 +165,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-12">
-                        <div nv-file-drop="" uploader="uploader" filters="imageFilter">
-                            <div class="col-md-12 bg-auto">    
-                                <div ng-show="uploader.isHTML5" class="m-b-md">
-                                    <img ng-src="js/controllers/uploads/spk/{{form.foto}}" ng-hide="is_create == true" class="img-thumbnail">
-                                    <img src="img/noimage.jpg" class="img-thumbnail" ng-show="is_create == true">
-                                    <input type="file" nv-file-select="" uploader="uploader" />
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
+                    
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <table class="table table-bordered">
                         <tr>
