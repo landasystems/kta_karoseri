@@ -1,4 +1,4 @@
-app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
+app.controller('rubahbentukCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
     var paramRef;
@@ -7,9 +7,9 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
     $scope.is_view = false;
     $scope.is_create = false;
 
-    $scope.cariWo = function($query) {
+    $scope.cariWo = function ($query) {
         if ($query.length >= 3) {
-            Data.get('wo/wospk', {nama: $query}).then(function(data) {
+            Data.get('wo/wospk', {nama: $query}).then(function (data) {
                 $scope.results = data.data;
             });
         }
@@ -30,7 +30,7 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
         paramRef = param;
-        Data.get('rubahbentuk', param).then(function(data) {
+        Data.get('rubahbentuk', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
@@ -38,19 +38,19 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
         $scope.isLoading = false;
     };
 
-    $scope.printLapPembuatan = function() {
-        Data.get('rubahbentuk', paramRef).then(function(data) {
+    $scope.printLapPembuatan = function () {
+        Data.get('rubahbentuk', paramRef).then(function (data) {
             window.open('api/web/rubahbentuk/excel?print=true', "", "width=500");
         });
     }
 
-    $scope.exportLapPembuatan = function() {
-        Data.get('rubahbentuk', paramRef).then(function(data) {
+    $scope.exportLapPembuatan = function () {
+        Data.get('rubahbentuk', paramRef).then(function (data) {
             window.location = 'api/web/rubahbentuk/excel';
         });
     }
 
-    $scope.create = function(form) {
+    $scope.create = function (form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = true;
@@ -61,16 +61,19 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
         $scope.form.tgl = new Date();
     };
 
-    $scope.update = function(form) {
+    $scope.update = function (form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.kd_rubah;
         $scope.form = form;
         $scope.selected(form.no_wo);
+        $scope.form.tgl = new Date(form.tgl);
+        $scope.form.pengajuan = new Date(form.pengajuan);
+        $scope.form.terima = new Date(form.terima);
     };
 
-    $scope.view = function(form) {
+    $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.kd_rubah;
@@ -78,36 +81,37 @@ app.controller('rubahbentukCtrl', function($scope, Data, toaster) {
         $scope.selected(form.no_wo);
     };
 
-    $scope.save = function(form) {
+    $scope.save = function (form) {
         var url = ($scope.is_create == true) ? 'rubahbentuk/create' : 'rubahbentuk/update/' + form.id;
-        Data.post(url, form).then(function(result) {
+        Data.post(url, form).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
-                $scope.is_edit = false;
                 $scope.callServer(tableStateRef); //reload grid ulang
-                toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
+                $scope.is_edit = false;
+                toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
+                $scope.form = {};
             }
         });
     };
 
-    $scope.cancel = function() {
+    $scope.cancel = function () {
         $scope.form.no_wo = "";
         $scope.callServer(tableStateRef);
         $scope.is_edit = false;
         $scope.is_view = false;
     };
 
-    $scope.delete = function(row) {
+    $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('rubahbentuk/delete/' + row.id).then(function(result) {
+            Data.delete('rubahbentuk/delete/' + row.id).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
 
-    $scope.selected = function($query) {
-        Data.get('wo/wospk', {nama: $query}).then(function(data) {
+    $scope.selected = function ($query) {
+        Data.get('wo/wospk', {nama: $query}).then(function (data) {
             $scope.form.no_wo = data.data[0];
         });
     }
