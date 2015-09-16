@@ -145,7 +145,7 @@ class NotifunitController extends Controller {
         }
         $this->setHeader(200);
         if ($id) {
-            return $this->render('excel', ['data' => $data]);
+            return $this->render('excel', ['model' => $data]);
         } else {
             echo json_encode(array('status' => 1, 'data' => $data), JSON_PRETTY_PRINT);
         }

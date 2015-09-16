@@ -169,10 +169,15 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
     };
     $scope.getDetail = function (id) {
         Data.get('bbm/view/' + id).then(function (data) {
-            $scope.detBbm = data.details;
+//            $scope.detBbm = data.details;
             $scope.form.nm_supplier = data.sup.nama_supplier;
             $scope.form.alamat_supplier = data.sup.alamat;
-            console.log(data);
+            $scope.detBbm = [];
+            angular.forEach(data.details, function ($value, $key) {
+                $scope.detBbm.push($value);
+                $scope.detBbm[$key]['tgl_terima'] = new Date($value.tgl_terima);
+            })
+//            console.log(data.details);
         });
     };
     $scope.excel = function (id) {
