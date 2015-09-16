@@ -77,8 +77,11 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     }
 
     $scope.cariBarang = function ($query1, $query2) {
-
-        if ($query1.length >= 3) {
+        if (typeof $scope.form.listspp != "undefined") {
+            Data.get('po/brgspp', {namabrg: $query1, nospp: $query2}).then(function (data) {
+                $scope.resultsbrg = data.data;
+            });
+        } else if ($query1.length >= 3) {
             Data.get('po/brgspp', {namabrg: $query1, nospp: $query2}).then(function (data) {
                 $scope.resultsbrg = data.data;
             });
