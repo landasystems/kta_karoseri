@@ -25,6 +25,7 @@ class SpprutinController extends Controller {
                     'view' => ['get'],
                     'excel' => ['get'],
                     'print' => ['get'],
+                    'kekurangan' => ['get'],
                     'detail' => ['get'],
                     'excelspp' => ['get'],
                     'kode' => ['get'],
@@ -403,7 +404,9 @@ class SpprutinController extends Controller {
     }
 
     public function actionDetail($id) {
-
+        $model = $this->findModel($id);
+        $data = $model->attributes;
+        
         $detSpp = DetSpp::find()
                 ->with(['wo', 'barang'])
                 ->where(['no_spp' => $id])
@@ -418,7 +421,7 @@ class SpprutinController extends Controller {
             $detail[$key]['barang'] = (isset($val->barang)) ? $val->barang->attributes : [];
         }
         $this->setHeader(200);
-        echo json_encode(['status' => 1, 'details' => $detail]);
+        echo json_encode(['status' => 1,'data' => $data, 'details' => $detail]);
     }
 
     public function actionGetdetail() {
@@ -481,6 +484,10 @@ class SpprutinController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/laporanspprutin", ['models' => $models, 'id' => $nospp]);
+    }
+    
+    public function actionKekurangan() {
+        
     }
 
 }

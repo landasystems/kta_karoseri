@@ -4124,6 +4124,12 @@ a.text-#000000:hover {
     padding: 20px;
 }
 
+.required:after { 
+    color: #e32;
+    content: ' *';
+    display:inline;
+}
+
 .wrapper-lg {
     padding: 30px;
 }

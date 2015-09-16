@@ -89,6 +89,7 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.no_spp;
         $scope.form = form;
+        $scope.form.tgl_trans = new Date(form.tgl_trans);
         var start = new Date(form.tgl1);
         var end = new Date(form.tgl2);
         $scope.form.periode = {startDate: start, endDate: end};
@@ -99,6 +100,7 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.no_spp;
         $scope.form = form;
+        $scope.form.tgl_trans = new Date(form.tgl_trans);
         var start = new Date(form.tgl1);
         var end = new Date(form.tgl2);
         $scope.form.periode = {startDate: start, endDate: end};

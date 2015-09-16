@@ -25,6 +25,7 @@ class SectionController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'kode' => ['get'],
+                    'cari' => ['get'],
                 ],
             ]
         ];

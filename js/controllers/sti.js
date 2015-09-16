@@ -120,6 +120,10 @@ app.controller('stiCtrl', function($scope, Data, toaster) {
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.form.tgl_terima = new Date();
+        $scope.form.serah_terima = new Date();
+        $scope.form.tgl_prd = new Date();
+        $scope.form.tgl_pdc = new Date();
 //        Data.get('custmer/kode').then(function(data) {
 //            $scope.form.kd_cust = data.kode;
 //        });
@@ -130,6 +134,10 @@ app.controller('stiCtrl', function($scope, Data, toaster) {
         $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.kd_titipan;
         $scope.form = form;
+        $scope.form.tgl_terima = new Date(form.tgl_terima);
+        $scope.form.serah_terima = new Date(form.serah_terima);
+        $scope.form.tgl_prd = new Date(form.tgl_prd);
+        $scope.form.tgl_pdc = new Date(form.tgl_pdc);
     };
     $scope.view = function(form) {
         $scope.is_edit = true;
