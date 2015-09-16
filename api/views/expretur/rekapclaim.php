@@ -74,8 +74,8 @@ if ($_GET['excel'] == 'ex') {
         $data[$val['no_wo']]['stat'][$val['stat']]['body'][$i]['totalby_tk'] = $val['biaya_tk'];
         $data[$val['no_wo']]['stat'][$val['stat']]['body'][$i]['totalby_spd'] = $val['biaya_spd'];
 //
-        $data[$val['no_wo']]['stat'][$val['stat']]['body'][$i]['tgl'] = isset($data[$val['no_wo']]['stat'][$val['stat']]['body']['tgl']) ? $data[$val['no_wo']]['stat'][$val['stat']]['body']['tgl'] . $val['tgl'] . '<br>' : $val['tgl'] . '<br>';
-        $data[$val['no_wo']]['stat'][$val['stat']]['body'][$i]['tgl_pelaksanaan'] = isset($data[$val['no_wo']]['stat'][$val['stat']]['body']['tgl_pelaksanaan']) ? $data[$val['no_wo']]['stat'][$val['stat']]['body']['tgl_pelaksanaan'] . $val['tgl_pelaksanaan'] . '<br>' : $val['tgl_pelaksanaan'] . '<br>';
+        $data[$val['no_wo']]['stat'][$val['stat']]['body'][$i]['tgl'] = isset($data[$val['no_wo']]['stat'][$val['stat']]['body']['tgl']) ? $data[$val['no_wo']]['stat'][$val['stat']]['body']['tgl'] . date("d/m/Y", strtotime($val['tgl'])) . '<br>' : date("d/m/Y", strtotime($val['tgl'])) . '<br>';
+        $data[$val['no_wo']]['stat'][$val['stat']]['body'][$i]['tgl_pelaksanaan'] = isset($data[$val['no_wo']]['stat'][$val['stat']]['body']['tgl_pelaksanaan']) ? $data[$val['no_wo']]['stat'][$val['stat']]['body']['tgl_pelaksanaan'] . date("d/m/Y", strtotime($val['tgl_pelaksanaan'])) . '<br>' : date("d/m/Y", strtotime($val['tgl_pelaksanaan'])) . '<br>';
         $data[$val['no_wo']]['stat'][$val['stat']]['body'][$i]['pelaksana'] = isset($data[$val['no_wo']]['stat'][$val['stat']]['body']['pelaksana']) ? $data[$val['no_wo']]['stat'][$val['stat']]['body']['pelaksana'] . $val['pelaksana'] . '<br>' : $val['pelaksana'] . '<br>';
         $data[$val['no_wo']]['stat'][$val['stat']]['body'][$i]['jns_komplain'] = isset($data[$val['no_wo']]['stat'][$val['stat']]['body']['jns_komplain']) ? $data[$val['no_wo']]['stat'][$val['stat']]['body']['jns_komplain'] . '- ' . $val['jns_komplain'] . '<br>' : '- ' . $val['jns_komplain'] . '<br>';
         $data[$val['no_wo']]['stat'][$val['stat']]['body'][$i]['problem'] = isset($data[$val['no_wo']]['stat'][$val['stat']]['body']['problem']) ? $data[$val['no_wo']]['stat'][$val['stat']]['body']['problem'] . '- ' . $val['problem'] . '<br>' : '- ' . $val['problem'] . '<br>';
@@ -98,7 +98,7 @@ if ($_GET['excel'] == 'ex') {
                     <br>
             <center><b>REKAP DATA CLAIM</b></center>
             <br><br>
-            <center>NO DOKUMEN : FR-SS-018</center>
+            <center>No Dokumen : FR-SS-018</center>
             <br><br>
 
             </td>
@@ -106,7 +106,7 @@ if ($_GET['excel'] == 'ex') {
                 <table>
 
                     <tr>
-                        <td>Periode</td>
+                        <td>PERIODE</td>
                         <?php
                         if (!empty($filter['tanggal'])) {
                             $value = explode(' - ', $filter['tanggal']);
@@ -120,8 +120,8 @@ if ($_GET['excel'] == 'ex') {
                         <td> : <?php echo $start . ' - ' . $end ?></td>
                     </tr>
                     <tr>
-                        <td>Tanggal</td>
-                        <td>: <?= date('d/m/Y') ?></td>
+                        <td>CETAK</td>
+                        <td>: <?= Yii::$app->landa->date2Ind(date('d-M-Y')) ?></td>
 
                     </tr>
                 </table>
@@ -164,64 +164,64 @@ if ($_GET['excel'] == 'ex') {
             foreach ($data as $key) {
                 ?>
                 <tr>
-                    <td class="border-bottom border-right" valign="top"><?= $n ?></td>
-                    <td class="border-bottom border-right" valign="top"><?php echo $key['title']['no_wo'] ?></td>
-                    <td class="border-bottom border-right" valign="top"><?php echo $key['title']['model'] ?></td>
-                    <td class="border-bottom border-right" valign="top"><?php echo $key['title']['nm_customer'] ?></td>
-                    <td class="border-bottom border-right" valign="top"><?php echo $key['title']['lokasi_kntr'] ?></td>
-                    <td class="border-bottom border-right" valign="top"><?php echo $key['title']['nama'] ?></td>
-                    <td class="border-bottom border-right"></td>
-                    <td class="border-bottom border-right"></td>
-                    <td class="border-bottom border-right"></td>
-                    <td class="border-bottom border-right"></td>
-                    <td class="border-bottom border-right"></td>
-                    <td class="border-bottom border-right"></td>
-                    <td class="border-bottom border-right"></td>
-                    <td class="border-bottom border-right"></td>
-                    <td class="border-bottom border-right"></td>
-                    <td class="border-bottom border-right"></td>
+                    <td class="border-top border-right" valign="top"><?= $n ?></td>
+                    <td class="border-top border-right" valign="top"><?php echo $key['title']['no_wo'] ?></td>
+                    <td class="border-top border-right" valign="top"><?php echo $key['title']['model'] ?></td>
+                    <td class="border-top border-right" valign="top"><?php echo $key['title']['nm_customer'] ?></td>
+                    <td class="border-top border-right" valign="top"><?php echo $key['title']['lokasi_kntr'] ?></td>
+                    <td class="border-top border-right" valign="top"><?php echo $key['title']['nama'] ?></td>
+                    <td class="border-top border-right"></td>
+                    <td class="border-top border-right"></td>
+                    <td class="border-top border-right"></td>
+                    <td class="border-top border-right"></td>
+                    <td class="border-top border-right"></td>
+                    <td class="border-top border-right"></td>
+                    <td class="border-top border-right"></td>
+                    <td class="border-top border-right"></td>
+                    <td class="border-top border-right"></td>
+                    <td class="border-top border-right"></td>
                 </tr>
                 <?php
                 foreach ($key['stat'] as $value) {
                     ?>
                     <tr>
-                        <td class="border-bottom border-right"></td>
-                        <td class="border-bottom border-right"></td>
-                        <td class="border-bottom border-right"></td>
-                        <td class="border-bottom border-right"></td>
-                        <td class="border-bottom border-right"></td>
-                        <td class="border-bottom border-right"></td>
-                        <td class="border-bottom border-right"></td>
-                        <td class="border-bottom border-right"></td>
-                        <td class="border-bottom border-right"></td>
-                        <td class="border-bottom border-right" valign="top"><b><?= $value['title'] ?></b></td>
-                        <td class="border-bottom border-right""></td>
-                        <td class="border-bottom border-right"></td>
-                        <td class="border-bottom border-right"></td>
-                        <td class="border-bottom border-right"></td>
-                        <td class="border-bottom border-right"></td>
-                        <td class="border-bottom border-right"></td>
+                        <td class="border-right"></td>
+                        <td class="border-right"></td>
+                        <td class="border-right"></td>
+                        <td class="border-right"></td>
+                        <td class="border-right"></td>
+                        <td class="border-right"></td>
+                        <td class="border-right"></td>
+                        <td class="border-right"></td>
+                        <td class="border-right"></td>
+                        <td class="border-right" valign="top"><b><?= $value['title'] ?></b></td>
+                        <td class="border-right"></td>
+                        <td class="border-right"></td>
+                        <td class="border-right"></td>
+                        <td class="border-right"></td>
+                        <td class="border-right"></td>
+                        <td class="border-right"></td>
                     </tr>
                     <?php
                     foreach ($value['body'] as $val) {
                         ?>
                         <tr>
-                            <td class="border-bottom border-right"></td>
-                            <td class="border-bottom border-right"></td>
-                            <td class="border-bottom border-right"></td>
-                            <td class="border-bottom border-right"></td>
-                            <td class="border-bottom border-right"></td>
-                            <td class="border-bottom border-right"></td>
-                            <td class="border-bottom border-right"><?= $val['tgl'] ?></td>
-                            <td class="border-bottom border-right"><?= $val['tgl_pelaksanaan'] ?></td>
-                            <td class="border-bottom border-right"><?= $val['pelaksana'] ?></td>
-                            <td class="border-bottom border-right"><?= $val['jns_komplain'] ?></td>
-                            <td class="border-bottom border-right"><?= $val['problem'] ?></td>
-                            <td class="border-bottom border-right"><?= $val['solusi'] ?></td>
-                            <td class="border-bottom border-right" style="text-align: right">&nbsp;<?= $val['biaya_mat'] ?></td>
-                            <td  class="border-bottom border-right" style="text-align: right">&nbsp;<?= $val['biaya_tk'] ?></td>
-                            <td  class="border-bottom border-right" style="text-align: right">&nbsp;<?= $val['biaya_spd'] ?></td>
-                            <td  class="border-bottom border-right" style="text-align: right">&nbsp;<?= $val['total'] ?></td>
+                            <td class="border-right"></td>
+                            <td class="border-right"></td>
+                            <td class="border-right"></td>
+                            <td class="border-right"></td>
+                            <td class="border-right"></td>
+                            <td class="border-right"></td>
+                            <td class="border-right"><?= $val['tgl'] ?></td>
+                            <td class="border-right"><?= $val['tgl_pelaksanaan'] ?></td>
+                            <td class="border-right"><?= $val['pelaksana'] ?></td>
+                            <td class="border-right"><?= $val['jns_komplain'] ?></td>
+                            <td class="border-right"><?= $val['problem'] ?></td>
+                            <td class="border-right"><?= $val['solusi'] ?></td>
+                            <td class="border-right" style="text-align: right">&nbsp;<?= $val['biaya_mat'] ?></td>
+                            <td  class="border-right" style="text-align: right">&nbsp;<?= $val['biaya_tk'] ?></td>
+                            <td  class="border-right" style="text-align: right">&nbsp;<?= $val['biaya_spd'] ?></td>
+                            <td  class="border-right" style="text-align: right">&nbsp;<?= $val['total'] ?></td>
                         </tr>
                         <?php
                         $biaya_mat += $val['totalby_mat'];
@@ -233,22 +233,22 @@ if ($_GET['excel'] == 'ex') {
                 $n++;
             }
             ?>
-            <td style="border-right: none;"></td>
-            <td class="no_border_LR"></td>
-            <td class="no_border_LR"></td>
-            <td class="no_border_LR"></td>
-            <td class="no_border_LR"></td>
-            <td class="no_border_LR"></td>
-            <td class="no_border_LR"></td>
-            <td class="no_border_LR"></td>
-            <td class="no_border_LR"></td>
-            <td class="no_border_LR"></td>
-            <td class="no_border_LR">TOTAL</td>
-            <td class="no_border_LR"></td>
-            <td class="no_border_LR" style="text-align: right">&nbsp;<?= $biaya_mat ?></td>
-            <td  class="no_border_LR"style="text-align: right">&nbsp;<?= $biaya_tk ?></td>
-            <td  class="no_border_LR"style="text-align: right">&nbsp;<?= $biaya_spd ?></td>
-            <td style="border-left: none;"></td>
+            <td class="border-top" style="border-right: none;"></td>
+            <td class="border-top no_border_LR"></td>
+            <td class="border-top no_border_LR"></td>
+            <td class="border-top no_border_LR"></td>
+            <td class="border-top no_border_LR"></td>
+            <td class="border-top no_border_LR"></td>
+            <td class="border-top no_border_LR"></td>
+            <td class="border-top no_border_LR"></td>
+            <td class="border-top no_border_LR"></td>
+            <td class="border-top no_border_LR"></td>
+            <td class="border-top no_border_LR"><b>TOTAL</b></td>
+            <td class="border-top no_border_LR"></td>
+            <td class="border-top no_border_LR" style="text-align: right">&nbsp;<?= $biaya_mat ?></td>
+            <td  class="border-top no_border_LR"style="text-align: right">&nbsp;<?= $biaya_tk ?></td>
+            <td  class="border-top no_border_LR"style="text-align: right">&nbsp;<?= $biaya_spd ?></td>
+            <td class="border-top" style="border-left: none;"></td>
 
         </table>
     </div>

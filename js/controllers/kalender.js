@@ -48,6 +48,7 @@ app.controller('kalenderCtrl', function ($scope, Data, toaster) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.form.tgl = new Date();
         Data.get('kalender/kode').then(function (data) {
             $scope.form.no = data.kode;
         });
@@ -58,6 +59,7 @@ app.controller('kalenderCtrl', function ($scope, Data, toaster) {
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.no;
         $scope.form = form;
+        $scope.form.tgl = new Date(form.tgl);
     };
     $scope.view = function (form) {
         $scope.is_edit = true;
