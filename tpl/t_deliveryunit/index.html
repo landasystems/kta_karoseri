@@ -5,9 +5,8 @@
     <div class="wrapper-md" ng-show="!is_edit">
         <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
             <div class="panel-heading">
-                <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian & Export Data</button>
+                <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                    <button type="button" class="btn btn-default fa fa-file-excel-o" ng-show="!isCollapsed">&nbsp;Export Excel</button>
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>
@@ -95,8 +94,8 @@
                 <form name="landaform" class="form-horizontal form-validation ">
                     <div class="col-md-4 col-sm-12">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">No Wo</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">No Wo</label>
+                            <div class="col-sm-8">
                                 <div class="input-group">
                                     <ui-select on-select="pilih(form, $item)" ng-model="form.nowo" theme="bootstrap">
                                         <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
@@ -113,27 +112,27 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Merk</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">Merk</label>
+                            <div class="col-sm-8">
                                 <input type="text" class="form-control" ng-model="form.merk" ng-readonly="true" placeholder="Merk">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Model</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">Model</label>
+                            <div class="col-sm-8">
                                 <input type="text" class="form-control" ng-model="form.model" ng-readonly="true" placeholder="Model">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Sales</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">Sales</label>
+                            <div class="col-sm-8">
                                 <input type="text" class="form-control" ng-model="form.sales" ng-readonly="true" placeholder="Sales">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Tanggal Delivery</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">Delivery</label>
+                            <div class="col-sm-8">
                                 <div class="input-group">
                                     <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_delivery" is-open="opened1" ng-click="open1($event)"/>
                                     <span class="input-group-addon">
@@ -146,21 +145,21 @@
                     <div class="col-md-4 col-sm-12">
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">No Delivery</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">No Delivery</label>
+                            <div class="col-sm-8">
                                 <input type="text" class="form-control" ng-model="form.no_delivery" ng-disabled="is_view" placeholder="No Delivery" required>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Tujuan</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">Tujuan</label>
+                            <div class="col-sm-8">
                                 <label class="btn btn-default"  ng-model="form.tujuan" btn-radio="'cabang'"  required>Kantor Cabang</label>
                                 <label class="btn btn-default"  ng-model="form.tujuan" btn-radio="'customer'"  required> Customer</label>
                             </div>
                         </div>
                         <div class="form-group" ng-hide="form.tujuan == 'customer'">
-                            <label class="col-sm-3 control-label"></label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label"></label>
+                            <div class="col-sm-8">
                                 <div >
                                     <input type="text" class="form-control" ng-model="form.cabang" ng-disabled="is_view" placeholder="Cabang">
                                 </div>
@@ -169,9 +168,9 @@
 
                         </div>
                         <div class="form-group" ng-hide="form.tujuan == 'cabang'">
-                            <label class="col-sm-3 control-label"></label>
+                            <label class="col-sm-4 control-label"></label>
 
-                            <div class="col-sm-9">
+                            <div class="col-sm-8">
                                 <div>
                                     <div class="input-group">
                                         <ui-select on-select="getCustomer(form,$item)" ng-model="form.customer" required theme="bootstrap" ng-disabled="is_view" >
@@ -191,13 +190,13 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Driver / Exp</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">Driver / Exp</label>
+                            <div class="col-sm-8">
                                 <input type="text" class="form-control" ng-model="form.driver" ng-disabled="is_view" placeholder="Driver" required>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-12">
+                    <div class="col-md-4 col-sm-12" align="center">
                         <div nv-file-drop="" uploader="uploader" filters="imageFilter">
                             <div class="col-md-12 bg-auto">    
                                 <div ng-show="uploader.isHTML5" class="m-b-md">

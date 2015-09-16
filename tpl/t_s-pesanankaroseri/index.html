@@ -147,7 +147,7 @@
                                 <label class="col-sm-4 control-label">Merk</label>
                                 <div class="col-sm-8">
                                     <select class="form-control" ng-change="typeChassis(form.merk);
-                                                getchassis(form.merk, form.tipe)" ng-model="form.merk" ng-disabled="is_view" required>
+                                                    getchassis(form.merk, form.tipe)" ng-model="form.merk" ng-disabled="is_view" required>
                                         <option value="">-Pilih Merk-</option>
                                         <option ng-repeat="merk in listMerk" value="{{merk.merk}}">{{merk.merk}}</option>
                                     </select>
@@ -193,47 +193,15 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-4 control-label">Sumber Pelanggan</label>
+                                <label class="col-sm-4 control-label">Sumber Pelanggan {{form.sumber_pelanggan}}</label>
                                 <div class="col-sm-8">
-                                    <div class="col-md-6">
-                                        <div class="radio">
-                                            <label class="i-checks">
-                                                <input type="radio" ng-disabled="is_view" ng-model="form.sumber_pelanggan" ng-value="1">
-                                                <i></i>
-                                                Repeat Order
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label class="i-checks">
-                                                <input type="radio" ng-disabled="is_view" ng-model="form.sumber_pelanggan" ng-value="3">
-                                                <i></i>
-                                                Walk In / Call In
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label class="i-checks">
-                                                <input type="radio" ng-disabled="is_view" ng-model="form.sumber_pelanggan" ng-value="5">
-                                                <i></i>
-                                                Lainnya
-                                            </label>
-                                        </div>
-                                    </div>  
-                                    <div class="col-md-6">
-                                        <div class="radio">
-                                            <label class="i-checks">
-                                                <input type="radio" ng-disabled="is_view" ng-model="form.sumber_pelanggan" ng-value="2">
-                                                <i></i>
-                                                Referensi
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label class="i-checks">
-                                                <input type="radio" ng-disabled="is_view" ng-model="form.sumber_pelanggan" ng-value="4">
-                                                <i></i>
-                                                Canvas
-                                            </label>
-                                        </div>
-                                    </div>
+                                    <select class="form-control" ng-model="form.sumber_pelanggan" ng-disabled="is_view" required>
+                                        <option value="1">Repeat Order</option>
+                                        <option value="2">Referensi</option>
+                                        <option value="3"> Walk In / Call In</option>
+                                        <option value="4">Canvas</option>
+                                        <option value="0">Lainnya</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -286,9 +254,8 @@
                             </div>
                             <br>
                             <div class="form-group">
-                                <label class="col-sm-4 control-label">PKP</label>
+                                <label class="col-sm-4 control-label">PKP {{form.pkp}}</label>
                                 <div class="col-sm-8">
-
                                     <label class="btn btn-default" ng-model="form.pkp" btn-radio="'1'" required>Ya</label>
                                     <label class="btn btn-default" ng-model="form.pkp" btn-radio="'0'" required>Tidak</label>
                                 </div>
@@ -352,9 +319,9 @@
                                 <label class="col-sm-4 control-label">PPN</label>
                                 <div class="col-sm-8">
                                     <label class="btn btn-default" ng-model="form.is_ppn" ng-click="is_ppn = true;
-                                            kalkulasi()" btn-radio="'1'">Include</label>
+                                                kalkulasi()" btn-radio="'1'">Include</label>
                                     <label class="btn btn-default" ng-model="form.is_ppn" ng-click="is_ppn = false;
-                                            kalkulasi()" btn-radio="'0'">Exclude</label>                        
+                                                kalkulasi()" btn-radio="'0'">Exclude</label>                        
                                     <br><br>
                                     <div class="input-group m-b">
                                         <span class="input-group-addon">Rp</span>

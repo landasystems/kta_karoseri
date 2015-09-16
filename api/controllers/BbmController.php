@@ -33,9 +33,30 @@ class BbmController extends Controller {
                     'listbbm' => ['get'],
                     'detailstok' => ['post'],
                     'excelserahterima' => ['get'],
+                    'caribarang' => ['get'],
                 ],
             ]
         ];
+    }
+
+    public function actionCaribarang() {
+        $params = $_REQUEST;
+        $barang = isset($params['barang']) ? $params['barang'] : '';
+        $po = isset($params['no_po']) ? $params['no_po'] : '';
+        $query = new Query;
+        
+        $query->from('detail_po')
+                ->join('JOIN', 'barang', 'barang.kd_barang = detail_po.kd_barang')
+                ->select("*")
+                ->where(['like', 'barang.nm_barang', $barang])
+                ->orWhere(['like', 'barang.kd_barang', $barang])
+                ->andWhere(['like', 'detail_po.nota', $po])
+                ->andWhere("barang.nm_barang != '-' && barang.kd_barang != '-'");
+        
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionListbbm() {
@@ -163,7 +184,7 @@ class BbmController extends Controller {
     }
 
     public function actionRekap() {
-        $params = $_REQUEST;
+        $params = json_decode(file_get_contents("php://input"), true);
         $filter = array();
         $sort = "db.no_bbm ASC";
         $offset = 0;
@@ -278,7 +299,7 @@ class BbmController extends Controller {
         $lastNumber = (int) substr($findNumber->no_bbm, -5);
         $model->no_bbm = 'BM' . date('y', strtotime($model->tgl_nota)) . substr('00000' . ($lastNumber + 1), -5);
         $model->kd_suplier = $params['form']['kd_supplier'];
-        $model->no_wo = $params['form']['wo']['no_wo'];
+        $model->no_wo = (isset($params['form']['wo']['no_wo']) ? $params['form']['wo']['no_wo'] : '-');
         $model->no_po = (isset($params['form']['po']['nota'])) ? $params['form']['po']['nota'] : NULL;
 
         if ($model->save()) {

@@ -7,16 +7,15 @@ app.controller('returBbmCtrl', function ($scope, Data, toaster) {
     $scope.is_create = false;
     $scope.jenis_kmp = [];
     $scope.bagian = '-';
+    $scope.form = {};
 
     $scope.kalkulasi = function (jml_bbm, jml_retur) {
-        if (jml_retur.length >= 1) {
-            var selisih = jml_bbm - jml_retur;
-            if (selisih >= 0) {
-                $scope.form.jumlah = selisih;
-            } else {
-                $scope.form.jml = 0;
-                toaster.pop('error', "Jumlah retur tidak boleh melebihi jumlah BBM");
-            }
+        var selisih = jml_bbm - jml_retur;
+        if (selisih > 0) {
+
+        } else {
+            $scope.form.jml = 0;
+            toaster.pop('error', "Jumlah retur tidak boleh 0 / melebihi jumlah BBK");
         }
     }
 
@@ -29,7 +28,11 @@ app.controller('returBbmCtrl', function ($scope, Data, toaster) {
     }
 
     $scope.cariBarang = function ($query, no_bbm) {
-        if ($query.length >= 1) {
+        if (typeof $scope.form.no_bbm != "undefined") {
+            Data.post('returbbm/barangmasuk', {barang: $query, no_bbm: no_bbm}).then(function (data) {
+                $scope.resultsbarang = data.data;
+            });
+        } else if ($query.length >= 1) {
             Data.post('returbbm/barangmasuk', {barang: $query, no_bbm: no_bbm}).then(function (data) {
                 $scope.resultsbarang = data.data;
             });

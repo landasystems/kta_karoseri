@@ -48,7 +48,6 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.pilih = function(form, $item) {
         Data.post('delivery/customer/', $item).then(function(data) {
             $scope.sCUstomer = data.customer;
-            console.log(data.customer);
         });
         form.merk = $item.merk;
         form.model = $item.model;
