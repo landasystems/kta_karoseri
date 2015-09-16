@@ -47,7 +47,10 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal) {
 
     $scope.kalkulasi = function (sisa, stok, jml_keluar) {
         if (typeof $scope.form.no_wo != "undefined") {
-            if (sisa - jml_keluar >= 0) {
+            if (sisa == 0) {
+                $scope.err_pengambilan = true;
+                toaster.pop('error', "Sisa pengambilan bahan telah habis");
+            } else if (sisa - jml_keluar >= 0) {
                 $scope.err_pengambilan = false;
                 $scope.sisa_pengambilan = sisa - jml_keluar;
                 $scope.stok_sekarang = stok - jml_keluar;
@@ -55,7 +58,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal) {
                 ($scope.sisa_pengambilan >= 0) ? $scope.sisa_pengambilan = $scope.sisa_pengambilan : $scope.sisa_pengambilan = 0;
             } else {
                 $scope.err_pengambilan = true;
-                toaster.pop('error', "Sisa pengambilan bahan telah habis");
+                toaster.pop('error', "Jumlah tidak boleh melebihi sisa pengambilan bahan");
             }
         } else {
             $scope.err_pengambilan = false;
@@ -72,31 +75,25 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal) {
     $scope.detailstok(0, 0);
 
     $scope.cariWo = function ($query) {
-//        if ($query.length >= 2) {
         Data.get('wo/wospk', {nama: $query}).then(function (data) {
             $scope.results = data.data;
         });
-//        }
     }
 
     $scope.cariJabatan = function ($query) {
-//        if ($query.length >= 2) {
         Data.get('jabatan/cari', {nama: $query}).then(function (data) {
             $scope.resultsjabatan = data.data;
         });
-//        }
     }
 
     $scope.cariKaryawan = function ($query) {
-//        if ($query.length >= 2) {
         Data.get('jabatan/listkaryawanabsent', {nama: $query}).then(function (data) {
             $scope.resultskaryawan = data.data;
         });
-//        }
     }
 
     $scope.listBarang = function ($query, no_wo, kd_jab) {
-        if (typeof $scope.form.no_wo != "undefined") {
+        if (typeof $scope.form.no_wo != "undefined" && typeof $scope.form.kd_jab != "undefined") {
             Data.post('bbk/listbarang', {nama: $query, no_wo: no_wo, kd_jab: kd_jab}).then(function (data) {
                 $scope.resultsbarang = data.data;
             });
@@ -239,15 +236,16 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
-                $scope.view(result.data);
-                if ($scope.is_craete == true) {
-                    var popupWin = window.open('', '_blank', 'width=1000,height=700');
-                    var elem = document.getElementById('printArea');
-                    popupWin.document.open()
-                    popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print();window.close();">' + elem.innerHTML + '</html>');
-                    popupWin.document.close();
-                }
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
+//                if ($scope.is_create == true) {
+                var popupWin = window.open('', '_blank', 'width=1000,height=700');
+                var elem = document.getElementById('printArea');
+                popupWin.document.open()
+                popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print();window.close();">' + elem.innerHTML + '</html>');
+                popupWin.document.close();
+//                }
+                $scope.is_edit = false;
+                $scope.view(result.data);
                 $scope.callServer(tableStateRef); //reload grid ulang
             }
         });

@@ -137,13 +137,13 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
-                if ($scope.is_craete == true) {
+//                if ($scope.is_create == true) {
                     var popupWin = window.open('', '_blank', 'width=1000,height=700');
                     var elem = document.getElementById('printArea');
                     popupWin.document.open()
                     popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print();window.close();">' + elem.innerHTML + '</html>');
                     popupWin.document.close();
-                }
+//                }
                 $scope.is_edit = false;
                 $scope.view(result.data);
                 $scope.callServer(tableStateRef); //reload grid ulang
