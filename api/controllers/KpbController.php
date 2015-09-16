@@ -96,14 +96,14 @@ class KpbController extends Controller {
     public function actionListbahan() {
         $param = json_decode(file_get_contents("php://input"), true);
 
-//cek apakah sdh di print
+        //cek apakah sdh di print
         $cek = Kpb::find()->where(['no_wo' => $param['kd_bom']['no_wo'], 'kd_jab' => $param['kd_jab'], 'status' => 1])->count();
 
         $query = new Query;
         $query->from('det_standar_bahan as dsb')
-                ->join('Join', 'tbl_jabatan as tj', 'dsb.kd_jab = tj.id_jabatan')
-                ->join('Join', 'pekerjaan as p', 'tj.krj = p.kd_kerja')
-                ->join('Join', 'barang as b', 'dsb.kd_barang = b.kd_barang')
+                ->join('LEFT JOIN', 'tbl_jabatan as tj', 'dsb.kd_jab = tj.id_jabatan')
+                ->join('LEFT JOIN', 'pekerjaan as p', 'tj.krj = p.kd_kerja')
+                ->join('LEFT JOIN', 'barang as b', 'dsb.kd_barang = b.kd_barang')
                 ->select("dsb.*, b.nm_barang, b.satuan, p.*")
                 ->where(['dsb.kd_bom' => $param['kd_bom']['kd_bom'], 'dsb.kd_jab' => $param['kd_jab']]);
 
