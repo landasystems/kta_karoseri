@@ -124,15 +124,6 @@ app.controller('returbbkCtrl', function ($scope, Data, toaster) {
         Data.get('returbbk/view/' + id).then(function (data) {
             $scope.form = data.data;
             $scope.form.tgl = new Date($scope.form.tgl);
-            if (jQuery.isEmptyObject(data.detail)) {
-                $scope.detailBbk = [{
-                        kd_barang: '',
-                        jml: '',
-                        ket: '',
-                    }];
-            } else {
-                $scope.detailBbk = data.detail;
-            }
         });
     }
 })
