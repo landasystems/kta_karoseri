@@ -120,7 +120,7 @@ app.controller('barangCtrl', function ($scope, Data, toaster, FileUploader) {
         }
     };
     $scope.delete = function (row) {
-        if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
+        if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
             Data.delete('barang/delete/' + row.kd_barang).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
