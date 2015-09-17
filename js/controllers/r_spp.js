@@ -36,6 +36,16 @@ app.controller('reksppCtrl', function ($scope, Data, toaster) {
         $scope.isLoading = false;
     };
 
+    $scope.excelkurang = function () {
+        Data.get('spprutin/rekap', paramRef).then(function (data) {
+            window.location = 'api/web/spprutin/kekurangan';
+        });
+    }
+    $scope.printkurang = function () {
+        Data.get('spprutin/rekap', paramRef).then(function (data) {
+            window.open('api/web/spprutin/kekurangan?print=true');
+        });
+    }
     $scope.excel = function () {
         Data.get('spprutin/rekap', paramRef).then(function (data) {
             window.location = 'api/web/spprutin/excelspp';

@@ -55,7 +55,7 @@
                         </tr>
                     </thead>
                     <tbody ng-show="!isLoading">
-                        <tr ng-repeat="row in displayed" ng-dblclick="view(row.nota)">
+                        <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
                             <td ng-show="user.id == '1'">
                                 <label class="i-checks">
                                     <input type="checkbox" ng-model="gantiStatus[row.nota]" ><i></i> 
