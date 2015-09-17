@@ -7,7 +7,7 @@
             <label class="col-sm-3 control-label">No Wo.</label>
             <div class="col-sm-9">
                 <div class="input-group">
-                    <ui-select on-select="listBagian($item.kd_bom)" ng-model="form.no_wo"  theme="bootstrap">
+                    <ui-select on-select="listBagian(form.no_wo)" ng-model="form.no_wo"  theme="bootstrap">
                         <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
                         <ui-select-choices refresh="cariWo($select.search)" repeat="val in results">
                             {{val.no_wo}}

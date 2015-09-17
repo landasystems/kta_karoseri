@@ -52,17 +52,14 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 
     $scope.updt_st = function ($id) {
         Data.get('po/updtst/' + $id).then(function (data) {
-//            $scope.callServer(tableStateRef);
             $scope.form.status = 1;
         });
-
     }
 
     $scope.cariSpp = function ($query) {
 
         if ($query.length >= 3) {
             Data.get('spprutin/cari', {nama: $query}).then(function (data) {
-//                console.log(data.data);
                 $scope.resultsspp = data.data;
             });
         }
@@ -86,6 +83,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
                 $scope.resultsbrg = data.data;
             });
         }
+        console.log($scope.resultsbrg);
     }
 
     $scope.pilih = function (detail, $item) {
@@ -96,14 +94,9 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     }
     $scope.pilihspp = function (detsPo, $item) {
         Data.get('po/cari', {nama: $item}).then(function (data) {
-            console.log(data.data)
             detsPo = data.data;
         });
-//        detail.harga = $item.harga;
-//        detail.satuan = $item.satuan;
     }
-
-
     $scope.subtotal = function () {
         var total = 0;
         var sub_total = 0;
@@ -322,7 +315,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
     };
     $scope.delete = function (row) {
-        if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
+        if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
             Data.delete('po/delete/' + row.nota).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });

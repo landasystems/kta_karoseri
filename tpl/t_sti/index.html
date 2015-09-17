@@ -37,8 +37,7 @@
                             <th st-sort="cu.nm_customer">Customer</th>
                             <th st-sort="cu.alamat1">Alamat</th>
                             <th st-sort="wa.warna">Warna</th>
-                            <th st-sort="vi.no_wo">No WO</th>
-                            <!--<th st-sort="catatan">Catatan</th>-->
+                            <th st-sort="vi.no_wo">No Wo</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -48,9 +47,8 @@
                             <td>{{row.tgl_terima| date}}</td>
                             <td>{{row.nm_customer| limitTo:15}}</td>
                             <td>{{row.alamat1| limitTo:15}}</td>
-                            <td>{{row.warna}}</td>
+                            <td>{{row.warna_chassis}}</td>
                             <td>{{row.no_wo}}</td>
-                            <!--<td>{{row.catatan}}</td>-->
                             <td>
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
                                     <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
@@ -61,12 +59,12 @@
                     </tbody>
                     <tbody ng-show="isLoading">
                         <tr>
-                            <td colspan="4" class="text-center">Loading ... </td>
+                            <td colspan="7" class="text-center">Loading ... </td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="6"></td>
+                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="7"></td>
                         </tr>
                 </table>
             </div>
@@ -101,24 +99,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!--                        <div class="form-group">
-                                                    <label class="col-sm-3 control-label">No. SPK</label>
-                                                    <div class="col-sm-9">
-                                                        <div class="input-group">
-                                                            <ui-select on-select="getSpk(form,$item)" ng-model="form.spk" required theme="bootstrap" ng-disabled="is_view" >
-                                                                <ui-select-match>{{$select.selected.no_spk}}</ui-select-match>
-                                                                <ui-select-choices refresh="cariSpk($select.search)" repeat="val in kdSpk">
-                                                                    {{val.no_spk}}
-                                                                </ui-select-choices>
-                                                            </ui-select>
-                                                            <span class="input-group-btn">
-                                                                <button ng-click="form.spk = undefined" class="btn btn-default">
-                                                                    <span class="glyphicon glyphicon-trash"></span>
-                                                                </button>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>-->
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Nama Customer</label>
                             <div class="col-sm-9">
@@ -143,7 +123,6 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Alamat</label>
                             <div class="col-sm-9">
-                                <!--<input type="text" class="form-control" ng-model="form.alamat1" ng-readonly >-->
                                 <textarea class="form-control" ng-model="form.alamat1" ng-readonly="true"></textarea>
                             </div>
                         </div>

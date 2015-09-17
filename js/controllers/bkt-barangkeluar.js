@@ -47,10 +47,15 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal) {
 
     $scope.kalkulasi = function (sisa, stok, jml_keluar) {
         if (typeof $scope.form.no_wo != "undefined") {
+            var sSisa = sisa - jml_keluar;
+            var sStok = stok - jml_keluar;
             if (sisa == 0) {
                 $scope.err_pengambilan = true;
                 toaster.pop('error', "Sisa pengambilan bahan telah habis");
-            } else if (sisa - jml_keluar >= 0) {
+            } else if (stok == 0) {
+                $scope.err_pengambilan = true;
+                toaster.pop('error', "Stok bahan telah habis");
+            } else if (sSisa >= 0 && sStok >= 0) {
                 $scope.err_pengambilan = false;
                 $scope.sisa_pengambilan = sisa - jml_keluar;
                 $scope.stok_sekarang = stok - jml_keluar;
@@ -259,7 +264,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal) {
     };
 
     $scope.delete = function (row) {
-        if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
+        if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
             Data.delete('bbk/delete/' + row.no_bbk).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });

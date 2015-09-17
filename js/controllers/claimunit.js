@@ -74,7 +74,7 @@ app.controller('claimunitCtrl', function($scope, Data, toaster) {
 
     $scope.delete = function(row) {
         var wo = row.no_wo;
-        if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
+        if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
             Data.delete('claimunit/delete/' + row.id).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });

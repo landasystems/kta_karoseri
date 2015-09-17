@@ -47,7 +47,7 @@ class BbmController extends Controller {
         
         $query->from('detail_po')
                 ->join('JOIN', 'barang', 'barang.kd_barang = detail_po.kd_barang')
-                ->select("*")
+                ->select("*, detail_po.jml as jml_po")
                 ->where(['like', 'barang.nm_barang', $barang])
                 ->orWhere(['like', 'barang.kd_barang', $barang])
                 ->andWhere(['like', 'detail_po.nota', $po])

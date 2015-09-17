@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\TransAdditionalBom;
+use app\models\TransAdditionalBomWo;
 use app\models\Bom;
 use app\models\Womasuk;
 use app\models\DetAdditionalBom;
@@ -30,20 +31,28 @@ class AdditionalbomController extends Controller {
                     'barang' => ['get'],
                     'kode' => ['get'],
                     'tipe' => ['get'],
-                    'cari' => ['get'],
+                    'cari' => ['post'],
                 ],
             ]
         ];
     }
 
     public function actionCari() {
-        $params = $_REQUEST;
-
+        $params = json_decode(file_get_contents("php://input"), true);
+        $selected = array();
+        foreach ($params['selected'] as $val) {
+            $selected[] = '"' . $val['no_wo'] . '"';
+        }
         $query = new Query;
         $query->from('view_wo_spk')
                 ->select("no_wo")
                 ->where(['like', 'no_wo', $params['no_wo']])
                 ->limit(10);
+
+        if (!empty($selected)) {
+            $query->andWhere('no_wo NOT IN(' . implode(",", $selected) . ')');
+        }
+
         $command = $query->createCommand();
         $models = $command->queryAll();
         $this->setHeader(200);
@@ -93,7 +102,7 @@ class AdditionalbomController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "id DESC";
+        $sort = "trans_additional_bom.id DESC";
         $offset = 0;
         $limit = 10;
 
@@ -118,10 +127,12 @@ class AdditionalbomController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from(['trans_additional_bom', 'chassis', 'model'])
-                ->where('trans_additional_bom.kd_chassis = chassis.kd_chassis and trans_additional_bom.kd_model=model.kd_model')
+                ->from('trans_additional_bom')
+                ->join('JOIN', 'trans_additional_bom_wo', 'trans_additional_bom.id = trans_additional_bom_wo.tran_additional_bom_id')
+                ->join('LEFT JOIN', 'chassis', 'trans_additional_bom.kd_chassis = chassis.kd_chassis')
+                ->join('LEFT JOIN', 'model', 'trans_additional_bom.kd_model=model.kd_model')
                 ->orderBy($sort)
-                ->select("*");
+                ->select("trans_additional_bom.id as id_tambahan, trans_additional_bom.kd_bom, trans_additional_bom.tgl_buat, trans_additional_bom_wo.*, chassis.*, model.*");
 
         //filter
         if (isset($params['filter'])) {
@@ -134,23 +145,25 @@ class AdditionalbomController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
 
+        $data = array();
+        $wo = array();
         foreach ($models as $key => $val) {
-            $bom = Bom::findOne($val['kd_bom']);
-            $wo = WoMasuk::findOne($val['no_wo']);
-            $model = \app\models\ModelKendaraan::findOne($val['kd_model']);
-            if (!empty($bom))
-                $models[$key]['bom'] = $bom->attributes;
-            if (!empty($wo))
-                $models[$key]['wo'] = $wo->attributes;
-            if (!empty($model))
-                $models[$key]['modelKendaraan'] = $model->attributes;
+            $wo[$val['kd_bom']][] = $val['no_wo'];
+            $data[$val['kd_bom']]['id'] = $val['id_tambahan'];
+            $data[$val['kd_bom']]['kd_bom'] = $val['kd_bom'];
+            $data[$val['kd_bom']]['bom'] = array('kd_bom' => $val['kd_bom']);
+            $data[$val['kd_bom']]['tgl_buat'] = $val['tgl_buat'];
+            $data[$val['kd_bom']]['merk'] = $val['merk'];
+            $data[$val['kd_bom']]['tipe'] = $val['tipe'];
+            $data[$val['kd_bom']]['model'] = $val['model'];
+            $data[$val['kd_bom']]['no_wo'] = join(',', $wo[$val['kd_bom']]);
         }
-//        Yii::error($models);
+
         $totalItems = $query->count();
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
     public function actionView($id) {
@@ -158,12 +171,21 @@ class AdditionalbomController extends Controller {
         $query->from(['trans_additional_bom', 'chassis', 'model'])
                 ->where('trans_additional_bom.kd_model = model.kd_model and trans_additional_bom.kd_chassis = chassis.kd_chassis and trans_additional_bom.id="' . $id . '"')
                 ->select("*");
-
         $command = $query->createCommand();
         $models = $command->query()->read();
+        
+        \Yii::error($models);
+
+        $no_wo = TransAdditionalBomWo::find()->where('tran_additional_bom_id="' . $id . '"')->all();
+
+        $wo = array();
+        foreach ($no_wo as $val) {
+            $wo[] = array('no_wo' => $val->no_wo);
+        }
+
         $models['kd_model'] = array('kd_model' => $models['kd_model'], 'model' => $models['model']);
         $models['kd_bom'] = array('kd_bom' => $models['kd_bom']);
-        $models['no_wo'] = array('0' => array('no_wo' => $models['no_wo']));
+        $models['no_wo'] = $wo;
 
         $det = DetAdditionalBom::find()
                 ->joinWith(['jabatan', 'barang'])
@@ -184,54 +206,88 @@ class AdditionalbomController extends Controller {
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
         foreach ($params['tambahItem']['no_wo'] as $val) {
-
             //cari apakah wo sudah ada di optional
-            $detNowo = TransAdditionalBom::findAll('no_wo="' . $val['no_wo'] . '"');
+            $detNowo = TransAdditionalBomWo::find()->where('no_wo="' . $val['no_wo'] . '"')->all();
             foreach ($detNowo as $valNowo) {
                 //delete detail optional
-                $detOptional = DetAdditionalBom::deleteAll('tran_additional_bom_id = "' . $valNowo->id . '"');
-            }
-            //hapus tran additional bom
-            $deleteAdditional = TransAdditionalBom::deleteAll('no_wo="' . $val['no_wo'] . '"');
+                $detOptional = DetAdditionalBom::deleteAll('tran_additional_bom_id = "' . $valNowo->tran_additional_bom_id . '"');
 
-            $model = new TransAdditionalBom();
-            $model->attributes = $params['tambahItem'];
-            $model->kd_bom = $params['tambahItem']['kd_bom']['kd_bom'];
-            $model->kd_model = $params['tambahItem']['kd_model']['kd_model'];
-            $model->no_wo = $val['no_wo'];
+                //hapus tran additional bom
+                $deleteAdditional = TransAdditionalBom::deleteAll('id="' . $valNowo->tran_additional_bom_id . '"');
 
-            if ($model->save()) {
-                $detailBom = $params['detTambahItem'];
-                foreach ($detailBom as $val) {
-                    $det = new DetAdditionalBom();
-                    $det->attributes = $val;
-                    $det->tran_additional_bom_id = $model->id;
-                    $det->kd_jab = $val['bagian']['id_jabatan'];
-                    $det->kd_barang = $val['barang']['kd_barang'];
-                    $det->kd_bom = $model->kd_bom;
-                    $det->save();
-                }
-                $this->setHeader(200);
-                echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-            } else {
-                $this->setHeader(400);
-                echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+                //hapus wo
+                $deleteWo = TransAdditionalBomWo::deleteAll('id="' . $valNowo->id . '"');
             }
+        }
+
+        $model = new TransAdditionalBom();
+        $model->attributes = $params['tambahItem'];
+        $model->kd_bom = $params['tambahItem']['kd_bom']['kd_bom'];
+        $model->kd_model = $params['tambahItem']['kd_model']['kd_model'];
+        $model->no_wo = '';
+
+        if ($model->save()) {
+            //save nomer wo
+            foreach ($params['tambahItem']['no_wo'] as $val) {
+                $wo = new TransAdditionalBomWo;
+                $wo->tran_additional_bom_id = $model->id;
+                $wo->no_wo = $val['no_wo'];
+                $wo->save();
+            }
+
+            //save detail bom
+            $detailBom = $params['detTambahItem'];
+            foreach ($detailBom as $val) {
+                $det = new DetAdditionalBom();
+                $det->attributes = $val;
+                $det->tran_additional_bom_id = $model->id;
+                $det->kd_jab = $val['bagian']['id_jabatan'];
+                $det->kd_barang = $val['barang']['kd_barang'];
+                $det->kd_bom = $model->kd_bom;
+                $det->save();
+            }
+            $this->setHeader(200);
+            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        } else {
+            $this->setHeader(400);
+            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
     }
 
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
-        $val['no_wo'] = $params['tambahItem']['no_wo'][0]['no_wo'];
+        foreach ($params['tambahItem']['no_wo'] as $val) {
+            //cari apakah wo sudah ada di optional
+            $detNowo = TransAdditionalBomWo::find()->where('no_wo="' . $val['no_wo'] . '"')->all();
+            foreach ($detNowo as $valNowo) {
+                //delete detail optional
+                $detOptional = DetAdditionalBom::deleteAll('tran_additional_bom_id = "' . $id . '"');
 
-        $model = $this->findModel($id);
+                //hapus tran additional bom
+                $deleteAdditional = TransAdditionalBom::deleteAll('id="' . $id . '"');
+
+                //hapus wo
+                $deleteWo = TransAdditionalBomWo::deleteAll('id="' . $valNowo->id . '"');
+                \Yii::error($valNowo);
+            }
+        }
+
+        $model = new TransAdditionalBom();
         $model->attributes = $params['tambahItem'];
         $model->kd_bom = $params['tambahItem']['kd_bom']['kd_bom'];
         $model->kd_model = $params['tambahItem']['kd_model']['kd_model'];
-        $model->no_wo = $val['no_wo'];
+        $model->no_wo = '';
 
         if ($model->save()) {
-            $deleteDetail = DetAdditionalBom::deleteAll(['tran_additional_bom_id' => $model->id]);
+            //save nomer wo
+            foreach ($params['tambahItem']['no_wo'] as $val) {
+                $wo = new TransAdditionalBomWo;
+                $wo->tran_additional_bom_id = $model->id;
+                $wo->no_wo = $val['no_wo'];
+                $wo->save();
+            }
+
+            //save detail bom
             $detailBom = $params['detTambahItem'];
             foreach ($detailBom as $val) {
                 $det = new DetAdditionalBom();
@@ -253,6 +309,7 @@ class AdditionalbomController extends Controller {
     public function actionDelete($id) {
         $model = $this->findModel($id);
         $deleteDetail = DetAdditionalBom::deleteAll(['tran_additional_bom_id' => $id]);
+        $deleteWo = TransAdditionalBomWo::deleteAll(['tran_additional_bom_id' => $id]);
 
         if ($model->delete()) {
             $this->setHeader(200);

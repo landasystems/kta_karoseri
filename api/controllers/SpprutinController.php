@@ -445,6 +445,8 @@ class SpprutinController extends Controller {
         $model = Barang::find()
                 ->where('kat like "rutin%"')
                 ->andWhere('qty <= min')
+                ->andWhere('saldo < max')
+                ->andWhere('min > 0')
                 ->all();
         $data = [];
         if (!empty($model)) {

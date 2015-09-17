@@ -65,14 +65,6 @@ app.controller('spkCtrl', function ($scope, Data, toaster) {
         $scope.detKerja = [{
                 nm_kerja: '',
             }];
-        console.log($scope.detKerja);
-//        Data.post('spk/customer/', $item).then(function(data) {
-//            $scope.sJabatan = data.jabatan;
-//            $scope.detKerja = data.detail;
-//            $scope.sKerja = data.kerja;
-//            $scope.form.jabatan = data.asu.spk.jabatan;
-//
-//        });
     };
 
     $scope.callServer = function callServer(tableState) {
@@ -155,7 +147,7 @@ app.controller('spkCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
     };
     $scope.delete = function (row) {
-        if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
+        if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
             Data.delete('spk/delete/' + row.id_spk).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });

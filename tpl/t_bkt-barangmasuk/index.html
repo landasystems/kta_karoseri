@@ -131,10 +131,10 @@
                                 <div class="col-sm-8">
                                     <div class="input-group">
                                         <ui-select on-select="getPo(form.po)" ng-disabled="is_view" ng-model="form.po" theme="bootstrap">
-                                        <ui-select-match>{{$select.selected.nota}}</ui-select-match>
-                                        <ui-select-choices refresh="cariPo($select.search)" repeat="po in listPo">
-                                            {{po.nota}}
-                                        </ui-select-choices>
+                                            <ui-select-match>{{$select.selected.nota}}</ui-select-match>
+                                            <ui-select-choices refresh="cariPo($select.search)" repeat="po in listPo">
+                                                {{po.nota}}
+                                            </ui-select-choices>
                                         </ui-select>
                                         <span class="input-group-btn">
                                             <button ng-click="form.po = undefined" class="btn btn-default">
@@ -196,52 +196,63 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
-                    <label class="control-label" style="font-weight: bold" align='left'>Detail BBM</label>
-                    <table class="table table-bordered det-trans">
-                        <thead>
-                            <tr>
-                                <th style="text-align: center; font-weight: bold;">Barang</th>
-                                <th style="text-align: center; font-weight: bold;width: 25%">Keterangan</th>
-                                <th style="text-align: center; font-weight: bold;width: 20%">Jml</th>
-                                <th style="text-align: center; font-weight: bold;width:20%">Delivery</th>
-                                <th width="30" ng-show="is_view != true" style="margin:0px;padding:0px;">
-                                    <button ng-disabled="is_view" ng-click="addDetail()" class="btn btn-success"><i class="fa fa-plus"></i></button>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="detail in detBbm">
-                                <td>
-                        <ui-select uiselect-autofocus="open" ng-disabled="is_view" ng-model="detail.barang" theme="bootstrap">
-                            <ui-select-match>{{$select.selected.kd_barang}} - {{$select.selected.nm_barang}}</ui-select-match>
-                            <ui-select-choices refresh="cariBarang($select.search, form.po.nota)" repeat="barang in results">
-                                {{barang.kd_barang}} - {{barang.nm_barang}}
-                            </ui-select-choices>
-                        </ui-select>
-                        </td>
-                        <td>
-                            <input type="text" ng-disabled="is_view" ng-model="detail.keterangan" class="form-control">
-                        </td>
-                        <td>
-                            <input type="text" ng-disabled="is_view" ng-pattern="/^[0-9]+$/" ng-model="detail.jumlah" class="form-control" ng-enter="addDetail();">
-                        </td>
-                        <td>
-                            <div class="input-group">
-                                <input type="text" class="form-control" ng-disabled="is_view" datepicker-popup="dd-MM-yyyy" ng-model="detail.tgl_terima" is-open="openedDet == $index" ng-enter="addDetail();" ng-change="setStatus()" ng-click="openDet($event, $index)"/>
-                                <span class="input-group-addon">
-                                    <i class="fa fa-calendar-o"></i>
-                                </span>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    Detail BBM
+                                </div>
+                                <div class="col-md-9" align="right">
+                                    <button ng-click="addDetail()" class="btn btn-success" ng-hide="is_view" title="Tambah Detail"><i class="fa fa-plus-square"></i></button>
+                                </div>
                             </div>
-                        </td>
-                        <td ng-show="is_view != true" >
-                            <button ng-disabled="is_view" ng-click="removeRow($index)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
-                        </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                        </div>
+                        <!--<div class="panel-body">-->
+                        <div class="table-responsive">
+                            <table class="table table-striped b-t b-light">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center; font-weight: bold;">Barang</th>
+                                        <th style="text-align: center; font-weight: bold;width: 25%">Keterangan</th>
+                                        <th style="text-align: center; font-weight: bold;width: 20%">Jml</th>
+                                        <th style="text-align: center; font-weight: bold;width:20%">Delivery</th>
+                                        <th width="30" ng-show="is_view != true" style="margin:0px;padding:0px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="detail in detBbm">
+                                        <td>
+                                <ui-select uiselect-autofocus="open" ng-disabled="is_view" ng-model="detail.barang" theme="bootstrap">
+                                    <ui-select-match>{{$select.selected.kd_barang}} - {{$select.selected.nm_barang}}</ui-select-match>
+                                    <ui-select-choices refresh="cariBarang($select.search, form.po.nota)" repeat="barang in results">
+                                        {{barang.kd_barang}} - {{barang.nm_barang}}
+                                    </ui-select-choices>
+                                </ui-select>
+                                </td>
+                                <td>
+                                    <input type="text" ng-disabled="is_view" ng-model="detail.keterangan" class="form-control">
+                                </td>
+                                <td>
+                                    <input type="text" ng-disabled="is_view" ng-pattern="/^[0-9]+$/" ng-model="detail.jumlah" class="form-control" ng-enter="addDetail();">
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" ng-disabled="is_view" datepicker-popup="dd-MM-yyyy" ng-model="detail.tgl_terima" is-open="openedDet == $index" ng-enter="addDetail();" ng-change="setStatus()" ng-click="openDet($event, $index)"/>
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar-o"></i>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td ng-show="is_view != true" >
+                                    <button ng-disabled="is_view" ng-click="removeRow($index)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                                </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <div align="center">
                         <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>

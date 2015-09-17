@@ -59,4 +59,8 @@ class TransAdditionalBom extends \yii\db\ActiveRecord
             'gambar' => 'Gambar',
         ];
     }
+    
+    public function getWo() {
+        return $this->hasMany(TransAdditionalBomWo::className(), ['tran_additional_bom_id' => 'id']);
+    }
 }

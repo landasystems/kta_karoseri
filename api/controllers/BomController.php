@@ -298,7 +298,8 @@ class BomController extends Controller {
         $i = 0;
         foreach ($models as $val) {
             //cek optional BOM
-            $optional = \app\models\TransAdditionalBom::findAll(['no_wo' => $val['no_wo']]);
+//            $optional = \app\models\TransAdditionalBom::findAll(['no_wo' => $val['no_wo']]);
+            $optional = \app\models\TransAdditionalBomWo::find()->where(['no_wo' => $val['no_wo']])->all();
 
             //jika tidak ada optional ambil dari trans_standar_bahan
             if (empty($optional) or count($optional) == 0) {
@@ -320,10 +321,11 @@ class BomController extends Controller {
                         ->join('LEFT JOIN', 'barang as brg', 'dts.kd_barang = brg.kd_barang')
                         ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
                         ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dts.tran_additional_bom_id')
-                        ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo  = tsb.no_wo')
+                        ->join('LEFT JOIN', 'trans_additional_bom_wo as tsbw', ' tsb.id = tsbw.tran_additional_bom_id')
+//                        ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo  = tsbw.no_wo')
                         ->orderBy('tjb.urutan_produksi ASC, brg.nm_barang ASC')
-                        ->where('wm.no_wo = "' . $val['no_wo'] . '"')
-                        ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
+                        ->where('tsbw.no_wo = "' . $val['no_wo'] . '"')
+                        ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, tsbw.no_wo");
             }
 
             $command = $query->createCommand();
@@ -349,8 +351,7 @@ class BomController extends Controller {
         //init variable
         $params = $_REQUEST;
         if (isset($params['filter'])) {
-            $no_wo = json_decode(file_get_contents("php://input"), true);
-            $filter = array();
+            $no_wo = (array) json_decode($params['filter']);
             $sort = "dts.kd_bom ASC";
             $offset = 0;
             $limit = 10;
@@ -362,7 +363,7 @@ class BomController extends Controller {
                 $offset = $params['offset'];
 
             //cek optional BOM
-            $optional = \app\models\TransAdditionalBom::findAll(['no_wo' => $no_wo['no_wo']]);
+            $optional = \app\models\TransAdditionalBomWo::find()->where('no_wo = "'.$no_wo['wm.no_wo'].'"')->all();
 
             //jika tidak ada optional ambil dari trans_standar_bahan
             if (empty($optional) or count($optional) == 0) {
@@ -387,7 +388,8 @@ class BomController extends Controller {
                         ->join('LEFT JOIN', 'barang as brg', 'dts.kd_barang = brg.kd_barang')
                         ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
                         ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dts.tran_additional_bom_id')
-                        ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo  = tsb.no_wo')
+                        ->join('LEFT JOIN', 'trans_additional_bom_wo as wm', ' tsb.id = wm.tran_additional_bom_id')
+//                        ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo  = tsbw.no_wo')
                         ->orderBy('tjb.urutan_produksi ASC, brg.nm_barang ASC')
                         ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
             }
@@ -476,7 +478,8 @@ class BomController extends Controller {
             if ($jWo <= 5) {
 
                 //cek optional BOM
-                $optional = \app\models\TransAdditionalBom::find()->where('no_wo = "' . $noWo . '"')->all();
+//                $optional = \app\models\TransAdditionalBom::find()->where('no_wo = "' . $noWo . '"')->all();
+                $optional = \app\models\TransAdditionalBomWo::find()->where(['no_wo' => $noWo])->all();
 
                 //jika tidak ada optional ambil dari trans_standar_bahan
                 if (empty($optional) or count($optional) == 0) {
@@ -499,9 +502,10 @@ class BomController extends Controller {
                             ->join('LEFT JOIN', 'barang as brg', 'dts.kd_barang = brg.kd_barang')
                             ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
                             ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dts.tran_additional_bom_id')
-                            ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo  = tsb.no_wo')
+                            ->join('LEFT JOIN', 'trans_additional_bom_wo as wm', ' tsb.id = wm.tran_additional_bom_id')
+//                            ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo  = tsbw.no_wo')
                             ->orderBy('tjb.urutan_produksi ASC, brg.nm_barang ASC')
-                            ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, tsb.no_wo");
+                            ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
                 }
 
                 $queryBbk = new Query;
@@ -567,7 +571,8 @@ class BomController extends Controller {
             if ($jWo <= 5) {
 
                 //cek optional BOM
-                $optional = \app\models\TransAdditionalBom::find()->where('no_wo = "' . $noWo . '"')->all();
+//                $optional = \app\models\TransAdditionalBom::find()->where('no_wo = "' . $noWo . '"')->all();
+                $optional = \app\models\TransAdditionalBomWo::find()->where(['no_wo' => $noWo])->all();
 
                 //jika tidak ada optional ambil dari trans_standar_bahan
                 if (empty($optional) or count($optional) == 0) {
@@ -588,9 +593,10 @@ class BomController extends Controller {
                             ->join('LEFT JOIN', 'barang as brg', 'dts.kd_barang = brg.kd_barang')
                             ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
                             ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dts.tran_additional_bom_id')
-                            ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo  = tsb.no_wo')
+                            ->join('LEFT JOIN', 'trans_additional_bom_wo as wm', ' tsb.id = wm.tran_additional_bom_id')
+//                            ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo  = tsbw.no_wo')
                             ->orderBy('tjb.urutan_produksi ASC, brg.nm_barang ASC')
-                            ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, tsb.no_wo");
+                            ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
                 }
 
                 $queryBbk = new Query;
