@@ -36,21 +36,29 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
             });
         }
     };
-    $scope.getPo = function (form, item) {
-        form.nama_supplier = item.nama_supplier;
-        form.kd_supplier = item.kd_supplier;
+
+    $scope.cariBarang = function ($query, $po) {
+        if (typeof $scope.form.po != "undefined") {
+            Data.get('bbm/caribarang', {barang: $query, no_po: $po}).then(function (data) {
+                $scope.results = data.data;
+            });
+        } else
+        if ($query.length >= 3) {
+            Data.get('bbm/caribarang', {barang: $query, no_po: $po}).then(function (data) {
+                $scope.results = data.data;
+            });
+        }
+    };
+
+    $scope.getPo = function (form) {
+        $scope.form.nm_supplier = form.nama_supplier;
+        $scope.form.kd_supplier = form.kd_supplier;
+        $scope.cariBarang('', form.nota);
     };
     $scope.cariSupplier = function ($query) {
         if ($query.length >= 3) {
             Data.get('supplier/cari', {nama: $query}).then(function (data) {
                 $scope.listSupplier = data.data;
-            });
-        }
-    };
-    $scope.cariBarang = function ($query) {
-        if ($query.length >= 3) {
-            Data.get('barang/cari', {barang: $query}).then(function (data) {
-                $scope.results = data.data;
             });
         }
     };
@@ -84,6 +92,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.form.tgl_nota = new Date();
         $scope.detBbm = [{
                 id: '',
                 no_bbm: '',
@@ -127,11 +136,17 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
-                $scope.is_edit = false;
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
+//                if ($scope.is_create == true) {
+                    var popupWin = window.open('', '_blank', 'width=1000,height=700');
+                    var elem = document.getElementById('printArea');
+                    popupWin.document.open()
+                    popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print();window.close();">' + elem.innerHTML + '</html>');
+                    popupWin.document.close();
+//                }
+                $scope.is_edit = false;
                 $scope.view(result.data);
                 $scope.callServer(tableStateRef); //reload grid ulang
-                
             }
         });
 
@@ -169,10 +184,15 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
     };
     $scope.getDetail = function (id) {
         Data.get('bbm/view/' + id).then(function (data) {
-            $scope.detBbm = data.details;
+//            $scope.detBbm = data.details;
             $scope.form.nm_supplier = data.sup.nama_supplier;
             $scope.form.alamat_supplier = data.sup.alamat;
-            console.log(data);
+            $scope.detBbm = [];
+            angular.forEach(data.details, function ($value, $key) {
+                $scope.detBbm.push($value);
+                $scope.detBbm[$key]['tgl_terima'] = new Date($value.tgl_terima);
+            })
+//            console.log(data.details);
         });
     };
     $scope.excel = function (id) {

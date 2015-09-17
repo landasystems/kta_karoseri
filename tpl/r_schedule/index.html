@@ -6,7 +6,6 @@
         <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
             <div class="panel-heading">.:: Rekap Schedule
                 <div class="btn-group pull-right" role="group" style="margin-top: -4px; margin-right: 18px;">
-                    <button type="button" class="btn btn-success fa fa-file-excel-o" ng-show="!isCollapsed" ng-click="excel();">&nbsp;&nbsp;Exp Laporan Schedule</button>
                 </div> 
             </div>
 
@@ -18,8 +17,26 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">No. Wo.</label>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-9">
                                             <input type="text" st-search="dw.no_wo" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Customer</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" st-search="vws.nm_customer" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group"> 
+                                        <label class="col-sm-3 control-label"></label>
+                                        <div class="col-sm-9">
+                                            <div class="pull-left dropdown" style="margin-top: 0px" dropdown="">
+                                                <button type="button" class="btn btn-success" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Rekap Schedule <span class="caret"></span></button>
+                                                <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 260px;">
+                                                    <li><a href="#" ng-click="print()">Cetak</a></li>
+                                                    <li><a href="#" ng-click="excel()">Export Excel</a></li>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

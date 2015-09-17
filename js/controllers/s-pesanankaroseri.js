@@ -1,4 +1,4 @@
-app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
+app.controller('spkaroseriCtrl', function ($scope, Data, toaster) {
 //init data
     var tableStateRef;
     $scope.displayed = [];
@@ -9,29 +9,29 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
     $scope.bagian = '-';
     $scope.is_ppn = false;
 
-    Data.get('chassis/merk').then(function(data) {
+    Data.get('chassis/merk').then(function (data) {
         $scope.listMerk = data.data;
     });
 
-    $scope.typeChassis = function(merk) {
-        Data.get('chassis/tipe?merk=' + merk).then(function(data) {
+    $scope.typeChassis = function (merk) {
+        Data.get('chassis/tipe?merk=' + merk).then(function (data) {
             $scope.listTipe = data.data;
         });
     }
 
-    $scope.getchassis = function(merk, tipe) {
-        Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function(data) {
+    $scope.getchassis = function (merk, tipe) {
+        Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function (data) {
             $scope.form.kd_chassis = data.kode;
         });
     };
 
-    $scope.kode = function(tipe) {
-        Data.post('spkaroseri/kode', {tipe: tipe}).then(function(data) {
+    $scope.kode = function (tipe) {
+        Data.post('spkaroseri/kode', {tipe: tipe}).then(function (data) {
             $scope.form.no_spk = data.kode;
         });
     }
 
-    $scope.kalkulasi = function() {
+    $scope.kalkulasi = function () {
         var jml = (!$scope.form.jml_unit) ? 0 : $scope.form.jml_unit * 1;
         var harga_karoseri = (!$scope.form.harga_karoseri) ? 0 : $scope.form.harga_karoseri * 1;
         var harga_optional = (!$scope.form.harga_optional) ? 0 : $scope.form.harga_optional * 1;
@@ -55,39 +55,39 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
         $scope.form.sisa_bayar = sisa;
     }
 
-    $scope.cariCustomer = function($query) {
+    $scope.cariCustomer = function ($query) {
         if ($query.length >= 3) {
-            Data.get('customer/cari', {nama: $query}).then(function(data) {
+            Data.get('customer/cari', {nama: $query}).then(function (data) {
                 $scope.rCustomer = data.data;
             });
         }
     }
 
-    $scope.cariModel = function($query) {
+    $scope.cariModel = function ($query) {
         if ($query.length >= 3) {
-            Data.get('modelkendaraan/listmodel', {nama: $query}).then(function(data) {
+            Data.get('modelkendaraan/listmodel', {nama: $query}).then(function (data) {
                 $scope.results = data.data;
             });
         }
     }
 
-    $scope.cariSales = function($query) {
+    $scope.cariSales = function ($query) {
         if ($query.length >= 3) {
-            Data.get('jabatan/listkaryawansales', {nama: $query}).then(function(data) {
+            Data.get('jabatan/listkaryawansales', {nama: $query}).then(function (data) {
                 $scope.rSales = data.data;
             });
         }
     }
 
-    $scope.cariBom = function($query) {
+    $scope.cariBom = function ($query) {
         if ($query.length >= 3) {
-            Data.get('bom/cari', {nama: $query}).then(function(data) {
+            Data.get('bom/cari', {nama: $query}).then(function (data) {
                 $scope.rBom = data.data;
             });
         }
     }
 
-    $scope.open1 = function($event) {
+    $scope.open1 = function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
         $scope.opened1 = true;
@@ -107,19 +107,20 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
             param['filter'] = tableState.search.predicateObject;
         }
 
-        Data.get('spkaroseri', param).then(function(data) {
+        Data.get('spkaroseri', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
         $scope.isLoading = false;
     };
 
-    $scope.create = function(form) {
+    $scope.create = function (form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.form.tgl = new Date();
         $scope.detailBbk = [{
                 kd_barang: '',
                 jml: '',
@@ -127,31 +128,31 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
             }];
     };
 
-    $scope.update = function(form) {
+    $scope.update = function (form) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.no_spk;
+        Data.get('chassis/tipe?merk=' + form.merk).then(function (data) {
+            $scope.listTipe = data.data;
+        });
         $scope.selected(form.no_spk);
-        $scope.form = form;
-        $scope.form.is_ppn = 0;
-        if (form.ppn > 0) {
-            $scope.form.is_ppn = "1";
-        }
     };
 
-    $scope.view = function(form) {
+    $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.is_create = false;
         $scope.formtitle = "Lihat Data : " + form.no_spk;
+        Data.get('chassis/tipe?merk=' + form.merk).then(function (data) {
+            $scope.listTipe = data.data;
+        });
         $scope.selected(form.no_spk);
-        $scope.form = form;
     };
 
-    $scope.save = function(form) {
+    $scope.save = function (form) {
         var url = ($scope.is_create == true) ? 'spkaroseri/create' : 'spkaroseri/update/' + form.no_spk;
-        Data.post(url, form).then(function(result) {
+        Data.post(url, form).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
@@ -162,26 +163,27 @@ app.controller('spkaroseriCtrl', function($scope, Data, toaster) {
         });
     };
 
-    $scope.cancel = function() {
+    $scope.cancel = function () {
         $scope.is_edit = false;
         $scope.is_view = false;
     };
-    $scope.delete = function(row) {
+    $scope.delete = function (row) {
         if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('spkaroseri/delete/' + row.no_spk).then(function(result) {
+            Data.delete('spkaroseri/delete/' + row.no_spk).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
-    $scope.selected = function(no_spk) {
-        Data.get('spkaroseri/view/' + no_spk).then(function(data) {
+    $scope.selected = function (no_spk) {
+        Data.get('spkaroseri/view/' + no_spk).then(function (data) {
             $scope.form = data.data;
-            $scope.typeChassis($scope.form.merk);
+            console.log($scope.form);
+            $scope.form.tgl = new Date($scope.form.tgl);
         });
     }
 });
 
-app.controller('rekapSpk', function($scope, Data) {
+app.controller('rekapSpk', function ($scope, Data) {
     var tableStateRef;
     var paramRef;
 
@@ -199,21 +201,21 @@ app.controller('rekapSpk', function($scope, Data) {
             param['filter'] = tableState.search.predicateObject;
         }
         paramRef = param;
-        Data.get('spkaroseri/rekap', param).then(function(data) {
+        Data.get('spkaroseri/rekap', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
         $scope.isLoading = false;
     };
 
-    $scope.excel = function() {
-        Data.get('spkaroseri/rekap', paramRef).then(function(data) {
+    $scope.excel = function () {
+        Data.get('spkaroseri/rekap', paramRef).then(function (data) {
             window.location = 'api/web/spkaroseri/excel';
         });
     }
 
-    $scope.print = function() {
-        Data.get('spkaroseri/rekap', paramRef).then(function(data) {
+    $scope.print = function () {
+        Data.get('spkaroseri/rekap', paramRef).then(function (data) {
             window.open('api/web/spkaroseri/excel');
         });
     }

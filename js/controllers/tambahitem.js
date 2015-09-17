@@ -18,7 +18,7 @@ app.controller('tambahItemCtrl', function($scope, Data, toaster, FileUploader, $
 
     $scope.cariWo = function($query) {
         if ($query.length >= 2) {
-            Data.get('additionalbom/cari', {no_wo: $query}).then(function(data) {
+            Data.post('additionalbom/cari', {no_wo: $query, selected: $scope.form.no_wo}).then(function(data) {
                 $scope.noWo = data.data;
             });
         }
@@ -126,7 +126,7 @@ app.controller('tambahItemCtrl', function($scope, Data, toaster, FileUploader, $
         $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = false;
-        $scope.formtitle = "Lihat Data : " + form.no_wo;
+        $scope.formtitle = "Lihat Data : " + form.kd_bom;
         Data.get('chassis/tipe?merk=' + form.merk).then(function(data) {
             $scope.listTipe = data.data;
         });
@@ -137,7 +137,7 @@ app.controller('tambahItemCtrl', function($scope, Data, toaster, FileUploader, $
         $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + form.no_wo;
+        $scope.formtitle = "Lihat Data : " + form.kd_bom;
         Data.get('chassis/tipe?merk=' + form.merk).then(function(data) {
             $scope.listTipe = data.data;
         });

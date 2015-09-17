@@ -5,9 +5,9 @@
     <div class="wrapper-md" ng-show="!is_edit">
         <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
             <div class="panel-heading">
-                <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian & Export Data</button>
+                <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                    <button type="button" class="btn btn-default fa fa-file-excel-o" ng-show="!isCollapsed">&nbsp;Export Excel</button>
+                    <!--<button type="button" class="btn btn-default fa fa-file-excel-o" ng-show="!isCollapsed">&nbsp;Export Excel</button>-->
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>
@@ -65,7 +65,19 @@
     <div class="wrapper-md" ng-show="is_edit">
         <div class="panel panel-default">
             <div class="panel-heading">
-                {{formtitle}} 
+                <div class="form-group">
+                    <div class="col-sm-4">{{formtitle}}</div>
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4">
+                        <div class="pull-right dropdown" style="margin-top: -10px" dropdown="">
+                            <button type="button"  class="btn btn-primary" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">&nbsp;&nbsp; Laporan SPP Non Rutin <span class="caret"></span></button>
+                            <ul class="dropdown-menu" style="width: 185px;background-color: #F7F7F7;">
+                                <li><a href="#" ng-click="excel()">Excel</a></li>
+                                <li><a href="#" ng-click="print()">Print</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation ">

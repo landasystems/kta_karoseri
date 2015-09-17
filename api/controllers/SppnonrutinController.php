@@ -22,6 +22,7 @@ class SppnonrutinController extends Controller {
                     'cari' => ['get'],
                     'view' => ['get'],
                     'excel' => ['get'],
+                    'print' => ['get'],
                     'detail' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
@@ -294,5 +295,25 @@ class SppnonrutinController extends Controller {
         $this->setHeader(200);
         echo json_encode(['status' => 1, 'details' => $detail]);
     }
+    
+    
+     public function actionPrint() {
+        session_start();
+        $nospp = $_SESSION['nospp'];
+
+        $query = new Query;
+        $query->where("det_spp.no_spp='" . $nospp . "'")
+                ->from('det_spp')
+                ->join('JOIN', 'trans_spp', 'trans_spp.no_spp = det_spp.no_spp')
+                ->join('LEFT JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
+                ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
+                ->join('LEFT JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
+                ->select("det_spp.*,trans_spp.*,jenis_brg.jenis_brg,barang.min,barang.max,barang.nm_barang,barang.satuan,trans_po.nota");
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/laporansppnonrutin", ['models' => $models, 'id' => $nospp]);
+    }
+
 
 }

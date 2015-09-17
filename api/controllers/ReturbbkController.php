@@ -81,13 +81,13 @@ class ReturbbkController extends Controller {
         $command = $query->createCommand();
         $models = $command->query()->read();
 
-        $cek = ReturBbk::findOne('no_retur_bbk = "BK' . date("y") . '00001"');
+        $cek = ReturBbk::findOne('no_retur_bbk = "BK' . date("y") . '000001"');
         if (empty($cek)) {
-            $urut = substr($models['no_retur_bbk'], -4) + 1;
-            $kode = substr('0000' . $urut, strlen($urut));
+            $urut = substr($models['no_retur_bbk'], -5) + 1;
+            $kode = substr('00000' . $urut, strlen($urut));
             $kode = "RK" . date("y") . $kode;
         } else {
-            $kode = "RK" . date("y") . "00001";
+            $kode = "RK" . date("y") . "000001";
         }
         $this->setHeader(200);
 
@@ -98,7 +98,7 @@ class ReturbbkController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tgl ASC";
+        $sort = "tgl DESC";
         $offset = 0;
         $limit = 10;
 

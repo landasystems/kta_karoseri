@@ -60,34 +60,36 @@ class SpkaroseriController extends Controller {
             $query->from('spk')
                     ->select('no_spk')
                     ->orderBy('no_spk DESC')
+                    ->where('SUBSTR(no_spk,1,1) = "O"')
                     ->limit(1);
 
-            $cek = Spkaroseri::findOne('no_spk = "O' . date("y") . '01"');
+            $cek = Spkaroseri::findOne('no_spk = "O' . date("y") . '001"');
             if (empty($cek)) {
                 $command = $query->createCommand();
                 $models = $command->query()->read();
-                $urut = substr($models['no_spk'], 2) + 1;
-                $kode = substr('00' . $urut, strlen($urut));
+                $urut = substr($models['no_spk'], 3) + 1;
+                $kode = substr('000' . $urut, strlen($urut));
                 $kode = "O" . date("y") . $kode;
             } else {
-                $kode = "O" . date("y") . "01";
+                $kode = "O" . date("y") . "001";
             }
         } else if ($tipe['tipe'] == "stok") {
             $query = new Query;
             $query->from('spk')
                     ->select('no_spk')
+                    ->where('SUBSTR(no_spk,1,1) = "S"')
                     ->orderBy('no_spk DESC')
                     ->limit(1);
 
-            $cek = Spkaroseri::findOne('no_spk = "S' . date("y") . '01"');
+            $cek = Spkaroseri::findOne('no_spk = "S' . date("y") . '001"');
             if (empty($cek)) {
                 $command = $query->createCommand();
                 $models = $command->query()->read();
-                $urut = substr($models['no_spk'], 2) + 1;
-                $kode = substr('00' . $urut, strlen($urut));
+                $urut = substr($models['no_spk'], 3) + 1;
+                $kode = substr('000' . $urut, strlen($urut));
                 $kode = "S" . date("y") . $kode;
             } else {
-                $kode = "S" . date("y") . "01";
+                $kode = "S" . date("y") . "001";
             }
         }
 
@@ -227,11 +229,12 @@ class SpkaroseriController extends Controller {
     public function actionView($id) {
         $query = new Query;
         $query->from('spk as s')
-                ->join('Join', 'chassis as c', 's.kd_chassis = c.kd_chassis')
-                ->join('Join', 'customer cus', 'cus.kd_cust = s.kd_customer')
-                ->join('Join', 'model m', 'm.kd_model= s.kd_model')
-                ->join('Join', 'tbl_karyawan tb', 's.nik= tb.nik')
+                ->join('LEFT JOIN', 'chassis as c', 's.kd_chassis = c.kd_chassis')
+                ->join('LEFT JOIN', 'customer cus', 'cus.kd_cust = s.kd_customer')
+                ->join('LEFT JOIN', 'model m', 'm.kd_model= s.kd_model')
+                ->join('LEFT JOIN', 'tbl_karyawan tb', 's.nik= tb.nik')
                 ->where('s.no_spk="' . $id . '"')
+//                ->select('s.*');
                 ->select("s.*, c.merk, c.tipe, cus.kd_cust, cus.nm_customer, cus.alamat1 , tb.nik, tb.nama, m.kd_model, m.model");
         $command = $query->createCommand();
         $models = $command->query()->read();
@@ -242,7 +245,7 @@ class SpkaroseriController extends Controller {
         $models['nik'] = array('nik' => $models['nik'], 'nama' => $models['nama']);
 
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($models)), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $models), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {

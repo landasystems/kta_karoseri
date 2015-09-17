@@ -226,6 +226,10 @@ span.label{width: 180px;display: inline-table;}
     -webkit-print-color-adjust:exact;
 }
 
-td, th{
+td {
     vertical-align: top;
+}
+
+th{
+    vertical-align: middle;
 }

@@ -35,7 +35,7 @@ class RubahBentuk extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tgl', 'pengajuan', 'terima'], 'safe'],
+            [['tgl', 'pengajuan', 'terima','id'], 'safe'],
             [['kd_rubah', 'warna_baru', 'no_garansi'], 'string', 'max' => 30],
             [['no_wo'], 'string', 'max' => 10],
             [['bentuk_baru'], 'string', 'max' => 100],
