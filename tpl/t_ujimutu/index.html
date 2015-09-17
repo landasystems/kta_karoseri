@@ -7,15 +7,12 @@
             <div class="panel-heading">
                 <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                    <!--<button type="button" class="btn btn-default fa fa-file-excel-o" ng-show="!isCollapsed">&nbsp;Export Excel</button>-->
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>
             <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
                 <div class="form-horizontal">
                     <div class="form-group">
-
-
                         <label class="col-sm-2 control-label">Kode Uji</label>
                         <div class="col-sm-3">
                             <input st-search="no_delivery" class="form-control"/>
@@ -23,11 +20,8 @@
                         <label class="col-sm-2 control-label">Tanggal</label>
                         <div class="col-sm-3">
                             <input st-search="merk" class="form-control"/>
-
                         </div>
-
                     </div>
-                    
                 </div>
             </div>
             <div class="table-responsive">
@@ -38,14 +32,15 @@
                             <th st-sort="merk">Tanggal</th>
                             <th st-sort="no_delivery">Biaya Admin</th>
                             <th st-sort="model">Total Biaya</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
                             <td>{{row.kd_uji}}</td>
-                            <td>{{row.tgl | date:'dd - MMM - yyyy'}}</td>
-                            <td>{{row.biaya_admin | currency}}</td>
-                            <td>{{row.total_biaya | currency}}</td>
+                            <td>{{row.tgl| date:'dd - MMM - yyyy'}}</td>
+                            <td>{{row.biaya_admin| currency}}</td>
+                            <td>{{row.total_biaya| currency}}</td>
                             <td>
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
                                     <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
@@ -56,13 +51,12 @@
                     </tbody>
                     <tbody ng-show="isLoading">
                         <tr>
-                            <td colspan="4" class="text-center">Loading ... </td>
+                            <td colspan="5" class="text-center">Loading ... </td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="6" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html">
-                            </td>
+                            <td colspan="5" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html"></td>
                         </tr>
                 </table>		
             </div>
@@ -104,80 +98,93 @@
                     </div>
 
                     <div class="line line-dashed b-b line-lg pull-in"></div>
-                    <h5 class="font-bold">- Detail -</h5> 
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <td align="center">NO WO</td>
-                                <td align="center">Merk Tipe</td>
-                                <td align="center">Bentuk Baru</td>
-                                <td align="center">Kelas</td>
-                                <td align="center">Biaya</td>
-                                <td>#</td>
-                            </tr>
-                        </thead>
-                        <tr ng-repeat="detail in detUjimutu">
-                            <td width="18%">
-                                <div class="input-group">
-                                            <ui-select on-select="pilih(detail, $item)" ng-model="detail.nowo" theme="bootstrap">
-                                                <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
-                                                <ui-select-choices refresh="cariProduk($select.search)" repeat="val in results">
-                                                    {{val.no_wo}}
-                                                </ui-select-choices>
-                                            </ui-select>
-                                            <span class="input-group-btn">
-                                                <button ng-click="detail.no_wo = undefined" class="btn btn-default">
-                                                    <span class="glyphicon glyphicon-trash"></span>
-                                                </button>
-                                            </span>
-                                        </div>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control"    ng-model="detail.merk" ng-disabled="true" >
-                            </td>
-                            <td>
-                                <input type="text" class="form-control"    ng-model="detail.bentuk_baru" ng-disabled="is_view" >
-                            </td>
-                            <td>
-                                <select  class="form-control" ng-model="detail.kelas" ng-disabled="is_view" required>
-                                <option value="">-- Pilih Kelas --</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                            </select>
-                                <!--<input type="text" class="form-control"    ng-model="detail.kelas"  ng-pattern="/^[0-9]+$/" ng-disabled="is_view" >-->
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" ng-keyup="total()" ng-model="detail.biaya" ng-disabled="is_view" >
-                            </td>
-                            <td>
-
-                                <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-plus"></i></button>
-                                <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="4" align="right"><b>Biaya Administrasi</b></td>
-                            <td colspan="2">
-                                <div class="input-group">
-                                    <span class="input-group-addon">Rp.</span>
-                                    <input type="text" ng-pattern="/^[0-9]+$/" class="form-control" ng-keyup="total()" ng-model="form.biaya_admin" placeholder="Biaya Administrasi" ng-disabled="is_view" style="width:200px">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    Detail Uji Mutu
                                 </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="4" align="right"><b>Total Biaya</b></td>
-                            <td colspan="2">
-                                <div class="input-group">
-                                    <span class="input-group-addon">Rp.</span>
-                                    <input type="text" ng-pattern="/^[0-9]+$/" class="form-control" ng-keyup="" ng-model="form.total_biaya" placeholder="Total Biaya" ng-disabled="is_view" style="width:200px">
+                                <div class="col-md-9" align="right">
+                                    <button ng-click="addDetail()" class="btn btn-success" ng-hide="is_view" title="Tambah Detail"><i class="fa fa-plus-square"></i></button>
                                 </div>
-                            </td>
-                        </tr>
-                    </table>
-
+                            </div>
+                        </div>
+                        <!--<div class="panel-body">-->
+                        <div class="table-responsive">
+                            <table class="table table-striped b-t b-light">
+                                <thead>
+                                    <tr>
+                                        <td align="center">NO WO</td>
+                                        <td align="center">Merk Tipe</td>
+                                        <td align="center">Bentuk Baru</td>
+                                        <td align="center">Kelas</td>
+                                        <td align="center">Biaya</td>
+                                        <td width="60"></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="detail in detUjimutu">
+                                        <td width="18%">
+                                            <div class="input-group">
+                                                <ui-select on-select="pilih(detail, $item)" ng-model="detail.nowo" theme="bootstrap">
+                                                    <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
+                                                    <ui-select-choices refresh="cariProduk($select.search)" repeat="val in results">
+                                                        {{val.no_wo}}
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                                <span class="input-group-btn">
+                                                    <button ng-click="detail.no_wo = undefined" class="btn btn-default">
+                                                        <span class="glyphicon glyphicon-trash"></span>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control"    ng-model="detail.merk" ng-disabled="true" >
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control"    ng-model="detail.bentuk_baru" ng-disabled="is_view" >
+                                        </td>
+                                        <td>
+                                            <select  class="form-control" ng-model="detail.kelas" ng-disabled="is_view" required>
+                                                <option value="">-- Pilih Kelas --</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                            </select>
+                                            <!--<input type="text" class="form-control"    ng-model="detail.kelas"  ng-pattern="/^[0-9]+$/" ng-disabled="is_view" >-->
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" ng-keyup="total()" ng-model="detail.biaya" ng-disabled="is_view" >
+                                        </td>
+                                        <td>
+                                            <button ng-click="removeRow($index)" class="btn btn-danger" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" align="right"><b>Biaya Administrasi</b></td>
+                                        <td colspan="2">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">Rp.</span>
+                                                <input type="text" ng-pattern="/^[0-9]+$/" class="form-control" ng-keyup="total()" ng-model="form.biaya_admin" placeholder="Biaya Administrasi" ng-disabled="is_view" style="width:200px">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" align="right"><b>Total Biaya</b></td>
+                                        <td colspan="2">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">Rp.</span>
+                                                <input type="text" ng-pattern="/^[0-9]+$/" class="form-control" ng-keyup="" ng-model="form.total_biaya" placeholder="Total Biaya" ng-disabled="is_view" style="width:200px">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <div align="center">
