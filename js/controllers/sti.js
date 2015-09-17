@@ -137,7 +137,6 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
         $scope.form.serah_terima = new Date(form.serah_terima);
         $scope.form.tgl_prd = new Date(form.tgl_prd);
         $scope.form.tgl_pdc = new Date(form.tgl_pdc);
-        console.log($scope.form.tipe);
     }
     $scope.save = function (form) {
         var url = 'serahterimain/create';

@@ -20,7 +20,7 @@ class KpbController extends Controller {
                     'index' => ['get'],
                     'view' => ['get'],
                     'excel' => ['get'],
-                    'jabkpb' => ['get'],
+                    'jabkpb' => ['post'],
                     'listbahan' => ['post'],
                     'simpanprint' => ['post'],
                     'bukaprint' => ['post'],
@@ -78,12 +78,22 @@ class KpbController extends Controller {
     }
 
     public function actionJabkpb() {
-        $param = $_REQUEST;
+        $param = json_decode(file_get_contents("php://input"), true);
         $query = new Query;
-        $query->from('tbl_jabatan as tj')
-                ->join('JOIN', 'det_standar_bahan as dsb', 'dsb.kd_jab = tj.id_jabatan')
-                ->select("tj.*")
-                ->where(['dsb.kd_bom' => $param['key']]);
+        $optional = \app\models\TransAdditionalBomWo::find()->where(['no_wo' => $param['key']['no_wo']])->all();
+        if (empty($optional) or count($optional) == 0) {
+            $query->from('tbl_jabatan as tj')
+                    ->join('JOIN', 'det_standar_bahan as dsb', 'dsb.kd_jab = tj.id_jabatan')
+                    ->select("tj.*")
+                    ->where(['dsb.kd_bom' => $param['key']['kd_bom']]);
+        } else {
+            $query->from('tbl_jabatan as tj')
+                    ->join('LEFT JOIN', 'det_additional_bom as dsb', 'dsb.kd_jab = tj.id_jabatan')
+                    ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dsb.tran_additional_bom_id')
+                    ->join('LEFT JOIN', 'trans_additional_bom_wo as tsbw', ' tsb.id = tsbw.tran_additional_bom_id')
+                    ->select("tj.*")
+                    ->where(['tsbw.no_wo' => $param['key']['no_wo']]);
+        }
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -99,13 +109,27 @@ class KpbController extends Controller {
         //cek apakah sdh di print
         $cek = Kpb::find()->where(['no_wo' => $param['kd_bom']['no_wo'], 'kd_jab' => $param['kd_jab'], 'status' => 1])->count();
 
-        $query = new Query;
-        $query->from('det_standar_bahan as dsb')
-                ->join('LEFT JOIN', 'tbl_jabatan as tj', 'dsb.kd_jab = tj.id_jabatan')
-                ->join('LEFT JOIN', 'pekerjaan as p', 'tj.krj = p.kd_kerja')
-                ->join('LEFT JOIN', 'barang as b', 'dsb.kd_barang = b.kd_barang')
-                ->select("dsb.*, b.nm_barang, b.satuan, p.*")
-                ->where(['dsb.kd_bom' => $param['kd_bom']['kd_bom'], 'dsb.kd_jab' => $param['kd_jab']]);
+        $optional = \app\models\TransAdditionalBomWo::find()->where(['no_wo' => $param['kd_bom']['no_wo']])->all();
+        if (empty($optional) or count($optional) == 0) {
+            $query = new Query;
+            $query->from('det_standar_bahan as dsb')
+                    ->join('LEFT JOIN', 'tbl_jabatan as tj', 'dsb.kd_jab = tj.id_jabatan')
+                    ->join('LEFT JOIN', 'pekerjaan as p', 'tj.krj = p.kd_kerja')
+                    ->join('LEFT JOIN', 'barang as b', 'dsb.kd_barang = b.kd_barang')
+                    ->select("dsb.*, b.nm_barang, b.satuan, p.*")
+                    ->where(['dsb.kd_bom' => $param['kd_bom']['kd_bom'], 'dsb.kd_jab' => $param['kd_jab']]);
+        } else {
+            $query = new Query;
+            $query->from('det_additional_bom as dsb')
+                    ->join('LEFT JOIN', 'tbl_jabatan as tj', 'dsb.kd_jab = tj.id_jabatan')
+                    ->join('LEFT JOIN', 'pekerjaan as p', 'tj.krj = p.kd_kerja')
+                    ->join('LEFT JOIN', 'barang as b', 'dsb.kd_barang = b.kd_barang')
+                    ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dsb.tran_additional_bom_id')
+                    ->join('LEFT JOIN', 'trans_additional_bom_wo as tsbw', ' tsb.id = tsbw.tran_additional_bom_id')
+                    ->select("dsb.*, b.nm_barang, b.satuan, p.*")
+                    ->where(['tsbw.no_wo' => $param['kd_bom']['no_wo'], 'dsb.kd_jab' => $param['kd_jab']]);
+        }
+
 
         $command = $query->createCommand();
         $models = $command->queryAll();
