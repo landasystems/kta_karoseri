@@ -8,9 +8,7 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
     $scope.is_create = false;
     $scope.sppDet = [];
     $scope.openedDet = -1;
-//    Data.get('bstk/nowo').then(function (data) {
-//        $scope.list_wo = data.list_wo;
-//    });
+
     $scope.open1 = function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
@@ -35,7 +33,11 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
 
         });
     };
-
+    $scope.isiTanggal = function (tanggal) {
+        angular.forEach($scope.sppDet, function ($value, $key) {
+            $scope.sppDet[$key]['p'] = new Date(tanggal);
+        })
+    };
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
@@ -53,7 +55,6 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         paramRef = param;
         Data.get('spprutin', param).then(function (data) {
             $scope.displayed = data.data;
-//            $scope.displayed.tgl_terima = new Date(data.data.tgl_terima);
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
 
@@ -65,12 +66,12 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
             window.location = 'api/web/spprutin/print';
         });
     }
+
     $scope.print = function () {
         Data.get('spprutin', paramRef).then(function (data) {
             window.open('api/web/spprutin/print?printlap=true');
         });
     }
-
 
     $scope.create = function (form) {
         $scope.is_create = true;
@@ -78,6 +79,7 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.form.tgl_trans = new Date();
         $scope.requiredPurchase(form);
         Data.get('spprutin/kode').then(function (data) {
             $scope.form.no_spp = data.kode;
@@ -104,6 +106,7 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         var start = new Date(form.tgl1);
         var end = new Date(form.tgl2);
         $scope.form.periode = {startDate: start, endDate: end};
+        console.log($scope.form);
         $scope.getDetail(form.no_spp);
     };
     $scope.save = function (form, details) {
@@ -124,18 +127,15 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
 
     };
 
-
     $scope.cancel = function () {
         $scope.is_edit = false;
         $scope.is_view = false;
     };
 
     $scope.delete = function (row) {
-        if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('spprutin/delete/' + row.no_spp).then(function (result) {
-                $scope.displayed.splice($scope.displayed.indexOf(row), 1);
-            });
-        }
+        Data.delete('spprutin/delete/' + row.no_spp).then(function (result) {
+            $scope.displayed.splice($scope.displayed.indexOf(row), 1);
+        });
     };
     $scope.addDetail = function () {
         var newDet = {

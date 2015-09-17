@@ -80,7 +80,7 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
         var start = new Date(form.tgl1);
         var end = new Date(form.tgl2);
         $scope.form.periode = {startDate: start, endDate: end};
-
+        $scope.form.tgl_trans = new Date(form.tgl_trans);
         $scope.getDetail(form.no_spp);
     };
     $scope.view = function (form) {
@@ -116,11 +116,9 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
     };
 
     $scope.delete = function (row) {
-        if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('sppnonrutin/delete/' + row.no_spp).then(function (result) {
-                $scope.displayed.splice($scope.displayed.indexOf(row), 1);
-            });
-        }
+        Data.delete('sppnonrutin/delete/' + row.no_spp).then(function (result) {
+            $scope.displayed.splice($scope.displayed.indexOf(row), 1);
+        });
     };
     $scope.addDetail = function () {
         var newDet = {

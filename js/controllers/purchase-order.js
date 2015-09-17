@@ -52,7 +52,6 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 
     $scope.updt_st = function ($id) {
         Data.get('po/updtst/' + $id).then(function (data) {
-//            $scope.callServer(tableStateRef);
             $scope.form.status = 1;
         });
 
@@ -62,7 +61,6 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 
         if ($query.length >= 3) {
             Data.get('spprutin/cari', {nama: $query}).then(function (data) {
-//                console.log(data.data);
                 $scope.resultsspp = data.data;
             });
         }
@@ -96,11 +94,8 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     }
     $scope.pilihspp = function (detsPo, $item) {
         Data.get('po/cari', {nama: $item}).then(function (data) {
-            console.log(data.data)
             detsPo = data.data;
         });
-//        detail.harga = $item.harga;
-//        detail.satuan = $item.satuan;
     }
 
 
