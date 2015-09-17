@@ -1,7 +1,7 @@
 <?php
 if ($_GET['excel'] == 'ex') {
     header("Content-type: application/vnd-ms-excel");
-//header("Content-Disposition: attachment; filename=excel-rekap-Claim.xls");
+header("Content-Disposition: attachment; filename=excel-rekap-Claim.xls");
 }
 //echo $_SERVER['PHP_SELF'];
 ?>

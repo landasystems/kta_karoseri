@@ -1,6 +1,6 @@
 <?php
 if (!isset($_GET['print'])) {
-header("Content-type: application/vnd-ms-excel");
+    header("Content-type: application/vnd-ms-excel");
 header("Content-Disposition: attachment; filename=excel-rekap-Barang_Keluar.xls");
 }
 ?>
@@ -25,105 +25,98 @@ header("Content-Disposition: attachment; filename=excel-rekap-Barang_Keluar.xls"
     ?>
 
 
-<table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
-    <tr>
-        <td colspan="3" style="border: 1px solid #000000">
-    <center><b>REKAP BARANG KELUAR</b></center>
-    <br>
-    <center>BBK</center>
-    <br>
-    No Dok : FR-WHS-015-REV.00
-    </td>
-    <td colspan="4" style="border: 1px solid #000000">
-        <table>
-            <tr>
-                <td>Nomer</td>
-                <td> : </td>
-            </tr>
-            <tr>
-                <td>Kategori</td>
-                <td> : </td>
-            </tr>
-            <tr>
-                <td>Periode</td>
-                <?php
-                if (!empty($filter['tgl_periode'])) {
-                    $value = explode(' - ', $filter['tgl_periode']);
-                    $start = date("d-m-Y", strtotime($value[0]));
-                    $end = date("d-m-Y", strtotime($value[1]));
-                } else {
-                    $start = '';
-                    $end = '';
-                }
-                ?>
-                <td> : <?php echo $start . ' - ' . $end ?></td>
-            </tr>
-            <tr>
-                <td>Cetak</td>
-                <td> : <?php echo date('d/m/Y') ?></td>
-            </tr>
-        </table>
-    </td>
-    <td colspan="2" style="border: 1px solid #000000" valign="top">
-    <center><b>Dibuat oleh</b></center>
-
-</td>
-<td colspan="0" style="border: 1px solid #000000" valign="top">
-<center><b>Diperiksa oleh</b></center>
-
-</td>
-<td colspan="0" style="border: 1px solid #000000" valign="top">
-<center><b>Diketahui oleh</b></center>
-
-</td>
-</tr>
-</table>
-
-<table width="100%" border="1" style="border-collapse: collapse;">
-    <tr>
-        <th>#</th>
-        <th>TANGGAL</th>
-        <th>NO WO</th>
-        <th>NO BBK</th>
-        <th>BAGIAN</th>
-        <th>PLK KERJA</th>
-        <th>KODE BARANG</th>
-        <th>NAMA BARANG</th>
-        <th>SAT</th>
-        <th>JML</th>
-        <th>KET</th>
-    </tr>
-    <?php
-    $no = 0;
-    foreach ($models as $key) {
-        ?>
+    <table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
         <tr>
-            <td valign="top">&nbsp;<?php echo $no ?></td>
-            <td valign="top"><?php echo date('d/m/y', strtotime($key['tanggal'])) ?></td>
-            <td valign="top">&nbsp;<?php echo $key['no_wo'] ?></td>
-            <td valign="top">&nbsp;<?php echo $key['no_bbk'] ?></td>
-            <td valign="top"><?php echo $key['jabatan'] ?></td>
-            <td valign="top"><?php echo $key['nama'] ?></td>
-            <td valign="top">&nbsp;<?php echo $key['kd_barang'] ?></td>
-            <td valign="top"><?php echo $key['nm_barang'] ?></td>
-            <td valign="top"><?php echo $key['satuan'] ?></td>
-            <td valign="top">&nbsp;<?php echo $key['jml'] ?></td>
-            <td valign="top"><?php echo $key['ket'] ?></td>
+            <td rowspan="2" colspan="3" style="border: 1px solid #000000">
+                <b><center>REKAP BARANG KELUAR</center>
+                    <br>
+                    <center>BBK</center></b>
+                <br> No Dok : FR-WHS-015-REV.00
+            </td>
+
+            <td rowspan="2" colspan="4" style="border: 1px solid #000000">
+                <table>
+                    <tr>
+                        <td>Nomer</td>
+                        <td> : </td>
+                    </tr>
+                    <tr>
+                        <td>Kategori</td>
+                        <td> : </td>
+                    </tr>
+                    <tr>
+                        <td>Periode</td>
+                        <?php
+                        if (!empty($filter['tgl_periode'])) {
+                            $value = explode(' - ', $filter['tgl_periode']);
+                            $start = date("d-m-Y", strtotime($value[0]));
+                            $end = date("d-m-Y", strtotime($value[1]));
+                        } else {
+                            $start = '';
+                            $end = '';
+                        }
+                        ?>
+                        <td> : <?php echo $start . ' - ' . $end ?></td>
+                    </tr>
+                    <tr>
+                        <td>Cetak</td>
+                        <td> : <?php echo date('d/m/Y') ?></td>
+                    </tr>
+                </table>
+            </td>
+
+            <th colspan="1" style="text-align: center">Dibuat oleh</th>
+            <th colspan="1" style="text-align: center">Diperiksa oleh</th>
+            <th colspan="1" style="text-align: center">Diketahui oleh</th>
+        </tr>
+        <tr>
+            <td class="border-bottom border-right" colspan="1" rowspan="1"></td>
+            <td class="border-bottom border-right" colspan="1" rowspan="1"></td>
+            <td class="border-bottom border-right" colspan="1" rowspan="1"></td>
+        </tr>
+    </table>
+
+    <table width="100%" border="1" style="border-collapse: collapse; font-size: 12px;">
+        <tr>
+            <th style="text-align: center;">TANGGAL</th>
+            <th style="text-align: center;">NO WO</th>
+            <th style="text-align: center;">NO BBK</th>
+            <th style="text-align: center;">BAGIAN</th>
+            <th style="text-align: center;">PLK KERJA</th>
+            <th>KODE BARANG</th>
+            <th>NAMA BARANG</th>
+            <th style="text-align: center;">SAT</th>
+            <th style="text-align: center;">JML</th>
+            <th>KET</th>
         </tr>
         <?php
-        $no++;
+        foreach ($models as $key) {
+            ?>
+            <tr>
+                <td class="border-right" style="text-align: center;" valign="top"><?php echo date('d/m/y', strtotime($key['tanggal'])) ?></td>
+                <td class="border-right" style="text-align: center;" valign="top" width="90px">&nbsp;<?php echo $key['no_wo'] ?></td>
+                <td class="border-right" style="text-align: center;" valign="top" >&nbsp;<?php echo $key['no_bbk'] ?></td>
+                <td class="border-right" valign="top" width="100px"><?php echo $key['jabatan'] ?></td>
+                <td class="border-right" valign="top">&nbsp;<?php echo $key['nama'] ?></td>
+                <td class="border-right" valign="top" width="100px">&nbsp;<?php echo $key['kd_barang'] ?></td>
+                <td class="border-right" valign="top"><?php echo $key['nm_barang'] ?></td>
+                <td class="border-right" style="text-align: center;" valign="top"><?php echo $key['satuan'] ?></td>
+                <td class="border-right" style="text-align: center;"valign="top">&nbsp;<?php echo $key['jml'] ?></td>
+                <td class="border-right" valign="top" width="100px"><?php echo $key['ket'] ?></td>
+            </tr>
+            <?php
+        }
+        ?>
+    </table>
+    <?php
+    if (isset($_GET['print'])) {
+        ?>
+        <script type="text/javascript">
+            window.print();
+            setTimeout(function () {
+                window.close();
+            }, 1);
+        </script>
+        <?php
     }
     ?>
-</table>
-        <?php
-if (isset($_GET['print'])) {
-    ?>
-    <script type="text/javascript">
-        window.print();
-        setTimeout(function () {
-            window.close();
-        }, 1);
-    </script>
-    <?php
-}
-?>

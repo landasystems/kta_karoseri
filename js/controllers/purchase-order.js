@@ -274,24 +274,25 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     };
 
 
-    $scope.update = function (nota) {
+    $scope.update = function (row) {
         $scope.is_print = false;
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
-        $scope.formtitle = "Edit Data : " + nota
-        $scope.form.tanggal = new Date(nota.tanggal);
-        $scope.selected(nota);
+        $scope.formtitle = "Edit Data : " + row.nota
+        $scope.form.tanggal = new Date(row.tanggal);
+
+        $scope.selected(row.nota);
 
     };
 
-    $scope.view = function (nota) {
+    $scope.view = function (row) {
         $scope.is_print = true;
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + nota;
-        $scope.form.tanggal = new Date(nota.tanggal);
-        $scope.selected(nota);
+        $scope.formtitle = "Lihat Data : " + row.nota;
+        $scope.form.tanggal = new Date(row.tanggal);
+        $scope.selected(row.nota);
 
     };
 
@@ -334,8 +335,12 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
             $scope.status = data.print;
             $scope.msg = data.msg;
             $scope.form.terbilang = $scope.keKata(data.data.total_dibayar) + ' RUPIAH';
-            $scope.detsPo = data.detail;
-//            $scope.detsPo.tanggal_pengiriman = new Date(data.detail.data_barang.tanggal_pengiriman);
+            $scope.detsPo = [];
+            angular.forEach(data.detail, function ($value, $key) {
+                $scope.detsPo.push($value);
+                $scope.detsPo[$key]['data_barang']['tgl_pengiriman'] = new Date($value.tgl_pengiriman);
+            })
+
             $scope.form.dp = (data.data.dp == undefined) ? '0' : data.data.dp;
             $scope.form.ppn = (data.data.ppn == undefined) ? '0' : data.data.ppn;
             $scope.form.bayar = (data.data.bayar == '1') ? '1' : '0';
