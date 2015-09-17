@@ -22,7 +22,6 @@ class PoController extends Controller {
                     'rekap' => ['get'],
                     'view' => ['get'],
                     'listsupplier' => ['get'],
-                    'listbarang' => ['get'],
                     'listspp' => ['get'],
                     'kode' => ['get'],
                     'test' => ['get'],
@@ -299,20 +298,6 @@ class PoController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $models));
     }
 
-    public function actionListbarang() {
-        $query = new Query;
-        $query->from('barang')
-                ->select("*")
-                ->orderBy('kd_barang ASC');
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $models));
-    }
-
     public function actionView($id) {
 
         $model = $this->findModel($id);
@@ -531,15 +516,21 @@ class PoController extends Controller {
                     ->where(['like', 'nm_barang', $param['namabrg']])
                     ->orWhere(['like', 'kd_barang', $param['namabrg']])
                     ->andWhere("nm_barang != '-' && kd_barang != '-'");
+
+            $command = $query->createCommand();
+            $models = $command->queryAll();
         } else {
             $query->from("det_spp")
                     ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang ')
                     ->where('det_spp.no_spp =' . $param['nospp'])
                     ->andWhere(['LIKE', 'nm_barang', $param['namabrg']])
-                    ->select("det_spp.no_spp,det_spp.qty as jml,det_spp.kd_barang,barang.*");
+                    ->groupBy('barang.kd_barang')
+                    ->select("det_spp.no_spp,sum(det_spp.qty) as jml,det_spp.kd_barang,barang.*");
+
+            $command = $query->createCommand();
+            $models = $command->queryAll();
         }
-        $command = $query->createCommand();
-        $models = $command->queryAll();
+
 
         $this->setHeader(200);
 
