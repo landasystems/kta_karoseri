@@ -85,15 +85,18 @@ class WomasukController extends Controller {
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $models));
     }
-    
+
     public function actionBukaprint() {
-       $params = json_decode(file_get_contents("php://input"), true);
-       \Yii::error($params);
+        $params = json_decode(file_get_contents("php://input"), true);
+        \Yii::error($params);
     }
+
     public function actionGetspk() {
         $params = json_decode(file_get_contents("php://input"), true);
+        
         if (!empty($params['spk']['no_spk'])) {
             $spk = $params['spk']['no_spk'];
+           
         } else {
             $spk = $params['no_wo'];
         }
@@ -111,7 +114,14 @@ class WomasukController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->queryOne();
-
+        // jenis kendaaraan
+          if (!empty($params['spk']['no_spk'])) {
+            $jenis = $models['jenis'];
+           
+        } else {
+            $jenis = $params['jenis'];
+        }
+        
         // kode
         $query = new Query;
         $query->from('wo_masuk')
@@ -124,21 +134,21 @@ class WomasukController extends Controller {
         $asu = $command->query()->read();
 
         if (empty($asu)) {
-            if ($models['jenis'] == 'Mini Bus') {
+            if ($jenis == 'Mini Bus') {
                 $kode = 'NV-' . date("y") . '0001';
             } else {
                 $kode = 'NV-' . date("y") . '0001';
             }
         } else {
             $lastKode = substr($asu['no_wo'], -4) + 1;
-            if ($models['jenis'] == 'Mini Bus') {
+            if ($jenis == 'Mini Bus') {
                 $kode = 'NB-' . date("y") . substr('000' . $lastKode, -4);
             } else {
                 $kode = 'NB-' . date("y") . substr('000' . $lastKode, -4);
             }
         }
 
-        if ($models['jenis'] == 'Mini Bus') {
+        if ($jenis == 'Mini Bus') {
             $table = 'mini';
         } else {
             $table = 'small';
@@ -273,7 +283,7 @@ class WomasukController extends Controller {
         $letter = $commandletter->queryAll();
 
 //============================= INTERIOR ================================ 
-        if ($models['jenis'] == 'Mini Bus') {
+        if ($jenis == 'Mini Bus') {
 
             //PLAVON
             $queryplavon = new Query;
@@ -856,7 +866,7 @@ class WomasukController extends Controller {
 
     public function actionSelect() {
         $params = json_decode(file_get_contents("php://input"), true);
-//        \Yii::error($params);
+        
         $model = $this->findModel($params['no_wo']);
         $data = $model->attributes;
         $query = new Query;
@@ -893,7 +903,7 @@ class WomasukController extends Controller {
             $data['titipan'] = (!empty($nowo)) ? $nowo->attributes : array();
             $data['titipan']['warna'] = (!empty($nowo)) ? $nowo->warna->attributes : array();
         }
-        if ($asu['jenis'] == "Small Bus") {
+        if ($params['jenis'] == "Small Bus") {
             // eksterior
             $eksterior = new Query;
             $eksterior->from('small_eks')
@@ -963,7 +973,7 @@ class WomasukController extends Controller {
 
 
         //=================== EKTERIOR===================
-        if ($asu['jenis'] == "Small Bus") {
+        if ($params['jenis'] == "Small Bus") {
             $table = 'small';
         } else {
             $table = 'mini';
@@ -996,7 +1006,7 @@ class WomasukController extends Controller {
             $eks['lain2'] = $asi['lain2'];
         }
 //        ============= INTERIOR ===================
-        if ($asu['jenis'] == "Small Bus") {
+        if ($params['jenis'] == "Small Bus") {
             $queryint = new Query;
             $queryint->from('small_int')
                     ->where("no_wo='" . $model['no_wo'] . "'")
@@ -1055,7 +1065,6 @@ class WomasukController extends Controller {
             }
         }
 
-
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $data, 'det' => $asu, 'eksterior' => $eks, 'interior' => $models3), JSON_PRETTY_PRINT);
     }
@@ -1071,98 +1080,212 @@ class WomasukController extends Controller {
         if ($model->save()) {
 
             // EKTERIOR
-            if(!empty($params['eksterior'])){
-            if ($params['womasuk']['jenis'] == "Small Bus") {
-                $table = new Smalleks();
-            } else {
-                $table = new Minieks();
+            if (!empty($params['eksterior'])) {
+                if ($params['womasuk']['jenis'] == "Small Bus") {
+                    $table = new Smalleks();
+                } else {
+                    $table = new Minieks();
+                }
+                $eks = $table;
+                $eks->no_wo = $params['womasuk']['no_wo'];
+                if (!empty($params['eksterior']['plat']['plat_body'])) {
+                    $eks->plat_body = $params['eksterior']['plat']['plat_body'];
+                }
+                if (!empty($params['eksterior']['spion']['kaca_spion'])) {
+                    $eks->kaca_spion = $params['eksterior']['spion']['kaca_spion'];
+                }
+                if (!empty($params['eksterior']['kdepan']['kaca_depan'])) {
+                    $eks->kaca_depan = $params['eksterior']['kdepan']['kaca_depan'];
+                }
+                if (!empty($params['eksterior']['kbelakang']['kaca_belakang'])) {
+                    $eks->kaca_belakang = $params['eksterior']['kbelakang']['kaca_belakang'];
+                }
+                if (!empty($params['eksterior']['ksamping']['kaca_samping'])) {
+                    $eks->kaca_samping = $params['eksterior']['ksamping']['kaca_samping'];
+                }
+                if (!empty($params['eksterior']['ldepan']['lampu_depan'])) {
+                    $eks->lampu_depan = $params['eksterior']['ldepan']['lampu_depan'];
+                }
+                if (!empty($params['eksterior']['lbelakang']['lampu_belakang'])) {
+                    $eks->lampu_belakang = $params['eksterior']['lbelakang']['lampu_belakang'];
+                }
+                if (!empty($params['eksterior']['pdepan']['pintu_depan'])) {
+                    $eks->pintu_depan = $params['eksterior']['pdepan']['pintu_depan'];
+                }
+                if (!empty($params['eksterior']['ppenumpang']['pintu_penumpang'])) {
+                    $eks->pintu_penumpang = $params['eksterior']['ppenumpang']['pintu_penumpang'];
+                }
+                if (!empty($params['eksterior']['pbagasi']['pintu_bagasi_samping'])) {
+                    $eks->pintu_bagasi_samping = $params['eksterior']['pbagasi']['pintu_bagasi_samping'];
+                }
+                if (!empty($params['eksterior']['pbelakang']['pintu_belakang'])) {
+                    $eks->pintu_belakang = $params['eksterior']['pbelakang']['pintu_belakang'];
+                }
+                if (!empty($params['eksterior']['wyper']['wyper_set'])) {
+                    $eks->wyper_set = $params['eksterior']['wyper']['wyper_set'];
+                }
+                if (!empty($params['eksterior']['warna']['kd_warna'])) {
+                    $warna = Warna::findOne($params['eksterior']['warna']['kd_warna']);
+                    if (empty($warna)) {
+                        $warna = new Warna();
+                    }
+                    $warna->attributes = $params;
+                    if ($warna->save()) {
+                        $eks->warna = $warna->kd_warna;
+                    }
+                }
+                if (!empty($params['eksterior']['warna2']['kd_warna'])) {
+                    //warna 2
+                    $warna = Warna::findOne($params['eksterior']['warna2']['kd_warna']);
+                    if (empty($warna)) {
+                        $warna = new Warna();
+                    }
+                    $warna->attributes = $params;
+                    if ($warna->save()) {
+                        $eks->warna2 = $warna->kd_warna;
+                    }
+                }
+                if (!empty($params['eksterior']['strip']['strip'])) {
+                    $eks->strip = $params['eksterior']['strip']['strip'];
+                }
+                if (!empty($params['eksterior']['letter']['letter'])) {
+                    $eks->letter = $params['eksterior']['letter']['letter'];
+                }
+                if (!empty($params['eksterior']['lain2'])) {
+                    $eks->lain2 = $params['eksterior']['lain2'];
+                }
+                $eks->save();
             }
-            $eks = $table;
-            $eks->nowo = $model->nowo;
-            $eks->plat_body = $params['eksterior']['plat']['plat_body'];
-            $eks->kaca_spion = $params['eksterior']['spion']['kaca_spion'];
-            $eks->kaca_depan = $params['eksterior']['kdepan']['kaca_depan'];
-            $eks->kaca_belakang = $params['eksterior']['kbelakang']['kaca_belakang'];
-            $eks->kaca_samping = $params['eksterior']['ksamping']['kaca_samping'];
-            $eks->lampu_depan = $params['eksterior']['ldepan']['lampu_depan'];
-            $eks->lampu_belakang = $params['eksterior']['lbelakang']['lampu_belakang'];
-            $eks->pintu_depan = $params['eksterior']['pdepan']['pintu_depan'];
-            $eks->pintu_penumpang = $params['eksterior']['ppenumpang']['pintu_penumpang'];
-            $eks->pintu_bagasi_samping = $params['eksterior']['pbagasi']['pintu_bagasi_samping'];
-            $eks->pintu_belakang = $params['eksterior']['pbelakang']['pintu_belakang'];
-            $eks->wyper_set = $params['eksterior']['wyper']['wyper_set'];
 
-            $warna = Warna::findOne($params['eksterior']['warna']['kd_warna']);
-            if (empty($warna)) {
-                $warna = new Warna();
-            }
-            $warna->attributes = $params;
-            if ($warna->save()) {
-                $eks->warna = $warna->kd_warna;
-            }
-            //warna 2
-            $warna = Warna::findOne($params['eksterior']['warna2']['kd_warna']);
-            if (empty($warna)) {
-                $warna = new Warna();
-            }
-            $warna->attributes = $params;
-            if ($warna->save()) {
-                $eks->warna2 = $warna->kd_warna;
-            }
-            $eks->strip = $params['eksterior']['strip']['strip'];
-            $eks->letter = $params['eksterior']['letter']['letter'];
-            $eks->lain2 = $params['eksterior']['lain2'];
-            $eks->save();
-            }
-            
             // INTERIOR
-            if(!empty($params['interior'])){
-            if ($params['womasuk']['jenis'] == "Mini Bus") {
-                $int = new Miniint();
-                $int->plavon = $params['interior']['plavon']['plavon'];
-                $int->trimming_deck = $params['interior']['trimming']['trimming_deck'];
-                $int->duchting_louver = $params['interior']['duchting']['duchting_louver'];
-                $int->lampu_plavon = $params['interior']['lplavon']['lampu_plavon'];
-                $int->lantai = $params['interior']['lantai']['lantai'];
-                $int->karpet = $params['interior']['karpet']['karpet'];
-                $int->konf_seat1 = $params['interior']['seat1']['konf_seat1'];
-                $int->konf_seat2 = $params['interior']['seat2']['konf_seat2'];
-                $int->konf_seat3 = $params['interior']['seat3']['konf_seat3'];
-                $int->konf_seat4 = $params['interior']['seat4']['konf_seat4'];
-                $int->konf_seat5 = $params['interior']['seat5']['konf_seat5'];
-                $int->konf_seat5 = $params['interior']['seat5']['konf_seat5'];
-                $int->cover_seat = $params['interior']['cover_seat']['cover_seat'];
-                $int->total_seat = $params['interior']['total_seat']['total_seat'];
-                $int->merk_ac = $params['interior']['ac']['merk_ac'];
-                $int->lain2 = $params['interior']['lain2'];
-                $int->save();
-            } else {
-                $int = new Smallint();
-                $int->plavon = $params['interior']['plavon']['plavon'];
-                $int->trimming_deck = $params['interior']['trimming']['trimming_deck'];
-                $int->duchting_louver = $params['interior']['duchting']['duchting_louver'];
-                $int->lampu_plavon = $params['interior']['lplavon']['lampu_plavon'];
-                $int->lantai = $params['interior']['lantai']['lantai'];
-                $int->karpet = $params['interior']['karpet']['karpet'];
-                $int->bagasi_dalam = $params['interior']['bdalam']['bagasi_dalam'];
-                $int->dashboard = $params['interior']['dashboard']['dashboard'];
-                $int->peredam = $params['interior']['peredam']['peredam'];
-                $int->pegangan_tangan_atas = $params['interior']['pegangan_atas']['pegangan_tangan_atas'];
-                $int->pengaman_penumpang = $params['interior']['pengaman_penumpang']['pengaman_penumpang'];
-                $int->pengaman_kaca_samping = $params['interior']['pengaman_kaca']['pengaman_kaca_samping'];
-                $int->pengaman_driver = $params['interior']['pengaman_driver']['pengaman_driver'];
-                $int->gordyn = $params['interior']['gordyn']['gordyn'];
-                $int->driver_fan = $params['interior']['driver_fan']['driver_fan'];
-                $int->radio_tape = $params['interior']['radio_tape']['radio_tape'];
-                $int->spek_seat = $params['interior']['spek_seat']['spek_seat'];
-                $int->driver_seat = $params['interior']['driver_seat']['driver_seat'];
-                $int->cover_seat = $params['interior']['cover_seat']['cover_seat'];
-                $int->optional_seat = $params['interior']['optional_seat']['optional_seat'];
-                $int->total_seat = $params['interior']['total_seat']['total_seat'];
-                $int->merk_ac = $params['interior']['ac']['merk_ac'];
-                $int->lain2 = $params['interior']['lain2'];
-                $int->save();
-            }
+            if (!empty($params['interior'])) {
+                if ($params['womasuk']['jenis'] == "Mini Bus") {
+                    $int = new Miniint();
+                    $int->no_wo = $params['womasuk']['no_wo'];
+                    if (!empty($params['interior']['plavon']['plavon'])) {
+                        $int->plavon = $params['interior']['plavon']['plavon'];
+                    }
+                    if (!empty($params['interior']['trimming']['trimming_deck'])) {
+                        $int->trimming_deck = $params['interior']['trimming']['trimming_deck'];
+                    }
+                    if (!empty($params['interior']['duchting']['duchting_louver'])) {
+                        $int->duchting_louver = $params['interior']['duchting']['duchting_louver'];
+                    }
+                    if (!empty($params['interior']['lplavon']['lampu_plavon'])) {
+                        $int->lampu_plavon = $params['interior']['lplavon']['lampu_plavon'];
+                    }
+                    if (!empty($params['interior']['lantai']['lantai'])) {
+                        $int->lantai = $params['interior']['lantai']['lantai'];
+                    }
+                    if (!empty($params['interior']['karpet']['karpet'])) {
+                        $int->karpet = $params['interior']['karpet']['karpet'];
+                    }
+                    if (!empty($params['interior']['seat1']['konf_seat1'])) {
+                        $int->konf_seat1 = $params['interior']['seat1']['konf_seat1'];
+                    }
+                    if (!empty($params['interior']['seat2']['konf_seat2'])) {
+                        $int->konf_seat2 = $params['interior']['seat2']['konf_seat2'];
+                    }
+                    if (!empty($params['interior']['seat3']['konf_seat3'])) {
+                        $int->konf_seat3 = $params['interior']['seat3']['konf_seat3'];
+                    }
+                    if (!empty($params['interior']['seat4']['konf_seat4'])) {
+                        $int->konf_seat4 = $params['interior']['seat4']['konf_seat4'];
+                    }
+                    if (!empty($params['interior']['seat5']['konf_seat5'])) {
+                        $int->konf_seat5 = $params['interior']['seat5']['konf_seat5'];
+                    }
+                    if (!empty($params['interior']['seat5']['konf_seat5'])) {
+                        $int->konf_seat5 = $params['interior']['seat5']['konf_seat5'];
+                    }
+                    if (!empty($params['interior']['cover_seat']['cover_seat'])) {
+                        $int->cover_seat = $params['interior']['cover_seat']['cover_seat'];
+                    }
+                    if (!empty($params['interior']['total_seat']['total_seat'])) {
+                        $int->total_seat = $params['interior']['total_seat']['total_seat'];
+                    }
+                    if (!empty($params['interior']['ac']['merk_ac'])) {
+                        $int->merk_ac = $params['interior']['ac']['merk_ac'];
+                    }
+                    if (!empty($params['interior']['lain2'])) {
+                        $int->lain2 = $params['interior']['lain2'];
+                    }
+                    $int->save();
+                } else {
+                    $int = new Smallint();
+                    $int->no_wo = $params['womasuk']['no_wo'];
+
+                    if (!empty($params['interior']['plavon']['plavon'])) {
+                        $int->plavon = $params['interior']['plavon']['plavon'];
+                    }
+                    if (!empty($params['interior']['trimming']['trimming_deck'])) {
+                        $int->trimming_deck = $params['interior']['trimming']['trimming_deck'];
+                    }
+                    if (!empty($params['interior']['duchting']['duchting_louver'])) {
+                        $int->duchting_louver = $params['interior']['duchting']['duchting_louver'];
+                    }
+                    if (!empty($params['interior']['lplavon']['lampu_plavon'])) {
+                        $int->lampu_plavon = $params['interior']['lplavon']['lampu_plavon'];
+                    }
+                    if (!empty($params['interior']['lantai']['lantai'])) {
+                        $int->lantai = $params['interior']['lantai']['lantai'];
+                    }
+                    if (!empty($params['interior']['karpet']['karpet'])) {
+                        $int->karpet = $params['interior']['karpet']['karpet'];
+                    }
+                    if (!empty($params['interior']['bdalam']['bagasi_dalam'])) {
+                        $int->bagasi_dalam = $params['interior']['bdalam']['bagasi_dalam'];
+                    }
+                    if (!empty($params['interior']['dashboard']['dashboard'])) {
+                        $int->dashboard = $params['interior']['dashboard']['dashboard'];
+                    }
+                    if (!empty($params['interior']['peredam']['peredam'])) {
+                        $int->peredam = $params['interior']['peredam']['peredam'];
+                    }
+                    if (!empty($params['interior']['pegangan_atas']['pegangan_tangan_atas'])) {
+                        $int->pegangan_tangan_atas = $params['interior']['pegangan_atas']['pegangan_tangan_atas'];
+                    }
+                    if (!empty($params['interior']['pengaman_penumpang']['pengaman_penumpang'])) {
+                        $int->pengaman_penumpang = $params['interior']['pengaman_penumpang']['pengaman_penumpang'];
+                    }
+                    if (!empty($params['interior']['pengaman_kaca']['pengaman_kaca_samping'])) {
+                        $int->pengaman_kaca_samping = $params['interior']['pengaman_kaca']['pengaman_kaca_samping'];
+                    }
+                    if (!empty($params['interior']['pengaman_driver']['pengaman_driver'])) {
+                        $int->pengaman_driver = $params['interior']['pengaman_driver']['pengaman_driver'];
+                    }
+                    if (!empty($params['interior']['gordyn']['gordyn'])) {
+                        $int->gordyn = $params['interior']['gordyn']['gordyn'];
+                    }
+                    if (!empty($params['interior']['driver_fan']['driver_fan'])) {
+                        $int->driver_fan = $params['interior']['driver_fan']['driver_fan'];
+                    }
+                    if (!empty($params['interior']['radio_tape']['radio_tape'])) {
+                        $int->radio_tape = $params['interior']['radio_tape']['radio_tape'];
+                    }
+                    if (!empty($params['interior']['spek_seat']['spek_seat'])) {
+                        $int->spek_seat = $params['interior']['spek_seat']['spek_seat'];
+                    }
+                    if (!empty($params['interior']['driver_seat']['driver_seat'])) {
+                        $int->driver_seat = $params['interior']['driver_seat']['driver_seat'];
+                    }
+                    if (!empty($params['interior']['cover_seat']['cover_seat'])) {
+                        $int->cover_seat = $params['interior']['cover_seat']['cover_seat'];
+                    }
+                    if (!empty($params['interior']['optional_seat']['optional_seat'])) {
+                        $int->optional_seat = $params['interior']['optional_seat']['optional_seat'];
+                    }
+                    if (!empty($params['interior']['total_seat']['total_seat'])) {
+                        $int->total_seat = $params['interior']['total_seat']['total_seat'];
+                    }
+                    if (!empty($params['interior']['ac']['merk_ac'])) {
+                        $int->merk_ac = $params['interior']['ac']['merk_ac'];
+                    }
+                    if (!empty($params['interior']['lain2'])) {
+                        $int->lain2 = $params['interior']['lain2'];
+                    }
+                    $int->save();
+                }
             }
 
             // UPDATE STI CUSTOMER
@@ -1182,7 +1305,7 @@ class WomasukController extends Controller {
 
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-
+        Yii::error($params);
         $model = $this->findModel($params['womasuk']['no_wo']);
 //        $model = WoMasuk::find()->where('no_wo="' . $params['eksterior']['no_wo'] . '"')->one();
 
@@ -1191,15 +1314,20 @@ class WomasukController extends Controller {
 
 
         if ($model->save()) {
-            // EKTERIOR
+// EKTERIOR
             if ($params['womasuk']['jenis'] == "Small Bus") {
                 $table = Smalleks::find()->where('no_wo="' . $model->no_wo . '"')->one();
-                ;
+                if (empty($table)) {
+                    $table = new Smalleks();
+                }
             } else {
                 $table = Minieks::find()->where('no_wo="' . $model->no_wo . '"')->one();
+                if (empty($table)) {
+                    $table = new Minieks();
+                }
             }
             $eks = $table;
-            $eks->no_wo = $model->no_wo;
+//            $eks->no_wo =$params['womasuk']['no_wo'];
             $eks->plat_body = $params['eksterior']['plat']['plat_body'];
             $eks->ventilasi_atas = $params['eksterior']['ventilasi']['ventilasi_atas'];
             $eks->kaca_spion = $params['eksterior']['spion']['kaca_spion'];
@@ -1225,72 +1353,156 @@ class WomasukController extends Controller {
                 }
             }
             if (!empty($params['eksterior']['warna2']['kd_warna'])) {
-            //warna 2
-            $warna = Warna::find()->where('kd_warna="' . $params['eksterior']['warna2']['kd_warna'] . '"')->one();
-            if (empty($warna)) {
-                $warna = new Warna();
-            }
-            $warna->attributes = $params;
-            if ($warna->save()) {
-                $eks->warna2 = $warna->kd_warna;
-            }
+//warna 2
+                $warna = Warna::find()->where('kd_warna="' . $params['eksterior']['warna2']['kd_warna'] . '"')->one();
+                if (empty($warna)) {
+                    $warna = new Warna();
+                }
+                $warna->attributes = $params;
+                if ($warna->save()) {
+                    $eks->warna2 = $warna->kd_warna;
+                }
             }
             $eks->strip = $params['eksterior']['strip']['strip'];
             $eks->letter = $params['eksterior']['letter']['letter'];
             $eks->lain2 = $params['eksterior']['lain2'];
             $eks->save();
 
-            // INTERIOR
+// INTERIOR
             if ($params['womasuk']['jenis'] == "Mini Bus") {
-                $int = Miniint::find()->where('no_wo="' . $model->no_wo . '"')->one();
-                $int->no_wo = $model->no_wo;
-                $int->plavon = $params['interior']['plavon']['plavon'];
-                $int->trimming_deck = $params['interior']['trimming']['trimming_deck'];
-                $int->duchting_louver = $params['interior']['duchting']['duchting_louver'];
-                $int->lampu_plavon = $params['interior']['lplavon']['lampu_plavon'];
-                $int->lantai = $params['interior']['lantai']['lantai'];
-                $int->karpet = $params['interior']['karpet']['karpet'];
-                $int->konf_seat1 = $params['interior']['seat1']['konf_seat1'];
-                $int->konf_seat2 = $params['interior']['seat2']['konf_seat2'];
-                $int->konf_seat3 = $params['interior']['seat3']['konf_seat3'];
-                $int->konf_seat4 = $params['interior']['seat4']['konf_seat4'];
-                $int->konf_seat5 = $params['interior']['seat5']['konf_seat5'];
-                $int->konf_seat5 = $params['interior']['seat5']['konf_seat5'];
-                $int->cover_seat = $params['interior']['cover_seat']['cover_seat'];
-                $int->total_seat = $params['interior']['total_seat']['total_seat'];
-                $int->merk_ac = $params['interior']['ac']['merk_ac'];
-                $int->lain2 = $params['interior']['lain2'];
+                $int = Miniint::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
+                if (empty($int)) {
+                    $int = new Miniint();
+                }
+                $int->no_wo = $params['womasuk']['no_wo'];
+                if (isset($params['interior']['plavon']['plavon'])) {
+                    $int->plavon = $params['interior']['plavon']['plavon'];
+                }
+                if (!empty($params['interior']['trimming']['trimming_deck'])) {
+                    $int->trimming_deck = $params['interior']['trimming']['trimming_deck'];
+                }
+                if (!empty($params['interior']['duchting']['duchting_louver'])) {
+                    $int->duchting_louver = $params['interior']['duchting']['duchting_louver'];
+                }
+                if (!empty($params['interior']['lplavon']['lampu_plavon'])) {
+                    $int->lampu_plavon = $params['interior']['lplavon']['lampu_plavon'];
+                }
+                if (!empty($params['interior']['lantai']['lantai'])) {
+                    $int->lantai = $params['interior']['lantai']['lantai'];
+                }
+                if (!empty($params['interior']['karpet']['karpet'])) {
+                    $int->karpet = $params['interior']['karpet']['karpet'];
+                }
+                if (!empty($params['interior']['seat1']['konf_seat1'])) {
+                    $int->konf_seat1 = $params['interior']['seat1']['konf_seat1'];
+                }
+                if (!empty($params['interior']['seat2']['konf_seat2'])) {
+                    $int->konf_seat2 = $params['interior']['seat2']['konf_seat2'];
+                }
+                if (!empty($params['interior']['seat3']['konf_seat3'])) {
+                    $int->konf_seat3 = $params['interior']['seat3']['konf_seat3'];
+                }
+                if (!empty($params['interior']['seat4']['konf_seat4'])) {
+                    $int->konf_seat4 = $params['interior']['seat4']['konf_seat4'];
+                }
+                if (!empty($params['interior']['seat5']['konf_seat5'])) {
+                    $int->konf_seat5 = $params['interior']['seat5']['konf_seat5'];
+                }
+                if (!empty($params['interior']['seat5']['konf_seat5'])) {
+                    $int->konf_seat5 = $params['interior']['seat5']['konf_seat5'];
+                }
+                if (!empty($params['interior']['cover_seat']['cover_seat'])) {
+                    $int->cover_seat = $params['interior']['cover_seat']['cover_seat'];
+                }
+                if (!empty($params['interior']['total_seat']['total_seat'])) {
+                    $int->total_seat = $params['interior']['total_seat']['total_seat'];
+                }
+                if (!empty($params['interior']['ac']['merk_ac'])) {
+                    $int->merk_ac = $params['interior']['ac']['merk_ac'];
+                }
+                if (!empty($params['interior']['lain2'])) {
+                    $int->lain2 = $params['interior']['lain2'];
+                }
                 $int->save();
             } else {
-                $int = Smallint::find()->where('no_wo="' . $model->no_wo . '"')->one();
-                $int->no_wo = $model->no_wo;
-                $int->plavon = $params['interior']['plavon']['plavon'];
-                $int->trimming_deck = $params['interior']['trimming']['trimming_deck'];
-                $int->duchting_louver = $params['interior']['duchting']['duchting_louver'];
-                $int->lampu_plavon = $params['interior']['lplavon']['lampu_plavon'];
-                $int->lantai = $params['interior']['lantai']['lantai'];
-                $int->karpet = $params['interior']['karpet']['karpet'];
-                $int->bagasi_dalam = $params['interior']['bdalam']['bagasi_dalam'];
-                $int->dashboard = $params['interior']['dashboard']['dashboard'];
-                $int->peredam = $params['interior']['peredam']['peredam'];
-                $int->pegangan_tangan_atas = $params['interior']['pegangan_atas']['pegangan_tangan_atas'];
-                $int->pengaman_penumpang = $params['interior']['pengaman_penumpang']['pengaman_penumpang'];
-                $int->pengaman_kaca_samping = $params['interior']['pengaman_kaca']['pengaman_kaca_samping'];
-                $int->pengaman_driver = $params['interior']['pengaman_driver']['pengaman_driver'];
-                $int->gordyn = $params['interior']['gordyn']['gordyn'];
-                $int->driver_fan = $params['interior']['driver_fan']['driver_fan'];
-                $int->radio_tape = $params['interior']['radio_tape']['radio_tape'];
-                $int->spek_seat = $params['interior']['spek_seat']['spek_seat'];
-                $int->driver_seat = $params['interior']['driver_seat']['driver_seat'];
-                $int->cover_seat = $params['interior']['cover_seat']['cover_seat'];
-                $int->optional_seat = $params['interior']['optional_seat']['optional_seat'];
-                $int->total_seat = $params['interior']['total_seat']['total_seat'];
-                $int->merk_ac = $params['interior']['ac']['merk_ac'];
-                $int->lain2 = $params['interior']['lain2'];
+                $int = Smallint::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
+                if (empty($int)) {
+                    $int = new Smallint();
+                }
+                $int->no_wo = $params['womasuk']['no_wo'];
+                if (!empty($params['interior']['plavon']['plavon'])) {
+                    $int->plavon = $params['interior']['plavon']['plavon'];
+                }
+                if (!empty($params['interior']['trimming']['trimming_deck'])) {
+                    $int->trimming_deck = $params['interior']['trimming']['trimming_deck'];
+                }
+                if (!empty($params['interior']['duchting']['duchting_louver'])) {
+                    $int->duchting_louver = $params['interior']['duchting']['duchting_louver'];
+                }
+                if (!empty($params['interior']['lplavon']['lampu_plavon'])) {
+                    $int->lampu_plavon = $params['interior']['lplavon']['lampu_plavon'];
+                }
+                if (!empty($params['interior']['lantai']['lantai'])) {
+                    $int->lantai = $params['interior']['lantai']['lantai'];
+                }
+                if (!empty($params['interior']['karpet']['karpet'])) {
+                    $int->karpet = $params['interior']['karpet']['karpet'];
+                }
+                if (!empty($params['interior']['bdalam']['bagasi_dalam'])) {
+                    $int->bagasi_dalam = $params['interior']['bdalam']['bagasi_dalam'];
+                }
+                if (!empty($params['interior']['dashboard']['dashboard'])) {
+                    $int->dashboard = $params['interior']['dashboard']['dashboard'];
+                }
+                if (!empty($params['interior']['peredam']['peredam'])) {
+                    $int->peredam = $params['interior']['peredam']['peredam'];
+                }
+                if (!empty($params['interior']['pegangan_atas']['pegangan_tangan_atas'])) {
+                    $int->pegangan_tangan_atas = $params['interior']['pegangan_atas']['pegangan_tangan_atas'];
+                }
+                if (!empty($params['interior']['pengaman_penumpang']['pengaman_penumpang'])) {
+                    $int->pengaman_penumpang = $params['interior']['pengaman_penumpang']['pengaman_penumpang'];
+                }
+                if (!empty($params['interior']['pengaman_kaca']['pengaman_kaca_samping'])) {
+                    $int->pengaman_kaca_samping = $params['interior']['pengaman_kaca']['pengaman_kaca_samping'];
+                }
+                if (!empty($params['interior']['pengaman_driver']['pengaman_driver'])) {
+                    $int->pengaman_driver = $params['interior']['pengaman_driver']['pengaman_driver'];
+                }
+                if (!empty($params['interior']['gordyn']['gordyn'])) {
+                    $int->gordyn = $params['interior']['gordyn']['gordyn'];
+                }
+                if (!empty($params['interior']['driver_fan']['driver_fan'])) {
+                    $int->driver_fan = $params['interior']['driver_fan']['driver_fan'];
+                }
+                if (!empty($params['interior']['radio_tape']['radio_tape'])) {
+                    $int->radio_tape = $params['interior']['radio_tape']['radio_tape'];
+                }
+                if (!empty($params['interior']['spek_seat']['spek_seat'])) {
+                    $int->spek_seat = $params['interior']['spek_seat']['spek_seat'];
+                }
+                if (!empty($params['interior']['driver_seat']['driver_seat'])) {
+                    $int->driver_seat = $params['interior']['driver_seat']['driver_seat'];
+                }
+                if (!empty($params['interior']['cover_seat']['cover_seat'])) {
+                    $int->cover_seat = $params['interior']['cover_seat']['cover_seat'];
+                }
+                if (!empty($params['interior']['optional_seat']['optional_seat'])) {
+                    $int->optional_seat = $params['interior']['optional_seat']['optional_seat'];
+                }
+                if (!empty($params['interior']['total_seat']['total_seat'])) {
+                    $int->total_seat = $params['interior']['total_seat']['total_seat'];
+                }
+                if (!empty($params['interior']['ac']['merk_ac'])) {
+                    $int->merk_ac = $params['interior']['ac']['merk_ac'];
+                }
+                if (!empty($params['interior']['lain2'])) {
+                    $int->lain2 = $params['interior']['lain2'];
+                }
                 $int->save();
             }
 
-            // UPDATE STI CUSTOMER
+// UPDATE STI CUSTOMER
 //            $spk = \app\models\Spk::findOne('no_spk='.$params['womasuk']['spk']['no_spk']);
             $spk = \app\models\Spkaroseri::find()->where('no_spk=' . $params['womasuk']['spk']['no_spk'])->one();
             $sti = \app\models\Serahterimain::find()->where('kd_titipan="' . $params['womasuk']['titipan']['kd_titipan'] . '"')->one();
@@ -1420,5 +1632,4 @@ class WomasukController extends Controller {
     }
 
 }
-
 ?>
