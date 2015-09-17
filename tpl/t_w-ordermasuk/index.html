@@ -1026,35 +1026,35 @@
     <div id="printArea" ng-show="is_view">
         <table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
             <tr>
-                <td colspan="5"><b>WORK ORDER {{form.jenis}}</b></td>
+                <td colspan="5"><b> <div style="text-transform: uppercase">WORK ORDER {{form.jenis}}</div></b></td>
                 <td >FR-PPC-003 Rev 02</td>
             </tr>
             <tr>
                 <td style=" border-right: 1px #000 solid;border-left: 1px #000 solid;border-bottom: 1px #000 solid;border-top: 1px #000 solid;" colspan="6"><b>I. DATA UNIT</b></td>
             </tr>
             <tr>
-                <td>No WO</td>
-                <td colspan="2">: {{form.no_wo}}</td>
-                <td>Model</td>
-                <td colspan="2">: {{form.model}}</td>
+                <td style="border-bottom: 1px solid #000000;">No WO</td>
+                <td style="border-bottom: 1px solid #000000;" colspan="2">: <b>{{form.no_wo}}</b></td>
+                <td style="border-bottom: 1px solid #000000;">Model</td>
+                <td colspan="2" style="border-bottom: 1px solid #000000;">: {{form.model}}</td>
             </tr>
             <tr>
-                <td>Customer</td>
-                <td colspan="2">: {{form.customer}}</td>
-                <td>No.Rangka</td>
-                <td colspan="2">: {{form.no_chassis}}</td>
+                <td style="border-bottom: 1px solid #000000;">Customer</td>
+                <td colspan="2" style="border-bottom: 1px solid #000000;">: {{form.customer}}</td>
+                <td style="border-bottom: 1px solid #000000;">No.Rangka</td>
+                <td colspan="2" style="border-bottom: 1px solid #000000;">: {{form.no_chassis}}</td>
             </tr>
             <tr>
-                <td>Merk</td>
-                <td colspan="2">: {{form.merk}}</td>
-                <td>No Mesin</td>
-                <td colspan="2">: {{form.no_mesin}}</td>
+                <td style="border-bottom: 1px solid #000000;">Merk</td>
+                <td colspan="2" style="border-bottom: 1px solid #000000;">: {{form.merk}}</td>
+                <td style="border-bottom: 1px solid #000000;">No Mesin</td>
+                <td colspan="2" style="border-bottom: 1px solid #000000;">: {{form.no_mesin}}</td>
             </tr>
             <tr>
-                <td>type</td>
-                <td colspan="2">: {{form.type}}</td>
-                <td>Tgl Masuk</td>
-                <td colspan="2">: {{form.tgl_terima}}</td>
+                <td style="border-bottom: 1px solid #000000;">type</td>
+                <td colspan="2" style="border-bottom: 1px solid #000000;">: {{form.type}}</td>
+                <td style="border-bottom: 1px solid #000000;">Tgl Masuk</td>
+                <td colspan="2" style="border-bottom: 1px solid #000000;">: {{form.tgl_terima}}</td>
             </tr>
             <tr>
                 <td colspan="6">
@@ -1062,12 +1062,12 @@
                         <tr>
                             <td  style="text-align: center;width: 1%;font-size: 10px;">II</td>
                             <td  style="border-bottom: 1px solid #000000;width:9%;"><b> SPESIFIKASI</b></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;"> URAIAN</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;font-size: 10px;"> V/X</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;">KETERANGAN</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;text-align: center"> URAIAN</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;font-size: 10px;text-align: center"> V/X</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;text-align: center">KETERANGAN</td>
                         </tr>
                         <tr>
-                            <td style="text-align: center;width: 1%">E</td>
+                            <td style="text-align: center;width: 1%;border-top: 1px solid #000000">E</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Plat Body</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{eks.plat.plat_body}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
@@ -1448,17 +1448,17 @@
                 <td colspan="6">
                     <table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
                         <tr>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;">
+                            <td style="border-left: 1px solid #000000;border-right: 1px solid #000000;">
                                 NOTE : 
                             </td>
-                            <td >DIBUAT</td>
-                            <td >DIPERIKSA</td>
-                            <td >DIPERIKSA</td>
-                            <td >DIKETAHUI</td>
-                            <td >DITERIMA</td>
+                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: center">DIBUAT</td>
+                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: center">DIPERIKSA</td>
+                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: center">DIPERIKSA</td>
+                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: center">DIKETAHUI</td>
+                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: center">DITERIMA</td>
                         </tr>
                         <tr>
-                            <td>&nbsp;</td>
+                            <td style="border-left: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
@@ -1466,7 +1466,15 @@
                             <td>&nbsp;</td>
                         </tr>
                         <tr>
+                            <td style="border-left: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
                             <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td style="border-left: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
@@ -1474,20 +1482,20 @@
                             <td>&nbsp;</td>
                         </tr>
                         <tr> 
-                            <td></td>
-                            <td>PPIC Head</td>
-                            <td>Engineering Head</td>
-                            <td>Component Head</td>
-                            <td>Plan Head</td>
-                            <td>Production Head</td>
+                            <td style="border-left: 1px solid #000000;border-right: 1px solid #000000;"></td>
+                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">PPIC Head</td>
+                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Engineering Head</td>
+                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Component Head</td>
+                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Plan Head</td>
+                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Production Head</td>
                         </tr>
                         <tr> 
-                            <td></td>
-                            <td style="font-size: 10px;">TGL : </td>
-                            <td style="font-size: 10px;">TGL : </td>
-                            <td style="font-size: 10px;">TGL : </td>
-                            <td style="font-size: 10px;">TGL : </td>
-                            <td style="font-size: 10px;">TGL : </td>
+                            <td style="border-left: 1px solid #000000;border-right: 1px solid #000000;"></td>
+                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 10px;">TGL : </td>
+                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 10px;">TGL : </td>
+                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 10px;">TGL : </td>
+                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 10px;">TGL : </td>
+                            <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 10px;">TGL : </td>
                         </tr>
                     </table>
                 </td>

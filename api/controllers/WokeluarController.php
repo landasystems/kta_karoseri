@@ -101,7 +101,7 @@ class WokeluarController extends Controller {
 //                ->join(' JOIN', 'warna', 'sti.kd_warna = warna.kd_warna')
                 ->join(' JOIN', 'model', 'model.kd_model = spk.kd_model')
                 ->select("*")
-                ->where('spk.no_spk="' . $params['no_wo']['no_spk'] . '"');
+                ->where('spk.no_spk="' . $params['no_wo']['no_spk'] . '" and (wo_masuk.tgl_keluar IS NOT NULL or wo_masuk.tgl_keluar="")');
 
 
         $command = $query->createCommand();
