@@ -147,7 +147,6 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
                 $scope.is_edit = false;
                 $scope.view(result.data);
                 $scope.callServer(tableStateRef); //reload grid ulang
-
             }
         });
 
