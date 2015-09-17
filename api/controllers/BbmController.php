@@ -44,17 +44,35 @@ class BbmController extends Controller {
         $barang = isset($params['barang']) ? $params['barang'] : '';
         $po = isset($params['no_po']) ? $params['no_po'] : '';
         $query = new Query;
-        
         $query->from('detail_po')
                 ->join('JOIN', 'barang', 'barang.kd_barang = detail_po.kd_barang')
-                ->select("*, detail_po.jml as jml_po")
+                ->select("barang.kd_barang, barang.nm_barang, detail_po.jml as jml_po, detail_po.nota")
                 ->where(['like', 'barang.nm_barang', $barang])
                 ->orWhere(['like', 'barang.kd_barang', $barang])
                 ->andWhere(['like', 'detail_po.nota', $po])
                 ->andWhere("barang.nm_barang != '-' && barang.kd_barang != '-'");
-        
+
         $command = $query->createCommand();
         $models = $command->queryAll();
+
+        $data = array();
+        $i = 0;
+        foreach ($models as $key => $val) {
+            $query = new Query;
+            $query->from('det_bbm')
+                    ->join('JOIN', 'trans_bbm', 'det_bbm.no_bbm = trans_bbm.no_bbm')
+                    ->select('sum(det_bbm.jumlah) as jml_masuk')
+                    ->where('trans_bbm.no_po = "' . $val['nota'] . '" and det_bbm.kd_barang = "' . $val['kd_barang'] . '"');
+            $command = $query->createCommand();
+            $bbm = $command->query()->read();
+
+            $models[$key] = $val;
+            $models[$i]['jml_po'] = $val['jml_po'];
+            $models[$i]['telah_diambil'] = $bbm['jml_masuk'];
+            $models[$i]['sisa_ambil'] = $val['jml_po'] - $bbm['jml_masuk'];
+            $i++;
+        }
+
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $models));
     }
