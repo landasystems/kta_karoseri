@@ -134,7 +134,7 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
             ujimutu: form,
             det_ujimutu: detail,
         };
-        var url = ($scope.is_create == true) ? 'ujimutu/create' : 'ujimutu/update/' + form.kd_uji;
+        var url = ($scope.is_create == true) ? 'ujimutu/create' : 'ujimutu/update/' + form.id;
         Data.post(url, data).then(function(result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -150,7 +150,7 @@ app.controller('ujimutuCtrl', function($scope, Data, toaster) {
         $scope.is_view = false;
     };
     $scope.delete = function(row) {
-        if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
+        if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
             Data.delete('ujimutu/delete/' + row.kd_uji).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });

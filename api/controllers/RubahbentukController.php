@@ -85,14 +85,14 @@ class RubahbentukController extends Controller {
                 ->join('Left Join', 'spk', 'vws.no_spk = spk.no_spk')
                 ->join('left Join', 'warna', 'vws.kd_warna = warna.kd_warna')
                 ->orderBy($sort)
-                ->select("*, warna.warna as warna_lama");
+                ->select("rb.*, vws.merk, vws.tipe, vws.model, vws.jenis, vws.no_chassis, vws.no_mesin, vws.nm_customer, warna.warna as warna_lama");
 
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
                 if ($key == 'tgl') {
                     $tgl = explode(" - ", $val);
-                    $_SESSION['periode'] = $key;
+//                    $_SESSION['periode'] = $key;
                     $start = date("Y-m-d", strtotime($tgl[0]));
                     $end = date("Y-m-d", strtotime($tgl[1]));
                     $query->andFilterWhere(['between', 'rb.tgl', $start, $end]);
@@ -107,6 +107,7 @@ class RubahbentukController extends Controller {
         $totalItems = $query->count();
         session_start();
         $_SESSION['query'] = $query;
+        $_SESSION['periode'] = isset($start) ? date("d/m/y", strtotime($start)) . '-' . date("d/m/y", strtotime($end)) : '-';
 
         $this->setHeader(200);
 

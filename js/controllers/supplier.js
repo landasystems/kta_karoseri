@@ -69,7 +69,8 @@ app.controller('supplierCtrl', function ($scope, Data, toaster) {
         $scope.form = form;
     };
     $scope.save = function (form) {
-        var url = ($scope.is_create == true) ? 'supplier/create' : 'supplier/update/' + form.kd_chassis;
+        console.log(form.kd_chassis);
+        var url = ($scope.is_create == true) ? 'supplier/create' : 'supplier/update/' + form.kd_supplier;
         Data.post(url, form).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
@@ -102,7 +103,7 @@ app.controller('supplierCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
     };
     $scope.delete = function (row) {
-        if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
+        if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
             Data.delete('supplier/delete/' + row.kd_supplier).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });

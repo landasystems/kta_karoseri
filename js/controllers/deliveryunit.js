@@ -48,7 +48,6 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.pilih = function(form, $item) {
         Data.post('delivery/customer/', $item).then(function(data) {
             $scope.sCUstomer = data.customer;
-            console.log(data.customer);
         });
         form.merk = $item.merk;
         form.model = $item.model;
@@ -127,7 +126,7 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.is_view = false;
     };
     $scope.delete = function(row) {
-        if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
+        if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
             Data.delete('delivery/delete/' + row.id).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });

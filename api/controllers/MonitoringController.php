@@ -48,7 +48,7 @@ class MonitoringController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "trans_spp.no_spp DESC";
+        $sort = "tanggal DESC";
         $offset = 0;
         $limit = 10;
 
@@ -73,12 +73,9 @@ class MonitoringController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('trans_spp')
-                ->join('JOIN', 'det_spp', 'trans_spp.no_spp = det_spp.no_spp')
-                ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
-                ->join('LEFT JOIN', 'view_wo_spk', 'view_wo_spk.no_wo = det_spp.no_wo')
+                ->from('monitoring_logistik')
                 ->orderBy($sort)
-                ->select("trans_spp.*, det_spp.*, barang.nm_barang, view_wo_spk.nm_customer");
+                ->select("*");
 
         //filter
         if (isset($params['filter'])) {
@@ -87,16 +84,16 @@ class MonitoringController extends Controller {
                 $value = explode(' - ', $filter['tanggal']);
                 $start = date("Y-m-d", strtotime($value[0]));
                 $end = date("Y-m-d", strtotime($value[1]));
-                $query->andFilterWhere(['between', 'trans_spp.tgl_trans', $start, $end]);
+                $query->andFilterWhere(['between', 'tanggal', $start, $end]);
+            } else {
+                $query->andFilterWhere(['=', 'tanggal', date("Y-m-d")]);
             }
             if (isset($filter['kategori'])) {
-                $query->andFilterWhere(['=', 'trans_spp.no_proyek', $filter['kategori']]);
+                $query->andFilterWhere(['=', 'kategori', $filter['kategori']]);
             }
+        } else {
+            $query->andFilterWhere(['=', 'tanggal', date("Y-m-d")]);
         }
-
-        session_start();
-        $_SESSION['query'] = $query;
-        $_SESSION['periode'] = isset($filter['tanggal']) ? $filter['tanggal'] : '-';
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -105,19 +102,6 @@ class MonitoringController extends Controller {
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
-    }
-
-    public function actionExcel() {
-        session_start();
-        $query = $_SESSION['query'];
-        $query->limit(null);
-        $query->offset(null);
-        $query->select("trans_spp.*, det_spp.*, barang.nm_barang");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        $periode = $_SESSION['periode'];
-
-        return $this->render("/expretur/monitoring", ['models' => $models, 'periode' => $periode]);
     }
 
     private function setHeader($status) {

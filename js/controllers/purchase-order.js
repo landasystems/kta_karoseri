@@ -52,17 +52,14 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 
     $scope.updt_st = function ($id) {
         Data.get('po/updtst/' + $id).then(function (data) {
-//            $scope.callServer(tableStateRef);
             $scope.form.status = 1;
         });
-
     }
 
     $scope.cariSpp = function ($query) {
 
         if ($query.length >= 3) {
             Data.get('spprutin/cari', {nama: $query}).then(function (data) {
-//                console.log(data.data);
                 $scope.resultsspp = data.data;
             });
         }
@@ -77,12 +74,16 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     }
 
     $scope.cariBarang = function ($query1, $query2) {
-
-        if ($query1.length >= 3) {
+        if (typeof $scope.form.listspp != "undefined") {
+            Data.get('po/brgspp', {namabrg: $query1, nospp: $query2}).then(function (data) {
+                $scope.resultsbrg = data.data;
+            });
+        } else if ($query1.length >= 3) {
             Data.get('po/brgspp', {namabrg: $query1, nospp: $query2}).then(function (data) {
                 $scope.resultsbrg = data.data;
             });
         }
+        console.log($scope.resultsbrg);
     }
 
     $scope.pilih = function (detail, $item) {
@@ -93,14 +94,9 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     }
     $scope.pilihspp = function (detsPo, $item) {
         Data.get('po/cari', {nama: $item}).then(function (data) {
-            console.log(data.data)
             detsPo = data.data;
         });
-//        detail.harga = $item.harga;
-//        detail.satuan = $item.satuan;
     }
-
-
     $scope.subtotal = function () {
         var total = 0;
         var sub_total = 0;
@@ -271,24 +267,25 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     };
 
 
-    $scope.update = function (nota) {
+    $scope.update = function (row) {
         $scope.is_print = false;
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
-        $scope.formtitle = "Edit Data : " + nota
-        $scope.form.tanggal = new Date(nota.tanggal);
-        $scope.selected(nota);
+        $scope.formtitle = "Edit Data : " + row.nota
+        $scope.form.tanggal = new Date(row.tanggal);
+
+        $scope.selected(row.nota);
 
     };
 
-    $scope.view = function (nota) {
+    $scope.view = function (row) {
         $scope.is_print = true;
         $scope.is_edit = true;
         $scope.is_view = true;
-        $scope.formtitle = "Lihat Data : " + nota;
-        $scope.form.tanggal = new Date(nota.tanggal);
-        $scope.selected(nota);
+        $scope.formtitle = "Lihat Data : " + row.nota;
+        $scope.form.tanggal = new Date(row.tanggal);
+        $scope.selected(row.nota);
 
     };
 
@@ -318,7 +315,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
     };
     $scope.delete = function (row) {
-        if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
+        if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
             Data.delete('po/delete/' + row.nota).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
@@ -331,8 +328,12 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
             $scope.status = data.print;
             $scope.msg = data.msg;
             $scope.form.terbilang = $scope.keKata(data.data.total_dibayar) + ' RUPIAH';
-            $scope.detsPo = data.detail;
-//            $scope.detsPo.tanggal_pengiriman = new Date(data.detail.data_barang.tanggal_pengiriman);
+            $scope.detsPo = [];
+            angular.forEach(data.detail, function ($value, $key) {
+                $scope.detsPo.push($value);
+                $scope.detsPo[$key]['data_barang']['tgl_pengiriman'] = new Date($value.tgl_pengiriman);
+            })
+
             $scope.form.dp = (data.data.dp == undefined) ? '0' : data.data.dp;
             $scope.form.ppn = (data.data.ppn == undefined) ? '0' : data.data.ppn;
             $scope.form.bayar = (data.data.bayar == '1') ? '1' : '0';

@@ -2,7 +2,7 @@ app.controller('reksppCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
     var paramRef;
-    
+
     $scope.displayed = [];
     $scope.paginations = 0;
     $scope.is_edit = false;
@@ -28,20 +28,45 @@ app.controller('reksppCtrl', function ($scope, Data, toaster) {
             $scope.displayed = data.data;
             $scope.displayedPrint = data.dataPrint;
             $scope.paginations = data.totalItems;
-            if(data.totalItems != 0) {
+            if (data.totalItems != 0) {
                 tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
             }
         });
 
         $scope.isLoading = false;
     };
-    
-    $scope.excel = function () {
+
+    $scope.excelkurang = function () {
         Data.get('spprutin/rekap', paramRef).then(function (data) {
-            window.location = 'api/web/spprutin/excel';
+            window.location = 'api/web/spprutin/kekurangan';
         });
     }
-   
+    $scope.printkurang = function () {
+        Data.get('spprutin/rekap', paramRef).then(function (data) {
+            window.open('api/web/spprutin/kekurangan?print=true');
+        });
+    }
+    $scope.excel = function () {
+        Data.get('spprutin/rekap', paramRef).then(function (data) {
+            window.location = 'api/web/spprutin/excelspp';
+        });
+    }
+    $scope.print = function () {
+        Data.get('spprutin/rekap', paramRef).then(function (data) {
+            window.open('api/web/spprutin/excelspp?print=true');
+        });
+    }
 
+    $scope.printMonitoring = function () {
+        Data.get('spprutin/rekap', paramRef).then(function (data) {
+            window.open('api/web/spprutin/excelmonitoring?print=true', "", "width=500");
+        });
+    }
+
+    $scope.exportMonitoring = function () {
+        Data.get('spprutin/rekap', paramRef).then(function (data) {
+            window.location = 'api/web/spprutin/excelmonitoring';
+        });
+    }
 
 })

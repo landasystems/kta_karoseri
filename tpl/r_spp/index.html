@@ -4,9 +4,34 @@
     </div>
     <div class="wrapper-md" ng-show="!is_edit">
         <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
-            <div class="panel-heading">.:: Rekap SPP
-                <div class="btn-group pull-right" role="group" style="margin-top: -4px; margin-right: 18px;">
-                    <button type="button" class="btn btn-success fa fa-file-excel-o" ng-show="!isCollapsed" ng-click="excel();">&nbsp;&nbsp;Exp Laporan SPP</button>
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-sm-4">.:: Rekap SPP</div>
+                    <div class="col-sm-8">
+                        <div class="pull-right dropdown" style="margin-top: 0px" dropdown="">
+                            <button type="button" class="btn btn-info" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Monitoring Kelengkapan Barang <span class="caret"></span></button>
+                            <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 269px;">
+                                <li><a href="#" ng-click="printMonitoring()">Cetak</a></li>
+                                <li><a href="#" ng-click="exportMonitoring()">Export Excel</a></li>
+                            </ul>
+                        </div>
+                        <div class="pull-right dropdown" style="margin-top: 0px" dropdown="">
+                            <button type="button"  class="btn btn-primary" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">&nbsp;&nbsp; Laporan SPP <span class="caret"></span></button>
+                            <ul class="dropdown-menu" style="width: 185px;background-color: #F7F7F7;">
+                                
+                                <li><a href="#" ng-click="print()">Print</a></li>
+                                <li><a href="#" ng-click="excel()">Excel</a></li>
+                            </ul>
+                        </div>
+                        <div class="pull-right dropdown" style="margin-top: 0px" dropdown="">
+                            <button type="button"  class="btn btn-primary" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">&nbsp;&nbsp; Laporan Kekurangan Pemenuhan SPP <span class="caret"></span></button>
+                            <ul class="dropdown-menu" style="width: 269px; background-color: #F7F7F7;">
+                                
+                                <li><a href="#" ng-click="printkurang()">Print</a></li>
+                                <li><a href="#" ng-click="excelkurang()">Excel</a></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div> 
             </div>
 
@@ -15,19 +40,33 @@
                     <div class="panel-heading">
                         <div class="form-horizontal">
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-3 control-label">No SPP</label>
-                                        <div class="col-sm-3">
-                                            <input type="text" st-search="det_spp.no_spp" class="form-control">
+                                        <div class="control-group">
+                                            <label class="col-sm-1 control-label">No SPP</label>
+                                            <div class="col-sm-4">
+                                                <input placeholder="No SPP" type="text" st-search="det_spp.no_spp" class="form-control">
+                                            </div>
+                                            <label class="col-sm-2 control-label">Periode Tgl Transaksi</label>
+                                            <div class="col-sm-4">
+                                                <input placeholder="Periode Tgl Transaksi" date-range-picker class="form-control" st-search="tgl_periode" type="text"  ng-model="tanggal">
+                                            </div>
                                         </div>
-                                        <label class="col-sm-3 control-label">kategori</label>
-                                        <div class="col-sm-3">
-                                            <select stInputEvent="change" st-search="kategori" class="form-control">
-                                                <option value="all">Semua</option>
-                                                <option value="rutin">Rutin</option>
-                                                <option value="nonrutin">Non Rutin</option>
-                                            </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="control-group">
+                                            <label class="col-sm-1 control-label">Kategori</label>
+                                            <div class="col-sm-4">
+                                                <select stInputEvent="change" st-search="kategori" class="form-control">
+                                                    <option value="all">Semua</option>
+                                                    <option value="rutin">Rutin</option>
+                                                    <option value="nonrutin">Non Rutin</option>
+                                                </select>
+                                            </div>
+                                            <label class="col-sm-2 control-label">Nama Barang</label>
+                                            <div class="col-sm-4">
+                                                <input placeholder="Nama Barang" type="text" st-search="barang.nm_barang" class="form-control">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -42,6 +81,7 @@
                     <thead>
                         <tr>
                             <th st-sort="det_spp.no_spp">No SPP</th>
+                            <th st-sort="trans_spp.tgl_trans">Tgl Trans</th>
                             <th st-sort="det_spp.kd_barang">Kode Barang</th>
                             <th st-sort="barang.nm_barang">Nama Barang</th>
                             <th st-sort="det_spp.qty">Jumlah</th>
@@ -52,6 +92,7 @@
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
                             <td>{{row.no_spp}}</td>
+                            <td>{{row.tgl_trans| date:'dd-MM-yyyy'}}</td>
                             <td>{{row.kd_barang}}</td>
                             <td>{{row.nm_barang}}</td>
                             <td>{{row.qty}}</td>

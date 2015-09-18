@@ -148,10 +148,10 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.form = form;
         $scope.selected(form);
     };
-     $scope.buka = function (form) {
+    $scope.buka = function(form) {
         console.log(form);
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
-            Data.post('womasuk/bukaprint/', form).then(function (result) {
+            Data.post('womasuk/bukaprint/', form).then(function(result) {
                 if (result.status == 0) {
                     toaster.pop('error', "Terjadi Kesalahan");
                 } else {
@@ -163,6 +163,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         }
     };
     $scope.save = function(form, eks, inter) {
+
         if ($scope.uploader.queue.length > 0) {
             $scope.uploader.uploadAll();
             form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
@@ -192,7 +193,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
     };
     $scope.delete = function(row) {
 //        alert(row);
-        if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
+        if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
             Data.post('womasuk/delete/', row).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
@@ -234,8 +235,15 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.selected = function(form, no_wo_baru) {
         Data.post('womasuk/select/', form).then(function(data) {
             $scope.form = data.data;
-            $scope.eks = data.eksterior;
-            $scope.inter = data.interior;
+
+            if (Object.keys(data.eksterior).length > 0) {
+                $scope.eks = data.eksterior;
+            }
+            if (Object.keys(data.interior).length > 0) {
+                $scope.inter = data.interior;
+               
+            }
+             $scope.inter.seat1 = data.interior[0].konf_seat1;
 //            $scope.inter = data.interior[0];
             $scope.form.warna = data.det.warna;
             $scope.form.no_wo = data.det.no_wo;
@@ -255,9 +263,10 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.form.no_chassis = data.data.titipan.no_chassis;
             $scope.form.no_mesin = data.data.titipan.no_mesin;
             $scope.form.warna = data.data.titipan.warna.warna;
-            
+
             $scope.getSpk(form);
-            console.log(data);
+            console.log(data.interior);
+           
 
 
         });
@@ -325,7 +334,6 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.list_cover_seat = data.interior.cover_seat;
             $scope.list_optional_seat = data.interior.optional_seat;
 
-            
 
 
         });

@@ -1,19 +1,23 @@
 app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
     //init data
     var tableStateRef;
+    var paramRef;
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
     $scope.sppDet = [];
     $scope.openedDet = -1;
-//    Data.get('bstk/nowo').then(function (data) {
-//        $scope.list_wo = data.list_wo;
-//    });
+
     $scope.open1 = function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
         $scope.opened1 = true;
+    };
+    $scope.open2 = function ($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened2 = true;
     };
     $scope.setStatus = function () {
         $scope.openedDet = -1;
@@ -26,10 +30,14 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
     $scope.requiredPurchase = function (form) {
         Data.get('spprutin/requiredpurchase', form).then(function (data) {
             $scope.sppDet = data.data;
-            
+
         });
     };
-
+    $scope.isiTanggal = function (tanggal) {
+        angular.forEach($scope.sppDet, function ($value, $key) {
+            $scope.sppDet[$key]['p'] = new Date(tanggal);
+        })
+    };
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
@@ -44,15 +52,26 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         if (tableState.search.predicateObject) {
             param['filter'] = tableState.search.predicateObject;
         }
-
+        paramRef = param;
         Data.get('spprutin', param).then(function (data) {
             $scope.displayed = data.data;
-//            $scope.displayed.tgl_terima = new Date(data.data.tgl_terima);
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
 
         $scope.isLoading = false;
     };
+
+    $scope.excel = function () {
+        Data.get('spprutin', paramRef).then(function (data) {
+            window.location = 'api/web/spprutin/print';
+        });
+    }
+
+    $scope.print = function () {
+        Data.get('spprutin', paramRef).then(function (data) {
+            window.open('api/web/spprutin/print?printlap=true');
+        });
+    }
 
     $scope.create = function (form) {
         $scope.is_create = true;
@@ -60,6 +79,7 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.form.tgl_trans = new Date();
         $scope.requiredPurchase(form);
         Data.get('spprutin/kode').then(function (data) {
             $scope.form.no_spp = data.kode;
@@ -71,6 +91,7 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.no_spp;
         $scope.form = form;
+        $scope.form.tgl_trans = new Date(form.tgl_trans);
         var start = new Date(form.tgl1);
         var end = new Date(form.tgl2);
         $scope.form.periode = {startDate: start, endDate: end};
@@ -81,9 +102,11 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.no_spp;
         $scope.form = form;
+        $scope.form.tgl_trans = new Date(form.tgl_trans);
         var start = new Date(form.tgl1);
         var end = new Date(form.tgl2);
         $scope.form.periode = {startDate: start, endDate: end};
+        console.log($scope.form);
         $scope.getDetail(form.no_spp);
     };
     $scope.save = function (form, details) {
@@ -103,17 +126,16 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         });
 
     };
+
     $scope.cancel = function () {
         $scope.is_edit = false;
         $scope.is_view = false;
     };
 
     $scope.delete = function (row) {
-        if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('spprutin/delete/' + row.no_spp).then(function (result) {
-                $scope.displayed.splice($scope.displayed.indexOf(row), 1);
-            });
-        }
+        Data.delete('spprutin/delete/' + row.no_spp).then(function (result) {
+            $scope.displayed.splice($scope.displayed.indexOf(row), 1);
+        });
     };
     $scope.addDetail = function () {
         var newDet = {

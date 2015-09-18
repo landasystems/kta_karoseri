@@ -46,6 +46,16 @@ app.controller('rekapwomasukCtrl', function($scope, Data, toaster) {
             window.location = 'api/web/rekap/excelwomasuk2';
         });
     }
+    $scope.print2 = function() {
+        Data.get('rekap/rekapwomasuk', paramRef).then(function(data) {
+            window.open('api/web/rekap/excelwomasuk2?print=true', "", "width=500");
+        });
+    }
+    $scope.print = function() {
+        Data.get('rekap/rekapwomasuk', paramRef).then(function(data) {
+            window.open('api/web/rekap/excelwomasuk?print=true', "", "width=500");
+        });
+    }
 
 
 

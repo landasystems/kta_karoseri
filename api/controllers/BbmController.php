@@ -33,16 +33,55 @@ class BbmController extends Controller {
                     'listbbm' => ['get'],
                     'detailstok' => ['post'],
                     'excelserahterima' => ['get'],
+                    'caribarang' => ['get'],
                 ],
             ]
         ];
+    }
+
+    public function actionCaribarang() {
+        $params = $_REQUEST;
+        $barang = isset($params['barang']) ? $params['barang'] : '';
+        $po = isset($params['no_po']) ? $params['no_po'] : '';
+        $query = new Query;
+        $query->from('detail_po')
+                ->join('JOIN', 'barang', 'barang.kd_barang = detail_po.kd_barang')
+                ->select("barang.kd_barang, barang.nm_barang, detail_po.jml as jml_po, detail_po.nota")
+                ->where(['like', 'barang.nm_barang', $barang])
+                ->orWhere(['like', 'barang.kd_barang', $barang])
+                ->andWhere(['like', 'detail_po.nota', $po])
+                ->andWhere("barang.nm_barang != '-' && barang.kd_barang != '-'");
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $data = array();
+        $i = 0;
+        foreach ($models as $key => $val) {
+            $query = new Query;
+            $query->from('det_bbm')
+                    ->join('JOIN', 'trans_bbm', 'det_bbm.no_bbm = trans_bbm.no_bbm')
+                    ->select('sum(det_bbm.jumlah) as jml_masuk')
+                    ->where('trans_bbm.no_po = "' . $val['nota'] . '" and det_bbm.kd_barang = "' . $val['kd_barang'] . '"');
+            $command = $query->createCommand();
+            $bbm = $command->query()->read();
+
+            $models[$key] = $val;
+            $models[$i]['jml_po'] = $val['jml_po'];
+            $models[$i]['telah_diambil'] = $bbm['jml_masuk'];
+            $models[$i]['sisa_ambil'] = $val['jml_po'] - $bbm['jml_masuk'];
+            $i++;
+        }
+
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionListbbm() {
         $param = $_REQUEST;
         $query = new Query;
         $query->from('trans_bbm')
-                ->select("no_bbm")
+                ->select("no_bbm, surat_jalan")
                 ->where('no_bbm like "%' . $param['nama'] . '%"')
                 ->orderBy('no_bbm DESC')
                 ->limit(15);
@@ -156,7 +195,6 @@ class BbmController extends Controller {
             $models[$key]['wo'] = (!empty($wo)) ? $wo->attributes : array();
             $models[$key]['supplier'] = (!empty($supplier)) ? $supplier->attributes : array();
         }
-//        Yii::error($models);
         $totalItems = $query->count();
         $this->setHeader(200);
 
@@ -164,7 +202,7 @@ class BbmController extends Controller {
     }
 
     public function actionRekap() {
-        $params = $_REQUEST;
+        $params = json_decode(file_get_contents("php://input"), true);
         $filter = array();
         $sort = "db.no_bbm ASC";
         $offset = 0;
@@ -201,8 +239,7 @@ class BbmController extends Controller {
                 ->orderBy($sort)
                 ->select("spp.no_spp,po.nota,tb.tgl_nota as tanggal_nota, db.no_bbm as no_bbm, barang.kd_barang as kd_barang, barang.nm_barang,
                     barang.satuan, db.jumlah as jumlah, tb.surat_jalan, db.no_po, su.nama_supplier, db.keterangan");
-//filter
-
+        //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
@@ -218,13 +255,14 @@ class BbmController extends Controller {
                     $query->andFilterWhere(['like', 'tb.' . $key, $val]);
                 } elseif ($key == 'nm_barang') {
                     $query->andFilterWhere(['like', 'barang.' . $key, $val]);
+                } elseif ($key == 'kat') {
+                    $query->andFilterWhere(['=', 'barang.kat', $val]);
                 }
             }
         }
 
         $command = $query->createCommand();
         $models = $command->queryAll();
-//        Yii::error($models);
         $totalItems = $query->count();
 
         $query->limit(null);
@@ -256,12 +294,26 @@ class BbmController extends Controller {
                 ->where(['no_bbm' => $model->no_bbm])
                 ->all();
         $detail = array();
+        $i = 0;
         foreach ($det as $key => $val) {
+            $query = new Query;
+            $query->from('detail_po')
+                    ->join('JOIN', 'trans_po', 'detail_po.nota = trans_po.nota')
+                    ->join('JOIN', 'trans_bbm', 'trans_bbm.no_po = trans_po.nota')
+                    ->select('sum(detail_po.jml) as jml_po')
+                    ->where('trans_bbm.no_bbm = "' . $val->no_bbm . '" and detail_po.kd_barang = "' . $val->kd_barang . '"');
+            $command = $query->createCommand();
+            $po = $command->query()->read();
+
             $detail[$key] = $val->attributes;
             $namaBarang = (isset($val->barang->nm_barang)) ? $val->barang->nm_barang : '';
             $satuan = (isset($val->barang->satuan)) ? $val->barang->satuan : '';
 
             $detail[$key]['barang'] = ['kd_barang' => $val->kd_barang, 'nm_barang' => $namaBarang, 'satuan' => $satuan];
+            $models[$i]['barang']['jml_po'] = $po['jml_po'];
+            $models[$i]['barang']['telah_diambil'] = $po['jml_po'];
+            $models[$i]['barang']['sisa_ambil'] = $po['jml_po'];
+            $i++;
         }
 
 
@@ -279,7 +331,7 @@ class BbmController extends Controller {
         $lastNumber = (int) substr($findNumber->no_bbm, -5);
         $model->no_bbm = 'BM' . date('y', strtotime($model->tgl_nota)) . substr('00000' . ($lastNumber + 1), -5);
         $model->kd_suplier = $params['form']['kd_supplier'];
-        $model->no_wo = $params['form']['wo']['no_wo'];
+        $model->no_wo = (isset($params['form']['wo']['no_wo']) ? $params['form']['wo']['no_wo'] : '-');
         $model->no_po = (isset($params['form']['po']['nota'])) ? $params['form']['po']['nota'] : NULL;
 
         if ($model->save()) {

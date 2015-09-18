@@ -57,6 +57,8 @@ class ReturbbmController extends Controller {
     public function actionBarangmasuk() {
         $params = json_decode(file_get_contents("php://input"), true);
         $query = new Query;
+        $params['no_bbm']['no_bbm'] = isset($params['no_bbm']['no_bbm']) ? $params['no_bbm']['no_bbm'] : '';
+
         if ($params['no_bbm']['no_bbm'] != "") {
             $query->from('barang, det_bbm')
                     ->select("barang.kd_barang, barang.nm_barang, det_bbm.jumlah")
@@ -148,7 +150,7 @@ class ReturbbmController extends Controller {
     public function actionRekap() {
         $params = $_REQUEST;
         $filter = array();
-        $sort = "rb.tgl ASC";
+        $sort = "rb.tgl DESC";
         $offset = 0;
         $limit = 10;
 
@@ -201,6 +203,8 @@ class ReturbbmController extends Controller {
                     $query->andFilterWhere(['like', 'barang.' . $key, $val]);
                 } elseif ($key == 'surat_jalan') {
                     $query->andFilterWhere(['like', 'barang.' . $key, $val]);
+                } elseif ($key == 'jenis_brg') {
+                    $query->andFilterWhere(['like', 'jb.' . $key, $val]);
                 }
             }
         }

@@ -1,6 +1,6 @@
 <div ng-app="app" ng-controller="poCtrl">
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n font-thin h3">Data Transaksi - Purchase Order</h1>
+        <h1 class="m-n font-thin h3">Purchase Order</h1>
     </div>
     <div class="wrapper-md" ng-show="!is_edit">
         <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
@@ -55,7 +55,7 @@
                         </tr>
                     </thead>
                     <tbody ng-show="!isLoading">
-                        <tr ng-repeat="row in displayed" ng-dblclick="view(row.nota)">
+                        <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
                             <td ng-show="user.id == '1'">
                                 <label class="i-checks">
                                     <input type="checkbox" ng-model="gantiStatus[row.nota]" ><i></i> 
@@ -67,7 +67,7 @@
                             <td>{{row.dikirim_ke}}</td>
                             <td ng-hide="is_view == true">
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row.nota)"></button>
+                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
                                     <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" ></button>
                                 </div> 
                             </td>
@@ -104,108 +104,98 @@
                     <p>{{msg}}</p>
                 </div>
                 <form name="landaform" class="form-horizontal form-validation ">
-                    <div class="col-md-12 col-sm-12 thumb-wrapper">
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <div class="panel-heading text-muted font-bold">
-                                    Transaksi PO
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Nomor PO</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control" ng-model="form.nota" ng-disabled="true" required ng-readonly="is_create == false"/>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Nomor PO</label>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" ng-model="form.nota" ng-disabled="true" required ng-readonly="is_create == false"/>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Tanggal</label>
+                                    <div class="col-sm-6">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tanggal" is-open="opened1" ng-click="open1($event)"/>
+                                            <span class="input-group-addon">
+                                                <i class="glyphicon glyphicon-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Tanggal</label>
-                                <div class="col-sm-6">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tanggal" is-open="opened1" ng-click="open1($event)"/>
-                                        <span class="input-group-addon">
-                                            <i class="glyphicon glyphicon-calendar"></i>
-                                        </span>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Pilihan</label>
+                                    <div class="col-sm-6">
+                                        <div class="btn-group">
+                                            <label class="btn btn-default"  ng-model="form.status_po" btn-radio="'1'"  required> PO Produksi</label>
+                                            <label class="btn btn-default"  ng-model="form.status_po" btn-radio="'0'"  required> PO Non Produksi</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" ng-hide="form.status_po == 0">
+                                    <label class="col-sm-3 control-label">No. SPP</label>
+                                    <div class="col-sm-6">
+                                        <div class="input-group">
+                                            <ui-select on-select="cariBarang('',form.listspp.no_spp)"  ng-model="form.listspp" ng-readonly="form.status_po == '0'" theme="bootstrap">
+                                                <ui-select-match>{{$select.selected.no_spp}} - {{$select.selected.no_proyek}}</ui-select-match>
+                                                <ui-select-choices refresh="cariSpp($select.search)" repeat="val in resultsspp">
+                                                    {{val.no_spp}} - {{val.no_proyek}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            <span class="input-group-btn">
+                                                <button ng-click="form.listspp = undefined" class="btn btn-default">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Pilihan</label>
-                                <div class="col-sm-6">
-                                    <div class="btn-group">
-                                        <label class="btn btn-default"  ng-model="form.status_po" btn-radio="'1'"  required> PO Produksi</label>
-                                        <label class="btn btn-default"  ng-model="form.status_po" btn-radio="'0'"  required> PO Non Produksi</label>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">&nbsp;Kepada Yth</label>
+                                    <div class="col-sm-6">
+                                        <div class="input-group">
+                                            <ui-select  ng-model="form.supplier" theme="bootstrap">
+                                                <ui-select-match>{{$select.selected.nama_supplier}}</ui-select-match>
+                                                <ui-select-choices refresh="cariSuppiler($select.search)" repeat="val in resultssupplier">
+                                                    {{val.nama_supplier}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            <span class="input-group-btn">
+                                                <button ng-click="form.supplier = undefined" class="btn btn-default">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group" ng-hide="form.status_po == 0">
-                                <label class="col-sm-3 control-label">No. SPP</label>
-                                <div class="col-sm-6">
-                                    <div class="input-group">
-                                        <ui-select on-select="pilihspp(detsPo, form.listspp.no_spp)"  ng-model="form.listspp" ng-readonly="form.status_po == '0'" theme="bootstrap">
-                                            <ui-select-match>{{$select.selected.no_spp}} - {{$select.selected.no_proyek}}</ui-select-match>
-                                            <ui-select-choices refresh="cariSpp($select.search)" repeat="val in resultsspp">
-                                                {{val.no_spp}} - {{val.no_proyek}}
-                                            </ui-select-choices>
-                                        </ui-select>
-                                        <span class="input-group-btn">
-                                            <button ng-click="form.listspp = undefined" class="btn btn-default">
-                                                <span class="glyphicon glyphicon-trash"></span>
-                                            </button>
-                                        </span>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Jatuh Tempo</label>
+                                    <div class="col-sm-6">
+                                        <div class="input-group m-b" style="margin:0px;">
+                                            <input type="text" class="form-control" ng-model="form.jatuh_tempo" ng-disabled="is_view" required/>
+                                            <span class="input-group-addon">/ Hari</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">&nbsp;Kepada Yth</label>
-                                <div class="col-sm-6">
-                                    <div class="input-group">
-                                        <ui-select  ng-model="form.supplier" theme="bootstrap">
-                                            <ui-select-match>{{$select.selected.nama_supplier}}</ui-select-match>
-                                            <ui-select-choices refresh="cariSuppiler($select.search)" repeat="val in resultssupplier">
-                                                {{val.nama_supplier}}
-                                            </ui-select-choices>
-                                        </ui-select>
-                                        <span class="input-group-btn">
-                                            <button ng-click="form.supplier = undefined" class="btn btn-default">
-                                                <span class="glyphicon glyphicon-trash"></span>
-                                            </button>
-                                        </span>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Dikirim Ke</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control" ng-model="form.dikirim_ke" ng-disabled="is_view" required/>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Jatuh Tempo</label>
-                                <div class="col-sm-6">
-                                    <div class="input-group m-b" style="margin:0px;">
-                                        <input type="text" class="form-control" ng-model="form.jatuh_tempo" ng-disabled="is_view" required/>
-                                        <span class="input-group-addon">/ Hari</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Dikirim Ke</label>
-                                <div class="col-sm-6">
-                                    <input type="text" class="form-control" ng-model="form.dikirim_ke" ng-disabled="is_view" required/>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <br><br>
                     <div class="row" style="margin-top: 20px;">
                         <div class="col-sm-12 col-sm-12">
-                            <div>
-                            </div>
-                            <br>
-                            <table class="table table-bordered det-trans">
+                            <table class="table table-striped b-t b-light">
                                 <thead>
                                     <tr>
-                                        <th class="panel-heading text-muted font-bold" colspan="9">
-                                            Detail Purchase Order
-                                        </th>
+                                        <th class="panel-heading text-muted font-bold" colspan="7">Detail Purchase Order</th>
+                                        <th class="panel-heading text-muted font-bold" ng-hide="is_view == true"><button ng-click="addDetail()" title="Tambah Data" class="btn btn-success" ng-disabled="is_view"><i class="fa fa-plus"></i></button></th>
                                     </tr>
                                     <tr>
                                         <th style="text-align: center;">Nama Barang</th>
@@ -220,7 +210,6 @@
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="detail in detsPo">
-
                                         <td>
                                             <div class="input-group">
                                                 <ui-select on-select="pilih(detail, $item)" ng-model="detail.data_barang" theme="bootstrap">
@@ -267,8 +256,7 @@
                                             <input type="text" class="form-control"   ng-model="detail.ket" ng-disabled="is_view" ng-readonly="is_edit == false">
                                         </td>
                                         <td ng-hide="is_view == true" style="width:50px;text-align: center;">
-                                            <button ng-click="addDetail()" title="Tambah Data" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-plus"></i></button>
-                                            <button ng-click="removeRow($index)" title="Hapus Data" class="btn btn-danger" ng-show="$index > 0" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
+                                            <button ng-click="removeRow($index)" title="Hapus Data" class="btn btn-danger"  ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
                                         </td>
                                     </tr>
                                 </tbody>

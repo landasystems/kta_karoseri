@@ -107,7 +107,7 @@ app.controller('tglsppCtrl', function($scope, Data, toaster, $modal) {
         $scope.is_view = false;
     };
     $scope.delete = function(row) {
-        if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
+        if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
             Data.post('womasuk/delete/', row).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });

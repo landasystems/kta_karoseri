@@ -63,24 +63,27 @@ if (!isset($_GET['print'])) {
         $bbm = '';
         $border = '';
         foreach ($models as $key => $val) {
-            if (isset($models[$key + 1]) and $models[$key + 1]['no_bbm'] == $val['no_bbm']) {
+            if (isset($models[$key + 1]) and $models[$key + 1]['nama_supplier'] == $val['nama_supplier']) {
                 $border = '';
             } else {
                 $border = 'border-bottom';
             }
-            echo '<tr>';
-            echo '<td class="border-right ' . $border . '" align="center">' . $no . '</td>';
-            echo '<td class="border-right ' . $border . '">' . $val['no_bbm'] . '</td>';
-            echo '<td class="border-right ' . $border . '">' . $val['nama_supplier'] . '</td>';
-            echo '<td class="border-right ' . $border . '"></td>';
-            echo '<td class="border-right ' . $border . '"></td>';
-            echo '<td class="border-right ' . $border . '"></td>';
-            echo '<td class="border-right ' . $border . '"></td>';
-            echo '<td class="border-right ' . $border . '"></td>';
-            echo '<td class="border-right ' . $border . '"></td>';
-            echo '<td class="border-right ' . $border . '"></td>';
-            echo '</tr>';
-            $no++;
+
+            if (isset($models[$key + 1]) and $models[$key + 1]['no_bbm'] != $val['no_bbm']) {
+                echo '<tr>';
+                echo '<td class="border-right ' . $border . '" align="center">' . $no . '</td>';
+                echo '<td class="border-right ' . $border . '">' . $val['no_bbm'] . '</td>';
+                echo '<td class="border-right ' . $border . '">' . $val['nama_supplier'] . '</td>';
+                echo '<td class="border-right ' . $border . '"></td>';
+                echo '<td class="border-right ' . $border . '"></td>';
+                echo '<td class="border-right ' . $border . '"></td>';
+                echo '<td class="border-right ' . $border . '"></td>';
+                echo '<td class="border-right ' . $border . '"></td>';
+                echo '<td class="border-right ' . $border . '"></td>';
+                echo '<td class="border-right ' . $border . '"></td>';
+                echo '</tr>';
+                $no++;
+            }
         }
         ?>
     </tbody>
@@ -88,12 +91,12 @@ if (!isset($_GET['print'])) {
 <?php
 if (isset($_GET['print'])) {
     ?>
-    <script type="text/javascript">
-        window.print();
-        setTimeout(function() {
-            window.close();
-        }, 1);
-    </script>
+    <!--    <script type="text/javascript">
+            window.print();
+            setTimeout(function () {
+                window.close();
+            }, 1);
+        </script>-->
     <?php
 }
 ?>

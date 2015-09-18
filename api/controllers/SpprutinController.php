@@ -24,7 +24,10 @@ class SpprutinController extends Controller {
                     'cari' => ['get'],
                     'view' => ['get'],
                     'excel' => ['get'],
+                    'print' => ['get'],
+                    'kekurangan' => ['get'],
                     'detail' => ['get'],
+                    'excelspp' => ['get'],
                     'kode' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
@@ -33,9 +36,22 @@ class SpprutinController extends Controller {
                     'listbarang' => ['get'],
                     'requiredpurchase' => ['get'],
                     'getdetail' => ['post'],
+                    'excelmonitoring' => ['get'],
                 ],
             ]
         ];
+    }
+
+    public function actionExcelmonitoring() {
+        session_start();
+        $query = $_SESSION['query'];
+        $query->limit(null);
+        $query->offset(null);
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $periode = $_SESSION['periode'];
+
+        return $this->render("/expretur/monitoring", ['models' => $models, 'periode' => $periode]);
     }
 
     public function actionCari() {
@@ -151,20 +167,19 @@ class SpprutinController extends Controller {
     }
 
     public function actionRekap() {
-        //init variable
+
         $params = $_REQUEST;
         $filter = array();
         $sort = "tgl_trans DESC";
         $offset = 0;
         $limit = 10;
-        //        Yii::error($params);
-        //limit & offset pagination
+
         if (isset($params['limit']))
             $limit = $params['limit'];
         if (isset($params['offset']))
             $offset = $params['offset'];
 
-        //sorting
+
         if (isset($params['sort'])) {
             $sort = $params['sort'];
             if (isset($params['order'])) {
@@ -175,21 +190,23 @@ class SpprutinController extends Controller {
             }
         }
 
-        //create query
         $query = new Query;
         $query->offset($offset)
-//                ->where("no_proyek='Rutin'")
                 ->limit($limit)
-                ->from('det_spp')
                 ->orderBy($sort)
-                ->join('JOIN', 'trans_spp', 'trans_spp.no_spp = det_spp.no_spp')
+                ->from('trans_spp')
+                ->join('JOIN', 'det_spp', 'trans_spp.no_spp = det_spp.no_spp')
                 ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
-                ->select("det_spp.*,trans_spp.*,barang.nm_barang");
+                ->join('JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
+//                ->join('LEFT JOIN', 'trans_bbm', 'trans_bbm.no_po = trans_po.nota')
+//                ->join('LEFT JOIN', 'det_bbm', 'det_bbm.kd_barang = det_spp.kd_barang and trans_po.no_po = trans_po.nota')
+//                ->join('LEFT JOIN', 'view_wo_spk', 'view_wo_spk.no_wo = det_spp.no_wo')
+//               ,det_bbm.tgl_terima as tgl_realisasi,view_wo_spk.nm_customer
+                ->select("det_spp.*,trans_spp.*,barang.nm_barang,barang.satuan,trans_po.nota,trans_po.tanggal as tgl_pch");
 
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-
                 if (isset($key) && $key == 'kategori') {
                     if ($val == 'rutin') {
                         $query->andWhere("trans_spp.no_proyek='Rutin'");
@@ -200,7 +217,7 @@ class SpprutinController extends Controller {
                     $value = explode(' - ', $val);
                     $start = date("Y-m-d", strtotime($value[0]));
                     $end = date("Y-m-d", strtotime($value[1]));
-                    $query->andFilterWhere(['between', 'dc.tgl_pelaksanaan', $start, $end]);
+                    $query->andFilterWhere(['between', 'trans_spp.tgl_trans', $start, $end]);
                 } else {
                     $query->andFilterWhere(['like', $key, $val]);
                 }
@@ -210,7 +227,10 @@ class SpprutinController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
-
+        session_start();
+        $_SESSION['query'] = $query;
+        $_SESSION['filter'] = $filter;
+        $_SESSION['periode'] = isset($filter['tgl_periode']) ? $filter['tgl_periode'] : '-';
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
@@ -226,7 +246,7 @@ class SpprutinController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-//        Yii::error($params);
+        Yii::error($params);
         $model = new TransSpp();
         $model->no_spp = $params['form']['no_spp'];
         $model->tgl_trans = $tgl_trans;
@@ -255,7 +275,7 @@ class SpprutinController extends Controller {
 
     public function actionUpdatetgl() {
         $params = json_decode(file_get_contents("php://input"), true);
-        \Yii::error($params);
+//        Yii::error($params);
         foreach ($params['asu'] as $key => $data) {
 //            $model = DetSpp::find(['no_spp' => $params['wip']['nama']['no_spp'], 'kd_barang' => $key])->all();
             $model = DetSpp::findOne($key);
@@ -275,12 +295,11 @@ class SpprutinController extends Controller {
         }
         $this->setHeader(200);
         echo json_encode(['status' => 1, 'details' => $detail]);
-        
     }
 
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-
+        Yii::error($params);
         $model = TransSpp::findOne($params['form']['no_spp']);
 //        $model->attributes = $params;
         if (empty($model)) {
@@ -386,10 +405,16 @@ class SpprutinController extends Controller {
     }
 
     public function actionDetail($id) {
+        $model = $this->findModel($id);
+        $data = $model->attributes;
+
         $detSpp = DetSpp::find()
                 ->with(['wo', 'barang'])
                 ->where(['no_spp' => $id])
                 ->all();
+        session_start();
+        $_SESSION['nospp'] = $id;
+
         $detail = array();
         foreach ($detSpp as $key => $val) {
             $detail[$key] = $val->attributes;
@@ -397,7 +422,7 @@ class SpprutinController extends Controller {
             $detail[$key]['barang'] = (isset($val->barang)) ? $val->barang->attributes : [];
         }
         $this->setHeader(200);
-        echo json_encode(['status' => 1, 'details' => $detail]);
+        echo json_encode(['status' => 1, 'data' => $data, 'details' => $detail]);
     }
 
     public function actionGetdetail() {
@@ -420,6 +445,8 @@ class SpprutinController extends Controller {
         $model = Barang::find()
                 ->where('kat like "rutin%"')
                 ->andWhere('qty <= min')
+                ->andWhere('saldo < max')
+                ->andWhere('min > 0')
                 ->all();
         $data = [];
         if (!empty($model)) {
@@ -430,6 +457,48 @@ class SpprutinController extends Controller {
         $totalItems = count($data);
         $this->setHeader(200);
         echo json_encode(['status' => 1, 'data' => $data, 'count' => $totalItems]);
+    }
+
+    public function actionExcelspp() {
+        session_start();
+        $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
+        $query->limit(null);
+        $query->offset(null);
+//         Yii::error($query);
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/rekapspp", ['models' => $models, 'filter' => $filter]);
+    }
+
+    public function actionPrint() {
+        session_start();
+        $nospp = $_SESSION['nospp'];
+
+        $query = new Query;
+        $query->where("det_spp.no_spp='" . $nospp . "'")
+                ->from('det_spp')
+                ->join('JOIN', 'trans_spp', 'trans_spp.no_spp = det_spp.no_spp')
+                ->join('LEFT JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
+                ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
+                ->join('LEFT JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
+                ->select("det_spp.*,trans_spp.*,jenis_brg.jenis_brg,barang.min,barang.max,barang.nm_barang,barang.satuan,trans_po.nota");
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/laporanspprutin", ['models' => $models, 'id' => $nospp]);
+    }
+
+    public function actionKekurangan() {
+        session_start();
+        $query = $_SESSION['query'];
+        $query->limit(null);
+        $query->offset(null);
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+//        $query->join('LEFT JOIN', 'trans_bbm', 'trans_bbm.no_po = trans_po.nota')
+//                ->join('LEFT JOIN', 'view_wo_spk', 'view_wo_spk.no_wo = det_spp.no_wo');
+        return $this->render("/expretur/kekurangan", ['models' => $models]);
     }
 
 }

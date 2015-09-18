@@ -22,7 +22,6 @@ class PoController extends Controller {
                     'rekap' => ['get'],
                     'view' => ['get'],
                     'listsupplier' => ['get'],
-                    'listbarang' => ['get'],
                     'listspp' => ['get'],
                     'kode' => ['get'],
                     'test' => ['get'],
@@ -123,11 +122,11 @@ class PoController extends Controller {
             foreach ($filter as $key => $val) {
                 if ($key == 'nm_barang') {
                     $brg = $this->searchBrg($val);
-                    foreach ($brg as $brg_val){
-                        $query->orFilterWhere(['=','trans_po.nota',$brg_val]);
+                    foreach ($brg as $brg_val) {
+                        $query->orFilterWhere(['=', 'trans_po.nota', $brg_val]);
                     }
                 } else {
-                $query->andFilterWhere(['like', $key, $val]);
+                    $query->andFilterWhere(['like', $key, $val]);
                 }
             }
         }
@@ -275,14 +274,14 @@ class PoController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         $data = array();
-        foreach($models as $key){
-            $data[]= $key['nota'];
+        foreach ($models as $key) {
+            $data[] = $key['nota'];
         }
-        
+
 
         $this->setHeader(200);
 
-      return $data;
+        return $data;
     }
 
     public function actionListsupplier() {
@@ -290,20 +289,6 @@ class PoController extends Controller {
         $query->from('supplier')
                 ->select("*")
                 ->orderBy('kd_supplier ASC');
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        $this->setHeader(200);
-
-        echo json_encode(array('status' => 1, 'data' => $models));
-    }
-
-    public function actionListbarang() {
-        $query = new Query;
-        $query->from('barang')
-                ->select("*")
-                ->orderBy('kd_barang ASC');
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -353,7 +338,7 @@ class PoController extends Controller {
         if ($cek == 1 and $_SESSION['user']['id'] != "1") {
             $msg = 'Detail PO sudah dicetak, silahkan menghubungi admin untuk mencetak ulang';
             $print = 1;
-        } else{
+        } else {
             $msg = '';
             $print = 0;
         }
@@ -419,12 +404,16 @@ class PoController extends Controller {
 
         if ($model->save()) {
             $details = $params['details'];
+            $del = DetailPo::deleteAll('nota = "' . $model->nota . '"');
+
             foreach ($details as $val) {
-                $det = new DetailPo();
-                $det->attributes = $val;
-                $det->kd_barang = $val['data_barang']['kd_barang'];
-                $det->nota = $model->nota;
-                $det->save();
+                if (isset($val['data_barang']['kd_barang'])) {
+                    $det = new DetailPo();
+                    $det->attributes = $val;
+                    $det->kd_barang = $val['data_barang']['kd_barang'];
+                    $det->nota = $model->nota;
+                    $det->save();
+                }
             }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -504,7 +493,6 @@ class PoController extends Controller {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('det_spp')
-//                ->join('LEFT JOIN','supplier', 'trans_po.suplier=supplier.kd_supplier')
                 ->select("*")
                 ->where('det_spp.no_spp =' . $param)
                 ->limit(10);
@@ -527,15 +515,20 @@ class PoController extends Controller {
                     ->where(['like', 'nm_barang', $param['namabrg']])
                     ->orWhere(['like', 'kd_barang', $param['namabrg']])
                     ->andWhere("nm_barang != '-' && kd_barang != '-'");
+
+            $command = $query->createCommand();
+            $models = $command->queryAll();
         } else {
             $query->from("det_spp")
                     ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang ')
                     ->where('det_spp.no_spp =' . $param['nospp'])
                     ->andWhere(['LIKE', 'nm_barang', $param['namabrg']])
-                    ->select("det_spp.no_spp,det_spp.qty as jml,det_spp.kd_barang,barang.*");
+                    ->groupBy('barang.kd_barang')
+                    ->select("det_spp.no_spp,sum(det_spp.qty) as jml,det_spp.kd_barang,barang.*");
+
+            $command = $query->createCommand();
+            $models = $command->queryAll();
         }
-        $command = $query->createCommand();
-        $models = $command->queryAll();
 
         $this->setHeader(200);
 
@@ -572,8 +565,7 @@ class PoController extends Controller {
     public function actionExcelfluktuasi() {
         session_start();
         $query = $_SESSION['query'];
-         $query->groupBy('dpo.harga');
-//         Yii::error($query);
+        $query->groupBy('dpo.harga');
         $filter = $_SESSION['filter'];
         $command = $query->createCommand();
         $models = $command->queryAll();

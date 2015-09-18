@@ -1,6 +1,7 @@
 app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
     //init data
     var tableStateRef;
+    var paramRef;
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_view = false;
@@ -26,7 +27,7 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
         if (tableState.search.predicateObject) {
             param['filter'] = tableState.search.predicateObject;
         }
-
+        paramRef = param;
         Data.get('sppnonrutin', param).then(function (data) {
             $scope.displayed = data.data;
 //            $scope.displayed.tgl_terima = new Date(data.data.tgl_terima);
@@ -35,6 +36,17 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
 
         $scope.isLoading = false;
     };
+
+    $scope.excel = function () {
+        Data.get('sppnonrutin', paramRef).then(function (data) {
+            window.location = 'api/web/sppnonrutin/print';
+        });
+    }
+    $scope.print = function () {
+        Data.get('sppnonrutin', paramRef).then(function (data) {
+            window.open('api/web/sppnonrutin/print?printlap=true');
+        });
+    }
 
     $scope.create = function (form) {
         $scope.is_create = true;
@@ -68,6 +80,7 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
         var start = new Date(form.tgl1);
         var end = new Date(form.tgl2);
         $scope.form.periode = {startDate: start, endDate: end};
+        $scope.form.tgl_trans = new Date(form.tgl_trans);
         $scope.getDetail(form.no_spp);
     };
     $scope.view = function (form) {
@@ -75,6 +88,9 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.no_spp;
         $scope.form = form;
+        var start = new Date(form.tgl1);
+        var end = new Date(form.tgl2);
+        $scope.form.periode = {startDate: start, endDate: end};
         $scope.getDetail(form.no_spp);
     };
     $scope.save = function (form, details) {
@@ -100,11 +116,9 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
     };
 
     $scope.delete = function (row) {
-        if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
-            Data.delete('sppnonrutin/delete/' + row.no_spp).then(function (result) {
-                $scope.displayed.splice($scope.displayed.indexOf(row), 1);
-            });
-        }
+        Data.delete('sppnonrutin/delete/' + row.no_spp).then(function (result) {
+            $scope.displayed.splice($scope.displayed.indexOf(row), 1);
+        });
     };
     $scope.addDetail = function () {
         var newDet = {

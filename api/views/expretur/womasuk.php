@@ -1,18 +1,11 @@
 <?php
+if (!isset($_GET['print'])) {
 header("Content-type: application/vnd-ms-excel");
 header("Content-Disposition: attachment; filename=excel-rekap-bstk.xls");
+}
 ?>
-<h3>PT. KARYA TUGAS ANDA</h3>
-Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
-<br>
-Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
-<hr>
-<br>
-<center><b>LAPORAN WO MASUK</b></center>
-<br><br>
-
-
-<table>
+<link rel="stylesheet" href="../../../css/print.css" type="text/css" />
+<table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
     <tr>
         <td colspan="3" style="border: 1px solid #000000">
             <br>
@@ -77,7 +70,7 @@ foreach ($models as $key => $val) {
     $i++;
 }
 ?>
-<table border="1">
+<table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
     <tr>
         <th>IN CHASIS</th>
         <th>UNIT</th>
@@ -139,3 +132,15 @@ foreach ($models as $key => $val) {
                 </tr>';
     ?>
 </table>
+<?php
+if (isset($_GET['print'])) {
+    ?>
+    <script type="text/javascript">
+        window.print();
+        setTimeout(function () {
+            window.close();
+        }, 1);
+    </script>
+    <?php
+}
+?>

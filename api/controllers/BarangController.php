@@ -133,7 +133,7 @@ class BarangController extends Controller {
         session_start();
         $_SESSION['queryBbm'] = $bbm;
         $_SESSION['queryBbk'] = $bbk;
-        $_SESSION['periode'] = $tglStart . ' - ' . $tglEnd;
+        $_SESSION['periode'] = date("d/m/Y",  strtotime($tglStart)) . ' - ' . date("d/m/Y",  strtotime($tglEnd));
         $_SESSION['tanggal'] = $tgl;
         echo json_encode(array('status' => 1, 'data' => $data));
     }
@@ -198,12 +198,6 @@ class BarangController extends Controller {
 
     public function actionKode() {
         $params = json_decode(file_get_contents("php://input"), true);
-//        print_r($params);
-//        Yii::error($params);
-        ////        $query = new Query;
-//
-//        $jenisBarang = \app\models\JenisBrg::findOne(['kd_jenis' => $params['kd_jenis']]);
-//
         $query = new Query;
         $query->from('barang')
                 ->select('*')
@@ -228,7 +222,7 @@ class BarangController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_barang ASC";
+        $sort = "nm_barang ASC";
         $offset = 0;
         $limit = 10;
 

@@ -48,6 +48,11 @@ app.controller('customerCtrl', function ($scope, Data, toaster) {
             window.location = 'api/web/customer/excel';
         });
     }
+    $scope.print = function () {
+        Data.get('customer', paramRef).then(function (data) {
+            window.open('api/web/customer/excel?printlap=true');
+        });
+    }
     $scope.create = function (form) {
         $scope.is_create = true;
         $scope.is_edit = true;
@@ -90,7 +95,7 @@ app.controller('customerCtrl', function ($scope, Data, toaster) {
     };
 
     $scope.delete = function (row) {
-        if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
+        if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
             Data.delete('customer/delete/' + row.kd_cust).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });

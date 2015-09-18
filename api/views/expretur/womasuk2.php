@@ -1,18 +1,13 @@
 <?php
+if (!isset($_GET['print'])) {
 header("Content-type: application/vnd-ms-excel");
 header("Content-Disposition: attachment; filename=excel-rekap-bstk.xls");
+}
 ?>
-<h3>PT. KARYA TUGAS ANDA</h3>
-Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
-<br>
-Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
-<hr>
-<br>
-<center><b>LAPORAN WO MASUK</b></center>
-<br><br>
 
+<link rel="stylesheet" href="../../../css/print.css" type="text/css" />
 
-<table width="100%" style="border-collapse: collapse">
+<table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
     <tr>
         <td colspan="3" style="border: 1px solid #000000">
             <br>
@@ -25,7 +20,7 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
     </td>
     <td colspan="4" style="border: 1px solid #000000">
         <table>
-            
+
             <tr>
                 <td>Periode</td>
                 <?php
@@ -79,9 +74,9 @@ foreach ($models as $key => $val) {
     $i++;
 }
 ?>
-<table border="1" width="100%" style="border-collapse: collapse">
+ <table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
     <tr>
-        <!--<th>IN CHASIS</th>-->
+        <th>IN CHASIS</th>
         <th>UNIT</th>
         <th>WO</th>
         <th>CUSTOMER</th>
@@ -93,34 +88,61 @@ foreach ($models as $key => $val) {
         <th>KETERANGAN</th>
     </tr>
     <?php
+    $jml = 1;
+    $grandtotal = 0;
     foreach ($data as $keys) {
         ?>
-        <tr><td colspan="9" style="text-align: left;background-color: #008000;color:#ffffff;"><?= $keys['title']['pro']; ?>&nbsp;</td></tr>
+        <tr><td colspan="10" style="text-align: left;background-color: #a6a6a6;color:#000;"><?= $keys['title']['pro']; ?>&nbsp;</td></tr>
 
         <?php
         $no = 0;
         $total = 0;
         foreach ($keys['customer'] as $val1) {
-            echo'<tr><td colspan="9" style="text-align: left;background-color: chartreuse;">' . $val1['customer'] . '</td></tr>';
+            echo'<tr><td colspan="10" style="text-align: left;background-color: #a6a6a6;">' . $val1['customer'] . '</td></tr>';
             foreach ($val1['body'] as $val) {
+                $total += $jml;
                 ?>
                 <tr>
-                    <td><?= $val['jml_unit']; ?></td>
+                    <td></td>
+                    <td><center><?= "1"; ?></center></td>
                     <td><?= $val['no_wo']; ?></td>
                     <td><?= $val['nm_customer']; ?></td>
                     <td><?= $val['model']; ?></td>
                     <td><?= $val['merk']; ?> <?= $val['tipe']; ?></td>
                     <td><?= $val['market']; ?></td>
                     <td></td>
-                    <td><?= Yii::$app->landa->date2Ind($val['tgl']); ?>&nbsp;</td>
+                    <td><?= date('d/m/Y', strtotime($val['tgl'])); ?>&nbsp;</td>
                     <td></td>
-                    
-                    
+
+
 
                 </tr>
                 <?php
             }
+            echo'<tr>
+                <th> Total</th>
+                <th>'.$total.' </th>
+                <th colspan="8"> </th>
+                </tr>';
+            $grandtotal += $total;
         }
     }
+     echo'<tr>
+                <th>Grand Total</th>
+                <th>'.$grandtotal.'</th>
+                    <th colspan="8"> </th>
+                </tr>';
     ?>
 </table>
+<?php
+if (isset($_GET['print'])) {
+    ?>
+    <script type="text/javascript">
+        window.print();
+        setTimeout(function () {
+            window.close();
+        }, 1);
+    </script>
+    <?php
+}
+?>

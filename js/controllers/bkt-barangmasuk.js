@@ -8,7 +8,19 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
     $scope.is_create = false;
     $scope.detBbm = [];
     $scope.openedDet = -1;
+    $scope.err_jml = false;
+    $scope.jml_po = 0;
 
+    $scope.kalkulasi = function (jml, jml_po) {
+        $scope.jml_po = jml_po;
+        var selisih = jml_po - jml;
+        if (selisih < 0) {
+            toaster.pop('danger', "Error", "Jumlah tidak boleh melebihi jumlah dari PO sebesar " + $scope.jml_po);
+            $scope.err_jml = true;
+        } else {
+            $scope.err_jml = false;
+        }
+    }
     $scope.open1 = function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
@@ -36,21 +48,45 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
             });
         }
     };
-    $scope.getPo = function (form, item) {
-        form.nama_supplier = item.nama_supplier;
-        form.kd_supplier = item.kd_supplier;
+
+    $scope.cariBarang = function ($query, $po) {
+        if (typeof $scope.form.po != "undefined") {
+            $scope.results = [];
+            Data.get('bbm/caribarang', {barang: $query, no_po: $po}).then(function (data) {
+                if ($scope.is_create == false) {
+                    angular.forEach(data.data, function ($value, $key) {
+                        $scope.results.push($value);
+                        $scope.results[$key]['barang']['sisa_ambil'] = $value
+                    })
+                } else {
+                    $scope.results = data.data;
+                }
+            });
+        } else
+        if ($query.length >= 3) {
+            results
+            Data.get('bbm/caribarang', {barang: $query, no_po: $po}).then(function (data) {
+                if ($scope.is_create == false) {
+                    angular.forEach(data.data, function ($value, $key) {
+                        $scope.results.push($value);
+                        $scope.results[$key]['barang']['sisa_ambil'] = $value
+                    })
+                } else {
+                    $scope.results = data.data;
+                }
+            });
+        }
+    };
+
+    $scope.getPo = function (form) {
+        $scope.form.nm_supplier = form.nama_supplier;
+        $scope.form.kd_supplier = form.kd_supplier;
+        $scope.cariBarang('', form.nota);
     };
     $scope.cariSupplier = function ($query) {
         if ($query.length >= 3) {
             Data.get('supplier/cari', {nama: $query}).then(function (data) {
                 $scope.listSupplier = data.data;
-            });
-        }
-    };
-    $scope.cariBarang = function ($query) {
-        if ($query.length >= 3) {
-            Data.get('barang/cari', {barang: $query}).then(function (data) {
-                $scope.results = data.data;
             });
         }
     };
@@ -84,6 +120,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        $scope.form.tgl_nota = new Date();
         $scope.detBbm = [{
                 id: '',
                 no_bbm: '',
@@ -118,61 +155,83 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
         $scope.getDetail(form.no_bbm);
     };
     $scope.save = function (form, detBbm) {
-        var data = {
-            form: form,
-            detBbm: detBbm
-        };
-        var url = ($scope.is_create == true) ? 'bbm/create/' : 'bbm/update/' + form.no_bbm;
-        Data.post(url, data).then(function (result) {
-            if (result.status == 0) {
-                toaster.pop('error', "Terjadi Kesalahan", result.errors);
-            } else {
-                $scope.is_edit = false;
-                toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
-                $scope.view(result.data);
-                $scope.callServer(tableStateRef); //reload grid ulang
-                
-            }
-        });
-
+        if ($scope.err_jml == false) {
+            var data = {
+                form: form,
+                detBbm: detBbm
+            };
+            var url = ($scope.is_create == true) ? 'bbm/create/' : 'bbm/update/' + form.no_bbm;
+            Data.post(url, data).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan", result.errors);
+                } else {
+                    toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
+                    if ($scope.is_create == true) {
+                        var popupWin = window.open('', '_blank', 'width=1000,height=700');
+                        var elem = document.getElementById('printArea');
+                        popupWin.document.open()
+                        popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print();window.close();">' + elem.innerHTML + '</html>');
+                        popupWin.document.close();
+                    }
+                    $scope.is_edit = false;
+                    $scope.view(result.data);
+                    $scope.callServer(tableStateRef); //reload grid ulang
+                }
+            });
+        } else {
+            toaster.pop('danger', "Error", "Jumlah tidak boleh melebihi jumlah dari PO sebesar " + $scope.jml_po);
+        }
     };
     $scope.cancel = function () {
         $scope.is_edit = false;
         $scope.is_view = false;
+        $scope.err_jml = false;
     };
 
     $scope.delete = function (row) {
-        if (confirm("Apa anda yakin akan MENGHAPUS PERMANENT item ini ?")) {
+        if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
             Data.delete('bbm/delete/' + row.no_bbm).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
     $scope.addDetail = function () {
-        var newDet = {
-            id: '0',
-            kd_barang: '',
-            jumlah: '',
-            tgl_terima: '',
-            no_wo: '',
+        if ($scope.err_jml == false) {
+            var newDet = {
+                id: '0',
+                kd_barang: '',
+                jumlah: '',
+                tgl_terima: '',
+                no_wo: '',
+            }
+            $scope.setStatus();
+            $scope.detBbm.unshift(newDet);
+        } else {
+            toaster.pop('danger', "Error", "Jumlah tidak boleh melebihi jumlah dari PO sebesar " + $scope.jml_po);
         }
-        $scope.setStatus();
-        $scope.detBbm.unshift(newDet);
     };
     $scope.removeRow = function (paramindex) {
-        var comArr = eval($scope.detBbm);
-        if (comArr.length > 1) {
-            $scope.detBbm.splice(paramindex, 1);
+        if ($scope.err_jml == false) {
+            var comArr = eval($scope.detBbm);
+            if (comArr.length > 1) {
+                $scope.detBbm.splice(paramindex, 1);
+            } else {
+                alert("Something gone wrong");
+            }
         } else {
-            alert("Something gone wrong");
+            toaster.pop('danger', "Error", "Jumlah tidak boleh melebihi jumlah dari PO sebesar " + $scope.jml_po);
         }
     };
     $scope.getDetail = function (id) {
         Data.get('bbm/view/' + id).then(function (data) {
-            $scope.detBbm = data.details;
             $scope.form.nm_supplier = data.sup.nama_supplier;
             $scope.form.alamat_supplier = data.sup.alamat;
-            console.log(data);
+            $scope.detBbm = [];
+            angular.forEach(data.details, function ($value, $key) {
+                $scope.detBbm.push($value);
+                $scope.detBbm[$key]['tgl_terima'] = new Date($value.tgl_terima);
+            })
+            console.log($scope.detBbm);
         });
     };
     $scope.excel = function (id) {
