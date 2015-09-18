@@ -493,7 +493,6 @@ class PoController extends Controller {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('det_spp')
-//                ->join('LEFT JOIN','supplier', 'trans_po.suplier=supplier.kd_supplier')
                 ->select("*")
                 ->where('det_spp.no_spp =' . $param)
                 ->limit(10);
@@ -531,7 +530,6 @@ class PoController extends Controller {
             $models = $command->queryAll();
         }
 
-
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models));
@@ -568,7 +566,6 @@ class PoController extends Controller {
         session_start();
         $query = $_SESSION['query'];
         $query->groupBy('dpo.harga');
-//         Yii::error($query);
         $filter = $_SESSION['filter'];
         $command = $query->createCommand();
         $models = $command->queryAll();

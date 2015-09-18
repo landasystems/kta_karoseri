@@ -308,22 +308,24 @@ class WokeluarController extends Controller {
 
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
+        Yii::error($params);
 //        $model = $this->findModel($params['womasuk']['no_wo']);
-        $model = WoMasuk::find()->where('no_wo="' . $params['no_wo'] . '"')->one();
+        $model = WoMasuk::find()->where('no_wo="' . $params['no_wo']['no_wo'] . '"')->one();
 
-        $model->attributes = $params;
-
-
-
-        if ($model->save()) {
+        $model->tgl_keluar = date('Y-m-d', strtotime( $params['tgl_keluar']));
 
 
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-        } else {
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-        }
+
+        $model->save();
+//        if ($model->save()) {
+
+//
+//            $this->setHeader(200);
+//            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+//        } else {
+//            $this->setHeader(400);
+//            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+//        }
     }
 
     public function actionDelete() {
