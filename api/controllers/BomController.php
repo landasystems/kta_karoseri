@@ -311,7 +311,7 @@ class BomController extends Controller {
                         ->join('JOIN', 'spk', 'spk.kd_bom = dts.kd_bom')
                         ->join('JOIN', 'wo_masuk as wm', 'wm.no_spk  = spk.no_spk')
                         ->join('JOIN', 'trans_standar_bahan as tsb', 'tsb.kd_bom  = spk.kd_bom')
-                        ->orderBy('tjb.urutan_produksi ASC, brg.nm_barang ASC')
+                        ->orderBy('tjb.urutan_produksi ASC, tjb.jabatan ASC, brg.nm_barang ASC')
                         ->where('wm.no_wo = "' . $val['no_wo'] . '"')
                         ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
             } else {
@@ -323,7 +323,7 @@ class BomController extends Controller {
                         ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dts.tran_additional_bom_id')
                         ->join('LEFT JOIN', 'trans_additional_bom_wo as tsbw', ' tsb.id = tsbw.tran_additional_bom_id')
 //                        ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo  = tsbw.no_wo')
-                        ->orderBy('tjb.urutan_produksi ASC, brg.nm_barang ASC')
+                        ->orderBy('tjb.urutan_produksi ASC, tjb.jabatan ASC, brg.nm_barang ASC')
                         ->where('tsbw.no_wo = "' . $val['no_wo'] . '"')
                         ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, tsbw.no_wo");
             }
@@ -377,7 +377,7 @@ class BomController extends Controller {
                         ->join('LEFT JOIN', 'spk', 'spk.kd_bom = dts.kd_bom')
                         ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_spk  = spk.no_spk')
                         ->join('LEFT JOIN', 'trans_standar_bahan as tsb', 'tsb.kd_bom  = spk.kd_bom')
-                        ->orderBy('tjb.urutan_produksi ASC, brg.nm_barang ASC')
+                         ->orderBy('tjb.urutan_produksi ASC, tjb.jabatan ASC, brg.nm_barang ASC')
                         ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
             } else {
                 //create query
@@ -390,7 +390,7 @@ class BomController extends Controller {
                         ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dts.tran_additional_bom_id')
                         ->join('LEFT JOIN', 'trans_additional_bom_wo as wm', ' tsb.id = wm.tran_additional_bom_id')
 //                        ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo  = tsbw.no_wo')
-                        ->orderBy('tjb.urutan_produksi ASC, brg.nm_barang ASC')
+                        ->orderBy('tjb.urutan_produksi ASC, tjb.jabatan ASC, brg.nm_barang ASC')
                         ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
             }
 
@@ -492,7 +492,7 @@ class BomController extends Controller {
                             ->join('LEFT JOIN', 'spk', 'spk.kd_bom = dts.kd_bom')
                             ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_spk  = spk.no_spk')
                             ->join('LEFT JOIN', 'trans_standar_bahan as tsb', 'tsb.kd_bom  = spk.kd_bom')
-                            ->orderBy('tjb.urutan_produksi ASC, brg.nm_barang ASC')
+                             ->orderBy('tjb.urutan_produksi ASC, tjb.jabatan ASC, brg.nm_barang ASC')
                             ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
                 } else {
                     $optional = true;
@@ -504,7 +504,7 @@ class BomController extends Controller {
                             ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dts.tran_additional_bom_id')
                             ->join('LEFT JOIN', 'trans_additional_bom_wo as wm', ' tsb.id = wm.tran_additional_bom_id')
 //                            ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo  = tsbw.no_wo')
-                            ->orderBy('tjb.urutan_produksi ASC, brg.nm_barang ASC')
+                             ->orderBy('tjb.urutan_produksi ASC, tjb.jabatan ASC, brg.nm_barang ASC')
                             ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
                 }
 
@@ -584,7 +584,7 @@ class BomController extends Controller {
                             ->join('LEFT JOIN', 'spk', 'spk.kd_bom = dts.kd_bom')
                             ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_spk  = spk.no_spk')
                             ->join('LEFT JOIN', 'trans_standar_bahan as tsb', 'tsb.kd_bom  = spk.kd_bom')
-                            ->orderBy('tjb.urutan_produksi ASC, brg.nm_barang ASC')
+                            ->orderBy('tjb.urutan_produksi ASC, tjb.jabatan ASC, brg.nm_barang ASC')
                             ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
                 } else {
                     //create query
@@ -595,7 +595,7 @@ class BomController extends Controller {
                             ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dts.tran_additional_bom_id')
                             ->join('LEFT JOIN', 'trans_additional_bom_wo as wm', ' tsb.id = wm.tran_additional_bom_id')
 //                            ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo  = tsbw.no_wo')
-                            ->orderBy('tjb.urutan_produksi ASC, brg.nm_barang ASC')
+                             ->orderBy('tjb.urutan_produksi ASC, tjb.jabatan ASC, brg.nm_barang ASC')
                             ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
                 }
 
@@ -692,7 +692,7 @@ class BomController extends Controller {
                 ->join('LEFT JOIN', 'tbl_jabatan as j', 'j.id_jabatan = dst.kd_jab')
                 ->join('LEFT JOIN', 'barang as b', 'b.kd_barang = dst.kd_barang')
                 ->where('dst.kd_bom = "' . $models['kd_bom'] . '"')
-                ->orderBy('j.urutan_produksi ASC, b.nm_barang ASC')
+                ->orderBy('j.urutan_produksi ASC, j.jabatan ASC, b.nm_barang ASC')
                 ->select('dst.*, j.jabatan, b.nm_barang, b.satuan, b.harga as harga_barang, b.harga');
         $commandDet = $det->createCommand();
         $detBom = $commandDet->queryAll();

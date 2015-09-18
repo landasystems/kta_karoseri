@@ -50,13 +50,13 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
     };
 
     $scope.cariBarang = function ($query, $po) {
+        $scope.results = [];
         if (typeof $scope.form.po != "undefined") {
-            $scope.results = [];
-            Data.get('bbm/caribarang', {barang: $query, no_po: $po}).then(function (data) {
+            Data.post('bbm/caribarang', {barang: $query, no_po: $po, listBarang: $scope.detBbm}).then(function (data) {
                 if ($scope.is_create == false) {
                     angular.forEach(data.data, function ($value, $key) {
                         $scope.results.push($value);
-                        $scope.results[$key]['barang']['sisa_ambil'] = $value
+                        $scope.results[$key]['sisa_ambil'] = $value
                     })
                 } else {
                     $scope.results = data.data;
@@ -64,19 +64,19 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
             });
         } else
         if ($query.length >= 3) {
-            results
-            Data.get('bbm/caribarang', {barang: $query, no_po: $po}).then(function (data) {
+            Data.post('bbm/caribarang', {barang: $query, no_po: $po, listBarang: $scope.detBbm}).then(function (data) {
                 if ($scope.is_create == false) {
                     angular.forEach(data.data, function ($value, $key) {
                         $scope.results.push($value);
-                        $scope.results[$key]['barang']['sisa_ambil'] = $value
+                        $scope.results[$key]['sisa_ambil'] = $value
                     })
                 } else {
                     $scope.results = data.data;
                 }
             });
         }
-    };
+    }
+    ;
 
     $scope.getPo = function (form) {
         $scope.form.nm_supplier = form.nama_supplier;
@@ -224,6 +224,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
     };
     $scope.getDetail = function (id) {
         Data.get('bbm/view/' + id).then(function (data) {
+            $scope.form = data.data;
             $scope.form.nm_supplier = data.sup.nama_supplier;
             $scope.form.alamat_supplier = data.sup.alamat;
             $scope.detBbm = [];

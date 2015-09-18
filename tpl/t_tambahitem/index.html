@@ -200,47 +200,55 @@
                         <input type="file" nv-file-select="" uploader="uploader" />
                     </div>                    
                     <div class="line line-dashed b-b line-lg pull-in"></div>
-                    <h5 class="font-bold">- Detail Bill Of Material</h5>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Filter Berdasarkan Bagian</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" ng-model="cari" style="width:300px;" ng-disabled="is_view">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    Detail BOM
+                                </div>
+                                <div class="col-md-9" align="right">
+                                    <button ng-click="addDetail(detail)" class="btn btn-success" ng-hide="is_view" title="Tambah Detail"><i class="fa fa-plus-square"></i></button>
+                                </div>
+                            </div>
                         </div>
+                        <!--<div class="panel-body">-->
+                        <div class="table-responsive">
+                            <table class="table table-striped b-t b-light">
+                                <thead>
+                                    <tr>
+                                        <th>Bagian</th>
+                                        <th>Barang</th>
+                                        <th width="100">Qty / Satuan</th>
+                                        <th width="300">Keterangan</th>
+                                        <th width="80" ng-hide="is_view" style="margin:0px;padding:0px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="detail in detTambahItem| filter : cari" style="margin:0px;padding:0px;">
+                                        <td>    
+                                            {{detail.bagian.jabatan}}
+                                        </td>
+                                        <td>
+                                            {{detail.barang.nm_barang}} 
+                                        </td>
+                                        <td>    
+                                            {{detail.qty}} {{detail.barang.satuan}}
+                                        </td>
+                                        <td>
+                                            {{detail.ket}}
+                                        </td>
+                                        <td style="margin:0px;padding:0px;" ng-hide="is_view">
+                                            <div class="btn-group pull-right" role="group">
+                                                <button ng-click="modal(detail)" class="btn btn-info" title="Edit Detail"><i class="fa fa-pencil-square-o"></i></button>
+                                                <button ng-click="removeRow($index)" class="btn btn-danger" title="Hapus Detail" ng-disabled="is_view""><i class="fa fa-trash-o"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!--</div>-->
                     </div>
-                    <div class="line line-dashed b-b line-lg pull-in"></div>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Bagian</th>
-                                <th>Barang</th>
-                                <th width="75">Qty</th>
-                                <th>Keterangan</th>
-                                <th width="80" ng-hide="is_view"  style="margin:0px;padding:0px;"><button ng-click="addDetail(detail)" class="btn btn-success" ng-disabled="is_view" style="width: 100%"><i class="fa fa-plus-square"></i></button></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="detail in detTambahItem| filter : cari" style="margin:0px;padding:0px;">
-                                <td>    
-                                    {{detail.bagian.jabatan}}
-                                </td>
-                                <td>
-                                    {{detail.barang.nm_barang}} 
-                                </td>
-                                <td>    
-                                    {{detail.qty}}
-                                </td>
-                                <td>
-                                    {{detail.ket}}
-                                </td>
-                                <td style="margin:0px;padding:0px;" ng-hide="is_view">
-                                    <div class="btn-group pull-right" role="group">
-                                        <button ng-click="modal(detail)" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
-                                        <button ng-click="removeRow($index)" class="btn btn-danger" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
                     <div align="center">
                         <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
                         <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, detTambahItem)">&nbsp;Simpan Perubahan</button>
