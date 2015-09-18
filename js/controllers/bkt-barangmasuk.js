@@ -238,7 +238,6 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
                 $scope.detBbm.push($value);
                 $scope.detBbm[$key]['tgl_terima'] = new Date($value.tgl_terima);
             })
-            console.log($scope.detBbm);
         });
     };
     $scope.excel = function (id) {

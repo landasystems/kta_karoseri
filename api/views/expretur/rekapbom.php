@@ -103,4 +103,3 @@ if (isset($_GET['print'])) {
     </script>
     <?php
 }
-?>
