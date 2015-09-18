@@ -41,6 +41,12 @@ app.controller('rekapchassisinCtrl', function($scope, Data, toaster) {
             window.location = 'api/web/rekap/excelchassisin';
         });
     }
+    
+    $scope.print = function () {
+        Data.get('rekap/rekapchassisin', paramRef).then(function (data) {
+            window.open('api/web/rekap/excelchassisin?print=true');
+        });
+    }
 
 
 

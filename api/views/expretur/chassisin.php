@@ -8,46 +8,7 @@ header("Content-type: application/vnd-ms-excel");
 
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
 <div style="width:26cm">
-    <table border="1">
-        <tr>
-            <td colspan="5">
-                <br>
-        <center><b></b></center>
-        <br><br>
-        <center>DATA CHASSIS IN</center>
-        <br><br>
-
-        </td>
-        <td  colspan="5" valign="top">
-            <table>
-                <tr>
-                    <td>DEPARTEMENT</td>
-
-                    <td> Sales Report</td>
-                </tr>
-                <tr>
-                    <td>PERIODE</td>
-                    <?php
-                    if (!empty($filter['tgl_terima'])) {
-                        $value = explode(' - ', $filter['tgl_terima']);
-                        $start = date("d/m/Y", strtotime($value[0]));
-                        $end = date("d/m/Y", strtotime($value[1]));
-                    } else {
-                        $start = '';
-                        $end = '';
-                    }
-                    ?>
-                    <td> : <?php echo $start . ' - ' . $end ?></td>
-                </tr>
-                <tr>
-                    <td>CETAK</td>
-                    <td> : <?php echo date('d/M/Y') ?></td>
-                </tr>
-            </table>
-        </td>
-        </tr>
-
-    </table>
+   
     <?php
     $data = array();
     $i = 0;
@@ -72,32 +33,32 @@ header("Content-type: application/vnd-ms-excel");
     <table style="border-collapse: collapse; font-size: 12px;" width="100%" border="1">
         <tr>
             <th class="border-bottom border-right" colspan="8" rowspan="3" style="text-align: center; font-size: 14px;">DATA CHASSIS IN</th>
-            <td class="border-bottom border-right">Departemen</td>
-            <td class="border-bottom border-right">: Selles Suport</td>
-            <td class="border-bottom border-right"></td>
-        </tr>
-        <tr>
-            <td>Tgl Cetak</td>
-            <td>: <?=date('d/M/Y')?></td>
+            <td>Departemen</td>
+            <td>: Selles Suport</td>
             <td></td>
         </tr>
         <tr>
+            <td>Tgl. Cetak</td>
+            <td>: <?=date('d/m/Y')?></td>
+            <td></td>
+        </tr>
+        <tr>
             <td></td>
             <td></td>
             <td></td>
         </tr>
         <tr>
-            <th>NO</th>
-            <th>IN CHASSIS</th>
-            <th>SALES</th>
-            <th>CUSTOMER</th>
-            <th>KODE TITIPAN</th>
-            <th>NO WO</th>
-            <th>SPK KE PPC</th>
-            <th>REVENUE</th>
-            <th>MERK/TYPE</th>
-            <th>NO RANGKA</th>
-            <th>NO ENGINE</th>
+            <th style="text-align: center">NO</th>
+            <th style="text-align: center">IN CHASSIS</th>
+            <th style="text-align: center">SALES</th>
+            <th style="text-align: center">CUSTOMER</th>
+            <th style="text-align: center">KODE TITIPAN</th>
+            <th style="text-align: center">NO WO</th>
+            <th style="text-align: center">SPK KE PPC</th>
+            <th style="text-align: center">REVENUE</th>
+            <th style="text-align: center">MERK/TYPE</th>
+            <th style="text-align: center">NO RANGKA</th>
+            <th style="text-align: center">NO ENGINE</th>
         </tr>
         <?php
         foreach ($data as $keys) {
@@ -124,7 +85,7 @@ header("Content-type: application/vnd-ms-excel");
                 . '<td  class="border-bottom border-right"></td>'
                 . '<td  class="border-bottom border-right"></td>'
                 . '<td  class="border-bottom border-right"></td>'
-                . '<td  class="border-bottom border-right" style="text-align: left;background-color: chartreuse;">' . $val1['tipe'] . '</td>'
+                . '<td  class="border-all back-yellow" style="text-align: left;background-color: yellow;">' . $val1['tipe'] . '</td>'
                 . '<td  class="border-bottom border-right"></td>'
                 . '<td  class="border-bottom border-right"></td>'
                 . '<td  class="border-bottom border-right"></td>'
