@@ -42,7 +42,6 @@ class SerahterimainController extends Controller {
         $allowed = array_map('strtoupper', $verbs);
 
         if (!in_array($verb, $allowed)) {
-
             $this->setHeader(400);
             echo json_encode(array('status' => 0, 'error_code' => 400, 'message' => 'Method not allowed'), JSON_PRETTY_PRINT);
             exit;
@@ -100,7 +99,7 @@ class SerahterimainController extends Controller {
                 ->join('LEFT JOIN', 'chassis as ch', 'se.kd_chassis= ch.kd_chassis')
                 ->join('LEFT JOIN', 'view_wo_spk as vi', 'vi.kd_titipan= se.kd_titipan')
                 ->orderBy($sort)
-                ->select("se.*,cu.*,wa.*,ch.*,vi.no_wo as no_wo");
+                ->select("se.*,cu.*,wa.*,ch.*,vi.no_wo as no_wo,wa.id as warna_id, wa.warna as warna_chassis");
 
         //filter
         if (isset($params['filter'])) {
@@ -115,12 +114,10 @@ class SerahterimainController extends Controller {
         $totalItems = $query->count();
 
         foreach ($models as $key => $val) {
-            $spk = \app\models\Spkaroseri::findOne($val['no_spk']);
-            $models[$key]['spk'] = (!empty($spk)) ? $spk->attributes : array();
-            $customer = \app\models\Customer::findOne($val['kd_cust']);
-            $models[$key]['customer'] = (!empty($customer)) ? $customer->attributes : array();
-            $chassis = \app\models\Chassis::findOne($val['kd_chassis']);
-            $models[$key]['chassis'] = (!empty($chassis)) ? $chassis->attributes : array();
+            $models[$key]['spk'] = array('no_spk' => $val['no_spk']);
+            $models[$key]['customer'] = array('kd_Cust' => $val['kd_cust'], 'nm_customer' => $val['nm_customer']);
+            $models[$key]['chassis'] = array('kd_chassis' => $val['kd_chassis']);
+            $models[$key]['warna'] = array('id' => $val['warna_id'], 'kd_warna' => $val['kd_warna'], 'warna' => $val['warna']);
         }
         $this->setHeader(200);
 
@@ -151,19 +148,16 @@ class SerahterimainController extends Controller {
             $model = new Serahterimain();
         }
 
-
-
         $model->attributes = $params;
-        //warna
-        $warna = \app\models\Warna::findOne($params['warna']['kd_warna']);
+        $model->status = 0;
+
+        $warna = \app\models\Warna::find()->where('kd_warna="' . $params['warna']['kd_warna'] . '"')->one();
         if (empty($warna)) {
             $warna = new \app\models\Warna();
+            $warna->attributes = $params;
+            $warna->save();
         }
-        $warna->attributes = $params;
-        if ($warna->save()) {
-            $model->kd_warna = $warna->kd_warna;
-        }
-
+        $model->kd_warna = $warna->kd_warna;
         if ($model->save()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);

@@ -54,7 +54,6 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         Data.get('po/updtst/' + $id).then(function (data) {
             $scope.form.status = 1;
         });
-
     }
 
     $scope.cariSpp = function ($query) {
@@ -84,6 +83,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
                 $scope.resultsbrg = data.data;
             });
         }
+        console.log($scope.resultsbrg);
     }
 
     $scope.pilih = function (detail, $item) {
@@ -97,8 +97,6 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
             detsPo = data.data;
         });
     }
-
-
     $scope.subtotal = function () {
         var total = 0;
         var sub_total = 0;

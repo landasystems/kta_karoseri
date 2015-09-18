@@ -103,12 +103,7 @@ class BbkController extends Controller {
     public function actionListbarang() {
         $params = json_decode(file_get_contents("php://input"), true);
         if (!empty($params['no_wo']) and ! empty($params['kd_jab'])) {
-            //cek optional bom
-//            $optional = \app\models\TransAdditionalBom::find()
-//                    ->joinWith('wo')
-//                    ->where(['trans_additional_bom_wo.no_wo' => $params['no_wo']['no_wo']])
-//                    ->all();
-            
+            //cek optional bom            
             $optional = \app\models\TransAdditionalBomWo::find()->where(['no_wo'=>$params['no_wo']['no_wo']])->all();
 
             //jika tidak ada optional
@@ -132,11 +127,11 @@ class BbkController extends Controller {
                         ->join('LEFT JOIN', 'tbl_jabatan as tj', 'tj.id_jabatan = dsb.kd_jab')
                         ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dsb.tran_additional_bom_id')
                         ->join('LEFT JOIN', 'trans_additional_bom_wo as tsbw', ' tsb.id = tsbw.tran_additional_bom_id')
-                        ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo  = tsbw.no_wo')
-                        ->select('b.saldo as stok, wm.no_wo as no_wo, b.kd_barang as kd_barang, '
+//                        ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo  = tsbw.no_wo')
+                        ->select('b.saldo as stok, tsbw.no_wo as no_wo, b.kd_barang as kd_barang, '
                                 . 'b.nm_barang as nm_barang, b.satuan, tj.id_jabatan as kd_jabatan, '
                                 . 'tj.jabatan as bagian, dsb.qty as jml, dsb.ket as ket')
-                        ->where('b.nm_barang like "%' . $params['nama'] . '%" and wm.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_jab']['id_jabatan'] . '"');
+                        ->where('b.nm_barang like "%' . $params['nama'] . '%" and tsbw.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_jab']['id_jabatan'] . '"');
 
                 $command = $query->createCommand();
                 $models = $command->queryAll();
