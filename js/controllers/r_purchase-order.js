@@ -35,28 +35,58 @@ app.controller('returpoCtrl', function ($scope, Data, toaster) {
 
         $scope.isLoading = false;
     };
-    
-    $scope.excel = function () {
+    //laporan PO
+    $scope.excellpo = function () {
         Data.get('po/rekap', paramRef).then(function (data) {
             window.location = 'api/web/po/excel';
         });
     }
+    
+    $scope.printlpo = function () {
+        Data.get('po/rekap', paramRef).then(function (data) {
+            window.open('api/web/po/excel?print=true');
+        });
+    }
+    
+    //
+    //beli tunai kredit
+    
     $scope.excelbeli = function () {
         Data.get('po/rekap', paramRef).then(function (data) {
             window.location = 'api/web/po/excelbeli';
         });
     }
+    $scope.printbeli = function () {
+        Data.get('po/rekap', paramRef).then(function (data) {
+            window.open('api/web/po/excel?print=true');
+        });
+    }
+    //
+    //pemantauan
     $scope.excelpantau = function () {
         Data.get('po/rekap', paramRef).then(function (data) {
             window.location = 'api/web/po/excelpantau';
         });
     }
+     $scope.printpantau= function () {
+        Data.get('po/rekap', paramRef).then(function (data) {
+            window.open('api/web/po/excelpantau?print=true');
+        });
+    }
+    //
+    //fluktuasi
     $scope.excelfluktuasi = function () {
         Data.get('po/rekap', paramRef).then(function (data) {
             window.location = 'api/web/po/excelfluktuasi';
         });
     }
-
+    
+     $scope.printfluktuasi = function () {
+        Data.get('po/rekap', paramRef).then(function (data) {
+            window.open('api/web/po/excelfluktuasi?print=true');
+        });
+    }
+    ////
 
     $scope.updt_st = function ($id) {
         Data.get('po/updtst/'+$id).then(function (data) {
