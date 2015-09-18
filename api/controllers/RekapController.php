@@ -25,6 +25,7 @@ class RekapController extends Controller {
                     'rekapwomasuk' => ['get'],
                     'excelwomasuk' => ['get'],
                     'excelwomasuk2' => ['get'],
+                    'rekapbbmbbk' => ['get'],
                 ],
             ]
         ];
@@ -307,6 +308,88 @@ class RekapController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
+    
+     public function actionRekapbbmbbk() {
+           $params = $_REQUEST;
+        $filter = array();
+        $sort = "dk.id DESC";
+        $offset = 0;
+        $limit = 10;
+
+        //limit & offset pagination
+        if (isset($params['limit']))
+            $limit = $params['limit'];
+        if (isset($params['offset']))
+            $offset = $params['offset'];
+
+        //sorting
+        if (isset($params['sort'])) {
+            $sort = $params['sort'];
+            if (isset($params['order'])) {
+                if ($params['order'] == "false")
+                    $sort.=" ASC";
+                else
+                    $sort.=" DESC";
+            }
+        }
+
+        //create query
+        $query = new Query;
+        $query->offset($offset)
+                ->limit($limit)
+                ->from('det_bbm as db')
+                ->join('JOIN', 'barang as b', 'b.kd_barang = db.kd_barang')
+                ->join('LEFT JOIN', 'det_bbk as dk', 'b.kd_barang = dk.kd_barang')
+                ->orderBy($sort)
+                
+                ->select("b.nm_barang, db.jumlah as masuk, dk.jml as keluar");
+//filter
+
+        if (isset($params['filter'])) {
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+
+                if (isset($key) && $key == 'tgl') {
+                    $value = explode(' - ', $val);
+                    $start = date("Y-m-d", strtotime($value[0]));
+                    $end = date("Y-m-d", strtotime($value[1]));
+                    $query->andFilterWhere(['between', 'spk.tgl', $start, $end]);
+                } elseif ($key == 'no_wo') {
+                    $query->andFilterWhere(['like', 'vws.' . $key, $val]);
+                } elseif ($key == 'no_spk') {
+                    $query->andFilterWhere(['like', 'spk.' . $key, $val]);
+                } elseif ($key == 'model') {
+                    $query->andFilterWhere(['like', 'model.' . $key, $val]);
+                } elseif ($key == 'nama') {
+                    $query->andFilterWhere(['like', 'customer.' . $key, $val]);
+                } elseif ($key == 'nm_customer') {
+                    $query->andFilterWhere(['like', 'customer.' . $key, $val]);
+                } elseif ($key == 'jenis') {
+                    $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
+                } elseif ($key == 'merk') {
+                    $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
+                } elseif ($key == 'tipe') {
+                    $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
+                }
+            }
+        }
+        Yii::error($query);
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+//        Yii::error($models);
+        $totalItems = $query->count();
+
+        $query->limit(null);
+        $query->offset(null);
+        session_start();
+        $_SESSION['query'] = $query;
+        $_SESSION['filter'] = $filter;
+
+//        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+   
+     }
 
     public function actionExcelchassisin() {
          session_start();

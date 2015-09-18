@@ -41,6 +41,11 @@ app.controller('rekapdeliveryCtrl', function ($scope, Data, toaster) {
             window.location = 'api/web/delivery/excel';
         });
     }
+    $scope.print = function() {
+        Data.get('delivery/rekap', paramRef).then(function(data) {
+            window.open('api/web/delivery/excel?print=true', "", "width=500");
+        });
+    }
    
 
 

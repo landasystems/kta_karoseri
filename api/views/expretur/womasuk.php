@@ -4,7 +4,7 @@ header("Content-type: application/vnd-ms-excel");
 header("Content-Disposition: attachment; filename=excel-rekap-bstk.xls");
 }
 ?>
-
+<link rel="stylesheet" href="../../../css/print.css" type="text/css" />
 <table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
     <tr>
         <td colspan="3" style="border: 1px solid #000000">
