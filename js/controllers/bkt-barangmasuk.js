@@ -1,4 +1,4 @@
-app.controller('bbmCtrl', function ($scope, Data, toaster) {
+app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
     //init data
 
     var tableStateRef;
@@ -137,6 +137,9 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
         Data.get('pengguna/profile').then(function (data) {
             $scope.form.penerima = data.data.nama;
         });
+        keyboardManager.bind('ctrl+s', function () {
+            $scope.save($scope.form, $scope.detBbm);
+        });
     };
     $scope.update = function (form) {
         $scope.is_create = false;
@@ -146,6 +149,9 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
         $scope.form = form;
         $scope.form.tgl_nota = new Date(form.tgl_nota);
         $scope.getDetail(form.no_bbm);
+        keyboardManager.bind('ctrl+s', function () {
+            $scope.save($scope.form, $scope.detBbm);
+        });
     };
     $scope.view = function (form) {
         $scope.is_edit = true;

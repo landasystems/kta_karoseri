@@ -9,6 +9,12 @@ angular.module('app')
                     events: true,
                     modules: [
                         {
+                            name: 'frAngular',
+                            files: [
+                                'vendor/modules/keyboardManager.js'
+                            ]
+                        },
+                        {
                             name: 'daterangepicker',
                             files: [
                                 'vendor/modules/angular-daterangepicker/angular-daterangepicker.min.js',
