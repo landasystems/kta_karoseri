@@ -198,7 +198,18 @@
                     <div class="col-md-4 col-sm-12">
                         <img ng-src="img/{{(form.gambar) ? 'bom/'+form.gambar : 'noimage.jpg'}}" class="img-thumbnail">
                         <input type="file" nv-file-select="" uploader="uploader" />
-                    </div>                    
+                    </div>          
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <h5 class="font-bold">- Detail Bill Of Material</h5>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Filter Berdasarkan Bagian</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" ng-model="cari" style="width:300px;">
+                        </div>
+                        <div class="col-sm-6" align="center">
+                            <button type="submit" class="btn btn-primary btn-lg fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, detBom)">&nbsp;Simpan Perubahan</button>
+                        </div>
+                    </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <div class="panel panel-default">
                         <div class="panel-heading">
