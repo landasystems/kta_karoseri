@@ -1,14 +1,14 @@
 <?php
 if (!isset($_GET['print'])) {
-header("Content-type: application/vnd-ms-excel");
-//header("Content-Disposition: attachment; filename=excel-rekap-bstk.xls");
+    header("Content-type: application/vnd-ms-excel");
+    header("Content-Disposition: attachment; filename=excel-rekap-bstk.xls");
 }
 ?>
 
 
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
 <div style="width:26cm">
-   
+
     <?php
     $data = array();
     $i = 0;
@@ -39,7 +39,7 @@ header("Content-type: application/vnd-ms-excel");
         </tr>
         <tr>
             <td>Tgl. Cetak</td>
-            <td>: <?=date('d/m/Y')?></td>
+            <td>: <?= date('d/m/Y') ?></td>
             <td></td>
         </tr>
         <tr>
@@ -130,15 +130,17 @@ header("Content-type: application/vnd-ms-excel");
         }
         ?>
     </table>
-    <?php
-    if (isset($_GET['print'])) {
-        ?>
-        <script type="text/javascript">
-            window.print();
-            setTimeout(function () {
-                window.close();
-            }, 1);
-        </script>
-        <?php
-    }
+
+</div>
+<?php
+if (isset($_GET['print'])) {
     ?>
+    <script type="text/javascript">
+        window.print();
+        setTimeout(function () {
+            window.close();
+        }, 1);
+    </script>
+    <?php
+}
+?>

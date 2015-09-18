@@ -1,13 +1,28 @@
 <?php
+if (!isset($_GET['print'])) {
 header("Content-type: application/vnd-ms-excel");
 header("Content-Disposition: attachment; filename=excel-rekap-PO.xls");
+}
 ?>
-<h3>PT. KARYA TUGAS ANDA</h3>
-Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
-<br>
-Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
-<hr>
-<br>
+<link rel="stylesheet" href="../../../css/print.css" type="text/css" />
+<div style="width:26cm">
+<?php
+    if (isset($_GET['print'])) {
+        ?>
+        <table>
+            <tr>
+                <td width="80"><img src="../../../img/logo.png"></td>
+                <td valign="top">
+                    <b style="font-size: 18px; margin:0px; padding:0px;">PT KARYA TUGAS ANDA</b>
+                    <p style="font-size: 13px; margin:0px; padding:0px;">Jl. Raya Sukorejo No. 1 Sukorejo 67161, Pasuruan Jawa Timur</p>
+                    <p style="font-size: 13px; margin:0px; padding:0px;">Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com</p>
+                </td>
+            </tr>
+        </table>
+        <hr>
+        <?php
+    }
+    ?>
 <center><b>REKAP PURCHASE ORDER</b></center>
 <br><br>
 <?php
@@ -19,7 +34,7 @@ foreach ($models as $key => $val) {
     $data[$val['nota']]['body']['bayar'] = isset($data[$val['nota']]['body']['bayar']) ? $data[$val['nota']]['body']['bayar'] . ($val['bayar'] == '0') ? 'Tunai' : 'Kredit' . '<br>' : ($val['bayar'] == '0') ? 'Tunai' : 'Kredit' . '<br>';
     $data[$val['nota']]['body']['total'] = isset($data[$val['nota']]['body']['total']) ? $data[$val['nota']]['body']['total'] . $val['jml'] * $val['harga'] . '<br>' : $val['jml'] * $val['harga'].'<br>';
     $data[$val['nota']]['body']['ket'] = isset($data[$val['nota']]['body']['ket']) ? $data[$val['nota']]['body']['ket'] . $val['ket'] . '<br>' : $val['ket'] . '<br>';
-    $data[$val['nota']]['body']['tgl_pengiriman'] = isset($data[$val['nota']]['body']['tgl_pengiriman']) ? $data[$val['nota']]['body']['tgl_pengiriman'] . $val['tgl_pengiriman'] . '<br>' : $val['tgl_pengiriman'] . '<br>';
+    $data[$val['nota']]['body']['tgl_pengiriman'] = isset($data[$val['nota']]['body']['tgl_pengiriman']) ? $data[$val['nota']]['body']['tgl_pengiriman'] . date('d-m-Y',strtotime($val['tgl_pengiriman'])) . '<br>' : date('d-m-Y',strtotime($val['tgl_pengiriman'])) . '<br>';
     $data[$val['nota']]['body']['harga'] = isset($data[$val['nota']]['body']['harga']) ? $data[$val['nota']]['body']['harga'] . $val['harga'] . '<br>' : $val['harga'] . '<br>';
     $data[$val['nota']]['body']['nama_supplier'] = isset($data[$val['nota']]['body']['nama_supplier']) ? $data[$val['nota']]['body']['nama_supplier'] . $val['nama_supplier'] . '<br>' : $val['nama_supplier'] . '<br>';
     $data[$val['nota']]['body']['no_bbm'] = isset($data[$val['nota']]['body']['no_bbm']) ? $data[$val['nota']]['body']['no_bbm'] . $val['no_bbm'] . '<br>' : $val['no_bbm'] . '<br>';
@@ -31,7 +46,8 @@ foreach ($models as $key => $val) {
     $i++;
 }
 ?>
-<table border="1">
+
+<table style="border-collapse: collapse; font-size: 12px;" width="100%" border="1">
     <tr>
         <th valign="top">No PO</th>
         <th valign="top">Supplier</th>
@@ -49,19 +65,32 @@ foreach ($models as $key => $val) {
     foreach ($data as $key) {
         ?>
         <tr>
-            <td valign="top"><?php echo $key['title']['nota'] ?></td>
-            <td valign="top"><?php echo $key['title']['suplier'] ?></td>
-            <td valign="top"><?php echo $key['title']['no_bbm'] ?></td>
-            <td style="text-align: center">&nbsp;<?php echo $key['body']['kd_barang'] ?></td>
-            <td><?php echo $key['body']['nm_barang'] ?></td>
-            <td style="text-align: right">&nbsp;<?php echo $key['body']['jml'] ?></td>
-            <td style="text-align: right">&nbsp;<?php echo $key['body']['harga'] ?></td>
-            <td style="text-align: right">&nbsp;<?php echo $key['body']['total'] ?></td>
-            <td><?php echo $key['body']['tgl_pengiriman'] ?></td>
-            <td><?php echo $key['body']['bayar'] ?></td>
-            <td><?php echo $key['body']['ket'] ?></td>
+            <td class="border-bottom border-right" valign="top"><?php echo $key['title']['nota'] ?></td>
+            <td class="border-bottom border-right" valign="top"><?php echo $key['title']['suplier'] ?></td>
+            <td class="border-bottom border-right" valign="top"><?php echo $key['title']['no_bbm'] ?></td>
+            <td class="border-bottom border-right" style="text-align: center">&nbsp;<?php echo $key['body']['kd_barang'] ?></td>
+            <td class="border-bottom border-right"><?php echo $key['body']['nm_barang'] ?></td>
+            <td class="border-bottom border-right" style="text-align: right">&nbsp;<?php echo $key['body']['jml'] ?></td>
+            <td class="border-bottom border-right" style="text-align: right">&nbsp;<?php echo $key['body']['harga'] ?></td>
+            <td class="border-bottom border-right" style="text-align: right">&nbsp;<?php echo $key['body']['total'] ?></td>
+            <td class="border-bottom border-right" style="width: 70px"><?php echo $key['body']['tgl_pengiriman'] ?></td>
+            <td class="border-bottom border-right"><?php echo $key['body']['bayar'] ?></td>
+            <td class="border-bottom border-right"><?php echo $key['body']['ket'] ?></td>
         </tr>
         <?php
     }
     ?>
 </table>
+</div>
+<?php
+    if (isset($_GET['print'])) {
+        ?>
+        <script type="text/javascript">
+            window.print();
+            setTimeout(function () {
+                window.close();
+            }, 1);
+        </script>
+        <?php
+    }
+    ?>

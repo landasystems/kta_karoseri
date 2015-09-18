@@ -123,6 +123,14 @@ class SppnonrutinController extends Controller {
                 ->from('trans_spp')
                 ->orderBy($sort)
                 ->select("*");
+        
+        if (isset($params['filter'])) {
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+
+                $query->andFilterWhere(['like', 'trans_spp.' . $key, $val]);
+            }
+        }
 
         //filter
         $command = $query->createCommand();
