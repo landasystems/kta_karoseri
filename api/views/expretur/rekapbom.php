@@ -50,25 +50,42 @@ foreach ($models as $val) {
                 <th class="border-all" align="center" style="vertical-align:middle">Satuan</th>
                 <th class="border-all" align="center" style="vertical-align:middle">Standar</th>
                 <th class="border-all" align="center" style="vertical-align:middle">Harga</th>
+                <th class="border-all" align="center" style="vertical-align:middle">Total</th>
                 <th class="border-all" align="center" style="vertical-align:middle">Keterangan</th>
             </tr>
             <?php
+            $grandTotal = 0;
             foreach ($value['jab'] as $key => $bag) {
                 echo '<tr>
-                        <td colspan="6" class="border-all back-grey"><b>' . $bag['jabatan'] . '</b></td>
+                        <td colspan="7" class="border-all back-grey"><b>' . $bag['jabatan'] . '</b></td>
                     </tr>';
+                $total = 0;
                 foreach ($bag['body'] as $det) {
-                    echo '<tr height="25">
+                    $total += $det['harga'] * $det['qty'];
+                    $grandTotal += $det['harga'] * $det['qty'];
+                    echo '<tr>
                         <td align="center" class="border-all">' . $det['kode_barang'] . '</td>
                         <td class="border-all">' . $det['nama_barang'] . '</td>
                         <td align="center" class="border-all">' . $det['satuan'] . '</td>
                         <td align="center" class="border-all">' . $det['qty'] . '</td>
                         <td align="right" class="border-all">' . $det['harga'] . '</td>
+                        <td align="right" class="border-all">' . $det['harga'] * $det['qty'] . '</td>
                         <td class="border-all">' . $det['ket'] . '</td>
                     </tr>';
                 }
+
+                echo '<tr>
+                            <td colspan="5" align="left" class="border-all"><b>Sub Total</b></td>
+                            <td align="right" class="border-all"><b>' . $total . '</b></td>
+                            <td class="border-all"></td>
+                        </tr>';
             }
             ?>
+            <tr>
+                <td colspan="5" align="left" class="border-all"><b>Grand Total</b></td>
+                <td align="right" class="border-all"><b><?php echo $grandTotal ?></b></td>
+                <td class="border-all"></td>
+            </tr>
         </table>
         <br><br>
         <?php
