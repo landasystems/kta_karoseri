@@ -51,14 +51,29 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
 
     $scope.cariBarang = function ($query, $po) {
         if (typeof $scope.form.po != "undefined") {
+            $scope.results = [];
             Data.get('bbm/caribarang', {barang: $query, no_po: $po}).then(function (data) {
-                $scope.results = data.data;
-                console.log(data.data);
+                if ($scope.is_create == false) {
+                    angular.forEach(data.data, function ($value, $key) {
+                        $scope.results.push($value);
+                        $scope.results[$key]['barang']['sisa_ambil'] = $value
+                    })
+                } else {
+                    $scope.results = data.data;
+                }
             });
         } else
         if ($query.length >= 3) {
+            results
             Data.get('bbm/caribarang', {barang: $query, no_po: $po}).then(function (data) {
-                $scope.results = data.data;
+                if ($scope.is_create == false) {
+                    angular.forEach(data.data, function ($value, $key) {
+                        $scope.results.push($value);
+                        $scope.results[$key]['barang']['sisa_ambil'] = $value
+                    })
+                } else {
+                    $scope.results = data.data;
+                }
             });
         }
     };
@@ -216,6 +231,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster) {
                 $scope.detBbm.push($value);
                 $scope.detBbm[$key]['tgl_terima'] = new Date($value.tgl_terima);
             })
+            console.log($scope.detBbm);
         });
     };
     $scope.excel = function (id) {

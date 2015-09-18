@@ -294,12 +294,26 @@ class BbmController extends Controller {
                 ->where(['no_bbm' => $model->no_bbm])
                 ->all();
         $detail = array();
+        $i = 0;
         foreach ($det as $key => $val) {
+            $query = new Query;
+            $query->from('detail_po')
+                    ->join('JOIN', 'trans_po', 'detail_po.nota = trans_po.nota')
+                    ->join('JOIN', 'trans_bbm', 'trans_bbm.no_po = trans_po.nota')
+                    ->select('sum(detail_po.jml) as jml_po')
+                    ->where('trans_bbm.no_bbm = "' . $val->no_bbm . '" and detail_po.kd_barang = "' . $val->kd_barang . '"');
+            $command = $query->createCommand();
+            $po = $command->query()->read();
+
             $detail[$key] = $val->attributes;
             $namaBarang = (isset($val->barang->nm_barang)) ? $val->barang->nm_barang : '';
             $satuan = (isset($val->barang->satuan)) ? $val->barang->satuan : '';
 
             $detail[$key]['barang'] = ['kd_barang' => $val->kd_barang, 'nm_barang' => $namaBarang, 'satuan' => $satuan];
+            $models[$i]['barang']['jml_po'] = $po['jml_po'];
+            $models[$i]['barang']['telah_diambil'] = $po['jml_po'];
+            $models[$i]['barang']['sisa_ambil'] = $po['jml_po'];
+            $i++;
         }
 
 

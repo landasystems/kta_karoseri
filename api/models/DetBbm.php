@@ -55,5 +55,9 @@ class DetBbm extends \yii\db\ActiveRecord {
     public function getBarang() {
         return $this->hasOne(Barang::className(), ['kd_barang' => 'kd_barang']);
     }
+    
+    public function getBbm() {
+        return $this->hasOne(Barang::className(), ['no_bbm' => 'no_bbm']);
+    }
 
 }
