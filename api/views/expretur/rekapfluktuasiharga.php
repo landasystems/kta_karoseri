@@ -1,6 +1,8 @@
 <?php
+if (!isset($_GET['print'])) {
 header("Content-type: application/vnd-ms-excel");
-//header("Content-Disposition: attachment; filename=excel-Laporan-spp-rutin.xls");
+header("Content-Disposition: attachment; filename=excel-Laporan-spp-rutin.xls");
+}
 
 ?>
 
@@ -55,26 +57,26 @@ header("Content-type: application/vnd-ms-excel");
 </table>
 <table style="border-collapse: collapse; font-size: 12px;" width="100%" border="1">
     <tr>
-        <th>No</th>
-        <th>Supplier</th>
+        <th style="text-align: center;">No</th>
+        <th style="text-align: center;">Supplier</th>
         <th>Kode Barang</th>
         <th>Nama Barang</th>
-        <th>Sat</th>
-        <th>Tanggal</th>
-        <th>Harga Barang</th>
+        <th style="text-align: center;">Sat</th>
+        <th style="text-align: center;">Tanggal</th>
+        <th style="text-align: center;">Harga Barang</th>
     </tr>
     <?php
     $no=1;
     foreach ($models as $key) {
         ?>
         <tr>
-            <td class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
+            <td style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
             <td class="border-bottom border-right" valign="top"><?=$key['nama_supplier']?></td>
             <td class="border-bottom border-right" valign="top">&nbsp;<?=$key['kd_barang']?></td>
             <td class="border-bottom border-right" valign="top"><?= $key['nm_barang']; ?></td>
-            <td class="border-bottom border-right" valign="top"><?= $key['satuan'];?></td>
-            <td class="border-bottom border-right" valign="top"><?= $key['tgl_pengiriman']; ?></td>
-            <td class="border-bottom border-right" valign="top" style="text-align: right;">&nbsp;<?= $key['hrg_barang']; ?></td>
+            <td style="text-align: center;" class="border-bottom border-right" valign="top"><?= $key['satuan'];?></td>
+            <td style="text-align: center;" class="border-bottom border-right" valign="top"><?= date('d-m-Y',strtotime($key['tgl_pengiriman'])); ?></td>
+            <td style="text-align: right;" class="border-bottom border-right" valign="top" style="text-align: right;">&nbsp;<?= $key['hrg_barang']; ?></td>
         </tr>
         <?php
         $no++;
@@ -82,3 +84,15 @@ header("Content-type: application/vnd-ms-excel");
     ?>
 </table>
 </div>
+<?php
+if (isset($_GET['print'])) {
+    ?>
+    <script type="text/javascript">
+        window.print();
+        setTimeout(function () {
+            window.close();
+        }, 1);
+    </script>
+    <?php
+}
+?>
