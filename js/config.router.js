@@ -440,7 +440,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load([]).then(
+                                                return $ocLazyLoad.load(['frAngular']).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/bkt-barangmasuk.js');
                                                         }

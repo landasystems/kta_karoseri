@@ -38,11 +38,15 @@ if (!isset($_GET['print'])) {
         </thead>
         <tbody>
             <?php
+            $grandTotal = 0;
             foreach ($detail as $bag) {
-                echo '<tr height="25">
-                        <td class="border-all" colspan="9" style="background-color: rgb(226, 222, 222)"><b>' . $bag['nama_jabatan'] . '</b></td>
+                echo '<tr>
+                        <td class="border-all back-grey" colspan="9" style="background-color: rgb(226, 222, 222)"><b>' . $bag['nama_jabatan'] . '</b></td>
                       </tr>';
+                $total = 0;
                 foreach ($bag['body'] as $det) {
+                    $total += $det['harga'] * $det['jumlah'];
+                    $grandTotal += $det['harga'] * $det['jumlah'];
                     echo '<tr height="25">
                             <td class="border-all" width="35%">' . $det['nama_barang'] . '</td>
                             <td class="border-all" align="center" width="70">' . $det['satuan'] . '</td>
@@ -52,8 +56,18 @@ if (!isset($_GET['print'])) {
                             <td class="border-all" colspan="2">' . $det['ket'] . '</td>
                         </tr>';
                 }
+                echo '<tr>
+                            <td colspan="5" align="left" class="border-all"><b>Sub Total</b></td>
+                            <td colspan="2" align="right" class="border-all"><b>' . $total . '</b></td>
+                            <td colspan="2" class="border-all"></td>
+                        </tr>';
             }
             ?>
+            <tr>
+                <td colspan="5" align="left" class="border-all"><b>Grand Total</b></td>
+                <td colspan="2" align="right" class="border-all"><b><?php echo $grandTotal ?></b></td>
+                <td colspan="2" class="border-all"></td>
+            </tr>
             <tr>
                 <td>Note</td>
                 <td colspan="3" class="border-all" align="center">PREPARED</td>
@@ -74,7 +88,7 @@ if (isset($_GET['print'])) {
     ?>
     <script type="text/javascript">
         window.print();
-        setTimeout(function() {
+        setTimeout(function () {
             window.close();
         }, 1);
     </script>

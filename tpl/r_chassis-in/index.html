@@ -4,9 +4,21 @@
     </div>
     <div class="wrapper-md" ng-show="!is_edit">
         <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
-            <div class="panel-heading">.:: Rekap Chassis In
-                <div class="btn-group pull-right" role="group" style="margin-top: -4px; margin-right: 18px;">
-                    <button type="button" class="btn btn-success fa fa-file-excel-o" ng-show="!isCollapsed" ng-click="excel();">&nbsp;&nbsp;Export Excel</button>
+           <div class="panel-heading">
+                <div class="form-group">
+                    <div class="col-sm-4">.:: Rekap Chassis In</div>
+                    <div class="col-sm-4">
+
+                    </div>
+                    <div class="col-sm-4">
+                       <div class="pull-right dropdown" style="margin-top: -10px;margin-right: -12px" dropdown="">
+                            <button type="button"  class="btn btn-primary" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">&nbsp;&nbsp; Laporan Chassis In <span class="caret"></span></button>
+                            <ul class="dropdown-menu" style="width: 185px;background-color: #F7F7F7;">
+                                <li><a href="#"  ng-click="excel()">Excel</a></li>
+                                <li><a href="#" ng-click="print()">Print</a></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div> 
             </div>
 

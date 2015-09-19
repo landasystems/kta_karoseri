@@ -1,15 +1,9 @@
 <?php
-header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-laporan-pembelian-tunai-kredit.xls");
+if (!isset($_GET['print'])) {
+    header("Content-type: application/vnd-ms-excel");
+    header("Content-Disposition: attachment; filename=excel-laporan-pembelian-tunai-kredit.xls");
+}
 ?>
-<h3>PT. KARYA TUGAS ANDA</h3>
-Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
-<br>
-Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
-<hr>
-<br>
-<center><b>REKAP PURCHASE ORDER</b></center>
-<br><br>
 <?php
 $data = array();
 $i = 0;
@@ -33,101 +27,121 @@ foreach ($models as $key => $val) {
     $i++;
 }
 ?>
+<link rel="stylesheet" href="../../../css/print.css" type="text/css" />
+<div style="width:26cm">
+    <table style="border-collapse: collapse; font-size: 12px;" width="100%" border="1">
+        <tr>
+            <td class="border-right" rowspan="4" colspan="3">
+                <br>
+        <center><b>LAPORAN PEMBELIAN</b></center>
+        <br><br>
+        <center>No Dokumen : FR-PCH-019Rev.0</center>
+        <br><br>
 
-<table border="1">
-    <tr>
-        <td rowspan="4" colspan="3">
-            <br>
-    <center><b>LAPORAN PEMBELIAN</b></center>
-    <br><br>
-    <center>No Dok : FR-PCH-019Rev.0</center>
-    <br><br>
-
-    </td>
-    <td rowspan="4" colspan="5" valign="top">
-        <table>
-            <tr>
-                <td>NOMOR</td>
-                <td> : </td>
-            </tr>
-            <tr>
-                <td>PERIODE</td>
-                <?php
-                if (!empty($filter['tanggal'])) {
-                    $value = explode(' - ', $filter['tanggal']);
-                    $start = date("d/m/Y", strtotime($value[0]));
-                    $end = date("d/m/Y", strtotime($value[1]));
-                } else {
-                    $start = '';
-                    $end = '';
-                }
-                ?>
-                <td> : <?php echo $start . ' - ' . $end ?></td>
-            </tr>
-            <tr>
-                <td>CETAK</td>
-                <td> : <?php echo date('d/m/Y') ?></td>
-            </tr>
-        </table>
-    </td>
-    <td>DIBUAT</td>
-    <td>DIPERIKSA</td>
-    <td>DIKETAHUI</td>
-</tr>
-<tr>
-    <td rowspan="2"></td>
-    <td rowspan="2"></td>
-    <td rowspan="2"></td>
-</tr>
-<tr></tr>
-<tr>
-    <td>ADM PURC</td>
-    <td>PURC HEAD</td>
-    <td>FINANCE HEAD</td>
-</tr>
-</table>
-<table border="1">
-    <tr>
-        <th valign="top">TANGGAL</th>
-        <th valign="top">NO BBM</th>
-        <th valign="top">KODE BARANG</th>
-        <th>NAMA BARANG</th>
-        <th>SAT</th>
-        <th>JUMLAH</th>
-        <th>HARGA SATUAN</th>
-        <th>JENIS BARANG</th>
-        <th>SURAT JALAN</th>
-        <th>PO</th>
-        <th>SUPPLIER</th>
-    </tr>
-    <?php
-    foreach ($data as $key) {
-        $status_bayar = ($key['title']['status_bayar'] == 0) ? 'Tunai' : 'Kredit';
-        ?>
-        <tr><td style="background-color: rgb(226, 222, 222)" colspan="11"><b><?= $status_bayar ?></b></td></tr>
+        </td>
+        <td class="border-right" rowspan="4" colspan="5" valign="top">
+            <table>
+                <tr>
+                    <td>NOMOR</td>
+                    <td> : </td>
+                </tr>
+                <tr>
+                    <td>PERIODE</td>
                     <?php
-                    foreach ($key['nota'] as $keys) {
-                        ?>
-            <tr><td colspan="11"><?= $keys['title'] ?></td></tr>
+                    if (!empty($filter['tanggal'])) {
+                        $value = explode(' - ', $filter['tanggal']);
+                        $start = date("d/m/Y", strtotime($value[0]));
+                        $end = date("d/m/Y", strtotime($value[1]));
+                    } else {
+                        $start = '';
+                        $end = '';
+                    }
+                    ?>
+                    <td> : <?php echo $start . ' - ' . $end ?></td>
+                </tr>
+                <tr>
+                    <td>CETAK</td>
+                    <td> : <?php echo date('d/m/Y') ?></td>
+                </tr>
+            </table>
+        </td>
+        <td style="text-align: center;" class="border-bottom border-right">DIBUAT</td>
+        <td style="text-align: center;" class="border-bottom border-right">DIPERIKSA</td>
+        <td style="text-align: center;" class="border-bottom border-right">DIKETAHUI</td>
+        </tr>
+        <tr>
+            <td class="border-bottom border-right" rowspan="2"></td>
+            <td class="border-bottom border-right" rowspan="2"></td>
+            <td class="border-bottom border-right" rowspan="2"></td>
+        </tr>
+        <tr></tr>
+        <tr>
+            <td style="text-align: center;" class="border-right">ADM PURC</td>
+            <td style="text-align: center;" class="border-right">PURC HEAD</td>
+            <td style="text-align: center;" sclass="border-right">FINANCE HEAD</td>
+        </tr>
+    </table>
+    <table style="border-collapse: collapse; font-size: 12px;" width="100%" border="1">
+        <tr>
+            <th style="text-align: center;" valign="top">TANGGAL</th>
+            <th style="text-align: center;" valign="top">NO BBM</th>
+            <th style="text-align: center;" valign="top">KODE BARANG</th>
+            <th style="text-align: center;">NAMA BARANG</th>
+            <th style="text-align: center;">SAT</th>
+            <th style="text-align: center;">JUMLAH</th>
+            <th style="text-align: center;">HARGA SATUAN</th>
+            <th style="text-align: center;">JENIS BARANG</th>
+            <th style="text-align: center;">SURAT JALAN</th>
+            <th style="text-align: center;">PO</th>
+            <th style="text-align: center;">SUPPLIER</th>
+        </tr>
+        <?php
+        foreach ($data as $key) {
+            $status_bayar = ($key['title']['status_bayar'] == 0) ? 'Tunai' : 'Kredit';
+            ?>
+            <tr>
+                <td class="border-all back-grey" style="background-color: rgb(226, 222, 222)" colspan="11">
+                    <b><?= $status_bayar ?></b>
+                </td>
+            </tr>
             <?php
-            foreach ($keys['body'] as $val) {
+            foreach ($key['nota'] as $keys) {
                 ?>
                 <tr>
-                    <td><?= $val['tgl_terima'] ?></td>
-                    <td><?= $val['no_bbm'] ?></td>
-                    <td><?= $val['kd_barang'] ?></td>
-                    <td><?= $val['nm_barang'] ?></td>
-                    <td><?= $val['satuan'] ?></td>
-                    <td><?= $val['jml'] ?></td>
-                    <td><?= $val['harga'] ?></td>
-                    <td><?= $val['jenis_brg'] ?></td>
-                    <td><?= $val['surat_jalan'] ?></td>
-                    <td><?= $val['nota'] ?></td>
-                    <td><?= $val['nama_supplier'] ?></td>
+                    <td class="border-bottom border-right" colspan="11"><?= $keys['title'] ?></td>
                 </tr>
                 <?php
+                foreach ($keys['body'] as $val) {
+                    ?>
+                    <tr>
+                        <td class="border-bottom border-right"><?= $val['tgl_terima'] ?></td>
+                        <td class="border-bottom border-right"><?= $val['no_bbm'] ?></td>
+                        <td class="border-bottom border-right"><?= $val['kd_barang'] ?></td>
+                        <td class="border-bottom border-right"><?= $val['nm_barang'] ?></td>
+                        <td class="border-bottom border-right"><?= $val['satuan'] ?></td>
+                        <td class="border-bottom border-right"><?= $val['jml'] ?></td>
+                        <td class="border-bottom border-right"><?= $val['harga'] ?></td>
+                        <td class="border-bottom border-right"><?= $val['jenis_brg'] ?></td>
+                        <td class="border-bottom border-right"><?= $val['surat_jalan'] ?></td>
+                        <td class="border-bottom border-right"><?= $val['nota'] ?></td>
+                        <td class="border-bottom border-right"><?= $val['nama_supplier'] ?></td>
+                    </tr>
+                    <?php
+                }
             }
         }
-    }
+        ?>
+    </table>
+</div>
+<?php
+if (isset($_GET['print'])) {
     ?>
-</table>
+    <script type="text/javascript">
+        window.print();
+        setTimeout(function () {
+            window.close();
+        }, 1);
+    </script>
+    <?php
+}
+?>

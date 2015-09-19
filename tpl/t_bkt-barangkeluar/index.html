@@ -217,54 +217,43 @@
                         </div>
                         <br>
                         <div class="row">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            Detail Barang Keluar
-                                        </div>
-                                        <div class="col-md-9" align="right">
-                                            <button ng-click="addDetail()" class="btn btn-success" ng-hide="is_view" title="Tambah Detail"><i class="fa fa-plus-square"></i></button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--<div class="panel-body">-->
-                                <div class="table-responsive">
-                                    <table class="table table-striped b-t b-light">
-                                        <thead>
-                                            <tr>
-                                                <th>Barang</th>
-                                                <th style="width:100px">Jumlah</th>
-                                                <th style="width:100px">Satuan</th>
-                                                <th style="width:400px">Keterangan</th>
-                                                <th width="50" ng-show="is_view != true"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr ng-repeat="detail in detailBbk">
-                                                <td>
-                                        <ui-select uiselect-autofocus="open" on-select="detail.satuan = detail.kd_barang.satuan; detailstok(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang)" ng-disabled="is_view" ng-model="detail.kd_barang" theme="bootstrap">
-                                            <ui-select-match>{{$select.selected.nm_barang}}</ui-select-match>
-                                            <ui-select-choices refresh="listBarang($select.search, form.no_wo, form.kd_jab)" repeat="val in resultsbarang">
-                                                {{val.nm_barang}}
-                                            </ui-select-choices>
-                                        </ui-select>
-                                        </td>
+                            <table class="table table-striped b-t b-light" style='margin-top: 25px;'>
+                                <thead>
+                                    <tr>
+                                        <th class="panel-heading text-muted font-bold" colspan="4">Detail BBK</th>
+                                        <th class="panel-heading text-muted font-bold" ><button ng-click="addDetail()" class="btn btn-success" ng-hide="is_view" title="Tambah Detail"><i class="fa fa-plus-square"></i></button></th>
+                                    </tr>
+                                    <tr>
+                                        <th>Barang</th>
+                                        <th style="width:100px">Jumlah</th>
+                                        <th style="width:100px">Satuan</th>
+                                        <th style="width:400px">Keterangan</th>
+                                        <th width="50" ng-show="is_view != true"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="detail in detailBbk">
                                         <td>
-                                            <input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control"
-                                                   ng-keyup="
-                                                                       kalkulasi(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang, detail.jml);">
-                                        </td>
-                                        <td>{{detail.satuan}}</td>
-                                        <td><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control" ng-enter="addDetail('');" event-focus-id="0"></td>
-                                        <td ng-show="is_view != true">
-                                            <button ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view" style="width:50px;" title="Hapus Detail"><i class="fa fa-trash-o"></i></button>
-                                        </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                                <ui-select uiselect-autofocus="open" on-select="detail.satuan = detail.kd_barang.satuan; detailstok(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang)" ng-disabled="is_view" ng-model="detail.kd_barang" theme="bootstrap">
+                                    <ui-select-match>{{$select.selected.nm_barang}}</ui-select-match>
+                                    <ui-select-choices refresh="listBarang($select.search, form.no_wo, form.kd_jab)" repeat="val in resultsbarang">
+                                        {{val.nm_barang}}
+                                    </ui-select-choices>
+                                </ui-select>
+                                </td>
+                                <td>
+                                    <input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control"
+                                           ng-keyup="
+                                                               kalkulasi(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang, detail.jml);">
+                                </td>
+                                <td>{{detail.satuan}}</td>
+                                <td><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control" ng-enter="addDetail('');" event-focus-id="0"></td>
+                                <td ng-show="is_view != true">
+                                    <button ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view" style="width:50px;" title="Hapus Detail"><i class="fa fa-trash-o"></i></button>
+                                </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                         <div class="line line-dashed"></div>
                         <div align="center">

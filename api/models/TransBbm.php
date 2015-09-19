@@ -31,7 +31,7 @@ class TransBbm extends \yii\db\ActiveRecord {
         return [
             [['no_bbm'], 'required'],
             [['tgl_nota'], 'safe'],
-            [['no_bbm','no_po'], 'string', 'max' => 15],
+            [['no_bbm', 'no_po'], 'string', 'max' => 15],
             [['surat_jalan'], 'string', 'max' => 20],
             [['kd_suplier', 'no_wo'], 'string', 'max' => 10],
             [['pengirim', 'penerima'], 'string', 'max' => 50],
@@ -56,6 +56,10 @@ class TransBbm extends \yii\db\ActiveRecord {
 
     public function getSupplier() {
         return $this->hasOne(Supplier::className(), ['kd_supplier' => 'kd_suplier']);
+    }
+
+    public function getPo() {
+        return $this->hasOne(TransPo::className(), ['nota' => 'no_po']);
     }
 
 }

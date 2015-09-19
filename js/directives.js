@@ -69,7 +69,7 @@ angular.module('app')
                 };
             }]);
 
-//Directive key press
+//Directive enter
 angular.module('app')
         .directive('ngEnter', function () {
             return function (scope, element, attrs) {
@@ -82,6 +82,20 @@ angular.module('app')
                         event.preventDefault();
                     }
                 });
+            };
+        });
+
+angular.module('app')
+        .directive('shortcut', function () {
+            return {
+                restrict: 'E',
+                replace: true,
+                scope: true,
+                link: function postLink(scope, iElement, iAttrs) {
+                    jQuery(document).on('keypress', function (e) {
+                        scope.$apply(scope.keyPressed(e));
+                    });
+                }
             };
         });
 
