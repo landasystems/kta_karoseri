@@ -1,7 +1,7 @@
 <?php
 if (!isset($_GET['print'])) {
 header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-rekap-bstk.xls");
+header("Content-Disposition: attachment; filename=excel-rekap-lapwomasuk.xls");
 }
 ?>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
@@ -70,7 +70,7 @@ foreach ($models as $key => $val) {
     $i++;
 }
 ?>
-<table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
+<table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
     <tr>
         <th>IN CHASIS</th>
         <th>UNIT</th>
@@ -97,20 +97,20 @@ foreach ($models as $key => $val) {
        
         
         foreach ($keys['customer'] as $val1) {
-            echo'<tr><td colspan="9" style="text-align: left;background-color: darkkhaki;">' . $val1['customer'] . '</td></tr>';
+            echo'<tr><td class="border-all" colspan="9" style="text-align: left;background-color: darkkhaki;">' . $val1['customer'] . '</td></tr>';
             foreach ($val1['body'] as $val) {
                 $total += $jml;
                 ?>
                 <tr>
-                    <td><?= $val['kd_titipan']; ?>&nbsp;</td>
-                    <td><center>1</center></td>
-                    <td><?= $val['no_wo']; ?></td>
-                    <td><?= $val['no_chassis']; ?></td>
-                    <td><?= $val['no_mesin']; ?></td>
-                    <td><?= $val['nama']; ?></td>
-                    <td><?= $val['market']; ?></td>
-                    <td><?= $val['model']; ?></td>
-                    <td><?= $val['merk']; ?> <?= $val['tipe']; ?></td>
+                    <td class="border-all"><?= $val['kd_titipan']; ?>&nbsp;</td>
+                    <td class="border-all"><center>1</center></td>
+                    <td class="border-all"><?= $val['no_wo']; ?></td>
+                    <td class="border-all"><?= $val['no_chassis']; ?></td>
+                    <td class="border-all"><?= $val['no_mesin']; ?></td>
+                    <td class="border-all"><?= $val['nama']; ?></td>
+                    <td class="border-all"><?= $val['market']; ?></td>
+                    <td class="border-all"><?= $val['model']; ?></td>
+                    <td class="border-all"><?= $val['merk']; ?> <?= $val['tipe']; ?></td>
 
 
                 </tr>

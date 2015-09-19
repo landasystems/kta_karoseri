@@ -22,17 +22,7 @@ header("Content-Disposition: attachment; filename=excel-rekap-ujimutu.xls");
         <table style="font-size: 12px;">
             <tr>
                 <td>PERIODE</td>
-                <?php
-                if (!empty($filter['tgl_periode'])) {
-                    $value = explode(' - ', $filter['tgl_periode']);
-                    $start = date("d/m/Y", strtotime($value[0]));
-                    $end = date("d/m/Y", strtotime($value[1]));
-                } else {
-                    $start = '';
-                    $end = '';
-                }
-                ?>
-                <td> : <?php echo $start . ' - ' . $end ?></td>
+                <td> : <?php echo $periode  ?></td>
             </tr>
             <tr>
                 <td>CETAK</td>

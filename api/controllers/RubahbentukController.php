@@ -23,6 +23,7 @@ class RubahbentukController extends Controller {
                     'update' => ['post'],
                     'delete' => ['delete'],
                     'excel' => ['get'],
+                    'exceluji' => ['get'],
                 ],
             ]
         ];
@@ -84,6 +85,8 @@ class RubahbentukController extends Controller {
                 ->join('Left Join', 'view_wo_spk as vws', 'rb.no_wo = vws.no_wo')
                 ->join('Left Join', 'spk', 'vws.no_spk = spk.no_spk')
                 ->join('left Join', 'warna', 'vws.kd_warna = warna.kd_warna')
+                ->join('left Join', 'det_uji_mutu as du', 'rb.no_wo = du.no_wo')
+                ->join('left Join', 'trans_uji_mutu as tum', 'tum.kd_uji = du.kd_uji')
                 ->orderBy($sort)
                 ->select("rb.*, vws.merk, vws.tipe, vws.model, vws.jenis, vws.no_chassis, vws.no_mesin, vws.nm_customer, warna.warna as warna_lama");
 
@@ -107,6 +110,7 @@ class RubahbentukController extends Controller {
         $totalItems = $query->count();
         session_start();
         $_SESSION['query'] = $query;
+        $_SESSION['filter'] = $filter;
         $_SESSION['periode'] = isset($start) ? date("d/m/y", strtotime($start)) . '-' . date("d/m/y", strtotime($end)) : '-';
 
         $this->setHeader(200);
@@ -124,6 +128,18 @@ class RubahbentukController extends Controller {
         $models = $command->queryAll();
         $periode = isset($_SESSION['periode']) ? $_SESSION['periode'] : '-';
         return $this->render("/expretur/rubahbentuk", ['models' => $models, 'periode' => $periode]);
+    }
+
+    public function actionExceluji() {
+        session_start();
+         $query = $_SESSION['query'];
+        $query->limit(null);
+        $query->offset(null);
+        $query->select("rb.tgl as tanggal_rubah, vws.no_wo, tum.tgl, vws.merk, vws.tipe, vws.no_chassis, vws.nm_customer, tum.kd_uji");
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $periode = isset($_SESSION['periode']) ? $_SESSION['periode'] : '-';
+        return $this->render("/expretur/rekapujimutu", ['models' => $models, 'periode' => $periode]);
     }
 
     public function actionView($id) {
