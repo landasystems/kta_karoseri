@@ -31,8 +31,8 @@ if (!isset($_GET['print'])) {
                 </tr>
             </table>
         </td>
-        <td class="border-left border-bottom">Diserahkan Oleh</td>
-        <td class="border-left border-bottom">Diterima  Oleh</td>
+        <td class="border-left border-bottom" align="center">Diserahkan Oleh</td>
+        <td class="border-left border-bottom" align="center">Diterima  Oleh</td>
     </tr>
     <tr>
         <td height="70" class="border-left"></td>

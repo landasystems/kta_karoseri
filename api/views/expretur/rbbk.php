@@ -6,29 +6,10 @@ header("Content-Disposition: attachment; filename=excel-rekap-Barang_Keluar.xls"
 ?>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
 <div style="width:26cm">
-    <?php
-    if (isset($_GET['print'])) {
-        ?>
-        <table>
-            <tr>
-                <td width="80"><img src="../../../img/logo.png"></td>
-                <td valign="top">
-                    <b style="font-size: 18px; margin:0px; padding:0px;">PT KARYA TUGAS ANDA</b>
-                    <p style="font-size: 13px; margin:0px; padding:0px;">Jl. Raya Sukorejo No. 1 Sukorejo 67161, Pasuruan Jawa Timur</p>
-                    <p style="font-size: 13px; margin:0px; padding:0px;">Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com</p>
-                </td>
-            </tr>
-        </table>
-        <hr>
-        <?php
-    }
-    ?>
-
-
-    <table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
+      <table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
         <tr>
             <td rowspan="2" colspan="3" style="border: 1px solid #000000">
-                <b><center>REKAP BARANG KELUAR</center>
+                <b><center>LAPORAN BARANG KELUAR</center>
                     <br>
                     <center>BBK</center></b>
                 <br> No Dok : FR-WHS-015-REV.00
@@ -65,7 +46,7 @@ header("Content-Disposition: attachment; filename=excel-rekap-Barang_Keluar.xls"
                 </table>
             </td>
 
-            <th colspan="1" style="text-align: center">Dibuat oleh</th>
+            <th colspan="1" style="text-align: center; height:15px;">Dibuat oleh</th>
             <th colspan="1" style="text-align: center">Diperiksa oleh</th>
             <th colspan="1" style="text-align: center">Diketahui oleh</th>
         </tr>
