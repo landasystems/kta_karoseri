@@ -30,15 +30,19 @@ header("Content-Disposition: attachment; filename=excel-rekap-ujimutu.xls");
             </tr>
         </table>
     </td>
-    <td>DIBUAT</td>
-    <td>DIPERIKSA</td>
+    <td style="height: 10px;"><center>DIBUAT</center></td>
+<td><center>DIPERIKSA</center></td>
 </tr>
 <tr>
-    <td rowspan="2"></td>
+    <td style="border-bottom:  none"></td>
+    <td style="border-bottom:  none"></td>
 </tr>
-<tr></tr>
 <tr>
-    <td>Tgl :</td>
+    <td style="border-top:  none"></td>
+    <td style="border-top:  none"></td>
+</tr>
+<tr>
+    <td style="height: 10px;">Tgl :</td>
     <td>Tgl :</td>
 </tr>
 </table>

@@ -5,24 +5,22 @@ header("Content-Disposition: attachment; filename=excel-rekap-ujimutu.xls");
 }
 ?>
 
-
-<table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
+<table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
+    
     <tr>
-        <td colspan="9">
-            <tr>
-        <td rowspan="4" colspan="2">
+        <td rowspan="4" >
             <br>
-    <center><b> PENGAJUAN UJI MUTU</b></center>
+    <center><b>PENGAJUAN UJI MUTU</b></center>
     <br><br>
     <center>Kode Dokumen : FR-PPC-00-REV000</center>
     <br><br>
 
     </td>
     <td rowspan="4" colspan="4" valign="top">
-        <table>
+        <table style="font-size: 12px;">
             <tr>
                 <td>PERIODE</td>
-                <?php
+                 <?php
                 if (!empty($filter['tgl_periode'])) {
                     $value = explode(' - ', $filter['tgl_periode']);
                     $start = date("d/m/Y", strtotime($value[0]));
@@ -40,23 +38,28 @@ header("Content-Disposition: attachment; filename=excel-rekap-ujimutu.xls");
             </tr>
         </table>
     </td>
-    <td>DIajukan Oleh</td>
-    <td>DIketahui Oleh</td>
-    <td>DIsetujui Oleh</td>
+    <td style="font-size:10px; height: 10px;text-align: center ">Diajukan Oleh</td>
+    <td  style="font-size:10px;text-align: center">Diketahui Oleh</td>
+    <td  style="font-size:10px;text-align: center">Disetujui Oleh</td>
 </tr>
 <tr>
-    <td rowspan="2"></td>
-    <td rowspan="2"></td>
-    <td rowspan="2"></td>
+    <td style="border-bottom:  none"></td>
+    <td style="border-bottom:  none"></td>
+    <td style="border-bottom:  none"></td>
 </tr>
-<tr></tr>
 <tr>
-    <td>Customer Relation Officer</td>
-    <td>Sales Suport Sect Head</td>
-    <td>Finance Dept Head</td>
+    <td style="border-top:  none"></td>
+    <td style="border-top:  none"></td>
+    <td style="border-top:  none"></td>
 </tr>
-        </td>
-    </tr>
+<tr>
+    <td style="height: 10px;font-size:10px">Tgl :</td>
+    <td style="font-size:10px">Tgl :</td>
+    <td style="font-size:10px">Tgl :</td>
+</tr>
+</table>
+
+    <table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
     <tr>
         <th rowspan="2">NO</th>
         <th rowspan="2">WO</th>
@@ -83,19 +86,19 @@ header("Content-Disposition: attachment; filename=excel-rekap-ujimutu.xls");
         if($key['kelas']==1){
             $kelas1 += 148000;
             $td = '<td>'.Yii::$app->landa->rp(148000).'</td>
-                <td>-</td>
-                <td>-</td>';
+                <td><center>-</center></td>
+                <td><center>-</center></td>';
         }
         if($key['kelas']==2){
             $kelas2 += 138000;
-            $td = '<td>-</td>
+            $td = '<td><center>-</center></td>
                 <td>'.Yii::$app->landa->rp(138000).'</td>
-                <td>-</td>';
+                <td><center>-</center></td>';
         }
         if($key['kelas']==3){
             $kelas3 += 138000;
-             $td = '<td>-</td>
-                <td>-</td>
+             $td = '<td><center>-</center></td>
+                <td><center>-</center></td>
                 <td>'.Yii::$app->landa->rp(138000).'</td>';
         }
         ?>
