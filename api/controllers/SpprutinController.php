@@ -81,6 +81,48 @@ class SpprutinController extends Controller {
 
         return $this->render("/expretur/monitoring", ['models' => $models, 'periode' => $periode]);
     }
+    
+    public function actionKekurangan() {
+        session_start();
+        $query = new Query;
+        $query->from('det_spp')
+                ->join('LEFT JOIN', 'trans_spp', 'trans_spp.no_spp = det_spp.no_spp')
+                ->join('LEFT JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
+                ->join('RIGHT JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
+                ->join('JOIN', 'detail_po', 'detail_po.nota = trans_po.nota and detail_po.kd_barang = barang.kd_barang')
+                ->join('RIGHT JOIN', 'trans_bbm', 'trans_bbm.no_po =  trans_po.nota')
+                ->join('JOIN', 'det_bbm', 'det_bbm.no_bbm = trans_bbm.no_bbm and det_bbm.kd_barang = barang.kd_barang')
+                ->join('LEFT JOIN', 'view_wo_spk', 'view_wo_spk.no_wo = det_spp.no_wo')
+                ->orderBy('view_wo_spk.no_wo ASC, barang.nm_barang ASC')
+                ->select("det_spp.*,barang.nm_barang,barang.satuan,trans_po.nota, det_spp.p as tgl_trans, det_spp.qty as jumlah_spp, det_bbm.jumlah as jumlah_bbm, (det_spp.qty-det_bbm.jumlah) as selisih");
+
+        if (isset($_SESSION['filter'])) {
+            foreach ($_SESSION['filter'] as $key => $val) {
+                if (isset($key) && $key == 'kategori') {
+                    if ($val == 'rutin') {
+                        $query->andWhere("trans_spp.no_proyek='Rutin'");
+                    } elseif ($val == 'nonrutin') {
+                        $query->andWhere("trans_spp.no_proyek='Non Rutin'");
+                    }
+                } else if ($key == 'tgl_periode') {
+                    $value = explode(' - ', $val);
+                    $start = date("Y-m-d", strtotime($value[0]));
+                    $end = date("Y-m-d", strtotime($value[1]));
+                    $query->andFilterWhere(['between', 'trans_spp.tgl_trans', $start, $end]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+                }
+            }
+        }
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $periode = $_SESSION['periode'];
+        
+//        echo json_encode($models);
+
+        return $this->render("/expretur/kekurangan", ['models' => $models, 'periode' => $periode]);
+    }
 
     public function actionCari() {
 
@@ -502,7 +544,7 @@ class SpprutinController extends Controller {
 
         $query = new Query;
         $query->where("det_spp.no_spp='" . $nospp . "'")
-                ->from('det_spp')
+                ->from('det_spps')
                 ->join('JOIN', 'trans_spp', 'trans_spp.no_spp = det_spp.no_spp')
                 ->join('LEFT JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
                 ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
@@ -514,16 +556,6 @@ class SpprutinController extends Controller {
         return $this->render("/expretur/laporanspprutin", ['models' => $models, 'id' => $nospp]);
     }
 
-    public function actionKekurangan() {
-        session_start();
-        $query = $_SESSION['query'];
-        $query->limit(null);
-        $query->offset(null);
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-//        $query->join('LEFT JOIN', 'trans_bbm', 'trans_bbm.no_po = trans_po.nota')
-//                ->join('LEFT JOIN', 'view_wo_spk', 'view_wo_spk.no_wo = det_spp.no_wo');
-        return $this->render("/expretur/kekurangan", ['models' => $models]);
-    }
+   
 
 }

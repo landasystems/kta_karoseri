@@ -34,6 +34,11 @@ app.controller('supplierCtrl', function ($scope, Data, toaster) {
             window.location = 'api/web/supplier/excel';
         });
     }
+    $scope.print = function () {
+        Data.get('supplier', paramRef).then(function (data) {
+            window.open('api/web/supplier/excel?print=true');
+        });
+    }
     
     $scope.create_kode = function () {
         var nama_sp = $scope.form.nama_supplier;
