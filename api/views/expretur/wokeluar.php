@@ -113,13 +113,13 @@ if (!isset($_GET['print'])) {
             <?php
             $total = 0;
             foreach ($keys['customer'] as $val1) {
-                echo'<tr><td <td class="border-all"> colspan="8" style="text-align: left;background-color: darkkhaki;">' . $val1['customer'] . '</td></tr>';
+                echo'<tr><td class="border-all" colspan="8" style="text-align: left;background-color: darkkhaki;">' . $val1['customer'] . '</td></tr>';
                 foreach ($val1['body'] as $val) {
                     $total += $jml;
                     ?>
                     <tr>
-                        <td><?= Yii::$app->landa->date2Ind($val['tgl_terima']); ?>&nbsp;</td>
-                        <td><center>1</center></td>
+                        <td class="border-all"><?= Yii::$app->landa->date2Ind($val['tgl_terima']); ?>&nbsp;</td>
+                        <td class="border-all"><center>1</center></td>
                     <td class="border-all"><?= $val['no_wo']; ?></td>
                     <td class="border-all"><?= $val['model']; ?></td>
                     <td class="border-all"><?= $val['merk']; ?> <?= $val['tipe']; ?></td>
@@ -153,7 +153,7 @@ if (!isset($_GET['print'])) {
         ?>
         <script type="text/javascript">
             window.print();
-            setTimeout(function() {
+            setTimeout(function () {
                 window.close();
             }, 1);
         </script>
