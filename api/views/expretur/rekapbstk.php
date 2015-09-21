@@ -1,28 +1,20 @@
 <?php
 header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-rekap-bstk.xls");
+//header("Content-Disposition: attachment; filename=excel-rekap-bstk.xls");
 ?>
-<h3>PT. KARYA TUGAS ANDA</h3>
-Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
-<br>
-Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
-<hr>
-<br>
-<center><b>LAPORAN REKAP BSTK</b></center>
-<br><br>
-
-
-<table border="1">
+<link rel="stylesheet" href="../../../css/print.css" type="text/css" />
+<div style="width:26cm">
+<table style="border-collapse: collapse; font-size: 12px;" width="100%" border="1">
     <tr>
-        <td rowspan="4" colspan="2">
+        <td class="border-right" rowspan="4" colspan="2">
             <br>
-    <center><b>LAPORAN BSTK</b></center>
+    <center><b>REKAP BSTK</b></center>
     <br><br>
-    <center>No Dok : FR-SS-014</center>
+    <center></center>
     <br><br>
 
     </td>
-    <td rowspan="4" colspan="2" valign="top">
+    <td class="border-right" rowspan="4" colspan="2" valign="top">
         <table>
             <tr>
                 <td>PERIODE</td>
@@ -39,23 +31,19 @@ Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
                 <td> : <?php echo $start . ' - ' . $end ?></td>
             </tr>
             <tr>
-                <td>CETAK</td>
-                <td> : <?php echo date('d M Y') ?></td>
+                <td>Tanggal Cetak</td>
+                <td> : <?= Yii::$app->landa->date2Ind(date('d-M-Y')) ?></td>
             </tr>
         </table>
     </td>
-    <td >DIBUAT</td>
-    <td >DIPERIKSA</td>
+    <td style="width:100px;text-align: center;" class="border-right border-bottom">DIBUAT</td>
+    <td style="width:100px;text-align: center;" class="border-right border-bottom" >DIKETAHUI</td>
 </tr>
 <tr>
-    <td rowspan="2"></td>
-    <td rowspan="2"></td>
+    <td class="border-right border-bottom" rowspan="2"></td>
+    <td class="border-right border-bottom" rowspan="2"></td>
 </tr>
 <tr></tr>
-<tr>
-    <td>Tgl :</td>
-    <td></td>
-</tr>
 </table>
 <?php
 $data = array();
@@ -69,7 +57,7 @@ foreach ($models as $key => $val) {
     $i++;
 }
 ?>
-<table border="1">
+<table style="border-collapse: collapse; font-size: 12px;" width="100%" border="1">
     <tr>
         <th>NO</th>
         <th>NO WO</th>
@@ -100,3 +88,4 @@ foreach ($models as $key => $val) {
     }
     ?>
 </table>
+</div>

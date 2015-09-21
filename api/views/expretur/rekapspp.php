@@ -11,14 +11,14 @@ $i = 0;
 //print_r($models);
 foreach ($models as $val) {
     $data[$val['no_spp']]['title']['no_spp'] = $val['no_spp'];
-    $data[$val['no_spp']]['title']['tgl_trans'] = $val['tgl_trans'];
+    $data[$val['no_spp']]['title']['tgl_trans'] = date('d-m-Y', strtotime($val['tgl_trans']));
     $data[$val['no_spp']]['body'][$i]['nota'] = $val['nota'];
     $data[$val['no_spp']]['body'][$i]['kd_barang'] = $val['kd_barang'];
     $data[$val['no_spp']]['body'][$i]['nm_barang'] = $val['nm_barang'];
     $data[$val['no_spp']]['body'][$i]['satuan'] = $val['satuan'];
     $data[$val['no_spp']]['body'][$i]['qty'] = $val['qty'];
-    $data[$val['no_spp']]['body'][$i]['p'] = $val['p'];
-    $data[$val['no_spp']]['body'][$i]['a'] = $val['a'];
+    $data[$val['no_spp']]['body'][$i]['p'] = date('d-m-Y', strtotime($val['p']));
+    $data[$val['no_spp']]['body'][$i]['a'] = date('d-m-Y', strtotime($val['a']));
     $data[$val['no_spp']]['body'][$i]['ket'] = $val['ket'];
     $i++;
 }
@@ -80,7 +80,7 @@ foreach ($models as $val) {
             ?>
             <tr>
                 <td class="border-top border-right" valign="top">&nbsp;<?= $key['title']['no_spp']; ?></td>
-                <td class="border-top border-right" valign="top"><?= date('d-m-Y', strtotime($key['title']['tgl_trans'])) ?></td>
+                <td class="border-top border-right" valign="top"><?= $key['title']['tgl_trans'] ?></td>
                 <td class="border-top border-right"></td>
                 <td class="border-top border-right"></td>
                 <td class="border-top border-right"></td>
@@ -101,8 +101,8 @@ foreach ($models as $val) {
                     <td class="border-right border-bottom" valign="top"><?= $keys['nm_barang']; ?></td>
                     <td style="text-align: center;" class="border-right border-bottom" valign="top"><?= $keys['satuan']; ?></td>
                     <td style="text-align: center;" class="border-right border-bottom" valign="top">&nbsp;<?= $keys['qty']; ?></td>
-                    <td class="border-right border-bottom"valign="top">&nbsp;<?= date('d-m-Y', strtotime($keys['p'])); ?></td>
-                    <td class="border-right border-bottom" valign="top">&nbsp;<?= date('d-m-Y', strtotime($keys['a'])); ?></td>
+                    <td class="border-right border-bottom"valign="top">&nbsp;<?= $keys['p']; ?></td>
+                    <td class="border-right border-bottom" valign="top">&nbsp;<?= $keys['a']; ?></td>
                     <td class="border-right border-bottom" valign="top"><?= $keys['ket']; ?></td>
                 </tr>
                 <?php
