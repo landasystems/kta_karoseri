@@ -40,8 +40,10 @@ class AdditionalbomController extends Controller {
     public function actionCari() {
         $params = json_decode(file_get_contents("php://input"), true);
         $selected = array();
-        foreach ($params['selected'] as $val) {
-            $selected[] = '"' . $val['no_wo'] . '"';
+        if(isset($params['selected'])) {
+            foreach ($params['selected'] as $val) {
+                $selected[] = '"' . $val['no_wo'] . '"';
+            }
         }
         $query = new Query;
         $query->from('view_wo_spk')
@@ -173,7 +175,7 @@ class AdditionalbomController extends Controller {
                 ->select("*");
         $command = $query->createCommand();
         $models = $command->query()->read();
-        
+
         \Yii::error($models);
 
         $no_wo = TransAdditionalBomWo::find()->where('tran_additional_bom_id="' . $id . '"')->all();

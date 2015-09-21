@@ -27,15 +27,15 @@ if (!isset($_GET['print'])) {
             </tr>
         </table>
     </td>
-    <td>DIBUAT</td>
-    <td>DIPERIKSA</td>
+    <td height="15" width="110" align="center">DIBUAT</td>
+    <td width="110" align="center">DIPERIKSA</td>
 </tr>
 <tr>
-    <td rowspan="2"></td>
+    <td></td>
+    <td></td>
 </tr>
-<tr></tr>
 <tr>
-    <td>Tgl :</td>
+    <td height="15">Tgl :</td>
     <td>Tgl :</td>
 </tr>
 </table>
