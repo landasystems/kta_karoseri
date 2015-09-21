@@ -49,10 +49,10 @@ class SppnonrutinController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models));
     }
-    
+
     public function actionKode() {
         $query = new Query;
-        $query  ->from('trans_spp')
+        $query->from('trans_spp')
                 ->select("*")
                 ->orderBy('no_spp DESC')
                 ->limit(1);
@@ -61,7 +61,7 @@ class SppnonrutinController extends Controller {
         $models = $command->query()->read();
         $kode_mdl = ($models['no_spp'] + 1);
         $kode = substr('00000' . $kode_mdl, strlen($kode_mdl));
-        
+
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'kode' => $kode));
@@ -123,7 +123,7 @@ class SppnonrutinController extends Controller {
                 ->from('trans_spp')
                 ->orderBy($sort)
                 ->select("*");
-        
+
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
@@ -144,15 +144,21 @@ class SppnonrutinController extends Controller {
 
     public function actionView($id) {
 
-        $model = $this->findModel($id);
+        $query = new Query;
+        $query->select("trans_spp.*, det_spp.*, barang.*, jenis_brg.*, det_spp.saldo as sld, det_spp.qty as jmlspp")
+                ->from('trans_spp')
+                ->join('JOIN', 'det_spp', 'det_spp.no_spp = trans_spp.no_spp')
+                ->join('LEFT JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
+                ->join('LEFT JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
+                ->where('trans_spp.no_spp = "' . $id . '"');
 
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        session_start();
+        $_SESSION['query'] = $query;
+        $_SESSION['nospp'] = $id;
     }
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-//        Yii::error($params);
         $model = new TransSpp();
         $tgl_trans = date('Y-m-d', strtotime($params['form']['tgl_trans']));
         $lastNumber = TransSpp::find()
@@ -188,7 +194,7 @@ class SppnonrutinController extends Controller {
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = TransSpp::findOne($id);
-        if(empty($model)){
+        if (empty($model)) {
             $model = new TransSpp();
             $model->no_spp = $params['form']['no_spp'];
         }
@@ -221,8 +227,8 @@ class SppnonrutinController extends Controller {
 
     public function actionDelete($id) {
         $model = $this->findModel($id);
-        $deleteDetail = DetSpp::deleteAll('no_spp="'.$id.'"');
-        
+        $deleteDetail = DetSpp::deleteAll('no_spp="' . $id . '"');
+
         if ($model->delete()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -303,25 +309,32 @@ class SppnonrutinController extends Controller {
         $this->setHeader(200);
         echo json_encode(['status' => 1, 'details' => $detail]);
     }
-    
-    
-     public function actionPrint() {
+
+    public function actionPrint() {
         session_start();
+        $query = $_SESSION['query'];
         $nospp = $_SESSION['nospp'];
-
-        $query = new Query;
-        $query->where("det_spp.no_spp='" . $nospp . "'")
-                ->from('det_spp')
-                ->join('JOIN', 'trans_spp', 'trans_spp.no_spp = det_spp.no_spp')
-                ->join('LEFT JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
-                ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
-                ->join('LEFT JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
-                ->select("det_spp.*,trans_spp.*,jenis_brg.jenis_brg,barang.min,barang.max,barang.nm_barang,barang.satuan,trans_po.nota");
-
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/laporansppnonrutin", ['models' => $models, 'id' => $nospp]);
     }
-
+    
+//    public function actionPrint() {
+//        session_start();
+//        $nospp = $_SESSION['nospp'];
+//
+//        $query = new Query;
+//        $query->where("det_spp.no_spp='" . $nospp . "'")
+//                ->from('det_spp')
+//                ->join('JOIN', 'trans_spp', 'trans_spp.no_spp = det_spp.no_spp')
+//                ->join('LEFT JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
+//                ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
+//                ->join('LEFT JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
+//                ->select("det_spp.*,trans_spp.*,jenis_brg.jenis_brg,barang.min,barang.max,barang.nm_barang,barang.satuan,trans_po.nota");
+//
+//        $command = $query->createCommand();
+//        $models = $command->queryAll();
+//        return $this->render("/expretur/laporansppnonrutin", ['models' => $models, 'id' => $nospp]);
+//    }
 
 }

@@ -61,19 +61,19 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.isLoading = false;
     };
 
-    $scope.excel = function () {
-        Data.get('spprutin', paramRef).then(function (data) {
+    $scope.excel = function (no_spp) {
+        Data.get('spprutin/view/' + no_spp).then(function (data) {
             window.location = 'api/web/spprutin/print';
         });
     }
 
-    $scope.print = function () {
-        Data.get('spprutin', paramRef).then(function (data) {
+    $scope.print = function (no_spp) {
+        Data.get('spprutin/view/' + no_spp).then(function (data) {
             window.open('api/web/spprutin/print?printlap=true');
         });
     }
 
-    $scope.create = function (form) {
+    $scope.create = function () {
         $scope.is_create = true;
         $scope.is_edit = true;
         $scope.is_view = false;
@@ -106,7 +106,6 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         var start = new Date(form.tgl1);
         var end = new Date(form.tgl2);
         $scope.form.periode = {startDate: start, endDate: end};
-        console.log($scope.form);
         $scope.getDetail(form.no_spp);
     };
     $scope.save = function (form, details) {
