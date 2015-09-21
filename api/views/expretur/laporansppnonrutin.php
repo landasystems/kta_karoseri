@@ -1,7 +1,7 @@
 <?php
 if (!isset($_GET['printlap'])) {
     header("Content-type: application/vnd-ms-excel");
-    header("Content-Disposition: attachment; filename=excel-rekap-fluktuasi-harga.xls");
+    header("Content-Disposition: attachment; filename=excel-rekap-sppnonrutin.xls");
 }
 $data = array();
 $i = 0;
