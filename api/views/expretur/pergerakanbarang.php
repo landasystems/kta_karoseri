@@ -7,37 +7,36 @@ if (!isset($_GET['print'])) {
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
 <div style="width:26cm">
     <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;" width="100%" border="1">
-        <thead>
-            <tr>
-                <td colspan="3" rowspan="2" align="center" class="border-all" width="30%">
-                    <h2 style="font-size: 18px;">LAPORAN STOK BAHAN MINGGUAN</h2>
-                    <p>No. Dokumen : FR-WHS-011.REV.00</p>
-                </td>
-                <td rowspan="2" colspan="6" valign="top" class="border-all">
-                    <table style="font-size: 12px;">
-                        <tr valign="top">
-                            <td width="75">Nomor</td>
-                            <td>: </td>
-                        </tr>
-                        <tr valign="top">
-                            <td>Periode</td>
-                            <td>: <?php echo isset($periode) ? $periode : '-' ?></td>
-                        </tr>
-                        <tr valign="top">
-                            <td>Cetak</td>
-                            <td>: <?php echo date("d/m/Y"); ?></td>
-                        </tr>
-                    </table>
-                </td>
-                <td width="12%" align="center" valign="top" height="15" colspan="2" class="border-right border-bottom">Dibuat Oleh</td>
-                <td width="12%" align="center" valign="top" colspan="2" class="border-right border-bottom">Diperiksa Oleh</td>
-                <td width="12%" align="center" valign="top" colspan="2" class="border-right border-bottom">Disetujui Oleh</td>
-            </tr>
-            <tr height="75">
-                <td colspan="2" class="border-all"></td>
-                <td colspan="2" class="border-all"></td>
-                <td colspan="2" class="border-all"></td>
-            </tr>
+        <tr>
+            <td colspan="3" rowspan="2" align="center" class="border-all" width="30%">
+                <h2 style="font-size: 18px;">LAPORAN STOK BAHAN MINGGUAN</h2>
+                <p>No. Dokumen : FR-WHS-011.REV.00</p>
+            </td>
+            <td rowspan="2" colspan="6" valign="top" class="border-all">
+                <table style="font-size: 12px;">
+                    <tr valign="top">
+                        <td width="75">Nomor</td>
+                        <td>: </td>
+                    </tr>
+                    <tr valign="top">
+                        <td>Periode</td>
+                        <td>: <?php echo isset($periode) ? $periode : '-' ?></td>
+                    </tr>
+                    <tr valign="top">
+                        <td>Cetak</td>
+                        <td>: <?php echo date("d/m/Y"); ?></td>
+                    </tr>
+                </table>
+            </td>
+            <td width="12%" align="center" valign="top" height="15" colspan="2" class="border-right border-bottom">Dibuat Oleh</td>
+            <td width="12%" align="center" valign="top" colspan="2" class="border-right border-bottom">Diperiksa Oleh</td>
+            <td width="12%" align="center" valign="top" colspan="2" class="border-right border-bottom">Disetujui Oleh</td>
+        </tr>
+        <tr height="75">
+            <td colspan="2" class="border-all"></td>
+            <td colspan="2" class="border-all"></td>
+            <td colspan="2" class="border-all"></td>
+        </tr>
     </table>
     <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px; margin-top: -2px;" width="100%" border="1">
         <tr>
@@ -95,7 +94,7 @@ if (isset($_GET['print'])) {
     ?>
     <script type="text/javascript">
         window.print();
-        setTimeout(function() {
+        setTimeout(function () {
             window.close();
         }, 1);
     </script>
