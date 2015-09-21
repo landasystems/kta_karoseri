@@ -1,7 +1,7 @@
 <?php
 if (!isset($_GET['print'])) {
 header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-rekap-bstk.xls");
+header("Content-Disposition: attachment; filename=excel-rekap-lap_womasuk.xls");
 }
 ?>
 
@@ -74,7 +74,7 @@ foreach ($models as $key => $val) {
     $i++;
 }
 ?>
- <table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
+ <table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
     <tr>
         <th>IN CHASIS</th>
         <th>UNIT</th>
@@ -92,7 +92,7 @@ foreach ($models as $key => $val) {
     $grandtotal = 0;
     foreach ($data as $keys) {
         ?>
-        <tr><td colspan="10" style="text-align: left;background-color: #a6a6a6;color:#000;"><?= $keys['title']['pro']; ?>&nbsp;</td></tr>
+        <tr><td  colspan="10" style="text-align: left;background-color: #a6a6a6;color:#000;"><?= $keys['title']['pro']; ?>&nbsp;</td></tr>
 
         <?php
         $no = 0;
@@ -103,16 +103,16 @@ foreach ($models as $key => $val) {
                 $total += $jml;
                 ?>
                 <tr>
-                    <td></td>
-                    <td><center><?= "1"; ?></center></td>
-                    <td><?= $val['no_wo']; ?></td>
-                    <td><?= $val['nm_customer']; ?></td>
-                    <td><?= $val['model']; ?></td>
-                    <td><?= $val['merk']; ?> <?= $val['tipe']; ?></td>
-                    <td><?= $val['market']; ?></td>
-                    <td></td>
-                    <td><?= date('d/m/Y', strtotime($val['tgl'])); ?>&nbsp;</td>
-                    <td></td>
+                    <td class="border-all"></td>
+                   <td class="border-all"><center><?= "1"; ?></center></td>
+                    <td class="border-all"><?= $val['no_wo']; ?></td>
+                    <td class="border-all"><?= $val['nm_customer']; ?></td>
+                    <td class="border-all"><?= $val['model']; ?></td>
+                    <td class="border-all"><?= $val['merk']; ?> <?= $val['tipe']; ?></td>
+                    <td class="border-all"><?= $val['market']; ?></td>
+                    <td class="border-all"></td>
+                    <td class="border-all"><?= date('d/m/Y', strtotime($val['tgl'])); ?>&nbsp;</td>
+                    <td class="border-all"></td>
 
 
 

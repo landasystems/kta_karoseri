@@ -1,14 +1,11 @@
 <?php
 if (!isset($_GET['print'])) {
-header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-rekap-ujimutu.xls");
+    header("Content-type: application/vnd-ms-excel");
+    header("Content-Disposition: attachment; filename=excel-rekap-ujimutu.xls");
 }
 ?>
 
-
-
-<table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
-    
+<table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
     <tr>
         <td rowspan="4" colspan="2">
             <br>
@@ -22,17 +19,7 @@ header("Content-Disposition: attachment; filename=excel-rekap-ujimutu.xls");
         <table style="font-size: 12px;">
             <tr>
                 <td>PERIODE</td>
-                <?php
-                if (!empty($filter['tgl_periode'])) {
-                    $value = explode(' - ', $filter['tgl_periode']);
-                    $start = date("d/m/Y", strtotime($value[0]));
-                    $end = date("d/m/Y", strtotime($value[1]));
-                } else {
-                    $start = '';
-                    $end = '';
-                }
-                ?>
-                <td> : <?php echo $start . ' - ' . $end ?></td>
+                <td> : <?php echo isset($periode) ? $periode : '-' ?></td>
             </tr>
             <tr>
                 <td>CETAK</td>
@@ -63,24 +50,24 @@ header("Content-Disposition: attachment; filename=excel-rekap-ujimutu.xls");
         <th>Customer</th>
     </tr>
     <?php
-    $jml=1;
-    $total=0;
+    $jml = 1;
+    $total = 0;
     foreach ($models as $key) {
         $total += $jml;
         ?>
         <tr>
-        <td valign="top">&nbsp;<?=$key['no_wo'];?></td>
-        <td valign="top"><?=date('d/m/Y', strtotime($key['tanggal_rubah']))?></td>
-        <td valign="top"><?=date('d/m/Y', strtotime($key['tgl']))?></td>
-        <td valign="top">&nbsp;<?=$key['kd_uji'];?></td>
-        <td valign="top">&nbsp;<?=$key['merk'];?>/<?=$key['tipe'];?></td>
-        <td valign="top">&nbsp;<?=$key['no_chassis'];?></td>
-        <td valign="top">&nbsp;<?=$key['nm_customer'];?></td>
+            <td valign="top">&nbsp;<?= $key['no_wo']; ?></td>
+            <td valign="top"><?= date('d/m/Y', strtotime($key['tanggal_rubah'])) ?></td>
+            <td valign="top"><?= date('d/m/Y', strtotime($key['tgl'])) ?></td>
+            <td valign="top">&nbsp;<?= $key['kd_uji']; ?></td>
+            <td valign="top">&nbsp;<?= $key['merk']; ?>/<?= $key['tipe']; ?></td>
+            <td valign="top">&nbsp;<?= $key['no_chassis']; ?></td>
+            <td valign="top">&nbsp;<?= $key['nm_customer']; ?></td>
         </tr>
         <?php
     }
     echo'<tr><th>Total</th>
-        <th colspan="6" textalign="left" style="text-align: left;">&nbsp;&nbsp;&nbsp;'.$total.'</th>';
+        <th colspan="6" textalign="left" style="text-align: left;">&nbsp;&nbsp;&nbsp;' . $total . '</th>';
     ?>
 </table>
 <?php
