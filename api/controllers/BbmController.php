@@ -206,7 +206,7 @@ class BbmController extends Controller {
     }
 
     public function actionRekap() {
-        $params = json_decode(file_get_contents("php://input"), true);
+        $params = $_REQUEST;
         $filter = array();
         $sort = "db.no_bbm ASC";
         $offset = 0;
@@ -244,23 +244,21 @@ class BbmController extends Controller {
                 ->select("spp.no_spp,po.nota,tb.tgl_nota as tanggal_nota, db.no_bbm as no_bbm, barang.kd_barang as kd_barang, barang.nm_barang,
                     barang.satuan, db.jumlah as jumlah, tb.surat_jalan, db.no_po, su.nama_supplier, db.keterangan");
         //filter
+//        print_r($params['limit']);
+//        echo $limit;
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
+//            echo 'asd';
             foreach ($filter as $key => $val) {
-
-                if (isset($key) && $key == 'tgl_nota') {
+                if ($key == 'tgl_nota') {
                     $value = explode(' - ', $val);
                     $start = date("Y-m-d", strtotime($value[0]));
                     $end = date("Y-m-d", strtotime($value[1]));
                     $query->andFilterWhere(['between', 'tb.tgl_nota', $start, $end]);
-                } elseif ($key == 'nama_supplier') {
-                    $query->andFilterWhere(['like', 'su.' . $key, $val]);
-                } elseif ($key == 'no_bbm') {
-                    $query->andFilterWhere(['like', 'tb.' . $key, $val]);
-                } elseif ($key == 'nm_barang') {
-                    $query->andFilterWhere(['like', 'barang.' . $key, $val]);
-                } elseif ($key == 'kat') {
+                } elseif ($key == 'kat' && !empty($val)) {
                     $query->andFilterWhere(['=', 'barang.kat', $val]);
+                } else {
+                    $query->andFilterWhere(['LIKE', $key, $val]);
                 }
             }
         }
