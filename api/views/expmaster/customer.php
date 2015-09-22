@@ -33,7 +33,7 @@ foreach ($models as $val) {
             <th style="text-align: center;">&nbsp;Kode Customer</th>
             <th>&nbsp;Nama Customer</th>
             <th>&nbsp;Market</th>
-            <th>&nbsp;Alamat 1</th>
+            <th>&nbsp;Alamat </th>
             <th>&nbsp;Telpon</th>
             <th>&nbsp;Hp</th>
             <th>&nbsp;Email</th>
