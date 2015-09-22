@@ -23,12 +23,13 @@ foreach ($models as $val) {
 }
 ?>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
+<div style="width:24cm">
 <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 9px;" width="100%">
     <tr>
         <td class="border-right border-bottom"  rowspan="4" colspan="2" align="center" width="30%">
             <br>
             <br>
-            <b style="margin: 2px;" style="font-size:15px;">SURAT PERINTAH PEMBELIAN</b>
+            <p><b style="margin: 2px;font-size:14px;">SURAT PERINTAH PEMBELIAN</b></p>
             <h1 style="margin: 2px;" style="font-size:16px;">RUTIN</h1>
             <p style="font-size:11px;">No Dokument :  FR-INV-013 Rev.03</p>
             <br><br>
@@ -126,8 +127,8 @@ foreach ($models as $val) {
         }
     }
     ?>
-
 </table>
+</div>
 <?php
 if (isset($_GET['printlap'])) {
     ?>

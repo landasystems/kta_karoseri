@@ -136,10 +136,10 @@ foreach ($models as $key => $val) {
 if (isset($_GET['printlap'])) {
     ?>
     <script type="text/javascript">
-    //        window.print();
-    //        setTimeout(function () {
-    //            window.close();
-    //        }, 1);
+            window.print();
+            setTimeout(function () {
+                window.close();
+            }, 1);
     </script>
     <?php
 }
