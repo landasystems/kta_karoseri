@@ -110,18 +110,22 @@ foreach ($models as $key => $val) {
                             </tr>';
                 }
                 $total += $jml;
-                echo'<tr><th>Total</th>
+                echo'<tr>
+                    <th></th>
+                    <th>Total</th>
                     <th></th>
                     <th>'.$jml.'</th>
-                        <th colspan="5"></th></tr>';
+                    <th colspan="4"></th>
+                    </tr>';
             }
         }
          
     }
-     echo'<tr><th>Total</th>
-                    <th></th>
-                    <th>'.$total.'</th>
-                        <th colspan="5"></th></tr>';
+     echo'<tr>
+         <th></th>
+         <th style="text-align:center;">GRAND TOTAL</th>
+         <th style="text-align:center;">'.$total.'</th>
+         <th colspan="5"></th></tr>';
     ?>
 
 
