@@ -1,5 +1,5 @@
 <?php
-if (!isset($_GET['printlap'])) {
+if (!isset($_GET['printl'])) {
     header("Content-type: application/vnd-ms-excel");
     header("Content-Disposition: attachment; filename=excel-master-supplier.xls");
 }
@@ -55,7 +55,7 @@ if (!isset($_GET['printlap'])) {
     </table>
 </div>
 <?php
-if (isset($_GET['printlap'])) {
+if (isset($_GET['print'])) {
     ?>
     <script type="text/javascript">
         window.print();
