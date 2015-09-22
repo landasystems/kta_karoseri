@@ -1,15 +1,15 @@
 <?php
-if (!isset($_GET['printl'])) {
+if (!isset($_GET['print'])) {
     header("Content-type: application/vnd-ms-excel");
     header("Content-Disposition: attachment; filename=excel-master-supplier.xls");
 }
 ?>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
-<div style="width:24cm">
+<div>
     <?php
     if (isset($_GET['print'])) {
         ?>
-        <table>
+        <table width="100%">
             <tr>
                 <td width="80"><img src="../../../img/logo.png"></td>
                 <td valign="top">
@@ -18,18 +18,20 @@ if (!isset($_GET['printl'])) {
                     <p style="font-size: 13px; margin:0px; padding:0px;">Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com</p>
                 </td>
             </tr>
+            <tr>
+                <td colspan="2"><hr></td>
+            </tr>
         </table>
-        <hr>
         <?php
     }
     ?>
 
     <center><h3>Laporan Data Supplier</h3></center>
-    <br><br>
+    <br>
 
     <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 11px;" width="100%">
         <tr>
-            <th class="border-bottom border-right">Kode Supplier</th>
+            <th class="border-bottom border-right" align="center">Kode Supplier</th>
             <th class="border-bottom border-right">Nama Supplier</th>
             <th class="border-bottom border-right">Alamat</th>
             <th class="border-bottom border-right">Telp</th>
