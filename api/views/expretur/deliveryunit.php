@@ -2,7 +2,7 @@
 <?php
 if (!isset($_GET['print'])) {
     header("Content-type: application/vnd-ms-excel");
-//    header("Content-Disposition: attachment; filename=excel-Delivery_masuk.xls");
+    header("Content-Disposition: attachment; filename=excel-Delivery_masuk.xls");
 }
 ?>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
@@ -23,7 +23,7 @@ if (!isset($_GET['print'])) {
 
         </td>
         <td   rowspan="4" style="border: 1px solid #000000">
-            <table>
+            <table style="font-size: 12px;">
 
                 <tr>
                     <td>Periode</td>
