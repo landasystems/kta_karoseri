@@ -20,13 +20,13 @@ header("Content-Disposition: attachment; filename=excel-Laporan-spp-rutin.xls");
 
     </td>
     <td class="border-right" rowspan="4" colspan="3" valign="top">
-        <table>
+        <table style="font-size:12px;">
             <tr>
                 <td>Departemen Purchassing</td>
 
             </tr>
             <tr>
-                <td>Periode</td>
+                <td style="width: 200px;">Periode</td>
                 <?php
                 if (!empty($filter['tanggal'])) {
                     $value = explode(' - ', $filter['tanggal']);
@@ -37,13 +37,13 @@ header("Content-Disposition: attachment; filename=excel-Laporan-spp-rutin.xls");
                     $end = '';
                 }
                 ?>
-                <td> : <?php echo $start . ' - ' . $end ?></td>
+                <td style="width: 80px;"> : <?php echo $start . ' - ' . $end ?></td>
             </tr>
 
         </table>
     </td>
-    <td class="border-bottom border-right">Dibuat</td>
-    <td class="border-bottom border-right">>Diketahui</td>
+    <td class="border-bottom border-right" style="width:100px; text-align: center">Dibuat</td>
+    <td class="border-bottom border-right" style="width:100px; text-align: center">Diketahui</td>
 </tr>
 <tr>
     <td class="border-bottom border-right" rowspan="2"></td>

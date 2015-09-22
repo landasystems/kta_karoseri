@@ -19,7 +19,7 @@ header("Content-Disposition: attachment; filename=excel-rekap-pemantauan-penerim
 
     </td>
     <td class="border-right" rowspan="4" colspan="5" valign="top">
-        <table>
+        <table style="font-size:12px;">
             <tr>
                 <td>DEPARTEMENT</td>
                 <td> : PURCHASSING</td>

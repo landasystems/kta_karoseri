@@ -58,7 +58,7 @@ app.controller('returpoCtrl', function ($scope, Data, toaster) {
     }
     $scope.printbeli = function () {
         Data.get('po/rekap', paramRef).then(function (data) {
-            window.open('api/web/po/excel?print=true');
+            window.open('api/web/po/excelbeli?print=true');
         });
     }
     //

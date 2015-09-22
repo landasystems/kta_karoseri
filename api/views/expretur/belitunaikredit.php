@@ -13,7 +13,7 @@ foreach ($models as $key => $val) {
     $data[$val['bayar']]['title']['status_bayar'] = $val['bayar'];
     $data[$val['bayar']]['nota'][$val['nota']]['title'] = $val['nota'];
 
-    $data[$val['bayar']]['nota'][$val['nota']]['body'][$i]['tgl_terima'] = $val['tgl_terima'];
+    $data[$val['bayar']]['nota'][$val['nota']]['body'][$i]['tgl_terima'] = date("d-m-Y", strtotime($val['tgl_terima']));
     $data[$val['bayar']]['nota'][$val['nota']]['body'][$i]['no_bbm'] = $val['no_bbm'];
     $data[$val['bayar']]['nota'][$val['nota']]['body'][$i]['kd_barang'] = $val['kd_barang'];
     $data[$val['bayar']]['nota'][$val['nota']]['body'][$i]['nm_barang'] = $val['nm_barang'];
@@ -40,7 +40,7 @@ foreach ($models as $key => $val) {
 
         </td>
         <td class="border-right" rowspan="4" colspan="5" valign="top">
-            <table>
+            <table style="font-size:12px;">
                 <tr>
                     <td>NOMOR</td>
                     <td> : </td>

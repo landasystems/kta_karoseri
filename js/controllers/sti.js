@@ -116,28 +116,29 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.kd_titipan;
-        Data.get('chassis/tipe?merk=' + form.merk).then(function (data) {
-            $scope.listTipe = data.data;
-        });
         $scope.selected(form);
     };
     $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.kd_titipan;
-        Data.get('chassis/tipe?merk=' + form.merk).then(function (data) {
-            $scope.listTipe = data.data;
-        });
+        $scope.selectlist(form.merk);
         $scope.selected(form);
     };
+    
     $scope.selected = function (form) {
         $scope.form = form;
-        $scope.form.tipe = form.tipe;
+        
         $scope.form.tgl_terima = new Date(form.tgl_terima);
         $scope.form.serah_terima = new Date(form.serah_terima);
         $scope.form.tgl_prd = new Date(form.tgl_prd);
         $scope.form.tgl_pdc = new Date(form.tgl_pdc);
-    }
+       Data.get('chassis/tipe?merk=' + form.merk).then(function (data) {
+            $scope.listTipe = data.data;
+        });
+        $scope.form.tipe = form.tipe;
+    };
+    
     $scope.save = function (form) {
         var url = 'serahterimain/create';
         Data.post(url, form).then(function (result) {
