@@ -27,7 +27,8 @@ foreach ($models as $val) {
     <tr>
         <td class="border-right border-bottom"  rowspan="4" colspan="2" align="center" width="30%">
             <br>
-            <b style="margin: 2px;" style="font-size:14px;">SURAT PERINTAH PEMBELIAN</b>
+            <br>
+            <b style="margin: 2px;" style="font-size:15px;">SURAT PERINTAH PEMBELIAN</b>
             <h1 style="margin: 2px;" style="font-size:16px;">RUTIN</h1>
             <p style="font-size:11px;">No Dokument :  FR-INV-013 Rev.03</p>
             <br><br>

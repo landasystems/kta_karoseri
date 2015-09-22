@@ -1,7 +1,7 @@
 <?php
 if ($_GET['excel'] == 'ex') {
     header("Content-type: application/vnd-ms-excel");
-    header("Content-Disposition: attachment; filename=excel-rekap-Claim.xls");
+//    header("Content-Disposition: attachment; filename=excel-rekap-Claim.xls");
 }
 ?>
 
@@ -49,7 +49,7 @@ if ($_GET['excel'] == 'ex') {
             <center><b>REKAP DATA CLAIM</b></center>
             <br><br>
             <center>No Dokumen : FR-SS-018</center>
-            <br><br>
+            <br>
 
             </td>
             <td rowspan="4" colspan="6" valign="top">
@@ -85,7 +85,7 @@ if ($_GET['excel'] == 'ex') {
                 <td class="border-bottom border-right" colspan="2" rowspan="3"></td>
             </tr>
         </table>
-        <table border="1" style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;" width="100%" cellpadding="0" cellspacing="0">
+        <table border="1" style="margin-top:-2;border-collapse: collapse; border: 1px #000 solid; font-size: 12px;" width="100%" cellpadding="0" cellspacing="0">
             <tr>
                 <th align="center" style="font-size: 12px;">No</th>
                 <th align="center" style="font-size: 12px;">No WO</th>
@@ -96,7 +96,7 @@ if ($_GET['excel'] == 'ex') {
                 <th width="60px">Tgl Claim</th>
                 <th align="center">Tgl Penanganan</th>
                 <th>Pelakasana</th>
-                <th>Jenis Komplain</th>
+                <th align="center">Jenis Komplain</th>
                 <th>Problem</th>
                 <th>Perubahan yg dilakukan</th>
                 <th align="center">Biaya Material</th>
