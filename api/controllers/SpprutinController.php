@@ -81,7 +81,7 @@ class SpprutinController extends Controller {
 
         return $this->render("/expretur/monitoring", ['models' => $models, 'periode' => $periode]);
     }
-    
+
     public function actionKekurangan() {
         session_start();
         $query = new Query;
@@ -118,7 +118,7 @@ class SpprutinController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         $periode = $_SESSION['periode'];
-        
+
 //        echo json_encode($models);
 
         return $this->render("/expretur/kekurangan", ['models' => $models, 'periode' => $periode]);
@@ -305,10 +305,17 @@ class SpprutinController extends Controller {
 
     public function actionView($id) {
 
-        $model = $this->findModel($id);
+        $query = new Query;
+        $query->select("trans_spp.*, det_spp.*, barang.*, jenis_brg.*, det_spp.saldo as sld, det_spp.qty as jmlspp")
+                ->from('trans_spp')
+                ->join('JOIN', 'det_spp', 'det_spp.no_spp = trans_spp.no_spp')
+                ->join('LEFT JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
+                ->join('LEFT JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
+                ->where('trans_spp.no_spp = "' . $id . '"');
 
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        session_start();
+        $_SESSION['query'] = $query;
+        $_SESSION['nospp'] = $id;
     }
 
     public function actionCreate() {
@@ -342,9 +349,7 @@ class SpprutinController extends Controller {
 
     public function actionUpdatetgl() {
         $params = json_decode(file_get_contents("php://input"), true);
-//        Yii::error($params);
         foreach ($params['asu'] as $key => $data) {
-//            $model = DetSpp::find(['no_spp' => $params['wip']['nama']['no_spp'], 'kd_barang' => $key])->all();
             $model = DetSpp::findOne($key);
             $model->a = date('Y-m-d', strtotime($params['wip']['a']));
             $model->save();
@@ -368,7 +373,6 @@ class SpprutinController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         Yii::error($params);
         $model = TransSpp::findOne($params['form']['no_spp']);
-//        $model->attributes = $params;
         if (empty($model)) {
             $model = new TransSpp();
             $model->no_spp = $params['form']['no_spp'];
@@ -379,7 +383,6 @@ class SpprutinController extends Controller {
         $model->tgl1 = date('Y-m-d', strtotime($params['form']['periode']['startDate']));
         $model->tgl2 = date('Y-m-d', strtotime($params['form']['periode']['endDate']));
         $model->no_proyek = 'Rutin';
-//        Yii::error($params);
         if ($model->save()) {
             $deleteAll = DetSpp::deleteAll('no_spp="' . $model->no_spp . '"');
             foreach ($params['details'] as $val) {
@@ -532,7 +535,6 @@ class SpprutinController extends Controller {
         $filter = $_SESSION['filter'];
         $query->limit(null);
         $query->offset(null);
-//         Yii::error($query);
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/rekapspp", ['models' => $models, 'filter' => $filter]);
@@ -540,22 +542,11 @@ class SpprutinController extends Controller {
 
     public function actionPrint() {
         session_start();
+        $query = $_SESSION['query'];
         $nospp = $_SESSION['nospp'];
-
-        $query = new Query;
-        $query->where("det_spp.no_spp='" . $nospp . "'")
-                ->from('det_spps')
-                ->join('JOIN', 'trans_spp', 'trans_spp.no_spp = det_spp.no_spp')
-                ->join('LEFT JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
-                ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
-                ->join('LEFT JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
-                ->select("det_spp.*,trans_spp.*,jenis_brg.jenis_brg,barang.min,barang.max,barang.nm_barang,barang.satuan,trans_po.nota");
-
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/laporanspprutin", ['models' => $models, 'id' => $nospp]);
     }
-
-   
 
 }
