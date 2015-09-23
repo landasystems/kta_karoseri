@@ -9,6 +9,7 @@ foreach ($models as $val) {
     $data[$val['no_wo']]['no_wo'] = $val['no_wo'];
     $data[$val['no_wo']]['body'][$i]['nm_customer'] = isset($val['nm_customer']) ? $val['nm_customer'] : '-';
     $data[$val['no_wo']]['body'][$i]['kd_barang'] = $val['kd_barang'];
+    $data[$val['no_wo']]['body'][$i]['no_spp'] = $val['no_spp'];
     $data[$val['no_wo']]['body'][$i]['nm_barang'] = $val['nm_barang'];
     $data[$val['no_wo']]['body'][$i]['ket'] = $val['ket'];
     $data[$val['no_wo']]['body'][$i]['inv'] = isset($val['tgl_trans']) ? date("d/m/y", strtotime($val['tgl_trans'])) : '-';
@@ -60,17 +61,43 @@ foreach ($models as $val) {
                 echo '<tr>';
                 echo '<td colspan="8" class="border-all">' . $val['no_wo'] . '</td>';
                 echo '</tr>';
+                $n = 1;
                 foreach ($val['body'] as $det) {
-                    echo '<tr>';
-                    echo '<td class="border-all"></td>';
-                    echo '<td class="border-all">' . $det['nm_customer'] . '</td>';
-                    echo '<td class="border-all" align="center">' . $det['kd_barang'] . '</td>';
-                    echo '<td class="border-all">' . $det['nm_barang'] . '</td>';
-                    echo '<td class="border-all">' . $det['ket'] . '</td>';
-                    echo '<td class="border-all" align="center">' . $det['inv'] . '</td>';
-                    echo '<td class="border-all" align="center">' . $det['pch'] . '</td>';
-                    echo '<td class="border-all" align="center">' . $det['realisasi'] . '</td>';
-                    echo '</tr>';
+                    $poBbm = new yii\db\Query;
+                    $poBbm->from('trans_po')
+                            ->join('JOIN', 'detail_po', 'detail_po.kd_barang = detail_po.kd_barang and trans_po.nota = detail_po.nota')
+                            ->join('RIGHT JOIN', 'trans_bbm', 'trans_bbm.no_po = trans_po.nota')
+                            ->join('RIGHT JOIN', 'det_bbm', 'det_bbm.kd_barang = detail_po.kd_barang and det_bbm.no_bbm = trans_bbm.no_bbm')
+                            ->select("det_bbm.no_bbm, trans_po.nota,  det_bbm.tgl_terima as realisasi, trans_po.tanggal as pch")
+                            ->where('trans_po.spp = "' . $det['no_spp'] . '" and detail_po.kd_barang = "' . $det['kd_barang'] . '"');
+                    $command = $poBbm->createCommand();
+                    $models = $command->queryAll();
+
+                    if (!empty($models)) {
+                        foreach ($models as $valDet) {
+                            echo '<tr>';
+                            echo '<td class="border-all"></td>';
+                            echo '<td class="border-all">' . $det['nm_customer'] . '</td>';
+                            echo '<td class="border-all" align="center">' . $det['kd_barang'] . '</td>';
+                            echo '<td class="border-all">' . $det['nm_barang'] . '</td>';
+                            echo '<td class="border-all">' . $det['ket'] . '</td>';
+                            echo '<td class="border-all" align="center">' . $det['inv'] . '</td>';
+                            echo '<td class="border-all" align="center">' . date("d/m/y", strtotime($valDet['pch'])) . '</td>';
+                            echo '<td class="border-all" align="center">' . date("d/m/y", strtotime($valDet['realisasi'])) . '</td>';
+                            echo '</tr>';
+                        }
+                    } else {
+                        echo '<tr>';
+                        echo '<td class="border-all"></td>';
+                        echo '<td class="border-all">' . $det['nm_customer'] . '</td>';
+                        echo '<td class="border-all" align="center">' . $det['kd_barang'] . '</td>';
+                        echo '<td class="border-all">' . $det['nm_barang'] . '</td>';
+                        echo '<td class="border-all">' . $det['ket'] . '</td>';
+                        echo '<td class="border-all" align="center">' . $det['inv'] . '</td>';
+                        echo '<td class="border-all" align="center">' . $det['pch'] . '</td>';
+                        echo '<td class="border-all" align="center">' . $det['realisasi'] . '</td>';
+                        echo '</tr>';
+                    }
                 }
             }
             ?>

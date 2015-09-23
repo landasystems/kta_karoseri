@@ -9,7 +9,7 @@ if (!isset($_GET['print'])) {
     <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;" width="100%" border="1">
         <tr>
             <td colspan="3" rowspan="2" align="center" class="border-all" width="30%">
-                <h2 style="font-size: 18px;">LAPORAN STOK BAHAN MINGGUAN</h2>
+                <h2 style="font-size: 18px; margin-top:8px;">LAPORAN STOK BAHAN MINGGUAN</h2>
                 <p>No. Dokumen : FR-WHS-011.REV.00</p>
             </td>
             <td rowspan="2" colspan="6" valign="top" class="border-all">

@@ -8,7 +8,7 @@ if (!isset($_GET['print'])) {
 <div style="width:26cm">
     <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;" width="100%">
         <tr>
-            <td colspan="4" rowspan="2" align="center" valign="middle" class="border-all" width="25%"><h2>REKAP SPK MASUK</h2></td>
+            <td colspan="4" rowspan="2" align="center" valign="middle" class="border-all" width="25%" style="padding:10px;"><h3 style="font-size:16px;">REKAP SPK MASUK</h3></td>
             <td colspan="4" rowspan="2" valign="top" class="border-all">
                 <table style="font-size: 12px;">
                     <tr>

@@ -216,7 +216,7 @@ app.controller('rekapSpk', function ($scope, Data) {
 
     $scope.print = function () {
         Data.get('spkaroseri/rekap', paramRef).then(function (data) {
-            window.open('api/web/spkaroseri/excel');
+            window.open('api/web/spkaroseri/excel?print=true');
         });
     }
 

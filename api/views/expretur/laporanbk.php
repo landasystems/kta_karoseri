@@ -43,8 +43,8 @@ foreach ($models as $val) {
         <?php
     }
     ?>
-    <center><b>Rekap Bukti Barang Keluar</b></center>
     <br>
+    <center><b>Rekap Bukti Barang Keluar</b></center>
     <br>
     <table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
 
