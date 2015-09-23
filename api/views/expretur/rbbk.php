@@ -8,17 +8,16 @@ header("Content-Disposition: attachment; filename=excel-rekap-Barang_Keluar.xls"
 <div style="width:26cm">
       <table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
         <tr>
-            <td rowspan="2" colspan="3" style="border: 1px solid #000000">
-                <h3><b><center>LAPORAN BARANG KELUAR</center>
-                    <br>
+            <td rowspan="2" colspan="3" style="width:30%; border: 1px solid #000000; padding-bottom:5px; padding-top:5px;">
+                <h3 style="font-size: 16px;"><b><center>LAPORAN BARANG KELUAR</center>
                     <center>BBK</center></b></h3>
-                <br> No Dok : FR-WHS-015-REV.00
+                No Dok : FR-WHS-015-REV.00
             </td>
 
             <td rowspan="2" colspan="4" style="border: 1px solid #000000">
-                <table>
+                <table style="font-size: 12px;">
                     <tr>
-                        <td>Nomer</td>
+                        <td width="100">Nomer</td>
                         <td> : </td>
                     </tr>
                     <tr>
@@ -46,18 +45,18 @@ header("Content-Disposition: attachment; filename=excel-rekap-Barang_Keluar.xls"
                 </table>
             </td>
 
-            <th colspan="1" style="text-align: center; width:100px;height:15px;">Dibuat oleh</th>
-            <th colspan="1" style="text-align: center;width:100px;">Diperiksa oleh</th>
-            <th colspan="1" style="text-align: center;width:100px;">Diketahui oleh</th>
+            <th colspan="1" style="text-align: center; width:110px;height:15px;">Dibuat oleh</th>
+            <th colspan="1" style="text-align: center;width:110px;">Diperiksa oleh</th>
+            <th colspan="1" style="text-align: center;width:110px;">Diketahui oleh</th>
         </tr>
         <tr>
-            <td class="border-bottom border-right" colspan="1" rowspan="1"></td>
+            <td class="border-bottom border-right" colspan="1" rowspan="1"><br><br></td>
             <td class="border-bottom border-right" colspan="1" rowspan="1"></td>
             <td class="border-bottom border-right" colspan="1" rowspan="1"></td>
         </tr>
     </table>
 
-    <table width="100%" border="1" style="border-collapse: collapse; font-size: 12px;">
+    <table width="100%" border="1" style="border-collapse: collapse; font-size: 12px; margin-top:-2px;">
         <tr>
             <th style="text-align: center;">TANGGAL</th>
             <th style="text-align: center;">NO WO</th>

@@ -111,7 +111,7 @@ if (!isset($_GET['print'])) {
                 $total = 0;
                 foreach ($keys['customer'] as $val1) {
                     echo'<tr>'
-                    . '<td class="border-all back-grey" colspan="8" style="text-align: left;background-color: darkkhaki;">' . $val1['customer'] . '</td>'
+                    . '<td class="border-all" colspan="8" style="text-align: left;background-color: darkkhaki;">' . $val1['customer'] . '</td>'
                     . '</tr>';
                     foreach ($val1['body'] as $val) {
                         $total += $jml;

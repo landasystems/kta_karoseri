@@ -8,16 +8,16 @@ if (!isset($_GET['print'])) {
 <div style="width:26cm">
     <table class="border-all" style="border-collapse: collapse; font-size: 12px;" width="100%">
         <tr>
-            <td colspan="2" rowspan="2" style="border: 1px solid #000000; font-size: 18px; width:35%" valign="middle" align="center">
+            <td rowspan="2" style="border: 1px solid #000000; font-size: 18px; width:35%" valign="middle" align="center">
                 <br>
                 <b>LAPORAN RETUR BARANG MASUK</b>
-                <br>
                 <b>(BBM)</b>
+                <br>
             </td>
-            <td colspan="4" rowspan="2" style="border: 1px solid #000000" valign="top">
+            <td rowspan="2" style="border: 1px solid #000000" valign="top">
                 <table style="border-collapse: collapse; font-size: 12px;">
                     <tr>
-                        <td>Nomer</td>
+                        <td width="100">Nomer</td>
                         <td> : </td>
                     </tr>
                     <tr>
@@ -48,7 +48,7 @@ if (!isset($_GET['print'])) {
             </td>
         </tr>
         <tr>
-            <td class="border-all"><br><br><br></td>
+            <td class="border-all" height="80"></td>
             <td class="border-all"></td>
         </tr>
     </table>

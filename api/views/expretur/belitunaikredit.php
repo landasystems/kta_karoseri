@@ -35,7 +35,7 @@ foreach ($models as $key => $val) {
                 <br>
         <center><b>LAPORAN PEMBELIAN</b></center>
         <br><br>
-        <center>No Dokumen : FR-PCH-019Rev.0</center>
+        <center>No Dokumen : FR-PCH-009Rev.0</center>
         <br><br>
 
         </td>
