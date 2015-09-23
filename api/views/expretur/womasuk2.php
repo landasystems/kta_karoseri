@@ -7,7 +7,7 @@
 
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
 
-<table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
+<table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
     <tr>
         <td colspan="3" style="border: 1px solid #000000">
             <br>
@@ -19,12 +19,11 @@
 
     </td>
     <td colspan="4" style="border: 1px solid #000000">
-        <table>
+        <table style=" font-size: 11px;" width="100%" >
 
             <tr>
-                <td>Periode</td>
+                <td >Periode</td>
                 <?php
-                print_r($market);
                 if (!empty($filter['tgl'])) {
                     $value = explode(' - ', $filter['tgl']);
                     $start = date("d/m/Y", strtotime($value[0]));
@@ -42,12 +41,14 @@
             </tr>
         </table>
     </td>
-    <td  style="border: 1px solid #000000" valign="top">
+    <td  style="border: 1px solid #000000;height: 10%" valign="top">
     <center><b>Dibuat oleh</b></center>
+    <hr style="border: 1px solid #000">
 
 </td>
 <td  style="border: 1px solid #000000" valign="top">
 <center><b>Diperiksa oleh</b></center>
+<hr style="border: 1px solid #000">
 
 </td>
 
@@ -77,43 +78,42 @@ foreach ($models as $key => $val) {
 ?>
 <table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
     <tr>
-        <th>IN CHASIS</th>
-        <th>UNIT</th>
-        <th>WO</th>
-        <th>CUSTOMER</th>
-        <th>MODEL</th>
-        <th>MERK/TYPE</th>
-        <th>MARKET</th>
-        <th>TGL PEMB WO</th>
-        <th>IN SPK</th>
-        <th>KETERANGAN</th>
+        <th class="border-all" style="font-size: 11px">UNIT</th>
+        <th class="border-all" style="font-size: 11px">WO</th>
+        <th class="border-all" style="font-size: 11px">CUSTOMER</th>
+        <th class="border-all" style="font-size: 11px">MODEL</th>
+        <th class="border-all" style="font-size: 11px">MERK/TYPE</th>
+        <th class="border-all" style="font-size: 11px">MARKET</th>
+        <th class="border-all" style="font-size: 11px">TGL PEMB WO</th>
+        <th class="border-all" style="font-size: 11px">IN SPK</th>
+        <th class="border-all" style="font-size: 11px">KETERANGAN</th>
     </tr>
     <?php
     $jml = 1;
     $grandtotal = 0;
     foreach ($data as $keys) {
         ?>
-        <tr><td  colspan="10" style="text-align: left;background-color: #a6a6a6;color:#000;"><?= $keys['title']['pro']; ?>&nbsp;</td></tr>
+        <tr><td  colspan="10" class="back-grey" style="text-align: left;background-color: #a6a6a6;color:#000;border-bottom: 1px solid #000"><?= $keys['title']['pro']; ?>&nbsp;</td></tr>
 
         <?php
         $no = 0;
         $total = 0;
         foreach ($keys['customer'] as $val1) {
-            echo'<tr><td colspan="10" style="text-align: left;background-color: #a6a6a6;">' . $val1['customer'] . '</td></tr>';
+            echo'<tr><td class="back-grey" colspan="10" style="text-align: left;background-color: #a6a6a6;">' . $val1['customer'] . '</td></tr>';
             foreach ($val1['body'] as $val) {
                 $total += $jml;
                 ?>
                 <tr>
-                    <td class="border-all"></td>
-                    <td class="border-all"><center><?= "1"; ?></center></td>
-            <td class="border-all"><?= $val['no_wo']; ?></td>
-            <td class="border-all"><?= $val['nm_customer']; ?></td>
-            <td class="border-all"><?= $val['model']; ?></td>
-            <td class="border-all"><?= $val['merk']; ?> <?= $val['tipe']; ?></td>
-            <td class="border-all"><?= $val['market']; ?></td>
-            <td class="border-all"></td>
-            <td class="border-all"><?= date('d/m/Y', strtotime($val['tgl'])); ?>&nbsp;</td>
-            <td class="border-all"></td>
+                    <td style="font-size: 11px" class="border-all"></td>
+                    <td class="border-all" style="font-size: 11px"><center><?= "1"; ?></center></td>
+            <td class="border-all" style="font-size: 11px"><?= $val['no_wo']; ?></td>
+            <td class="border-all" style="font-size: 11px"><?= $val['nm_customer']; ?></td>
+            <td class="border-all" style="font-size: 11px"><?= $val['model']; ?></td>
+            <td class="border-all" style="font-size: 11px"><?= $val['merk']; ?> <?= $val['tipe']; ?></td>
+            <td class="border-all" style="font-size: 11px"><?= $val['market']; ?></td>
+            <td class="border-all" style="font-size: 11px"></td>
+            <td class="border-all" style="font-size: 11px"><?= date('d/m/Y', strtotime($val['tgl'])); ?>&nbsp;</td>
+            <td class="border-all" style="font-size: 11px"></td>
 
 
 
@@ -149,33 +149,87 @@ echo'<tr>
     </tr>
     <tr>
         <td colspan="3">
-            <table>
+            <table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
                 <tr>
                     <th colspan="2"></th>
                     <th></th>
                 </tr>
                 <?php
-                $no=0;
+                $no = 0;
+                $total = 0;
                 foreach ($market as $mar) {
                     $no++;
+                    $total += $mar['jumlah'];
                     ?>
-                <tr>
-                    <td><?php echo $no ?></td>
-                    <td><?php echo $mar['market'] ?></td>
-                    <td><?php echo $mar['jumlah'] ?></td>
-                </tr>
+                    <tr>
+                        <td class="border-all"><?php echo $no ?></td>
+                        <td class="border-all"><?php echo $mar['market'] ?></td>
+                        <td class="border-all"><?php echo $mar['jumlah'] ?></td>
+                    </tr>
                     <?php
                 }
+                echo'<tr>
+                    <th colspan="2">Total</th>
+                    <th>' . $total . '</th>
+                </tr>';
                 ?>
             </table>
         </td>
         <td colspan="3">
-
-        </td>
-        <td colspan="4">
-
-        </td>
+            <table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
+                <tr>
+                    <th colspan="2"><center>Merk</center></th>
+                <th><center>Unit</center></th>
     </tr>
+    <?php
+    $no = 0;
+    $total = 0;
+    foreach ($merk as $mar) {
+        $no++;
+        $total += $mar['jumlah'];
+        ?>
+        <tr>
+            <td class="border-all"><?php echo $no ?></td>
+            <td class="border-all"><?php echo $mar['merk'] ?></td>
+            <td class="border-all"><?php echo $mar['jumlah'] ?></td>
+        </tr>
+        <?php
+    }
+    echo'<tr>
+                    <th colspan="2">Total</th>
+                    <th>' . $total . '</th>
+                </tr>';
+    ?>
+</table>
+</td>
+<td colspan="4">
+    <table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
+        <tr>
+            <th colspan="2"><center>Model</center></th>
+    <th><center>Unit</center></th>
+</tr>
+<?php
+$no = 0;
+$total = 0;
+foreach ($model as $mar) {
+    $no++;
+    $total += $mar['jumlah'];
+    ?>
+    <tr>
+        <td class="border-all"><?php echo $no ?></td>
+        <td class="border-all"><?php echo $mar['model'] ?></td>
+        <td class="border-all"><?php echo $mar['jumlah'] ?></td>
+    </tr>
+    <?php
+}
+echo'<tr>
+                    <th colspan="2">Total</th>
+                    <th>' . $total . '</th>
+                </tr>';
+?>
+</table>
+</td>
+</tr>
 </table>
 <?php
 if (isset($_GET['print'])) {

@@ -5,22 +5,22 @@ header("Content-Disposition: attachment; filename=excel-rekap-lapwomasuk.xls");
 }
 ?>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
-<table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
+<table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
     <tr>
         <td colspan="3" style="border: 1px solid #000000">
             <br>
     <center><b>LAPORAN UNIT MASUK</b></center>
     <br>
     <center>No Dokumen : FR-PPC-004 Rev 00</center>
-    <center>Applicable To Realisasi OI & Budget Opname</center>
+    <center>Applicable To Budgets OI & Budget Opname</center>
     <br>
 
     </td>
     <td colspan="4" style="border: 1px solid #000000">
-        <table>
+        <table style="border-collapse: collapse; font-size: 11px; margin-left: -1px" width="100%">
 
             <tr>
-                <td>Periode</td>
+                <td style="border-bottom: 1px solid #000">Periode</td>
                 <?php
                 if (!empty($filter['tgl'])) {
                     $value = explode(' - ', $filter['tgl']);
@@ -31,21 +31,33 @@ header("Content-Disposition: attachment; filename=excel-rekap-lapwomasuk.xls");
                     $end = '';
                 }
                 ?>
-                <td> : <?php echo $start . ' - ' . $end ?></td>
+                <td style="border-bottom: 1px solid #000"> : <?php echo $start . ' - ' . $end ?></td>
             </tr>
             <tr>
-                <td>Cetak</td>
-                <td> : <?php echo date('d F Y') ?></td>
+                <td style="border-bottom: 1px solid #000">Cetak</td>
+                <td style="border-bottom: 1px solid #000"> : <?php echo date('d F Y') ?></td>
+            </tr>
+            <tr>
+                <td style="border-bottom: 1px solid #000" colspan="2"> &nbsp;</td>
+            </tr>
+            <tr>
+                <td style="border-bottom: 1px solid #000" colspan="2">&nbsp;</td>
             </tr>
         </table>
     </td>
-    <td  style="border: 1px solid #000000" valign="top">
+    <td  style="border: 1px solid #000000;width: 15%" valign="top">
     <center><b>Dibuat oleh</b></center>
-
+    <hr style="border: 1px solid #000000">
+    <br><br><br>
+    <hr style="border: 1px solid #000000">
+    Tgl:
 </td>
-<td  style="border: 1px solid #000000" valign="top">
+<td  style="border: 1px solid #000000;width: 15%" valign="top">
 <center><b>Diperiksa oleh</b></center>
-
+ <hr style="border: 1px solid #000000">
+    <br><br><br>
+    <hr style="border: 1px solid #000000">
+    Tgl:
 </td>
 
 </tr>
@@ -72,15 +84,15 @@ foreach ($models as $key => $val) {
 ?>
 <table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
     <tr>
-        <th>IN CHASIS</th>
-        <th>UNIT</th>
-        <th>WO</th>
-        <th>NO ENGINE</th>
-        <th>NO CHASSIS</th>
-        <th>SALES</th>
-        <th>MARKET</th>
-        <th>MODEL</th>
-        <th>MERK/TYPE</th>
+        <th class="border-all">IN CHASIS</th>
+        <th class="border-all">UNIT</th>
+        <th class="border-all">WO</th>
+        <th class="border-all">NO ENGINE</th>
+        <th class="border-all">NO CHASSIS</th>
+        <th class="border-all">SALES</th>
+        <th class="border-all">MARKET</th>
+        <th class="border-all">MODEL</th>
+        <th class="border-all">MERK/TYPE</th>
     </tr>
     <?php
        $jml = 1;
@@ -89,7 +101,7 @@ foreach ($models as $key => $val) {
      
          
         ?>
-        <tr><td colspan="9" style="text-align: left;background-color: bisque;color:#000;"><?= $keys['title']['pro']; ?>&nbsp;</td></tr>
+    <tr><td colspan="9" class="back-grey" style="text-align: left;background-color: bisque;color:#000;"><?= $keys['title']['pro']; ?>&nbsp;</td></tr>
 
         <?php
         $no = 0;
@@ -97,7 +109,7 @@ foreach ($models as $key => $val) {
        
         
         foreach ($keys['customer'] as $val1) {
-            echo'<tr><td class="border-all" colspan="9" style="text-align: left;background-color: darkkhaki;">' . $val1['customer'] . '</td></tr>';
+            echo'<tr><td class="border-all back-grey" colspan="9" style="text-align: left;background-color: darkkhaki;">' . $val1['customer'] . '</td></tr>';
             foreach ($val1['body'] as $val) {
                 $total += $jml;
                 ?>
@@ -105,8 +117,9 @@ foreach ($models as $key => $val) {
                     <td class="border-all"><?= $val['kd_titipan']; ?>&nbsp;</td>
                     <td class="border-all"><center>1</center></td>
                     <td class="border-all"><?= $val['no_wo']; ?></td>
-                    <td class="border-all"><?= $val['no_chassis']; ?></td>
                     <td class="border-all"><?= $val['no_mesin']; ?></td>
+                    <td class="border-all"><?= $val['no_chassis']; ?></td>
+                    
                     <td class="border-all"><?= $val['nama']; ?></td>
                     <td class="border-all"><?= $val['market']; ?></td>
                     <td class="border-all"><?= $val['model']; ?></td>
