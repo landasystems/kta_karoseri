@@ -10,6 +10,7 @@ if (!isset($_GET['print'])) {
         <thead>
             <tr>
                 <td rowspan="2" width="30%" class="border-right">
+                    <br>
                     <h6 style="margin: 0px; padding: 0px; font-size: 16px; font-weight: normal;" align="center">REALISASI STANDART</h6>
                     <h3 style="margin: 0px; padding: 0px;" align="center">PEMAKAIAN BAHAN</h3>
                     <p align="center">No. Dokumen : FR-WHS-006.REV.00</p>

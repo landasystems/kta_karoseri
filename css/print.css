@@ -225,6 +225,12 @@ span.label{width: 180px;display: inline-table;}
     background-repeat: repeat;
     -webkit-print-color-adjust:exact;
 }
+.back-blue{
+    background-color:#007FBB !important;;
+    background-image: url("../img/blue.png");
+    background-repeat: repeat;
+    -webkit-print-color-adjust:exact;
+}
 .back-yellow{
     background-color: yellow !important;;
     background-image: url("../img/yellow.png");

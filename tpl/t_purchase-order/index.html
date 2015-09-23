@@ -389,11 +389,11 @@
     <!--PRINT-->
 
     <div id="printArea" ng-show="is_view">
-        <table class="table_po">
+        <table class="table_po" style="border-collapse: collapse;font-size: 12px;">
             <thead>
                 <tr>
-                    <td colspan="6" style="border-right:0px">
-                        <div style="border:1px">
+                    <td colspan="6" style="border-right:0px;padding: 10px" >
+                        <div style="border:1px solid #000;padding:5px ;border-collapse: collapse;">
                             <div>
                                 <img ng-src="img/logo.png" align="left" style="margin-right: 8px"/>
                             </div>
@@ -425,12 +425,12 @@
 
             <tbody  width="700">
                 <tr class="table_po tr">
-                    <th style="width: 5%">No.</th>
+                    <th style="text-align: center;width: 5%">No.</th>
                     <th style="width:54%;">URAIAN</th>
-                    <th style="width:5%">KWANTUM</th>
-                    <th style="width:6%">SATUAN</th>
-                    <th >HARGA</th>
-                    <th>JUMLAH</th>
+                    <th style="text-align: center;width:5%">KWANTUM</th>
+                    <th style="text-align: center;width:6%">SATUAN</th>
+                    <th style="text-align: center;">HARGA</th>
+                    <th style="text-align: center;">JUMLAH</th>
                 </tr>
                 <tr class="table_po tr" ng-repeat="detail in detsPo">
                     <td style="text-align:center;">{{detail.data_barang.no}}</td>
@@ -450,10 +450,10 @@
                         <div>- Pengiriman Tanggal : {{form.tanggal| date:'dd-MMMM-yyyy'}}</div>
                         <div>- Form asli ini berlaku untuk penagihan</div>
                         <div>- Spesifikasi teknis terlampir</div>
-                        <table class="tablepo" style="border-collapse: collapse;">
+                        <table class="tablepo" style="width:101% ;margin-left: -2px;margin-bottom: -2px;border-collapse: collapse;font-size: 12px;">
                             <tr style="border-top:  1px solid #333;">
-                                <td style="text-align:center;border-top:  1px solid #333;border-left:none;">Pemberi Order</td>
-                                <td style="text-align:center;border-top:  1px solid #333;">Penerima Order</td>
+                                <td style=" text-align:center;border-top:  1px solid #333;border-left:none;">Pemberi Order</td>
+                                <td style=" text-align:center;border-top:  1px solid #333;">Penerima Order</td>
                             </tr>
                             <tr height="80">
                                 <td style="border-left:  none;"></td>
