@@ -1,4 +1,4 @@
-app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
+app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
     var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
     var uploader = $scope.uploader = new FileUploader({
         url: 'img/upload.php?folder=delivery&kode=' + kode_unik,
@@ -8,45 +8,50 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
 
     uploader.filters.push({
         name: 'imageFilter',
-        fn: function(item) {
+        fn: function (item) {
             var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
     });
     //init data
     var tableStateRef;
+    var paramRef;
+    
     $scope.displayed = [];
     $scope.is_edit = false;
+    $scope.is_print = false;
     $scope.is_view = false;
     $scope.is_create = false;
     $scope.is_create = false;
 
-    $scope.open1 = function($event) {
+   
+
+    $scope.open1 = function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
         $scope.opened1 = true;
     };
 
-    $scope.cariProduk = function($query) {
+    $scope.cariProduk = function ($query) {
         if ($query.length >= 3) {
-            Data.get('ujimutu/cari', {nama: $query}).then(function(data) {
+            Data.get('ujimutu/cari', {nama: $query}).then(function (data) {
                 $scope.results = data.data;
             });
         }
     }
-    $scope.cariCustomer = function($query) {
+    $scope.cariCustomer = function ($query) {
         if ($query.length >= 3) {
-            Data.get('customer/cari', {nama: $query}).then(function(data) {
+            Data.get('customer/cari', {nama: $query}).then(function (data) {
                 $scope.kdCust = data.data;
             });
         }
     };
-     $scope.getCustomer = function(form, items) {
+    $scope.getCustomer = function (form, items) {
         form.kd_cust = items.kd_cust;
     };
 
-    $scope.pilih = function(form, $item) {
-        Data.post('delivery/customer/', $item).then(function(data) {
+    $scope.pilih = function (form, $item) {
+        Data.post('delivery/customer/', $item).then(function (data) {
             $scope.sCUstomer = data.customer;
         });
         form.merk = $item.merk;
@@ -69,17 +74,24 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
         if (tableState.search.predicateObject) {
             param['filter'] = tableState.search.predicateObject;
         }
-
-        Data.get('delivery', param).then(function(data) {
+        paramRef = param;
+        Data.get('delivery', param).then(function (data) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
 
         $scope.isLoading = false;
     };
+    
+     $scope.printG = function () {
+        Data.get('delivery', paramRef).then(function (data) {
+            window.open = 'api/web/delivery/garansi';
+        });
+    }
 
-    $scope.create = function(form) {
+    $scope.create = function (form) {
         $scope.is_edit = true;
+        $scope.is_print = false;
         $scope.is_view = false;
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
@@ -87,7 +99,8 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.form.tgl_delivery = new Date();
 
     };
-    $scope.update = function(form) {
+    $scope.update = function (form) {
+        $scope.is_print = false;
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.is_create = false;
@@ -96,14 +109,16 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.form.tgl_delivery = new Date(form.tgl_delivery);
 //        $scope.selected(form.id);
     };
-    $scope.view = function(form) {
+    $scope.view = function (form) {
+
+        $scope.is_print = true;
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.no_wo;
         $scope.form = form;
 //        $scope.selected(form.id);
     };
-    $scope.save = function(form) {
+    $scope.save = function (form) {
         if ($scope.uploader.queue.length > 0) {
             $scope.uploader.uploadAll();
             form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
@@ -111,7 +126,7 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
             form.foto = '';
         }
         var url = ($scope.is_create == true) ? 'delivery/create' : 'delivery/update/' + form.id;
-        Data.post(url, form).then(function(result) {
+        Data.post(url, form).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
@@ -121,19 +136,19 @@ app.controller('deliveryCtrl', function($scope, Data, toaster, FileUploader) {
             }
         });
     };
-    $scope.cancel = function() {
+    $scope.cancel = function () {
         $scope.is_edit = false;
         $scope.is_view = false;
     };
-    $scope.delete = function(row) {
+    $scope.delete = function (row) {
         if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
-            Data.delete('delivery/delete/' + row.id).then(function(result) {
+            Data.delete('delivery/delete/' + row.id).then(function (result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
     };
-    $scope.selected = function(id) {
-        Data.get('delivery/view/' + id).then(function(data) {
+    $scope.selected = function (id) {
+        Data.get('delivery/view/' + id).then(function (data) {
             $scope.form = data.data;
             $scope.form.merk = data.data.no_wo.merk;
             $scope.form.model = data.data.no_wo.model;

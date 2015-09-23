@@ -90,6 +90,9 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 {{formtitle}} 
+                <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-hide="is_print == false">
+                    <button type="button" class="btn btn-primary fa fa-print" ng-print print-element-id="printArea" >&nbsp;Garansi</button>
+                </div>
             </div>
             <div class="panel-body">
                 <form name="landaform" class="form-horizontal form-validation ">
@@ -218,4 +221,40 @@
             </div>
         </div>
     </div>
+
+    <!--Print-->
+    <div id="printArea" ng-show="is_view">
+        <table border="1">
+            <tr>
+                <td colspan="2">Merk / Tipe</td>
+                <td>Model</td>
+                <td colspan="3" rowspan="2">Tanggal Penyerahan</td>
+            </tr>
+            <tr>
+                <td colspan="2">{{form.merk}}</td>
+                <td>{{form.model}}</td>
+            </tr>
+            <tr>
+                <td>No. Mesin</td>
+                <td>No. Rangka</td>
+                <td>Warna</td>
+                <td>Tanggal</td>
+                <td>Bulan</td>
+                <td>Tahun</td>
+            </tr>
+            <tr>
+                <td colspan="6">Nama pemilik :</td>
+            </tr>
+            <tr>
+                <td>Alamat :</td>
+                <td>Email :</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>No Telp:</td>
+            </tr>
+        </table>
+    </div>
+
+
 </div>
