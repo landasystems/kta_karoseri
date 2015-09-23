@@ -91,12 +91,12 @@ if (!isset($_GET['print'])) {
 <?php
 if (isset($_GET['print'])) {
     ?>
-    <!--    <script type="text/javascript">
+        <script type="text/javascript">
             window.print();
             setTimeout(function () {
                 window.close();
             }, 1);
-        </script>-->
+        </script>
     <?php
 }
 ?>
