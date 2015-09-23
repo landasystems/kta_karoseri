@@ -12,7 +12,7 @@ if (!isset($_GET['print'])) {
                 <table style="font-size: 11px;">
                     <tr>
                         <td colspan="3" align="center">
-                            <h4 style="font-size: 14px;">SERAH TERIMA BUKTIBARANG MASUK (BBM)</h4>
+                            <h4 style="font-size: 14px;">SERAH TERIMA BUKTI BARANG MASUK (BBM)</h4>
                         </td>
                     </tr>
                     <tr>
