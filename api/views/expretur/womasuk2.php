@@ -1,8 +1,8 @@
 <?php
-if (!isset($_GET['print'])) {
-header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-rekap-lap_womasuk.xls");
-}
+//if (!isset($_GET['print'])) {
+//header("Content-type: application/vnd-ms-excel");
+//header("Content-Disposition: attachment; filename=excel-rekap-lap_womasuk.xls");
+//}
 ?>
 
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
@@ -24,6 +24,7 @@ header("Content-Disposition: attachment; filename=excel-rekap-lap_womasuk.xls");
             <tr>
                 <td>Periode</td>
                 <?php
+                print_r($market);
                 if (!empty($filter['tgl'])) {
                     $value = explode(' - ', $filter['tgl']);
                     $start = date("d/m/Y", strtotime($value[0]));
@@ -74,7 +75,7 @@ foreach ($models as $key => $val) {
     $i++;
 }
 ?>
- <table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
+<table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
     <tr>
         <th>IN CHASIS</th>
         <th>UNIT</th>
@@ -104,35 +105,77 @@ foreach ($models as $key => $val) {
                 ?>
                 <tr>
                     <td class="border-all"></td>
-                   <td class="border-all"><center><?= "1"; ?></center></td>
-                    <td class="border-all"><?= $val['no_wo']; ?></td>
-                    <td class="border-all"><?= $val['nm_customer']; ?></td>
-                    <td class="border-all"><?= $val['model']; ?></td>
-                    <td class="border-all"><?= $val['merk']; ?> <?= $val['tipe']; ?></td>
-                    <td class="border-all"><?= $val['market']; ?></td>
-                    <td class="border-all"></td>
-                    <td class="border-all"><?= date('d/m/Y', strtotime($val['tgl'])); ?>&nbsp;</td>
-                    <td class="border-all"></td>
+                    <td class="border-all"><center><?= "1"; ?></center></td>
+            <td class="border-all"><?= $val['no_wo']; ?></td>
+            <td class="border-all"><?= $val['nm_customer']; ?></td>
+            <td class="border-all"><?= $val['model']; ?></td>
+            <td class="border-all"><?= $val['merk']; ?> <?= $val['tipe']; ?></td>
+            <td class="border-all"><?= $val['market']; ?></td>
+            <td class="border-all"></td>
+            <td class="border-all"><?= date('d/m/Y', strtotime($val['tgl'])); ?>&nbsp;</td>
+            <td class="border-all"></td>
 
 
 
-                </tr>
-                <?php
-            }
-            echo'<tr>
+            </tr>
+            <?php
+        }
+        echo'<tr>
                 <th> Total</th>
-                <th>'.$total.' </th>
+                <th>' . $total . ' </th>
                 <th colspan="8"> </th>
                 </tr>';
-            $grandtotal += $total;
-        }
+        $grandtotal += $total;
     }
-     echo'<tr>
+}
+echo'<tr>
                 <th>Grand Total</th>
-                <th>'.$grandtotal.'</th>
+                <th>' . $grandtotal . '</th>
                     <th colspan="8"> </th>
                 </tr>';
-    ?>
+?>
+</table>
+<table>
+    <tr>
+        <td colspan="3">
+            Berdasarkan "Market"
+        </td>
+        <td colspan="3">
+            Berdasarkan "Merk"
+        </td>
+        <td colspan="4">
+            Berdasarkan "Model"
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <table>
+                <tr>
+                    <th colspan="2"></th>
+                    <th></th>
+                </tr>
+                <?php
+                $no=0;
+                foreach ($market as $mar) {
+                    $no++;
+                    ?>
+                <tr>
+                    <td><?php echo $no ?></td>
+                    <td><?php echo $mar['market'] ?></td>
+                    <td><?php echo $mar['jumlah'] ?></td>
+                </tr>
+                    <?php
+                }
+                ?>
+            </table>
+        </td>
+        <td colspan="3">
+
+        </td>
+        <td colspan="4">
+
+        </td>
+    </tr>
 </table>
 <?php
 if (isset($_GET['print'])) {

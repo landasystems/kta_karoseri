@@ -85,13 +85,17 @@ class BstkController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('bstk as b')
+                ->join('JOIN', 'view_wo_spk as vw', 'b.no_wo = vw.no_wo')
+                ->join('LEFT JOIN', 'customer as cu', 'vw.kd_cust = cu.kd_cust')
+                ->join('LEFT JOIN', 'serah_terima_in as sti', 'vw.kd_titipan = sti.kd_titipan')
+                ->join('LEFT JOIN', 'delivery', 'vw.no_wo = delivery.no_wo')
                 ->join('JOIN', 'warna as wa', 'b.kd_warna = wa.kd_warna')
-                ->join('JOIN', 'wo_masuk as w', 'b.no_wo = w.no_wo')
-                ->join('JOIN', 'spk as s', 'w.no_spk = s.no_spk')
+                
+                ->join('JOIN', 'spk as s', 'vw.no_spk = s.no_spk')
                 ->join('JOIN', 'model as m', 's.kd_model = m.kd_model')
                 ->join('JOIN', 'chassis as c', 's.kd_chassis = c.kd_chassis')
                 ->orderBy($sort)
-                ->select("b.id as id, b.no_wo as no_wo,b.tgl as tgl, c.merk as merk, c.tipe as tipe, m.kd_model as kd_model, m.model as model, wa.warna as warna, b.kd_warna as kd_warna, b.catatan as catatan");
+                ->select("vw.*,delivery.tgl_delivery,sti.driver,cu.alamat1, cu.telp, b.id as id, b.no_wo as no_wo,b.tgl as tgl, c.merk as merk, c.tipe as tipe, m.kd_model as kd_model, m.model as model, wa.warna as warna, b.kd_warna as kd_warna, b.catatan as catatan");
 
         //filter
         if (isset($params['filter'])) {

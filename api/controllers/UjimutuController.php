@@ -346,7 +346,7 @@ class UjimutuController extends Controller {
         
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/rekapujimutu", ['models' => $models,'filter'=>$filter]);
+        return $this->render("/expretur/rekapujimutu2", ['models' => $models,'filter'=>$filter]);
     }
     public function actionExcel2() {
         session_start();
