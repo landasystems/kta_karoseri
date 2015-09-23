@@ -22,6 +22,7 @@
                             <li><a href="#" ng-click="excel()">Export Excel</a></li>
                         </ul>
                     </div>
+                    <button type="button" class="btn btn-primary fa fa-print" ng-print print-element-id="printArea">&nbsp;Print Char</button>
                     <!--<button type="button" class="btn btn-success fa fa-file-excel-o" ng-show="!isCollapsed" ng-click="excel();">&nbsp;&nbsp;Export Laporan Rekap</button>-->
                 </div> 
             </div>
@@ -49,7 +50,7 @@
                                     <div class="col-sm-3">
                                         <input placeholder="NO WO" st-search="no_wo" class="form-control"/>
                                     </div>
-                                   
+
                                     <div class="col-sm-3">
                                         <input placeholder="Sales" st-search="nama" class="form-control"/>
                                     </div>
@@ -63,7 +64,7 @@
                                         <input placeholder="Nama Customer" st-search="nm_customer" class="form-control"/>
                                     </div>
 
-                                   
+
                                     <div class="col-sm-3">
                                         <input placeholder="Merk" st-search="merk" class="form-control"/>
                                     </div>
@@ -127,11 +128,30 @@
         </div>
     </div>
 
-    <!--FORM-->
+    <div id="printArea">
+        <table>
+            <tr>
+                <td colspan="12">
+            <center>
+<highchart id="chart1" config="chartHari" class="span12"></highchart>
+            </center>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+            <highchart id="chart1" config="chartMerk" class="span10"></highchart>             
+            </td>
+            <td colspan="4">
+            <highchart id="chart1" config="chartSales" class="span10"></highchart>             
+            </td>
+            <td colspan="4">
+            <highchart id="chart1" config="chartModel" class="span10"></highchart>
+            </td>
+            </tr>
+        </table>
 
 
-
-    <!--PRINT-->
+    </div>
 
 
 
