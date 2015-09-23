@@ -41,6 +41,11 @@ app.controller('rekapreturbarangkeluarCtrl', function ($scope, Data, toaster) {
             window.location = 'api/web/returbbk/excel';
         });
     }
+     $scope.print = function() {
+        Data.get('returbbk/rekap', paramRef).then(function(data) {
+            window.open('api/web/returbbk/excel?print=true', "", "width=500");
+        });
+    }
    
 
 
