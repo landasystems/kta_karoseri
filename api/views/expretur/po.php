@@ -25,7 +25,7 @@ header("Content-Disposition: attachment; filename=excel-rekap-PO.xls");
     ?>
         <br>
 <center><b>REKAP PURCHASE ORDER</b></center>
-<br><br>
+<br>
 <?php
 $data = array();
 $i = 0;
@@ -50,17 +50,17 @@ foreach ($models as $key => $val) {
 
 <table style="border-collapse: collapse; font-size: 12px;" width="100%" border="1">
     <tr>
-        <th valign="top">No PO</th>
-        <th valign="top">Supplier</th>
-        <th valign="top">NO BBM</th>
-        <th valign="top" style="text-align: center;">Kode Barang</th>
-        <th valign="top">Nama Barang</th>
-        <th valign="top">Qty</th>
-        <th valign="top">Harga</th>
-        <th valign="top" style="text-align: center;">Total</th>
-        <th valign="top" style="text-align: center;">Tgl Kirim</th>
-        <th valign="top">Jenis Bayar</th>
-        <th valign="top">Keterangan</th>
+        <th valign="top" class="border-all">No PO</th>
+        <th valign="top" class="border-all">Supplier</th>
+        <th valign="top" class="border-all">NO BBM</th>
+        <th valign="top" class="border-all" style="text-align: center;">Kode Barang</th>
+        <th valign="top" class="border-all">Nama Barang</th>
+        <th valign="top" class="border-all">Qty</th>
+        <th valign="top" class="border-all">Harga</th>
+        <th valign="top" class="border-all" style="text-align: center;">Total</th>
+        <th valign="top" class="border-all" style="text-align: center;">Tgl Kirim</th>
+        <th valign="top" class="border-all">Jenis Bayar</th>
+        <th valign="top" class="border-all">Keterangan</th>
     </tr>
     <?php
     foreach ($data as $key) {
@@ -71,11 +71,11 @@ foreach ($models as $key => $val) {
             <td class="border-bottom border-right" valign="top"><?php echo $key['title']['no_bbm'] ?></td>
             <td class="border-bottom border-right" style="text-align: center">&nbsp;<?php echo $key['body']['kd_barang'] ?></td>
             <td class="border-bottom border-right"><?php echo $key['body']['nm_barang'] ?></td>
-            <td class="border-bottom border-right" style="text-align: right">&nbsp;<?php echo $key['body']['jml'] ?></td>
+            <td class="border-bottom border-right" style="text-align: center">&nbsp;<?php echo $key['body']['jml'] ?></td>
             <td class="border-bottom border-right" style="text-align: right">&nbsp;<?php echo $key['body']['harga'] ?></td>
-            <td class="border-bottom border-right" style="text-align: right">&nbsp;<?php echo $key['body']['total'] ?></td>
-            <td class="border-bottom border-right" style="width: 70px;text-align: right"><?php echo $key['body']['tgl_pengiriman'] ?></td>
-            <td class="border-bottom border-right"><?php echo $key['body']['bayar'] ?></td>
+            <td class="border-bottom border-right" style="text-align: right">&nbsp;<?php echo  $key['body']['total'] ?></td>
+            <td class="border-bottom border-right" style="width: 60px;text-align: right"><?php echo date("d/m/y",  strtotime($key['body']['tgl_pengiriman'])) ?></td>
+            <td class="border-bottom border-right" align="center"><?php echo $key['body']['bayar'] ?></td>
             <td class="border-bottom border-right"><?php echo $key['body']['ket'] ?></td>
         </tr>
         <?php

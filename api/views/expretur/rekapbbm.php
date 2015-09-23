@@ -27,7 +27,7 @@ foreach ($models as $val) {
         <table>
             <tr>
                 <td width="80"><img src="../../../img/logo.png"></td>
-                <td valign="top">
+                <td style="vertical-align:top">
                     <b style="font-size: 18px; margin:0px; padding:0px;">PT KARYA TUGAS ANDA</b>
                     <p style="font-size: 13px; margin:0px; padding:0px;">Jl. Raya Sukorejo No. 1 Sukorejo 67161, Pasuruan Jawa Timur</p>
                     <p style="font-size: 13px; margin:0px; padding:0px;">Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com</p>
@@ -62,33 +62,33 @@ foreach ($models as $val) {
             $no++;
             ?>
             <tr>
-                <td valign="top" class="border-right" align="center"><?php echo $key['no_spp'] ?></td>
-                <td valign="top" class="border-right" align="center"><?php echo $key['nota'] ?></td>
-                <td valign="top" class="border-right" align="center"><?php echo $key['no_bbm'] ?></td>
-                <td valign="top" class="border-right" align="center"><?php echo $key['surat_jalan'] ?></td>
-                <td valign="top" class="border-right"><?php echo $key['nama_supplier'] ?></td>
-                <td valign="top" class="border-right"></td>
-                <td valign="top" class="border-right"></td>
-                <td valign="top" class="border-right"></td>
-                <td valign="top" class="border-right"></td>
-                <td valign="top" class="border-right"></td>
-                <td valign="top" class="border-right"></td>
+                <td style="vertical-align:top" class="border-right" align="center"><?php echo $key['no_spp'] ?></td>
+                <td style="vertical-align:top" class="border-right" align="center"><?php echo $key['nota'] ?></td>
+                <td style="vertical-align:top" class="border-right" align="center"><?php echo $key['no_bbm'] ?></td>
+                <td style="vertical-align:top" class="border-right" align="center"><?php echo $key['surat_jalan'] ?></td>
+                <td style="vertical-align:top" class="border-right"><?php echo $key['nama_supplier'] ?></td>
+                <td style="vertical-align:top" class="border-right"></td>
+                <td style="vertical-align:top" class="border-right"></td>
+                <td style="vertical-align:top" class="border-right"></td>
+                <td style="vertical-align:top" class="border-right"></td>
+                <td style="vertical-align:top" class="border-right"></td>
+                <td style="vertical-align:top" class="border-right"></td>
             </tr>
             <?php
             foreach ($key['body'] as $val) {
                 ?>
                 <tr>
-                    <td valign="top" class="border-right border-bottom"></td>
-                    <td valign="top" class="border-right border-bottom"></td>
-                    <td valign="top" class="border-right border-bottom"></td>
-                    <td valign="top" class="border-right border-bottom"></td>
-                    <td valign="top" class="border-right border-bottom"></td>
-                    <td valign="top" class="border-right border-bottom" align="center"><?php echo date('d/m/y', strtotime($val['tgl_terima'])) ?></td>
-                    <td valign="top" class="border-right border-bottom" align="center"><?php echo $val['kd_barang'] ?></td>
-                    <td valign="top" class="border-right border-bottom"><?php echo $val['nm_barang'] ?></td>
-                    <td valign="top" class="border-right border-bottom" align="center"><?php echo $val['satuan'] ?></td>
-                    <td valign="top" class="border-right border-bottom" align="center"><?php echo $val['jumlah'] ?></td>
-                    <td valign="top" class="border-right border-bottom"><?php echo $val['keterangan'] ?></td>
+                    <td style="vertical-align:top" class="border-right border-bottom"></td>
+                    <td style="vertical-align:top" class="border-right border-bottom"></td>
+                    <td style="vertical-align:top" class="border-right border-bottom"></td>
+                    <td style="vertical-align:top" class="border-right border-bottom"></td>
+                    <td style="vertical-align:top" class="border-right border-bottom"></td>
+                    <td style="vertical-align:top" class="border-right border-bottom" align="center"><?php echo date('d/m/y', strtotime($val['tgl_terima'])) ?></td>
+                    <td style="vertical-align:top" class="border-right border-bottom" align="center"><?php echo $val['kd_barang'] ?></td>
+                    <td style="vertical-align:top" class="border-right border-bottom"><?php echo $val['nm_barang'] ?></td>
+                    <td style="vertical-align:top" class="border-right border-bottom" align="center"><?php echo $val['satuan'] ?></td>
+                    <td style="vertical-align:top" class="border-right border-bottom" align="center"><?php echo $val['jumlah'] ?></td>
+                    <td style="vertical-align:top" class="border-right border-bottom"><?php echo $val['keterangan'] ?></td>
                 </tr>
                 <?php
             }
