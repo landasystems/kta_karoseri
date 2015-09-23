@@ -122,7 +122,6 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.kd_titipan;
-        $scope.selectlist(form.merk);
         $scope.selected(form);
     };
     

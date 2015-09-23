@@ -9,9 +9,9 @@ header("Content-Disposition: attachment; filename=excel-rekap-Barang_Keluar.xls"
       <table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
         <tr>
             <td rowspan="2" colspan="3" style="border: 1px solid #000000">
-                <b><center>LAPORAN BARANG KELUAR</center>
+                <h3><b><center>LAPORAN BARANG KELUAR</center>
                     <br>
-                    <center>BBK</center></b>
+                    <center>BBK</center></b></h3>
                 <br> No Dok : FR-WHS-015-REV.00
             </td>
 
@@ -46,9 +46,9 @@ header("Content-Disposition: attachment; filename=excel-rekap-Barang_Keluar.xls"
                 </table>
             </td>
 
-            <th colspan="1" style="text-align: center; height:15px;">Dibuat oleh</th>
-            <th colspan="1" style="text-align: center">Diperiksa oleh</th>
-            <th colspan="1" style="text-align: center">Diketahui oleh</th>
+            <th colspan="1" style="text-align: center; width:100px;height:15px;">Dibuat oleh</th>
+            <th colspan="1" style="text-align: center;width:100px;">Diperiksa oleh</th>
+            <th colspan="1" style="text-align: center;width:100px;">Diketahui oleh</th>
         </tr>
         <tr>
             <td class="border-bottom border-right" colspan="1" rowspan="1"></td>

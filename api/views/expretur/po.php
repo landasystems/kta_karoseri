@@ -23,6 +23,7 @@ header("Content-Disposition: attachment; filename=excel-rekap-PO.xls");
         <?php
     }
     ?>
+        <br>
 <center><b>REKAP PURCHASE ORDER</b></center>
 <br><br>
 <?php
@@ -52,14 +53,14 @@ foreach ($models as $key => $val) {
         <th valign="top">No PO</th>
         <th valign="top">Supplier</th>
         <th valign="top">NO BBM</th>
-        <th>Kode Barang</th>
-        <th>Nama Barang</th>
-        <th>Qty</th>
-        <th>Harga</th>
-        <th>Total</th>
-        <th>Tgl Kirim</th>
-        <th>Jenis Bayar</th>
-        <th>Keterangan</th>
+        <th valign="top" style="text-align: center;">Kode Barang</th>
+        <th valign="top">Nama Barang</th>
+        <th valign="top">Qty</th>
+        <th valign="top">Harga</th>
+        <th valign="top" style="text-align: center;">Total</th>
+        <th valign="top" style="text-align: center;">Tgl Kirim</th>
+        <th valign="top">Jenis Bayar</th>
+        <th valign="top">Keterangan</th>
     </tr>
     <?php
     foreach ($data as $key) {
@@ -73,7 +74,7 @@ foreach ($models as $key => $val) {
             <td class="border-bottom border-right" style="text-align: right">&nbsp;<?php echo $key['body']['jml'] ?></td>
             <td class="border-bottom border-right" style="text-align: right">&nbsp;<?php echo $key['body']['harga'] ?></td>
             <td class="border-bottom border-right" style="text-align: right">&nbsp;<?php echo $key['body']['total'] ?></td>
-            <td class="border-bottom border-right" style="width: 70px"><?php echo $key['body']['tgl_pengiriman'] ?></td>
+            <td class="border-bottom border-right" style="width: 70px;text-align: right"><?php echo $key['body']['tgl_pengiriman'] ?></td>
             <td class="border-bottom border-right"><?php echo $key['body']['bayar'] ?></td>
             <td class="border-bottom border-right"><?php echo $key['body']['ket'] ?></td>
         </tr>

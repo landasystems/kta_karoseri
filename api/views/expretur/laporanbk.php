@@ -44,7 +44,8 @@ foreach ($models as $val) {
     }
     ?>
     <center><b>Rekap Bukti Barang Keluar</b></center>
-
+    <br>
+    <br>
     <table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
 
 

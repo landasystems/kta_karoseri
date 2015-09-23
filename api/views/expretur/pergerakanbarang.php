@@ -42,7 +42,7 @@ if (!isset($_GET['print'])) {
         <tr>
             <th rowspan="3" align="center" style="vertical-align:middle">NO</th>
             <th rowspan="3" align="center" width="100" style="vertical-align:middle">KODE BARANG</th>
-            <th rowspan="3" align="center" style="vertical-align:middle">NAMA BARANG</th>
+            <th rowspan="3" align="center" style="vertical-align:middle;text-align: left;">NAMA BARANG</th>
             <th rowspan="3" align="center" style="vertical-align:middle">SAT</th>
             <th rowspan="3" align="center" style="vertical-align:middle">STOK MINIM</th>
             <th rowspan="3" align="center" style="vertical-align:middle">SALDO AWAL</th>

@@ -241,7 +241,7 @@ class BbmController extends Controller {
                 ->join('JOIN', 'barang', 'barang.kd_barang = db.kd_barang')
                 ->join('LEFT JOIN', 'jenis_brg as jb', 'barang.jenis = jb.kd_jenis')
                 ->orderBy($sort)
-                ->select("spp.no_spp,po.nota,tb.tgl_nota as tanggal_nota, db.no_bbm as no_bbm, barang.kd_barang as kd_barang, barang.nm_barang,
+                ->select("spp.no_spp,po.nota,tb.tgl_nota as tanggal_nota,db.tgl_terima, db.no_bbm as no_bbm, barang.kd_barang as kd_barang, barang.nm_barang,
                     barang.satuan, db.jumlah as jumlah, tb.surat_jalan, db.no_po, su.nama_supplier, db.keterangan");
         //filter
 //        print_r($params['limit']);
