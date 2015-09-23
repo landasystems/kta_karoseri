@@ -90,7 +90,7 @@ foreach ($models as $val) {
             ?>
             <tr>
                 <td class="border-top border-right" valign="top">&nbsp;<?= $key['title']['no_spp']; ?></td>
-                <td class="border-top border-right" valign="top"><?= date("dm/Y",  strtotime($key['title']['tgl_trans'])) ?></td>
+                <td class="border-top border-right" valign="top"><?= date("d/m/Y",  strtotime($key['title']['tgl_trans'])) ?></td>
                 <td class="border-top border-right"></td>
                 <td class="border-top border-right"></td>
                 <td class="border-top border-right"></td>

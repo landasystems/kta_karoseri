@@ -46,15 +46,12 @@ class SpprutinController extends Controller {
         session_start();
         $query = new Query;
         $query->from('det_spp')
-                ->join('LEFT JOIN', 'trans_spp', 'trans_spp.no_spp = det_spp.no_spp')
+                ->join('JOIN', 'trans_spp', 'trans_spp.no_spp = det_spp.no_spp')
                 ->join('LEFT JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
-                ->join('RIGHT JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
-                ->join('JOIN', 'detail_po', 'detail_po.nota = trans_po.nota and detail_po.kd_barang = barang.kd_barang')
-                ->join('RIGHT JOIN', 'trans_bbm', 'trans_bbm.no_po =  trans_po.nota')
-                ->join('JOIN', 'det_bbm', 'det_bbm.no_bbm = trans_bbm.no_bbm and det_bbm.kd_barang = barang.kd_barang')
                 ->join('LEFT JOIN', 'view_wo_spk', 'view_wo_spk.no_wo = det_spp.no_wo')
+                ->groupBy('trans_spp.no_spp, det_spp.kd_barang')
                 ->orderBy('view_wo_spk.no_wo ASC, barang.nm_barang ASC')
-                ->select("det_spp.*,barang.nm_barang,barang.satuan,trans_po.nota, det_spp.p as tgl_trans, det_bbm.tgl_terima as tgl_realisasi, detail_po.tgl_pengiriman as tgl_pch, view_wo_spk.nm_customer");
+                ->select("det_spp.*,barang.nm_barang,barang.satuan, view_wo_spk.nm_customer, trans_spp.tgl_trans as tgl_trans");
 
         if (isset($_SESSION['filter'])) {
             foreach ($_SESSION['filter'] as $key => $val) {
@@ -268,7 +265,7 @@ class SpprutinController extends Controller {
                 ->join('JOIN', 'trans_spp', 'trans_spp.no_spp = det_spp.no_spp')
                 ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
                 ->join('RIGHT JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
-                ->join('JOIN', 'detail_po', 'detail_po.nota = trans_po.nota and detail_po.kd_barang = barang.kd_barang')
+                ->join('RIGHT JOIN', 'detail_po', 'detail_po.nota = trans_po.nota and detail_po.kd_barang = det_spp.kd_barang')
                 ->select("det_spp.*,trans_spp.*,barang.nm_barang,barang.satuan, trans_po.nota");
 
         if (isset($params['filter'])) {
@@ -535,7 +532,7 @@ class SpprutinController extends Controller {
         $filter = $_SESSION['filter'];
         $query->limit(null);
         $query->offset(null);
-        $query->orderBy('trans_po.nota','barang.nm_barang');
+        $query->orderBy('trans_po.nota', 'barang.nm_barang');
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/rekapspp", ['models' => $models, 'filter' => $filter]);
