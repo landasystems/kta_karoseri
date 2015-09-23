@@ -30,15 +30,15 @@ if (!isset($_GET['print'])) {
                     </tr>
                 </table>
             </td>
-            <td height="15" align="center" class="border-all" style="width:20%">
+            <td height="15" align="center" class="border-all" style="width:15%">
                 Dibuat Oleh
             </td>
-            <td height="15" align="center" class="border-all" style="width:20%">
+            <td height="15" align="center" class="border-all" style="width:15%">
                 Diperiksa Oleh
             </td>
         </tr>
         <tr>
-            <td class="border-all" style="height:60px;"></td>
+            <td class="border-all" style="height:80px;"></td>
             <td class="border-all"></td>
         </tr>
     </table>
@@ -46,8 +46,8 @@ if (!isset($_GET['print'])) {
         <tr>
             <th rowspan="2" style="text-align:center; width: 8%">KODE BARANG</th>
             <th rowspan="2" style="text-align:center; width: 15%">GOLONGAN</th>
-            <th rowspan="2" style="text-align:center; width: 25%">NAMA BARANG</th>
-            <th rowspan="2" style="text-align:center; width: 10%">SAT</th>
+            <th rowspan="2" style="text-align:center;">NAMA BARANG</th>
+            <th rowspan="2" style="text-align:center; width: 5%">SAT</th>
             <th colspan="2" style="text-align:center; width: 10%">JUMLAH</th>
             <th rowspan="2" style="text-align:center; width: 20%">KETERANGAN</th>
         </tr>

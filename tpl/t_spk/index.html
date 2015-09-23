@@ -206,25 +206,28 @@
         </div>
     </div>
     <div id="printArea" ng-show="is_view">
-        <table width="100%" border="1" style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;">
+        <table width="100%"  style="border-collapse: collapse;  font-size: 12px;">
             <tr>
-                <td colspan="5">
-            <center><h3>SPK PREMIER</h3></center>
+                <td colspan="5" style="padding: 8px;border: 1px solid #000">
+                    <div style="border: 1px solid #000">
+                        <center><h3>SPK PREMIER</h3></center>
+                    </div>
+            
             </td>
             </tr>
             <tr>
-                <td colspan="5">
+                <td colspan="5" style="border: 1px solid #000">
                     <table width="100%" style="font-size: 12px;">
                         <tr>
-                            <td>No. Wo</td>
+                            <td ><b>No. Wo</b></td>
                             <td>: {{form.no_wo.no_wo}}</td>
-                            <td>Model</td>
+                            <td ><b>Model</b></td>
                             <td>: {{form.model}}</td>
                         </tr>
                         <tr>
-                            <td>Customer</td>
+                            <td ><b>Customer</b></td>
                             <td>: {{form.nm_customer}}</td>
-                            <td>Chassis</td>
+                            <td><b>Chassis</b></td>
                             <td>: {{form.merk}}/{{form.tipe}}</td>
                         </tr>
                     </table>
@@ -232,13 +235,15 @@
             </tr>
             <tr>
                 <td colspan="5">
-                    <table width="100%" style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;">
+                    <table width="102%" style="margin-top: -2px;border-collapse: collapse; border: 1px #000 solid; font-size: 11px;">
                         <tr>
+                            <th class="border-all">NO</th>
                             <th class="border-all">URAIAN</th>
-                            <th class="border-all">%</th>
+                            <th class="border-all"><center>%</center></th>
                             <th class="border-all">KETERANGAN</th>
                         </tr>
                         <tr ng-repeat="detail in detKerja">
+                            <td style="border: 1px solid #000; width: 3%" class="border-all"><center>{{$index+1}}</center></td>
                             <td style="border: 1px solid #000000" class="border-all">
                                 {{detail.nm_kerja.nm_kerja}}
                             </td>
@@ -249,15 +254,15 @@
                 </td>
             </tr>
             <tr>
-                <td style="">
-                    <table width="100%" style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;">
+                <td style="border-collapse: collapse; ">
+                    <table width="100%" style="border-collapse: collapse; border: 1px #000 solid; font-size: 11px; margin-top: -2px; ">
                         <tr >
                             <td rowspan="3" colspan="2" valign="middle" class="border-all">
                         <center>SPK DITERIMA</center>
                 </td>
-                <td class="border-all">PEMBORONG</td>
-                <td class="border-all">PENGAWAS</td>
-                <td class="border-all">PPC</td>
+                <td class="border-all" ><center>PEMBORONG</center></td>
+                    <td class="border-all"><center>PENGAWAS</center></td>
+                    <td class="border-all"><center>PPC</center></td>
             </tr>
             <tr>
                 <td class="border-all"><br><br></td>

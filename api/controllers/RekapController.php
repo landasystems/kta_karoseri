@@ -25,6 +25,7 @@ class RekapController extends Controller {
                     'rekapwomasuk' => ['get'],
                     'excelwomasuk' => ['get'],
                     'excelwomasuk2' => ['get'],
+                    'chartwomasuk' => ['get'],
                     'rekapbbmbbk' => ['get'],
                 ],
             ]
@@ -280,7 +281,7 @@ class RekapController extends Controller {
                 } elseif ($key == 'model') {
                     $query->andFilterWhere(['like', 'model.' . $key, $val]);
                 } elseif ($key == 'nama') {
-                    $query->andFilterWhere(['like', 'customer.' . $key, $val]);
+                    $query->andFilterWhere(['like', 'tk.' . $key, $val]);
                 } elseif ($key == 'nm_customer') {
                     $query->andFilterWhere(['like', 'customer.' . $key, $val]);
                 } elseif ($key == 'jenis') {
@@ -301,7 +302,7 @@ class RekapController extends Controller {
         $query->limit(null);
         $query->offset(null);
         session_start();
-        $_SESSION['query'] = $query;
+        $_SESSION['queryasu'] = $query;
         $_SESSION['filter'] = $filter;
 
 //        $this->setHeader(200);
@@ -423,10 +424,83 @@ class RekapController extends Controller {
         session_start();
         $query = $_SESSION['query'];
         $filter = $_SESSION['filter'];
-
+        $query->limit(null);
+        $query->offset(null);
+        
+        // Table fullnya
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/womasuk2", ['models' => $models, 'filter' => $filter]);
+        
+        // Berdasarkan Market
+        $query->select("customer.market,count(*) as jumlah");
+        $query->groupBy("customer.market");
+        $command2 = $query->createCommand();
+        $market = $command2->queryAll();
+        
+        // Berdasarkan Merk
+        $query->select("chassis.merk,count(*) as jumlah");
+        $query->groupBy("chassis.merk");
+        $command3 = $query->createCommand();
+        $merk = $command3->queryAll();
+        
+        // Berdasarkan Model
+        $query->select("model.model,count(*) as jumlah");
+        $query->groupBy("model.model");
+        $command4 = $query->createCommand();
+        $model = $command4->queryAll();
+        
+        return $this->render("/expretur/womasuk2", ['models' => $models,'market'=>$market,'merk'=>$merk,'model'=>$model, 'filter' => $filter]);
+    }
+    public function actionChartwomasuk() {
+        session_start();
+        $query = $_SESSION['queryasu'];
+        $query->limit(null);
+        $query->offset(null);
+        
+        // Table fullnya
+//        $command = $query->createCommand();
+//        $models = $command->queryAll();
+        
+       
+        
+        // Berdasarkan Sales
+        $query->select("tk.nama, count(*) as jumlah");
+        $query->groupBy("tk.nama");
+        $command2 = $query->createCommand();
+        $sales = $command2->queryAll();
+        $asu = array();
+        foreach($sales as $data){
+            $asu[] = ['name'=>$data['nama'],'y'=>(int)$data['jumlah']];
+        }
+        // Berdasarkan Merk
+        $query->select("chassis.merk,count(*) as jumlah");
+        $query->groupBy("chassis.merk");
+        $command3 = $query->createCommand();
+        $merk = $command3->queryAll();
+        $aa = array();
+        foreach($merk as $data){
+            $aa[] = ['name'=>$data['merk'],'y'=>(int)$data['jumlah']];
+        }
+        // Berdasarkan Model
+        $query->select("model.model,count(*) as jumlah");
+        $query->groupBy("model.model");
+        $command4 = $query->createCommand();
+        $model = $command4->queryAll();
+        $babi = array();
+        foreach($model as $data){
+            $babi[] = ['name'=>$data['model'],'y'=>(int)$data['jumlah']];
+        }
+        
+        // Berdasarkan Perhari
+        $query->select("spk.tgl,count(*) as jumlah");
+        $query->groupBy("spk.tgl");
+        $command5 = $query->createCommand();
+        $hari = $command5->queryAll();
+        $kerek = array();
+        foreach($hari as $data){
+            $kerek[] = ['name'=>date('d-m-Y', strtotime($data['tgl'])),'y'=>(int)$data['jumlah']];
+        }
+          return json_encode(array('merk' => $aa,'sales'=>$asu,'model'=>$babi,'hari'=>$kerek), JSON_PRETTY_PRINT);
     }
 
 }

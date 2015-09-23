@@ -23,8 +23,8 @@ foreach ($models as $val) {
     <table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
         <thead>
             <tr>
-                <td rowspan="3" width="75" class="border-all" align="center">
-                    <img src="../../../img/logo.png" alt="." style="display: inline">
+                <td rowspan="3" width="75" class="border-all" style="text-align:center;" align="center">
+                    <img src="../../../img/logo.png" alt=".">
                 </td>
                 <td rowspan="3" valign="top" class="border-all" width="338" style="padding:5px;">
                     <b style="font-size:18px;">MASTER SCHEDULLE</b>
@@ -42,7 +42,7 @@ foreach ($models as $val) {
                 </td>
             </tr>
             <tr>
-                <td class="border-all"><br><br></td>
+                <td class="border-all" style="height:60px;"></td>
                 <td class="border-all"></td>
             </tr>
             <tr>

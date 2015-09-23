@@ -16,7 +16,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">No WO</label>
                             <div class="col-sm-9">
-                                <input st-search="kd_bom" class="form-control"/>
+                                <input st-search="vw.no_wo" class="form-control"/>
                             </div>
                         </div>
                         <div class="form-group">
@@ -140,61 +140,136 @@
     </div>
     <div id="printArea" ng-show="is_view">
         <style>
-            .detail-barang{
-                border-collapse: collapse;
-            }
             .detail-barang td{
-                padding:0px;
                 border-top: 1px;
                 border-left: 1px;
                 border-bottom: 1px;
                 border-right: 1px;
                 border:1px;
-                border-collapse: collapse;
                 border-style:solid;
-                
-            }
-            .detail-barang th{
-                padding:0px;
-                border-top: 1px;
-                border-left: 1px;
-                border-bottom: 1px;
-                border-right: 1px;
-                border:1px;
-                border-collapse: collapse;
-                border-style:solid;
-                font-weight: normal !important;
             }
         </style>
-        <table style="width:98%" class="detail-barang">
-            <thead>
+        <div style="margin-top: 0px">
+            <table width="100%" class="no-border">
                 <tr>
-                    <th rowspan="3" style="text-align: center;width: 40%">
-                        <h3>BUKTI SERAH TERIMA KENDARAAN</h3><br>
-                                NO.DOKUMEN : FR.SS.007 REV 00
-                    </th>
-                    <th style="text-align: center;width:10%">Disiapkan Oleh</th>
-                    <th style="text-align: center;width:10%">Diketahui Oleh</th>
-                    <th style="text-align: center;width:10%">Disetujui Oleh</th>
-                    <th style="text-align: center;width:10%">Dikirim Oleh</th>
-                    <th style="text-align: center;width:10%">Diterima Oleh</th>
-                </tr>
-                <tr style="text-align: center;height: 80px;vertical-align: bottom;">
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
+                    <td colspan="4" style="height: 2.3cm;">&nbsp;</td>
                 </tr>
                 <tr>
-                    <th>TGL:......</th>
-                    <th>TGL:......</th>
-                    <th>TGL:......</th>
-                    <th>TGL:......</th>
-                    <th>TGL:......</th>
+                    <td colspan="4">&nbsp;</td>
                 </tr>
-            </thead>
-        </table>
+            </table>
+            <table width="100%" class="no-border">
+                <tr>
+                    <td width="10%">
+                    </td>
+                    <td valign="top" style="font-size: 10px;">
+                        {{form.nm_customer}}
+                    </td>
+                    <td width="20%">
+                    </td>
+                    <td valign="top" style="font-size: 10px;">
+                        
+                    </td>
+                </tr>
+            </table>
+            <table width="100%" class="no-border">
+                <tr>
+                    <td width="10%">
+                    </td>
+                    <td  valign="top" style="font-size: 10px; margin-top: 4px;width: 42%" rowspan="2">
+                        {{form.alamat1}}
+                    </td>
+                    <td width="20%">
+                    </td>
+                    <td valign="top" style="font-size: 10px;margin-top: 4px;">
+                        {{form.driver}}
+                    </td>
+                </tr>
+                <tr>
+                    <td width="10%" >
+                    </td>
+                    <td width="14%">
+                    </td>
+                    <td valign="top" style="font-size: 10px;margin-left:19px;">
+                        {{form.tgl_delivery}}
+                    </td>
+                </tr>
+            </table>
+            
+            <table width="100%" class="no-border" style="margin-top:-3px;">
+                <tr>
+                    <td width="10%">
+                    </td>
+                    <td valign="top" style="font-size: 10px; margin-top: 4px;width: 45%">
+                        {{form.telp}}
+                    </td>
+                    <td width="20%">
+                    </td>
+                    <td valign="top" style="font-size: 10px;margin-top: 4px;">
+                        &nbsp;
+                    </td>
+                </tr>
+            </table>
+            <table width="100%" class="no-border">
+                <tr>
+                    <td width="10%">
+                    </td>
+                    <td valign="top" style="font-size: 10px; margin-top: 4px;width: 45%">
+                        {{form.no_wo}}
+                    </td>
+                    <td width="13%">
+                    </td>
+                    <td valign="top" style="font-size: 10px;margin-top: 4px;">
+                        {{form.no_chassis}}
+                    </td>
+                </tr>
+            </table>
+            <table width="100%" class="no-border">
+                <tr>
+                    <td width="10%">
+                    </td>
+                    <td valign="top" style="font-size: 10px; margin-top: 4px;">
+                        {{form.merk}} / {{form.tipe}}
+                    </td>
+                    <td width="">
+                    </td>
+                    <td valign="top" style="font-size: 10px;margin-top: 4px;">
+                        {{form.no_mesin}}
+                    </td>
+                </tr>
+            </table>
+            <table width="100%" class="no-border">
+                <tr>
+                    <td width="10%">
+                    </td>
+                    <td valign="top" style="font-size: 10px; margin-top: 4px;">
+                        {{form.model}}
+                    </td>
+                    <td width="20%">
+                    </td>
+                    <td valign="top" style="font-size: 10px;margin-top: 4px;">
+                        
+                    </td>
+                </tr>
+            </table>
+            <table width="100%" class="no-border">
+                <tr>
+                    <td width="10%">
+                    </td>
+                    <td valign="top" style="font-size: 10px; margin-top: 4px;">
+                        {{form.warna}}
+                    </td>
+                    <td width="20%">
+                    </td>
+                    <td valign="top" style="font-size: 10px;margin-top: 4px;">
+                        
+                    </td>
+                </tr>
+            </table>
+            
+
+        </div>
 
     </div>
+    
 </div>

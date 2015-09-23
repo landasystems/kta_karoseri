@@ -259,76 +259,97 @@
         <div style="margin-top: 0px">
             <table width="100%" class="no-border">
                 <tr>
-                    <td width="50%">
-                        PT. KARYA TUGAS ANDA <br>
-                        Sukorejo - Pasuruan
+                    <td colspan="4" style="height: 1cm;">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="4">&nbsp;</td>
+                </tr>
+            </table>
+            <table width="100%" class="no-border">
+                <tr>
+                    <td width="14%">
                     </td>
-                    <td valign="top">
-                        NO. DOC : FR-WHS-004-REV.00
+                    <td valign="top" style="font-size: 10px;">
+                        {{form.tgl_terima | date}}
+                    </td>
+                    <td width="20%">
+                    </td>
+                    <td valign="top" style="font-size: 10px;">
+                       {{form.serah_terima | date}} 
+                    </td>
+                    <td width="12%">
+                    </td>
+                    <td valign="top" style="font-size: 10px;">
+                       NB-01021
+                    </td>
+                    <td width="20%">
+                    </td>
+                    <td valign="top" style="font-size: 10px;">
+                       {{form.no_chassis}} 
                     </td>
                 </tr>
             </table>
-            <br>
-            <center>
-                <h4>*** BUKTI BARANG MASUK ***</h4>
-            </center>
-            <br>
-            <center>
-                FR-WHS-003.REV.00
-            </center>
-            <br>
-            <div class="joke" border="1">
-                <table class="detail-barang" border="1px" style="border-collapse: collapse;width:100%">
-                    <tr>
-                        <td style="border-bottom: 1px;width: 40%" colspan="2" border="1">
-                            Tanggal : 2015-08-12<br>
-                            No. BBM : BM1502088<br>
-                            No. PO : PCH150034<br>
-                        </td>
-                        <td style="border-top:none !important;border-bottom:none !important;"></td>
-                        <td style="border:1px;width:55%" colspan="3">
-                            Dari : PERDANA - JL. TEMBAAN 57 C - SURABAYA            </td>
-                    </tr>
-                </table>
-            </div>
-            <br>
-            <table border="1" class="detail-barang" style="border-collapse: collapse;width: 100%">
-                <thead>
-                    <tr>
-                        <th style="text-align: center;">No</th>
-                        <th style="text-align: center;">Nama Barang</th>
-                        <th style="text-align: center;">Qty</th>
-                        <th style="text-align: center;">Kode Barang</th>
-                        <th style="text-align: center;" colspan="2">Keterangan</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td style="text-align: center;">1</td><td>PIPA KOTAK 20 X 40 X 1,8 MM X 6 M</td><td style="text-align: center;">13</td><td style="text-align: center;">700135</td><td colspan="2">asdfasd</td></tr><tr><td style="text-align: center;">2</td><td>MUR M - 8 KOTAK</td><td style="text-align: center;">11</td><td style="text-align: center;">700113</td><td colspan="2">agdfas a</td></tr>    </tbody>
-            </table>
-            <br>
-            <table border="1" class="detail-barang" style="width:100%;border-collapse: collapse;">
+            <table width="100%" class="no-border">
                 <tr>
-                    <td colspan="2" rowspan="3" style="height: 100px;font-">Catatan : </td>
-                    <td style="text-align: center;">PIMPINAN</td>
-                    <td style="text-align: center;">INSPEKSI</td>
-                    <td style="text-align: center;">ADM. GUDANG</td>
-                    <td style="text-align: center;">DISERAHKAN</td>
-                </tr>
-                <tr>
-                    <td style="height: 60px !important;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>TGL : </td>
-                    <td>TGL : </td>
-                    <td>TGL : </td>
-                    <td>TGL : </td>
+                    <td width="7%">
+                    </td>
+                    <td valign="top" style="font-size: 10px;">
+                        {{form.nm_customer}}
+                    </td>
+                    <td width="20%">
+                    </td>
+                    <td valign="top" style="font-size: 10px;">
+                       {{form.tgl_prd | date}} 
+                    </td>
+                    <td width="12%">
+                    </td>
+                    <td valign="top" style="font-size: 10px;">
+                     {{form.mrek}}/{{form.tipe}} 
+                    </td>
+                    <td width="20%">
+                    </td>
+                    <td valign="top" style="font-size: 10px;">
+                      {{form.no_mesin}}
+                    </td>
                 </tr>
             </table>
-            1. Supplier ; 2. Keuangan ; 3. Gudang
-
+            <table width="100%" class="no-border">
+                <tr>
+                    <td width="7%">
+                    </td>
+                    <td valign="top" style="font-size: 10px;">
+                        {{form.alamat1}}
+                    </td>
+                    <td width="20%">
+                    </td>
+                    <td valign="top" style="font-size: 10px;">
+                       {{form.tgl_pdc | date}} 
+                    </td>
+                    <td width="12%">
+                    </td>
+                    <td valign="top" style="font-size: 10px;">
+                       {{form.model | date}} 
+                    </td>
+                    <td width="20%">
+                    </td>
+                    <td valign="top" style="font-size: 10px;">
+                       {{form.warna.warna}}
+                    </td>
+                </tr>
+            </table>
+            <table width="100%" class="no-border">
+                <tr>
+                    <td width="7%">
+                        {{form.driver}}
+                    </td>
+                    <td valign="top" style="font-size: 10px;">
+                        {{form.driver}}
+                    </td>
+                    
+                </tr>
+            </table>
+            
+            
 
         </div>
 

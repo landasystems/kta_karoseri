@@ -21,7 +21,7 @@ header("Content-Disposition: attachment; filename=excel-rekap-pemantauan-penerim
     <td class="border-right" rowspan="4" colspan="5" valign="top">
         <table style="font-size:12px;">
             <tr>
-                <td>DEPARTEMENT</td>
+                <td width="100">DEPARTEMENT</td>
                 <td> : PURCHASSING</td>
             </tr>
             <tr>
