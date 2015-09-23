@@ -12,7 +12,7 @@ foreach ($models as $val) {
     $data[$val['no_bbm']]['surat_jalan'] = $val['surat_jalan'];
     $data[$val['no_bbm']]['nama_supplier'] = $val['nama_supplier'];
     $data[$val['no_bbm']]['body'][$val['kd_barang']]['kd_barang'] = $val['kd_barang'];
-    $data[$val['no_bbm']]['body'][$val['kd_barang']]['tanggal_nota'] = $val['tanggal_terima'];
+    $data[$val['no_bbm']]['body'][$val['kd_barang']]['tgl_terima'] = $val['tgl_terima'];
     $data[$val['no_bbm']]['body'][$val['kd_barang']]['nm_barang'] = $val['nm_barang'];
     $data[$val['no_bbm']]['body'][$val['kd_barang']]['satuan'] = $val['satuan'];
     $data[$val['no_bbm']]['body'][$val['kd_barang']]['jumlah'] = $val['jumlah'];
@@ -83,7 +83,7 @@ foreach ($models as $val) {
                     <td valign="top" class="border-right border-bottom"></td>
                     <td valign="top" class="border-right border-bottom"></td>
                     <td valign="top" class="border-right border-bottom"></td>
-                    <td valign="top" class="border-right border-bottom" align="center"><?php echo date('d/m/y', strtotime($val['tanggal_terima'])) ?></td>
+                    <td valign="top" class="border-right border-bottom" align="center"><?php echo date('d/m/y', strtotime($val['tgl_terima'])) ?></td>
                     <td valign="top" class="border-right border-bottom" align="center"><?php echo $val['kd_barang'] ?></td>
                     <td valign="top" class="border-right border-bottom"><?php echo $val['nm_barang'] ?></td>
                     <td valign="top" class="border-right border-bottom" align="center"><?php echo $val['satuan'] ?></td>
