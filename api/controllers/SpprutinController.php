@@ -535,6 +535,7 @@ class SpprutinController extends Controller {
         $filter = $_SESSION['filter'];
         $query->limit(null);
         $query->offset(null);
+        $query->orderBy('trans_po.nota','barang.nm_barang');
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/rekapspp", ['models' => $models, 'filter' => $filter]);

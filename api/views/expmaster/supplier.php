@@ -5,7 +5,7 @@ if (!isset($_GET['print'])) {
 }
 ?>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
-<div>
+<div style="width:26cm">
     <?php
     if (isset($_GET['print'])) {
         ?>
@@ -31,7 +31,7 @@ if (!isset($_GET['print'])) {
 
     <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 11px;" width="100%">
         <tr>
-            <th class="border-bottom border-right" align="center">Kode Supplier</th>
+            <th class="border-bottom border-right" style="text-align: center;">Kode Supplier</th>
             <th class="border-bottom border-right">Nama Supplier</th>
             <th class="border-bottom border-right">Alamat</th>
             <th class="border-bottom border-right">Telp</th>
