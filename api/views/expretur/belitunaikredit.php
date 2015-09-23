@@ -13,7 +13,7 @@ foreach ($models as $key => $val) {
     $data[$val['bayar']]['title']['status_bayar'] = $val['bayar'];
     $data[$val['bayar']]['nota'][$val['nota']]['title'] = $val['nota'];
 
-    $data[$val['bayar']]['nota'][$val['nota']]['body'][$i]['tgl_terima'] = $val['tgl_terima'];
+    $data[$val['bayar']]['nota'][$val['nota']]['body'][$i]['tgl_terima'] = date("d-m-Y", strtotime($val['tgl_terima']));
     $data[$val['bayar']]['nota'][$val['nota']]['body'][$i]['no_bbm'] = $val['no_bbm'];
     $data[$val['bayar']]['nota'][$val['nota']]['body'][$i]['kd_barang'] = $val['kd_barang'];
     $data[$val['bayar']]['nota'][$val['nota']]['body'][$i]['nm_barang'] = $val['nm_barang'];
@@ -35,12 +35,12 @@ foreach ($models as $key => $val) {
                 <br>
         <center><b>LAPORAN PEMBELIAN</b></center>
         <br><br>
-        <center>No Dokumen : FR-PCH-019Rev.0</center>
+        <center>No Dokumen : FR-PCH-009Rev.0</center>
         <br><br>
 
         </td>
         <td class="border-right" rowspan="4" colspan="5" valign="top">
-            <table>
+            <table style="font-size:12px;">
                 <tr>
                     <td>NOMOR</td>
                     <td> : </td>
@@ -65,9 +65,9 @@ foreach ($models as $key => $val) {
                 </tr>
             </table>
         </td>
-        <td style="text-align: center;" class="border-bottom border-right">DIBUAT</td>
-        <td style="text-align: center;" class="border-bottom border-right">DIPERIKSA</td>
-        <td style="text-align: center;" class="border-bottom border-right">DIKETAHUI</td>
+        <td style="text-align: center; width:120px;" class="border-bottom border-right">DIBUAT</td>
+        <td style="text-align: center; width:120px;" class="border-bottom border-right">DIPERIKSA</td>
+        <td style="text-align: center; width:120px;" class="border-bottom border-right">DIKETAHUI</td>
         </tr>
         <tr>
             <td class="border-bottom border-right" rowspan="2"></td>
@@ -81,7 +81,7 @@ foreach ($models as $key => $val) {
             <td style="text-align: center;" sclass="border-right">FINANCE HEAD</td>
         </tr>
     </table>
-    <table style="border-collapse: collapse; font-size: 12px;" width="100%" border="1">
+    <table style="margin-top:-2px;border-collapse: collapse; font-size: 12px;" width="100%" border="1">
         <tr>
             <th style="text-align: center;" valign="top">TANGGAL</th>
             <th style="text-align: center;" valign="top">NO BBM</th>
@@ -116,14 +116,14 @@ foreach ($models as $key => $val) {
                     <tr>
                         <td class="border-bottom border-right"><?= $val['tgl_terima'] ?></td>
                         <td class="border-bottom border-right"><?= $val['no_bbm'] ?></td>
-                        <td class="border-bottom border-right"><?= $val['kd_barang'] ?></td>
+                        <td style="text-align: center;" class="border-bottom border-right"><?= $val['kd_barang'] ?></td>
                         <td class="border-bottom border-right"><?= $val['nm_barang'] ?></td>
-                        <td class="border-bottom border-right"><?= $val['satuan'] ?></td>
-                        <td class="border-bottom border-right"><?= $val['jml'] ?></td>
+                        <td style="text-align: center;" class="border-bottom border-right"><?= $val['satuan'] ?></td>
+                        <td style="text-align: center;" class="border-bottom border-right"><?= $val['jml'] ?></td>
                         <td class="border-bottom border-right"><?= $val['harga'] ?></td>
-                        <td class="border-bottom border-right"><?= $val['jenis_brg'] ?></td>
+                        <td style="text-align: center;" class="border-bottom border-right"><?= $val['jenis_brg'] ?></td>
                         <td class="border-bottom border-right"><?= $val['surat_jalan'] ?></td>
-                        <td class="border-bottom border-right"><?= $val['nota'] ?></td>
+                        <td style="text-align: center;" class="border-bottom border-right"><?= $val['nota'] ?></td>
                         <td class="border-bottom border-right"><?= $val['nama_supplier'] ?></td>
                     </tr>
                     <?php

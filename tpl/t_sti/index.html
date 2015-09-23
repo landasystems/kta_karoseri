@@ -171,10 +171,9 @@
                             <label class="col-sm-3 control-label">Merk</label>
                             <div class="col-sm-9">
                                 <div class="input-group">
-                                    <select class="form-control" ng-change="typeChassis(form.merk);
-                                                    getchassis(form.merk, form.tipe)" ng-model="form.merk" ng-disabled="is_view" required style="width: 245px;">
+                                    <select class="form-control" ng-change="typeChassis(form.merk);getchassis(form.merk, form.tipe)" ng-model="form.merk" ng-disabled="is_view" required style="width: 245px;">
                                         <option value="">-Pilih Merk-</option>
-                                        <option ng-repeat="merk in listMerk" value="{{merk.merk}}">{{merk.merk}}</option>
+                                        <option ng-repeat="merk in listMerk" value="{{merk.merk}}" ng-selected="{{merk.merk == form.merk}}" >{{merk.merk}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -184,7 +183,7 @@
                             <div class="col-sm-9">
                                 <select class="form-control" ng-change="getchassis(form.merk, form.tipe)" ng-model="form.tipe" ng-disabled="is_view" required style="width: 245px;">
                                     <option value="">-Pilih Tipe-</option>
-                                    <option ng-repeat="tipe in listTipe" value="{{tipe.tipe}}">{{tipe.tipe}}</option>
+                                    <option ng-repeat="tipe in listTipe" value="{{tipe.tipe}}" ng-selected="{{tipe.tipe == form.tipe}}">{{tipe.tipe}}</option>
                                 </select>
                             </div>
                         </div>

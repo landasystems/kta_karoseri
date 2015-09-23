@@ -11,7 +11,7 @@ header("Content-Disposition: attachment; filename=excel-Laporan-spp-rutin.xls");
 <div style="width:26cm">
 <table style="border-collapse: collapse; font-size: 12px;" width="100%" border="1">
     <tr>
-        <td class="border-right" rowspan="4" colspan="2">
+        <td class="border-right" rowspan="4" colspan="2" style="width:300px">
             <br>
     <center><b>FLUKTUASI HARGA</b></center>
     <br><br>
@@ -20,9 +20,9 @@ header("Content-Disposition: attachment; filename=excel-Laporan-spp-rutin.xls");
 
     </td>
     <td class="border-right" rowspan="4" colspan="3" valign="top">
-        <table>
+        <table style="font-size:12px;">
             <tr>
-                <td>Departemen Purchassing</td>
+                <td colspan="2">Departemen Purchassing</td>
 
             </tr>
             <tr>
@@ -37,13 +37,13 @@ header("Content-Disposition: attachment; filename=excel-Laporan-spp-rutin.xls");
                     $end = '';
                 }
                 ?>
-                <td> : <?php echo $start . ' - ' . $end ?></td>
+                <td style="width: 250px;"> <?php echo $start . ' - ' . $end ?></td>
             </tr>
 
         </table>
     </td>
-    <td class="border-bottom border-right">Dibuat</td>
-    <td class="border-bottom border-right">>Diketahui</td>
+    <td class="border-bottom border-right" style="width:150px; text-align: center">Dibuat</td>
+    <td class="border-bottom border-right" style="width:150px; text-align: center">Diketahui</td>
 </tr>
 <tr>
     <td class="border-bottom border-right" rowspan="2"></td>
@@ -55,7 +55,7 @@ header("Content-Disposition: attachment; filename=excel-Laporan-spp-rutin.xls");
     <td class="border-bottom border-right"></td>
 </tr>
 </table>
-<table style="border-collapse: collapse; font-size: 12px;" width="100%" border="1">
+<table style="margin-top: -2px;border-collapse: collapse; font-size: 12px;" width="100%" border="1">
     <tr>
         <th style="text-align: center;">No</th>
         <th style="text-align: center;">Supplier</th>

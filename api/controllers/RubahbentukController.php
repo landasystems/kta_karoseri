@@ -84,11 +84,12 @@ class RubahbentukController extends Controller {
                 ->from('rubah_bentuk as rb')
                 ->join('Left Join', 'view_wo_spk as vws', 'rb.no_wo = vws.no_wo')
                 ->join('Left Join', 'spk', 'vws.no_spk = spk.no_spk')
+                ->join('Left Join', 'customer', 'customer.kd_cust = vws.kd_cust')
                 ->join('left Join', 'warna', 'vws.kd_warna = warna.kd_warna')
                 ->join('left Join', 'det_uji_mutu as du', 'rb.no_wo = du.no_wo')
                 ->join('left Join', 'trans_uji_mutu as tum', 'tum.kd_uji = du.kd_uji')
                 ->orderBy($sort)
-                ->select("rb.*, vws.merk, vws.tipe, vws.model, vws.jenis, vws.no_chassis, vws.no_mesin, vws.nm_customer, warna.warna as warna_lama");
+                ->select("rb.*, vws.merk, vws.tipe, vws.model, vws.jenis, vws.no_chassis, vws.no_mesin, vws.nm_customer, customer.alamat1, warna.warna as warna_lama");
 
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
@@ -132,7 +133,7 @@ class RubahbentukController extends Controller {
 
     public function actionExceluji() {
         session_start();
-         $query = $_SESSION['query'];
+        $query = $_SESSION['query'];
         $query->limit(null);
         $query->offset(null);
         $query->select("rb.tgl as tanggal_rubah, vws.no_wo, tum.tgl, vws.merk, vws.tipe, vws.no_chassis, vws.nm_customer, tum.kd_uji");

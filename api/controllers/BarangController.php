@@ -28,6 +28,8 @@ class BarangController extends Controller {
                     'cari' => ['get'],
                     'rekappergerakan' => ['post'],
                     'excelpergerakan' => ['get'],
+                    'rekapbbmbbk' => ['post'],
+                    'excelbbmbbk' => ['get'],
                 ],
             ]
         ];
@@ -69,11 +71,14 @@ class BarangController extends Controller {
             $newDate = date("Y-m-d", $new);
             $tgl[] = $newDate;
 
-            if ($i == 1)
-                $tglStart = $newDate;
-            if ($i == 6)
-                $tglEnd = $newDate;
+//            if ($i == 1)
+//                $tglStart = $newDate;
+//            if ($i == 6)
+//                $tglEnd = $newDate;
         }
+
+        $tglStart = date("Y-m-d", strtotime($params['tanggal']['startDate']));
+        $tglEnd = date("Y-m-d", strtotime($params['tanggal']['endDate']));
 
         if (isset($params['limit']))
             $limit = $params['limit'];
@@ -133,7 +138,7 @@ class BarangController extends Controller {
         session_start();
         $_SESSION['queryBbm'] = $bbm;
         $_SESSION['queryBbk'] = $bbk;
-        $_SESSION['periode'] = date("d/m/Y",  strtotime($tglStart)) . ' - ' . date("d/m/Y",  strtotime($tglEnd));
+        $_SESSION['periode'] = date("d/m/Y", strtotime($tglStart)) . ' - ' . date("d/m/Y", strtotime($tglEnd));
         $_SESSION['tanggal'] = $tgl;
         echo json_encode(array('status' => 1, 'data' => $data));
     }
@@ -141,12 +146,17 @@ class BarangController extends Controller {
     public function actionExcelpergerakan() {
         session_start();
 
+        $tgl = isset($_SESSION['tanggal']) ? $_SESSION['tanggal'] : '';
         $bbm = $_SESSION['queryBbm'];
         $bbk = $_SESSION['queryBbk'];
 
+        $bbm->where(null);
+        $bbm->where(['det_bbm.tgl_terima' => $tgl]);
         $commandBbm = $bbm->createCommand();
         $modelBBM = $commandBbm->queryAll();
 
+        $bbk->where(null);
+        $bbk->where(['trans_bbk.tanggal' => $tgl]);
         $commandBbk = $bbk->createCommand();
         $modelBBK = $commandBbk->queryAll();
 
@@ -177,10 +187,81 @@ class BarangController extends Controller {
             $i++;
         }
 
-        $tgl = isset($_SESSION['tanggal']) ? $_SESSION['tanggal'] : '-';
         $periode = $_SESSION['periode'];
-//        print_r($bbm);
         return $this->render("/expretur/pergerakanbarang", ['models' => $data, 'tgl' => $tgl, 'periode' => $periode]);
+    }
+
+    public function actionRekapbbmbbk() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $tglStart = date("Y-m-d", strtotime($params['tanggal']['startDate']));
+        $tglEnd = date("Y-m-d", strtotime($params['tanggal']['endDate']));
+
+        if (isset($params['limit']))
+            $limit = $params['limit'];
+
+        $bbm = new Query;
+        $bbm->from('det_bbm')
+                ->join('Join', 'barang', 'barang.kd_barang = det_bbm.kd_barang')
+                ->join('Join', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
+                ->select("det_bbm.tgl_terima, barang.kd_barang, barang.nm_barang, barang.satuan, barang.min, barang.saldo, det_bbm.jumlah, jenis_brg.jenis_brg as golongan")
+                ->orderBy('jenis_brg.jenis_brg ASC, barang.nm_barang ASC')
+                ->where('det_bbm.tgl_terima >= "' . $tglStart . '" and det_bbm.tgl_terima <= "' . $tglEnd . '"');
+
+        if (isset($params['barang']))
+            $bbm->andFilterWhere(['det_bbm.kd_barang' => $params['barang']['kd_barang']]);
+
+        $bbk = new Query;
+        $bbk->from('det_bbk')
+                ->join('Join', 'trans_bbk', 'trans_bbk.no_bbk = det_bbk.no_bbk')
+                ->join('Join', 'barang', 'barang.kd_barang = det_bbk.kd_barang')
+                ->join('Join', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
+                ->select("barang.kd_barang, barang.nm_barang, barang.satuan, barang.min, barang.saldo, det_bbk.jml, trans_bbk.tanggal, jenis_brg.jenis_brg as golongan")
+                ->orderBy('jenis_brg.jenis_brg ASC, barang.nm_barang ASC')
+                ->where('trans_bbk.tanggal >= "' . $tglStart . '" and trans_bbk.tanggal <= "' . $tglEnd . '"');
+
+        if (isset($params['barang']))
+            $bbk->andWhere(['det_bbk.kd_barang' => $params['barang']['kd_barang']]);
+
+        session_start();
+        $_SESSION['queryBbm'] = $bbm;
+        $_SESSION['queryBbk'] = $bbk;
+        $_SESSION['periode'] = date("d/m/Y", strtotime($tglStart)) . ' - ' . date("d/m/Y", strtotime($tglEnd));
+    }
+
+    public function actionExcelbbmbbk() {
+        session_start();
+
+        $bbm = $_SESSION['queryBbm'];
+        $bbk = $_SESSION['queryBbk'];
+
+        $commandBbm = $bbm->createCommand();
+        $modelBBM = $commandBbm->queryAll();
+
+        $commandBbk = $bbk->createCommand();
+        $modelBBK = $commandBbk->queryAll();
+
+        $data = array();
+        foreach ($modelBBM as $valBbm) {
+            $data[$valBbm['kd_barang']]['kd_barang'] = $valBbm['kd_barang'];
+            $data[$valBbm['kd_barang']]['barang'] = $valBbm['nm_barang'];
+            $data[$valBbm['kd_barang']]['golongan'] = $valBbm['golongan'];
+            $data[$valBbm['kd_barang']]['satuan'] = $valBbm['satuan'];
+            $data[$valBbm['kd_barang']]['golongan'] = $valBbm['golongan'];
+            $data[$valBbm['kd_barang']]['jmlBbk'] = 0;
+            $data[$valBbm['kd_barang']]['jmlBbm'] = isset($data[$valBbm['kd_barang']]['jmlBbm']) ? $data[$valBbm['kd_barang']]['jmlBbm'] + $valBbm['jumlah'] : $valBbm['jumlah'];
+        }
+
+        foreach ($modelBBK as $valBbk) {
+            $data[$valBbk['kd_barang']]['kd_barang'] = $valBbk['kd_barang'];
+            $data[$valBbk['kd_barang']]['barang'] = $valBbk['nm_barang'];
+            $data[$valBbk['kd_barang']]['satuan'] = $valBbk['satuan'];
+            $data[$valBbk['kd_barang']]['golongan'] = $valBbk['golongan'];
+            $data[$valBbk['kd_barang']]['saldo_awal'] = $valBbk['saldo'];
+            $data[$valBbk['kd_barang']]['jmlBbm'] = isset($data[$valBbk['kd_barang']]['jmlBbm']) ? $data[$valBbk['kd_barang']]['jmlBbm'] : 0;
+            $data[$valBbk['kd_barang']]['jmlBbk'] = isset($data[$valBbk['kd_barang']]['jmlBbk']) ? $data[$valBbk['kd_barang']]['jmlBbk'] + $valBbk['jml'] : $valBbk['jml'];
+        }
+        $periode = $_SESSION['periode'];
+        return $this->render("/expretur/laporanbbmbbk", ['models' => $data, 'periode' => $periode]);
     }
 
     public function actionJenis() {

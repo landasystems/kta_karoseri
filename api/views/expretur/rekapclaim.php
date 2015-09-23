@@ -1,61 +1,11 @@
 <?php
 if ($_GET['excel'] == 'ex') {
     header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-rekap-Claim.xls");
+//    header("Content-Disposition: attachment; filename=excel-rekap-Claim.xls");
 }
-//echo $_SERVER['PHP_SELF'];
 ?>
 
 <body>
-    <!--    <h3>PT. KARYA TUGAS ANDA</h3>
-        Jl. raya Sukorejo No. 1 Sukorejo 67161 Pasuruan, Jawa Timur
-        <br>
-        Telp: +62 343 611161 Fax: +62 343 612688 Email: kta@tugasanda.com
-        <hr>
-        <br>
-    <center><b>REKAP CLAIM UNIT</b></center>
-    <br><br>-->
-    <script>
-        window.addEventListener('load', function () {
-            var rotates = document.getElementsByClassName('rotate');
-            for (var i = 0; i < rotates.length; i++) {
-                rotates[i].style.height = rotates[i].offsetWidth + 'px';
-            }
-        });
-    </script> 
-    <style>
-        .no_border{
-            border-top: none;
-            border-bottom: none;
-        }
-        .no_border_LR{
-            border-left: none;
-            border-right:  none;
-        }
-        .rotate {
-            /* FF3.5+ */
-            -moz-transform: rotate(-90.0deg);
-            /* Opera 10.5 */
-            -o-transform: rotate(-90.0deg);
-            /* Saf3.1+, Chrome */
-            -webkit-transform: rotate(-90.0deg);
-            /* IE6,IE7 */
-            /* IE8 */
-            -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083)";
-            /* Standard */
-            transform: rotate(-90.0deg);   
-        }
-        .tds {
-            border-collapse:collapse;
-            border: 1px black solid;
-        }
-        trs:nth-of-type(5) td:nth-of-type(1) {
-            visibility: hidden;
-        }
-    </style>
-    <!--<script src="http://code.highcharts.com/highcharts.js"></script>
-    <script src="http://code.highcharts.com/modules/exporting.js"></script>-->
-
     <?php
     $data = array();
     $i = 0;
@@ -99,12 +49,11 @@ header("Content-Disposition: attachment; filename=excel-rekap-Claim.xls");
             <center><b>REKAP DATA CLAIM</b></center>
             <br><br>
             <center>No Dokumen : FR-SS-018</center>
-            <br><br>
+            <br>
 
             </td>
             <td rowspan="4" colspan="6" valign="top">
-                <table>
-
+                <table style="font-size:12px;">
                     <tr>
                         <td>PERIODE</td>
                         <?php
@@ -126,18 +75,17 @@ header("Content-Disposition: attachment; filename=excel-rekap-Claim.xls");
                     </tr>
                 </table>
             </td>
-            <th colspan="2" style="text-align: center">DIBUAT</th>
-            <th colspan="2" style="text-align: center">DIPERIKSA</th>
-            <th colspan="2" style="text-align: center">DIKETAHUI</th>
+            <th colspan="2" style="text-align: center" width="70">DIBUAT</th>
+            <th colspan="2" style="text-align: center" width="70">DIPERIKSA</th>
+            <th colspan="2" style="text-align: center" width="70">DIKETAHUI</th>
             </tr>
             <tr>
                 <td class="border-bottom border-right" colspan="2" rowspan="3"></td>
                 <td class="border-bottom border-right" colspan="2" rowspan="3"></td>
                 <td class="border-bottom border-right" colspan="2" rowspan="3"></td>
             </tr>
-
         </table>
-        <table border="1" style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;" width="100%" cellpadding="0" cellspacing="0">
+        <table border="1" style="margin-top:-2;border-collapse: collapse; border: 1px #000 solid; font-size: 12px;" width="100%" cellpadding="0" cellspacing="0">
             <tr>
                 <th align="center" style="font-size: 12px;">No</th>
                 <th align="center" style="font-size: 12px;">No WO</th>
@@ -148,7 +96,7 @@ header("Content-Disposition: attachment; filename=excel-rekap-Claim.xls");
                 <th width="60px">Tgl Claim</th>
                 <th align="center">Tgl Penanganan</th>
                 <th>Pelakasana</th>
-                <th>Jenis Komplain</th>
+                <th align="center">Jenis Komplain</th>
                 <th>Problem</th>
                 <th>Perubahan yg dilakukan</th>
                 <th align="center">Biaya Material</th>

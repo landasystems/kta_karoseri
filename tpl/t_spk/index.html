@@ -5,9 +5,9 @@
     <div class="wrapper-md" ng-show="!is_edit">
         <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
             <div class="panel-heading">
-                <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian & Export Data</button>
+                <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                    <button type="button" class="btn btn-default fa fa-file-excel-o" ng-show="!isCollapsed">&nbsp;Export Excel</button>
+                    <!--<button type="button" class="btn btn-default fa fa-file-excel-o" ng-show="!isCollapsed">&nbsp;Export Excel</button>-->
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>
@@ -83,7 +83,7 @@
 
             <div class="panel-heading">
                 {{formtitle}}
-                <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-hide="is_print == false">
+                <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-hide="is_print == false" ng-show="is_view">
                     <button type="button" class="btn btn-primary fa fa-print" ng-click="updt_st(form.id_spk)"  ng-print print-element-id="printArea" ng-disabled="status == '0'">&nbsp;Print</button>
                 </div> 
             </div>
@@ -206,7 +206,7 @@
         </div>
     </div>
     <div id="printArea" ng-show="is_view">
-        <table width="100%" border="1">
+        <table width="100%" border="1" style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;">
             <tr>
                 <td colspan="5">
             <center><h3>SPK PREMIER</h3></center>
@@ -214,9 +214,9 @@
             </tr>
             <tr>
                 <td colspan="5">
-                    <table width="100%">
+                    <table width="100%" style="font-size: 12px;">
                         <tr>
-                            <td>NO WO</td>
+                            <td>No. Wo</td>
                             <td>: {{form.no_wo.no_wo}}</td>
                             <td>Model</td>
                             <td>: {{form.model}}</td>
@@ -232,59 +232,59 @@
             </tr>
             <tr>
                 <td colspan="5">
-                    <table border="1" width="100%">
+                    <table width="100%" style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;">
                         <tr>
-                            <th>URAIAN</th>
-                            <th>%</th>
-                            <th>KETERANGAN</th>
+                            <th class="border-all">URAIAN</th>
+                            <th class="border-all">%</th>
+                            <th class="border-all">KETERANGAN</th>
                         </tr>
                         <tr ng-repeat="detail in detKerja">
-                            <td style="border: 1px solid #000000">
+                            <td style="border: 1px solid #000000" class="border-all">
                                 {{detail.nm_kerja.nm_kerja}}
                             </td>
-                            <td style="border: 1px solid #000000"></td>
-                            <td style="border: 1px solid #000000"></td>
+                            <td style="border: 1px solid #000000" class="border-all"></td>
+                            <td style="border: 1px solid #000000" class="border-all"></td>
                         </tr>
                     </table>
                 </td>
             </tr>
             <tr>
                 <td style="">
-                    <table width="100%" border="1">
+                    <table width="100%" style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;">
                         <tr >
-                            <td rowspan="3" colspan="2" valign="middle" style="border: 1px solid #000000">
+                            <td rowspan="3" colspan="2" valign="middle" class="border-all">
                         <center>SPK DITERIMA</center>
                 </td>
-                <td style="border: 1px solid #000000">PEMBORONG</td>
-                <td style="border: 1px solid #000000">PENGAWAS</td>
-                <td style="border: 1px solid #000000">PPC</td>
+                <td class="border-all">PEMBORONG</td>
+                <td class="border-all">PENGAWAS</td>
+                <td class="border-all">PPC</td>
             </tr>
             <tr>
-                <td style="border-right: 1px solid #000000"><br><br></td>
-                <td style="border-right: 1px solid #000000"><br><br></td>
-                <td style="border-right: 1px solid #000000"><br><br></td>
+                <td class="border-all"><br><br></td>
+                <td class="border-all"><br><br></td>
+                <td class="border-all"><br><br></td>
             </tr>
 
             <tr>
-                <td style="border: 1px solid #000000">Tgl:</td>
-                <td style="border: 1px solid #000000">Tgl:</td>
-                <td style="border: 1px solid #000000">Tgl:</td>
+                <td class="border-all" width="80">Tgl:</td>
+                <td class="border-all" width="80">Tgl:</td>
+                <td class="border-all" width="80">Tgl:</td>
             </tr>
             <tr>
-                <td rowspan="3" colspan="2" valign="middle" style="border: 1px solid #000000">
+                <td rowspan="3" colspan="2" valign="middle" class="border-all">
             <center>SPK DITERIMA UNIT</center>
             </td>
             </tr>
             <tr>
-                <td style="border-right: 1px solid #000000"><br><br></td>
-                <td style="border-right: 1px solid #000000"><br><br></td>
-                <td style="border-right: 1px solid #000000"><br><br></td>
+                <td class="border-all"><br><br></td>
+                <td class="border-all"><br><br></td>
+                <td class="border-all"><br><br></td>
             </tr>
 
             <tr>
-                <td style="border: 1px solid #000000">Tgl:</td>
-                <td style="border: 1px solid #000000">Tgl:</td>
-                <td style="border: 1px solid #000000">Tgl:</td>
+                <td class="border-all">Tgl:</td>
+                <td class="border-all">Tgl:</td>
+                <td class="border-all">Tgl:</td>
             </tr>
 
         </table>

@@ -1,14 +1,11 @@
 <?php
 if (!isset($_GET['print'])) {
-header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=excel-rekap-ujimutu.xls");
+    header("Content-type: application/vnd-ms-excel");
+    header("Content-Disposition: attachment; filename=excel-rekap-ujimutu.xls");
 }
 ?>
 
-
-
-<table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
-    
+<table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
     <tr>
         <td rowspan="4" colspan="2">
             <br>
@@ -22,7 +19,7 @@ header("Content-Disposition: attachment; filename=excel-rekap-ujimutu.xls");
         <table style="font-size: 12px;">
             <tr>
                 <td>PERIODE</td>
-                <td> : <?php echo $periode  ?></td>
+                <td> : <?php echo isset($periode) ? $periode : '-' ?></td>
             </tr>
             <tr>
                 <td>CETAK</td>
@@ -30,19 +27,15 @@ header("Content-Disposition: attachment; filename=excel-rekap-ujimutu.xls");
             </tr>
         </table>
     </td>
-    <td style="height: 10px;"><center>DIBUAT</center></td>
-<td><center>DIPERIKSA</center></td>
+    <td height="15" width="110" align="center">DIBUAT</td>
+    <td width="110" align="center">DIPERIKSA</td>
 </tr>
 <tr>
-    <td style="border-bottom:  none"></td>
-    <td style="border-bottom:  none"></td>
+    <td></td>
+    <td></td>
 </tr>
 <tr>
-    <td style="border-top:  none"></td>
-    <td style="border-top:  none"></td>
-</tr>
-<tr>
-    <td style="height: 10px;">Tgl :</td>
+    <td height="15">Tgl :</td>
     <td>Tgl :</td>
 </tr>
 </table>
@@ -57,24 +50,24 @@ header("Content-Disposition: attachment; filename=excel-rekap-ujimutu.xls");
         <th>Customer</th>
     </tr>
     <?php
-    $jml=1;
-    $total=0;
+    $jml = 1;
+    $total = 0;
     foreach ($models as $key) {
         $total += $jml;
         ?>
         <tr>
-        <td valign="top">&nbsp;<?=$key['no_wo'];?></td>
-        <td valign="top"><?=date('d/m/Y', strtotime($key['tanggal_rubah']))?></td>
-        <td valign="top"><?=date('d/m/Y', strtotime($key['tgl']))?></td>
-        <td valign="top">&nbsp;<?=$key['kd_uji'];?></td>
-        <td valign="top">&nbsp;<?=$key['merk'];?>/<?=$key['tipe'];?></td>
-        <td valign="top">&nbsp;<?=$key['no_chassis'];?></td>
-        <td valign="top">&nbsp;<?=$key['nm_customer'];?></td>
+            <td valign="top">&nbsp;<?= $key['no_wo']; ?></td>
+            <td valign="top"><?= date('d/m/Y', strtotime($key['tanggal_rubah'])) ?></td>
+            <td valign="top"><?= date('d/m/Y', strtotime($key['tgl'])) ?></td>
+            <td valign="top">&nbsp;<?= $key['kd_uji']; ?></td>
+            <td valign="top">&nbsp;<?= $key['merk']; ?>/<?= $key['tipe']; ?></td>
+            <td valign="top">&nbsp;<?= $key['no_chassis']; ?></td>
+            <td valign="top">&nbsp;<?= $key['nm_customer']; ?></td>
         </tr>
         <?php
     }
     echo'<tr><th>Total</th>
-        <th colspan="6" textalign="left" style="text-align: left;">&nbsp;&nbsp;&nbsp;'.$total.'</th>';
+        <th colspan="6" textalign="left" style="text-align: left;">&nbsp;&nbsp;&nbsp;' . $total . '</th>';
     ?>
 </table>
 <?php

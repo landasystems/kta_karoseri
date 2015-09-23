@@ -41,6 +41,11 @@ app.controller('rekapbstkCtrl', function ($scope, Data, toaster) {
             window.location = 'api/web/bstk/excel';
         });
     }
+    $scope.print = function () {
+        Data.get('customer', paramRef).then(function (data) {
+            window.open('api/web/bstk/excel?printlap=true');
+        });
+    }
    
 
 

@@ -75,16 +75,16 @@ foreach ($models as $val) {
 
     <table class="border-all" style="border-collapse: collapse; font-size: 11px; margin-top:-2px;" width="100%">
         <tr>
-            <th class="border-all">TANGGAL</th>
-            <th class="border-all">NO BBM</th>
-            <th class="border-all">KODE BRG</th>
-            <th class="border-all">NAMA BARANG</th>
-            <th class="border-all" align="center">SAT</th>
-            <th class="border-all" align="center">JML</th>
-            <th class="border-all" align="center">SURAT JALAN</th>
-            <th class="border-all" align="center">PO</th>
-            <th class="border-all">SUPPLIER</th>
-            <th class="border-all">KET</th>
+            <th class="border-all back-grey">TANGGAL</th>
+            <th class="border-all back-grey">NO BBM</th>
+            <th class="border-all back-grey">KODE BRG</th>
+            <th class="border-all back-grey">NAMA BARANG</th>
+            <th class="border-all back-grey" align="center">SAT</th>
+            <th class="border-all back-grey" align="center">JML</th>
+            <th class="border-all back-grey" align="center">SURAT JALAN</th>
+            <th class="border-all back-grey" align="center">PO</th>
+            <th class="border-all back-grey">SUPPLIER</th>
+            <th class="border-all back-grey">KET</th>
         </tr>
         <?php
         foreach ($data as $val) {

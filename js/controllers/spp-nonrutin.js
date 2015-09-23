@@ -36,14 +36,15 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
 
         $scope.isLoading = false;
     };
-
-    $scope.excel = function () {
-        Data.get('sppnonrutin', paramRef).then(function (data) {
+    
+    $scope.excel = function (no_spp) {
+        Data.get('sppnonrutin/view/' + no_spp).then(function (data) {
             window.location = 'api/web/sppnonrutin/print';
         });
     }
-    $scope.print = function () {
-        Data.get('sppnonrutin', paramRef).then(function (data) {
+
+    $scope.print = function (no_spp) {
+        Data.get('sppnonrutin/view/' + no_spp).then(function (data) {
             window.open('api/web/sppnonrutin/print?printlap=true');
         });
     }
