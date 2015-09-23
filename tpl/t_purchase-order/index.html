@@ -389,11 +389,11 @@
     <!--PRINT-->
 
     <div id="printArea" ng-show="is_view">
-        <table class="table_po">
+        <table class="table_po" style="border-collapse: collapse;font-size: 12px;">
             <thead>
                 <tr>
                     <td colspan="6" style="border-right:0px">
-                        <div style="border:1px">
+                        <div style="border:1px #333">
                             <div>
                                 <img ng-src="img/logo.png" align="left" style="margin-right: 8px"/>
                             </div>
@@ -450,10 +450,10 @@
                         <div>- Pengiriman Tanggal : {{form.tanggal| date:'dd-MMMM-yyyy'}}</div>
                         <div>- Form asli ini berlaku untuk penagihan</div>
                         <div>- Spesifikasi teknis terlampir</div>
-                        <table class="tablepo" style="border-collapse: collapse;">
+                        <table class="tablepo" style="margin-left: -2px;margin-bottom: -2px;margin-right:-2px;border-collapse: collapse;font-size: 12px;">
                             <tr style="border-top:  1px solid #333;">
-                                <td style="text-align:center;border-top:  1px solid #333;border-left:none;">Pemberi Order</td>
-                                <td style="text-align:center;border-top:  1px solid #333;">Penerima Order</td>
+                                <td style=" text-align:center;border-top:  1px solid #333;border-left:none;">Pemberi Order</td>
+                                <td style=" text-align:center;border-top:  1px solid #333;">Penerima Order</td>
                             </tr>
                             <tr height="80">
                                 <td style="border-left:  none;"></td>

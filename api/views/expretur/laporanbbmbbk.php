@@ -30,10 +30,10 @@ if (!isset($_GET['print'])) {
                     </tr>
                 </table>
             </td>
-            <td height="15" align="center" class="border-all" style="width:15%">
+            <td height="15" align="center" class="border-all" style="width:20%">
                 Dibuat Oleh
             </td>
-            <td height="15" align="center" class="border-all" style="width:15%">
+            <td height="15" align="center" class="border-all" style="width:20%">
                 Diperiksa Oleh
             </td>
         </tr>

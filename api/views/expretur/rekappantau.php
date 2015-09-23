@@ -10,10 +10,10 @@ header("Content-Disposition: attachment; filename=excel-rekap-pemantauan-penerim
 
 <table style="border-collapse: collapse; font-size: 12px;" width="100%" border="1">
     <tr>
-        <td class="border-right" rowspan="4" colspan="3">
+        <td style="width:170px;"class="border-right" rowspan="4" colspan="3">
             <br>
     <center><b>LAPORAN PEMANTAUAN PENERIMAAN BARANG</b></center>
-    <br><br>
+    <br>
     <center>No Dokumen FR-PCH-002REV.02</center>
     <br><br>
 
@@ -42,8 +42,8 @@ header("Content-Disposition: attachment; filename=excel-rekap-pemantauan-penerim
 
         </table>
     </td>
-    <td style="text-align: center;" class="border-right border-bottom">DIBUAT</td>
-    <td style="text-align: center;" class="border-right border-bottom">DIKETAHUI</td>
+    <td style="text-align: center; width:120px;" class="border-right border-bottom">DIBUAT</td>
+    <td style="text-align: center; width:120px;" class="border-right border-bottom">DIKETAHUI</td>
 </tr>
 <tr>
     <td style="width: 90px;" class="border-right" rowspan="3"></td>
@@ -53,21 +53,21 @@ header("Content-Disposition: attachment; filename=excel-rekap-pemantauan-penerim
 <tr>
 </tr>
 </table>
-<table style="border-collapse: collapse; font-size: 12px;" width="100%" border="1">
+<table style="margin-top:-2px;border-collapse: collapse; font-size: 12px;" width="100%" border="1">
     <tr>
-        <th style="text-align: center;" rowspan="2">No</th>
-        <th style="text-align: center;" rowspan="2">No PO</th>
-        <th rowspan="2">Kode Barang</th>
-        <th rowspan="2">Nama Barang</th>
-        <th style="text-align: center;" rowspan="2">Sat</th>
-        <th style="text-align: center;" rowspan="2">QTY</th>
-        <th style="text-align: center;" rowspan="2">Deadline</th>
-        <th style="text-align: center; width: 60px;" colspan="2">Tanggal Kirim</th>
-        <th style="text-align: center;" rowspan="2">Status</th>
+        <th class="border-all" style="text-align: center;" rowspan="2">No</th>
+        <th class="border-all" style="text-align: center;" rowspan="2">No PO</th>
+        <th class="border-all" rowspan="2">Kode Barang</th>
+        <th class="border-all" rowspan="2">Nama Barang</th>
+        <th class="border-all" style="text-align: center;" rowspan="2">Sat</th>
+        <th class="border-all" style="text-align: center;" rowspan="2">QTY</th>
+        <th class="border-all" style="text-align: center;" rowspan="2">Deadline</th>
+        <th class="border-all" style="text-align: center; width: 60px;" colspan="2">Tanggal Kirim</th>
+        <th class="border-all" style="text-align: center;" rowspan="2">Status</th>
     </tr>
     <tr>
-        <th style="text-align: center; width: 40px">P</th>
-        <th style="text-align: center; width: 40px">A</th>
+        <th class="border-all" style="text-align: center; width: 40px">P</th>
+        <th class="border-all" style="text-align: center; width: 40px">A</th>
     </tr>
     <?php
     $no = 1;

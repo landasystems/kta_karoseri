@@ -1,7 +1,7 @@
 <?php
 if (!isset($_GET['print'])) {
     header("Content-type: application/vnd-ms-excel");
-    header("Content-Disposition: attachment; filename=excel-rekap-spp.xls");
+//    header("Content-Disposition: attachment; filename=excel-rekap-spp.xls");
 }
 ?>
 
@@ -10,6 +10,16 @@ $data = array();
 $i = 0;
 //print_r($models);
 foreach ($models as $val) {
+    if(!empty($val['p'])){
+        $p = date('d/m/Y', strtotime($val['p']));
+    }else{
+        $p = '';
+    }
+    if(!empty($val['a'])){
+        $a = date('d/m/Y', strtotime($val['a']));
+    }else{
+        $a = '';
+    }
     $data[$val['no_spp']]['title']['no_spp'] = $val['no_spp'];
     $data[$val['no_spp']]['title']['tgl_trans'] = date('d-m-Y', strtotime($val['tgl_trans']));
     $data[$val['no_spp']]['body'][$i]['nota'] = $val['nota'];
@@ -17,8 +27,8 @@ foreach ($models as $val) {
     $data[$val['no_spp']]['body'][$i]['nm_barang'] = $val['nm_barang'];
     $data[$val['no_spp']]['body'][$i]['satuan'] = $val['satuan'];
     $data[$val['no_spp']]['body'][$i]['qty'] = $val['qty'];
-    $data[$val['no_spp']]['body'][$i]['p'] = date('d-m-Y', strtotime($val['p']));
-    $data[$val['no_spp']]['body'][$i]['a'] = date('d-m-Y', strtotime($val['a']));
+    $data[$val['no_spp']]['body'][$i]['p'] = $p;
+    $data[$val['no_spp']]['body'][$i]['a'] = $a;
     $data[$val['no_spp']]['body'][$i]['ket'] = $val['ket'];
     $i++;
 }

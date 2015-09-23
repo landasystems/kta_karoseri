@@ -9,6 +9,7 @@ if (!isset($_GET['print'])) {
     <table class="border-all" style="border-collapse: collapse; font-size: 12px;" width="100%">
         <tr>
             <td colspan="2" rowspan="2" style="border: 1px solid #000000; font-size: 18px; width:35%" valign="middle" align="center">
+                <br>
                 <b>LAPORAN RETUR BARANG MASUK</b>
                 <br>
                 <b>(BBM)</b>
