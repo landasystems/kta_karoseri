@@ -8,18 +8,16 @@ header("Content-Disposition: attachment; filename=excel-rekap-bstk.xls");
 <div style="width:26cm">
     <table style="border-collapse: collapse; font-size: 12px;" width="100%" border="1">
         <tr>
-            <td class="border-right" rowspan="4" colspan="2">
+            <td class="border-right" rowspan="4" colspan="2" style="font-size:18px;">
                 <br>
-        <center><b>REKAP BSTK</b></center>
-        <br><br>
-        <center></center>
-        <br><br>
+        <center><h4><b>REKAP BSTK</b></h4></center>
+        <br>
 
         </td>
         <td class="border-right" rowspan="4" colspan="2" valign="top">
-            <table>
+            <table style="font-size:12px;">
                 <tr>
-                    <td>PERIODE</td>
+                    <td width="100">Periode</td>
                     <?php
                     if (!empty($filter['tgl_periode'])) {
                         $value = explode(' - ', $filter['tgl_periode']);
@@ -38,8 +36,8 @@ header("Content-Disposition: attachment; filename=excel-rekap-bstk.xls");
                 </tr>
             </table>
         </td>
-        <td style="width:100px;text-align: center;" class="border-right border-bottom">DIBUAT</td>
-        <td style="width:100px;text-align: center;" class="border-right border-bottom" >DIKETAHUI</td>
+        <td style="width:15%;text-align: center;" class="border-right border-bottom" >DIBUAT</td>
+        <td style="width:15%;text-align: center;" class="border-right border-bottom" >DIKETAHUI</td>
         </tr>
         <tr>
             <td class="border-right border-bottom" rowspan="2"></td>
@@ -59,7 +57,7 @@ header("Content-Disposition: attachment; filename=excel-rekap-bstk.xls");
         $i++;
     }
     ?>
-    <table style="border-collapse: collapse; font-size: 12px;" width="100%" border="1">
+    <table style="border-collapse: collapse; font-size: 12px; margin-top: -2px;" width="100%" border="1">
         <tr>
             <th style="text-align: center;">NO</th>
             <th style="text-align: center;">NO WO</th>

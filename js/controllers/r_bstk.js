@@ -42,7 +42,7 @@ app.controller('rekapbstkCtrl', function ($scope, Data, toaster) {
         });
     }
     $scope.print = function () {
-        Data.get('customer', paramRef).then(function (data) {
+        Data.get('bstk/rekap', paramRef).then(function (data) {
             window.open('api/web/bstk/excel?printlap=true');
         });
     }

@@ -23,8 +23,8 @@ if (!isset($_GET['print'])) {
                     </tr>
                 </table>
             </td>
-            <td colspan="2" valign="top" align="center" class="border-all" width="80">Dibuat</td>
-            <td colspan="2" valign="top" align="center" class="border-all" width="80">Diketahui</td>
+            <td colspan="2" valign="top" align="center" class="border-all" width="100">Dibuat</td>
+            <td colspan="2" valign="top" align="center" class="border-all" width="100">Diketahui</td>
         </tr>
         <tr height="70">
             <td colspan="2" class="border-all"></td>

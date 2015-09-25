@@ -1,5 +1,9 @@
-
 <?php
+if (!isset($_GET['print'])) {
+    header("Content-type: application/vnd-ms-excel");
+    header("Content-Disposition: attachment; filename=excel-laporan-kekurangan-pemenuhan-spp.xls");
+}
+
 if (!empty($filter['tgl_periode'])) {
     $value = explode(' - ', $filter['tgl_periode']);
     $start = date("d-m-Y", strtotime($value[0]));
@@ -54,9 +58,9 @@ if (!empty($filter['tgl_periode'])) {
         </tr>
         <tr>
 
-            <th class="border-bottom border-right" style="text-align: center">1</th>
-            <th class="border-bottom border-right" style="text-align: center">2</th>
-            <th class="border-bottom border-right" style="text-align: center">3</th>
+            <th class="border-bottom border-right" style="text-align: center" width="10%">1</th>
+            <th class="border-bottom border-right" style="text-align: center" width="10%">2</th>
+            <th class="border-bottom border-right" style="text-align: center" width="10%">3</th>
         </tr>
     
         <?php
@@ -81,3 +85,15 @@ if (!empty($filter['tgl_periode'])) {
         ?>
     </table>
 </div>
+<?php
+if (isset($_GET['print'])) {
+    ?>
+    <script type="text/javascript">
+        window.print();
+        setTimeout(function () {
+            window.close();
+        }, 1);
+    </script>
+    <?php
+}
+?>

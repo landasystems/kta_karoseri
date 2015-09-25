@@ -7,6 +7,7 @@ $data = array();
 $i = 0;
 foreach ($models as $val) {
     $data[$val['no_wo']]['no_wo'] = $val['no_wo'];
+    $data[$val['no_wo']]['body'][$i]['no_spp'] = $val['no_spp'];
     $data[$val['no_wo']]['body'][$i]['nm_customer'] = isset($val['nm_customer']) ? $val['nm_customer'] : '-';
     $data[$val['no_wo']]['body'][$i]['kd_barang'] = $val['kd_barang'];
     $data[$val['no_wo']]['body'][$i]['no_spp'] = $val['no_spp'];
@@ -57,6 +58,7 @@ foreach ($models as $val) {
         </thead>
         <tbody>
             <?php
+            $no=1;
             foreach ($data as $val) {
                 echo '<tr>';
                 echo '<td colspan="8" class="border-all">' . $val['no_wo'] . '</td>';
@@ -77,7 +79,7 @@ foreach ($models as $val) {
                         foreach ($models as $valDet) {
                             echo '<tr>';
                             echo '<td class="border-all"></td>';
-                            echo '<td class="border-all">' . $det['nm_customer'] . '</td>';
+                            echo '<td class="border-all">' . $det['no_spp'] . '</td>';
                             echo '<td class="border-all" align="center">' . $det['kd_barang'] . '</td>';
                             echo '<td class="border-all">' . $det['nm_barang'] . '</td>';
                             echo '<td class="border-all">' . $det['ket'] . '</td>';
@@ -89,7 +91,7 @@ foreach ($models as $val) {
                     } else {
                         echo '<tr>';
                         echo '<td class="border-all"></td>';
-                        echo '<td class="border-all">' . $det['nm_customer'] . '</td>';
+                        echo '<td class="border-all">' . $det['no_spp'] . '</td>';
                         echo '<td class="border-all" align="center">' . $det['kd_barang'] . '</td>';
                         echo '<td class="border-all">' . $det['nm_barang'] . '</td>';
                         echo '<td class="border-all">' . $det['ket'] . '</td>';
