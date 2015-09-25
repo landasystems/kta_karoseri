@@ -79,7 +79,7 @@ foreach ($models as $val) {
                         foreach ($models as $valDet) {
                             echo '<tr>';
                             echo '<td class="border-all"></td>';
-                            echo '<td class="border-all">' . $det['no_spp'] . '</td>';
+                            echo '<td class="border-all">' . $det['nm_customer'] . '</td>';
                             echo '<td class="border-all" align="center">' . $det['kd_barang'] . '</td>';
                             echo '<td class="border-all">' . $det['nm_barang'] . '</td>';
                             echo '<td class="border-all">' . $det['ket'] . '</td>';
@@ -91,7 +91,7 @@ foreach ($models as $val) {
                     } else {
                         echo '<tr>';
                         echo '<td class="border-all"></td>';
-                        echo '<td class="border-all">' . $det['no_spp'] . '</td>';
+                        echo '<td class="border-all">' . $det['nm_customer'] . '</td>';
                         echo '<td class="border-all" align="center">' . $det['kd_barang'] . '</td>';
                         echo '<td class="border-all">' . $det['nm_barang'] . '</td>';
                         echo '<td class="border-all">' . $det['ket'] . '</td>';
