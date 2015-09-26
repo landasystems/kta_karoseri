@@ -92,7 +92,7 @@ app.controller('rekapwomasukCtrl', function ($scope, Data, toaster) {
                         borderWidth: 0,
                         dataLabels: {
                             enabled: true,
-                            format: '{point.y:.1f}%'
+                            format: '{point.y}'
                         }
                     }
                 },
@@ -128,7 +128,7 @@ app.controller('rekapwomasukCtrl', function ($scope, Data, toaster) {
                         borderWidth: 0,
                         dataLabels: {
                             enabled: true,
-                            format: '{point.y:.1f}%'
+                            format: '{point.y}'
                         }
                     }
                 },
