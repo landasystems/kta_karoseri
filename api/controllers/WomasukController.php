@@ -1314,27 +1314,21 @@ class WomasukController extends Controller {
         if ($model->save()) {
 // EKTERIOR
             if ($params['womasuk']['jenis'] == "Small Bus") {
-//                $table = Smalleks::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
-//                if (empty($table)) {
-//                    $table = new Smalleks();
-//                }
                 $eks = Smalleks::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
-                if (empty($int)) {
+                if (empty($eks)) {
                     $eks = new Smalleks();
+                    $eks->no_wo =$params['womasuk']['no_wo'];
                 }
                 
             } else {
-//                $table = Minieks::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
-//                if (empty($table)) {
-//                    $table = new Minieks();
-//                }
                 $eks = Minieks::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
-                if (empty($int)) {
+                if (empty($eks)) {
                     $eks = new Minieks();
+                    $eks->no_wo =$params['womasuk']['no_wo'];
                 }
             }
 //            $eks = $table;
-            $eks->no_wo =$params['womasuk']['no_wo'];
+            
             if (!empty($params['eksterior']['plat']['plat_body'])) {
                 $eks->plat_body = $params['eksterior']['plat']['plat_body'];
             }
@@ -1412,8 +1406,9 @@ class WomasukController extends Controller {
                 $int = Miniint::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
                 if (empty($int)) {
                     $int = new Miniint();
+                    $int->no_wo = $params['womasuk']['no_wo'];
                 }
-                $int->no_wo = $params['womasuk']['no_wo'];
+                
                 if (!empty($params['interior']['plavon']['plavon'])) {
                     $int->plavon = $params['interior']['plavon']['plavon'];
                 }
@@ -1467,8 +1462,8 @@ class WomasukController extends Controller {
                 $int = Smallint::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
                 if (empty($int)) {
                     $int = new Smallint();
+                    $int->no_wo = $params['womasuk']['no_wo'];
                 }
-                $int->no_wo = $params['womasuk']['no_wo'];
                 if (!empty($params['interior']['plavon']['plavon'])) {
                     $int->plavon = $params['interior']['plavon']['plavon'];
                 }

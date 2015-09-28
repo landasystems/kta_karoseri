@@ -87,7 +87,7 @@ class DepartementController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tbl_department.id_department ASC";
+        $sort = "tbl_department.id_department DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);

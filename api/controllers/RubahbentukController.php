@@ -55,7 +55,7 @@ class RubahbentukController extends Controller {
 
         $params = $_REQUEST;
         $filter = array();
-        $sort = "rb.kd_rubah DESC";
+        $sort = "rb.tgl DESC";
         $offset = 0;
         $limit = 10;
         if (isset($params['limit']))
