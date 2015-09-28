@@ -178,20 +178,20 @@
                                 <div>
                                     <!--<input type="text" class="form-control" ng-model="form.customer" ng-disabled="is_view" placeholder="">-->
                                     <textarea class="form-control" ng-model="form.customer" ng-readonly="true" >{{form.alaamt1}}</textarea>
-<!--                                    <div class="input-group">
-                                        <ui-select on-select="getCustomer(form,$item)" ng-model="form.customer" theme="bootstrap" ng-disabled="is_view" >
-                                            <ui-select-match>{{$select.selected.nm_customer}}</ui-select-match>
-                                            <ui-select-choices refresh="cariCustomer($select.search)" repeat="val in sCUstomer">
-                                                <span title ="{{val.alamat1}}"> {{val.nm_customer}}</span>
-                                                <span title ="{{val.alamat1}}"> {{val.alamat1}}</span>
-                                            </ui-select-choices>
-                                        </ui-select>
-                                        <span class="input-group-btn">
-                                            <button ng-click="form.customer = undefined" class="btn btn-default">
-                                                <span class="glyphicon glyphicon-trash"></span>
-                                            </button>
-                                        </span>
-                                    </div>-->
+                                    <!--                                    <div class="input-group">
+                                                                            <ui-select on-select="getCustomer(form,$item)" ng-model="form.customer" theme="bootstrap" ng-disabled="is_view" >
+                                                                                <ui-select-match>{{$select.selected.nm_customer}}</ui-select-match>
+                                                                                <ui-select-choices refresh="cariCustomer($select.search)" repeat="val in sCUstomer">
+                                                                                    <span title ="{{val.alamat1}}"> {{val.nm_customer}}</span>
+                                                                                    <span title ="{{val.alamat1}}"> {{val.alamat1}}</span>
+                                                                                </ui-select-choices>
+                                                                            </ui-select>
+                                                                            <span class="input-group-btn">
+                                                                                <button ng-click="form.customer = undefined" class="btn btn-default">
+                                                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                                                </button>
+                                                                            </span>
+                                                                        </div>-->
                                 </div>
 
                             </div>
@@ -230,6 +230,163 @@
 
         <table style="width:27cm;" border="1">
             <tr>
+                <td class="border-right border-bottom">
+                    <table  style="width:13cm;">
+                        <tr>
+                            <td colspan="2"></td>
+                            <td></td>
+                            <td colspan="3" rowspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">{{form.merk}}</td>
+                            <td>{{form.model}}</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>{{form.no_mesin}}</td>
+                            <td>{{form.no_chassis}}</td>
+                            <td>{{form.warna}}</td>
+                            <td>{{form.tgl_delivery| date:'dd'}}</td>
+                            <td>{{form.tgl_delivery| date:'MM'}}</td>
+                            <td>{{form.tgl_delivery| date:'yyyy'}}</td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="6"> {{form.nm_pemilik}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" rowspan="2"> <br>{{form.alamat1}}</td>
+                            <td colspan="4"> {{form.email}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"> {{form.telp}}</td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="1"></td>
+                            <td colspan="2"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"> {{form.nm_customer}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" rowspan="2"> <br>{{form.alamat1}}</td>
+                            <td colspan="4"> {{form.email}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"> {{form.telp}}</td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="1"></td>
+                            <td colspan="2"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="border-bottom">
+                    <!--<table width="50%">-->
+                    <!--                        <tr>
+                                                <td colspan="2">Merk / Tipe</td>
+                                                <td>Model</td>
+                                                <td colspan="3" rowspan="2">Tanggal Penyerahan</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">{{form.merk}}</td>
+                                                <td>{{form.model}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>No. Mesin</td>
+                                                <td>No. Rangka</td>
+                                                <td>Warna</td>
+                                                <td>Tanggal</td>
+                                                <td>Bulan</td>
+                                                <td>Tahun</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{{form.no_mesin}}</td>
+                                                <td>{{form.no_chassis}}</td>
+                                                <td>{{form.warna}}</td>
+                                                <td>{{form.tgl_delivery| date:'dd'}}</td>
+                                                <td>{{form.tgl_delivery| date:'MM'}}</td>
+                                                <td>{{form.tgl_delivery| date:'yyyy'}}</td>
+                                            </tr>
+                    
+                                            <tr>
+                                                <td colspan="6">Nama perusahaan : {{form.nm_customer}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2" rowspan="2">Alamat : <br>{{form.alamat1}}</td>
+                                                <td colspan="4">Email : {{form.email}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4">No Telp: {{form.telp}}</td>
+                                            </tr>
+                    
+                                            <tr>
+                                                <td colspan="1">Kota :</td>
+                                                <td colspan="2">Propinsi :</td>
+                                                <td colspan="3">kode pos :</td>
+                                            </tr>
+                                        </table>-->
+                </td>
+            </tr>
+            <tr>
+                <td class="border-right">
+                    <table  style="width:13cm;">
+                        <tr>
+                            <td colspan="2"></td>
+                            <td></td>
+                            <td colspan="3" rowspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">{{form.merk}}</td>
+                            <td>{{form.model}}</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>{{form.no_mesin}}</td>
+                            <td>{{form.no_chassis}}</td>
+                            <td>{{form.warna}}</td>
+                            <td>{{form.tgl_delivery| date:'dd'}}</td>
+                            <td>{{form.tgl_delivery| date:'MM'}}</td>
+                            <td>{{form.tgl_delivery| date:'yyyy'}}</td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="6"> {{form.nm_pemilik}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" rowspan="2"> <br> </td>
+                            <td colspan="4"> </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"> </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="1"></td>
+                            <td colspan="2"></td>
+                            <td colspan="3"></td>
+                        </tr>
+
+                    </table>
+                </td>
                 <td>
                     <table  style="width:13cm;">
                         <tr>
@@ -253,20 +410,20 @@
                             <td>{{form.no_mesin}}</td>
                             <td>{{form.no_chassis}}</td>
                             <td>{{form.warna}}</td>
-                            <td>{{form.tgl_delivery| date:'dd'}} /</td>
-                            <td>{{form.tgl_delivery| date:'MM'}} /</td>
+                            <td>{{form.tgl_delivery| date:'dd'}}</td>
+                            <td>{{form.tgl_delivery| date:'MM'}}</td>
                             <td>{{form.tgl_delivery| date:'yyyy'}}</td>
                         </tr>
 
                         <tr>
-                            <td colspan="6"> {{form.nm_customer}}</td>
+                            <td colspan="6"> {{form.nm_pemilik}}</td>
                         </tr>
                         <tr>
-                            <td colspan="2" rowspan="2"> <br>{{form.alamat1}}</td>
-                            <td colspan="4"> {{form.email}}</td>
+                            <td colspan="2" rowspan="2"> <br> </td>
+                            <td colspan="4">  </td>
                         </tr>
                         <tr>
-                            <td colspan="4"> {{form.telp}}</td>
+                            <td colspan="4">  <td>
                         </tr>
 
                         <tr>
@@ -274,63 +431,8 @@
                             <td colspan="2"></td>
                             <td colspan="3"></td>
                         </tr>
+
                     </table>
-                </td>
-                <td>
-                    <!--<table width="50%">-->
-<!--                        <tr>
-                            <td colspan="2">Merk / Tipe</td>
-                            <td>Model</td>
-                            <td colspan="3" rowspan="2">Tanggal Penyerahan</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">{{form.merk}}</td>
-                            <td>{{form.model}}</td>
-                        </tr>
-                        <tr>
-                            <td>No. Mesin</td>
-                            <td>No. Rangka</td>
-                            <td>Warna</td>
-                            <td>Tanggal</td>
-                            <td>Bulan</td>
-                            <td>Tahun</td>
-                        </tr>
-                        <tr>
-                            <td>{{form.no_mesin}}</td>
-                            <td>{{form.no_chassis}}</td>
-                            <td>{{form.warna}}</td>
-                            <td>{{form.tgl_delivery| date:'dd'}}</td>
-                            <td>{{form.tgl_delivery| date:'MM'}}</td>
-                            <td>{{form.tgl_delivery| date:'yyyy'}}</td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="6">Nama perusahaan : {{form.nm_customer}}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" rowspan="2">Alamat : <br>{{form.alamat1}}</td>
-                            <td colspan="4">Email : {{form.email}}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4">No Telp: {{form.telp}}</td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="1">Kota :</td>
-                            <td colspan="2">Propinsi :</td>
-                            <td colspan="3">kode pos :</td>
-                        </tr>
-                    </table>-->
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <table>
-                        
-                    </table> 
-                </td>
-                <td>
-                    
                 </td>
             </tr>
         </table>
