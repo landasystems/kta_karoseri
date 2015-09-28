@@ -389,7 +389,7 @@ class SpprutinController extends Controller {
                 $det->kd_barang = (empty($val['barang']['kd_barang'])) ? '-' : $val['barang']['kd_barang'];
                 $det->saldo = $val['barang']['saldo'];
                 $det->qty = $val['barang']['qty'];
-                $det->p = date('Y-m-d', strtotime($det->p));
+                $det->p = (!empty($det->p) ? date('Y-m-d', strtotime($det->p)) : null);
                 $det->no_wo = (empty($val['wo']['no_wo'])) ? '-' : $val['wo']['no_wo'];
                 $det->save();
             }
