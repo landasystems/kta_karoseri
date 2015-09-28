@@ -51,12 +51,12 @@ app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
     };
 
     $scope.pilih = function (form, $item) {
+        
         Data.post('delivery/customer/', $item).then(function (data) {
 //            $scope.sCUstomer = data.customer;
-        console.log(data.customer);
+        
         form.customer = data.customer.nm_customer;
         form.kd_cust = data.customer.kd_cust;
-//        form.alamat1 = data.customer.alamat1;
             
         });
         form.merk = $item.merk;
@@ -113,7 +113,6 @@ app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
         $scope.form = form;
         $scope.form.customer = form.customer.nm_customer;
         $scope.form.tgl_delivery = new Date(form.tgl_delivery);
-        console.log(form);
     };
     $scope.view = function (form) {
 
