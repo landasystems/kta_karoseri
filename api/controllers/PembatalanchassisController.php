@@ -54,7 +54,7 @@ class PembatalanchassisController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "serah_terima_in.kd_titipan ASC";
+        $sort = "serah_terima_in.kd_titipan DESC";
         $offset = 0;
         $limit = 20;
 

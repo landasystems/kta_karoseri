@@ -75,7 +75,7 @@ class DeliveryController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "delivery.id ASC";
+        $sort = "delivery.id DEC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -107,8 +107,10 @@ class DeliveryController extends Controller {
                 ->join('JOIN', 'chassis', 'chassis.kd_chassis = spk.kd_chassis')
                 ->join('JOIN', 'model', 'model.kd_model = spk.kd_model')
                 ->join('JOIN', 'tbl_karyawan', 'tbl_karyawan.nik = spk.nik')
+                ->join('LEFT JOIN', 'serah_terima_in', 'serah_terima_in.kd_titipan = wo_masuk.kd_titipan')
+                ->join('LEFT JOIN', 'warna', 'serah_terima_in.kd_warna = warna.kd_warna')
                 ->orderBy($sort)
-                ->select("delivery.*, chassis.merk as merk, model.model as model, tbl_karyawan.nama as sales,cu.*");
+                ->select("delivery.*, chassis.merk as merk, model.model as model, tbl_karyawan.nama as sales,cu.*,serah_terima_in.no_mesin,serah_terima_in.no_chassis,warna.warna");
 
         //filter
         if (isset($params['filter'])) {

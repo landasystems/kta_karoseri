@@ -41,7 +41,6 @@
                 <div class="panel panel-info" style="text-align: center">
                     <div class="panel-heading">
                         <div class="form-horizontal">
-
                             <div class="form-group">
                                 <div class="control-group">
                                     <div class="col-sm-4">
@@ -73,6 +72,18 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <div class="control-group">
+                                    <label class="col-sm-2 control-label">No BBM</label>
+                                    <div class="col-sm-3">
+                                        <input placeholder="No BBM" st-search="tb.no_bbm" class="form-control"/>
+                                    </div>
+                                    <label class="col-sm-2 control-label">Surat Jalan</label>
+                                    <div class="col-sm-3">
+                                        <input placeholder="Surat Jalan" st-search="tb.surat_jalan" class="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -82,7 +93,6 @@
                 <table class="table table-striped table-hover" >
                     <thead>
                         <tr>
-
                             <th st-sort="tgl_nota">Tanggal</th>
                             <th st-sort="tb.no_bbm">No BBM</th>
                             <th st-sort="barang.kd_barang">KODE BRG</th>
@@ -107,8 +117,6 @@
                             <td>{{row.no_po}}</td>
                             <td>{{row.nama_supplier}}</td>
                             <td>{{row.keterangan}}</td>
-
-
                         </tr>
                     </tbody>
                     <tbody ng-show="isLoading">

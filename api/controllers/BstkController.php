@@ -59,7 +59,7 @@ class BstkController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "b.no_wo ASC";
+        $sort = "b.no_wo DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -126,7 +126,7 @@ class BstkController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "b.no_wo ASC";
+        $sort = "b.no_wo DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);

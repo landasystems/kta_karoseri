@@ -83,16 +83,16 @@ class SpprutinController extends Controller {
         session_start();
         $query = new Query;
         $query->from('det_spp')
-                ->join('LEFT JOIN', 'trans_spp', 'trans_spp.no_spp = det_spp.no_spp')
+                ->join('JOIN', 'trans_spp', 'trans_spp.no_spp = det_spp.no_spp')
                 ->join('LEFT JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
-                ->join('RIGHT JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
-                ->join('JOIN', 'detail_po', 'detail_po.nota = trans_po.nota and detail_po.kd_barang = barang.kd_barang')
-                ->join('RIGHT JOIN', 'trans_bbm', 'trans_bbm.no_po =  trans_po.nota')
-                ->join('JOIN', 'det_bbm', 'det_bbm.no_bbm = trans_bbm.no_bbm and det_bbm.kd_barang = barang.kd_barang')
+//                ->join('RIGHT JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
+//                ->join('JOIN', 'detail_po', 'detail_po.nota = trans_po.nota and detail_po.kd_barang = barang.kd_barang')
+//                ->join('RIGHT JOIN', 'trans_bbm', 'trans_bbm.no_po =  trans_po.nota')
+//                ->join('RIGHT JOIN', 'det_bbm', 'det_bbm.no_bbm = trans_bbm.no_bbm and det_bbm.kd_barang = barang.kd_barang')
                 ->join('LEFT JOIN', 'view_wo_spk', 'view_wo_spk.no_wo = det_spp.no_wo')
                 ->orderBy('view_wo_spk.no_wo ASC, barang.nm_barang ASC')
-                ->select("det_spp.*,barang.nm_barang,barang.satuan,trans_po.nota, det_spp.p as tgl_trans, det_spp.qty as jumlah_spp, det_bbm.jumlah as jumlah_bbm, (det_spp.qty-det_bbm.jumlah) as selisih");
-
+//                ->select("det_spp.*,barang.nm_barang,barang.satuan,trans_po.nota, det_spp.p as tgl_trans, det_spp.qty as jumlah_spp, det_bbm.jumlah as jumlah_bbm, (det_spp.qty-det_bbm.jumlah) as selisih");
+                ->select("det_spp.*,barang.nm_barang,barang.satuan,det_spp.p as tgl_trans, det_spp.qty as jumlah_spp");
         if (isset($_SESSION['filter'])) {
             foreach ($_SESSION['filter'] as $key => $val) {
                 if (isset($key) && $key == 'kategori') {
@@ -389,7 +389,7 @@ class SpprutinController extends Controller {
                 $det->kd_barang = (empty($val['barang']['kd_barang'])) ? '-' : $val['barang']['kd_barang'];
                 $det->saldo = $val['barang']['saldo'];
                 $det->qty = $val['barang']['qty'];
-                $det->p = date('Y-m-d', strtotime($det->p));
+                $det->p = (!empty($det->p) ? date('Y-m-d', strtotime($det->p)) : null);
                 $det->no_wo = (empty($val['wo']['no_wo'])) ? '-' : $val['wo']['no_wo'];
                 $det->save();
             }

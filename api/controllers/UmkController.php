@@ -57,7 +57,7 @@ class UmkController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tbl_umk.no_umk ASC";
+        $sort = "tbl_umk.no_umk DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);

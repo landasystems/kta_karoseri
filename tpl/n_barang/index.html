@@ -5,6 +5,7 @@
     <div class="wrapper-md" ng-show="!is_edit">
         <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
             <div class="panel-heading">
+                <button type="button" class="btn btn-success fa fa-print" ng-show="!isCollapsed" ng-click="print();">&nbsp;Print Laporan Notifikasi Barang</button>
                 <button type="button" ng-click="excel()" class="btn btn-success fa fa-file-excel-o" >&nbsp;Export Excel</button>
             </div>
             <div class="table-responsive">

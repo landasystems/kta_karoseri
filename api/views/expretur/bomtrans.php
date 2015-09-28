@@ -69,6 +69,66 @@ if (!isset($_GET['print'])) {
                 <td colspan="2" class="border-all"></td>
             </tr>
             <tr>
+                <td colspan="3" class="border-all" style="text-align:center;"><b>ITEM PEKERJAAN</b></td>
+                <td colspan="3" class="border-all" style="text-align:center;"><b>MP / HK</b></td>
+                <td colspan="2" class="border-all" style="text-align:center;"><b>NILAI PEKERJAAN</b></td>
+            </tr>
+            <tr>
+                <td colspan="3" class="border-all" style="text-align:center;">Strip Off</td>
+                <td colspan="3" class="border-all" style="text-align:center;">MP / 1 HK</td>
+                <td colspan="2" class="border-all" style="text-align:center;"></td>
+            </tr>
+            <tr>
+                <td colspan="3" class="border-all" style="text-align:center;">Komponen A</td>
+                <td colspan="3" class="border-all" style="text-align:center;">9 MP / 3 HK</td>
+                <td colspan="2" class="border-all" style="text-align:center;"></td>
+            </tr>
+            <tr>
+                <td colspan="3" class="border-all" style="text-align:center;">Sub Assy</td>
+                <td colspan="3" class="border-all" style="text-align:center;">MP / 1 HK</td>
+                <td colspan="2" class="border-all" style="text-align:center;"></td>
+            </tr>
+            <tr>
+                <td colspan="3" class="border-all" style="text-align:center;">Body Lantai</td>
+                <td colspan="3" class="border-all" style="text-align:center;">MP / 1 HK</td>
+                <td colspan="2" class="border-all" style="text-align:center;"></td>
+            </tr>
+            <tr>
+                <td colspan="3" class="border-all" style="text-align:center;">Body Welding</td>
+                <td colspan="3" class="border-all" style="text-align:center;">MP / 8 HK</td>
+                <td colspan="2" class="border-all" style="text-align:center;"></td>
+            </tr>
+            <tr>
+                <td colspan="3" class="border-all" style="text-align:center;">Primer</td>
+                <td colspan="3" class="border-all" style="text-align:center;">3 MP / 1 HK</td>
+                <td colspan="2" class="border-all" style="text-align:center;"></td>
+            </tr>
+            <tr>
+                <td colspan="3" class="border-all" style="text-align:center;">Putty</td>
+                <td colspan="3" class="border-all" style="text-align:center;">3 MP / 1 HK</td>
+                <td colspan="2" class="border-all" style="text-align:center;"></td>
+            </tr>
+            <tr>
+                <td colspan="3" class="border-all" style="text-align:center;">Surfacer</td>
+                <td colspan="3" class="border-all" style="text-align:center;">MP / 1 HK</td>
+                <td colspan="2" class="border-all" style="text-align:center;"></td>
+            </tr>
+            <tr>
+                <td colspan="3" class="border-all" style="text-align:center;">Pra Painting</td>
+                <td colspan="3" class="border-all" style="text-align:center;">MP / 1 HK</td>
+                <td colspan="2" class="border-all" style="text-align:center;"></td>
+            </tr>
+            <tr>
+                <td colspan="3" class="border-all" style="text-align:center;">Painting</td>
+                <td colspan="3" class="border-all" style="text-align:center;">MP / 2 HK</td>
+                <td colspan="2" class="border-all" style="text-align:center;"></td>
+            </tr>
+            <tr>
+                <td colspan="3" class="border-all" style="text-align:center;">Finishing</td>
+                <td colspan="3" class="border-all" style="text-align:center;">MP / 5 HK</td>
+                <td colspan="2" class="border-all" style="text-align:center;"></td>
+            </tr>
+            <tr>
                 <td>Note</td>
                 <td colspan="3" class="border-all" align="center">PREPARED</td>
                 <td colspan="3" class="border-all" align="center">CHECKED</td>

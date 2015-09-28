@@ -86,7 +86,7 @@ class CustomerController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_cust ASC";
+        $sort = "kd_cust DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);

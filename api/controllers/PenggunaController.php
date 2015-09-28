@@ -56,7 +56,7 @@ class PenggunaController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "m_user.nama ASC";
+        $sort = "m_user.nama DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);

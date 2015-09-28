@@ -8,7 +8,6 @@
                 <div class="btn-group pull-right" role="group" style="margin-top: -4px; margin-right: 18px;">
                 </div> 
             </div>
-
             <div class="panel-body">
                 <div class="panel panel-info" style="text-align: center">
                     <div class="panel-heading">
@@ -60,7 +59,7 @@
                         </tr>
                     </thead>
                     <tbody ng-show="!isLoading">
-                        <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
+                        <tr ng-repeat="row in displayed">
                             <td>{{row.no_wo}}</td>
                             <td>{{row.nm_customer}}</td>
                             <td>{{row.bagian}}</td>

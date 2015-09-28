@@ -303,7 +303,7 @@ class BarangController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "nm_barang ASC";
+        $sort = "nm_barang DESC";
         $offset = 0;
         $limit = 10;
 

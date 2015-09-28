@@ -108,7 +108,7 @@ class WoController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "trans_po.nota ASC";
+        $sort = "trans_po.nota DESC";
         $offset = 0;
         $limit = 10;
 

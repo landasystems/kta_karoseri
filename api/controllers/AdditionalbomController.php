@@ -131,8 +131,8 @@ class AdditionalbomController extends Controller {
                 ->limit($limit)
                 ->from('trans_additional_bom')
                 ->join('JOIN', 'trans_additional_bom_wo', 'trans_additional_bom.id = trans_additional_bom_wo.tran_additional_bom_id')
-                ->join('LEFT JOIN', 'chassis', 'trans_additional_bom.kd_chassis = chassis.kd_chassis')
-                ->join('LEFT JOIN', 'model', 'trans_additional_bom.kd_model=model.kd_model')
+                ->join('JOIN', 'chassis', 'trans_additional_bom.kd_chassis = chassis.kd_chassis')
+                ->join('JOIN', 'model', 'trans_additional_bom.kd_model=model.kd_model')
                 ->orderBy($sort)
                 ->select("trans_additional_bom.id as id_tambahan, trans_additional_bom.kd_bom, trans_additional_bom.tgl_buat, trans_additional_bom_wo.*, chassis.*, model.*");
 
@@ -150,15 +150,15 @@ class AdditionalbomController extends Controller {
         $data = array();
         $wo = array();
         foreach ($models as $key => $val) {
-            $wo[$val['kd_bom']][] = $val['no_wo'];
-            $data[$val['kd_bom']]['id'] = $val['id_tambahan'];
-            $data[$val['kd_bom']]['kd_bom'] = $val['kd_bom'];
-            $data[$val['kd_bom']]['bom'] = array('kd_bom' => $val['kd_bom']);
-            $data[$val['kd_bom']]['tgl_buat'] = $val['tgl_buat'];
-            $data[$val['kd_bom']]['merk'] = $val['merk'];
-            $data[$val['kd_bom']]['tipe'] = $val['tipe'];
-            $data[$val['kd_bom']]['model'] = $val['model'];
-            $data[$val['kd_bom']]['no_wo'] = join(',', $wo[$val['kd_bom']]);
+            $wo[$val['id_tambahan']][] = $val['no_wo'];
+            $data[$val['id_tambahan']]['id'] = $val['id_tambahan'];
+            $data[$val['id_tambahan']]['kd_bom'] = $val['kd_bom'];
+            $data[$val['id_tambahan']]['bom'] = array('kd_bom' => $val['kd_bom']);
+            $data[$val['id_tambahan']]['tgl_buat'] = $val['tgl_buat'];
+            $data[$val['id_tambahan']]['merk'] = $val['merk'];
+            $data[$val['id_tambahan']]['tipe'] = $val['tipe'];
+            $data[$val['id_tambahan']]['model'] = $val['model'];
+            $data[$val['id_tambahan']]['no_wo'] = join(',', $wo[$val['id_tambahan']]);
         }
 
         $totalItems = $query->count();
