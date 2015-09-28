@@ -191,7 +191,9 @@ class NotifbarangController extends Controller {
             $data[$keyy]['status'] = 'Belum ada SPP';
             $keyy++;
         }
-        Yii::error($data);
+//        Yii::error($data);
+        session_start();
+        $_SESSION['data'] = $data;
         $totalItems = count($data);
         $this->setHeader(200);
         if ($id) {
@@ -200,6 +202,12 @@ class NotifbarangController extends Controller {
             echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
         }
     }
+    
+     public function actionExcel() {
+         session_start();
+         $datas = $_SESSION['data'];
+         return $this->render("excel", ['data' => $datas]);
+     }
 
     public function actionView($id) {
 

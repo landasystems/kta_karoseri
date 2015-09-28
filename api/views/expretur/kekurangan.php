@@ -1,7 +1,7 @@
 <?php
 if (!isset($_GET['print'])) {
     header("Content-type: application/vnd-ms-excel");
-    header("Content-Disposition: attachment; filename=excel-laporan-kekurangan-pemenuhan-spp.xls");
+//    header("Content-Disposition: attachment; filename=excel-laporan-kekurangan-pemenuhan-spp.xls");
 }
 
 if (!empty($filter['tgl_periode'])) {
@@ -45,7 +45,7 @@ if (!empty($filter['tgl_periode'])) {
         <tr></tr>
     </table>
 
-    <table  style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;" width="100%">
+    <table  style="margin-top:-2px;border-collapse: collapse; border: 1px #000 solid; font-size: 12px;" width="100%">
         <tr>
             <th class="border-bottom border-right"rowspan="2" style="text-align: center">No. Spp</th>
             <th class="border-bottom border-right" rowspan="2">Kode Barang</th>
@@ -62,24 +62,55 @@ if (!empty($filter['tgl_periode'])) {
             <th class="border-bottom border-right" style="text-align: center" width="10%">2</th>
             <th class="border-bottom border-right" style="text-align: center" width="10%">3</th>
         </tr>
-    
+
         <?php
         foreach ($models as $val) {
-            if ($val['selisih'] > 0) {
-                ?>
-                <tr>
-                    <td style="text-align: center" class="border-bottom border-right"><?= $val['no_spp'] ?></td>
-                    <td class="border-bottom border-right"><?= $val['kd_barang'] ?></td>
-                    <td class="border-bottom border-right"> <?= $val['nm_barang'] ?></td>
-                    <td style="text-align: center" class="border-bottom border-right"><?= $val['satuan'] ?></td>
-                    <td style="text-align: center" class="border-bottom border-right"><?= $val['selisih'] ?></td>
-                    <td class="border-bottom border-right"><?= $val['ket'] ?></td>
-                    <td class="border-bottom border-right"></td>
-                    <td class="border-bottom border-right"></td>
-                    <td class="border-bottom border-right"></td>
-                    <td class="border-bottom border-right"></td>
-                </tr>
-                <?php
+
+            $poBbm = new yii\db\Query;
+            $poBbm->from('trans_po')
+                    ->join('JOIN', 'detail_po', 'detail_po.kd_barang = detail_po.kd_barang and trans_po.nota = detail_po.nota')
+                    ->join('RIGHT JOIN', 'trans_bbm', 'trans_bbm.no_po = trans_po.nota')
+                    ->join('RIGHT JOIN', 'det_bbm', 'det_bbm.kd_barang = detail_po.kd_barang and det_bbm.no_bbm = trans_bbm.no_bbm')
+                    ->select("det_bbm.jumlah as jumlah_bbm, (" . $val['jumlah_spp'] . " - det_bbm.jumlah) as selisih")
+                    ->where('trans_po.spp = "' . $val['no_spp'] . '" and detail_po.kd_barang = "' . $val['kd_barang'] . '"');
+            $command = $poBbm->createCommand();
+            $models = $command->queryAll();
+//            if ($val['selisih'] > 0) {
+
+            if (!empty($models) && $models['selisih'] > 0) {
+
+                foreach ($models as $value) {
+                    ?>
+                    <tr>
+                        <td style="text-align: center" class="border-bottom border-right"><?= $val['no_spp'] ?></td>
+                        <td class="border-bottom border-right"><?= $val['kd_barang'] ?></td>
+                        <td class="border-bottom border-right"> <?= $val['nm_barang'] ?></td>
+                        <td style="text-align: center" class="border-bottom border-right"><?= $val['satuan'] ?></td>
+                        <td style="text-align: center" class="border-bottom border-right"><?= $value['selisih']?></td>
+                        <td class="border-bottom border-right"><?= $val['ket'] ?></td>
+                        <td class="border-bottom border-right" style="width: 50px;"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                    </tr>
+                    <?php
+//            }
+                }
+            }else if(empty ($models)){
+                 ?>
+                    <tr>
+                        <td style="text-align: center" class="border-bottom border-right"><?= $val['no_spp'] ?></td>
+                        <td class="border-bottom border-right"><?= $val['kd_barang'] ?></td>
+                        <td class="border-bottom border-right"> <?= $val['nm_barang'] ?></td>
+                        <td style="text-align: center" class="border-bottom border-right"><?= $val['satuan'] ?></td>
+                        <td style="text-align: center" class="border-bottom border-right"><?= $val['jumlah_spp']?></td>
+                        <td class="border-bottom border-right"><?= $val['ket'] ?></td>
+                        <td class="border-bottom border-right" style="width: 50px;"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                    </tr>
+                    <?php
             }
         }
         ?>
