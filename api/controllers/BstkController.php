@@ -201,6 +201,7 @@ class BstkController extends Controller {
         $model = new Bstk();
 
         $model->attributes = $params;
+        $model->tgl = date("Y-m-d");
         if ($model->save()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
