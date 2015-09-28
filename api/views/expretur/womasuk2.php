@@ -1,8 +1,8 @@
 <?php
-//if (!isset($_GET['print'])) {
-//header("Content-type: application/vnd-ms-excel");
-//header("Content-Disposition: attachment; filename=excel-rekap-lap_womasuk.xls");
-//}
+if (!isset($_GET['print'])) {
+header("Content-type: application/vnd-ms-excel");
+header("Content-Disposition: attachment; filename=excel-rekap-lap_womasuk.xls");
+}
 ?>
 
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
