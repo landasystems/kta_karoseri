@@ -167,11 +167,12 @@ span.label{width: 180px;display: inline-table;}
 }
 
 #print_bbk{        
-    font-size: 8pt;    
+    padding: 0px;
+    font-size: 6pt;    
     letter-spacing: 1pt;
     margin: 0px;
     padding: 0px;
-    font-family: Sans Serif;        
+    font-family: "Draft";        
 }
 #print_bbm{        
     font-size: 10pt;      
@@ -181,9 +182,10 @@ span.label{width: 180px;display: inline-table;}
     font-family: Sans Serif;        
 }
 .print_bbk_td{
-    font-size: 8pt;
+    padding: 0px;
+    font-size: 6pt;
     vertical-align: top;
-    font-family: Sans Serif;      
+    font-family: "Draft";      
 }
 .print_bbm_td{
     font-size: 10pt;
