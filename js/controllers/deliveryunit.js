@@ -39,24 +39,17 @@ app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
             });
         }
     }
-    $scope.cariCustomer = function ($query) {
-        if ($query.length >= 3) {
-            Data.get('customer/cari', {nama: $query}).then(function (data) {
-                $scope.kdCust = data.data;
-            });
-        }
-    };
     $scope.getCustomer = function (form, items) {
         form.kd_cust = items.kd_cust;
     };
 
     $scope.pilih = function (form, $item) {
+        console.log(form);
         Data.post('delivery/customer/', $item).then(function (data) {
 //            $scope.sCUstomer = data.customer;
-        console.log(data.customer);
-        form.customer = data.customer.nm_customer;
+        
+        form.customer = 'sas';
         form.kd_cust = data.customer.kd_cust;
-//        form.alamat1 = data.customer.alamat1;
             
         });
         form.merk = $item.merk;
@@ -113,7 +106,6 @@ app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
         $scope.form = form;
         $scope.form.customer = form.customer.nm_customer;
         $scope.form.tgl_delivery = new Date(form.tgl_delivery);
-        console.log(form);
     };
     $scope.view = function (form) {
 
@@ -153,14 +145,14 @@ app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
             });
         }
     };
-    $scope.selected = function (id) {
-        Data.get('delivery/view/' + id).then(function (data) {
-            $scope.form = data.data;
-            $scope.form.merk = data.data.no_wo.merk;
-            $scope.form.model = data.data.no_wo.model;
-            $scope.form.sales = data.data.no_wo.sales;
-        });
-    }
+//    $scope.selected = function (id) {
+//        Data.get('delivery/view/' + id).then(function (data) {
+//            $scope.form = data.data;
+//            $scope.form.merk = data.data.no_wo.merk;
+//            $scope.form.model = data.data.no_wo.model;
+//            $scope.form.sales = data.data.no_wo.sales;
+//        });
+//    }
 
 
 })

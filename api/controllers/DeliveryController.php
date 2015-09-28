@@ -101,7 +101,7 @@ class DeliveryController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('delivery')
-                ->join('LEFT JOIN', 'customer as cu', 'delivery.kd_cust = cu.kd_cust')
+//                ->join('LEFT JOIN', 'customer as cu', 'delivery.kd_cust = cu.kd_cust')
                 ->join('JOIN', 'wo_masuk', 'delivery.no_wo = wo_masuk.no_wo')
                 ->join('JOIN', 'spk', 'spk.no_spk = wo_masuk.no_spk')
                 ->join('JOIN', 'chassis', 'chassis.kd_chassis = spk.kd_chassis')
@@ -110,7 +110,7 @@ class DeliveryController extends Controller {
                 ->join('LEFT JOIN', 'serah_terima_in', 'serah_terima_in.kd_titipan = wo_masuk.kd_titipan')
                 ->join('LEFT JOIN', 'warna', 'serah_terima_in.kd_warna = warna.kd_warna')
                 ->orderBy($sort)
-                ->select("delivery.*, chassis.merk as merk, model.model as model, tbl_karyawan.nama as sales,cu.*,serah_terima_in.no_mesin,serah_terima_in.no_chassis,warna.warna");
+                ->select("delivery.*, chassis.merk as merk, model.model as model, tbl_karyawan.nama as sales,serah_terima_in.no_mesin,serah_terima_in.no_chassis,warna.warna");
 
         //filter
         if (isset($params['filter'])) {
@@ -132,7 +132,11 @@ class DeliveryController extends Controller {
         $totalItems = $query->count();
         foreach ($models as $key => $val) {
             $customer = \app\models\Customer::findOne($val['kd_cust']);
+            if($val['tujuan'] == "customer"){
             $models[$key]['customer'] = (!empty($customer)) ? $customer->attributes : array();
+            }else{
+                $models[$key]['customer'] = ['nm_customer'=>""];
+            }
             $nowo = \app\models\Womasuk::findOne($val['no_wo']);
             $models[$key]['nowo'] = (!empty($nowo)) ? $nowo->attributes : array();
         }
