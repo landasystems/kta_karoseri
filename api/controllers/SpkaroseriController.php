@@ -154,7 +154,7 @@ class SpkaroseriController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "spk.no_spk DESC";
+        $sort = "spk.tgl DESC";
         $offset = 0;
         $limit = 10;
 
@@ -180,21 +180,25 @@ class SpkaroseriController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('spk')
-                ->join('LEFT JOIN', 'view_wo_spk as vws', 'spk.no_spk = vws.no_spk')
-                ->join('LEFT JOIN', 'serah_terima_in as sti', 'sti.kd_titipan = vws.kd_titipan')
+                ->join('LEFT JOIN','customer','customer.kd_cust = spk.kd_customer')
+                ->join('LEFT JOIN','chassis','chassis.kd_chassis = spk.kd_chassis')
+                ->join('LEFT JOIN','model','model.kd_model = spk.kd_model')
+//                ->join('JOIN', 'view_wo_spk as vws', 'spk.no_spk = vws.no_spk')
+                ->join('LEFT JOIN', 'serah_terima_in as sti', 'sti.no_spk = spk.no_spk')
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                ->select("vws.*, tk.nama as sales, sti.tgl_terima as tgl_chassis")
+                ->join('LEFT JOIN', 'wo_masuk',' wo_masuk.no_spk = spk.no_spk')
+                ->select("customer.nm_customer, sti.kd_titipan, wo_masuk.no_wo, tk.nama as sales, chassis.*, model.*, spk.no_spk, spk.tgl, sti.tgl_terima as tgl_chassis")
                 ->orderBy($sort);
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                if ($key == 'sti.tgl_terima') {
+                if ($key == 'spk.tgl') {
                     $tgl = explode(" - ", $val);
                     $start = date("Y-m-d", strtotime($tgl[0]));
                     $end = date("Y-m-d", strtotime($tgl[1]));
-                    $query->andFilterWhere(['between', 'sti.tgl_terima', $start, $end]);
+                    $query->andFilterWhere(['between', 'spk.tgl', $start, $end]);
                 } else {
                     $query->andFilterWhere(['like', $key, $val]);
                 }
