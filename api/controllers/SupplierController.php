@@ -57,7 +57,7 @@ class SupplierController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_supplier ASC";
+        $sort = "kd_supplier DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);

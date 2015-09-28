@@ -87,7 +87,7 @@ class ChassisController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_chassis ASC";
+        $sort = "kd_chassis DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);

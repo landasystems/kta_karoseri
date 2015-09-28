@@ -74,7 +74,7 @@ class DeliveryController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "delivery.id ASC";
+        $sort = "delivery.id DEC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);

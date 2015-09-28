@@ -56,7 +56,7 @@ class JenisbrgController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_jenis ASC";
+        $sort = "kd_jenis DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);

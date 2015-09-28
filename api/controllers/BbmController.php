@@ -381,8 +381,14 @@ class BbmController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params['form'];
-        $model->kd_suplier = $params['form']['kd_supplier'];
-//        $model->kd_suplier = isset($params['form']['supplier']['kd_supplier']) ? $params['form']['supplier']['kd_supplier'] : '-';
+
+        if (isset($params['form']['po']['kd_suplier'])) {
+            $model->kd_suplier = $params['form']['kd_suplier'];
+        } else if (isset($params['form']['kd_supplier'])) {
+            $model->kd_suplier = $params['form']['kd_supplier'];
+        }else{
+            $model->kd_suplier = '-';
+        }
         $model->no_wo = (isset($params['form']['wo']['no_wo'])) ? $params['form']['wo']['no_wo'] : '-';
         $model->no_po = (isset($params['form']['po']['nota'])) ? $params['form']['po']['nota'] : NULL;
 
@@ -394,7 +400,7 @@ class BbmController extends Controller {
             $detail = DetBbm::find()->where('no_bbm = "' . $model->no_bbm . '"')->all();
             foreach ($detail as $detbbm) {
                 $barang = Barang::find()->where('kd_barang="' . $detbbm->kd_barang . '"')->one();
-                $barang->saldo -= $detbbm->jml;
+                $barang->saldo -= $detbbm->jumlah;
                 $barang->save();
 
                 //hapus detail bbm

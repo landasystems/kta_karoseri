@@ -106,7 +106,7 @@ class SectionController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tbl_section.id_section ASC";
+        $sort = "tbl_section.id_section DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);

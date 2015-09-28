@@ -154,7 +154,7 @@ class JabatanController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tbl_jabatan.id_jabatan ASC";
+        $sort = "tbl_jabatan.id_jabatan DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
