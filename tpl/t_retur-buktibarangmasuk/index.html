@@ -106,7 +106,7 @@
                                 <label class="col-sm-3 control-label">No BBM</label>
                                 <div class="col-sm-9">
                                     <div class="input-group">
-                                        <ui-select ng-model="form.no_bbm" ng-disabled="is_view" theme="bootstrap" on-select="form.surat_jalan = form.no_bbm.surat_jalan; cariBarang('', form.no_bbm)">
+                                        <ui-select ng-model="form.no_bbm" ng-disabled="is_view" theme="bootstrap" on-select="cariBarang('', form.no_bbm); form.surat_jalan = form.no_bbm.surat_jalan; cariBarang('', form.no_bbm)">
                                             <ui-select-match>{{$select.selected.no_bbm}}</ui-select-match>
                                             <ui-select-choices refresh="cariBbm($select.search)" repeat="val in results">
                                                 {{val.no_bbm}}
