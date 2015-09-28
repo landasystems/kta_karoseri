@@ -8,6 +8,8 @@ app.controller('rekapclaimCtrl', function ($scope, Data, toaster) {
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
+    $scope.start = "";
+    $scope.end = "";
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -40,7 +42,7 @@ app.controller('rekapclaimCtrl', function ($scope, Data, toaster) {
     $scope.grafik = function () {
 
         Data.get('claimunit/char').then(function (data) {
-
+            console.log(data);
             var exjumlah = data.Eksterior.jumlah;
             var exjeniskmp = data.Eksterior.jns_komplain;
             var injumlah = data.Interior.jumlah;

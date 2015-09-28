@@ -646,7 +646,7 @@ class WomasukController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "wo_masuk.no_wo DESC";
+        $sort = "wo_masuk.tgl_kontrak DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -672,14 +672,14 @@ class WomasukController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('wo_masuk')
-                ->join('JOIN', 'spk', 'spk.no_spk = wo_masuk.no_spk')
-                ->join('JOIN', 'chassis', 'spk.kd_chassis = chassis.kd_chassis') // model chassis, merk, jenis, 
-                ->join('JOIN', 'tbl_karyawan as sales', 'spk.nik= sales.nik') // sales
-                ->join('JOIN', 'customer', 'spk.kd_customer = customer.kd_cust') // customer
+                ->join('LEFT JOIN', 'spk', 'spk.no_spk = wo_masuk.no_spk')
+                ->join('lEFT JOIN', 'chassis', 'spk.kd_chassis = chassis.kd_chassis') // model chassis, merk, jenis, 
+                ->join('LEFT JOIN', 'tbl_karyawan as sales', 'spk.nik= sales.nik') // sales
+                ->join('LEFT JOIN', 'customer', 'spk.kd_customer = customer.kd_cust') // customer
 //                ->join('LEFT JOIN', 'small_eks', 'wo_masuk.no_wo = small_eks.no_wo') // customer
 //                ->join('LEFT JOIN', 'mini_eks', 'wo_masuk.no_wo = mini_eks.no_wo') // customer
 //                ->join('JOIN', 'model', 'spk.kd_model = model.kd_model') // customer
-                ->join('JOIN', 'serah_terima_in', 'wo_masuk.kd_titipan = serah_terima_in.kd_titipan') // customer
+                ->join('LEFT JOIN', 'serah_terima_in', 'wo_masuk.kd_titipan = serah_terima_in.kd_titipan') // customer
 //                ->join('JOIN', 'warna', 'serah_terima_in.kd_warna = warna.kd_warna') // customer
                 ->orderBy($sort)
 //                ->groupBy('no_wo')

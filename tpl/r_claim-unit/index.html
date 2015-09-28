@@ -117,9 +117,57 @@
     <!--PRINT-->
 
     <div id="printArea">
+        <table width="100%">
+            <tr>
+                <td colspan="2">
+                     <table border="1" style="border-collapse: collapse; font-size: 12px;" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+                <td rowspan="4" colspan="4" class="border-bottom border-right">
+                    <br>
+            <center><b>REKAP DATA CLAIM</b></center>
+            <br><br>
+            <center>No Dokumen : FR-SS-018</center>
+            <br>
+
+            </td>
+            <td rowspan="4" colspan="6" valign="top">
+                <table style="font-size:12px;">
+                    <tr>
+                        <td>PERIODE</td>
+                        
+                        <td> : {{start}} - {{end}}</td>
+                    </tr>
+                    <tr>
+                        <td>CETAK</td>
+                        <td>:</td>
+
+                    </tr>
+                </table>
+            </td>
+            <th colspan="2" style="text-align: center" width="70">DIBUAT</th>
+            <th colspan="2" style="text-align: center" width="70">DIPERIKSA</th>
+            <th colspan="2" style="text-align: center" width="70">DIKETAHUI</th>
+            </tr>
+            <tr>
+                <td class="border-bottom border-right" colspan="2" rowspan="3"></td>
+                <td class="border-bottom border-right" colspan="2" rowspan="3"></td>
+                <td class="border-bottom border-right" colspan="2" rowspan="3"></td>
+            </tr>
+        </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <highchart id="chart1" config="chartConfigEx" class="span10"></highchart>
+                </td>
+                <td>
+                    <highchart id="chart1" config="chartConfigIn" class="span10"></highchart>
+                </td>
+            </tr>
+        </table>
         <!--<div>-->
-        <highchart id="chart1" config="chartConfigEx" class="span10"></highchart>
-        <highchart id="chart1" config="chartConfigIn" class="span10"></highchart>
+        
+        
     </div>
 
 

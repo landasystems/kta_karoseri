@@ -129,60 +129,65 @@
     </div>
 
     <div id="printArea">
-        <table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
-    <tr>
-        <td colspan="3" style="border: 1px solid #000000">
-            <br>
-    <center><b>LAPORAN UNIT MASUK</b></center>
-    <br>
-    <center>No Dokumen : FR-PPC-004 Rev 00</center>
-    <center>Applicable To Realisasi OI & Budget Opname</center>
-    <br>
 
-    </td>
-    <td colspan="4" style="border: 1px solid #000000">
-        <table style=" font-size: 11px;" width="100%" >
-
-            <tr>
-                <td >Periode</td>
-              
-                <td> : {{start | date:'dd - mmm - YYY'}} - {{end | date:'dd - mmm - YYY'}}</td>
-            </tr>
-            <tr>
-                <td>Cetak</td>
-                <td> : </td>
-            </tr>
-        </table>
-    </td>
-    <td  style="border: 1px solid #000000;height: 10%" valign="top">
-    <center><b>Dibuat oleh</b></center>
-    <hr style="border: 1px solid #000">
-
-</td>
-<td  style="border: 1px solid #000000" valign="top">
-<center><b>Diperiksa oleh</b></center>
-<hr style="border: 1px solid #000">
-
-</td>
-
-</tr>
-</table >
         <table width="100%">
             <tr>
-                <td colspan="12">
-            <center>
-<highchart id="chart1" config="chartHari" class="span12"></highchart>
-            </center>
+                <td colspan="3">
+                    <table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
+                        <tr>
+                            <td colspan="3" style="border: 1px solid #000000">
+                                <br>
+                        <center><b>LAPORAN UNIT MASUK</b></center>
+                        <br>
+                        <center>No Dokumen : FR-PPC-004 Rev 00</center>
+                        <center>Applicable To Realisasi OI & Budget Opname</center>
+                        <br>
+
+                        </td>
+                        <td colspan="4" style="border: 1px solid #000000">
+                            <table style=" font-size: 11px;" width="100%" >
+
+                                <tr>
+                                    <td >Periode</td>
+
+                                    <td> : {{start | date:'dd - mmm - YYY'}} - {{end | date:'dd - mmm - YYY'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Cetak</td>
+                                    <td> : </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td  style="border: 1px solid #000000;height: 10%" valign="top">
+                        <center><b>Dibuat oleh</b></center>
+                        <hr style="border: 1px solid #000">
+
+                        </td>
+                        <td  style="border: 1px solid #000000" valign="top">
+                        <center><b>Diperiksa oleh</b></center>
+                        <hr style="border: 1px solid #000">
+
+                        </td>
+
+                        </tr>
+                    </table >
                 </td>
             </tr>
             <tr>
-                <td colspan="4">
+                <td colspan="3">
+            <center>
+                <highchart id="chart1" config="chartHari" class="span12"></highchart>
+            </center>
+            </td>
+            </tr>
+            <tr>
+                <td >
             <highchart id="chart1" config="chartMerk" class="span10"></highchart>             
             </td>
-            <td colspan="4">
+            <td >
             <highchart id="chart1" config="chartSales" class="span10"></highchart>             
             </td>
-            <td colspan="4">
+            <td >
             <highchart id="chart1" config="chartModel" class="span10"></highchart>
             </td>
             </tr>
