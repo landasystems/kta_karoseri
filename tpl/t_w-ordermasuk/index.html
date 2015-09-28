@@ -160,9 +160,10 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Jenis Kendaraan</label>
-                                                <div class="col-sm-9">
-                                                    <label class="btn btn-default" ng-model="form.jenis" ng-disabled="is_view" btn-radio="'Mini Bus'" >Mini Bus</label>
-                                                    <label class="btn btn-default" ng-model="form.jenis" ng-disabled="is_view" btn-radio="'Small Bus'" >Small Bus</label>
+                                                <div class="col-sm-6">
+                                                    <input type="text" class="form-control" ng-model="form.jenis" ng-readonly="true" placeholder="Jenis">
+<!--                                                    <label class="btn btn-default" ng-model="form.jenis" ng-disabled="is_view" btn-radio="'Mini Bus'" >Mini Bus</label>
+                                                    <label class="btn btn-default" ng-model="form.jenis" ng-disabled="is_view" btn-radio="'Small Bus'" >Small Bus</label>-->
                                                 </div>
                                             </div>
 
