@@ -308,6 +308,16 @@ class ClaimunitController extends Controller {
     public function actionChar() {
         session_start();
         $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
+        if (!empty($filter['tgl_periode'])) {
+            $value = explode(' - ', $filter['tgl_periode']);
+            $start = date("d/m/Y", strtotime($value[0]));
+            $end = date("d/m/Y", strtotime($value[1]));
+        } else {
+            $start = '';
+            $end = '';
+        }
+        
         $query->groupBy("dc.kd_jns")
                 ->select("jk.stat,jk.bag,jk.jns_komplain,count(dc.kd_jns) as jumlah");
 
@@ -321,7 +331,7 @@ class ClaimunitController extends Controller {
         foreach ($models as $key => $val) {
 
             if ($val['stat'] == 'Eksterior') {
-                $ex['jns_komplain'][$e] = $val['jns_komplain']." (".$val['bag'].")";
+                $ex['jns_komplain'][$e] = $val['jns_komplain'] . " (" . $val['bag'] . ")";
                 $ex['jumlah'][$e] = (int) $val['jumlah'];
                 $e++;
             } else {
@@ -331,7 +341,7 @@ class ClaimunitController extends Controller {
             }
         }
 
-        return json_encode(array('Interior' => $in, 'Eksterior' => $ex), JSON_PRETTY_PRINT);
+        return json_encode(array('Interior' => $in, 'Eksterior' => $ex,'start'=>$start,'end'=>$end), JSON_PRETTY_PRINT);
     }
 
 }
