@@ -444,10 +444,11 @@ class BbkController extends Controller {
                 $barang = Barang::find()->where('kd_barang="' . $detbbk->kd_barang . '"')->one();
                 $barang->saldo += $detbbk->jml;
                 $barang->save();
+                
+                //hapus detail bbk
+                $detbbk->delete();
             }
-
-            //hapus detail bbk
-            $del = DetBbk::deleteAll('no_bbk = "' . $model->no_bbk . '"');
+//            $del = DetBbk::deleteAll('no_bbk = "' . $model->no_bbk . '"');
 
             //isi detail dengan yang baru
             $detailBbk = $params['detailBbk'];

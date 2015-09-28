@@ -342,8 +342,12 @@ app.controller('modalCtrl', function ($scope, Data, $modalInstance, form, toaste
     }
 
     $scope.listBarang = function ($query, no_wo, kd_jab) {
-        if ($query.length >= 1) {
-            Data.post('bbk/listbarang', {nama: $query, no_wo: no_wo, kd_jab: kd_jab}).then(function (data) {
+        if (typeof $scope.form.no_wo != "undefined" && typeof $scope.form.kd_kerja != "undefined") {
+            Data.post('bbk/listbarang', {nama: $query, no_wo: no_wo, kd_jab: kd_jab, listBarang: $scope.detailBbk}).then(function (data) {
+                $scope.resultsbarang = data.data;
+            });
+        } else if ($query.length >= 2) {
+            Data.post('bbk/listbarang', {nama: $query, no_wo: no_wo, kd_jab: kd_jab, listBarang: $scope.detailBbk}).then(function (data) {
                 $scope.resultsbarang = data.data;
             });
         }

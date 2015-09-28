@@ -7,3 +7,4 @@ if (ini_get('date.timezone')) {
     echo 'date.timezone: ' . ini_get('date.timezone');
 }
 ?>
+haii

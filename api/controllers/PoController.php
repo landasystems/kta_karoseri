@@ -160,7 +160,7 @@ class PoController extends Controller {
     public function actionRekap() {
         $params = $_REQUEST;
         $filter = array();
-        $sort = "trans_po.nota ASC";
+        $sort = "trans_po.nota DESC";
         $offset = 0;
         $limit = 10;
 

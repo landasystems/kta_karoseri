@@ -352,7 +352,7 @@ class BomController extends Controller {
         $params = $_REQUEST;
         if (isset($params['filter'])) {
             $no_wo = (array) json_decode($params['filter']);
-            $sort = "dts.kd_bom ASC";
+            $sort = "dts.kd_bom DESC";
             $offset = 0;
             $limit = 10;
 
@@ -473,7 +473,7 @@ class BomController extends Controller {
         $no_wo = array();
         foreach ($filter['no_wo'] as $val) {
             $noWo = $val['no_wo'];
-            $sort = "dts.kd_bom ASC";
+            $sort = "dts.kd_bom DESC";
 
             if ($jWo <= 5) {
 
@@ -566,7 +566,7 @@ class BomController extends Controller {
         $detBom = array();
         foreach ($params['no_wo'] as $val) {
             $noWo = $val['no_wo'];
-            $sort = "dts.kd_bom ASC";
+            $sort = "dts.kd_bom DESC";
 
             if ($jWo <= 5) {
 

@@ -54,7 +54,7 @@ class ValidasibomController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "trans_standar_bahan.kd_bom ASC";
+        $sort = "trans_standar_bahan.kd_bom DESC";
         $offset = 0;
         $limit = 20;
         //        Yii::error($params);

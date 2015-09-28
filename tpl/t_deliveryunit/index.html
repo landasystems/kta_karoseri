@@ -176,11 +176,14 @@
 
                             <div class="col-sm-8">
                                 <div>
-                                    <div class="input-group">
-                                        <ui-select on-select="getCustomer(form,$item)" ng-model="form.customer" required theme="bootstrap" ng-disabled="is_view" >
+                                    <!--<input type="text" class="form-control" ng-model="form.customer" ng-disabled="is_view" placeholder="">-->
+                                    <textarea class="form-control" ng-model="form.customer" ng-readonly="true" >{{form.alaamt1}}</textarea>
+<!--                                    <div class="input-group">
+                                        <ui-select on-select="getCustomer(form,$item)" ng-model="form.customer" theme="bootstrap" ng-disabled="is_view" >
                                             <ui-select-match>{{$select.selected.nm_customer}}</ui-select-match>
                                             <ui-select-choices refresh="cariCustomer($select.search)" repeat="val in sCUstomer">
                                                 <span title ="{{val.alamat1}}"> {{val.nm_customer}}</span>
+                                                <span title ="{{val.alamat1}}"> {{val.alamat1}}</span>
                                             </ui-select-choices>
                                         </ui-select>
                                         <span class="input-group-btn">
@@ -188,7 +191,7 @@
                                                 <span class="glyphicon glyphicon-trash"></span>
                                             </button>
                                         </span>
-                                    </div>
+                                    </div>-->
                                 </div>
 
                             </div>

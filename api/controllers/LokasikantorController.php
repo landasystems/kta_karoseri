@@ -72,7 +72,7 @@ class LokasikantorController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tbl_lokasi_kantor.id_lokasi_kantor ASC";
+        $sort = "tbl_lokasi_kantor.id_lokasi_kantor DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);

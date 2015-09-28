@@ -27,10 +27,9 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $event.stopPropagation();
         $scope.openedDet = $index;
     };
-    $scope.requiredPurchase = function (form) {
-        Data.get('spprutin/requiredpurchase', form).then(function (data) {
+    $scope.requiredPurchase = function () {
+        Data.get('spprutin/requiredpurchase').then(function (data) {
             $scope.sppDet = data.data;
-
         });
     };
     $scope.isiTanggal = function (tanggal) {
@@ -80,7 +79,7 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
         $scope.form.tgl_trans = new Date();
-        $scope.requiredPurchase(form);
+        $scope.requiredPurchase();
         Data.get('spprutin/kode').then(function (data) {
             $scope.form.no_spp = data.kode;
         });

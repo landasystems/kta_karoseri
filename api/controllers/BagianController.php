@@ -54,7 +54,7 @@ class BagianController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_bag ASC";
+        $sort = "kd_bag DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);

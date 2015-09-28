@@ -105,7 +105,7 @@ class SubsectionController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "pekerjaan.kd_kerja ASC";
+        $sort = "pekerjaan.kd_kerja DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
