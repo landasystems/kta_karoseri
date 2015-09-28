@@ -29,6 +29,7 @@ class WoMasuk extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
+            [['no_wo'], 'unique'],
             [['no_wo'], 'required'],
             [['kondisi', 'stat'], 'integer'],
             [['in_spk_marketing', 'tgl_kontrak', 'tgl_keluar'], 'safe'],

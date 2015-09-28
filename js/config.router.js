@@ -426,7 +426,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['daterangepicker']).then(
+                                                return $ocLazyLoad.load(['daterangepicker','frAngular']).then(
                                                         function() {
                                                             return $ocLazyLoad.load('js/controllers/bkt-barangkeluar.js');
                                                         }

@@ -13,10 +13,13 @@ app.controller('wokeluarCtrl', function($scope, Data, toaster) {
         $event.stopPropagation();
         $scope.opened1 = true;
     };
-    Data.post('wokeluar/nowo').then(function (data) {
-        $scope.list_nowo = data.nowo;
-    });
-    $scope.getnowo = function (wo) {
+     $scope.cariNowo = function($query) {
+        if ($query.length >= 3) {
+            Data.get('wokeluar/nowo', {nama: $query}).then(function(data) {
+                $scope.list_nowo = data.data;
+            });
+        }
+    };$scope.getnowo = function (wo) {
         Data.post('wokeluar/getnowo/', wo).then(function (data) {
             $scope.form = data.nowo;
 
@@ -24,15 +27,12 @@ app.controller('wokeluarCtrl', function($scope, Data, toaster) {
     };
 
     $scope.pilih = function(form, $item) {
-        form.customer = $item.customer;
-        form.pemilik = $item.pemilik;
-        form.sales = $item.sales;
-        form.warna = $item.warna;
-//        form.model_kendaraan = $item.warna;
-        form.merk = $item.merk;
-        form.model_chassis = $item.model_chassis;
-        form.no_chassis = $item.no_chassis;
-        form.no_mesin = $item.no_mesin;
+        Data.post('wokeluar/getnowo/', $item).then(function (data) {
+            $scope.form = data.data;
+//               $scope.list_nowo = data.data;
+               console.log(data);
+
+        });
     }
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -73,6 +73,7 @@ app.controller('wokeluarCtrl', function($scope, Data, toaster) {
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.no_wo;
         $scope.form = form;
+         $scope.form.tgl_keluar = new Date(form.tgl_keluar);
         $scope.selected(form);
         $scope.form = {};
     };
@@ -102,8 +103,8 @@ app.controller('wokeluarCtrl', function($scope, Data, toaster) {
     };
     $scope.delete = function(row) {
 //        alert(row);
-        if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
-            Data.post('womasuk/delete/',row).then(function(result) {
+        if (confirm("apakah anda yakin ?")) {
+            Data.post('wokeluar/delete/',row).then(function(result) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
