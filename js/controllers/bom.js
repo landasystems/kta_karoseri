@@ -1,4 +1,4 @@
-app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateParams, $modal) {
+app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateParams, $modal, keyboardManager) {
     var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
     var uploader = $scope.uploader = new FileUploader({
         url: 'img/upload.php?folder=bom&kode=' + kode_unik,
@@ -190,6 +190,7 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
+                $scope.is_create = false;
                 $scope.is_edit = false;
                 $scope.callServer(tableStateRef); //reload grid ulang
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
@@ -249,7 +250,13 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
     if ($stateParams.form != null) { //pengecekan jika ada pencarian, dilempar ke view
         $scope.view($stateParams.form);
     }
-})
+
+    keyboardManager.bind('ctrl+s', function () {
+        if ($scope.is_edit == true) {
+            $scope.save($scope.form, $scope.detBom);
+        }
+    });
+});
 
 app.controller('modalCtrl', function ($scope, Data, $modalInstance, form) {
 

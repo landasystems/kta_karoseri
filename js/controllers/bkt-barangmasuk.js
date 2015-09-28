@@ -173,6 +173,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
                         popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print();window.close();">' + elem.innerHTML + '</html>');
                         popupWin.document.close();
                     }
+                    $scope.is_create = false;
                     $scope.is_edit = false;
                     $scope.view(result.data);
                     $scope.callServer(tableStateRef); //reload grid ulang
@@ -239,9 +240,9 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
     };
 
     keyboardManager.bind('ctrl+s', function () {
-        if (($scope.is_create == true || $scope.is_edit == true) && $scope.is_view == false) {
+        if ($scope.is_edit == true) {
             $scope.save($scope.form, $scope.detBbm);
         }
     });
-    
+
 });
