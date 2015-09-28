@@ -291,7 +291,7 @@ class SpkController extends Controller {
         $query->from(['det_spkerja', 'kerja'])
                 ->where('det_spkerja.kd_ker = kerja.kd_ker  and det_spkerja.no_wo = "' . $model['no_wo'] . '" and det_spkerja.kd_jab="' . $model['kd_jab'] . '"')
 //                ->join('LEFT JOIN', 'kerja', 'kerja.kd_jab = ds.kd_jab')
-//                ->where('ds.no_wo = "' . $params['no_wo'] . '" ')
+                ->orderBy("kerja.no DESC")
                 ->select("kerja.nm_kerja, kerja.no, kerja.kd_ker, kerja.kd_jab,kerja.jenis");
         $command = $query->createCommand();
         $detail = $command->queryAll();

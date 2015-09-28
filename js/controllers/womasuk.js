@@ -243,8 +243,8 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
                 $scope.inter = data.interior;
                
             }
-             $scope.inter.seat1 = data.interior[0].konf_seat1;
-//            $scope.inter = data.interior[0];
+//             $scope.inter.seat1 = data.interior[0].konf_seat1;
+//          console.log(data);
             $scope.form.warna = data.det.warna;
             $scope.form.no_wo = data.det.no_wo;
             $scope.form.customer = data.det.customer;

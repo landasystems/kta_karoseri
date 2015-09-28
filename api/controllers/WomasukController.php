@@ -93,10 +93,9 @@ class WomasukController extends Controller {
 
     public function actionGetspk() {
         $params = json_decode(file_get_contents("php://input"), true);
-        
+
         if (!empty($params['spk']['no_spk'])) {
             $spk = $params['spk']['no_spk'];
-           
         } else {
             $spk = $params['no_wo'];
         }
@@ -115,13 +114,12 @@ class WomasukController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryOne();
         // jenis kendaaraan
-          if (!empty($params['spk']['no_spk'])) {
+        if (!empty($params['spk']['no_spk'])) {
             $jenis = $models['jenis'];
-           
         } else {
             $jenis = $params['jenis'];
         }
-        
+
         // kode
         $query = new Query;
         $query->from('wo_masuk')
@@ -866,7 +864,7 @@ class WomasukController extends Controller {
 
     public function actionSelect() {
         $params = json_decode(file_get_contents("php://input"), true);
-        
+
         $model = $this->findModel($params['no_wo']);
         $data = $model->attributes;
         $query = new Query;
@@ -1071,7 +1069,7 @@ class WomasukController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($params);
+//        Yii::error($params);
         $model = new Womasuk();
         $model->attributes = $params['womasuk'];
         $model->no_spk = $params['womasuk']['spk']['no_spk'];
@@ -1305,7 +1303,7 @@ class WomasukController extends Controller {
 
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($params);
+       
         $model = $this->findModel($params['womasuk']['no_wo']);
 //        $model = WoMasuk::find()->where('no_wo="' . $params['eksterior']['no_wo'] . '"')->one();
 
@@ -1316,31 +1314,66 @@ class WomasukController extends Controller {
         if ($model->save()) {
 // EKTERIOR
             if ($params['womasuk']['jenis'] == "Small Bus") {
-                $table = Smalleks::find()->where('no_wo="' . $model->no_wo . '"')->one();
-                if (empty($table)) {
-                    $table = new Smalleks();
+//                $table = Smalleks::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
+//                if (empty($table)) {
+//                    $table = new Smalleks();
+//                }
+                $eks = Smalleks::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
+                if (empty($int)) {
+                    $eks = new Smalleks();
                 }
+                
             } else {
-                $table = Minieks::find()->where('no_wo="' . $model->no_wo . '"')->one();
-                if (empty($table)) {
-                    $table = new Minieks();
+//                $table = Minieks::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
+//                if (empty($table)) {
+//                    $table = new Minieks();
+//                }
+                $eks = Minieks::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
+                if (empty($int)) {
+                    $eks = new Minieks();
                 }
             }
-            $eks = $table;
-//            $eks->no_wo =$params['womasuk']['no_wo'];
-            $eks->plat_body = $params['eksterior']['plat']['plat_body'];
-            $eks->ventilasi_atas = $params['eksterior']['ventilasi']['ventilasi_atas'];
-            $eks->kaca_spion = $params['eksterior']['spion']['kaca_spion'];
-            $eks->kaca_depan = $params['eksterior']['kdepan']['kaca_depan'];
-            $eks->kaca_belakang = $params['eksterior']['kbelakang']['kaca_belakang'];
-            $eks->kaca_samping = $params['eksterior']['ksamping']['kaca_samping'];
-            $eks->lampu_depan = $params['eksterior']['ldepan']['lampu_depan'];
-            $eks->lampu_belakang = $params['eksterior']['lbelakang']['lampu_belakang'];
-            $eks->pintu_depan = $params['eksterior']['pdepan']['pintu_depan'];
-            $eks->pintu_penumpang = $params['eksterior']['ppenumpang']['pintu_penumpang'];
-            $eks->pintu_bagasi_samping = $params['eksterior']['pbagasi']['pintu_bagasi_samping'];
-            $eks->pintu_belakang = $params['eksterior']['pbelakang']['pintu_belakang'];
-            $eks->wyper_set = $params['eksterior']['wyper']['wyper_set'];
+//            $eks = $table;
+            $eks->no_wo =$params['womasuk']['no_wo'];
+            if (!empty($params['eksterior']['plat']['plat_body'])) {
+                $eks->plat_body = $params['eksterior']['plat']['plat_body'];
+            }
+            if (isset($params['eksterior']['ventilasi']['ventilasi_atas'])) {
+                $eks->ventilasi_atas = $params['eksterior']['ventilasi']['ventilasi_atas'];
+            }
+            if (isset($params['eksterior']['spion']['kaca_spion'])) {
+                $eks->kaca_spion = $params['eksterior']['spion']['kaca_spion'];
+            }
+            if (isset($params['eksterior']['kdepan']['kaca_depan'])) {
+                $eks->kaca_depan = $params['eksterior']['kdepan']['kaca_depan'];
+            }
+            if (isset($params['eksterior']['kbelakang']['kaca_belakang'])) {
+                $eks->kaca_belakang = $params['eksterior']['kbelakang']['kaca_belakang'];
+            }
+            if (isset($params['eksterior']['ksamping']['kaca_samping'])) {
+                $eks->kaca_samping = $params['eksterior']['ksamping']['kaca_samping'];
+            }
+            if (isset($params['eksterior']['ldepan']['lampu_depan'])) {
+                $eks->lampu_depan = $params['eksterior']['ldepan']['lampu_depan'];
+            }
+            if (isset($params['eksterior']['lbelakang']['lampu_belakang'])) {
+                $eks->lampu_belakang = $params['eksterior']['lbelakang']['lampu_belakang'];
+            }
+            if (isset($params['eksterior']['pdepan']['pintu_depan'])) {
+                $eks->pintu_depan = $params['eksterior']['pdepan']['pintu_depan'];
+            }
+            if (isset($params['eksterior']['ppenumpang']['pintu_penumpang'])) {
+                $eks->pintu_penumpang = $params['eksterior']['ppenumpang']['pintu_penumpang'];
+            }
+            if (isset($params['eksterior']['pbagasi']['pintu_bagasi_samping'])) {
+                $eks->pintu_bagasi_samping = $params['eksterior']['pbagasi']['pintu_bagasi_samping'];
+            }
+            if (isset($params['eksterior']['pbelakang']['pintu_belakang'])) {
+                $eks->pintu_belakang = $params['eksterior']['pbelakang']['pintu_belakang'];
+            }
+            if (isset($params['eksterior']['wyper']['wyper_set'])) {
+                $eks->wyper_set = $params['eksterior']['wyper']['wyper_set'];
+            }
 
             if (!empty($params['eksterior']['warna']['kd_warna'])) {
                 $warna = Warna::find()->where('kd_warna="' . $params['eksterior']['warna']['kd_warna'] . '"')->one();
@@ -1363,9 +1396,15 @@ class WomasukController extends Controller {
                     $eks->warna2 = $warna->kd_warna;
                 }
             }
-            $eks->strip = $params['eksterior']['strip']['strip'];
-            $eks->letter = $params['eksterior']['letter']['letter'];
-            $eks->lain2 = $params['eksterior']['lain2'];
+            if (isset($params['eksterior']['strip']['strip'])) {
+                $eks->strip = $params['eksterior']['strip']['strip'];
+            }
+            if (isset($params['eksterior']['letter']['letter'])) {
+                $eks->letter = $params['eksterior']['letter']['letter'];
+            }
+            if (isset($params['eksterior']['lain2'])) {
+                $eks->lain2 = $params['eksterior']['lain2'];
+            }
             $eks->save();
 
 // INTERIOR
@@ -1375,7 +1414,7 @@ class WomasukController extends Controller {
                     $int = new Miniint();
                 }
                 $int->no_wo = $params['womasuk']['no_wo'];
-                if (isset($params['interior']['plavon']['plavon'])) {
+                if (!empty($params['interior']['plavon']['plavon'])) {
                     $int->plavon = $params['interior']['plavon']['plavon'];
                 }
                 if (!empty($params['interior']['trimming']['trimming_deck'])) {
@@ -1632,4 +1671,5 @@ class WomasukController extends Controller {
     }
 
 }
+
 ?>

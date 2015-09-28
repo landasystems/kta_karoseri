@@ -65,7 +65,12 @@
 
 
                             <div class="line line-dashed b-b line-lg pull-in"></div>
-                            <table class="table table-bordered">
+                            <table class="table table-striped b-t b-light">
+                                  <thead>
+                                 <tr>
+                                        <th class="panel-heading text-muted font-bold" colspan="7">Detail Work In Proses</th>
+                                        <th class="panel-heading text-muted font-bold" ><button ng-click="addDetail()" class="btn btn-success"  title="Tambah Detail"><i class="fa fa-plus-square"></i></button></th>
+                                    </tr>
                                 <tr>
                                     <!--<th>NO WO</th>-->
                                     <th>Kepala Pemborong</th>
@@ -77,6 +82,7 @@
                                     <th>Keterangan</th>
                                     <th></th>
                                 </tr>
+                                  </thead>
                                 <tr ng-repeat="det in detWip">
                                     <!--                                    <td  style="margin:0px;padding:0px;">
                                                                             <input type="text" class="form-control" ng-model="det.no_wo" required disabled="true"/>
@@ -112,8 +118,8 @@
                                     <td style="margin:0px;padding:0px;width:7%" ng-hide="is_view">
                                         <div class="btn-group pull-right" role="group">
                                             <button ng-click="modal(det)" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
-                                            <button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-plus-square-o"></i></button>
-                                            <button ng-click="removeRow($index)" class="btn btn-danger" ng-show="$index > 0" ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
+                                            <!--<button ng-click="addDetail()" class="btn btn-success" ng-show="$index == 0" ng-disabled="is_view"><i class="fa fa-plus-square-o"></i></button>-->
+                                            <button ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view"><i class="fa fa-trash-o"></i></button>
                                         </div>
                                     </td>
 
