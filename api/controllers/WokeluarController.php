@@ -31,7 +31,7 @@ class WokeluarController extends Controller {
                     'jenis' => ['get'],
                     'kode' => ['get'],
                     'cari' => ['get'],
-                    'nowo' => ['post'],
+                    'nowo' => ['get'],
                     'warna' => ['post'],
                     'getnowo' => ['post'],
                     'select' => ['post'],
@@ -100,15 +100,24 @@ class WokeluarController extends Controller {
                 ->join(' JOIN', 'wo_masuk', 'wo_masuk.no_spk = spk.no_spk')
 //                ->join(' JOIN', 'warna', 'sti.kd_warna = warna.kd_warna')
                 ->join(' JOIN', 'model', 'model.kd_model = spk.kd_model')
-                ->select("*")
-                ->where('spk.no_spk="' . $params['no_wo']['no_spk'] . '" and (wo_masuk.tgl_keluar IS NOT NULL or wo_masuk.tgl_keluar="")');
+                ->select("chassis.*,model.*,wo_masuk.in_spk_marketing, wo_masuk.tgl_kontrak, wo_masuk.foto")
+                ->where('spk.no_spk="' . $params['no_spk'] . '" and (wo_masuk.tgl_keluar IS NOT NULL or wo_masuk.tgl_keluar="0000-00-000")');
 
 
         $command = $query->createCommand();
         $models = $command->queryOne();
-//        Yii::error($models);
+        
+        $model = Womasuk::find()
+                        ->where('no_wo like "%' . $params['no_wo'] . '%" and tgl_keluar is NULL ')
+                        ->limit(10)->all();
+        $data = array();
+        if (!empty($model)) {
+            foreach ($model as $key => $val) {
+                $models['no_wo'] = $val->attributes;
+            }
+        }
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'nowo' => $models));
+        echo json_encode(array('status' => 1, 'data'=>$models));
     }
 
     public function actionWarna() {
@@ -124,18 +133,20 @@ class WokeluarController extends Controller {
         echo json_encode(array('status' => 1, 'warna' => $models));
     }
 
+    
     public function actionNowo() {
-
         $params = $_REQUEST;
-        $query = new Query;
-        $query->from('wo_masuk')
-                ->where('tgl_keluar is null')
-                ->select("*");
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
+        $model = Womasuk::find()
+                        ->where('no_wo like "%' . $params['nama'] . '%" and tgl_keluar is NULL ')
+                        ->limit(10)->all();
+        $data = array();
+        if (!empty($model)) {
+            foreach ($model as $key => $val) {
+                $data[] = $val->attributes;
+            }
+        }
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'nowo' => $models));
+        echo json_encode(array('status' => 1, 'data' => $data), JSON_PRETTY_PRINT);
     }
 
     public function actionIndex() {
@@ -332,22 +343,8 @@ class WokeluarController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
 //        Yii::error($params);
         $model = $this->findModel($params['no_wo']);
-//        $model = WoMasuk::deleteAll(['no_wo' => $params['no_wo']]);
-        if ($params['jenis'] == "Small Bus") {
-            $eks = Smalleks::deleteAll(['no_wo' => $params['no_wo']]);
-            $int = Smallint::deleteAll(['no_wo' => $params['no_wo']]);
-        } else {
-            $eks = Minieks::deleteAll(['no_wo' => $params['no_wo']]);
-            $int = Miniint::deleteAll(['no_wo' => $params['no_wo']]);
-        }
-        if ($model->delete()) {
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-        } else {
-
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-        }
+        $model->tgl_keluar = "";
+        $model->save();
     }
 
     protected function findModel($id) {

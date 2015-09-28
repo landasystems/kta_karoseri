@@ -8,6 +8,8 @@ app.controller('rekapwomasukCtrl', function ($scope, Data, toaster) {
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
+    $scope.start = "";
+    $scope.end = "";
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -59,7 +61,8 @@ app.controller('rekapwomasukCtrl', function ($scope, Data, toaster) {
     }
     $scope.grafik = function () {
         Data.get('rekap/chartwomasuk').then(function (data) {
-
+            $scope.start = data.start;
+            $scope.end = data.end;
             var merk = data.merk;
             var model = data.model;
             var sales = data.sales;

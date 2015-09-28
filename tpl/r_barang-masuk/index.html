@@ -43,29 +43,31 @@
                         <div class="form-horizontal">
                             <div class="form-group">
                                 <div class="control-group">
-                                    <label class="col-sm-2 control-label">Periode</label>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <input placeholder="Tanggal Periode" date-range-picker class="form-control" st-search="tgl_nota" type="text"  ng-model="tanggal">
                                     </div>
 
-                                    <label class="col-sm-2 control-label">Kategori</label>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <select st-search="kat" class="form-control">
                                             <option value="">.:Pilih Jenis:.</option>
                                             <option value="Rutin">Rutin</option>
                                             <option value="Non Rutin">Non Rutin</option>
                                         </select>
                                     </div>
+                                    <div class="col-sm-4">
+                                        <input placeholder="No BBM" st-search="tb.no_bbm" class="form-control"/>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="control-group">
-                                    <label class="col-sm-2 control-label">Supplier</label>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
+                                        <input placeholder="Kode Barang" st-search="barang.kd_barang" class="form-control"/>
+                                    </div>
+                                    <div class="col-sm-4">
                                         <input placeholder="Nama Supplier" st-search="su.nama_supplier" class="form-control"/>
                                     </div>
-                                    <label class="col-sm-2 control-label">Nama Barang</label>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <input placeholder="Nama barang" st-search="barang.nm_barang" class="form-control"/>
                                     </div>
                                 </div>

@@ -75,7 +75,7 @@ class DeliveryController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "delivery.id DEC";
+        $sort = "delivery.id DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -245,7 +245,7 @@ class DeliveryController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($params);
+//        Yii::error($params);
         $model = new Delivery();
         
         $model->attributes = $params;
@@ -277,6 +277,13 @@ class DeliveryController extends Controller {
         \Yii::error($params);
         $model = $this->findModel($id);
         $model->attributes = $params;
+        if($params['tujuan'] == 'customer'){
+            $model->kd_cust = $params['kd_cust'];
+            $model->cabang = "";
+        }else{
+             $model->kd_cust = "";
+            $model->cabang = $params['cabang'];
+        }
 //        $model->no_wo = $params['no_wo']['no_wo'];
         if ($model->tujuan == "customer") {
             $model->status = 1;

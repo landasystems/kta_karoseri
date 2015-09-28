@@ -223,6 +223,7 @@ class RekapController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
+
     public function actionRekapwomasuk() {
         $params = $_REQUEST;
         $filter = array();
@@ -252,12 +253,12 @@ class RekapController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('view_wo_spk as vws')
-                ->join('JOIN', 'wo_masuk as wm', 'wm.no_wo = vws.no_wo')
-                ->join('JOIN', 'chassis', 'chassis.kd_chassis = vws.kd_chassis')
-                ->join('JOIN', 'model', 'model.kd_model = vws.kd_model')
-                ->join('JOIN', 'customer', 'customer.kd_cust = vws.kd_cust')
-                ->join('JOIN', 'serah_terima_in as sti', 'sti.no_spk = vws.no_spk')
-                ->join('JOIN', 'spk', 'vws.no_spk = spk.no_spk')
+                ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo = vws.no_wo')
+                ->join('LEFT JOIN', 'chassis', 'chassis.kd_chassis = vws.kd_chassis')
+                ->join('LEFT JOIN', 'model', 'model.kd_model = vws.kd_model')
+                ->join('LEFT JOIN', 'customer', 'customer.kd_cust = vws.kd_cust')
+                ->join('LEFT JOIN', 'serah_terima_in as sti', 'sti.no_spk = vws.no_spk')
+                ->join('LEFT JOIN', 'spk', 'vws.no_spk = spk.no_spk')
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
                 ->where('tk.department="DPRT005" and wm.tgl_keluar IS NOT NULL')
                 ->orderBy($sort)
@@ -309,9 +310,9 @@ class RekapController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
-    
-     public function actionRekapbbmbbk() {
-           $params = $_REQUEST;
+
+    public function actionRekapbbmbbk() {
+        $params = $_REQUEST;
         $filter = array();
         $sort = "dk.id DESC";
         $offset = 0;
@@ -342,7 +343,6 @@ class RekapController extends Controller {
                 ->join('JOIN', 'barang as b', 'b.kd_barang = db.kd_barang')
                 ->join('LEFT JOIN', 'det_bbk as dk', 'b.kd_barang = dk.kd_barang')
                 ->orderBy($sort)
-                
                 ->select("b.nm_barang, db.jumlah as masuk, dk.jml as keluar");
 //filter
 
@@ -389,17 +389,16 @@ class RekapController extends Controller {
 //        $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
-   
-     }
+    }
 
     public function actionExcelchassisin() {
-         session_start();
+        session_start();
         $query = $_SESSION['query'];
         $filter = $_SESSION['filter'];
 
         $command = $query->createCommand();
         $models = $command->queryAll();
-    return $this->render("/expretur/chassisin", ['models' => $models, 'filter' => $filter]);
+        return $this->render("/expretur/chassisin", ['models' => $models, 'filter' => $filter]);
     }
 
     public function actionExcelwokeluar() {
@@ -411,66 +410,76 @@ class RekapController extends Controller {
         $models = $command->queryAll();
         return $this->render("/expretur/wokeluar", ['models' => $models, 'filter' => $filter]);
     }
+
     public function actionExcelwomasuk() {
         session_start();
-        $query = $_SESSION['query'];
+        $query = $_SESSION['queryasu'];
         $filter = $_SESSION['filter'];
 
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/womasuk", ['models' => $models, 'filter' => $filter]);
     }
+
     public function actionExcelwomasuk2() {
         session_start();
-        $query = $_SESSION['query'];
+        $query = $_SESSION['queryasu'];
         $filter = $_SESSION['filter'];
         $query->limit(null);
         $query->offset(null);
-        
+
         // Table fullnya
         $command = $query->createCommand();
         $models = $command->queryAll();
-        
+
         // Berdasarkan Market
         $query->select("customer.market,count(*) as jumlah");
         $query->groupBy("customer.market");
         $command2 = $query->createCommand();
         $market = $command2->queryAll();
-        
+
         // Berdasarkan Merk
         $query->select("chassis.merk,count(*) as jumlah");
         $query->groupBy("chassis.merk");
         $command3 = $query->createCommand();
         $merk = $command3->queryAll();
-        
+
         // Berdasarkan Model
         $query->select("model.model,count(*) as jumlah");
         $query->groupBy("model.model");
         $command4 = $query->createCommand();
         $model = $command4->queryAll();
-        
-        return $this->render("/expretur/womasuk2", ['models' => $models,'market'=>$market,'merk'=>$merk,'model'=>$model, 'filter' => $filter]);
+
+        return $this->render("/expretur/womasuk2", ['models' => $models, 'market' => $market, 'merk' => $merk, 'model' => $model, 'filter' => $filter]);
     }
+
     public function actionChartwomasuk() {
         session_start();
         $query = $_SESSION['queryasu'];
+        $filter = $_SESSION['filter'];
+        if (!empty($filter['tgl'])) {
+            $value = explode(' - ', $filter['tgl']);
+            $start = date("d/m/Y", strtotime($value[0]));
+            $end = date("d/m/Y", strtotime($value[1]));
+        } else {
+            $start = '';
+            $end = '';
+        }
+        
         $query->limit(null);
         $query->offset(null);
-        
+
         // Table fullnya
 //        $command = $query->createCommand();
 //        $models = $command->queryAll();
-        
-       
-        
         // Berdasarkan Sales
         $query->select("tk.nama, count(*) as jumlah");
         $query->groupBy("tk.nama");
         $command2 = $query->createCommand();
         $sales = $command2->queryAll();
         $asu = array();
-        foreach($sales as $data){
-            $asu[] = ['name'=>$data['nama'],'y'=>(int)$data['jumlah']];
+        foreach ($sales as $data) {
+            $asu[] = ['name' => $data['nama'], 'y' => (int) $data['jumlah']];
         }
         // Berdasarkan Merk
         $query->select("chassis.merk,count(*) as jumlah");
@@ -478,8 +487,8 @@ class RekapController extends Controller {
         $command3 = $query->createCommand();
         $merk = $command3->queryAll();
         $aa = array();
-        foreach($merk as $data){
-            $aa[] = ['name'=>$data['merk'],'y'=>(int)$data['jumlah']];
+        foreach ($merk as $data) {
+            $aa[] = ['name' => $data['merk'], 'y' => (int) $data['jumlah']];
         }
         // Berdasarkan Model
         $query->select("model.model,count(*) as jumlah");
@@ -487,20 +496,20 @@ class RekapController extends Controller {
         $command4 = $query->createCommand();
         $model = $command4->queryAll();
         $babi = array();
-        foreach($model as $data){
-            $babi[] = ['name'=>$data['model'],'y'=>(int)$data['jumlah']];
+        foreach ($model as $data) {
+            $babi[] = ['name' => $data['model'], 'y' => (int) $data['jumlah']];
         }
-        
+
         // Berdasarkan Perhari
         $query->select("spk.tgl,count(*) as jumlah");
         $query->groupBy("spk.tgl");
         $command5 = $query->createCommand();
         $hari = $command5->queryAll();
         $kerek = array();
-        foreach($hari as $data){
-            $kerek[] = ['name'=>date('d-m-Y', strtotime($data['tgl'])),'y'=>(int)$data['jumlah']];
+        foreach ($hari as $data) {
+            $kerek[] = ['name' => date('d-m-Y', strtotime($data['tgl'])), 'y' => (int) $data['jumlah']];
         }
-          return json_encode(array('merk' => $aa,'sales'=>$asu,'model'=>$babi,'hari'=>$kerek), JSON_PRETTY_PRINT);
+        return json_encode(array('merk' => $aa, 'sales' => $asu, 'model' => $babi, 'hari' => $kerek,'start'=>$start, 'end'=>$end), JSON_PRETTY_PRINT);
     }
 
 }
