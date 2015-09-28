@@ -1538,7 +1538,7 @@ class WomasukController extends Controller {
 
 // UPDATE STI CUSTOMER
 //            $spk = \app\models\Spk::findOne('no_spk='.$params['womasuk']['spk']['no_spk']);
-            $spk = \app\models\Spkaroseri::find()->where('no_spk=' . $params['womasuk']['spk']['no_spk'])->one();
+            $spk = \app\models\Spkaroseri::find()->where('no_spk="' . $params['womasuk']['spk']['no_spk'].'"')->one();
             $sti = \app\models\Serahterimain::find()->where('kd_titipan="' . $params['womasuk']['titipan']['kd_titipan'] . '"')->one();
             $sti->kd_cust = $spk->kd_customer;
             $sti->no_spk = $spk->no_spk;

@@ -69,6 +69,7 @@ class SpkController extends Controller {
         $models = $command->queryAll();
         $query2 = new Query;
         $query2->from('kerja')
+                ->orderBy('nm_kerja ASC')
                 ->where('kd_jab="' . $params['id_jabatan'] . '"')
                 ->select("*");
         $command2 = $query2->createCommand();
