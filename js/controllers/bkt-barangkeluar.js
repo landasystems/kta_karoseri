@@ -196,6 +196,9 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
 
     $scope.create = function (form) {
         $scope.formtitle = "Form Tambah Data";
+        $scope.err_pengambilan = false;
+        $scope.sisa_pengambilan = 0;
+        $scope.stok_sekarang = 0;
         $scope.form = {};
         Data.get('pengguna/profile').then(function (data) {
             $scope.form.petugas = data.data.nama;
@@ -213,9 +216,6 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
         $scope.is_view = false;
         $scope.is_copy = false;
         $scope.is_create = true;
-        keyboardManager.bind('ctrl+s', function () {
-            $scope.save($scope.form, $scope.detBbm);
-        });
     };
 
     $scope.update = function (form) {
@@ -257,8 +257,9 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                         popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print();window.close();">' + elem.innerHTML + '</html>');
                         popupWin.document.close();
                     }
+                    $scope.is_create = false;
                     $scope.is_edit = false;
-                    $scope.view(result.data);
+                    $scope.create($scope.form);
                     $scope.callServer(tableStateRef); //reload grid ulang
                 }
             });
@@ -307,9 +308,8 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             }
         });
     }
-
     keyboardManager.bind('ctrl+s', function () {
-        if (($scope.is_create == true || $scope.is_edit == true) && $scope.is_view == false) {
+        if ($scope.is_edit == true) {
             $scope.save($scope.form, $scope.detailBbk);
         }
     });
