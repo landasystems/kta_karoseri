@@ -177,7 +177,6 @@ app.controller('spkaroseriCtrl', function ($scope, Data, toaster) {
     $scope.selected = function (no_spk) {
         Data.get('spkaroseri/view/' + no_spk).then(function (data) {
             $scope.form = data.data;
-            console.log($scope.form);
             $scope.form.tgl = new Date($scope.form.tgl);
         });
     }
