@@ -137,9 +137,6 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
         Data.get('pengguna/profile').then(function (data) {
             $scope.form.penerima = data.data.nama;
         });
-        keyboardManager.bind('ctrl+s', function () {
-            $scope.save($scope.form, $scope.detBbm);
-        });
     };
     $scope.update = function (form) {
         $scope.is_create = false;
@@ -149,9 +146,6 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
         $scope.form = form;
         $scope.form.tgl_nota = new Date(form.tgl_nota);
         $scope.getDetail(form.no_bbm);
-        keyboardManager.bind('ctrl+s', function () {
-            $scope.save($scope.form, $scope.detBbm);
-        });
     };
     $scope.view = function (form) {
         $scope.is_edit = true;
@@ -243,4 +237,11 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
     $scope.excel = function (id) {
         window.location = 'api/web/bbm/exceldet/' + id;
     };
+
+    keyboardManager.bind('ctrl+s', function () {
+        if (($scope.is_create == true || $scope.is_edit == true) && $scope.is_view == false) {
+            $scope.save($scope.form, $scope.detBbm);
+        }
+    });
+    
 });

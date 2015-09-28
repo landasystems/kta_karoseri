@@ -176,7 +176,8 @@ app.controller('tambahItemCtrl', function ($scope, Data, toaster, FileUploader, 
     $scope.delete = function (row) {
         if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
             Data.delete('additionalbom/delete/' + row.id).then(function (result) {
-                $scope.displayed.splice($scope.displayed.indexOf(row), 1);
+//                $scope.displayed.splice($scope.displayed.indexOf(row), 1);
+                $scope.callServer(tableStateRef);
             });
         }
     };

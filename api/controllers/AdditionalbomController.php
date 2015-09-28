@@ -40,7 +40,7 @@ class AdditionalbomController extends Controller {
     public function actionCari() {
         $params = json_decode(file_get_contents("php://input"), true);
         $selected = array();
-        if(isset($params['selected'])) {
+        if (isset($params['selected'])) {
             foreach ($params['selected'] as $val) {
                 $selected[] = '"' . $val['no_wo'] . '"';
             }
@@ -240,13 +240,15 @@ class AdditionalbomController extends Controller {
             //save detail bom
             $detailBom = $params['detTambahItem'];
             foreach ($detailBom as $val) {
-                $det = new DetAdditionalBom();
-                $det->attributes = $val;
-                $det->tran_additional_bom_id = $model->id;
-                $det->kd_jab = $val['bagian']['id_jabatan'];
-                $det->kd_barang = $val['barang']['kd_barang'];
-                $det->kd_bom = $model->kd_bom;
-                $det->save();
+                if (isset($val['barang']['kd_barang'])) {
+                    $det = new DetAdditionalBom();
+                    $det->attributes = $val;
+                    $det->tran_additional_bom_id = $model->id;
+                    $det->kd_jab = $val['bagian']['id_jabatan'];
+                    $det->kd_barang = $val['barang']['kd_barang'];
+                    $det->kd_bom = $model->kd_bom;
+                    $det->save();
+                }
             }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -265,16 +267,12 @@ class AdditionalbomController extends Controller {
                 //delete detail optional
                 $detOptional = DetAdditionalBom::deleteAll('tran_additional_bom_id = "' . $id . '"');
 
-                //hapus tran additional bom
-                $deleteAdditional = TransAdditionalBom::deleteAll('id="' . $id . '"');
-
                 //hapus wo
                 $deleteWo = TransAdditionalBomWo::deleteAll('id="' . $valNowo->id . '"');
-                \Yii::error($valNowo);
             }
         }
 
-        $model = new TransAdditionalBom();
+        $model = TransAdditionalBom::findOne($id);
         $model->attributes = $params['tambahItem'];
         $model->kd_bom = $params['tambahItem']['kd_bom']['kd_bom'];
         $model->kd_model = $params['tambahItem']['kd_model']['kd_model'];
@@ -292,13 +290,15 @@ class AdditionalbomController extends Controller {
             //save detail bom
             $detailBom = $params['detTambahItem'];
             foreach ($detailBom as $val) {
-                $det = new DetAdditionalBom();
-                $det->attributes = $val;
-                $det->tran_additional_bom_id = $model->id;
-                $det->kd_jab = $val['bagian']['id_jabatan'];
-                $det->kd_barang = $val['barang']['kd_barang'];
-                $det->kd_bom = $model->kd_bom;
-                $det->save();
+                if (isset($val['barang']['kd_barang'])) {
+                    $det = new DetAdditionalBom();
+                    $det->attributes = $val;
+                    $det->tran_additional_bom_id = $model->id;
+                    $det->kd_jab = $val['bagian']['id_jabatan'];
+                    $det->kd_barang = $val['barang']['kd_barang'];
+                    $det->kd_bom = $model->kd_bom;
+                    $det->save();
+                }
             }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -312,9 +312,9 @@ class AdditionalbomController extends Controller {
         $model = $this->findModel($id);
         $deleteDetail = DetAdditionalBom::deleteAll(['tran_additional_bom_id' => $id]);
         $deleteWo = TransAdditionalBomWo::deleteAll(['tran_additional_bom_id' => $id]);
-
         if ($model->delete()) {
             $this->setHeader(200);
+
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {
 
