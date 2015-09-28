@@ -58,12 +58,13 @@ class DeliveryController extends Controller {
     public function actionCustomer() {
         $params = json_decode(file_get_contents("php://input"), true);
         $query = new Query;
-        $query->from('view_wo_spk')
-                ->where('no_wo="' . $params['no_wo'] . '"')
-                ->select("kd_cust, nm_customer");
+        $query->from('view_wo_spk as vw')
+                ->join('LEFT JOIN', 'customer as cu', 'vw.kd_cust = cu.kd_cust')
+                ->where('vw.no_wo="' . $params['no_wo'] . '"')
+                ->select("vw.kd_cust, vw.nm_customer,cu.alamat1");
 
         $command = $query->createCommand();
-        $models = $command->queryAll();
+        $models = $command->query()->read();
 
         $this->setHeader(200);
 
@@ -100,7 +101,7 @@ class DeliveryController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('delivery')
-                ->join('JOIN', 'customer as cu', 'delivery.kd_cust = cu.kd_cust')
+                ->join('LEFT JOIN', 'customer as cu', 'delivery.kd_cust = cu.kd_cust')
                 ->join('JOIN', 'wo_masuk', 'delivery.no_wo = wo_masuk.no_wo')
                 ->join('JOIN', 'spk', 'spk.no_spk = wo_masuk.no_spk')
                 ->join('JOIN', 'chassis', 'chassis.kd_chassis = spk.kd_chassis')
@@ -168,7 +169,7 @@ class DeliveryController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('delivery as dev')
-                ->join('JOIN', 'customer', 'dev.kd_cust = customer.kd_cust')
+                ->join('LEFT JOIN', 'customer', 'dev.kd_cust = customer.kd_cust')
                 ->join('JOIN', 'view_wo_spk as vws', 'dev.no_wo = vws.no_wo')
                 ->join('JOIN', 'spk', 'spk.no_spk = vws.no_spk')
                 ->join('JOIN ', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
@@ -242,11 +243,20 @@ class DeliveryController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        \Yii::error($params);
+        Yii::error($params);
         $model = new Delivery();
+        
         $model->attributes = $params;
+        if($params['tujuan'] == 'customer'){
+            $model->kd_cust = $params['kd_cust'];
+            $model->cabang = "";
+        }else{
+             $model->kd_cust = "";
+            $model->cabang = $params['cabang'];
+        }
         if ($model->tujuan == "customer") {
             $model->status = 1;
+     
         } else {
             $model->status = 0;
         }
