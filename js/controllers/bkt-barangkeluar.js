@@ -1,4 +1,4 @@
-app.controller('bbkCtrl', function ($scope, Data, toaster, $modal) {
+app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManager) {
 //init data
     var tableStateRef;
     $scope.displayed = [];
@@ -213,6 +213,9 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal) {
         $scope.is_view = false;
         $scope.is_copy = false;
         $scope.is_create = true;
+        keyboardManager.bind('ctrl+s', function () {
+            $scope.save($scope.form, $scope.detBbm);
+        });
     };
 
     $scope.update = function (form) {
@@ -304,6 +307,12 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal) {
             }
         });
     }
+
+    keyboardManager.bind('ctrl+s', function () {
+        if (($scope.is_create == true || $scope.is_edit == true) && $scope.is_view == false) {
+            $scope.save($scope.form, $scope.detailBbk);
+        }
+    });
 });
 
 app.controller('modalCtrl', function ($scope, Data, $modalInstance, form, toaster) {
