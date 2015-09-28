@@ -62,9 +62,12 @@ app.controller('notifBarangCtrl', function ($scope, Data, toaster) {
 
     $scope.excel = function () {
 //        if(form != undefined){
-        window.location = 'api/web/notifunit/index/1';
+        window.location = 'api/web/notifbarang/excel';
 //        }
     };
+      $scope.print = function () {
+            window.open('api/web/notifbarang/excel?print=true');
+     };
     $scope.cancel = function () {
         if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
             $scope.callServer(tableStateRef);
