@@ -37,6 +37,7 @@ app.controller('kpbCtrl', function ($scope, Data, toaster, $modal) {
         Data.post('kpb/jabkpb', {key: $scope.form.no_wo}).then(function (data) {
             $scope.jabatan = {};
             $scope.jabatan = data.data;
+            console.log(data.data)
         });
 //    }
     }
