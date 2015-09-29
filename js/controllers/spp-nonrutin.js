@@ -36,7 +36,7 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
 
         $scope.isLoading = false;
     };
-    
+
     $scope.excel = function (no_spp) {
         Data.get('sppnonrutin/view/' + no_spp).then(function (data) {
             window.location = 'api/web/sppnonrutin/print';
@@ -158,8 +158,8 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
                 form: function () {
                     var data = {
                         sppDet: sppDet,
-                        detail: detail
-
+                        detail: detail,
+                        is_create: $scope.is_create,
                     };
                     return data;
 
@@ -193,13 +193,10 @@ app.controller('modalCtrl', function ($scope, Data, $modalInstance, form) {
     };
 
     $scope.formmodal = form.detail;
+    $scope.is_create = form.is_create;
     $scope.woMasuk = [];
+    $scope.wo_masuk = form.no_wo;
     $scope.woSelected = function (formmodal, woMasuk, items) {
-//        for (var i = form.sppDet.length - 1; i >= 0; i--) {
-//            if (form.sppDet[i].kd_barang == form.detail.kd_barang) {
-//                form.sppDet.splice(i, 1);
-//            }
-//        }
         var mongo = form.sppDet;
         var index = mongo.indexOf(form.detail);
         var data = {

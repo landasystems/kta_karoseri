@@ -137,9 +137,20 @@ class SppnonrutinController extends Controller {
         $models = $command->queryAll();
         $totalItems = $query->count();
 
+        $data = array();
+        foreach ($models as $key => $val) {
+            $tg1 = explode("/", $val['tgl1']);
+            $tg2 = explode("/", $val['tgl2']);
+            $tgl1 = $tg1[2] . '-' . $tg1[1] . '-' . $tg1[0];
+            $tgl2 = $tg2[2] . '-' . $tg2[1] . '-' . $tg2[0];
+            $data[$key] = $val;
+            $data[$key]['tgl1'] = $tgl1;
+            $data[$key]['tgl2'] = $tgl2;
+        }
+
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
     public function actionView($id) {
@@ -168,8 +179,8 @@ class SppnonrutinController extends Controller {
         $number = (empty($lastNumber)) ? 1 : (int) substr($lastNumber->no_spp, 3) + 1;
         $model->no_spp = date('y', $tgl_trans) . substr("000" . $number, -3);
         $model->tgl_trans = $tgl_trans;
-        $model->tgl1 = date('Y-m-d', strtotime($params['form']['periode']['startDate']));
-        $model->tgl2 = date('Y-m-d', strtotime($params['form']['periode']['endDate']));
+        $model->tgl1 = date('d/m/Y', strtotime($params['form']['periode']['startDate']));
+        $model->tgl2 = date('d/m/Y', strtotime($params['form']['periode']['endDate']));
         $model->no_proyek = 'Non Rutin';
 
         if ($model->save()) {
@@ -201,8 +212,8 @@ class SppnonrutinController extends Controller {
         $model->attributes = $params;
         $tgl_trans = date('Y-m-d', strtotime($params['form']['tgl_trans']));
         $model->tgl_trans = $tgl_trans;
-        $model->tgl1 = date('Y-m-d', strtotime($params['form']['periode']['startDate']));
-        $model->tgl2 = date('Y-m-d', strtotime($params['form']['periode']['endDate']));
+        $model->tgl1 = date('d/m/Y', strtotime($params['form']['periode']['startDate']));
+        $model->tgl2 = date('d/m/Y', strtotime($params['form']['periode']['endDate']));
         $model->no_proyek = 'Non Rutin';
         if ($model->save()) {
             $deleteAll = DetSpp::deleteAll('no_spp="' . $model->no_spp . '"');
@@ -297,14 +308,31 @@ class SppnonrutinController extends Controller {
 
     public function actionDetail($id) {
         $detSpp = DetSpp::find()
-                ->with(['wo', 'barang'])
+                ->joinWith(['wo', 'barang'])
                 ->where(['no_spp' => $id])
+//                ->groupBy('barang.kd_barang, det_spp.qty')
+                ->select('det_spp.*, barang.nm_barang, barang.kd_barang, barang.satuan')
                 ->all();
         $detail = array();
+        $nowo = array();
+        $woArr = array();
         foreach ($detSpp as $key => $val) {
-            $detail[$key] = $val->attributes;
-            $detail[$key]['wo'] = (isset($val->wo)) ? $val->wo->attributes : [];
-            $detail[$key]['barang'] = (isset($val->barang)) ? $val->barang->attributes : [];
+            $kd_barang = isset($detSpp[$key + 1]['kd_barang']) ? $detSpp[$key + 1]['kd_barang'] : 0;
+            $jml_barang = isset($detSpp[$key + 1]['qty']) ? $detSpp[$key + 1]['qty'] : 0;
+            if ($kd_barang == $val['kd_barang'] and $jml_barang == $val['qty']) {
+                $nowo[] = $val['no_wo'];
+                $woArr[] = array('no_wo' => $val['no_wo']);
+            } else {
+                $nowo[] = $val['no_wo'];
+                $woArr[] = array('no_wo' => $val['no_wo']);
+                $wo = join(", ", $nowo);
+                $detail[$key] = $val->attributes;
+                $detail[$key]['wo'] = $wo;
+                $detail[$key]['no_wo'] = $woArr;
+                $detail[$key]['barang'] = array('kd_barang' => $val->barang->nm_barang, 'nm_barang' => $val->barang->nm_barang, 'satuan' => $val->barang->satuan);
+                $nowo = array();
+                $woArr = array();
+            }
         }
         $this->setHeader(200);
         echo json_encode(['status' => 1, 'details' => $detail]);
@@ -318,7 +346,7 @@ class SppnonrutinController extends Controller {
         $models = $command->queryAll();
         return $this->render("/expretur/laporansppnonrutin", ['models' => $models, 'id' => $nospp]);
     }
-    
+
 //    public function actionPrint() {
 //        session_start();
 //        $nospp = $_SESSION['nospp'];
@@ -336,5 +364,4 @@ class SppnonrutinController extends Controller {
 //        $models = $command->queryAll();
 //        return $this->render("/expretur/laporansppnonrutin", ['models' => $models, 'id' => $nospp]);
 //    }
-
 }

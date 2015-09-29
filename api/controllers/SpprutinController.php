@@ -228,9 +228,20 @@ class SpprutinController extends Controller {
         $models = $command->queryAll();
         $totalItems = $query->count();
 
+        $data = array();
+        foreach ($models as $key => $val) {
+            $tg1 = explode("/", $val['tgl1']);
+            $tg2 = explode("/", $val['tgl2']);
+            $tgl1 = $tg1[2] . '-' . $tg1[1] . '-' . $tg1[0];
+            $tgl2 = $tg2[2] . '-' . $tg2[1] . '-' . $tg2[0];
+            $data[$key] = $val;
+            $data[$key]['tgl1'] = $tgl1;
+            $data[$key]['tgl2'] = $tgl2;
+        }
+
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
     public function actionRekap() {
@@ -321,8 +332,8 @@ class SpprutinController extends Controller {
         $model = new TransSpp();
         $model->no_spp = $params['form']['no_spp'];
         $model->tgl_trans = $tgl_trans;
-        $model->tgl1 = date('Y-m-d', strtotime($params['form']['periode']['startDate']));
-        $model->tgl2 = date('Y-m-d', strtotime($params['form']['periode']['endDate']));
+        $model->tgl1 = date('d/m/Y', strtotime($params['form']['periode']['startDate']));
+        $model->tgl2 = date('d/m/Y', strtotime($params['form']['periode']['endDate']));
         $model->no_proyek = 'Rutin';
 
         if ($model->save()) {
@@ -368,7 +379,6 @@ class SpprutinController extends Controller {
 
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($params);
         $model = TransSpp::findOne($params['form']['no_spp']);
         if (empty($model)) {
             $model = new TransSpp();
@@ -377,8 +387,8 @@ class SpprutinController extends Controller {
 
         $tgl_trans = date('Y-m-d', strtotime($params['form']['tgl_trans']));
         $model->tgl_trans = $tgl_trans;
-        $model->tgl1 = date('Y-m-d', strtotime($params['form']['periode']['startDate']));
-        $model->tgl2 = date('Y-m-d', strtotime($params['form']['periode']['endDate']));
+        $model->tgl1 = date('d/m/Y', strtotime($params['form']['periode']['startDate']));
+        $model->tgl2 = date('d/m/Y', strtotime($params['form']['periode']['endDate']));
         $model->no_proyek = 'Rutin';
         if ($model->save()) {
             $deleteAll = DetSpp::deleteAll('no_spp="' . $model->no_spp . '"');

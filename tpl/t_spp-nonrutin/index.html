@@ -36,8 +36,8 @@
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
                             <td>{{row.no_spp}}</td>
                             <td>{{row.tgl_trans| date}}</td>
-                            <td>{{row.tgl1}}</td>
-                            <td>{{row.tgl2}}</td>
+                            <td>{{row.tgl1| date}}</td>
+                            <td>{{row.tgl2| date}}</td>
                             <td>
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
                                     <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
@@ -144,14 +144,16 @@
                                 <tbody>
                                     <tr ng-repeat="detail in sppDet">
                                         <td>
-                                            <div class="input-group" style="width:100%">
+                                            {{detail.barang.kd_barang}}
+<!--                                            <div class="input-group" style="width:100%">
                                                 <input type="text" ng-readonly="true" ng-model="detail.barang.kd_barang" class="form-control">
-                                            </div>
+                                            </div>-->
                                         </td>
                                         <td>
-                                            <div class="input-group" style="width:100%">
+                                            {{detail.barang.nm_barang}}
+<!--                                            <div class="input-group" style="width:100%">
                                                 <input type="text" ng-readonly="true" ng-model="detail.barang.nm_barang" class="form-control">
-                                            </div>
+                                            </div>-->
                                         </td>
                                         <td>
                                             <input type="text" ng-pattern="/^[0-9.-]*$/" ng-model="detail.qty" class="form-control">
@@ -159,19 +161,17 @@
                                         <td>
                                             <input type="text" ng-model="detail.ket" class="form-control">
                                         </td>
-                                        <td>
-                                            {{detail.p | date:'dd-MM-yyyy'}}
-<!--                                            <div class="input-group">
-                                                <input type="text" class="form-control" ng-model="detail.p" ng-readonly="true"/>
-                                                <span class="input-group-addon">
-                                                    <i class="fa fa-calendar-o"></i>
-                                                </span>
-                                            </div>-->
+                                        <td align="center">
+                                            {{detail.p| date:'dd-MM-yyyy'}}
+                                            <!--                                            <div class="input-group">
+                                                                                            <input type="text" class="form-control" ng-model="detail.p" ng-readonly="true"/>
+                                                                                            <span class="input-group-addon">
+                                                                                                <i class="fa fa-calendar-o"></i>
+                                                                                            </span>
+                                                                                        </div>-->
                                         </td>
                                         <td>
-                                            <div>
-                                                <input type="text" ng-model="detail.no_wo" class="form-control">
-                                            </div>
+                                            {{detail.wo}}
                                         </td>
                                         <td>
                                             <button ng-click="modal(sppDet, detail)" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
