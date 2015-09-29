@@ -35,8 +35,9 @@ app.controller('kpbCtrl', function ($scope, Data, toaster, $modal) {
     $scope.listBagian = function (key) {
 //    if (typeof $scope.form.no_wo != "undefined") {
         Data.post('kpb/jabkpb', {key: $scope.form.no_wo}).then(function (data) {
-            $scope.jabatan = {};
-            $scope.jabatan = data.data;
+            $scope.Listjabatan = {};
+            $scope.Listjabatan = data.data;
+//            console.log(data.data)
         });
 //    }
     }
@@ -86,9 +87,9 @@ app.controller('modalCtrl', function ($scope, Data, $modalInstance, form, toaste
     }
 
     $scope.listBagian = function (key) {
-        $scope.jabatan = {};
+        $scope.Listjabatan2 = {};
         Data.post('kpb/jabkpb', {key: key}).then(function (data) {
-            $scope.jabatan = data.data;
+            $scope.Listjabatan2 = data.data;
         });
     }
 

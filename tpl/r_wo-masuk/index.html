@@ -15,7 +15,7 @@
                             <li><a href="#" ng-click="printchart()">Print Chart</a></li>
                         </ul>
                     </div>
-                    <div class="pull-right dropdown"  dropdown="">
+                    <div class="pull-right dropdown" style="margin-top: -4px" dropdown="">
                         <button type="button" class="btn btn-success" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Rekap WO Masuk <span class="caret"></span></button>
                         <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 260px;">
                             <li><a href="#" ng-click="print()">Cetak</a></li>
@@ -115,12 +115,12 @@
                     </tbody>
                     <tbody ng-show="isLoading">
                         <tr>
-                            <td colspan="4" class="text-center">Loading ... </td>
+                            <td colspan="8" class="text-center">Loading ... </td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="12" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html">
+                            <td colspan="8" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html">
                             </td>
                         </tr>
                 </table>		
