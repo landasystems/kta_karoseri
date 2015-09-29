@@ -132,28 +132,22 @@
                             <table class="table table-striped b-t b-light">
                                 <thead>
                                     <tr>
-                                        <th style="text-align: center; font-weight: bold;width:10%">Kode Barang</th>
+                                        <th style="text-align: center; font-weight: bold;">Kode Barang</th>
                                         <th style="text-align: center; font-weight: bold;width:20%">Nama Barang</th>
-                                        <th style="text-align: center; font-weight: bold;width:7%">QTY</th>
+                                        <th style="text-align: center; font-weight: bold;width:5%">QTY</th>
                                         <th style="text-align: center; font-weight: bold;width:25%">Keterangan</th>
-                                        <th style="text-align: center; font-weight: bold;width:15%">Delivery</th>
-                                        <th style="text-align: center; font-weight: bold;width:15%">No WO</th>
-                                        <th></th>
+                                        <th style="text-align: center; font-weight: bold;">Delivery</th>
+                                        <th style="text-align: center; font-weight: bold;width:25%">No WO</th>
+                                        <th  ng-hide="is_view"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="detail in sppDet">
                                         <td>
                                             {{detail.barang.kd_barang}}
-<!--                                            <div class="input-group" style="width:100%">
-                                                <input type="text" ng-readonly="true" ng-model="detail.barang.kd_barang" class="form-control">
-                                            </div>-->
                                         </td>
                                         <td>
                                             {{detail.barang.nm_barang}}
-<!--                                            <div class="input-group" style="width:100%">
-                                                <input type="text" ng-readonly="true" ng-model="detail.barang.nm_barang" class="form-control">
-                                            </div>-->
                                         </td>
                                         <td>
                                             <input type="text" ng-pattern="/^[0-9.-]*$/" ng-model="detail.qty" class="form-control">
@@ -163,17 +157,11 @@
                                         </td>
                                         <td align="center">
                                             {{detail.p| date:'dd-MM-yyyy'}}
-                                            <!--                                            <div class="input-group">
-                                                                                            <input type="text" class="form-control" ng-model="detail.p" ng-readonly="true"/>
-                                                                                            <span class="input-group-addon">
-                                                                                                <i class="fa fa-calendar-o"></i>
-                                                                                            </span>
-                                                                                        </div>-->
                                         </td>
                                         <td>
-                                            {{detail.wo}}
+                                            <b ng-repeat="noWo in detail.no_wo">{{noWo.no_wo}}{{$last ? '' : ', '}}</b>
                                         </td>
-                                        <td>
+                                        <td  ng-hide="is_view">
                                             <button ng-click="modal(sppDet, detail)" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
                                             <button ng-click="removeRow($index)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
                                         </td>

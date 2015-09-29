@@ -185,6 +185,7 @@ app.controller('tambahItemCtrl', function ($scope, Data, toaster, FileUploader, 
     $scope.selected = function (id) {
         Data.get('additionalbom/view/' + id).then(function (data) {
             $scope.form = data.data;
+            console.log($scope.form);
             $scope.form.tgl_buat = new Date($scope.form.tgl_buat);
             if (jQuery.isEmptyObject(data.detail)) {
                 $scope.detTambahItem = [
