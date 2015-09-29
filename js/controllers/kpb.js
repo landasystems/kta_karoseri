@@ -87,9 +87,9 @@ app.controller('modalCtrl', function ($scope, Data, $modalInstance, form, toaste
     }
 
     $scope.listBagian = function (key) {
-        $scope.jabatan = {};
+        $scope.Listjabatan2 = {};
         Data.post('kpb/jabkpb', {key: key}).then(function (data) {
-            $scope.jabatan = data.data;
+            $scope.Listjabatan2 = data.data;
         });
     }
 
