@@ -35,9 +35,9 @@ app.controller('kpbCtrl', function ($scope, Data, toaster, $modal) {
     $scope.listBagian = function (key) {
 //    if (typeof $scope.form.no_wo != "undefined") {
         Data.post('kpb/jabkpb', {key: $scope.form.no_wo}).then(function (data) {
-            $scope.jabatan = {};
-            $scope.jabatan = data.data;
-            console.log(data.data)
+            $scope.Listjabatan = {};
+            $scope.Listjabatan = data.data;
+//            console.log(data.data)
         });
 //    }
     }

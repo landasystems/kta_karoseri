@@ -34,7 +34,7 @@
                         <div class="col-sm-4">
                             <select class="form-control" ng-model="form.kd_jabatan" ng-change="listBahan(form.no_wo, form.kd_jabatan)">
                                 <option value="">.: Pilih Bagian :.</option>
-                                <option ng-repeat="jab in jabatan" value="{{jab.id_jabatan}}">{{jab.jabatan}}</option>
+                                <option ng-repeat="jab in Listjabatan" value="{{jab.id_jabatan}}">{{jab.jabatan}}</option>
                             </select>
                         </div>
                     </div>
