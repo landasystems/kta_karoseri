@@ -66,12 +66,12 @@ class WipController extends Controller {
     public function actionCari() {
         $params = $_REQUEST;
         $query = new Query;
-        $query->from('view_wo_spk')
-                ->join(' JOIN', 'spk', 'view_wo_spk.no_spk = spk.no_spk')
-                ->join('JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
+        $query->from('wo_masuk')
+                ->join('LEFT JOIN', 'spk', 'wo_masuk.no_spk = spk.no_spk')
+//                ->join('JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
 //                ->join(' JOIN', 'chassis', 'chassis.kd_chassis = spk.kd_chassis')
-                ->join(' JOIN', 'wo_masuk', 'view_wo_spk.no_wo = wo_masuk.no_wo')
-                ->join(' JOIN', 'serah_terima_in as sti', 'sti.no_spk = view_wo_spk.no_spk')
+//                ->join(' JOIN', 'wo_masuk', 'view_wo_spk.no_wo = wo_masuk.no_wo')
+                ->join('LEFT JOIN', 'serah_terima_in as sti', 'sti.no_spk = wo_masuk.no_spk')
 //                ->join(' JOIN', 'model', 'model.kd_model = spk.kd_model')
                 ->select("*")
                 ->where(['like', 'wo_masuk.no_wo', $params['no_wo']])
