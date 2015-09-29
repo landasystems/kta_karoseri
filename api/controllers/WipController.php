@@ -67,12 +67,8 @@ class WipController extends Controller {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('wo_masuk')
-                ->join('LEFT JOIN', 'spk', 'wo_masuk.no_spk = spk.no_spk')
-//                ->join('JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-//                ->join(' JOIN', 'chassis', 'chassis.kd_chassis = spk.kd_chassis')
-//                ->join(' JOIN', 'wo_masuk', 'view_wo_spk.no_wo = wo_masuk.no_wo')
-                ->join('LEFT JOIN', 'serah_terima_in as sti', 'sti.no_spk = wo_masuk.no_spk')
-//                ->join(' JOIN', 'model', 'model.kd_model = spk.kd_model')
+                ->join('LEFT JOIN', 'serah_terima_in as sti', 'sti.kd_titipan = wo_masuk.kd_titipan')
+                ->join('LEFT JOIN', 'view_wo_spk', 'view_wo_spk.no_wo = wo_masuk.no_wo')
                 ->select("*")
                 ->where(['like', 'wo_masuk.no_wo', $params['no_wo']])
                 ->andWhere('wo_masuk.tgl_keluar IS NULL or wo_masuk.tgl_keluar=""')
@@ -85,7 +81,6 @@ class WipController extends Controller {
 
     public function actionGetnowo() {
         $params = json_decode(file_get_contents("php://input"), true);
-//        Yii::error($params);
         $query2 = new Query;
         $query2->from('det_wip as wip')
                 ->join('JOIN', 'bagian', 'bagian.kd_bag = wip.kd_kerja')
@@ -99,6 +94,14 @@ class WipController extends Controller {
         if (!empty($detail)) {
             foreach ($detail as $key => $data) {
                 $coba[$key] = $data;
+
+                $tgPS = explode('/', $data['plan_start']);
+                $tgPF = explode('/', $data['plan_finish']);
+                $acPS = explode('/', $data['act_start']);
+
+                $coba[$key]['plan_start'] = $tgPS[2] . '-' . $tgPS[1] . '-' . $tgPS[0];
+                $coba[$key]['plan_finish'] = $tgPF[2] . '-' . $tgPF[1] . '-' . $tgPF[0];
+                $coba[$key]['act_start'] = $acPS[2] . '-' . $acPS[1] . '-' . $acPS[0];
                 $coba[$key]['pemborong'] = ['nama' => $data['nama'], 'nik' => $data['nik']];
                 $coba[$key]['proses'] = ['bagian' => $data['bagian'], 'kd_bag' => $data['kd_bag']];
             }
@@ -110,7 +113,7 @@ class WipController extends Controller {
             $coba[0]['plan_finish'] = '';
             $coba[0]['act_start'] = '';
             $coba[0]['act_finish'] = '';
-            $coba[0]['keterangan'] = '';
+            $coba[0]['ket'] = '';
         }
         // hitung umur
         // memecah string tanggal awal untuk mendapatkan
@@ -326,37 +329,27 @@ class WipController extends Controller {
 
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-//        Yii::error($params['detWip']);
         $deleteAll = Wip::deleteAll('no_wo="' . $params['wip']['no_wo']['no_wo'] . '"');
 
         foreach ($params['detWip'] as $data) {
             $model = new Wip();
-            $model->no_wo = $params['wip']['no_wo']['no_wo'];
+            $model->no_wo = isset($params['wip']['no_wo']['no_wo']) ? $params['wip']['no_wo']['no_wo'] : '-';
             $model->kd_kerja = $data['proses']['kd_bag'];
-            $model->plan_start = date('Y-m-d', strtotime($data['plan_start']));
-            $model->plan_finish = date('Y-m-d', strtotime($data['plan_finish']));
-            $model->act_start = date('Y-m-d', strtotime($data['act_start']));
-            $model->act_finish = date('Y-m-d', strtotime($data['act_finish']));
-            $model->keterangan = $data['keterangan'];
-            $model->nik = $data['pemborong']['nik'];
+            $model->plan_start = date('d/m/Y', strtotime($data['plan_start']));
+            $model->plan_finish = date('d/m/Y', strtotime($data['plan_finish']));
+            $model->act_start = (!empty($data['act_start'])) ? date('d/m/Y', strtotime($data['act_start'])) : null;
+            $model->act_finish = (!empty($data['act_finish'])) ? date('Y-m-d', strtotime($data['act_finish'])) : null;
+            $model->ket = isset($data['ket']) ? $data['ket'] : '-';
+            $model->nik = isset($data['pemborong']['nik']) ? $data['pemborong']['nik'] : 0;
             $model->save();
         }
-
-//        $model->attributes = $params;
-
-
-
-
-
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
     }
 
     public function actionDelete() {
         $params = json_decode(file_get_contents("php://input"), true);
-//        Yii::error($params);
         $model = $this->findModel($params['no_wo']);
-//        $model = WoMasuk::deleteAll(['no_wo' => $params['no_wo']]);
         if ($params['jenis'] == "Small Bus") {
             $eks = Smalleks::deleteAll(['no_wo' => $params['no_wo']]);
             $int = Smallint::deleteAll(['no_wo' => $params['no_wo']]);

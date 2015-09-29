@@ -34,7 +34,7 @@ app.controller('wipCtrl', function ($scope, Data, toaster, $modal) {
                     plan_finish: '',
                     act_start: '',
                     act_finish: '',
-                    keterangan: '',
+                    ket: '',
                 }];
             $scope.detWip = (data.detail != null) ? data.detail : newDet;
             form.umur = data.umur;
@@ -139,7 +139,7 @@ app.controller('wipCtrl', function ($scope, Data, toaster, $modal) {
             plan_finish: '',
             act_start: '',
             act_finish: '',
-            keterangan: '',
+            ket: '',
         }
         $scope.setStatus();
         $scope.detWip.unshift(newDet);
