@@ -149,7 +149,7 @@ class SerahterimainController extends Controller {
         }
 
         $model->attributes = $params;
-        $model->status = 0;
+        $model->status = 1;
 
         $warna = \app\models\Warna::find()->where('kd_warna="' . $params['warna']['kd_warna'] . '"')->one();
         if (empty($warna)) {

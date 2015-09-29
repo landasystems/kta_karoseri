@@ -5,15 +5,22 @@ if (!isset($_GET['printlap'])) {
 }
 $data = array();
 $nowo = array();
+$jml = 0;
 foreach ($models as $key => $val) {
 
-    if (isset($models[$key + 1]['kd_barang']) and $models[$key + 1]['kd_barang'] == $val['kd_barang']) {
+    $kd_barang = isset($models[$key + 1]['kd_barang']) ? $models[$key + 1]['kd_barang'] : 0;
+    $jml_barang = isset($models[$key + 1]['jmlspp']) ? $models[$key + 1]['jmlspp'] : 0;
+
+    if ($kd_barang == $val['kd_barang'] and $jml_barang == $val['jmlspp']) {
         $nowo[] = $val['no_wo'];
+        $jml += $val['jmlspp'];
     } else {
-        if (empty($nowo))
-            $wo = $val['no_wo'];
-        else
-            $wo = join(", ", $nowo);
+        $nowo[] = $val['no_wo'];
+        $jml += $val['jmlspp'];
+//        if (empty($nowo))
+//            $wo = $val['no_wo'];
+//        else
+        $wo = join(", ", $nowo);
 
         $data[$val['jenis_brg']]['title'] = $val['jenis_brg'];
         $data[$val['jenis_brg']]['body'][$key]['kd_barang'] = $val['kd_barang'];
@@ -22,13 +29,15 @@ foreach ($models as $key => $val) {
         $data[$val['jenis_brg']]['body'][$key]['min'] = $val['min'];
         $data[$val['jenis_brg']]['body'][$key]['max'] = $val['max'];
         $data[$val['jenis_brg']]['body'][$key]['saldo'] = $val['sld'];
-        $data[$val['jenis_brg']]['body'][$key]['qty'] = $val['jmlspp'];
+        $data[$val['jenis_brg']]['body'][$key]['qty'] = $jml;
         $data[$val['jenis_brg']]['body'][$key]['ket'] = $wo;
         $data[$val['jenis_brg']]['body'][$key]['p'] = $val['p'];
         $data[$val['jenis_brg']]['body'][$key]['a'] = $val['a'];
         $nowo = array();
+        $jml = 0;
     }
 }
+print_r($nowo);
 ?>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
 <div style="width:24cm">
@@ -136,10 +145,10 @@ foreach ($models as $key => $val) {
 if (isset($_GET['printlap'])) {
     ?>
     <script type="text/javascript">
-            window.print();
-            setTimeout(function () {
-                window.close();
-            }, 1);
+        window.print();
+        setTimeout(function () {
+            window.close();
+        }, 1);
     </script>
     <?php
 }
