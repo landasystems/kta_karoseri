@@ -55,7 +55,7 @@ app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
         Data.post('delivery/customer/', $item).then(function (data) {
 //            $scope.sCUstomer = data.customer;
         
-        form.customer = data.customer.nm_customer;
+        form.customer = data.customer.nm_customer+" - "+data.customer.alamat1 ;
         form.kd_cust = data.customer.kd_cust;
             
         });
@@ -111,7 +111,7 @@ app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.no_wo;
         $scope.form = form;
-        $scope.form.customer = form.customer.nm_customer;
+        $scope.form.customer = form.customer.nm_customer+" - "+form.customer.alamat1;
         $scope.form.tgl_delivery = new Date(form.tgl_delivery);
     };
     $scope.view = function (form) {
