@@ -42,7 +42,6 @@ app.controller('rekapclaimCtrl', function ($scope, Data, toaster) {
     $scope.grafik = function () {
 
         Data.get('claimunit/char').then(function (data) {
-            console.log(data);
             var exjumlah = data.Eksterior.jumlah;
             var exjeniskmp = data.Eksterior.jns_komplain;
             var injumlah = data.Interior.jumlah;

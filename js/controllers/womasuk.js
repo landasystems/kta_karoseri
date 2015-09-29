@@ -10,7 +10,21 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         name: 'imageFilter',
         fn: function(item) {
             var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+           var x = '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+            if(!x) {
+                toaster.pop('error', "Jenis gambar tidak sesuai");
+            }
+            return x;
+        }
+    });
+    
+    uploader.filters.push({
+        name: 'sizeFilter', 
+        fn: function (item) {
+            var xz = item.size <= 1048576;
+            if(!xz) {
+                toaster.pop('error', "Ukuran gambar tidak boleh lebih dari 1 MB");
+            }
         }
     });
     //init data

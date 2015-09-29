@@ -10,7 +10,21 @@ app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
         name: 'imageFilter',
         fn: function (item) {
             var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+            var x = '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+            if(!x) {
+                toaster.pop('error', "Jenis gambar tidak sesuai");
+            }
+            return x;
+        }
+    });
+    
+    uploader.filters.push({
+        name: 'sizeFilter', 
+        fn: function (item) {
+            var xz = item.size <= 1048576;
+            if(!xz) {
+                toaster.pop('error', "Ukuran gambar tidak boleh lebih dari 1 MB");
+            }
         }
     });
     //init data
@@ -55,7 +69,7 @@ app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
         Data.post('delivery/customer/', $item).then(function (data) {
 //            $scope.sCUstomer = data.customer;
         
-        form.customer = data.customer.nm_customer;
+        form.customer = data.customer.nm_customer+" - "+data.customer.alamat1 ;
         form.kd_cust = data.customer.kd_cust;
             
         });
@@ -111,7 +125,7 @@ app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.no_wo;
         $scope.form = form;
-        $scope.form.customer = form.customer.nm_customer;
+        $scope.form.customer = form.customer.nm_customer+" - "+form.customer.alamat1;
         $scope.form.tgl_delivery = new Date(form.tgl_delivery);
     };
     $scope.view = function (form) {

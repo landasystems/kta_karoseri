@@ -369,7 +369,11 @@ class PoController extends Controller {
         $model = new TransPo();
         $model->attributes = $params['formpo'];
         $model->suplier = $params['formpo']['supplier']['kd_supplier'];
-        $model->tanggal = date("Y-m-d", strtotime($params['formpo']['tanggal']));
+        if (!empty($model->tanggal)) {
+            $model->tanggal = date("Y-m-d", strtotime($params['formpo']['tanggal']));
+        } else {
+            $model->tanggal = NULL;
+        }
         $model->spp = (empty($params['formpo']['listspp']['no_spp'])) ? '-' : $params['formpo']['listspp']['no_spp'];
         //
         session_start();
@@ -383,7 +387,11 @@ class PoController extends Controller {
                 $det = new DetailPo();
                 $det->attributes = $val;
                 $det->kd_barang = $val['data_barang']['kd_barang'];
-                $det->tgl_pengiriman = date("Y-m-d", strtotime($val['data_barang']['tgl_pengiriman']));
+                if (!empty($det - pengiriman)) {
+                    $det->tgl_pengiriman = date("Y-m-d", strtotime($val['data_barang']['tgl_pengiriman']));
+                } else {
+                    $det->tgl_pengiriman = NULL;
+                }
                 $det->nota = $model->nota;
                 $det->save();
             }
@@ -399,7 +407,11 @@ class PoController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params['formpo'];
-        $model->tanggal = date("Y-m-d", strtotime($params['formpo']['tanggal']));
+        if (!empty($model->tanggal)) {
+            $model->tanggal = date("Y-m-d", strtotime($params['formpo']['tanggal']));
+        } else {
+            $model->tanggal = NULL;
+        }
         $model->spp = (empty($params['formpo']['listspp']['no_spp'])) ? '-' : $params['formpo']['listspp']['no_spp'];
 
         if ($model->save()) {
@@ -411,6 +423,9 @@ class PoController extends Controller {
                     $det = new DetailPo();
                     $det->attributes = $val;
                     $det->kd_barang = $val['data_barang']['kd_barang'];
+                    if(empty($det->tgl_pengiriman)){
+                    $det->tgl_pengiriman = NULL;
+                    }
                     $det->nota = $model->nota;
                     $det->save();
                 }
