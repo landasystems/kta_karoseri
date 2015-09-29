@@ -79,7 +79,7 @@ class PembatalanchassisController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from(['serah_terima_in', 'customer', 'chassis'])
-                ->where('serah_terima_in.kd_cust = customer.kd_cust and serah_terima_in.kd_chassis = chassis.kd_chassis and serah_terima_in.status = 1 and serah_terima_in.no_spk = "-"')
+                ->where('serah_terima_in.kd_cust = customer.kd_cust and serah_terima_in.kd_chassis = chassis.kd_chassis and serah_terima_in.status = 1 and serah_terima_in.no_spk = "-" or serah_terima.no_spk is NULL')
                 ->select("*")
                 ->orderBy($sort);
 
