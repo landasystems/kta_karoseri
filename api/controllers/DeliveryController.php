@@ -135,7 +135,7 @@ class DeliveryController extends Controller {
             if($val['tujuan'] == "customer"){
             $models[$key]['customer'] = (!empty($customer)) ? $customer->attributes : array();
             }else{
-                $models[$key]['customer'] = ['nm_customer'=>""];
+                $models[$key]['customer'] = ['nm_customer'=>"",'alamat1'=>""];
             }
             $nowo = \app\models\Womasuk::findOne($val['no_wo']);
             $models[$key]['nowo'] = (!empty($nowo)) ? $nowo->attributes : array();

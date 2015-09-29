@@ -86,24 +86,13 @@ class WokeluarController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
 //        Yii::error($params['no_spk']['no_spk']);
         $query = new Query;
-//        $query->from(['customesr', 'chassis', 'tbl_karyawan', 'spk', 'serah_terima_in', 'warna', 'model'])
-//                ->where('chassis.kd_chassis = spk.kd_chassis
-//                        AND spk.nik = tbl_karyawan.nik
-//                        AND spk.kd_customer = customer.kd_cust AND serah_terima_in.no_spk = spk.no_spk AND serah_terima_in.kd_warna = warna.kd_warna AND spk.kd_model = model.kd_model AND spk.no_spk="' . $params['no_wo']['no_spk'] . '"')
-//                ->select("spk.*, tbl_karyawan.nama as sales,customer.nm_customer as customer, customer.nm_pemilik as pemilik, chassis.model_chassis as model_chassis,
-//                        chassis.merk as merk, chassis.tipe as tipe, serah_terima_in.kd_titipan, serah_terima_in.no_chassis, serah_terima_in.no_mesin,
-//                        serah_terima_in.tgl_terima, warna.warna as warna, model.model");
-        $query->from('spk')
-                ->join(' JOIN', 'customer as cs', 'spk.kd_customer = cs.kd_cust')
-                ->join('JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                ->join(' JOIN', 'chassis', 'chassis.kd_chassis = spk.kd_chassis')
-                ->join(' JOIN', 'wo_masuk', 'wo_masuk.no_spk = spk.no_spk')
-//                ->join(' JOIN', 'warna', 'sti.kd_warna = warna.kd_warna')
-                ->join(' JOIN', 'model', 'model.kd_model = spk.kd_model')
-                ->select("chassis.*,model.*,wo_masuk.in_spk_marketing, wo_masuk.tgl_kontrak, wo_masuk.foto")
-                ->where('spk.no_spk="' . $params['no_spk'] . '" and (wo_masuk.tgl_keluar IS NOT NULL or wo_masuk.tgl_keluar="0000-00-000")');
-
-
+        $query->from('view_wo_spk as vw')
+                ->join('LEFT JOIN', 'wo_masuk', 'wo_masuk.no_wo = vw.no_wo')
+                ->join('LEFT JOIN', 'chassis as c', 'c.kd_chassis = vw.kd_chassis')
+                ->join('LEFT JOIN', 'spk', 'spk.no_spk = vw.no_spk')
+                ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
+                ->select("vw.*,c.model_chassis,wo_masuk.in_spk_marketing,wo_masuk.tgl_kontrak")
+                ->where('vw.no_wo="' . $params['no_wo'] . '" ');
         $command = $query->createCommand();
         $models = $command->queryOne();
         
