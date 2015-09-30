@@ -33,7 +33,7 @@ class Wip extends \yii\db\ActiveRecord
     {
         return [
             [['act_finish'], 'safe'],
-            [['keterangan'], 'string'],
+            [['ket'], 'string'],
             [['no_wo', 'nik'], 'string', 'max' => 20],
             [['kd_kerja'], 'string', 'max' => 7],
             [['plan_start', 'plan_finish', 'act_start'], 'string', 'max' => 10]

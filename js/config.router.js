@@ -372,6 +372,16 @@ angular.module('app')
                                                 return $ocLazyLoad.load('js/controllers/validasibom.js');
                                             }]
                                     }})
+                                //bukaValidasi bom
+                                .state('transaksi.bukavalidasibom', {
+                                    url: '/bukavalidasibom',
+                                    templateUrl: 'tpl/t_bukavalidasibom/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load('js/controllers/bukavalidasibom.js');
+                                            }]
+                                    }})
                                 // SPK
                                 .state('transaksi.spk', {
                                     url: '/spk',

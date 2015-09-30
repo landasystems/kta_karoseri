@@ -229,6 +229,7 @@
                                     <tr>
                                         <th>Bagian</th>
                                         <th>Barang</th>
+                                        <th width="150">Harga</th>
                                         <th width="100">Qty / Satuan</th>
                                         <th width="300">Keterangan</th>
                                         <th width="80" ng-hide="is_view" style="margin:0px;padding:0px;"></th>
@@ -242,7 +243,10 @@
                                         <td>
                                             {{detail.barang.nm_barang}} 
                                         </td>
-                                        <td>    
+                                        <td align="right">
+                                            {{detail.barang.harga|currency}}
+                                        </td>
+                                        <td align="center">    
                                             {{detail.qty}} {{detail.barang.satuan}}
                                         </td>
                                         <td>

@@ -36,8 +36,8 @@
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
                             <td>{{row.no_spp}}</td>
                             <td>{{row.tgl_trans| date}}</td>
-                            <td>{{row.tgl1}}</td>
-                            <td>{{row.tgl2}}</td>
+                            <td>{{row.tgl1 | date}}</td>
+                            <td>{{row.tgl2 | date}}</td>
                             <td>
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
                                     <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
@@ -153,7 +153,7 @@
                                         <th style="text-align: center; font-weight: bold;">Saldo</th>
                                         <th style="text-align: center; font-weight: bold;">QTY</th>
                                         <th style="text-align: center; font-weight: bold;width:130px;">P</th>
-                                        <th width="120"></th>
+                                        <th width="120" ng-hide="is_view"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -182,7 +182,7 @@
                                         <td align="center">
                                             {{detail.p|date}}
                                         </td>
-                                        <td style="text-align: center;">
+                                        <td style="text-align: center;" ng-hide="is_view">
                                             <button ng-click="modal(detail)" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
                                             <button ng-click="removeRow($index)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
                                         </td>

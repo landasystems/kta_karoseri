@@ -22,13 +22,13 @@
                 </div>
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" ng-if="is_create">
             <label class="col-sm-2 control-label">Qty</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" ng-model="formmodal.qty" style="width:70px">
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" ng-if="is_create">
             <label class="col-sm-2 control-label">Keterangan</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" ng-model="formmodal.ket">
@@ -48,12 +48,12 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">No WO</label>
             <div class="col-sm-10">
-                <ui-select on-select="woSelected(formmodal,woMasuk,$item)" multiple ng-model="woMasuk" theme="bootstrap">
+                <ui-select  multiple ng-model="formmodal.no_wo" theme="bootstrap">
                     <ui-select-match placeholder="Pilih nomor Wo">{{$item.no_wo}}</ui-select-match>
                     <ui-select-choices refresh="cariWo($select.search)" repeat="val in listWo">
                         <div ng-bind-html="val.no_wo | highlight: $select.search"></div>
                         <small>
-                            Tgl Kontrak: {{val.tgl_kontrak | date}}
+                            Tgl Kontrak: {{val.tgl_kontrak| date}}
                             <!--telephone: {{val.no_tlp}}-->
                         </small>
                     </ui-select-choices>

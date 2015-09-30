@@ -122,6 +122,7 @@ app.controller('rolesCtrl', function($scope, Data, toaster) {
             "master_jnskomplain": false,
             "transaksi_bom": false,
             "transaksi_validasibom": false,
+            "transaksi_bukavalidasibom": false,
             "transaksi_tambahitem": false,
             "transaksi_cekbom": false,
             "transaksi_sti": false,

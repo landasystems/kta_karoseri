@@ -84,7 +84,7 @@
             <div class="panel-heading">
                 {{formtitle}}
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-hide="is_print == false" ng-show="is_view">
-                    <button type="button" class="btn btn-primary fa fa-print" ng-click="updt_st(form.id_spk)"  ng-print print-element-id="printArea" ng-disabled="status == '0'">&nbsp;Print</button>
+                    <button type="button" class="btn btn-primary fa fa-print" ng-click="updt_st(form.id_spk)"  ng-print print-element-id="printArea" ng-disabled="form.status == '1' && user.id != '1'">&nbsp;Print</button>
                 </div> 
             </div>
             <div class="panel-body">
@@ -204,7 +204,7 @@
             <tr>
                 <td colspan="5" style="padding: 8px;border: 1px solid #000">
                     <div style="border: 1px solid #000">
-                        <center><h3>SPK PREMIER</h3></center>
+                        <center><h3>SPK PRIMER</h3></center>
                     </div>
                 </td>
             </tr>

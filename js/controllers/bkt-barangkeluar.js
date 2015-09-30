@@ -14,6 +14,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     $scope.err_pengambilan = false;
 
     $scope.bukaPrint = function (form) {
+        console.log(form)
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
             Data.post('bbk/bukaprint/', {no_bbk: form}).then(function (result) {
                 if (result.status == 0) {
@@ -109,15 +110,20 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
         }
     }
 
-    $scope.addDetail = function (detail) {
-        if ($scope.err_pengambilan == false) {
-            $scope.detailBbk.unshift({
-                kd_barang: '',
-                jml: '',
-                ket: '',
-            });
+    $scope.addDetail = function () {
+        console.log($scope.detailBbk[0].ket);
+        if (typeof $scope.detailBbk[0].ket == "undefined" || $scope.detailBbk[0].ket == "") {
+            toaster.pop('error', "Keterangan tidak boleh kosong");
         } else {
-            toaster.pop('error', "Sisa pengambilan bahan telah habis");
+            if ($scope.err_pengambilan == false) {
+                $scope.detailBbk.unshift({
+                    kd_barang: '',
+                    jml: '',
+                    ket: '',
+                });
+            } else {
+                toaster.pop('error', "Sisa pengambilan bahan telah habis");
+            }
         }
     };
 

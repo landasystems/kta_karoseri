@@ -10,7 +10,21 @@ app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
         name: 'imageFilter',
         fn: function (item) {
             var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+            var x = '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+            if(!x) {
+                toaster.pop('error', "Jenis gambar tidak sesuai");
+            }
+            return x;
+        }
+    });
+    
+    uploader.filters.push({
+        name: 'sizeFilter', 
+        fn: function (item) {
+            var xz = item.size <= 1048576;
+            if(!xz) {
+                toaster.pop('error', "Ukuran gambar tidak boleh lebih dari 1 MB");
+            }
         }
     });
     //init data
@@ -101,6 +115,9 @@ app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        Data.get('delivery/kode').then(function (data) {
+            $scope.form.no_delivery = data.kode;
+        });
         $scope.form.tgl_delivery = new Date();
 
     };

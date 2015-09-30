@@ -73,12 +73,20 @@ class PoController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->query()->read();
-        $kode_mdl = (substr($models['nota'], -4) + 1);
-        $kode = substr('0000' . $kode_mdl, strlen($kode_mdl));
-        $kode_tahun = substr(date('Y'), -2);
+
+        $cek = TransPo::find()
+                ->where('nota = "PCH' . date("y") . '0001"')
+                ->One();
+        if (!empty($cek)) {
+            $kode_mdl = (substr($models['nota'], -4) + 1);
+            $kode = substr('0000' . $kode_mdl, strlen($kode_mdl));
+            $kode = "PCH" . date("y") . $kode;
+        } else {
+            $kode = "PCH" . date("y") . '0001';
+        }
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => 'PCH' . $kode_tahun . $kode));
+        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionIndex() {
@@ -355,8 +363,8 @@ class PoController extends Controller {
 
     public function actionBukaprint() {
         $params = json_decode(file_get_contents("php://input"), true);
+//        Yii::error($params);
         $centang = $params['nota'];
-
         foreach ($centang as $key => $val) {
             $status = TransPo::findOne($key);
             $status->status = 0;
@@ -369,7 +377,11 @@ class PoController extends Controller {
         $model = new TransPo();
         $model->attributes = $params['formpo'];
         $model->suplier = $params['formpo']['supplier']['kd_supplier'];
-        $model->tanggal = date("Y-m-d", strtotime($params['formpo']['tanggal']));
+        if (!empty($model->tanggal)) {
+            $model->tanggal = date("Y-m-d", strtotime($params['formpo']['tanggal']));
+        } else {
+            $model->tanggal = NULL;
+        }
         $model->spp = (empty($params['formpo']['listspp']['no_spp'])) ? '-' : $params['formpo']['listspp']['no_spp'];
         //
         session_start();
@@ -383,7 +395,11 @@ class PoController extends Controller {
                 $det = new DetailPo();
                 $det->attributes = $val;
                 $det->kd_barang = $val['data_barang']['kd_barang'];
-                $det->tgl_pengiriman = date("Y-m-d", strtotime($val['data_barang']['tgl_pengiriman']));
+                if (!empty($det -> tgl_pengiriman)) {
+                    $det->tgl_pengiriman = date("Y-m-d", strtotime($val['data_barang']['tgl_pengiriman']));
+                } else {
+                    $det->tgl_pengiriman = NULL;
+                }
                 $det->nota = $model->nota;
                 $det->save();
             }
@@ -399,7 +415,11 @@ class PoController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params['formpo'];
-        $model->tanggal = date("Y-m-d", strtotime($params['formpo']['tanggal']));
+        if (!empty($model->tanggal)) {
+            $model->tanggal = date("Y-m-d", strtotime($params['formpo']['tanggal']));
+        } else {
+            $model->tanggal = NULL;
+        }
         $model->spp = (empty($params['formpo']['listspp']['no_spp'])) ? '-' : $params['formpo']['listspp']['no_spp'];
 
         if ($model->save()) {
@@ -411,6 +431,9 @@ class PoController extends Controller {
                     $det = new DetailPo();
                     $det->attributes = $val;
                     $det->kd_barang = $val['data_barang']['kd_barang'];
+                    if (empty($det->tgl_pengiriman)) {
+                        $det->tgl_pengiriman = NULL;
+                    }
                     $det->nota = $model->nota;
                     $det->save();
                 }
