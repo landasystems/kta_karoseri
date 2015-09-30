@@ -88,7 +88,7 @@
                             <label class="col-sm-4 control-label">Tanggal Delivery</label>
                             <div class="col-sm-5">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl" is-open="opened1" ng-click="open1($event)"/>
+                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-disabled="is_view" ng-model="form.tgl" is-open="opened1" ng-click="open1($event)"/>
                                     <span class="input-group-addon">
                                         <i class="fa fa-calendar-o"></i>
                                     </span>
@@ -126,7 +126,7 @@
                                     <tr ng-repeat="detail in detUjimutu">
                                         <td width="18%">
                                             <div class="input-group">
-                                                <ui-select on-select="pilih(detail, $item)" ng-model="detail.nowo" theme="bootstrap">
+                                                <ui-select on-select="pilih(detail, $item)" ng-model="detail.nowo" theme="bootstrap" ng-disabled="is_view">
                                                     <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
                                                     <ui-select-choices refresh="cariProduk($select.search)" repeat="val in results">
                                                         {{val.no_wo}}

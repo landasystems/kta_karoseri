@@ -96,7 +96,7 @@
                             <label class="col-sm-4 control-label">No. Wo</label>
                             <div class="col-sm-8">
                                 <div class="input-group">
-                                    <ui-select on-select="pilih(form, $item)" ng-model="form.no_wo" theme="bootstrap">
+                                    <ui-select on-select="pilih(form, $item)" ng-model="form.no_wo" theme="bootstrap" ng-disabled="is_view">
                                         <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
                                         <ui-select-choices refresh="cariProduk($select.search)" repeat="val in results">
                                             {{val.no_wo}}
@@ -122,7 +122,7 @@
                             <label class="col-sm-4 control-label">PIC</label>
                             <div class="col-sm-8">
                                 <div class="input-group">
-                                    <ui-select  ng-model="form.pic" theme="bootstrap">
+                                    <ui-select  ng-model="form.pic" theme="bootstrap" ng-disabled="is_view">
                                         <ui-select-match>{{$select.selected.nama}}</ui-select-match>
                                         <ui-select-choices refresh="cariOrang($select.search)" repeat="val in resultsKaryawan">
                                             {{val.nama}}
@@ -147,7 +147,7 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Bagian</label>
                             <div class="col-sm-8">
-                                <ui-select on_select="getjabatan(form)"   ng-model="form.jabatan" theme="bootstrap">
+                                <ui-select on_select="getjabatan(form)"   ng-model="form.jabatan" theme="bootstrap" ng-disabled="is_view">
                                     <ui-select-match placeholder="Cari Jabatan">{{$select.selected.jabatan}}</ui-select-match>
                                     <ui-select-choices group-by="'group'" repeat="dokter in sJabatan | filter: $select.search">
                                         <div ng-bind-html="dokter.jabatan | highlight: $select.search"></div>
@@ -172,7 +172,7 @@
                             <table class="table table-striped b-t b-light">
                                 <tr ng-repeat="detail in detKerja">
                                     <td>
-                                <ui-select tagging="tagTransform"  on-select="nambahIsi(detail,$item)" tagging-label="false" ng-model="detail.nm_kerja" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 600px;" title="Choose a color">
+                                <ui-select tagging="tagTransform"  on-select="nambahIsi(detail,$item)" tagging-label="false" ng-model="detail.nm_kerja" theme="bootstrap" sortable="true" ng-disabled="is_view" style="width: 600px;" title="Choose a color">
                                     <ui-select-match placeholder="Pilih jenis kerjaan">{{$select.selected.nm_kerja}}</ui-select-match>
                                     <ui-select-choices repeat="kerja in sKerja | filter:$select.search" >
                                         <small>

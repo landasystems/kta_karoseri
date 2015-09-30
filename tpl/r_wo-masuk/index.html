@@ -15,7 +15,7 @@
                             <li><a href="#" ng-click="printchart()">Print Chart</a></li>
                         </ul>
                     </div>
-                    <div class="pull-right dropdown" style="margin-top: -4px" dropdown="">
+                    <div class="pull-right dropdown" style="margin-top: 0px" dropdown="">
                         <button type="button" class="btn btn-success" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Rekap WO Masuk <span class="caret"></span></button>
                         <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 260px;">
                             <li><a href="#" ng-click="print()">Cetak</a></li>
@@ -150,7 +150,7 @@
                                 <tr>
                                     <td >Periode</td>
 
-                                    <td> : {{start | date:'dd - mmm - YYY'}} - {{end | date:'dd - mmm - YYY'}}</td>
+                                    <td> : {{start| date:'dd - mmm - YYY'}} - {{end| date:'dd - mmm - YYY'}}</td>
                                 </tr>
                                 <tr>
                                     <td>Cetak</td>
@@ -188,8 +188,13 @@
             <highchart id="chart1" config="chartSales" class="span10"></highchart>             
             </td>
             <td >
-            <highchart id="chart1" config="chartModel" class="span10"></highchart>
+            
             </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <highchart id="chart1" config="chartModel" class="span10"></highchart>
+                </td>
             </tr>
         </table>
 
