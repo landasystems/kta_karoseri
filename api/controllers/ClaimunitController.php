@@ -141,14 +141,18 @@ class ClaimunitController extends Controller {
         $tglDelivery = $command->query()->read();
 
         if (!empty($tglDelivery)) {
-            $query = new Query;
-            $query->select('SELECT DATE_ADD("' . $tglDelivery['tgl_delivery'] . '", INTERVAL 1 YEAR) as tgl');
-            $tglAkhirGaransi = $query->createCommand()->query()->read();
+            $connection = \Yii::$app->db;
+            $sql = 'select DATE_ADD( "' . $tglDelivery['tgl_delivery'] . '", INTERVAL 1 YEAR ) as tgl';
+            $tglAkhirGaransi = $connection->createCommand($sql)->query()->read();
 
-            $query->select('SELECT DATEDIFF("' . $tglAkhirGaransi['tgl'] . '", "' . date("Y-m-d") . '") as sisa');
-            $s = $query->createCommand()->query()->read();
+            $sql = 'select DATEDIFF("' . $tglAkhirGaransi['tgl'] . '", "' . date("Y-m-d") . '") as sisa';
+            $s = $connection->createCommand($sql)->query()->read();
 
             $sisa = $s['sisa'];
+        }
+        
+        if($sisa < 0){
+            $sisa = 0;
         }
 
         $this->setHeader(200);
@@ -317,7 +321,7 @@ class ClaimunitController extends Controller {
             $start = '';
             $end = '';
         }
-        
+
         $query->groupBy("dc.kd_jns")
                 ->select("jk.stat,jk.bag,jk.jns_komplain,count(dc.kd_jns) as jumlah");
 
@@ -341,7 +345,7 @@ class ClaimunitController extends Controller {
             }
         }
 
-        return json_encode(array('Interior' => $in, 'Eksterior' => $ex,'start'=>$start,'end'=>$end), JSON_PRETTY_PRINT);
+        return json_encode(array('Interior' => $in, 'Eksterior' => $ex, 'start' => $start, 'end' => $end), JSON_PRETTY_PRINT);
     }
 
 }
