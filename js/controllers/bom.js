@@ -351,7 +351,7 @@ app.controller('rekapBomCtrl', function ($scope, Data) {
     }
     $scope.cariWo = function ($query) {
         if ($query.length >= 3) {
-            Data.get('wo/wospkselesai', {nama: $query}).then(function (data) {
+            Data.get('wo/wospk', {nama: $query}).then(function (data) {
                 $scope.results = data.data;
             });
         }
