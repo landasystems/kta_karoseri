@@ -69,24 +69,24 @@
                 <table class="table table-striped table-hover" >
                     <thead>
                         <tr>
-                            <th>Tgl</th>
-                            <th>Customer</th>
+                            <th>No. Spk</th>
                             <th>Kode Titipan</th>
                             <th>No. Wo</th>
+                            <th>Tgl</th>
+                            <th>Customer</th>
                             <th>Merk/Type</th>
                             <th>Model</th>
-                            <th>No. Spk</th>
                         </tr>
                     </thead>
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
+                            <td>{{row.no_spk}}</td><td>{{row.kd_titipan}}</td>
+                            <td>{{row.no_wo}}</td>
                             <td>{{row.tgl| date}}</td>
                             <td>{{row.nm_customer}}</td>
-                            <td>{{row.kd_titipan}}</td>
-                            <td>{{row.no_wo}}</td>
                             <td>{{row.merk}}/{{row.tipe}}</td>
                             <td>{{row.model}}</td>
-                            <td>{{row.no_spk}}</td>
+
                         </tr>
                     </tbody>
                     <tbody ng-show="isLoading">

@@ -109,15 +109,20 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
         }
     }
 
-    $scope.addDetail = function (detail) {
-        if ($scope.err_pengambilan == false) {
-            $scope.detailBbk.unshift({
-                kd_barang: '',
-                jml: '',
-                ket: '',
-            });
+    $scope.addDetail = function () {
+        console.log($scope.detailBbk[0].ket);
+        if (typeof $scope.detailBbk[0].ket == "undefined" || $scope.detailBbk[0].ket == "") {
+            toaster.pop('error', "Keterangan tidak boleh kosong");
         } else {
-            toaster.pop('error', "Sisa pengambilan bahan telah habis");
+            if ($scope.err_pengambilan == false) {
+                $scope.detailBbk.unshift({
+                    kd_barang: '',
+                    jml: '',
+                    ket: '',
+                });
+            } else {
+                toaster.pop('error', "Sisa pengambilan bahan telah habis");
+            }
         }
     };
 

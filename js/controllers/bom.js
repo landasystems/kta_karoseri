@@ -10,18 +10,18 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
         fn: function (item) {
             var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
             var x = '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-            if(!x) {
+            if (!x) {
                 toaster.pop('error', "Jenis gambar tidak sesuai");
             }
             return x;
         }
     });
-    
+
     uploader.filters.push({
-        name: 'sizeFilter', 
+        name: 'sizeFilter',
         fn: function (item) {
             var xz = item.size <= 1048576;
-            if(!xz) {
+            if (!xz) {
                 toaster.pop('error', "Ukuran gambar tidak boleh lebih dari 1 MB");
             }
         }
@@ -349,33 +349,33 @@ app.controller('rekapBomCtrl', function ($scope, Data) {
             window.open('api/web/bom/excel?print=true', "", "width=500");
         });
     }
-    $scope.callServer2 = function callServer(tableState) {
-        $scope.tableStateRef = tableState;
-        $scope.isLoading = true;
-        var offset = tableState.pagination.start || 0;
-        var limit = tableState.pagination.number || 10;
-        var param = {offset: offset, limit: limit};
-        if (tableState.sort.predicate) {
-            param['sort'] = tableState.sort.predicate;
-            param['order'] = tableState.sort.reverse;
+    $scope.cariWo = function ($query) {
+        if ($query.length >= 3) {
+            Data.get('wo/wospkselesai', {nama: $query}).then(function (data) {
+                $scope.results = data.data;
+            });
         }
-        if (tableState.search.predicateObject) {
-            param['filter'] = tableState.search.predicateObject;
-        }
-        paramRef = param;
-        Data.get('bom/rekaprealisasiwo', param).then(function (data) {
-            $scope.displayed = data.data;
-            tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
+    };
+    $scope.r_bomWoSrc = [];
+    $scope.r_bomWo = [];
+    $scope.tmpBomWo = function (form) {
+        var data = form;
+        Data.post('bom/rekaprealisasiwo', data).then(function (data) {
+            $scope.r_bomWoSrc = [];
+            angular.forEach(data.data, function ($value, $key) {
+                $scope.r_bomWoSrc.push($value);
+            });
         });
-        $scope.isLoading = false;
     };
     $scope.excelRekapRealisasiWo = function () {
-        Data.get('bom/rekaprealisasiwo', paramRef).then(function (data) {
+        var data = $scope.form;
+        Data.post('bom/rekaprealisasiwo', data).then(function (data) {
             window.location = 'api/web/bom/excelrealisasiwo';
         });
     }
     $scope.printRekapRealisasiWo = function () {
-        Data.get('bom/rekaprealisasiwo', paramRef).then(function (data) {
+        var data = $scope.form;
+        Data.post('bom/rekaprealisasiwo', data).then(function (data) {
             window.open('api/web/bom/excelrealisasiwo?print=true', "", "width=500");
         });
     }

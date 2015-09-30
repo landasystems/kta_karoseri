@@ -8,12 +8,16 @@ $i = 0;
 
 $detBbk = array();
 foreach ($modelbbk as $valBbk) {
-    $detBbk[$valBbk['kd_barang']]['jml'] = isset($detBbk[$valBbk['kd_barang']]['jml']) ? $detBbk[$valBbk['kd_barang']]['jml'] + $valBbk['jml'] : $valBbk['jml'];
+    $detBbk[$valBbk['id_jabatan']][$valBbk['kd_barang']]['jml'] = isset($detBbk[$valBbk['id_jabatan']][$valBbk['kd_barang']]['jml']) ? $detBbk[$valBbk['id_jabatan']][$valBbk['kd_barang']]['jml'] + $valBbk['jml'] : $valBbk['jml'];
+    if ($valBbk['ket'] != "-") {
+        $detBbk[$valBbk['id_jabatan']][$valBbk['kd_barang']]['ket'][] = $valBbk['ket'];
+    }
 }
 
 $data = array();
 foreach ($models as $val) {
-    $jKeluar = isset($detBbk[$val['kd_barang']]['jml']) ? $detBbk[$val['kd_barang']]['jml'] : ' ';
+    $jKeluar = isset($detBbk[$val['id_jabatan']][$val['kd_barang']]['jml']) ? $detBbk[$val['id_jabatan']][$val['kd_barang']]['jml'] : 0;
+    $ket = isset($detBbk[$val['id_jabatan']][$val['kd_barang']]['ket']) ? join(',', $detBbk[$val['id_jabatan']][$val['kd_barang']]['ket']) : '-';
 
     $data[$val['no_wo']]['no_wo'] = $val['no_wo'];
     $data[$val['no_wo']]['jab'][$val['id_jabatan']]['jabatan'] = $val['jabatan'];
@@ -22,7 +26,7 @@ foreach ($models as $val) {
     $data[$val['no_wo']]['jab'][$val['id_jabatan']]['body'][$val['kd_barang']]['nama_barang'] = $val['nm_barang'];
     $data[$val['no_wo']]['jab'][$val['id_jabatan']]['body'][$val['kd_barang']]['satuan'] = $val['satuan'];
     $data[$val['no_wo']]['jab'][$val['id_jabatan']]['body'][$val['kd_barang']]['qty'] = $val['qty'];
-    $data[$val['no_wo']]['jab'][$val['id_jabatan']]['body'][$val['kd_barang']]['ket'] = $val['ket'];
+    $data[$val['no_wo']]['jab'][$val['id_jabatan']]['body'][$val['kd_barang']]['ket'] = $ket;
     $data[$val['no_wo']]['jab'][$val['id_jabatan']]['body'][$val['kd_barang']]['harga'] = $val['harga'];
     $data[$val['no_wo']]['jab'][$val['id_jabatan']]['body'][$val['kd_barang']]['jml_keluar'] = $jKeluar;
     $i++;
