@@ -645,7 +645,8 @@ class BomController extends Controller {
         $models = $command->queryAll();
 
         $det = BomDet::find()
-                ->with(['jabatan', 'barang'])
+                ->joinWith(['jabataan', 'barang'])
+                ->orderBy('tbl_jabatan.urutan_produksi ASC, tbl_jabatan.jabatan ASC, barang.nm_barang ASC')
                 ->where(['kd_bom' => $kd_bom])
                 ->all();
 
