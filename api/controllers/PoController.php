@@ -73,12 +73,20 @@ class PoController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->query()->read();
-        $kode_mdl = (substr($models['nota'], -4) + 1);
-        $kode = substr('0000' . $kode_mdl, strlen($kode_mdl));
-        $kode_tahun = substr(date('Y'), -2);
+
+        $cek = TransPo::find()
+                ->where('nota = "PCH' . date("y") . '0001"')
+                ->One();
+        if (!empty($cek)) {
+            $kode_mdl = (substr($models['nota'], -4) + 1);
+            $kode = substr('0000' . $kode_mdl, strlen($kode_mdl));
+            $kode = "PCH" . date("y") . $kode;
+        } else {
+            $kode = "PCH" . date("y") . '0001';
+        }
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => 'PCH' . $kode_tahun . $kode));
+        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionIndex() {
@@ -355,13 +363,13 @@ class PoController extends Controller {
 
     public function actionBukaprint() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $centang = $params['nota'];
-
-        foreach ($centang as $key => $val) {
-            $status = TransPo::findOne($key);
-            $status->status = 0;
-            $status->save();
-        }
+        Yii::error($params);
+//        $centang = $params['nota'];
+//        foreach ($centang as $key => $val) {
+//            $status = TransPo::findOne($key);
+//            $status->status = 0;
+//            $status->save();
+//        }
     }
 
     public function actionCreate() {
@@ -423,8 +431,8 @@ class PoController extends Controller {
                     $det = new DetailPo();
                     $det->attributes = $val;
                     $det->kd_barang = $val['data_barang']['kd_barang'];
-                    if(empty($det->tgl_pengiriman)){
-                    $det->tgl_pengiriman = NULL;
+                    if (empty($det->tgl_pengiriman)) {
+                        $det->tgl_pengiriman = NULL;
                     }
                     $det->nota = $model->nota;
                     $det->save();

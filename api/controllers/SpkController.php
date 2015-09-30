@@ -262,6 +262,8 @@ class SpkController extends Controller {
         $data['no_wo'] = [
             'no_wo' => $no_wo
         ];
+        //Cek status print
+        $cek = $data['status'];
         
         //PIC
         $pic = \app\models\Karyawan::find()
@@ -300,10 +302,19 @@ class SpkController extends Controller {
         foreach ($detail as $key => $asu) {
             $coba[$key]['nm_kerja'] = $asu;
         }
+        
+        session_start();
+        if ($cek == 1 and $_SESSION['user']['id'] != "1") {
+            $msg = 'Detail PO sudah dicetak, silahkan menghubungi admin untuk mencetak ulang';
+            $print = 1;
+        } else {
+            $msg = '';
+            $print = 0;
+        }
 
 
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $data, 'detail' => $coba, 'jabatan' => $listjabatan), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'detail' => $coba, 'jabatan' => $listjabatan, 'msg' => $msg, 'print' => $print), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {

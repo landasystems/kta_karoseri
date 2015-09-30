@@ -26,6 +26,7 @@ class DeliveryController extends Controller {
                     'no_wo' => ['post'],
                     'det_nowo' => ['get'],
                     'rekap' => ['get'],
+                    'kode' => ['get'],
                     'excel' => ['get'],
                 ],
             ]
@@ -69,6 +70,32 @@ class DeliveryController extends Controller {
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'customer' => $models));
+    }
+
+    public function actionKode() {
+        $query = new Query;
+        $query->from('delivery')
+                ->select('*')
+                ->orderBy('no_delivery DESC')
+                ->limit(1);
+
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+
+        $cek = Delivery::find()
+                ->where('no_delivery = "DU-' . date("y") . '0001"')
+                ->One();
+//        Yii::error($cek);
+        if (!empty($cek)) {
+            $kode_mdl = (substr($models['no_delivery'], -4) + 1);
+            $kode = substr('0000' . $kode_mdl, strlen($kode_mdl));
+            $kode = "DU-" . date("y") . $kode;
+        } else {
+            $kode = "DU-" . date("y") . '0001';
+        }
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
     public function actionIndex() {
@@ -132,10 +159,10 @@ class DeliveryController extends Controller {
         $totalItems = $query->count();
         foreach ($models as $key => $val) {
             $customer = \app\models\Customer::findOne($val['kd_cust']);
-            if($val['tujuan'] == "customer"){
-            $models[$key]['customer'] = (!empty($customer)) ? $customer->attributes : array();
-            }else{
-                $models[$key]['customer'] = ['nm_customer'=>"",'alamat1'=>""];
+            if ($val['tujuan'] == "customer") {
+                $models[$key]['customer'] = (!empty($customer)) ? $customer->attributes : array();
+            } else {
+                $models[$key]['customer'] = ['nm_customer' => "", 'alamat1' => ""];
             }
             $nowo = \app\models\Womasuk::findOne($val['no_wo']);
             $models[$key]['nowo'] = (!empty($nowo)) ? $nowo->attributes : array();
@@ -251,18 +278,17 @@ class DeliveryController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
 //        Yii::error($params);
         $model = new Delivery();
-        
+
         $model->attributes = $params;
-        if($params['tujuan'] == 'customer'){
+        if ($params['tujuan'] == 'customer') {
             $model->kd_cust = $params['kd_cust'];
             $model->cabang = "";
-        }else{
-             $model->kd_cust = "";
+        } else {
+            $model->kd_cust = "";
             $model->cabang = $params['cabang'];
         }
         if ($model->tujuan == "customer") {
             $model->status = 1;
-     
         } else {
             $model->status = 0;
         }
@@ -281,11 +307,11 @@ class DeliveryController extends Controller {
         \Yii::error($params);
         $model = $this->findModel($id);
         $model->attributes = $params;
-        if($params['tujuan'] == 'customer'){
+        if ($params['tujuan'] == 'customer') {
             $model->kd_cust = $params['kd_cust'];
             $model->cabang = "";
-        }else{
-             $model->kd_cust = "";
+        } else {
+            $model->kd_cust = "";
             $model->cabang = $params['cabang'];
         }
 //        $model->no_wo = $params['no_wo']['no_wo'];

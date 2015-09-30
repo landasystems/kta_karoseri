@@ -115,6 +115,9 @@ app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
+        Data.get('delivery/kode').then(function (data) {
+            $scope.form.no_delivery = data.kode;
+        });
         $scope.form.tgl_delivery = new Date();
 
     };

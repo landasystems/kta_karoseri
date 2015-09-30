@@ -39,6 +39,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 
 
     $scope.bukaPrint = function (form) {
+        console.log(form);
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
             Data.post('po/bukaprint/', {nota: form}).then(function (result) {
                 if (result.status == 0) {
