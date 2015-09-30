@@ -17,9 +17,6 @@ foreach ($models as $key => $val) {
     } else {
         $nowo[] = $val['no_wo'];
         $jml += $val['jmlspp'];
-//        if (empty($nowo))
-//            $wo = $val['no_wo'];
-//        else
         $wo = join(", ", $nowo);
 
         $data[$val['jenis_brg']]['title'] = $val['jenis_brg'];

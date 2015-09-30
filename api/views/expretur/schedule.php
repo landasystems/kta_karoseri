@@ -14,7 +14,7 @@ foreach ($models as $val) {
     $data[$val['no_wo']]['body'][$i]['pf'] = $val['plan_finish'];
     $data[$val['no_wo']]['body'][$i]['as'] = $val['act_start'];
     $data[$val['no_wo']]['body'][$i]['af'] = $val['act_finish'];
-    $data[$val['no_wo']]['body'][$i]['keterangan'] = $val['keterangan'];
+    $data[$val['no_wo']]['body'][$i]['ket'] = $val['ket'];
     $i++;
 }
 ?>
@@ -92,7 +92,7 @@ foreach ($models as $val) {
                     <td class="border-all" valign="top" style="border-top: none; border-bottom: none;" align="right"><?php echo $scedule['pf'] ?></td>
                     <td class="border-all" valign="top" style="border-top: none; border-bottom: none;" align="right"><?php echo $scedule['as'] ?></td>
                     <td class="border-all" valign="top" style="border-top: none; border-bottom: none;" align="right"><?php echo $scedule['af'] ?></td>
-                    <td class="border-all" colspan="2" valign="top" style="border-top: none; border-bottom: none;"><?php echo $scedule['keterangan'] ?></td>
+                    <td class="border-all" colspan="2" valign="top" style="border-top: none; border-bottom: none;"><?php echo $scedule['ket'] ?></td>
                 </tr>
                 <?php
             }

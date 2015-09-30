@@ -121,6 +121,8 @@ app.controller('spkaroseriCtrl', function ($scope, Data, toaster) {
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
         $scope.form.tgl = new Date();
+        $scope.form.kat_spk = 'stok';
+        $scope.kode('stok');
         $scope.detailBbk = [{
                 kd_barang: '',
                 jml: '',
