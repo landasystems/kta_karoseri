@@ -12,7 +12,7 @@
                     <div class="col-md-8 col-sm-12">
                         <div class="btn-group pull-right" role="group">
                             <div class="pull-right dropdown" style="margin-top: 0px" dropdown="">
-                                <button type="button" class="btn btn-info" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Rekap BBM <span class="caret"></span></button>
+                                <button type="button" class="btn btn-primary" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Rekap BBM <span class="caret"></span></button>
                                 <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 260px;">
                                     <li><a href="#" ng-click="printRekap()">Cetak</a></li>
                                     <li><a href="#" ng-click="excelRekap()">Export Excel</a></li>
@@ -96,7 +96,7 @@
                     </thead>
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed">
-                            <td>{{row.tanggal_nota| date:'dd - MMM - yyyy'}}</td>
+                            <td>{{row.tanggal_nota| date:'dd/M/yy'}}</td>
                             <td>{{row.no_bbm}}</td>
                             <td>{{row.kd_barang}}</td>
                             <td>{{row.nm_barang}}</td>
