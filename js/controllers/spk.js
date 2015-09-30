@@ -15,6 +15,20 @@ app.controller('spkCtrl', function ($scope, Data, toaster) {
         }
         $scope.detKerja.unshift(newDet);
     }
+    
+    $scope.bukaPrint = function (form) {
+//        console.log(form);
+        if (confirm("Apa anda yakin akan memproses item ini ?")) {
+            Data.post('womasuk/bukaprint/', {nota: form}).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan");
+                } else {
+                    toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
+                }
+            });
+        }
+    }
+    
     $scope.removeRow = function (paramindex) {
         var comArr = eval($scope.detKerja);
         if (comArr.length > 1) {

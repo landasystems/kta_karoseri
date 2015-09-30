@@ -14,6 +14,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     $scope.err_pengambilan = false;
 
     $scope.bukaPrint = function (form) {
+        console.log(form)
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
             Data.post('bbk/bukaprint/', {no_bbk: form}).then(function (result) {
                 if (result.status == 0) {

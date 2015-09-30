@@ -66,9 +66,9 @@
                             <td>{{row.tanggal| date}}</td>
                             <td>{{row.dikirim_ke}}</td>
                             <td ng-hide="is_view == true">
-                                <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
-                                    <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" ></button>
+                                <div class="btn-group pull-right"  role="group" style="margin-top: -3px;">
+                                    <button type="button" ng-show="row.status == 0" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
+                                    <button type="button" ng-show="row.status == 0 " class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" ></button>
                                 </div> 
                             </td>
                         </tr>
@@ -117,7 +117,7 @@
                                     <label class="col-sm-3 control-label">Tanggal</label>
                                     <div class="col-sm-6">
                                         <div class="input-group">
-                                            <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tanggal" is-open="opened1" ng-click="open1($event)"/>
+                                            <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-disabled="is_view" ng-model="form.tanggal" is-open="opened1" ng-click="open1($event)"/>
                                             <span class="input-group-addon">
                                                 <i class="glyphicon glyphicon-calendar"></i>
                                             </span>
@@ -246,7 +246,7 @@
                                         </td>
                                         <td style="width:200px;">
                                             <div class="input-group">
-                                                <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="detail.data_barang.tgl_pengiriman" is-open="openedDet == $index" ng-change="setStatus()" ng-click="openDet($event, $index)"/>
+                                                <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-disabled="is_view" ng-model="detail.data_barang.tgl_pengiriman" is-open="openedDet == $index" ng-change="setStatus()" ng-click="openDet($event, $index)"/>
                                                 <span class="input-group-addon">
                                                     <i class="glyphicon glyphicon-calendar"></i>
                                                 </span>
@@ -426,7 +426,7 @@
             <tbody  width="700">
                 <tr class="table_po tr">
                     <th style="text-align: center;width: 5%">No.</th>
-                    <th style="width:54%;">URAIAN</th>
+                    <th style="width:200px;">URAIAN</th>
                     <th style="text-align: center;width:5%">KWANTUM</th>
                     <th style="text-align: center;width:6%">SATUAN</th>
                     <th style="text-align: center;">HARGA</th>
@@ -434,7 +434,7 @@
                 </tr>
                 <tr class="table_po tr" ng-repeat="detail in detsPo">
                     <td style="text-align:center;">{{detail.data_barang.no}}</td>
-                    <td>{{detail.data_barang.nm_barang}}</td>
+                    <td>{{detail.data_barang.nm_barang}} - {{detail.ket}}</td>
                     <td style="text-align:center;">{{detail.jml}}</td>
                     <td style="text-align:center;">{{detail.data_barang.satuan}}</td>
                     <td style="text-align:right;" width="19%">{{detail.harga| number}}</td>
