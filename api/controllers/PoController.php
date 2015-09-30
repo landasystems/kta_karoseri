@@ -363,13 +363,13 @@ class PoController extends Controller {
 
     public function actionBukaprint() {
         $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($params);
-//        $centang = $params['nota'];
-//        foreach ($centang as $key => $val) {
-//            $status = TransPo::findOne($key);
-//            $status->status = 0;
-//            $status->save();
-//        }
+//        Yii::error($params);
+        $centang = $params['nota'];
+        foreach ($centang as $key => $val) {
+            $status = TransPo::findOne($key);
+            $status->status = 0;
+            $status->save();
+        }
     }
 
     public function actionCreate() {
@@ -395,7 +395,7 @@ class PoController extends Controller {
                 $det = new DetailPo();
                 $det->attributes = $val;
                 $det->kd_barang = $val['data_barang']['kd_barang'];
-                if (!empty($det - pengiriman)) {
+                if (!empty($det -> tgl_pengiriman)) {
                     $det->tgl_pengiriman = date("Y-m-d", strtotime($val['data_barang']['tgl_pengiriman']));
                 } else {
                     $det->tgl_pengiriman = NULL;

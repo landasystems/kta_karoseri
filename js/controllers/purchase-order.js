@@ -8,6 +8,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     $scope.is_print = false;
     $scope.is_view = false;
     $scope.is_create = false;
+    $scope.gantiStatus = {};
     $scope.msg = '';
 
     $scope.callServer = function callServer(tableState) {
@@ -39,7 +40,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 
 
     $scope.bukaPrint = function (form) {
-        console.log(form);
+//        console.log(form);
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
             Data.post('po/bukaprint/', {nota: form}).then(function (result) {
                 if (result.status == 0) {
@@ -84,7 +85,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
                 $scope.resultsbrg = data.data;
             });
         }
-        console.log($scope.resultsbrg);
+//        console.log($scope.resultsbrg);
     }
 
     $scope.pilih = function (detail, $item) {
