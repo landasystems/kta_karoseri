@@ -202,7 +202,7 @@ class PoController extends Controller {
                 ->join('JOIN', 'barang', 'barang.kd_barang = dpo.kd_barang')
                 ->join('LEFT JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
                 ->orderBy($sort)
-                ->select("dpo.*,det_spp.*,trans_po.* ,jenis_brg.jenis_brg, supplier.nama_supplier,trans_bbm.surat_jalan,det_bbm.tgl_terima, det_bbm.no_bbm, barang.nm_barang, barang.satuan,barang.harga as hrg_barang");
+                ->select("dpo.*,det_spp.*,trans_po.* ,jenis_brg.jenis_brg, supplier.nama_supplier,trans_bbm.surat_jalan,det_bbm.tgl_terima, det_bbm.no_bbm, barang.kd_barang as kode_barang,barang.nm_barang, barang.satuan,barang.harga as hrg_barang");
         //filter
 
         if (isset($params['filter'])) {

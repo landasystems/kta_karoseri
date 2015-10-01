@@ -15,7 +15,7 @@ foreach ($models as $key => $val) {
 
     $data[$val['bayar']]['nota'][$val['nota']]['body'][$i]['tgl_terima'] = date("d-m-Y", strtotime($val['tgl_terima']));
     $data[$val['bayar']]['nota'][$val['nota']]['body'][$i]['no_bbm'] = $val['no_bbm'];
-    $data[$val['bayar']]['nota'][$val['nota']]['body'][$i]['kd_barang'] = $val['kd_barang'];
+    $data[$val['bayar']]['nota'][$val['nota']]['body'][$i]['kode_barang'] = $val['kode_barang'];
     $data[$val['bayar']]['nota'][$val['nota']]['body'][$i]['nm_barang'] = $val['nm_barang'];
     $data[$val['bayar']]['nota'][$val['nota']]['body'][$i]['satuan'] = $val['satuan'];
     $data[$val['bayar']]['nota'][$val['nota']]['body'][$i]['jml'] = $val['jml'];
@@ -105,18 +105,22 @@ foreach ($models as $key => $val) {
                 </td>
             </tr>
             <?php
+            $grandtotal = 0;
             foreach ($key['nota'] as $keys) {
                 ?>
                 <tr>
                     <td class="border-bottom border-right" colspan="11"><?= $keys['title'] ?></td>
                 </tr>
                 <?php
+                $total = 0;
                 foreach ($keys['body'] as $val) {
+                    $total += $val['jml'];
+                    $grandtotal += $val['jml'];
                     ?>
                     <tr>
                         <td class="border-bottom border-right"><?= $val['tgl_terima'] ?></td>
                         <td class="border-bottom border-right"><?= $val['no_bbm'] ?></td>
-                        <td style="text-align: center;" class="border-bottom border-right"><?= $val['kd_barang'] ?></td>
+                        <td style="text-align: center;" class="border-bottom border-right"><?= $val['kode_barang'] ?></td>
                         <td class="border-bottom border-right"><?= $val['nm_barang'] ?></td>
                         <td style="text-align: center;" class="border-bottom border-right"><?= $val['satuan'] ?></td>
                         <td style="text-align: center;" class="border-bottom border-right"><?= $val['jml'] ?></td>
@@ -126,9 +130,38 @@ foreach ($models as $key => $val) {
                         <td style="text-align: center;" class="border-bottom border-right"><?= $val['nota'] ?></td>
                         <td class="border-bottom border-right"><?= $val['nama_supplier'] ?></td>
                     </tr>
+
                     <?php
                 }
+                ?>
+                <tr>
+                    <td class="border-bottom border-left"></td>
+                    <td class="border-bottom border-left"></td>
+                    <td class="border-bottom border-left"></td>
+                    <th colspan="2" class="border-bottom border-left" style="text-align:right">Total :&nbsp;&nbsp;</th>
+                    <th class="border-bottom border-left" style="text-align:center"><?= $total ?></th>
+                    <td class="border-bottom border-left"></td>
+                    <td class="border-bottom border-left"></td>
+                    <td class="border-bottom border-left"></td>
+                    <td class="border-bottom border-left"></td>
+                    <td class="border-bottom border-left"></td>
+                </tr>
+                <?php
             }
+            ?>
+            <tr>
+                <td class="border-bottom border-left"></td>
+                <td class="border-bottom border-left"></td>
+                <td class="border-bottom border-left"></td>
+                <th colspan="2" class="border-bottom border-left" style="text-align:right">Grandtotal :&nbsp;&nbsp;</th>
+                <th class="border-bottom border-left" style="text-align:center"><?= $grandtotal ?></th>
+                <td class="border-bottom border-left"></td>
+                <td class="border-bottom border-left"></td>
+                <td class="border-bottom border-left"></td>
+                <td class="border-bottom border-left"></td>
+                <td class="border-bottom border-left"></td>
+            </tr>
+            <?php
         }
         ?>
     </table>
