@@ -110,8 +110,8 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
         });
         $scope.isLoading = false;
     };
-    $scope.printTrans = function () {
-        Data.get('bom', paramRef).then(function (data) {
+    $scope.printTrans = function (id) {
+        Data.get('bom/view/' + id).then(function (data) {
             window.open('api/web/bom/exceltrans?print=true', "", "width=500");
         });
     }

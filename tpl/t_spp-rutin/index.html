@@ -13,10 +13,23 @@
             </div>
             <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
                 <div class="form-horizontal">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">No SPP</label>
-                        <div class="col-sm-3">
-                            <input st-search="no_spp" class="form-control"/>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">No SPP</label>
+                                <div class="col-sm-8">
+                                    <input st-search="no_spp" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label">Nama Barang</label>
+                                <div class="col-sm-8">
+                                    <input st-search="barang" class="form-control"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            
                         </div>
                     </div>
                 </div>
@@ -36,8 +49,8 @@
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
                             <td>{{row.no_spp}}</td>
                             <td>{{row.tgl_trans| date}}</td>
-                            <td>{{row.tgl1 | date}}</td>
-                            <td>{{row.tgl2 | date}}</td>
+                            <td>{{row.tgl1| date}}</td>
+                            <td>{{row.tgl2| date}}</td>
                             <td>
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
                                     <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
@@ -145,7 +158,12 @@
                             <table class="table table-striped b-t b-light">
                                 <thead>
                                     <tr>
-                                        <th style="text-align: center; font-weight: bold;width:10%">Kode Barang</th>
+                                        <th width="10">
+                                            <label class="i-checks">
+                                                <input type="checkbox" ng-model="cek" ng-click="cekAll()"><i></i> 
+                                            </label>
+                                        </th>
+                                        <th style="text-align: center; font-weight: bold;width:10%">Kd Barang</th>
                                         <th style="text-align: center; font-weight: bold;">Nama Barang</th>
                                         <th style="text-align: center; font-weight: bold;">Satuan</th>
                                         <th style="text-align: center; font-weight: bold;">Min</th>
@@ -158,6 +176,11 @@
                                 </thead>
                                 <tbody>
                                     <tr ng-repeat="detail in sppDet">
+                                        <td width="10">
+                                            <label class="i-checks">
+                                                <input type="checkbox" ng-model="detail.centang" ><i></i> 
+                                            </label>
+                                        </td>
                                         <td align="center">
                                             {{detail.barang.kd_barang}}
                                         </td>

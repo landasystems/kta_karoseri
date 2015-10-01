@@ -14,7 +14,6 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     $scope.err_pengambilan = false;
 
     $scope.bukaPrint = function (form) {
-        console.log(form)
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
             Data.post('bbk/bukaprint/', {no_bbk: form}).then(function (result) {
                 if (result.status == 0) {
@@ -98,11 +97,21 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
         });
     }
 
+    $scope.resultriwayat = [];
+    $scope.riwayatAmbil = function (no_wo, kd_jab) {
+        if (typeof $scope.form.no_wo != "undefined" && typeof $scope.form.kd_jab != "undefined") {
+            Data.post('bbk/riwayatambil', {no_wo: no_wo, kd_jab: kd_jab}).then(function (data) {
+                $scope.resultriwayat = data.data;
+            });
+        }
+    }
+
     $scope.listBarang = function ($query, no_wo, kd_jab) {
         if (typeof $scope.form.no_wo != "undefined" && typeof $scope.form.kd_jab != "undefined") {
             Data.post('bbk/listbarang', {nama: $query, no_wo: no_wo, kd_jab: kd_jab, listBarang: $scope.detailBbk}).then(function (data) {
                 $scope.resultsbarang = data.data;
             });
+            $scope.riwayatAmbil(no_wo, kd_jab);
         } else if ($query.length >= 2) {
             Data.post('bbk/listbarang', {nama: $query, no_wo: no_wo, kd_jab: kd_jab, listBarang: $scope.detailBbk}).then(function (data) {
                 $scope.resultsbarang = data.data;
@@ -111,7 +120,6 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     }
 
     $scope.addDetail = function () {
-        console.log($scope.detailBbk[0].ket);
         if (typeof $scope.detailBbk[0].ket == "undefined" || $scope.detailBbk[0].ket == "") {
             toaster.pop('error', "Keterangan tidak boleh kosong");
         } else {

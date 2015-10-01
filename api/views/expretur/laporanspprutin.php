@@ -83,7 +83,7 @@ foreach ($models as $val) {
 <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 10px; margin-top:-2px;" width='100%'>
     <tr>
         <th class="border-right border-bottom" style="text-align: center;" rowspan="2">NO</th>
-        <th class="border-right border-bottom" style="text-align: center;" rowspan="2">KODE BARANG</th>
+        <th class="border-right border-bottom" style="text-align: center;" rowspan="2" width="75">KODE BARANG</th>
         <th class="border-right border-bottom" style="text-align: center;" rowspan="2">URAIAN</th>
         <th class="border-right border-bottom" style="text-align: center;" rowspan="2">SAT</th>
         <th class="border-right border-bottom" style="text-align: center;" rowspan="2">MAX. STOK</th>
@@ -106,8 +106,8 @@ foreach ($models as $val) {
         <?php
         $no = 1;
         foreach ($val['body'] as $vals) {
-            $p = (!empty($vals['p'])) ? date('d-m-Y', strtotime($vals['p'])) : '';
-            $a = (!empty($vals['a'])) ? date('d-m-Y', strtotime($vals['a'])) : '';
+            $p = (!empty($vals['p'])) ? date("d/m/y", strtotime($vals['p'])) : '';
+            $a = (!empty($vals['a']) and $vals['a'] != null) ? date("d/m/y", strtotime($a)) : '';
             ?>
             <tr>
                 <td class="border-right border-bottom" style="text-align:center"><?= $no ?></td>
@@ -119,8 +119,8 @@ foreach ($models as $val) {
                 <td class="border-right border-bottom" style="text-align:center">&nbsp;<?= $vals['saldo'] ?></td>
                 <td class="border-right border-bottom" style="text-align:center">&nbsp;<?= $vals['qty'] ?></td>
                 <td class="border-right border-bottom"><?= $vals['ket'] ?></td>
-                <td class="border-right border-bottom"><?= date("d/m/y", strtotime($p)); ?></td>
-                <td class="border-right border-bottom"><?= date("d/m/y", strtotime($a)); ?></td>
+                <td class="border-right border-bottom" width="30"><?= $p; ?></td>
+                <td class="border-right border-bottom" width="30"><?= $a; ?></td>
             </tr>
             <?php
             $no++;

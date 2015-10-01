@@ -134,10 +134,10 @@ class WoController extends Controller {
     public function actionCari() {
         $params = $_REQUEST;
         $query = new Query;
-        $query->from('wo_masuk')
+        $query->from('wo_masuk as wm')
                 ->select("*")
                 ->where(['like', 'no_wo', $params['no_wo']])
-                ->andWhere('wm.tgl_keluar IS NULL or wm.tgl_keluar="" or wm.tgl_keluar = "0000-00-00"')
+                ->andWhere('wm.tgl_keluar IS NULL ')
                 ->limit(10);
         $command = $query->createCommand();
         $models = $command->queryAll();
