@@ -248,6 +248,7 @@ class SppnonrutinController extends Controller {
         if ($model->save()) {
             $deleteAll = DetSpp::deleteAll('no_spp="' . $model->no_spp . '"');
             foreach ($params['details'] as $val) {
+
                 if (empty($val['no_wo'])) {
                     $det = new DetSpp();
                     $det->attributes = $val;

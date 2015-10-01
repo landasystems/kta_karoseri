@@ -136,16 +136,16 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     };
 
     $scope.removeRow = function (paramindex) {
-        if ($scope.err_pengambilan == false) {
+//        if ($scope.err_pengambilan == false) {
             var comArr = eval($scope.detailBbk);
             if (comArr.length > 1) {
                 $scope.detailBbk.splice(paramindex, 1);
             } else {
                 alert("Something gone wrong");
             }
-        } else {
-            toaster.pop('error', "Sisa pengambilan bahan telah habis");
-        }
+//        } else {
+//            toaster.pop('error', "Sisa pengambilan bahan telah habis");
+//        }
     };
 
     $scope.open1 = function ($event) {
