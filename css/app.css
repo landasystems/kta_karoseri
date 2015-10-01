@@ -1,3 +1,38 @@
+/*Scrollable table*/
+.table-scroll table {
+    width: 100%;
+}
+
+.table-scroll thead, .table-scroll tbody, .table-scroll tr, .table-scroll td, .table-scroll th { display: block; }
+
+.table-scroll tr:after {
+    content: ' ';
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+
+.table-scroll thead th {
+    height: 30px;
+
+    /*text-align: left;*/
+}
+
+.table-scroll tbody {
+    height: 120px;
+    overflow-y: auto;
+}
+
+.table-scroll thead {
+    /* fallback */
+}
+
+
+.table-scroll tbody td, .table-scroll thead th {
+    width: 25%;
+    float: left;
+}
+
 /*---table margin & padding 0px*/
 .det-trans > tbody > tr > td{ 
     margin: 0px;

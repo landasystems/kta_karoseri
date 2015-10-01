@@ -106,6 +106,7 @@
             <div class="panel-heading">
                 {{formtitle}} 
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
+                    <button type="button" class="btn btn-warning fa fa-copy" ng-click="copy();">&nbsp;Salin BBK</button>
                     <button type="button" class="btn btn-success fa fa-check"  ng-click="modal()">&nbsp;Pengecualian BBK</button>
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-show="is_view" ng-click="create();">&nbsp;Tambah Data</button>
                     <button type="button" class="btn btn-info fa fa-print"  ng-show="is_view" ng-print print-element-id="printArea" ng-click="simpanPrint(form.no_bbk)" ng-disabled="is_print == 1 && user.id != 1">&nbsp;Print</button>
@@ -118,7 +119,7 @@
                             <p>Nota Bukti Barang Keluar hanya boleh dicetak 1 kali, silahkan hubungi admin untuk mencetak ulang </p>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-5 col-sm-12">
                                 <div class="form-group" ng-if="is_copy">
                                     <label class="col-sm-3 control-label">Cari BBK</label>
                                     <div class="col-sm-9">
@@ -202,7 +203,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-7 col-sm-12">
                                 <div class="row">
                                     <div class="col-md-6 col-sm-12 thumb-wrapper">
                                         <center><h4>Sisa Pengambilan</h4></center>
@@ -213,11 +214,31 @@
                                         <center style="margin-top: 10px;"><h1>{{stok_sekarang}}</h1></center>
                                     </div>
                                 </div>
+                                <div class="row" style="margin-top: 10px;">
+                                    <table class="table table-stripped table-scroll" style="margin-bottom: 0px; padding-bottom: 0px; font-size: 12px; height: 150px; overflow-y: scroll">
+                                        <thead>
+                                            <tr>
+                                                <th width="25">Tanggal</th>
+                                                <th>Bagian</th>
+                                                <th>Barang</th>
+                                                <th width="10">Jml</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="data in resultriwayat">
+                                                <td>{{data.tanggal| date:'dd/M/yyyy'}}</td>
+                                                <td>{{data.jabatan}}</td>
+                                                <td>{{data.nm_barang}}</td>
+                                                <td>{{data.jml}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                         <br>
                         <div class="row">
-                            <table class="table table-striped b-t b-light" style='margin-top: 25px;'>
+                            <table class="table table-striped b-t b-light" style='margin-top: 0px;'>
                                 <thead>
                                     <tr>
                                         <th class="panel-heading text-muted font-bold" colspan="4">Detail BBK</th>

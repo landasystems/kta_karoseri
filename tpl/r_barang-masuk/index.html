@@ -46,10 +46,9 @@
                                     <div class="col-sm-4">
                                         <input placeholder="Tanggal Periode" date-range-picker class="form-control" st-search="tgl_nota" type="text"  ng-model="tanggal">
                                     </div>
-
                                     <div class="col-sm-4">
                                         <select st-search="kat" class="form-control">
-                                            <option value="">.:Pilih Jenis:.</option>
+                                            <option value="">.:Pilih Jenis SPP:.</option>
                                             <option value="Rutin">Rutin</option>
                                             <option value="Non Rutin">Non Rutin</option>
                                         </select>
@@ -72,7 +71,17 @@
                                     </div>
                                 </div>
                             </div>
-                            
+                            <div class="form-group">
+                                <div class="control-group">
+                                    <div class="col-sm-4">
+                                        <select st-search="po.bayar" class="form-control">
+                                            <option value="">.:Pilih Jenis Pembayaran:.</option>
+                                            <option value="0">LUNAS</option>
+                                            <option value="1">KREDIT</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -84,8 +93,7 @@
                         <tr>
                             <th st-sort="tgl_nota">Tanggal</th>
                             <th st-sort="tb.no_bbm">No BBM</th>
-                            <th st-sort="barang.kd_barang">KODE BRG</th>
-                            <th st-sort="barang.nm_barang">NAMA BARANG</th>
+                            <th st-sort="barang.nm_barang">BARANG</th>
                             <th st-sort="barang.sat">SAT</th>
                             <th st-sort="db.jumlah">JML</th>
                             <th st-sort="tb.surat_jalan">SURAT JALAN</th>
@@ -98,8 +106,7 @@
                         <tr ng-repeat="row in displayed">
                             <td>{{row.tanggal_nota| date:'dd/M/yy'}}</td>
                             <td>{{row.no_bbm}}</td>
-                            <td>{{row.kd_barang}}</td>
-                            <td>{{row.nm_barang}}</td>
+                            <td><b>{{row.kd_barang}}</b> - {{row.nm_barang}}</td>
                             <td>{{row.satuan}}</td>
                             <td>{{row.jumlah}}</td>
                             <td>{{row.surat_jalan}}</td>
@@ -110,12 +117,12 @@
                     </tbody>
                     <tbody ng-show="isLoading">
                         <tr>
-                            <td colspan="4" class="text-center">Loading ... </td>
+                            <td colspan="9" class="text-center">Loading ... </td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="12" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html">
+                            <td colspan="9" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html">
                             </td>
                         </tr>
                 </table>		
