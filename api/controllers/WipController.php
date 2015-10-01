@@ -86,6 +86,7 @@ class WipController extends Controller {
                 ->join('JOIN', 'bagian', 'bagian.kd_bag = wip.kd_kerja')
                 ->join('JOIN', 'tbl_karyawan as tk', 'tk.nik = wip.nik')
                 ->where('wip.no_wo = "' . $params['no_wo'] . '"')
+                ->orderBy("bagian.urutan ASC")
                 ->select('*');
         $command2 = $query2->createCommand();
         $detail = $command2->queryAll();
