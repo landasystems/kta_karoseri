@@ -74,8 +74,8 @@
                             <td>{{row.petugas}}</td>
                             <td ng-hide="is_view == true">
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                                    <button type="button" ng-show="row.status == 0" class="btn btn-info fa fa-edit" ng-click="update(row)" title="Edit BBK"></button>
-                                    <button type="button" ng-show="row.status == 0" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" title="Hapus BBK"></button>
+                                    <button type="button" ng-show="row.status == 0 || user.id == 1" class="btn btn-info fa fa-edit" ng-click="update(row)" title="Edit BBK"></button>
+                                    <button type="button" ng-show="row.status == 0 || user.id == 1" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" title="Hapus BBK"></button>
                                 </div> 
                             </td>
                         </tr>
