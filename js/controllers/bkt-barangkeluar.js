@@ -111,7 +111,6 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     }
 
     $scope.addDetail = function () {
-        console.log($scope.detailBbk[0].ket);
         if (typeof $scope.detailBbk[0].ket == "undefined" || $scope.detailBbk[0].ket == "") {
             toaster.pop('error', "Keterangan tidak boleh kosong");
         } else {
