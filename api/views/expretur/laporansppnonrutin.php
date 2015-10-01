@@ -27,14 +27,14 @@ foreach ($models as $key => $val) {
         $data[$val['jenis_brg']]['body'][$key]['max'] = $val['max'];
         $data[$val['jenis_brg']]['body'][$key]['saldo'] = $val['sld'];
         $data[$val['jenis_brg']]['body'][$key]['qty'] = $jml;
-        $data[$val['jenis_brg']]['body'][$key]['ket'] = $wo;
+        $data[$val['jenis_brg']]['body'][$key]['ket'] = ((empty($val['ket']) || $val['ket'] == '-') ? '' : $val['ket'] . ', ') . $wo;
+//        $data[$val['jenis_brg']]['body'][$key]['keterangan'] = $val['ket'];
         $data[$val['jenis_brg']]['body'][$key]['p'] = $val['p'];
         $data[$val['jenis_brg']]['body'][$key]['a'] = $val['a'];
         $nowo = array();
         $jml = 0;
     }
 }
-print_r($nowo);
 ?>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
 <div style="width:24cm">
@@ -95,12 +95,12 @@ print_r($nowo);
     </table>
     <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 10px; margin-top:-2px;" width='100%'>
         <tr>
-            <th class="border-right border-bottom" style="text-align: center;" rowspan="2">NO</th>
-            <th class="border-right border-bottom" style="text-align: center;" rowspan="2">KODE</th>
+            <th class="border-right border-bottom" style="text-align: center; width: 15px;" rowspan="2">NO</th>
+            <th class="border-right border-bottom" style="text-align: center; width: 50px;" rowspan="2">KODE</th>
             <th class="border-right border-bottom" style="text-align: center;" rowspan="2">URAIAN</th>
-            <th class="border-right border-bottom" style="text-align: center;" rowspan="2">SAT</th>
-            <th class="border-right border-bottom" style="text-align: center;" rowspan="2">SALDO</th>
-            <th class="border-right border-bottom" style="text-align: center;" rowspan="2">QTY</th>
+            <th class="border-right border-bottom" style="text-align: center;" rowspan="2" width="25">SAT</th>
+            <th class="border-right border-bottom" style="text-align: center;" rowspan="2" width="35">SALDO</th>
+            <th class="border-right border-bottom" style="text-align: center;" rowspan="2" width="25">QTY</th>
             <th class="border-right border-bottom" style="text-align: center;" rowspan="2">KETERANGAN</th>
             <th class="border-right border-bottom" style="text-align: center;" colspan="2">SCHEDULLE</th>
         </tr>
@@ -117,16 +117,16 @@ print_r($nowo);
             $no = 1;
             foreach ($val['body'] as $vals) {
                 $p = (!empty($vals['p'])) ? date("d/m/y", strtotime($vals['p'])) : '';
-                $a = (!empty($vals['a'])) ? date("d/m/y", strtotime($vals['a'])) : '';
+                $a = (!empty($vals['a']) and $vals['a'] != null) ? date("d/m/y", strtotime($vals['a'])) : '';
                 ?>
                 <tr>
                     <td class="border-right border-bottom" style="text-align:center"><?= $no ?></td>
                     <td class="border-right border-bottom" style="text-align:center">&nbsp;<?= $vals['kd_barang'] ?></td>
-                    <td class="border-right border-bottom" style="width: 200px"><?= $vals['nm_barang'] ?></td>
+                    <td class="border-right border-bottom" style="width: 250px"><?= $vals['nm_barang'] ?></td>
                     <td class="border-right border-bottom" style="text-align:center"><?= $vals['satuan'] ?></td>
                     <td class="border-right border-bottom" style="text-align:center">&nbsp;<?= $vals['saldo'] ?></td>
                     <td class="border-right border-bottom" style="text-align:center">&nbsp;<?= $vals['qty'] ?></td>
-                    <td class="border-right border-bottom" style="width: 250px"><?= $vals['ket'] ?></td>
+                    <td class="border-right border-bottom"><?= $vals['ket'] ?></td>
                     <td class="border-right border-bottom" style="width: 30px;"><?= $p; ?></td>
                     <td class="border-right border-bottom" style="width: 30px;"><?= $a; ?></td>
                 </tr>

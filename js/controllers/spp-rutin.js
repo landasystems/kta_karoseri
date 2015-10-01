@@ -1,4 +1,4 @@
-app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
+app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal, keyboardManager) {
     //init data
     var tableStateRef;
     var paramRef;
@@ -8,6 +8,7 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
     $scope.is_create = false;
     $scope.sppDet = [];
     $scope.openedDet = -1;
+    $scope.tanggal = [];
 
     $scope.open1 = function ($event) {
         $event.preventDefault();
@@ -34,7 +35,12 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
     };
     $scope.isiTanggal = function (tanggal) {
         angular.forEach($scope.sppDet, function ($value, $key) {
-            $scope.sppDet[$key]['p'] = new Date(tanggal);
+            if ($value.centang == true) {
+                $value.p = new Date(tanggal);
+
+                $value.centang = false;
+                $scope.form.p = "";
+            }
         })
     };
     $scope.callServer = function callServer(tableState) {
@@ -84,6 +90,7 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
             $scope.form.no_spp = data.kode;
         });
     };
+
     $scope.update = function (form) {
         $scope.is_create = false;
         $scope.is_edit = true;
@@ -96,6 +103,7 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.form.periode = {startDate: start, endDate: end};
         $scope.getDetail(form.no_spp);
     };
+
     $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
@@ -107,6 +115,13 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.form.periode = {startDate: start, endDate: end};
         $scope.getDetail(form.no_spp);
     };
+
+    keyboardManager.bind('ctrl+p', function () {
+        if ($scope.is_edit == true && $scope.is_view == false) {
+            $scope.modalTanggal($scope.sppDet);
+        }
+    });
+
     $scope.save = function (form, details) {
         var data = {
             form: form,
@@ -151,6 +166,7 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.setStatus();
         $scope.sppDet.unshift(newDet);
     };
+
     $scope.removeRow = function (paramindex) {
         var comArr = eval($scope.sppDet);
         if (comArr.length > 1) {
@@ -159,11 +175,13 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
             alert("Something gone wrong");
         }
     };
+
     $scope.getDetail = function (id) {
         Data.get('spprutin/detail/' + id).then(function (data) {
             $scope.sppDet = data.details;
         });
     };
+
     $scope.modal = function (form) {
         var modalInstance = $modal.open({
             templateUrl: 'tpl/t_spp-rutin/modal.html',
@@ -176,6 +194,36 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal) {
             }
         });
     };
+
+    $scope.modalTanggal = function (form) {
+        var modalInstance = $modal.open({
+            templateUrl: 'tpl/t_spp-rutin/modalTanggal.html',
+            controller: 'modalTanggalCtrl',
+            size: 'md',
+            resolve: {
+                form: function () {
+                    return form;
+                }
+            }
+        });
+    };
+
+    $scope.cekAll = function () {
+        angular.forEach($scope.sppDet, function ($value, $key) {
+            if ($scope.cek == true) {
+                $value.centang = true;
+            } else {
+                $value.centang = false;
+            }
+        })
+    }
+
+    keyboardManager.bind('ctrl+s', function () {
+        if ($scope.is_edit == true && $scope.is_view == false) {
+            $scope.save($scope.form, $scope.sppDet);
+        }
+    });
+
 });
 
 app.controller('modalCtrl', function ($scope, Data, $modalInstance, form) {
@@ -195,6 +243,29 @@ app.controller('modalCtrl', function ($scope, Data, $modalInstance, form) {
     };
 
     $scope.formmodal = form;
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+});
+
+app.controller('modalTanggalCtrl', function ($scope, Data, $modalInstance, form) {
+    $scope.open2 = function ($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+        $scope.opened2 = true;
+    };
+
+    $scope.detail = form;
+
+    $scope.isiTanggal = function (tanggal) {
+        angular.forEach($scope.detail, function ($value, $key) {
+            if ($value.centang == true) {
+                $value.p = new Date(tanggal);
+                $value.centang = false;
+            }
+        })
+    };
+
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };

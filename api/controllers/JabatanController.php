@@ -123,6 +123,7 @@ class JabatanController extends Controller {
         $query = new Query;
         $query->from('tbl_jabatan')
                 ->select("*")
+                ->orderBy('jabatan ASC')
                 ->where('jabatan like "%' . $param['nama'] . '%"')
                 ->orWhere(['like', 'id_jabatan', $param['nama']]);
 
