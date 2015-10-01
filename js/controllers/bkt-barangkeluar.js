@@ -245,32 +245,37 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     };
 
     $scope.save = function (form, detail) {
-        if ($scope.err_pengambilan == false) {
-            var data = {
-                bbk: form,
-                detailBbk: detail,
-            };
-            var url = ($scope.is_create == true) ? 'bbk/create' : 'bbk/update/' + form.no_bbk;
-            Data.post(url, data).then(function (result) {
-                if (result.status == 0) {
-                    toaster.pop('error', "Terjadi Kesalahan", result.errors);
-                } else {
-                    toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
-                    if ($scope.is_create == true) {
-                        var popupWin = window.open('', '_blank', 'width=1000,height=700');
-                        var elem = document.getElementById('printArea');
-                        popupWin.document.open()
-                        popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print();window.close();">' + elem.innerHTML + '</html>');
-                        popupWin.document.close();
+
+        if (confirm("Apakah Anda yakin mengisi data tersebut ?")) {
+
+            if ($scope.err_pengambilan == false) {
+                var data = {
+                    bbk: form,
+                    detailBbk: detail,
+                };
+                var url = ($scope.is_create == true) ? 'bbk/create' : 'bbk/update/' + form.no_bbk;
+                Data.post(url, data).then(function (result) {
+                    if (result.status == 0) {
+                        toaster.pop('error', "Terjadi Kesalahan", result.errors);
+                    } else {
+                        toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
+                        if ($scope.is_create == true) {
+                            var popupWin = window.open('', '_blank', 'width=1000,height=700');
+                            var elem = document.getElementById('printArea');
+                            popupWin.document.open()
+                            popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print();window.close();">' + elem.innerHTML + '</html>');
+                            popupWin.document.close();
+                        }
+                        $scope.is_create = false;
+                        $scope.is_edit = false;
+                        $scope.create($scope.form);
+                        $scope.callServer(tableStateRef); //reload grid ulang
                     }
-                    $scope.is_create = false;
-                    $scope.is_edit = false;
-                    $scope.create($scope.form);
-                    $scope.callServer(tableStateRef); //reload grid ulang
-                }
-            });
-        } else {
-            toaster.pop('error', "Sisa pengambilan bahan telah habis");
+                });
+            } else {
+                toaster.pop('error', "Sisa pengambilan bahan telah habis");
+            }
+
         }
     };
 
