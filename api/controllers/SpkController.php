@@ -27,6 +27,7 @@ class SpkController extends Controller {
                     'kerja' => ['post'],
                     'customer' => ['post'],
                     'jabatan' => ['post'],
+                    'bukaprint' => ['post'],
                     'kode' => ['get'],
                     'updtst' => ['get'],
                 ],
@@ -55,6 +56,17 @@ class SpkController extends Controller {
         }
 
         return true;
+    }
+
+    public function actionBukaprint() {
+        $params = json_decode(file_get_contents("php://input"), true);
+//        Yii::error($params);
+        $centang = $params['id_spk'];
+        foreach ($centang as $key => $val) {
+            $status = Spk::findOne($key);
+            $status->status = 0;
+            $status->save();
+        }
     }
 
     public function actionKerja() {
@@ -211,9 +223,8 @@ class SpkController extends Controller {
                 ->join('LEFT JOIN', 'tbl_karyawan', 'trans_spkerja.nik = tbl_karyawan.nik')
                 ->join('JOIN', 'view_wo_spk as vw', 'trans_spkerja.no_wo = vw.no_wo')
                 ->join('JOIN', 'tbl_jabatan', 'trans_spkerja.kd_jab = tbl_jabatan.id_jabatan')
-               
                 ->orderBy($sort)
-                ->select("tbl_karyawan.nama,trans_spkerja.id as id_spk,trans_spkerja.no_wo,vw.nm_customer, vw.model,tbl_jabatan.jabatan, vw.merk, vw.tipe");
+                ->select("tbl_karyawan.nama,trans_spkerja.status as sts_print,trans_spkerja.id as id_spk,trans_spkerja.no_wo,vw.nm_customer, vw.model,tbl_jabatan.jabatan, vw.merk, vw.tipe");
 
         //filter
         if (isset($params['filter'])) {
@@ -243,6 +254,18 @@ class SpkController extends Controller {
     public function actionView($id) {
         $model = $this->findModel($id);
         $data = $model->attributes;
+
+        //Cek status print
+        $cek = $data['status'];
+        session_start();
+        if ($cek == "1" && $_SESSION['user']['id'] != "1") {
+            $msg = 'Detail PO sudah dicetak, silahkan menghubungi admin untuk mencetak ulang';
+            $print = 1;
+        } else {
+            $msg = '';
+            $print = 0;
+        }
+//        Yii::error($cek);
 // cus dan model
         $query2 = new Query;
         $query2->from('trans_spkerja')
@@ -253,7 +276,7 @@ class SpkController extends Controller {
         $command2 = $query2->createCommand();
         $models2 = $command2->query()->read();
 
-        $data = ['nm_customer' => $models2['nm_customer'], 'model' => $models2['model'],'merk' => $models2['merk'],'tipe' => $models2['tipe']];
+        $data = ['nm_customer' => $models2['nm_customer'], 'model' => $models2['model'], 'merk' => $models2['merk'], 'tipe' => $models2['tipe']];
         //no wo
         $nowo = Spk::find()
                 ->where(['id' => $model['id']])
@@ -262,9 +285,8 @@ class SpkController extends Controller {
         $data['no_wo'] = [
             'no_wo' => $no_wo
         ];
-        //Cek status print
-        $cek = $data['status'];
-        
+
+//        $cek = 1;
         //PIC
         $pic = \app\models\Karyawan::find()
                 ->where(['nik' => $model['nik']])
@@ -302,19 +324,12 @@ class SpkController extends Controller {
         foreach ($detail as $key => $asu) {
             $coba[$key]['nm_kerja'] = $asu;
         }
-        
-        session_start();
-        if ($cek == 1 and $_SESSION['user']['id'] != "1") {
-            $msg = 'Detail PO sudah dicetak, silahkan menghubungi admin untuk mencetak ulang';
-            $print = 1;
-        } else {
-            $msg = '';
-            $print = 0;
-        }
+
+
 
 
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $data, 'detail' => $coba, 'jabatan' => $listjabatan, 'msg' => $msg, 'print' => $print), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'detail' => $coba, 'jabatan' => $listjabatan, 'msg' => $msg, 'print' => $print,'status_print' => $cek), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
@@ -419,11 +434,13 @@ class SpkController extends Controller {
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
     }
-      public function actionUpdtst($id) {
+
+    public function actionUpdtst($id) {
         $model = Spk::findOne(['id' => $id]);
         $model->status = 1;
         $model->save();
     }
+
     public function actionDelete($id) {
         $model = $this->findModel($id);
         $deleteDetail = DetSpkerja::deleteAll(['no_wo' => $model['no_wo']]);
