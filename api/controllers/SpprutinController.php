@@ -92,7 +92,7 @@ class SpprutinController extends Controller {
                 ->join('LEFT JOIN', 'view_wo_spk', 'view_wo_spk.no_wo = det_spp.no_wo')
                 ->orderBy('view_wo_spk.no_wo ASC, barang.nm_barang ASC')
 //                ->select("det_spp.*,barang.nm_barang,barang.satuan,trans_po.nota, det_spp.p as tgl_trans, det_spp.qty as jumlah_spp, det_bbm.jumlah as jumlah_bbm, (det_spp.qty-det_bbm.jumlah) as selisih");
-                ->select("det_spp.*,barang.nm_barang,barang.satuan,det_spp.p as tgl_trans, det_spp.qty as jumlah_spp");
+                ->select("det_spp.*,barang.kd_barang as kode_barang,barang.nm_barang,barang.satuan,det_spp.p as tgl_trans, det_spp.qty as jumlah_spp");
         if (isset($_SESSION['filter'])) {
             foreach ($_SESSION['filter'] as $key => $val) {
                 if (isset($key) && $key == 'kategori') {
@@ -186,7 +186,7 @@ class SpprutinController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tgl_trans DESC";
+        $sort = "no_spp DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -219,8 +219,12 @@ class SpprutinController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-
-                $query->andFilterWhere(['like', 'trans_spp.' . $key, $val]);
+                if ($key == 'barang') {
+                    $brg = $this->searchBrg($val);
+                    $query->andFilterWhere(['no_spp' => $brg]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+                }
             }
         }
         //filter
@@ -242,6 +246,26 @@ class SpprutinController extends Controller {
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+
+    public function searchBrg($id) {
+        $patern = $id;
+        $query = new Query;
+        $query->from('det_spp')
+                ->select("*")
+                ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
+                ->join('JOIN', 'trans_spp', 'trans_spp.no_spp= det_spp.no_spp')
+                ->where("trans_spp.no_proyek='Rutin'")
+                ->select('det_spp.no_spp, barang.nm_barang');
+        $query->andFilterWhere(['like', 'barang.nm_barang', $patern]);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $data = array();
+        foreach ($models as $key) {
+            $data[] = $key['no_spp'];
+        }
+        return $data;
     }
 
     public function actionRekap() {
@@ -277,7 +301,7 @@ class SpprutinController extends Controller {
                 ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
                 ->join('RIGHT JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
                 ->join('RIGHT JOIN', 'detail_po', 'detail_po.nota = trans_po.nota and detail_po.kd_barang = det_spp.kd_barang')
-                ->select("det_spp.*,trans_spp.*,barang.nm_barang,barang.satuan, trans_po.nota");
+                ->select("det_spp.*,trans_spp.*,barang.kd_barang as kode_barang,barang.nm_barang,barang.satuan, trans_po.nota");
 
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
@@ -326,34 +350,33 @@ class SpprutinController extends Controller {
         $_SESSION['nospp'] = $id;
     }
 
-    public function actionCreate() {
-        $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($params);
-        $model = new TransSpp();
-        $model->no_spp = $params['form']['no_spp'];
-        $model->tgl_trans = $tgl_trans;
-        $model->tgl1 = date('d/m/Y', strtotime($params['form']['periode']['startDate']));
-        $model->tgl2 = date('d/m/Y', strtotime($params['form']['periode']['endDate']));
-        $model->no_proyek = 'Rutin';
-
-        if ($model->save()) {
-            foreach ($params['details'] as $val) {
-                $det = new DetSpp();
-                $det->attributes = $val;
-                $det->no_spp = $model->no_spp;
-                $det->kd_barang = (empty($val['barang']['kd_barang'])) ? '-' : $val['barang']['kd_barang'];
-                $det->saldo = $val['barang']['saldo'];
-                $det->p = date('Y-m-d', strtotime($det->p));
-                $det->no_wo = (empty($val['wo']['no_wo'])) ? '-' : $val['wo']['no_wo'];
-                $det->save();
-            }
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-        } else {
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-        }
-    }
+//    public function actionCreate() {
+//        $params = json_decode(file_get_contents("php://input"), true);
+//        $model = new TransSpp();
+//        $model->no_spp = $params['form']['no_spp'];
+//        $model->tgl_trans = $tgl_trans;
+//        $model->tgl1 = date('d/m/Y', strtotime($params['form']['periode']['startDate']));
+//        $model->tgl2 = date('d/m/Y', strtotime($params['form']['periode']['endDate']));
+//        $model->no_proyek = 'Rutin';
+//
+//        if ($model->save()) {
+//            foreach ($params['details'] as $val) {
+//                $det = new DetSpp();
+//                $det->attributes = $val;
+//                $det->no_spp = $model->no_spp;
+//                $det->kd_barang = (empty($val['barang']['kd_barang'])) ? '-' : $val['barang']['kd_barang'];
+//                $det->saldo = $val['barang']['saldo'];
+//                $det->p = date('Y-m-d', strtotime($det->p));
+//                $det->no_wo = (empty($val['wo']['no_wo'])) ? '-' : $val['wo']['no_wo'];
+//                $det->save();
+//            }
+//            $this->setHeader(200);
+//            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+//        } else {
+//            $this->setHeader(400);
+//            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+//        }
+//    }
 
     public function actionUpdatetgl() {
         $params = json_decode(file_get_contents("php://input"), true);
@@ -399,7 +422,7 @@ class SpprutinController extends Controller {
                 $det->kd_barang = (empty($val['barang']['kd_barang'])) ? '-' : $val['barang']['kd_barang'];
                 $det->saldo = $val['barang']['saldo'];
                 $det->qty = $val['barang']['qty'];
-                $det->p = (!empty($det->p) ? date('Y-m-d', strtotime($det->p)) : null);
+                $det->p = (!empty($val['p']) ? date('Y-m-d', strtotime($val['p'])) : null);
                 $det->no_wo = (empty($val['wo']['no_wo'])) ? '-' : $val['wo']['no_wo'];
                 $det->save();
             }

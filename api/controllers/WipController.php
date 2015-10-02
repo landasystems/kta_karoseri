@@ -30,7 +30,7 @@ class WipController extends Controller {
                     'delete' => ['post'],
                     'jenis' => ['get'],
                     'kode' => ['get'],
-                    'warna' => ['post'],
+                    'rekap' => ['get'],
                     'getnowo' => ['post'],
                     'select' => ['post'],
                     'karyawan' => ['get'],
@@ -86,6 +86,7 @@ class WipController extends Controller {
                 ->join('JOIN', 'bagian', 'bagian.kd_bag = wip.kd_kerja')
                 ->join('JOIN', 'tbl_karyawan as tk', 'tk.nik = wip.nik')
                 ->where('wip.no_wo = "' . $params['no_wo'] . '"')
+                ->orderBy("bagian.urutan ASC")
                 ->select('*');
         $command2 = $query2->createCommand();
         $detail = $command2->queryAll();
@@ -94,14 +95,34 @@ class WipController extends Controller {
         if (!empty($detail)) {
             foreach ($detail as $key => $data) {
                 $coba[$key] = $data;
+                
+                if(!empty($data['plan_start']) && $data['plan_start']="-" && isset($data['plan_start'])){
+                    $tgPS = explode('/', $data['plan_start']);
+                    $isips = $tgPS[2] . '-' . $tgPS[1] . '-' . $tgPS[0];
+                }else{
+                    $isips = "";
+                }
+                
+                if(!empty($data['plan_finish']) && $data['plan_finish']="-" && isset($data['plan_finish'])){
+                     $tgPF = explode('/', $data['plan_finish']);
+                    $isipf = $tgPF[2] . '-' . $tgPF[1] . '-' . $tgPF[0];
+                }else{
+                    $isipf = "";
+                }
+                
+                if(!empty($data['act_start']) && $data['act_start'] !="-" && isset($data['act_start'])){
+                     $tgPF = explode('/', $data['act_start']);
+                    $isias = $tgPF[2] . '-' . $tgPF[1] . '-' . $tgPF[0];
+                }else{
+                    $isias = "";
+                }
+                
+                
 
-                $tgPS = explode('/', $data['plan_start']);
-                $tgPF = explode('/', $data['plan_finish']);
-                $acPS = explode('/', $data['act_start']);
-
-                $coba[$key]['plan_start'] = $tgPS[2] . '-' . $tgPS[1] . '-' . $tgPS[0];
-                $coba[$key]['plan_finish'] = $tgPF[2] . '-' . $tgPF[1] . '-' . $tgPF[0];
-                $coba[$key]['act_start'] = $acPS[2] . '-' . $acPS[1] . '-' . $acPS[0];
+                $coba[$key]['plan_start'] = $isips;
+                $coba[$key]['plan_finish'] = $isipf;
+                $coba[$key]['act_start'] = $isias;
+                $coba[$key]['act_finish'] = $data['act_finish'];
                 $coba[$key]['pemborong'] = ['nama' => $data['nama'], 'nik' => $data['nik']];
                 $coba[$key]['proses'] = ['bagian' => $data['bagian'], 'kd_bag' => $data['kd_bag']];
             }
@@ -139,7 +160,7 @@ class WipController extends Controller {
         echo json_encode(array('status' => 1, 'umur' => $selisih, 'detail' => $coba));
     }
 
-    public function actionIndex() {
+    public function actionRekap() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
@@ -167,10 +188,11 @@ class WipController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('det_wip as dw')
-                ->join('JOIN', 'view_wo_spk as vws', 'dw.no_wo = vws.no_wo')
-                ->join('JOIN', 'bagian', 'bagian.kd_bag = dw.kd_kerja')
+                ->join('JOIN', 'view_wo_spk as vw', 'dw.no_wo = vw.no_wo')
+//                ->groupBy('dw.no_wo')
+                ->where('dw.kd_kerja="BAG001"')
                 ->orderBy($sort)
-                ->select("*");
+                ->select("dw.plan_start, vw.*");
 
         //filter
         if (isset($params['filter'])) {
@@ -181,7 +203,7 @@ class WipController extends Controller {
         }
 
         session_start();
-        $_SESSION['query'] = $query;
+        $_SESSION['queryas'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -194,158 +216,15 @@ class WipController extends Controller {
 
     public function actionExcel() {
         session_start();
-        $query = $_SESSION['query'];
+        $query = $_SESSION['queryas'];
         $query->limit(null);
         $query->offset(null);
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/schedule", ['models' => $models]);
+        return $this->render("/expretur/wip", ['models' => $models]);
     }
 
-    public function actionKaryawan() {
-        $params = $_REQUEST;
-        $query = new Query;
-        $query->from('tbl_karyawan')
-                ->select("*")
-                ->where(['like', 'nama', $params['karyawan']]);
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $models));
-    }
-
-    public function actionProses() {
-        $params = $_REQUEST;
-        $query = new Query;
-        $query->from('bagian')
-                ->select("*")
-                ->where(['like', 'bagian', $params['proses']]);
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $models));
-    }
-
-    public function actionView($id) {
-
-        $model = $this->findModel($id);
-        $query = new Query;
-        $query->from('wo_masuk')
-                ->join('JOIN', 'spk', 'spk.no_spk = wo_masuk.no_spk')
-                ->join('JOIN', 'chassis', 'spk.kd_chassis = chassis.kd_chassis') // model chassis, merk, jenis, 
-                ->join('JOIN', 'tbl_karyawan as sales', 'spk.nik= sales.nik') // sales
-                ->join('JOIN', 'customer', 'spk.kd_customer = customer.kd_cust') // customer
-                ->join('JOIN', 'model', 'spk.kd_model = model.kd_model') // customer
-                ->join('JOIN', 'serah_terima_in', 'spk.no_spk = serah_terima_in.no_spk') // customer
-                ->join('JOIN', 'warna', 'serah_terima_in.kd_warna = warna.kd_warna') // customer
-                ->where('wo_masuk.no_wo = "' . $id . '"')
-                ->select("*");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        foreach ($models as $data) {
-            $warna = 'dfdf';
-        }
-
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes), 'warna' => $warna), JSON_PRETTY_PRINT);
-    }
-
-    public function actionSelect() {
-        $params = json_decode(file_get_contents("php://input"), true);
-        $model = $this->findModel($params['no_wo']);
-        $query = new Query;
-        $query->from('wo_masuk')
-                ->join('JOIN', 'spk', 'spk.no_spk = wo_masuk.no_spk')
-                ->join('JOIN', 'chassis', 'spk.kd_chassis = chassis.kd_chassis') // model chassis, merk, jenis, 
-                ->join('JOIN', 'tbl_karyawan as sales', 'spk.nik= sales.nik') // sales
-                ->join('JOIN', 'customer', 'spk.kd_customer = customer.kd_cust') // customer
-                ->join('JOIN', 'model', 'spk.kd_model = model.kd_model') // customer
-                ->join('LEFT JOIN', 'serah_terima_in', 'spk.no_spk = serah_terima_in.no_spk') // customer
-                ->join('LEFT JOIN', 'warna', 'serah_terima_in.kd_warna = warna.kd_warna') // customer
-                ->where('wo_masuk.no_wo = "' . $params['no_wo'] . '"')
-                ->select("sales.nama as sales,warna.warna as warna, customer.nm_customer as customer, customer.nm_pemilik as pemilik,
-                            chassis.model_chassis as model_chassis, chassis.merk as merk, chassis.tipe as tipe, model.model, serah_terima_in.no_chassis as no_rangka,
-                            serah_terima_in.no_mesin, chassis.jenis, serah_terima_in.tgl_terima");
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        foreach ($models as $data) {
-            $asu['warna'] = (isset($data['warna'])) ? $data['warna'] : '-';
-            $asu['customer'] = (isset($data['customer'])) ? $data['customer'] : '-';
-            $asu['sales'] = (isset($data['sales'])) ? $data['sales'] : '-';
-            $asu['pemilik'] = (isset($data['pemilik'])) ? $data['pemilik'] : '-';
-            $asu['model_chassis'] = (isset($data['model_chassis'])) ? $data['model_chassis'] : '-';
-            $asu['tipe'] = (isset($data['tipe'])) ? $data['tipe'] : '-';
-            $asu['merk'] = (isset($data['merk'])) ? $data['merk'] : '-';
-            $asu['model'] = (isset($data['model'])) ? $data['model'] : '-';
-            $asu['no_rangka'] = (isset($data['no_rangka'])) ? $data['no_rangka'] : '-';
-            $asu['no_mesin'] = (isset($data['no_mesin'])) ? $data['no_mesin'] : '-';
-            $asu['jenis'] = (isset($data['jenis'])) ? $data['jenis'] : '-';
-            $asu['tgl_terima'] = (isset($data['tgl_terima'])) ? $data['tgl_terima'] : '-';
-        }
-        if ($asu['jenis'] == "Small Bus") {
-            // eksterior
-            $eksterior = new Query;
-            $eksterior->from('small_eks')
-                    ->select("*")
-                    ->where('no_wo="' . $params['no_wo'] . '"');
-
-            $command2 = $eksterior->createCommand();
-            $models2 = $command2->queryAll();
-
-            // interior
-            $interior = new Query;
-            $interior->from('small_int')
-                    ->select("*")
-                    ->where('no_wo="' . $params['no_wo'] . '"');
-
-            $command3 = $interior->createCommand();
-            $models3 = $command3->queryAll();
-        } else {
-            // eksterior
-            $eksterior = new Query;
-            $eksterior->from('mini_eks')
-                    ->select("*")
-                    ->where('no_wo="' . $params['no_wo'] . '"');
-
-            $command2 = $eksterior->createCommand();
-            $models2 = $command2->queryAll();
-
-            // interior
-            $interior = new Query;
-            $interior->from('mini_int')
-                    ->select("*")
-                    ->where('no_wo="' . $params['no_wo'] . '"');
-
-            $command3 = $interior->createCommand();
-            $models3 = $command3->queryAll();
-        }
-        $model['no_spk'] = ['as' => '1111'];
-
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes), 'det' => $asu, 'eksterior' => $models2, 'interior' => $models3), JSON_PRETTY_PRINT);
-    }
-
-    public function actionUpdate() {
-        $params = json_decode(file_get_contents("php://input"), true);
-        $deleteAll = Wip::deleteAll('no_wo="' . $params['wip']['no_wo']['no_wo'] . '"');
-
-        foreach ($params['detWip'] as $data) {
-            $model = new Wip();
-            $model->no_wo = isset($params['wip']['no_wo']['no_wo']) ? $params['wip']['no_wo']['no_wo'] : '-';
-            $model->kd_kerja = $data['proses']['kd_bag'];
-            $model->plan_start = date('d/m/Y', strtotime($data['plan_start']));
-            $model->plan_finish = date('d/m/Y', strtotime($data['plan_finish']));
-            $model->act_start = (!empty($data['act_start'])) ? date('d/m/Y', strtotime($data['act_start'])) : null;
-            $model->act_finish = (!empty($data['act_finish'])) ? date('Y-m-d', strtotime($data['act_finish'])) : null;
-            $model->ket = isset($data['ket']) ? $data['ket'] : '-';
-            $model->nik = isset($data['pemborong']['nik']) ? $data['pemborong']['nik'] : 0;
-            $model->save();
-        }
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-    }
+    
 
     public function actionDelete() {
         $params = json_decode(file_get_contents("php://input"), true);

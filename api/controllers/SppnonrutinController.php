@@ -94,7 +94,7 @@ class SppnonrutinController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tgl_trans DESC";
+        $sort = "no_spp DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -127,8 +127,13 @@ class SppnonrutinController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-
-                $query->andFilterWhere(['like', 'trans_spp.' . $key, $val]);
+                if ($key == 'barang') {
+                    $brg = $this->searchBrg($val);
+//                    print_r($brg);
+                    $query->andFilterWhere(['no_spp' => $brg]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+                }
             }
         }
 
@@ -151,6 +156,26 @@ class SppnonrutinController extends Controller {
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+
+    public function searchBrg($id) {
+        $patern = $id;
+        $query = new Query;
+        $query->from('det_spp')
+                ->select("*")
+                ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
+                ->join('JOIN', 'trans_spp', 'trans_spp.no_spp= det_spp.no_spp')
+                ->where("trans_spp.no_proyek='Non Rutin'")
+                ->select('det_spp.no_spp, barang.nm_barang');
+        $query->andFilterWhere(['like', 'barang.nm_barang', $patern]);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $data = array();
+        foreach ($models as $key) {
+            $data[] = $key['no_spp'];
+        }
+        return $data;
     }
 
     public function actionView($id) {
@@ -223,15 +248,27 @@ class SppnonrutinController extends Controller {
         if ($model->save()) {
             $deleteAll = DetSpp::deleteAll('no_spp="' . $model->no_spp . '"');
             foreach ($params['details'] as $val) {
-                foreach ($val['no_wo'] as $valWo) {
+
+                if (empty($val['no_wo'])) {
                     $det = new DetSpp();
                     $det->attributes = $val;
                     $det->no_spp = $model->no_spp;
                     $det->kd_barang = (empty($val['barang']['kd_barang'])) ? '-' : $val['barang']['kd_barang'];
                     $det->saldo = $val['saldo'];
                     $det->p = isset($val['p']) ? date('Y-m-d', strtotime($val['p'])) : null;
-                    $det->no_wo = (empty($valWo['no_wo'])) ? '-' : $valWo['no_wo'];
+                    $det->no_wo = '-';
                     $det->save();
+                } else {
+                    foreach ($val['no_wo'] as $valWo) {
+                        $det = new DetSpp();
+                        $det->attributes = $val;
+                        $det->no_spp = $model->no_spp;
+                        $det->kd_barang = (empty($val['barang']['kd_barang'])) ? '-' : $val['barang']['kd_barang'];
+                        $det->saldo = $val['saldo'];
+                        $det->p = isset($val['p']) ? date('Y-m-d', strtotime($val['p'])) : null;
+                        $det->no_wo = (empty($valWo['no_wo'])) ? '-' : $valWo['no_wo'];
+                        $det->save();
+                    }
                 }
             }
             $this->setHeader(200);

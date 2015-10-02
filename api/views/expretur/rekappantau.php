@@ -72,29 +72,30 @@ header("Content-Disposition: attachment; filename=excel-rekap-pemantauan-penerim
     <?php
     $no = 1;
     foreach ($models as $key) {
-        if ($key['p'] == '0000-00-00' || empty($key['p'])) {
-            $key['p'] = '';
+        //
+        if ($key['tgl_pengiriman'] == '0000-00-00' || empty($key['tgl_pengiriman'])) {
+            $key['tgl_pengiriman'] = '';
         }else{
-            $key['p'] = date('d/m',strtotime($key['p']));
+            $key['tgl_pengiriman'] = date('d/m',strtotime($key['tgl_pengiriman']));
         }
-        
-        if($key['a'] == '0000-00-00' || empty($key['a'])){
-            $key['a'] = '';
+        //
+        if($key['tgl_terima'] == '0000-00-00' || empty($key['tgl_terima'])){
+            $key['tgl_terima'] = '';
         }else{
-           $key['a'] = date('d/m',strtotime($key['a']));
+           $key['tgl_terima'] = date('d/m',strtotime($key['tgl_terima']));
         }
         
         ?>
         <tr>
             <td style="text-align: center;" class="border-bottom border-right"><?= $no ?></td>
             <td style="text-align: center;" class="border-bottom border-right"><?= $key['nota'] ?></td>
-            <td class="border-bottom border-right"><?= $key['kd_barang'] ?></td>
+            <td class="border-bottom border-right"><?= $key['kode_barang'] ?></td>
             <td class="border-bottom border-right"><?= $key['nm_barang'] ?></td>
             <td style="text-align: center;" class="border-bottom border-right"><?= $key['satuan'] ?></td>
             <td style="text-align: center;" class="border-bottom border-right"><?= $key['jml'] ?></td>
             <td style="text-align: center;" class="border-bottom border-right"><?= $key['jatuh_tempo'] ?></td>
-            <td style="text-align: center;" style="" class="border-bottom border-right"><?= $key['p'] ?></td>
-            <td style="text-align: center;" style="" class="border-bottom border-right"><?= $key['a'] ?></td>
+            <td style="text-align: center;" style="" class="border-bottom border-right"><?= $key['tgl_pengiriman'] ?></td>
+            <td style="text-align: center;" style="" class="border-bottom border-right"><?= $key['tgl_terima'] ?></td>
             <td class="border-bottom border-right"></td>
         </tr>
         <?php

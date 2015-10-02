@@ -1,16 +1,125 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
-</html>
+<div ng-app="app" ng-controller="rekapwipCtrl">
+    <div class="bg-light lter b-b wrapper-md">
+        <h1 class="m-n font-thin h3">Data Rekap - WO Keluar</h1>
+    </div>
+    <div class="wrapper-md" ng-show="!is_edit">
+        <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
+            <div class="panel-heading">.:: Rekap Wo In Process
+                <div class="btn-group pull-right" role="group" style="margin-top: -4px; margin-right: 18px;">
+                    <!--<button type="button" class="btn btn-success fa fa-file-excel-o" ng-show="!isCollapsed" ng-click="excel();">&nbsp;&nbsp;Export Excel</button>-->
+                    <div class="pull-right dropdown" style="margin-top: -4px" dropdown="">
+                        <button type="button" class="btn btn-info" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Rekap WIP<span class="caret"></span></button>
+                        <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 260px;">
+                            <li><a href="#" ng-click="print()">Cetak</a></li>
+                            <li><a href="#" ng-click="excel()">Export Excel</a></li>
+                        </ul>
+                    </div>
+                </div> 
+            </div>
+
+            <div class="panel-body">
+
+                <div class="panel panel-info" style="text-align: center">
+                    <div class="panel-heading">
+                        <div class="form-horizontal">
+
+                            <div class="form-group">
+                                <div class="control-group">
+
+                                    <div class="col-sm-3">
+                                        <input placeholder="Tanggal Periode" date-range-picker class="form-control" st-search="tgl_terima" type="text"  ng-model="tanggal">
+                                    </div>
+
+                                    <div class="col-sm-3">
+                                        <select  class="form-control m-b" st-search="jenis" >
+                                            <option value="">-- Pilih Jenis --</option>
+                                            <option value="Mini Bus">Mini Bus</option>
+                                            <option value="Small Bus">Small Bus</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input placeholder="NO WO" st-search="no_wo" class="form-control"/>
+                                    </div>
+                                   
+                                    <div class="col-sm-3">
+                                        <input placeholder="Sales" st-search="nama" class="form-control"/>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="control-group">
+
+                                    <div class="col-sm-3">
+                                        <input placeholder="Nama Customer" st-search="nm_customer" class="form-control"/>
+                                    </div>
+
+                                   
+                                    <div class="col-sm-3">
+                                        <input placeholder="Merk" st-search="merk" class="form-control"/>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input placeholder="Model" st-search="model" class="form-control"/>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input placeholder="Type" st-search="tipe" class="form-control"/>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!--</div>-->
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive" ng-hide="paginations == 0">
+                <table class="table table-striped table-hover" >
+                    <thead>
+                        <tr>
+                            <th st-sort="nama">No Wo</th>
+                            <th st-sort="nm_customer">MERK/TYPE</th>
+                            <th st-sort="nm_customer">IN CHASSIS</th>
+                            <th st-sort="kd_titipan">IN SPK</th>
+                            <th st-sort="no_wo">IN PRODUCTION</th>
+                            <th st-sort="merk">CUSTOMER</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-show="!isLoading">
+                        <tr ng-repeat="row in displayed">
+                            <td>{{row.no_wo}}</td>
+                            <td>{{row.merk}} {{row.tipe}}</td>
+                            <td>{{row.tgl_terima}}</td>
+                            <td>{{row.tgl}}</td>
+                            <td>{{row.plan_start}}</td>
+                            <td>{{row.nm_customer}}</td>
+
+
+                        </tr>
+                    </tbody>
+                    <tbody ng-show="isLoading">
+                        <tr>
+                            <td colspan="4" class="text-center">Loading ... </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="12" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html">
+                            </td>
+                        </tr>
+                </table>		
+            </div>
+        </div>
+    </div>
+
+    <!--FORM-->
+
+
+
+    <!--PRINT-->
+
+
+
+</div>

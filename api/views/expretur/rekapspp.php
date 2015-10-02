@@ -23,7 +23,7 @@ foreach ($models as $val) {
     $data[$val['no_spp']]['title']['no_spp'] = $val['no_spp'];
     $data[$val['no_spp']]['title']['tgl_trans'] = date('d-m-Y', strtotime($val['tgl_trans']));
     $data[$val['no_spp']]['body'][$i]['nota'] = $val['nota'];
-    $data[$val['no_spp']]['body'][$i]['kd_barang'] = $val['kd_barang'];
+    $data[$val['no_spp']]['body'][$i]['kode_barang'] = $val['kode_barang'];
     $data[$val['no_spp']]['body'][$i]['nm_barang'] = $val['nm_barang'];
     $data[$val['no_spp']]['body'][$i]['satuan'] = $val['satuan'];
     $data[$val['no_spp']]['body'][$i]['qty'] = $val['qty'];
@@ -107,12 +107,12 @@ foreach ($models as $val) {
                     <td class="border-right border-bottom"></td>
                     <td class="border-right border-bottom"></td>
                     <td style="text-align: center;" class="border-right border-bottom" valign="top"><?= $keys['nota'] ?></td>
-                    <td style="text-align: center;" class="border-right border-bottom" valign="top"><?= $keys['kd_barang'] ?></td>
+                    <td style="text-align: center;" class="border-right border-bottom" valign="top"><?= $keys['kode_barang'] ?></td>
                     <td class="border-right border-bottom" valign="top"><?= $keys['nm_barang']; ?></td>
                     <td style="text-align: center;" class="border-right border-bottom" valign="top"><?= $keys['satuan']; ?></td>
                     <td style="text-align: center;" class="border-right border-bottom" valign="top">&nbsp;<?= $keys['qty']; ?></td>
-                    <td class="border-right border-bottom"valign="top">&nbsp;<?= $keys['p']; ?></td>
-                    <td class="border-right border-bottom" valign="top">&nbsp;<?= $keys['a']; ?></td>
+                    <td class="border-right border-bottom"valign="top" style="width: 60px">&nbsp;<?= $keys['p']; ?></td>
+                    <td class="border-right border-bottom" valign="top" style="width: 60px">&nbsp;<?= $keys['a']; ?></td>
                     <td class="border-right border-bottom" valign="top"><?= $keys['ket']; ?></td>
                 </tr>
                 <?php

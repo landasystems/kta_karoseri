@@ -125,7 +125,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
         $scope.form.tgl_kontrak = new Date();
-        $scope.form.in_spk_marketing = new Date();
+//        $scope.form.in_spk_marketing = new Date();
         $scope.eks = {};
         $scope.inter = {};
 
@@ -149,9 +149,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         $scope.form = form;
         $scope.selected(form);
         $scope.form = {};
-        $scope.form.tgl_keluar = new Date(form.tgl_keluar);
         $scope.form.tgl_kontrak = new Date(form.tgl_kontrak);
-        $scope.form.in_spk_marketing = new Date(form.in_spk_marketing);
         $scope.eks = {};
         $scope.inter = {};
     };
@@ -257,8 +255,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
                 $scope.inter = data.interior;
                
             }
-//             $scope.inter.seat1 = data.interior[0].konf_seat1;
-//          console.log(data);
+//            $scope.form.tgl = data.in_spk_marketing;
             $scope.form.warna = data.det.warna;
             $scope.form.no_wo = data.det.no_wo;
             $scope.form.customer = data.det.customer;
@@ -279,7 +276,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.form.warna = data.data.titipan.warna.warna;
 
             $scope.getSpk(form);
-            console.log(data.interior);
+            console.log(data);
            
 
 
@@ -292,10 +289,10 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
             form.merk = data.spk.merk;
             form.model_chassis = data.spk.model_chassis;
             form.jenis = data.spk.jenis;
+            form.in_spk_marketing = data.spk.tgl;
             form.tipe = data.spk.tipe;
             form.model = data.spk.model;
             form.sales = data.spk.nama;
-            form.no_wo = data.code;
             form.customer = data.spk.nm_customer;
             form.pemilik = data.spk.nm_pemilik;
 

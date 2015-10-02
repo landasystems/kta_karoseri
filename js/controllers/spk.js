@@ -7,6 +7,8 @@ app.controller('spkCtrl', function ($scope, Data, toaster) {
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
+    $scope.gantiStatus = {};
+    $scope.msg = '';
 //    $scope.detKerja = [];
 
     $scope.addDetail = function () {
@@ -15,11 +17,13 @@ app.controller('spkCtrl', function ($scope, Data, toaster) {
         }
         $scope.detKerja.unshift(newDet);
     }
-    
+
+
+
     $scope.bukaPrint = function (form) {
 //        console.log(form);
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
-            Data.post('womasuk/bukaprint/', {nota: form}).then(function (result) {
+            Data.post('spk/bukaprint/', {id_spk: form}).then(function (result) {
                 if (result.status == 0) {
                     toaster.pop('error', "Terjadi Kesalahan");
                 } else {
@@ -28,7 +32,7 @@ app.controller('spkCtrl', function ($scope, Data, toaster) {
             });
         }
     }
-    
+
     $scope.removeRow = function (paramindex) {
         var comArr = eval($scope.detKerja);
         if (comArr.length > 1) {
@@ -38,7 +42,7 @@ app.controller('spkCtrl', function ($scope, Data, toaster) {
         }
     };
     $scope.updt_st = function ($id) {
-        Data.get('womasuk/updtst/' + $id).then(function (data) {
+        Data.get('spk/updtst/' + $id).then(function (data) {
 //            $scope.callServer(tableStateRef);
         });
     }
@@ -135,22 +139,24 @@ app.controller('spkCtrl', function ($scope, Data, toaster) {
 
     };
     $scope.save = function (form, detail) {
+        if (confirm("Apakah anda yakin mengisi data tersebut ?")) {
 
-        var data = {
-            spk: form,
-            detailSpk: detail,
-        };
-        var url = ($scope.is_create == true) ? 'spk/create' : 'spk/update/' + form.id_spk;
-        Data.post(url, data).then(function (result) {
-            if (result.status == 0) {
-                toaster.pop('error', "Terjadi Kesalahan", result.errors);
-            } else {
-                $scope.is_edit = false;
-                $scope.form = {};
-                $scope.callServer(tableStateRef); //reload grid ulang
-                toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
-            }
-        });
+            var data = {
+                spk: form,
+                detailSpk: detail,
+            };
+            var url = ($scope.is_create == true) ? 'spk/create' : 'spk/update/' + form.id_spk;
+            Data.post(url, data).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan", result.errors);
+                } else {
+                    $scope.is_edit = false;
+                    $scope.form = {};
+                    $scope.callServer(tableStateRef); //reload grid ulang
+                    toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
+                }
+            });
+        }
     };
     $scope.cancel = function () {
         if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi

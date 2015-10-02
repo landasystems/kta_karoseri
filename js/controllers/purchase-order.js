@@ -292,21 +292,23 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     };
 
     $scope.save = function (form, detail) {
-        var data = {
-            formpo: form,
-            details: detail,
-        };
+        if (confirm("Apakah Anda yakin mengisi data tersebut ?")) {
+            var data = {
+                formpo: form,
+                details: detail,
+            };
 //        console.log(data);
-        var url = ($scope.is_create == true) ? 'po/create' : 'po/update/' + form.nota;
-        Data.post(url, data).then(function (result) {
-            if (result.status == 0) {
-                toaster.pop('error', "Terjadi Kesalahan", result.errors);
-            } else {
-                $scope.is_edit = false;
-                $scope.view(result.data.nota);
-                toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
-            }
-        });
+            var url = ($scope.is_create == true) ? 'po/create' : 'po/update/' + form.nota;
+            Data.post(url, data).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan", result.errors);
+                } else {
+                    $scope.is_edit = false;
+                    $scope.view(result.data.nota);
+                    toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
+                }
+            });
+        }
 
     };
     $scope.cancel = function () {

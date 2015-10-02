@@ -35,9 +35,28 @@ class BbkController extends Controller {
                     'print' => ['get'],
                     'pengecualian' => ['post'],
                     'bukaprint' => ['post'],
+                    'riwayatambil' => ['post'],
                 ],
             ]
         ];
+    }
+
+    public function actionRiwayatambil() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        if (!empty($params['no_wo']) and ! empty($params['kd_jab'])) {
+            $query = new Query;
+            $query->from('trans_bbk')
+                    ->join('LEFT JOIN', 'det_bbk', 'det_bbk.no_bbk = trans_bbk.no_bbk')
+                    ->join('LEFT JOIN', 'barang', 'barang.kd_barang = det_bbk.kd_barang')
+                    ->join('LEFT JOIN', 'tbl_jabatan', 'tbl_jabatan.id_jabatan = trans_bbk.kd_jab')
+                    ->select('trans_bbk.tanggal,tbl_jabatan.jabatan,barang.nm_barang, det_bbk.jml')
+                    ->orderBy('trans_bbk.tanggal DESC')
+                    ->where('trans_bbk.no_wo = "'.$params['no_wo']['no_wo'].'" and trans_bbk.kd_jab = "'.$params['kd_jab']['id_jabatan'].'"');
+            $command = $query->createCommand();
+            $models = $command->queryAll();
+
+            echo json_encode(array('status' => 1, 'data' => $models));
+        }
     }
 
     public function beforeAction($event) {
@@ -444,12 +463,11 @@ class BbkController extends Controller {
                 $barang = Barang::find()->where('kd_barang="' . $detbbk->kd_barang . '"')->one();
                 $barang->saldo += $detbbk->jml;
                 $barang->save();
-                
+
                 //hapus detail bbk
                 $detbbk->delete();
             }
 //            $del = DetBbk::deleteAll('no_bbk = "' . $model->no_bbk . '"');
-
             //isi detail dengan yang baru
             $detailBbk = $params['detailBbk'];
             foreach ($detailBbk as $val) {

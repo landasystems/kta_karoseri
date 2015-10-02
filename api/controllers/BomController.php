@@ -637,27 +637,32 @@ class BomController extends Controller {
         session_start();
         $query = $_SESSION['bom'];
         $kd_bom = $_SESSION['kd_bom'];
+        $detail = $_SESSION['detail'];
 
         $query->limit(null);
         $query->offset(null);
 
         $command = $query->createCommand();
         $models = $command->queryAll();
+        
+        $det = $detail->createCommand();
+        $modelsDetail = $det->queryAll();
 
-        $det = BomDet::find()
-                ->with(['jabatan', 'barang'])
-                ->where(['kd_bom' => $kd_bom])
-                ->all();
+//        $det = BomDet::find()
+//                ->where(['kd_bom' => $kd_bom])
+//                ->with(['jabatan', 'barang'])
+////                ->orderBy('tbl_jabatan.urutan_produksi ASC, tbl_jabatan.jabatan ASC, barang.nm_barang ASC')
+//                ->all();
 
         $detail = array();
         $i = 0;
-        foreach ($det as $val) {
-            $detail[$val->jabatan->id_jabatan]['nama_jabatan'] = isset($val->jabatan->jabatan) ? $val->jabatan->jabatan : '-';
-            $detail[$val->jabatan->id_jabatan]['body'][$i]['nama_barang'] = isset($val->barang->nm_barang) ? $val->barang->nm_barang : '-';
-            $detail[$val->jabatan->id_jabatan]['body'][$i]['satuan'] = isset($val->barang->satuan) ? $val->barang->satuan : '-';
-            $detail[$val->jabatan->id_jabatan]['body'][$i]['harga'] = isset($val->barang->harga) ? $val->barang->harga : '0';
-            $detail[$val->jabatan->id_jabatan]['body'][$i]['jumlah'] = isset($val->qty) ? $val->qty : '-';
-            $detail[$val->jabatan->id_jabatan]['body'][$i]['ket'] = isset($val->ket) ? $val->ket : '-';
+        foreach ($modelsDetail as $val) {
+            $detail[$val['kd_jab']]['nama_jabatan'] = !empty($val['jabatan']) ? $val['jabatan'] : '-';
+            $detail[$val['kd_jab']]['body'][$i]['nama_barang'] = !empty($val['nm_barang']) ? $val['nm_barang'] : '-';
+            $detail[$val['kd_jab']]['body'][$i]['satuan'] = !empty($val['satuan']) ? $val['satuan'] : '-';
+            $detail[$val['kd_jab']]['body'][$i]['harga'] = !empty($val['harga']) ? $val['harga'] : '0';
+            $detail[$val['kd_jab']]['body'][$i]['jumlah'] = !empty($val['qty']) ? $val['qty'] : '-';
+            $detail[$val['kd_jab']]['body'][$i]['ket'] = !empty($val['ket']) ? $val['ket'] : '-';
             $i++;
         }
         return $this->render("/expretur/bomtrans", ['model' => $models[0], 'detail' => $detail]);
@@ -687,6 +692,7 @@ class BomController extends Controller {
         session_start();
         $_SESSION['bom'] = $query;
         $_SESSION['kd_bom'] = $models['kd_bom'];
+        $_SESSION['detail'] = $det;
 
         $detail = array();
         foreach ($detBom as $key => $val) {

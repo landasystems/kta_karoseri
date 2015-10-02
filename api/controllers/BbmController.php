@@ -208,7 +208,7 @@ class BbmController extends Controller {
     public function actionRekap() {
         $params = $_REQUEST;
         $filter = array();
-        $sort = "db.no_bbm ASC";
+        $sort = "db.no_bbm DESC";
         $offset = 0;
         $limit = 10;
 
@@ -351,6 +351,7 @@ class BbmController extends Controller {
                     $det->attributes = $val;
                     $det->kd_barang = $val['barang']['kd_barang'];
                     $det->no_bbm = $model->no_bbm;
+                    $det->no_po = $model->no_po;
                     $det->save();
 
                     if (!empty($no_spp)) {
@@ -413,6 +414,7 @@ class BbmController extends Controller {
                 $det->attributes = $val;
                 $det->kd_barang = $val['barang']['kd_barang'];
                 $det->no_bbm = $model->no_bbm;
+                 $det->no_po = $model->no_po;
                 $det->save();
 
                 //update tanggal aktual spp

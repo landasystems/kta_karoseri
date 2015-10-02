@@ -222,7 +222,7 @@
                                         <a ui-sref='transaksi.worderkeluar'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Work Order Keluar</a>
                                     </li>
                                     <li ng-show="user.akses.transaksi_winprogress">
-                                        <a ui-sref='transaksi.winprogress'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Work In Progress</a>
+                                        <a ui-sref='transaksi.winprogress'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Work In Process</a>
                                     </li>
                                     <li ng-show="user.akses.transaksi_spk">
                                         <a ui-sref="transaksi.spk"><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Surat Perintah Kerja</a>
@@ -331,9 +331,9 @@
                                         <li ng-show="user.akses.rekap_wokeluar">
                                             <a ui-sref='rekap.wokeluar'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>WO Keluar</a>
                                         </li>
-                                        <!--                                        <li ng-show="user.akses.rekap_wip">
-                                                                                    <a ui-sref='rekap.wip'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>WIP</a>
-                                                                                </li>-->
+                                        <li ng-show="user.akses.rekap_wip">
+                                            <a ui-sref='rekap.wip'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Work In Process</a>
+                                        </li>
 
                                     </ul>
                                 </ul>

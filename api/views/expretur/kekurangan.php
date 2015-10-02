@@ -83,7 +83,7 @@ if (!empty($filter['tgl_periode'])) {
                     ?>
                     <tr>
                         <td style="text-align: center" class="border-bottom border-right"><?= $val['no_spp'] ?></td>
-                        <td class="border-bottom border-right"><?= $val['kd_barang'] ?></td>
+                        <td class="border-bottom border-right"><?= $val['kode_barang'] ?></td>
                         <td class="border-bottom border-right"> <?= $val['nm_barang'] ?></td>
                         <td style="text-align: center" class="border-bottom border-right"><?= $val['satuan'] ?></td>
                         <td style="text-align: center" class="border-bottom border-right"><?= $value['selisih']?></td>
@@ -100,7 +100,7 @@ if (!empty($filter['tgl_periode'])) {
                  ?>
                     <tr>
                         <td style="text-align: center" class="border-bottom border-right"><?= $val['no_spp'] ?></td>
-                        <td class="border-bottom border-right"><?= $val['kd_barang'] ?></td>
+                        <td class="border-bottom border-right"><?= $val['kode_barang'] ?></td>
                         <td class="border-bottom border-right"> <?= $val['nm_barang'] ?></td>
                         <td style="text-align: center" class="border-bottom border-right"><?= $val['satuan'] ?></td>
                         <td style="text-align: center" class="border-bottom border-right"><?= $val['jumlah_spp']?></td>
