@@ -92,7 +92,7 @@ class SpprutinController extends Controller {
                 ->join('LEFT JOIN', 'view_wo_spk', 'view_wo_spk.no_wo = det_spp.no_wo')
                 ->orderBy('view_wo_spk.no_wo ASC, barang.nm_barang ASC')
 //                ->select("det_spp.*,barang.nm_barang,barang.satuan,trans_po.nota, det_spp.p as tgl_trans, det_spp.qty as jumlah_spp, det_bbm.jumlah as jumlah_bbm, (det_spp.qty-det_bbm.jumlah) as selisih");
-                ->select("det_spp.*,barang.nm_barang,barang.satuan,det_spp.p as tgl_trans, det_spp.qty as jumlah_spp");
+                ->select("det_spp.*,barang.kd_barang as kode_barang,barang.nm_barang,barang.satuan,det_spp.p as tgl_trans, det_spp.qty as jumlah_spp");
         if (isset($_SESSION['filter'])) {
             foreach ($_SESSION['filter'] as $key => $val) {
                 if (isset($key) && $key == 'kategori') {
@@ -301,7 +301,7 @@ class SpprutinController extends Controller {
                 ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
                 ->join('RIGHT JOIN', 'trans_po', 'trans_po.spp = trans_spp.no_spp')
                 ->join('RIGHT JOIN', 'detail_po', 'detail_po.nota = trans_po.nota and detail_po.kd_barang = det_spp.kd_barang')
-                ->select("det_spp.*,trans_spp.*,barang.nm_barang,barang.satuan, trans_po.nota");
+                ->select("det_spp.*,trans_spp.*,barang.kd_barang as kode_barang,barang.nm_barang,barang.satuan, trans_po.nota");
 
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);

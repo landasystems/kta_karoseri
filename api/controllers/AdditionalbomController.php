@@ -176,7 +176,7 @@ class AdditionalbomController extends Controller {
         $command = $query->createCommand();
         $models = $command->query()->read();
 
-        \Yii::error($models);
+//        \Yii::error($models);
 
         $no_wo = TransAdditionalBomWo::find()->where('tran_additional_bom_id="' . $id . '"')->all();
 

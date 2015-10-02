@@ -74,8 +74,8 @@
                             <td>{{row.petugas}}</td>
                             <td ng-hide="is_view == true">
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                                    <button type="button" ng-show="row.status == 0" class="btn btn-info fa fa-edit" ng-click="update(row)" title="Edit BBK"></button>
-                                    <button type="button" ng-show="row.status == 0" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" title="Hapus BBK"></button>
+                                    <button type="button" ng-show="row.status == 0 || user.id == 1" class="btn btn-info fa fa-edit" ng-click="update(row)" title="Edit BBK"></button>
+                                    <button type="button" ng-show="row.status == 0 || user.id == 1" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" title="Hapus BBK"></button>
                                 </div> 
                             </td>
                         </tr>
@@ -263,9 +263,7 @@
                                 </ui-select>
                                 </td>
                                 <td>
-                                    <input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control"
-                                           ng-keyup="
-                                                               kalkulasi(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang, detail.jml);">
+                                    <input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control" ng-keyup="kalkulasi(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang, detail.jml);">
                                 </td>
                                 <td>{{detail.satuan}}</td>
                                 <td><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control" ng-enter="addDetail('');" event-focus-id="0" required></td>

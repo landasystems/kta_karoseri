@@ -30,7 +30,6 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
         paramRef = param;
         Data.get('sppnonrutin', param).then(function (data) {
             $scope.displayed = data.data;
-//            $scope.displayed.tgl_terima = new Date(data.data.tgl_terima);
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
 
@@ -196,6 +195,11 @@ app.controller('modalCtrl', function ($scope, Data, $modalInstance, form) {
 
     $scope.formmodal = form.detail;
     $scope.is_create = form.is_create;
+    if($scope.is_create == true){
+        $scope.formmodal.p = new Date();
+    }else{
+        $scope.formmodal.p = new Date($scope.formmodal.p);
+    }
 //    $scope.woMasuk = [];
 //    $scope.woMasuk = form.no_wo;
 //    $scope.woSelected = function (formmodal, woMasuk, items) {
