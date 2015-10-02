@@ -61,21 +61,47 @@ class SiteController extends Controller {
     }
 
     public function actionCoba() {
-        $absen = AbsensiEttLog::find()
-                ->joinWith('karyawan')
-                ->select("emp.first_name, emp.pin, date(scan_date) as scan_date")
-//                ->where('date(scan_date) = "' . date("Y-m-d") . '"')
-                ->limit(100)
+        $departement = \app\models\Department::find()
+                ->orderBy('id_department   ')
                 ->all();
 
-        foreach ($absen as $key => $val) {
-//            print_r($val) . '<br>';
-            echo isset($val['karyawan']['first_name']) ? $val['karyawan']['first_name'] : '-' . '<br>';
-        }
+        echo '<table>';
+        foreach ($departement as $r) {
+            echo '<tr><td><b>' . $r->id_department . '| ' . $r->department . '</b></td><td></td><td></td><td></td><td></td></tr>';
 
-//        echo json_encode($absen->pin);
-//        $aa = AbsensiEmp::find()->limit(10)->all();
-//        print_r($absen);
+            $section = \app\models\Section::find()
+                    ->orderBy('id_section')
+                    ->where('dept="' . $r->id_department . '"')
+                    ->all();
+            foreach ($section as $s) {
+                echo '<tr><td></td><td>' . $s->id_section . '| ' . $s->section . '</td><td></td><td></td><td></td></tr>';
+
+                $subsection = \app\models\SubSection::find()
+                        ->orderBy('kd_kerja')
+                        ->where('id_section="' . $s->id_section . '"')
+                        ->all();
+                foreach ($subsection as $t) {
+                    echo '<tr><td></td><td></td><td>' . $t->kd_kerja . '| ' . $t->kerja . '</td><td></td><td></td></tr>';
+
+                    $jabatan = \app\models\Jabatan::find()
+                            ->orderBy('id_jabatan')
+                            ->where('krj="' . $t->kd_kerja . '"')
+                            ->all();
+                    foreach ($jabatan as $u) {
+                        echo '<tr><td></td><td></td><td></td><td>' . $u->id_jabatan . '| ' . $u->jabatan . '</td><td></td></tr>';
+                        
+                        $karyawan = \app\models\Karyawan::find()
+                                    ->orderBy('nik')
+                                    ->where('jabatan="' . $u->id_jabatan . '"')
+                                    ->all();
+                            foreach ($karyawan as $v) {
+                                echo '<tr><td></td><td></td><td></td><td></td><td>' . $v->nik . '| ' . $v->nama . '</td></tr>';
+                            }
+                    }
+                }
+            }
+        }
+        echo '</table>';
     }
 
     public function actionLogin() {
