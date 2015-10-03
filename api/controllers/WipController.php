@@ -218,6 +218,7 @@ class WipController extends Controller {
     public function actionExcel() {
         session_start();
         $query = $_SESSION['queryas'];
+        \Yii::error($query);
         $query->limit(null);
         $query->offset(null);
         $command = $query->createCommand();
