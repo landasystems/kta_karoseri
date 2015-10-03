@@ -261,6 +261,7 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
             }
         });
     };
+    
     if ($stateParams.form != null) { //pengecekan jika ada pencarian, dilempar ke view
         $scope.view($stateParams.form);
     }

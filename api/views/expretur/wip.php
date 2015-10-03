@@ -52,8 +52,9 @@ header("Content-Disposition: attachment; filename=excel-rekap-lapwomasuk.xls");
 </tr>
 </table>
 
-<table style="border-collapse: collapse; font-size: 9px;" width="100%"  border="1">
-    <tr>
+<table style="border-collapse: collapse; font-size: 9px;page-break-before: always; page-break-after: always;" width="100%"  border="1">
+    <thead>
+    <tr >
         <th class="border-all" style="font-size:8px">NO</th>
         <th class="border-all">NO WO</th>
         <th class="border-all">MERK/TYPE</th>
@@ -82,18 +83,60 @@ header("Content-Disposition: attachment; filename=excel-rekap-lapwomasuk.xls");
         <th class="border-all">PDC</th>
         <th class="border-all">KET</th>
     </tr>
+    </thead>
+    <tbody>
     <?php
-    print_r($model);
-//         foreach ($model as $data){
-//             echo'
-//                 <td>'.$data['no_wo'].'</td>
-//                 ';
-//         }
+//    print_r($model);
+    $no=0;
+         foreach ($models as $data){
+             $no++;
+             echo'<tr>
+                 <td class="border-all" style="font-size:8px">'.$no.'</td>
+                 <td class="border-all" style="font-size:8px">'.$data['no_wo'].'</td>
+                 <td class="border-all" style="font-size:8px">'.$data['merk'].' '.$data['tipe'].'</td>
+                 <td class="border-all" style="font-size:8px">'.$data['tgl_terima'].'</td>
+                 <td class="border-all" style="font-size:8px">'.$data['tgl'].'</td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px"></td>
+                     </tr>
+                 ';
+         }
     ?>
+        </tbody>
 </table>
 <?php
 if (isset($_GET['print'])) {
     ?>
+<style>
+@media print
+{
+  table { page-break-after:auto }
+  tr    { page-break-inside:avoid; page-break-after:auto }
+  td    { page-break-inside:avoid; page-break-after:auto }
+  thead { display:table-header-group }
+  tfoot { display:table-footer-group }
+}
+</style>
     <script type="text/javascript">
         window.print();
         setTimeout(function () {
