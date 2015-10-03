@@ -15,6 +15,35 @@ app.controller('tambahItemCtrl', function ($scope, Data, toaster, FileUploader, 
     });
 
     $scope.noWo = [];
+    $scope.pilih = {};
+
+    $scope.validasi = function () {
+        if (confirm("Apa anda yakin akan memproses item ini ?")) {
+            Data.post('additionalbom/validasi/', $scope.pilih).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan");
+                } else {
+                    $scope.is_edit = false;
+                    $scope.callServer(tableStateRef); //reload grid ulang
+                    toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
+                }
+            });
+        }
+    };
+
+    $scope.bukavalidasi = function () {
+        if (confirm("Apa anda yakin akan memproses item ini ?")) {
+            Data.post('additionalbom/bukavalidasi/', $scope.pilih).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan");
+                } else {
+                    $scope.is_edit = false;
+                    $scope.callServer(tableStateRef); //reload grid ulang
+                    toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
+                }
+            });
+        }
+    };
 
     $scope.cariWo = function ($query) {
         if ($query.length >= 2) {

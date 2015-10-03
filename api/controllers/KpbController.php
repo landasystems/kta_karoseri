@@ -80,7 +80,12 @@ class KpbController extends Controller {
     public function actionJabkpb() {
         $param = json_decode(file_get_contents("php://input"), true);
         $query = new Query;
-        $optional = \app\models\TransAdditionalBomWo::find()->where(['no_wo' => $param['key']['no_wo']])->all();
+        $optional = \app\models\TransAdditionalBomWo::find()
+                ->joinWith('transadditionalbom')
+                ->where(['no_wo' => $param['key']['no_wo']])
+                ->andWhere(['trans_additional_bom.status' => 1])
+                ->all();
+
         if (empty($optional) or count($optional) == 0) {
             $query->from('tbl_jabatan as tj')
                     ->join('JOIN', 'det_standar_bahan as dsb', 'dsb.kd_jab = tj.id_jabatan')
@@ -109,7 +114,12 @@ class KpbController extends Controller {
         //cek apakah sdh di print
         $cek = Kpb::find()->where(['no_wo' => $param['kd_bom']['no_wo'], 'kd_jab' => $param['kd_jab'], 'status' => 1])->count();
 
-        $optional = \app\models\TransAdditionalBomWo::find()->where(['no_wo' => $param['kd_bom']['no_wo']])->all();
+        $optional = \app\models\TransAdditionalBomWo::find()
+                ->joinWith('transadditionalbom')
+                ->where(['no_wo' => $param['kd_bom']['no_wo']])
+                ->andWhere(['trans_additional_bom.status' => 1])
+                ->all();
+
         if (empty($optional) or count($optional) == 0) {
             $query = new Query;
             $query->from('det_standar_bahan as dsb')

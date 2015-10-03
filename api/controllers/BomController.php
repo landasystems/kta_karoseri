@@ -298,8 +298,11 @@ class BomController extends Controller {
         $i = 0;
         foreach ($models as $val) {
             //cek optional BOM
-//            $optional = \app\models\TransAdditionalBom::findAll(['no_wo' => $val['no_wo']]);
-            $optional = \app\models\TransAdditionalBomWo::find()->where(['no_wo' => $val['no_wo']])->all();
+            $optional = \app\models\TransAdditionalBomWo::find()
+                    ->joinWith('transadditionalbom')
+                    ->where(['no_wo' => $val['no_wo']])
+                    ->andWhere(['trans_additional_bom.status' => 1])
+                    ->all();
 
             //jika tidak ada optional ambil dari trans_standar_bahan
             if (empty($optional) or count($optional) == 0) {
@@ -354,7 +357,11 @@ class BomController extends Controller {
         $no_wo = $params['no_wo']['no_wo'];
 
         //cek optional BOM
-        $optional = \app\models\TransAdditionalBomWo::find()->where('no_wo = "' . $no_wo . '"')->all();
+        $optional = \app\models\TransAdditionalBomWo::find()
+                ->joinWith('transadditionalbom')
+                ->where(['no_wo' => $no_wo])
+                ->andWhere(['trans_additional_bom.status' => 1])
+                ->all();
 
         //jika tidak ada optional ambil dari trans_standar_bahan
         if (empty($optional) or count($optional) == 0) {
@@ -462,8 +469,11 @@ class BomController extends Controller {
             if ($jWo <= 5) {
 
                 //cek optional BOM
-//                $optional = \app\models\TransAdditionalBom::find()->where('no_wo = "' . $noWo . '"')->all();
-                $optional = \app\models\TransAdditionalBomWo::find()->where(['no_wo' => $noWo])->all();
+                $optional = \app\models\TransAdditionalBomWo::find()
+                        ->joinWith('transadditionalbom')
+                        ->where(['no_wo' => $noWo])
+                        ->andWhere(['trans_additional_bom.status' => 1])
+                        ->all();
 
                 //jika tidak ada optional ambil dari trans_standar_bahan
                 if (empty($optional) or count($optional) == 0) {
@@ -551,8 +561,11 @@ class BomController extends Controller {
             if ($jWo <= 5) {
 
                 //cek optional BOM
-//                $optional = \app\models\TransAdditionalBom::find()->where('no_wo = "' . $noWo . '"')->all();
-                $optional = \app\models\TransAdditionalBomWo::find()->where(['no_wo' => $noWo])->all();
+                $optional = \app\models\TransAdditionalBomWo::find()
+                        ->joinWith('transadditionalbom')
+                        ->where(['no_wo' => $noWo])
+                        ->andWhere(['trans_additional_bom.status' => 1])
+                        ->all();
 
                 //jika tidak ada optional ambil dari trans_standar_bahan
                 if (empty($optional) or count($optional) == 0) {
