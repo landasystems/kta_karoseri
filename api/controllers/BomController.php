@@ -300,7 +300,7 @@ class BomController extends Controller {
             //cek optional BOM
             $optional = \app\models\TransAdditionalBomWo::find()
                     ->joinWith('transadditionalbom')
-                    ->where(['no_wo' => $val['no_wo']])
+                    ->where(['trans_additional_bom_wo.no_wo' => $val['no_wo']])
                     ->andWhere(['trans_additional_bom.status' => 1])
                     ->all();
 
@@ -359,7 +359,7 @@ class BomController extends Controller {
         //cek optional BOM
         $optional = \app\models\TransAdditionalBomWo::find()
                 ->joinWith('transadditionalbom')
-                ->where(['no_wo' => $no_wo])
+                ->where(['trans_additional_bom_wo.no_wo' => $no_wo])
                 ->andWhere(['trans_additional_bom.status' => 1])
                 ->all();
 
@@ -471,7 +471,7 @@ class BomController extends Controller {
                 //cek optional BOM
                 $optional = \app\models\TransAdditionalBomWo::find()
                         ->joinWith('transadditionalbom')
-                        ->where(['no_wo' => $noWo])
+                        ->where(['trans_additional_bom_wo.no_wo' => $noWo])
                         ->andWhere(['trans_additional_bom.status' => 1])
                         ->all();
 
@@ -563,7 +563,7 @@ class BomController extends Controller {
                 //cek optional BOM
                 $optional = \app\models\TransAdditionalBomWo::find()
                         ->joinWith('transadditionalbom')
-                        ->where(['no_wo' => $noWo])
+                        ->where(['trans_additional_bom_wo.no_wo' => $noWo])
                         ->andWhere(['trans_additional_bom.status' => 1])
                         ->all();
 

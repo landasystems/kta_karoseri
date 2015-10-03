@@ -82,7 +82,7 @@ class KpbController extends Controller {
         $query = new Query;
         $optional = \app\models\TransAdditionalBomWo::find()
                 ->joinWith('transadditionalbom')
-                ->where(['no_wo' => $param['key']['no_wo']])
+                ->where(['trans_additional_bom_wo.no_wo' => $param['key']['no_wo']])
                 ->andWhere(['trans_additional_bom.status' => 1])
                 ->all();
 
@@ -116,7 +116,7 @@ class KpbController extends Controller {
 
         $optional = \app\models\TransAdditionalBomWo::find()
                 ->joinWith('transadditionalbom')
-                ->where(['no_wo' => $param['kd_bom']['no_wo']])
+                ->where(['trans_additional_bom_wo.no_wo' => $param['kd_bom']['no_wo']])
                 ->andWhere(['trans_additional_bom.status' => 1])
                 ->all();
 

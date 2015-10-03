@@ -134,7 +134,7 @@ class BbkController extends Controller {
 
             $optional = \app\models\TransAdditionalBomWo::find()
                     ->joinWith('transadditionalbom')
-                    ->where(['no_wo' => $params['no_wo']['no_wo']])
+                    ->where(['trans_additional_bom_wo.no_wo' => $params['no_wo']['no_wo']])
                     ->andWhere(['trans_additional_bom.status' => 1])
                     ->all();
 
