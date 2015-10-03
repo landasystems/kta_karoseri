@@ -96,14 +96,14 @@ class WipController extends Controller {
             foreach ($detail as $key => $data) {
                 $coba[$key] = $data;
                 
-                if(!empty($data['plan_start']) && $data['plan_start']="-" && isset($data['plan_start'])){
+                if(!empty($data['plan_start']) && $data['plan_start'] !="-" && isset($data['plan_start'])){
                     $tgPS = explode('/', $data['plan_start']);
                     $isips = $tgPS[2] . '-' . $tgPS[1] . '-' . $tgPS[0];
                 }else{
                     $isips = "";
                 }
                 
-                if(!empty($data['plan_finish']) && $data['plan_finish']="-" && isset($data['plan_finish'])){
+                if(!empty($data['plan_finish']) && $data['plan_finish'] !="-" && isset($data['plan_finish'])){
                      $tgPF = explode('/', $data['plan_finish']);
                     $isipf = $tgPF[2] . '-' . $tgPF[1] . '-' . $tgPF[0];
                 }else{
@@ -189,10 +189,11 @@ class WipController extends Controller {
                 ->limit($limit)
                 ->from('det_wip as dw')
                 ->join('JOIN', 'view_wo_spk as vw', 'dw.no_wo = vw.no_wo')
+                ->join('LEFT JOIN', 'spk', 'vw.no_spk = spk.no_spk')
 //                ->groupBy('dw.no_wo')
                 ->where('dw.kd_kerja="BAG001"')
                 ->orderBy($sort)
-                ->select("dw.plan_start, vw.*");
+                ->select("dw.plan_start, vw.*,spk.jml_hari");
 
         //filter
         if (isset($params['filter'])) {
