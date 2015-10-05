@@ -886,6 +886,19 @@ angular.module('app')
                                                 );
                                             }]
                                     }})
+                                .state('rekap.fluktuasi', {
+                                    url: '/fluktuasi-harga',
+                                    templateUrl: 'tpl/r_fluktuasi-harga/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/r_fluktuasi.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
                                 //
                                 .state('rekap.womasuk', {
                                     url: '/wo-masuk',

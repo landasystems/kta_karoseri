@@ -20,6 +20,7 @@ class PoController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'rekap' => ['get'],
+                    'fluktuasi' => ['post'],
                     'view' => ['get'],
                     'listsupplier' => ['get'],
                     'listspp' => ['get'],
@@ -268,6 +269,68 @@ class PoController extends Controller {
         return ['data' => $data, 'totalItems' => $totalItems];
     }
 
+    public function hitung_hari($m, $y) {
+
+        $hasil = cal_days_in_month(CAL_GREGORIAN, $m, $y);
+
+        return $hasil;
+    }
+
+    public function actionFluktuasi() {
+        session_start();
+        $params = json_decode(file_get_contents("php://input"), true);
+        $filter = array();
+        $sort = "trans_po.nota DESC";
+        $offset = 0;
+        $limit = 10;
+
+        //create query
+        $query = new Query;
+        $query->offset($offset)
+                ->from('detail_po as dpo')
+                ->join('JOIN', 'trans_po', 'trans_po.nota = dpo.nota')
+                ->join('LEFT JOIN', 'det_spp', "det_spp.no_spp = trans_po.spp and det_spp.kd_barang = dpo.kd_barang")
+                ->join('LEFT JOIN', 'supplier', 'supplier.kd_supplier = trans_po.suplier')
+                ->join('JOIN', 'det_bbm', 'det_bbm.no_po = trans_po.nota and det_bbm.kd_barang = dpo.kd_barang')
+                ->join('LEFT JOIN', 'trans_bbm', 'trans_bbm.no_bbm = det_bbm.no_bbm')
+                ->join('JOIN', 'barang', 'barang.kd_barang = dpo.kd_barang')
+                ->join('LEFT JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
+                ->groupBy('dpo.harga')
+                ->select("dpo.*,trans_po.bayar,supplier.nama_supplier,trans_bbm.surat_jalan,det_bbm.tgl_terima, det_bbm.no_bbm, barang.kd_barang as kode_barang,barang.nm_barang, barang.satuan,barang.harga as hrg_barang");
+        //filter
+
+        if (isset($params['bulan']) && isset($params['tahun'])) {
+
+
+            if ($params['bulan']) {
+                $m = $params['bulan'];
+            }
+            
+            if ($params['tahun']) {
+                $y = $params['tahun'];
+            }
+
+            $d = $this->hitung_hari($m, $y);
+
+            $start = $y . '-01-01';
+            
+            $finish = $y . '-' . $m . '-' . $d;
+            
+            $query->andFilterWhere(['between', 'dpo.tgl_pengiriman', $start, $finish]);
+        }
+        
+        $data = $this->retRekap($query);
+
+        $query->limit(null);
+        $query->offset(null);
+        $_SESSION['queryfluktuasi'] = $query;
+        $_SESSION['filterfluktuasi'] = $filter;
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $data['data'], 'totalItems' => $data['totalItems']), JSON_PRETTY_PRINT);
+    }
+
     public function searchBrg($id) {
         $patern = $id;
         $query = new Query;
@@ -395,7 +458,7 @@ class PoController extends Controller {
                 $det = new DetailPo();
                 $det->attributes = $val;
                 $det->kd_barang = $val['data_barang']['kd_barang'];
-                if (!empty($det -> tgl_pengiriman)) {
+                if (!empty($det->tgl_pengiriman)) {
                     $det->tgl_pengiriman = date("Y-m-d", strtotime($val['data_barang']['tgl_pengiriman']));
                 } else {
                     $det->tgl_pengiriman = NULL;
@@ -587,12 +650,10 @@ class PoController extends Controller {
 
     public function actionExcelfluktuasi() {
         session_start();
-        $query = $_SESSION['query'];
-        $query->groupBy('dpo.harga');
-        $filter = $_SESSION['filter'];
+        $query = $_SESSION['queryfluktuasi'];
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/rekapfluktuasiharga", ['models' => $models, 'filter' => $filter]);
+        return $this->render("/expretur/rekapfluktuasiharga", ['models' => $models]);
     }
 
 }

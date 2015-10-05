@@ -161,6 +161,7 @@ app.controller('rolesCtrl', function($scope, Data, toaster) {
             "rekap_rubahbentuk": false,
             "rekap_claimunit": false,
             "rekap_deliveryunit": false,
+            "rekap_fluktuasi": false,
             "rekap_bom": false,
             "rekap_chassisin": false,
             "rekap_bstk": false,
