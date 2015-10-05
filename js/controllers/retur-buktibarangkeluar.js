@@ -9,6 +9,36 @@ app.controller('returbbkCtrl', function ($scope, Data, toaster) {
     $scope.bagian = '-';
     $scope.form = {};
 
+    $scope.pilih = {};
+
+    $scope.lock = function () {
+        if (confirm("Apa anda yakin akan memproses item ini ?")) {
+            Data.post('returbbk/lock/', $scope.pilih).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan");
+                } else {
+                    $scope.is_edit = false;
+                    $scope.callServer(tableStateRef); //reload grid ulang
+                    toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
+                }
+            });
+        }
+    };
+
+    $scope.unlock = function () {
+        if (confirm("Apa anda yakin akan memproses item ini ?")) {
+            Data.post('returbbk/unlock/', $scope.pilih).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan");
+                } else {
+                    $scope.is_edit = false;
+                    $scope.callServer(tableStateRef); //reload grid ulang
+                    toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
+                }
+            });
+        }
+    };
+
     $scope.kalkulasi = function (jml_bbk, jml_keluar) {
         var selisih = jml_bbk - jml_keluar;
         if (selisih >= 0) {

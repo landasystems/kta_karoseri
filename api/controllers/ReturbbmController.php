@@ -27,9 +27,33 @@ class ReturbbmController extends Controller {
                     'kode' => ['get'],
                     'rekap' => ['get'],
                     'barangmasuk' => ['post'],
+                    'lock' => ['post'],
+                    'unlock' => ['post'],
                 ],
             ]
         ];
+    }
+
+    public function actionLock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = Returbbm::findOne($key);
+            $status->lock = 1;
+            $status->save();
+        }
+    }
+
+    public function actionUnlock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = Returbbm::findOne($key);
+            $status->lock = 0;
+            $status->save();
+        }
     }
 
     public function beforeAction($event) {
@@ -256,6 +280,7 @@ class ReturbbmController extends Controller {
         $model->attributes = $params;
         $model->kd_barang = $params['kd_barang']['kd_barang'];
         $model->no_bbm = $params['no_bbm']['no_bbm'];
+        $model->lock = 1;
         if ($model->alasan == 'Tidak Sesuai') {
             //update stok barang
             $barang = Barang::find()->where('kd_barang="' . $model->kd_barang . '"')->one();
@@ -284,7 +309,7 @@ class ReturbbmController extends Controller {
         $model->attributes = $params;
         $model->kd_barang = $params['kd_barang']['kd_barang'];
         $model->no_bbm = $params['no_bbm']['no_bbm'];
-
+        $model->lock = 1;
         if ($model->save()) {
             if ($model->alasan == 'Tidak Sesuai') {
                 //update stok barang dengan yang baru
