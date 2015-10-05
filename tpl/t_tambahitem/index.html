@@ -7,6 +7,8 @@
             <div class="panel-heading">
                 <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
+                    <button type="button" class="btn btn-info fa fa-plus-square-o" ng-click="validasi(pilih);" ng-show="status == 0 && user.roles_id == 1">&nbsp;Validasi Data</button>
+                    <button type="button" class="btn btn-success fa fa-plus-square-o" ng-click="bukavalidasi(pilih);" ng-show="status == 1 && user.roles_id == 1">&nbsp;Buka Validasi</button>
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>
@@ -45,14 +47,24 @@
                                 <input st-search="trans_additional_bom_wo.no_wo" class="form-control"/>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Status</label>
+                            <div class="col-sm-9">
+                                <select stInputEvent="change" st-search="trans_additional_bom.status" class="form-control" ng-model="status">
+                                    <option value="">.: Pilih Status :.</option>
+                                    <option value="1">Tervalidasi</option>
+                                    <option value="0">Belum Tervalidasi</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
             <div class="table-responsive">
                 <table class="table table-striped table-hover" >
                     <thead>
                         <tr>
+                            <th ng-show="(status == 1 || status == 0) && user.roles_id == 1"></th>
                             <th st-sort="trans_additional_bom.kd_bom">Kode Bom</th>
                             <th st-sort="trans_additional_bom_wo.no_wo">No Wo</th>
                             <th st-sort="chassis.merk">Merk</th>
@@ -64,6 +76,11 @@
                     </thead>
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
+                            <td ng-show="(status == 1 || status == 0) && user.roles_id == 1">
+                                <label class="i-checks">
+                                    <input type="checkbox" ng-model="pilih.id[row.id]"><i></i> 
+                                </label>
+                            </td>
                             <td>{{row.kd_bom}}</td>
                             <td>{{row.no_wo}}</td>
                             <td>{{row.merk}}</td>
@@ -71,21 +88,24 @@
                             <td>{{row.model}}</td>
                             <td>{{row.tgl_buat| date}}</td>
                             <td>
-                                <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
+                                <div ng-show="row.status == 0" class="btn-group pull-right" role="group" style="margin-top: -3px;">
                                     <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
                                     <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);"></button>
                                 </div> 
+                                <span class="badge bg-success" ng-if="row.status == 1"><i>Validated</i></span>
                             </td>
                         </tr>
                     </tbody>
                     <tbody ng-show="isLoading">
                         <tr>
-                            <td colspan="7" class="text-center">Loading ... </td>
+                            <td colspan="8" class="text-center" ng-if="status == ''  && user.roles_id == 1">Loading ... </td>
+                            <td colspan="7" class="text-center" ng-if="(status == 1 || status == 0)  && user.roles_id == 1">Loading ... </td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="7"></td>
+                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="8" ng-if="status == ''  && user.roles_id == 1"></td>
+                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="7" ng-if="(status == 1 || status == 0)  && user.roles_id == 1"></td>
                         </tr>
                 </table>		
             </div>

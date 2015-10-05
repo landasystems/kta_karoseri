@@ -61,18 +61,27 @@ class SiteController extends Controller {
     }
 
     public function actionCoba() {
-        $absen = AbsensiEttLog::find()
-                ->joinWith('karyawan')
-                ->select("emp.first_name, emp.pin, date(scan_date) as scan_date")
-//                ->where('date(scan_date) = "' . date("Y-m-d") . '"')
-                ->limit(100)
+        $optional = \app\models\TransAdditionalBomWo::find()
+                ->joinWith('transadditionalbom')
+                ->where(['trans_additional_bom_wo.no_wo' => "NB-215031"])
+                ->andWhere(['trans_additional_bom.status'=>0])
                 ->all();
 
-        foreach ($absen as $key => $val) {
-//            print_r($val) . '<br>';
-            echo isset($val['karyawan']['first_name']) ? $val['karyawan']['first_name'] : '-' . '<br>';
+        foreach ($optional as $key => $val) {
+            print_r($val);
         }
 
+//        $absen = AbsensiEttLog::find()
+//                ->joinWith('karyawan')
+//                ->select("emp.first_name, emp.pin, date(scan_date) as scan_date")
+////                ->where('date(scan_date) = "' . date("Y-m-d") . '"')
+//                ->limit(100)
+//                ->all();
+//
+//        foreach ($absen as $key => $val) {
+////            print_r($val) . '<br>';
+//            echo isset($val['karyawan']['first_name']) ? $val['karyawan']['first_name'] : '-' . '<br>';
+//        }
 //        echo json_encode($absen->pin);
 //        $aa = AbsensiEmp::find()->limit(10)->all();
 //        print_r($absen);
@@ -85,6 +94,7 @@ class SiteController extends Controller {
         if (!empty($model)) {
             session_start();
             $_SESSION['user']['id'] = $model->id;
+            $_SESSION['user']['roles_id'] = $model->roles_id;
             $_SESSION['user']['username'] = $model->username;
             $_SESSION['user']['nama'] = $model->nama;
             $akses = (isset($model->roles->akses)) ? $model->roles->akses : '[]';

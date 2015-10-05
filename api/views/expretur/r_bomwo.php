@@ -79,8 +79,8 @@ foreach ($models as $val) {
                     echo '<tr height="25">
                         <td align="center" class="border-all">' . $det['kode_barang'] . '</td>
                         <td class="border-all">' . $det['nama_barang'] . '</td>
-                        <td class="border-all" align="right">' . $det['harga'] . '</td>
                         <td class="border-all" align="center">' . $det['satuan'] . '</td>
+                        <td class="border-all" align="right">' . $det['harga'] . '</td>
                         <td class="border-all" align="center">' . $det['qty'] . '</td>
                         <td class="border-all" align="center">' . $det['jml_keluar'] . '</td>
                         <td class="border-all">' . $det['ket'] . '</td>

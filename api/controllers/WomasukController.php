@@ -332,44 +332,44 @@ class WomasukController extends Controller {
             $karpet = $commandkarpet->queryAll();
 
             //SEAT 1
-            $queryseat1 = new Query;
-            $queryseat1->from('mini_int')
+            $queryseat_satu = new Query;
+            $queryseat_satu->from('mini_int')
                     ->distinct("konf_seat1")
                     ->select("konf_seat1");
-            $commandseat1 = $queryseat1->createCommand();
-            $seat_satu = $commandseat1->queryAll();
+            $commandseat_satu = $queryseat_satu->createCommand();
+            $seat_satu = $commandseat_satu->queryAll();
 
             //SEAT 2
-            $queryseat2 = new Query;
-            $queryseat2->from('mini_int')
+            $queryseat_dua = new Query;
+            $queryseat_dua->from('mini_int')
                     ->distinct("konf_seat2")
                     ->select("konf_seat2");
-            $commandseat2 = $queryseat2->createCommand();
-            $seat_dua = $commandseat2->queryAll();
+            $commandseat_dua = $queryseat_dua->createCommand();
+            $seat_dua = $commandseat_dua->queryAll();
 
             //SEAT 3
-            $queryseat3 = new Query;
-            $queryseat3->from('mini_int')
+            $queryseat_tiga = new Query;
+            $queryseat_tiga->from('mini_int')
                     ->distinct("konf_seat3")
                     ->select("konf_seat3");
-            $commandseat3 = $queryseat3->createCommand();
-            $seat_tiga = $commandseat3->queryAll();
+            $commandseat_tiga = $queryseat_tiga->createCommand();
+            $seat_tiga = $commandseat_tiga->queryAll();
 
             //SEAT 4
-            $queryseat4 = new Query;
-            $queryseat4->from('mini_int')
+            $queryseat_empat = new Query;
+            $queryseat_empat->from('mini_int')
                     ->distinct("konf_seat4")
                     ->select("konf_seat4");
-            $commandseat4 = $queryseat4->createCommand();
-            $seat_empat = $commandseat4->queryAll();
+            $commandseat_empat = $queryseat_empat->createCommand();
+            $seat_empat = $commandseat_empat->queryAll();
 
             //SEAT 5
-            $queryseat5 = new Query;
-            $queryseat5->from('mini_int')
+            $queryseat_lima = new Query;
+            $queryseat_lima->from('mini_int')
                     ->distinct("konf_seat5")
                     ->select("konf_seat5");
-            $commandseat5 = $queryseat5->createCommand();
-            $seat_lima = $commandseat5->queryAll();
+            $commandseat_lima = $queryseat_lima->createCommand();
+            $seat_lima = $commandseat_lima->queryAll();
 
             //COVER SEAT
             $querycover = new Query;
@@ -931,15 +931,17 @@ class WomasukController extends Controller {
             }
         } else {
             // eksterior
+            
+            // ====================== WARNA ================================
             $eksterior = new Query;
             $eksterior->from('mini_eks')
                     ->join('JOIN', 'warna', 'mini_eks.warna = warna.kd_warna') // customer
-                    ->select("*")
+                    ->select("warna.*")
                     ->where('no_wo="' . $params['no_wo'] . '"');
 
             $command2 = $eksterior->createCommand();
             $models2 = $command2->queryAll();
-//            $eks = array();
+            $eks = array();
             foreach ($models2 as $r) {
                 $eks = $r;
                 $eks['warna'] = $r;
@@ -952,11 +954,12 @@ class WomasukController extends Controller {
 
             $command3 = $eksterior2->createCommand();
             $models3 = $command3->queryAll();
-            $eks = array();
+//            $eks = array();
             foreach ($models3 as $r) {
+//                $eks = $r;
                 $eks['warna2'] = $r;
             }
-
+//======================================
             // interior
             $interior = new Query;
             $interior->from('mini_int')
@@ -1069,10 +1072,11 @@ class WomasukController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-//        Yii::error($params);
+        
         $model = new Womasuk();
         $model->attributes = $params['womasuk'];
         $model->no_spk = $params['womasuk']['spk']['no_spk'];
+//        $model->in_spk_marketing =date('Y-m-d', strtotime($params['womasuk']['tgl'])) ;
 
 
         if ($model->save()) {
@@ -1123,25 +1127,25 @@ class WomasukController extends Controller {
                     $eks->wyper_set = $params['eksterior']['wyper']['wyper_set'];
                 }
                 if (!empty($params['eksterior']['warna']['kd_warna'])) {
-                    $warna = Warna::findOne($params['eksterior']['warna']['kd_warna']);
-                    if (empty($warna)) {
-                        $warna = new Warna();
-                    }
-                    $warna->attributes = $params;
-                    if ($warna->save()) {
-                        $eks->warna = $warna->kd_warna;
-                    }
+//                    $warna = Warna::findOne($params['eksterior']['warna']['kd_warna']);
+//                    if (empty($warna)) {
+//                        $warna = new Warna();
+//                    }
+//                    $warna->attributes = $params;
+//                    if ($warna->save()) {
+                        $eks->warna = $params['eksterior']['warna']['kd_warna'];
+//                    }
                 }
                 if (!empty($params['eksterior']['warna2']['kd_warna'])) {
                     //warna 2
-                    $warna = Warna::findOne($params['eksterior']['warna2']['kd_warna']);
-                    if (empty($warna)) {
-                        $warna = new Warna();
-                    }
-                    $warna->attributes = $params;
-                    if ($warna->save()) {
-                        $eks->warna2 = $warna->kd_warna;
-                    }
+//                    $warna = Warna::findOne($params['eksterior']['warna2']['kd_warna']);
+//                    if (empty($warna)) {
+//                        $warna = new Warna();
+//                    }
+//                    $warna->attributes = $params;
+//                    if ($warna->save()) {
+                        $eks->warna2 = $params['eksterior']['warna2']['kd_warna'];
+//                    }
                 }
                 if (!empty($params['eksterior']['strip']['strip'])) {
                     $eks->strip = $params['eksterior']['strip']['strip'];
@@ -1178,23 +1182,23 @@ class WomasukController extends Controller {
                     if (!empty($params['interior']['karpet']['karpet'])) {
                         $int->karpet = $params['interior']['karpet']['karpet'];
                     }
-                    if (!empty($params['interior']['seat1']['konf_seat1'])) {
-                        $int->konf_seat1 = $params['interior']['seat1']['konf_seat1'];
+                    if (!empty($params['interior']['seat_satu']['konf_seat1'])) {
+                        $int->konf_seat1 = $params['interior']['seat_satu']['konf_seat1'];
                     }
-                    if (!empty($params['interior']['seat2']['konf_seat2'])) {
-                        $int->konf_seat2 = $params['interior']['seat2']['konf_seat2'];
+                    if (!empty($params['interior']['seat_dua']['konf_seat2'])) {
+                        $int->konf_seat2 = $params['interior']['seat_dua']['konf_seat2'];
                     }
-                    if (!empty($params['interior']['seat3']['konf_seat3'])) {
-                        $int->konf_seat3 = $params['interior']['seat3']['konf_seat3'];
+                    if (!empty($params['interior']['seat_tiga']['konf_seat3'])) {
+                        $int->konf_seat3 = $params['interior']['seat_tiga']['konf_seat3'];
                     }
-                    if (!empty($params['interior']['seat4']['konf_seat4'])) {
-                        $int->konf_seat4 = $params['interior']['seat4']['konf_seat4'];
+                    if (!empty($params['interior']['seat_empat']['konf_seat4'])) {
+                        $int->konf_seat4 = $params['interior']['seat_empat']['konf_seat4'];
                     }
-                    if (!empty($params['interior']['seat5']['konf_seat5'])) {
-                        $int->konf_seat5 = $params['interior']['seat5']['konf_seat5'];
+                    if (!empty($params['interior']['seat_lima']['konf_seat5'])) {
+                        $int->konf_seat5 = $params['interior']['seat_lima']['konf_seat5'];
                     }
-                    if (!empty($params['interior']['seat5']['konf_seat5'])) {
-                        $int->konf_seat5 = $params['interior']['seat5']['konf_seat5'];
+                    if (!empty($params['interior']['seat_lima']['konf_seat5'])) {
+                        $int->konf_seat5 = $params['interior']['seat_lima']['konf_seat5'];
                     }
                     if (!empty($params['interior']['cover_seat']['cover_seat'])) {
                         $int->cover_seat = $params['interior']['cover_seat']['cover_seat'];
@@ -1303,9 +1307,8 @@ class WomasukController extends Controller {
 
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-       
+       Yii::error($params);
         $model = $this->findModel($params['womasuk']['no_wo']);
-//        $model = WoMasuk::find()->where('no_wo="' . $params['eksterior']['no_wo'] . '"')->one();
 
         $model->attributes = $params['womasuk'];
 
@@ -1370,26 +1373,26 @@ class WomasukController extends Controller {
             }
 
             if (!empty($params['eksterior']['warna']['kd_warna'])) {
-                $warna = Warna::find()->where('kd_warna="' . $params['eksterior']['warna']['kd_warna'] . '"')->one();
-                if (empty($warna)) {
-                    $warna = new Warna();
+//                    $warna = Warna::findOne($params['eksterior']['warna']['kd_warna']);
+//                    if (empty($warna)) {
+//                        $warna = new Warna();
+//                    }
+//                    $warna->attributes = $params;
+//                    if ($warna->save()) {
+                        $eks->warna = $params['eksterior']['warna']['kd_warna'];
+//                    }
                 }
-                $warna->attributes = $params;
-                if ($warna->save()) {
-                    $eks->warna = $warna->kd_warna;
+                if (!empty($params['eksterior']['warna2']['kd_warna'])) {
+                    //warna 2
+//                    $warna = Warna::findOne($params['eksterior']['warna2']['kd_warna']);
+//                    if (empty($warna)) {
+//                        $warna = new Warna();
+//                    }
+//                    $warna->attributes = $params;
+//                    if ($warna->save()) {
+                        $eks->warna2 = $params['eksterior']['warna2']['kd_warna'];
+//                    }
                 }
-            }
-            if (!empty($params['eksterior']['warna2']['kd_warna'])) {
-//warna 2
-                $warna = Warna::find()->where('kd_warna="' . $params['eksterior']['warna2']['kd_warna'] . '"')->one();
-                if (empty($warna)) {
-                    $warna = new Warna();
-                }
-                $warna->attributes = $params;
-                if ($warna->save()) {
-                    $eks->warna2 = $warna->kd_warna;
-                }
-            }
             if (isset($params['eksterior']['strip']['strip'])) {
                 $eks->strip = $params['eksterior']['strip']['strip'];
             }
@@ -1427,23 +1430,23 @@ class WomasukController extends Controller {
                 if (!empty($params['interior']['karpet']['karpet'])) {
                     $int->karpet = $params['interior']['karpet']['karpet'];
                 }
-                if (!empty($params['interior']['seat1']['konf_seat1'])) {
-                    $int->konf_seat1 = $params['interior']['seat1']['konf_seat1'];
+                if (!empty($params['interior']['seat_satu']['konf_seat1'])) {
+                    $int->konf_seat1 = $params['interior']['seat_satu']['konf_seat1'];
                 }
-                if (!empty($params['interior']['seat2']['konf_seat2'])) {
-                    $int->konf_seat2 = $params['interior']['seat2']['konf_seat2'];
+                if (!empty($params['interior']['seat_dua']['konf_seat2'])) {
+                    $int->konf_seat2 = $params['interior']['seat_dua']['konf_seat2'];
                 }
-                if (!empty($params['interior']['seat3']['konf_seat3'])) {
-                    $int->konf_seat3 = $params['interior']['seat3']['konf_seat3'];
+                if (!empty($params['interior']['seat_tiga']['konf_seat3'])) {
+                    $int->konf_seat3 = $params['interior']['seat_tiga']['konf_seat3'];
                 }
-                if (!empty($params['interior']['seat4']['konf_seat4'])) {
-                    $int->konf_seat4 = $params['interior']['seat4']['konf_seat4'];
+                if (!empty($params['interior']['seat_empat']['konf_seat4'])) {
+                    $int->konf_seat4 = $params['interior']['seat_empat']['konf_seat4'];
                 }
-                if (!empty($params['interior']['seat5']['konf_seat5'])) {
-                    $int->konf_seat5 = $params['interior']['seat5']['konf_seat5'];
+                if (!empty($params['interior']['seat_lima']['konf_seat5'])) {
+                    $int->konf_seat5 = $params['interior']['seat_lima']['konf_seat5'];
                 }
-                if (!empty($params['interior']['seat5']['konf_seat5'])) {
-                    $int->konf_seat5 = $params['interior']['seat5']['konf_seat5'];
+                if (!empty($params['interior']['seat_lima']['konf_seat5'])) {
+                    $int->konf_seat5 = $params['interior']['seat_lima']['konf_seat5'];
                 }
                 if (!empty($params['interior']['cover_seat']['cover_seat'])) {
                     $int->cover_seat = $params['interior']['cover_seat']['cover_seat'];

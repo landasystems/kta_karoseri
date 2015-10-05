@@ -144,7 +144,7 @@
                                                 <label class="col-sm-3 control-label">No SPK</label>
                                                 <div class="col-sm-8">
                                                     <div class="input-group">
-                                                        <ui-select on-select="getSpk(form,$item)" ng-model="form.spk"  theme="bootstrap" ng-disabled="is_view || is_edit" >
+                                                        <ui-select on-select="getSpk(form,$item)" ng-model="form.spk"  theme="bootstrap" ng-disabled="is_view" >
                                                             <ui-select-match>{{$select.selected.no_spk}}</ui-select-match>
                                                             <ui-select-choices refresh="cariSpk($select.search)" repeat="val in kdSpk">
                                                                 {{val.no_spk}}
@@ -170,14 +170,14 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">No WO</label>
                                                 <div class="col-sm-6">
-                                                    <input type="text" class="form-control" ng-model="form.no_wo" ng-disabled="is_view" ng-readonly="is_edit" placeholder="No WO">
+                                                    <input type="text" class="form-control" ng-model="form.no_wo" ng-disabled="is_view"  placeholder="No WO">
                                                 </div>
                                             </div> 
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Kode Titipan</label>
                                                 <div class="col-sm-8">
                                                     <div class="input-group">
-                                                        <ui-select on-select="getTitipan(form,$item)" ng-model="form.titipan" theme="bootstrap"  ng-disabled="is_view || is_edit" >
+                                                        <ui-select on-select="getTitipan(form,$item)" ng-model="form.titipan" theme="bootstrap"  ng-disabled="is_view " >
                                                             <ui-select-match>{{$select.selected.kd_titipan}}</ui-select-match>
                                                             <ui-select-choices refresh="cariTitipan($select.search)" repeat="val in titip">
                                                                 {{val.kd_titipan}}
@@ -270,7 +270,7 @@
                                                 <label class="col-sm-3 control-label">In SPK Marketing</label>
                                                 <div class="col-sm-8">
                                                     <div class="input-group">
-                                                        <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.in_spk_marketing" is-open="opened2" ng-click="open2($event)"/>
+                                                        <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.in_spk_marketing" ng-disabled="true" is-open="opened2" ng-click="open2($event)"/>
                                                         <span class="input-group-addon">
                                                             <i class="fa fa-calendar-o"></i>
                                                         </span>
@@ -278,7 +278,7 @@
                                                 </div>
                                             </div> 
                                             <div class="form-group">
-                                                <label class="col-sm-3 control-label">Tanggal Kontrak</label>
+                                                <label class="col-sm-3 control-label">Tanggal Akhir Kontrak</label>
                                                 <div class="col-sm-8">
                                                     <div class="input-group">
                                                         <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_kontrak" is-open="opened3" ng-click="open3($event)"/>
@@ -867,11 +867,11 @@
                                                     <div class="col-sm-8">
                                                         <div class="input-group">
                                                             <span class="input-group-addon">1</span>
-                                                            <ui-select tagging="tagTransformseat1"   tagging-label="false" ng-model="inter.seat1" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                            <ui-select tagging="tagTransformseat1"   tagging-label="false" ng-model="inter.seat_satu" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
                                                                 <ui-select-match style="width:100px;" placeholder="">{{$select.selected.konf_seat1}}</ui-select-match>
-                                                                <ui-select-choices repeat="l in list_seat1 | filter:$select.search" >
+                                                                <ui-select-choices repeat="g in list_seat1 | filter:$select.search" >
                                                                     <small style="width:100px;">
-                                                                        {{l.konf_seat1}} 
+                                                                        {{g.konf_seat1}} 
 
                                                                     </small>
                                                                 </ui-select-choices>
@@ -880,7 +880,7 @@
                                                         </div><br>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">2</span>
-                                                            <ui-select tagging="tagTransformseat2"   tagging-label="false" ng-model="inter.seat2" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                            <ui-select tagging="tagTransformseat2"   tagging-label="false" ng-model="inter.seat_dua" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
                                                                 <ui-select-match placeholder="">{{$select.selected.konf_seat2}}</ui-select-match>
                                                                 <ui-select-choices repeat="l in list_seat2 | filter:$select.search" >
                                                                     <small>
@@ -893,7 +893,7 @@
                                                         </div><br>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">3</span>
-                                                            <ui-select tagging="tagTransformseat3"   tagging-label="false" ng-model="inter.seat3" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                            <ui-select tagging="tagTransformseat3"   tagging-label="false" ng-model="inter.seat_tiga" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
                                                                 <ui-select-match placeholder="">{{$select.selected.konf_seat3}}</ui-select-match>
                                                                 <ui-select-choices repeat="l in list_seat3 | filter:$select.search" >
                                                                     <small>
@@ -906,7 +906,7 @@
                                                         </div><br>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">4</span>
-                                                            <ui-select tagging="tagTransformseat4"   tagging-label="false" ng-model="inter.seat4" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                            <ui-select tagging="tagTransformseat4"   tagging-label="false" ng-model="inter.seat_empat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
                                                                 <ui-select-match placeholder="">{{$select.selected.konf_seat4}}</ui-select-match>
                                                                 <ui-select-choices repeat="l in list_seat4 | filter:$select.search" >
                                                                     <small>
@@ -919,7 +919,7 @@
                                                         </div><br>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">5</span>
-                                                            <ui-select tagging="tagTransformseat5"   tagging-label="false" ng-model="inter.seat5" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                            <ui-select tagging="tagTransformseat5"   tagging-label="false" ng-model="inter.seat_lima" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
                                                                 <ui-select-match placeholder="">{{$select.selected.konf_seat5}}</ui-select-match>
                                                                 <ui-select-choices repeat="l in list_seat5 | filter:$select.search" >
                                                                     <small>
@@ -1253,35 +1253,35 @@
                         <tr ng-if="form.jenis == 'Mini Bus'">
                             <td style="text-align: center;width: 1%">O</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Konf Seat 1</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.seat1.konf_seat1}}</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.seat_satu.konf_seat1}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Mini Bus'">
                             <td style="text-align: center;width: 1%">R</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;"> &nbsp;Konf Seat 2</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.seat2.konf_seat2}}</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.seat_dua.konf_seat2}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Mini Bus'">
                             <td style="text-align: center;width: 1%"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Konf Seat 3</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.seat3.konf_seat3}}</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.tiga.konf_seat3}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Mini Bus'">
                             <td style="text-align: center;width: 1%"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Konf Seat 4</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.seat4.konf_seat4}}</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.seat_empat.konf_seat4}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Mini Bus'">
                             <td style="text-align: center;width: 1%"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;"> &nbsp;Konf Seat 5</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.seat5.konf_seat5}}</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.seat_lima.konf_seat5}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>

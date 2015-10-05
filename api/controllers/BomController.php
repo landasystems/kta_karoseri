@@ -298,8 +298,11 @@ class BomController extends Controller {
         $i = 0;
         foreach ($models as $val) {
             //cek optional BOM
-//            $optional = \app\models\TransAdditionalBom::findAll(['no_wo' => $val['no_wo']]);
-            $optional = \app\models\TransAdditionalBomWo::find()->where(['no_wo' => $val['no_wo']])->all();
+            $optional = \app\models\TransAdditionalBomWo::find()
+                    ->joinWith('transadditionalbom')
+                    ->where(['trans_additional_bom_wo.no_wo' => $val['no_wo']])
+                    ->andWhere(['trans_additional_bom.status' => 1])
+                    ->all();
 
             //jika tidak ada optional ambil dari trans_standar_bahan
             if (empty($optional) or count($optional) == 0) {
@@ -354,7 +357,11 @@ class BomController extends Controller {
         $no_wo = $params['no_wo']['no_wo'];
 
         //cek optional BOM
-        $optional = \app\models\TransAdditionalBomWo::find()->where('no_wo = "' . $no_wo . '"')->all();
+        $optional = \app\models\TransAdditionalBomWo::find()
+                ->joinWith('transadditionalbom')
+                ->where(['trans_additional_bom_wo.no_wo' => $no_wo])
+                ->andWhere(['trans_additional_bom.status' => 1])
+                ->all();
 
         //jika tidak ada optional ambil dari trans_standar_bahan
         if (empty($optional) or count($optional) == 0) {
@@ -376,7 +383,6 @@ class BomController extends Controller {
                     ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
                     ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dts.tran_additional_bom_id')
                     ->join('LEFT JOIN', 'trans_additional_bom_wo as wm', ' tsb.id = wm.tran_additional_bom_id')
-//                        ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo  = tsbw.no_wo')
                     ->orderBy('tjb.urutan_produksi ASC, tjb.jabatan ASC, brg.nm_barang ASC')
                     ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
         }
@@ -463,8 +469,11 @@ class BomController extends Controller {
             if ($jWo <= 5) {
 
                 //cek optional BOM
-//                $optional = \app\models\TransAdditionalBom::find()->where('no_wo = "' . $noWo . '"')->all();
-                $optional = \app\models\TransAdditionalBomWo::find()->where(['no_wo' => $noWo])->all();
+                $optional = \app\models\TransAdditionalBomWo::find()
+                        ->joinWith('transadditionalbom')
+                        ->where(['trans_additional_bom_wo.no_wo' => $noWo])
+                        ->andWhere(['trans_additional_bom.status' => 1])
+                        ->all();
 
                 //jika tidak ada optional ambil dari trans_standar_bahan
                 if (empty($optional) or count($optional) == 0) {
@@ -552,8 +561,11 @@ class BomController extends Controller {
             if ($jWo <= 5) {
 
                 //cek optional BOM
-//                $optional = \app\models\TransAdditionalBom::find()->where('no_wo = "' . $noWo . '"')->all();
-                $optional = \app\models\TransAdditionalBomWo::find()->where(['no_wo' => $noWo])->all();
+                $optional = \app\models\TransAdditionalBomWo::find()
+                        ->joinWith('transadditionalbom')
+                        ->where(['trans_additional_bom_wo.no_wo' => $noWo])
+                        ->andWhere(['trans_additional_bom.status' => 1])
+                        ->all();
 
                 //jika tidak ada optional ambil dari trans_standar_bahan
                 if (empty($optional) or count($optional) == 0) {
@@ -637,6 +649,7 @@ class BomController extends Controller {
         session_start();
         $query = $_SESSION['bom'];
         $kd_bom = $_SESSION['kd_bom'];
+        $detail = $_SESSION['detail'];
 
         $query->limit(null);
         $query->offset(null);
@@ -644,21 +657,24 @@ class BomController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
 
-        $det = BomDet::find()
-                ->where(['kd_bom' => $kd_bom])
-                ->with(['jabatan', 'barang'])
-//                ->orderBy('tbl_jabatan.urutan_produksi ASC, tbl_jabatan.jabatan ASC, barang.nm_barang ASC')
-                ->all();
+        $det = $detail->createCommand();
+        $modelsDetail = $det->queryAll();
+
+//        $det = BomDet::find()
+//                ->where(['kd_bom' => $kd_bom])
+//                ->with(['jabatan', 'barang'])
+////                ->orderBy('tbl_jabatan.urutan_produksi ASC, tbl_jabatan.jabatan ASC, barang.nm_barang ASC')
+//                ->all();
 
         $detail = array();
         $i = 0;
-        foreach ($det as $val) {
-            $detail[$val->jabatan->id_jabatan]['nama_jabatan'] = isset($val->jabatan->jabatan) ? $val->jabatan->jabatan : '-';
-            $detail[$val->jabatan->id_jabatan]['body'][$i]['nama_barang'] = isset($val->barang->nm_barang) ? $val->barang->nm_barang : '-';
-            $detail[$val->jabatan->id_jabatan]['body'][$i]['satuan'] = isset($val->barang->satuan) ? $val->barang->satuan : '-';
-            $detail[$val->jabatan->id_jabatan]['body'][$i]['harga'] = isset($val->barang->harga) ? $val->barang->harga : '0';
-            $detail[$val->jabatan->id_jabatan]['body'][$i]['jumlah'] = isset($val->qty) ? $val->qty : '-';
-            $detail[$val->jabatan->id_jabatan]['body'][$i]['ket'] = isset($val->ket) ? $val->ket : '-';
+        foreach ($modelsDetail as $val) {
+            $detail[$val['kd_jab']]['nama_jabatan'] = !empty($val['jabatan']) ? $val['jabatan'] : '-';
+            $detail[$val['kd_jab']]['body'][$i]['nama_barang'] = !empty($val['nm_barang']) ? $val['nm_barang'] : '-';
+            $detail[$val['kd_jab']]['body'][$i]['satuan'] = !empty($val['satuan']) ? $val['satuan'] : '-';
+            $detail[$val['kd_jab']]['body'][$i]['harga'] = !empty($val['harga']) ? $val['harga'] : '0';
+            $detail[$val['kd_jab']]['body'][$i]['jumlah'] = !empty($val['qty']) ? $val['qty'] : '-';
+            $detail[$val['kd_jab']]['body'][$i]['ket'] = !empty($val['ket']) ? $val['ket'] : '-';
             $i++;
         }
         return $this->render("/expretur/bomtrans", ['model' => $models[0], 'detail' => $detail]);
@@ -688,6 +704,7 @@ class BomController extends Controller {
         session_start();
         $_SESSION['bom'] = $query;
         $_SESSION['kd_bom'] = $models['kd_bom'];
+        $_SESSION['detail'] = $det;
 
         $detail = array();
         foreach ($detBom as $key => $val) {

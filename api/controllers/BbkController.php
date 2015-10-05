@@ -51,7 +51,7 @@ class BbkController extends Controller {
                     ->join('LEFT JOIN', 'tbl_jabatan', 'tbl_jabatan.id_jabatan = trans_bbk.kd_jab')
                     ->select('trans_bbk.tanggal,tbl_jabatan.jabatan,barang.nm_barang, det_bbk.jml')
                     ->orderBy('trans_bbk.tanggal DESC')
-                    ->where('trans_bbk.no_wo = "'.$params['no_wo']['no_wo'].'" and trans_bbk.kd_jab = "'.$params['kd_jab']['id_jabatan'].'"');
+                    ->where('trans_bbk.no_wo = "' . $params['no_wo']['no_wo'] . '" and trans_bbk.kd_jab = "' . $params['kd_jab']['id_jabatan'] . '"');
             $command = $query->createCommand();
             $models = $command->queryAll();
 
@@ -132,7 +132,11 @@ class BbkController extends Controller {
                 }
             }
 
-            $optional = \app\models\TransAdditionalBomWo::find()->where(['no_wo' => $params['no_wo']['no_wo']])->all();
+            $optional = \app\models\TransAdditionalBomWo::find()
+                    ->joinWith('transadditionalbom')
+                    ->where(['trans_additional_bom_wo.no_wo' => $params['no_wo']['no_wo']])
+                    ->andWhere(['trans_additional_bom.status' => 1])
+                    ->all();
 
             //jika tidak ada optional
             if (empty($optional) or count($optional) == 0) {
