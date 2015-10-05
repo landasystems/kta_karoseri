@@ -249,6 +249,7 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
             }
         });
     }
+    
     $scope.modal = function (form) {
         var modalInstance = $modal.open({
             templateUrl: 'tpl/t_bom/modal.html',
