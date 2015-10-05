@@ -72,7 +72,7 @@ foreach ($models as $key => $val) {
             <td class="border-bottom border-right" style="text-align: center">&nbsp;<?php echo $key['body']['kd_barang'] ?></td>
             <td class="border-bottom border-right"><?php echo $key['body']['nm_barang'] ?></td>
             <td class="border-bottom border-right" style="text-align: center">&nbsp;<?php echo $key['body']['jml'] ?></td>
-            <td class="border-bottom border-right" style="text-align: right">&nbsp;<?php echo $key['body']['harga'] ?></td>
+            <td class="border-bottom border-right" style="text-align: right">&nbsp;<?php echo Yii::$app->landa->price($key['body']['harga']) ?></td>
             <td class="border-bottom border-right" style="text-align: right">&nbsp;<?php echo  $key['body']['total'] ?></td>
             <td class="border-bottom border-right" style="width: 60px;text-align: right"><?php echo date("d/m/y",  strtotime($key['body']['tgl_pengiriman'])) ?></td>
             <td class="border-bottom border-right" align="center"><?php echo $key['body']['bayar'] ?></td>

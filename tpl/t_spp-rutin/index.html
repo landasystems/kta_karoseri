@@ -49,7 +49,7 @@
                 <table class="table table-striped table-hover" >
                     <thead>
                         <tr>
-                            <th ng-show="(status == 1 || status == 0) && user.roles_id == 1"></th>
+                            <th ng-show="user.roles_id == 1"></th>
                             <th st-sort="no_spp">NO SPP</th>
                             <th st-sort="tgl_trans">Tanggal Transaksi</th>
                             <th st-sort="tgl1">Tgl 1</th>
@@ -59,7 +59,7 @@
                     </thead>
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
-                            <td ng-show="(status == 1 || status == 0) && user.roles_id == 1">
+                            <td ng-show="user.roles_id == 1">
                                 <label class="i-checks">
                                     <input type="checkbox" ng-model="pilih.id[row.no_spp]"><i></i> 
                                 </label>
@@ -79,13 +79,13 @@
                     <tbody ng-show="isLoading">
                         <tr>
                             <td colspan="5" class="text-center" ng-if="user.roles_id != 1">Loading ... </td>
-                            <td colspan="6" class="text-center" ng-if="(status == 1 || status == 0) && user.roles_id == 1">Loading ... </td>
+                            <td colspan="6" class="text-center" ng-if="user.roles_id == 1">Loading ... </td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
                             <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="5" ng-if="user.roles_id != 1"></td>
-                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="6" ng-if="(status == 1 || status == 0) && user.roles_id == 1"></td>
+                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="6" ng-if="user.roles_id == 1"></td>
                         </tr>
                 </table>		
             </div>

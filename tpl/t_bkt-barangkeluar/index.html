@@ -95,13 +95,13 @@
                     <tbody ng-show="isLoading">
                         <tr>
                             <td colspan="7" class="text-center" ng-if="user.roles_id != 1">Loading ... </td>
-                            <td colspan="8" class="text-center" ng-if="(status == 1 || status == 0) && user.roles_id == 1">Loading ... </td>
+                            <td colspan="8" class="text-center" ng-if="user.roles_id == 1">Loading ... </td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
                             <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="7" ng-if="user.roles_id != 1"></td>
-                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="8" ng-if="(status == 1 || status == 0) && user.roles_id == 1"></td>
+                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="8" ng-if="user.roles_id == 1"></td>
                         </tr>
                 </table>		
             </div>
