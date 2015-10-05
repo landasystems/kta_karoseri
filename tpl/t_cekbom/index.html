@@ -43,8 +43,8 @@
                             <thead>
                                 <tr>
                                     <th st-sort="kd_bom">Kode Bom</th>
-                                    <th st-sort="no_wo">NO Wo</th>
                                     <th st-sort="no_spk">SPK</th>
+                                    <th st-sort="no_wo">No Wo</th>
                                     <th st-sort="nm_customer">Customer</th>
                                     <th st-sort="merk">Merk</th>
                                     <th st-sort="tipe">Tipe</th>
@@ -56,8 +56,8 @@
                             <tbody ng-show="!isLoading">
                                 <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
                                     <td>{{row.kd_bom}}</td>
-                                    <td>{{row.no_wo}}</td>
                                     <td>{{row.no_spk}}</td>
+                                    <td>{{row.no_wo}}</td>
                                     <td>{{row.nm_customer}}</td>
                                     <td>{{row.merk}}</td>
                                     <td>{{row.tipe}}</td>

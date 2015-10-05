@@ -61,8 +61,11 @@ foreach ($models as $key => $val) {
                         <td> : 
                             <?php
                             $periode = \app\models\TransSpp::findOne(['no_spp' => $id]);
-
-                            echo date("d/m/Y", strtotime($periode['tgl1'])) . " - " . date("d/m/Y", strtotime($periode['tgl2']));
+                            $tg1 = explode("/", $periode['tgl1']);
+                            $tg2 = explode("/", $periode['tgl2']);
+                            $tgl1 = $tg1[2] . '-' . $tg1[1] . '-' . $tg1[0];
+                            $tgl2 = $tg2[2] . '-' . $tg2[1] . '-' . $tg2[0];
+                            echo date("d/m/Y", strtotime($tgl1)) . " - " . date("d/m/Y", strtotime($tgl2));
                             ?>
                         </td>
                     </tr>
@@ -117,7 +120,7 @@ foreach ($models as $key => $val) {
             $no = 1;
             foreach ($val['body'] as $vals) {
                 $p = (!empty($vals['p'])) ? date("d/m/y", strtotime($vals['p'])) : '';
-                $a = (!empty($vals['a']) and $vals['a'] != null) ? date("d/m/y", strtotime($vals['a'])) : '';
+                $a = (!empty($vals['a']) and $vals['a'] != null and $vals['a'] != "0000-00-00") ? date("d/m/y", strtotime($vals['a'])) : '';
                 ?>
                 <tr>
                     <td class="border-right border-bottom" style="text-align:center"><?= $no ?></td>
