@@ -285,7 +285,7 @@ class BbkController extends Controller {
             $query = new Query;
             $query->from('barang')
                     ->select("*")
-                    ->orderBy('kd_barang ASC')
+                    ->orderBy('nm_barang ASC')
                     ->where('nm_barang like "%' . $params['nama'] . '%"');
 
             $command = $query->createCommand();
