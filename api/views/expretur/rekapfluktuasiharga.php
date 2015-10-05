@@ -1,20 +1,21 @@
 <?php
 if (!isset($_GET['print'])) {
     header("Content-type: application/vnd-ms-excel");
-//    header("Content-Disposition: attachment; filename=excel-Laporan-spp-rutin.xls");
+    header("Content-Disposition: attachment; filename=excel-Laporan-spp-rutin.xls");
 }
 ?>
 <?php
 $i = 0;
 $data = array();
 foreach ($models as $key => $val) {
-    $bulan = date('mm', strtotime($val['tgl_pengiriman']));
+    $bulan = date('m', strtotime($val['tgl_pengiriman']));
 
-    $data[$bulan]['bulan'] = $bulan;
-    $data[$bulan]['nama_supplier'] = $val['nama_supplier'];
-    $data[$bulan]['nm_barang'] = $val['nm_barang'];
-    $data[$bulan]['satuan'] = $val['satuan'];
-    $data[$bulan]['hrg_barang'] = $val['hrg_barang'];
+    $data[$bulan]['body'][$i]['bulan'] = $bulan;
+    $data[$bulan]['body'][$i]['nota'] = $val['nota'];
+    $data[$bulan]['body'][$i]['nama_supplier'] = $val['nama_supplier'];
+    $data[$bulan]['body'][$i]['nm_barang'] = $val['nm_barang'];
+    $data[$bulan]['body'][$i]['satuan'] = $val['satuan'];
+    $data[$bulan]['body'][$i]['hrg_barang'] = $val['hrg_barang'];
 
     $i++;
 }
@@ -68,322 +69,301 @@ foreach ($models as $key => $val) {
     </table>
     <table style="margin-top: -2px;border-collapse: collapse; font-size: 12px;" width="100%" border="1">
         <tr>
-            <th rowspan="2" style="text-align: center;">No</th>
-            <th rowspan="2" style="text-align: center;">Supplier</th>
-            <th rowspan="2">Nama Barang</th>
-            <th rowspan="2" style="text-align: center;">Sat</th>
-            <th colspan="12" style="text-align: center;">Harga Barang</th>
+            <th  class="border-bottom border-right" rowspan="2" style="text-align: center;">No</th>
+            <th  class="border-bottom border-right" rowspan="2" style="text-align: center;">SUPPLIER</th>
+            <th  class="border-bottom border-right" rowspan="2">NAMA BARANG</th>
+            <th  class="border-bottom border-right" rowspan="2" style="text-align: center;">SAT</th>
+            <th  class="border-bottom border-right" colspan="12" style="text-align: center; font-size: 16px; color: red;">HARGA BARANG</th>
         </tr>
         <tr>
-            <td>JAN</td>
-            <td>FEB</td>
-            <td>MAR</td>
-            <td>APR</td>
-            <td>MEI</td>
-            <td>JUN</td>
-            <td>JUL</td>
-            <td>AGS</td>
-            <td>SEP</td>
-            <td>OKT</td>
-            <td>NOP</td>
-            <td>DES</td>
+            <td style="text-align: center; width: 60px;" class="border-bottom border-right">JAN</td>
+            <td style="text-align: center; width: 60px;" class="border-bottom border-right">FEB</td>
+            <td style="text-align: center; width: 60px;" class="border-bottom border-right">MAR</td>
+            <td style="text-align: center; width: 60px;" class="border-bottom border-right">APR</td>
+            <td style="text-align: center; width: 60px;" class="border-bottom border-right">MEI</td>
+            <td style="text-align: center; width: 60px;" class="border-bottom border-right">JUN</td>
+            <td style="text-align: center; width: 60px;" class="border-bottom border-right">JUL</td>
+            <td style="text-align: center; width: 60px;" class="border-bottom border-right">AGS</td>
+            <td style="text-align: center; width: 60px;" class="border-bottom border-right">SEP</td>
+            <td style="text-align: center; width: 60px;" class="border-bottom border-right">OKT</td>
+            <td style="text-align: center; width: 60px;" class="border-bottom border-right">NOP</td>
+            <td style="text-align: center; width: 60px;" class="border-bottom border-right">DES</td>
         </tr>
         <?php
         $no = 1;
-        foreach ($data as $key) {
-            if ($key['bulan'] == 01) {
-                ?>
-                <tr>
-                    <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
-                    <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
-                    <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
-                    <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
-                    <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+        foreach ($data as $datas) {
+            foreach ($datas['body'] as $key) {
+                if ($key['bulan'] == 01) {
+                    ?>
+                    <tr>
+                        <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
+                        <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
+                        <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
+                        <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
+                        <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                    </tr>
 
-                <?php
-                
-            }
-            else if ($key['bulan'] == 02) {
-                ?>
-                <tr>
-                    <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
-                    <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
-                    <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
-                    <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
-                    <td></td>
-                    <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+                    <?php
+                } else if ($key['bulan'] == 02) {
+                    ?>
+                    <tr>
+                        <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
+                        <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
+                        <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
+                        <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
+                        <td class="border-bottom border-right"></td>
+                        <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                    </tr>
 
-                <?php
-                
-            }
-            else if ($key['bulan'] == 03) {
-                ?>
-                <tr>
-                    <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
-                    <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
-                    <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
-                    <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
-                    <td></td>
-                    <td></td>
-                    <td class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+            <?php
+        } else if ($key['bulan'] == 03) {
+            ?>
+                    <tr>
+                        <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
+                        <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
+                        <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
+                        <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                    </tr>
 
-                <?php
-                
-            }
-            else if ($key['bulan'] == 04) {
-                ?>
-                <tr>
-                    <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
-                    <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
-                    <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
-                    <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+            <?php
+        } else if ($key['bulan'] == 04) {
+            ?>
+                    <tr>
+                        <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
+                        <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
+                        <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
+                        <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                    </tr>
 
-                <?php
-                
-            }
-            else if ($key['bulan'] == 05) {
-                ?>
-                <tr>
-                    <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
-                    <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
-                    <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
-                    <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
-                     <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
-                   
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+            <?php
+        } else if ($key['bulan'] == 05) {
+            ?>
+                    <tr>
+                        <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
+                        <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
+                        <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
+                        <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
 
-                <?php
-                
-            }
-            else if ($key['bulan'] == 06) {
-                ?>
-                <tr>
-                    <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
-                    <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
-                    <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
-                    <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
-                    
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
 
-                <?php
-                
-            }
-            else if ($key['bulan'] == 07) {
-                ?>
-                <tr>
-                    <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
-                    <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
-                    <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
-                    <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
-                     <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
-                   <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                    </tr>
 
-                <?php
-                
-            }
-            else if ($key['bulan'] == 08) {
-                ?>
-                <tr>
-                    <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
-                    <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
-                    <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
-                    <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+            <?php
+        } else if ($key['bulan'] == 06) {
+            ?>
+                    <tr>
+                        <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
+                        <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
+                        <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
+                        <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
 
-                <?php
-                
-            }
-            else if ($key['bulan'] == 09) {
-                ?>
-                <tr>
-                    <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
-                    <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
-                    <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
-                    <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
-                     <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
-                   
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                    </tr>
 
-                <?php
-                
-            }
-            else if ($key['bulan'] == 10) {
-                ?>
-                <tr>
-                    <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
-                    <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
-                    <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
-                    <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+            <?php
+        } else if ($key['bulan'] == 07) {
+            ?>
+                    <tr>
+                        <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
+                        <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
+                        <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
+                        <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                    </tr>
 
-                <?php
-                
-            }
-            else if ($key['bulan'] == 11) {
-                ?>
-                <tr>
-                    <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
-                    <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
-                    <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
-                    <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
-                    <td></td>
-                </tr>
+            <?php
+        } else if ($key['bulan'] == 08) {
+            ?>
+                    <tr>
+                        <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
+                        <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
+                        <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
+                        <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                    </tr>
 
-                <?php
-                
-            }
-            else if ($key['bulan'] == 02) {
-                ?>
-                <tr>
-                    <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
-                    <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
-                    <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
-                    <td  class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
-                     <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
-                  </tr>
+            <?php
+        } else if ($key['bulan'] == 09) {
+            ?>
+                    <tr>
+                        <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
+                        <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
+                        <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
+                        <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                    </tr>
 
-                <?php
-                
+            <?php
+        } else if ($key['bulan'] == 10) {
+            ?>
+                    <tr>
+                        <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
+                        <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
+                        <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
+                        <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                    </tr>
+
+            <?php
+        } else if ($key['bulan'] == 11) {
+            ?>
+                    <tr>
+                        <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
+                        <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
+                        <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
+                        <td class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
+                        <td class="border-bottom border-right"></td>
+                    </tr>
+
+                    <?php
+                } else if ($key['bulan'] == 12) {
+                    ?>
+                    <tr>
+                        <td  style="text-align: center;" class="border-bottom border-right" valign="top">&nbsp;<?= $no; ?></td>
+                        <td  class="border-bottom border-right" valign="top"><?= $key['nama_supplier'] ?></td>
+                        <td  class="border-bottom border-right" valign="top">&nbsp;<?= $key['nm_barang'] ?></td>
+                        <td  class="border-bottom border-right" valign="top"><?= $key['satuan']; ?></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td class="border-bottom border-right"></td>
+                        <td  class="border-bottom border-right" valign="top" style="text-align: center;"><?= $key['hrg_barang']; ?></td>
+                    </tr>
+
+                    <?php
+                }
+//            echo $key['bulan'];
+                $no++;
             }
-            echo $key['bulan'];
-            $no++;
         }
         ?>
     </table>

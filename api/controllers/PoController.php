@@ -304,7 +304,7 @@ class PoController extends Controller {
         session_start();
         $params = json_decode(file_get_contents("php://input"), true);
         $filter = array();
-        $sort = "trans_po.nota DESC";
+        $sort = "dpo.tgl_pengiriman ASC";
         $offset = 0;
         $limit = 10;
 
@@ -319,6 +319,7 @@ class PoController extends Controller {
                 ->join('LEFT JOIN', 'trans_bbm', 'trans_bbm.no_bbm = det_bbm.no_bbm')
                 ->join('JOIN', 'barang', 'barang.kd_barang = dpo.kd_barang')
                 ->join('LEFT JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
+                ->orderBy($sort)
                 ->groupBy('dpo.harga')
                 ->select("dpo.*,trans_po.bayar,supplier.nama_supplier,trans_bbm.surat_jalan,det_bbm.tgl_terima, det_bbm.no_bbm, barang.kd_barang as kode_barang,barang.nm_barang, barang.satuan,barang.harga as hrg_barang");
         //filter
@@ -345,8 +346,8 @@ class PoController extends Controller {
 
         $data = $this->retRekap($query);
 
-        $query->limit(null);
-        $query->offset(null);
+        
+        $query->offset(0);
         $_SESSION['queryfluktuasi'] = $query;
         $_SESSION['filterfluktuasi'] = $filter;
 
