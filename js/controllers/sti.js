@@ -16,6 +16,18 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
             $scope.listTipe = data.data;
         });
     };
+    
+    $scope.created_kode = function (kode) {
+        var kods = $scope.form.kd_titipan;
+        var buat = $scope.is_create;
+        if (buat == true) {
+            Data.get('serahterimain/kode', {kd: kode}).then(function (data) {
+                $scope.form.kd_titipan = data.data;
+            });
+        } else {
+            $scope.form.kd_titipan = kods;
+        }
+    }
 
     $scope.getchassis = function (merk, tipe) {
         Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function (data) {
@@ -116,12 +128,16 @@ app.controller('stiCtrl', function ($scope, Data, toaster) {
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Edit Data : " + form.kd_titipan;
+        var kode = form.kd_titipan;
+        $scope.format_kode = kode.substr(0,2);
         $scope.selected(form);
     };
     $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.kd_titipan;
+        var kode = form.kd_titipan;
+        $scope.format_kode = kode.substr(0,2);
         $scope.selected(form);
     };
     
