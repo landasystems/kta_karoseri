@@ -36,17 +36,18 @@ app.controller('fluktuasiCtrl', function ($scope, Data, toaster) {
 //
 //        $scope.isLoading = false;
 //    };
-    $scope.r_fluktuasiSrc = [];
+
     $scope.r_fluktuasi = [];
     $scope.tmpFluktuasiHrg = function (form) {
         var data = form;
         Data.post('po/fluktuasi', data).then(function (data) {
+                $scope.r_fluktuasiSrc = [];
             angular.forEach(data.data, function ($value, $key) {
                 $scope.r_fluktuasiSrc.push($value);
 
             });
         });
-        console.log($scope.r_fluktuasi);
+//        console.log($scope.r_fluktuasi);
     }
 
     var myDate = new Date();
