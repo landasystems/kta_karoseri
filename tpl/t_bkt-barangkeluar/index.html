@@ -7,7 +7,9 @@
             <div class="panel-heading">
                 <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                    <button type="button" class="btn btn-warning fa fa-print" ng-show="user.id == 1" ng-click="bukaPrint(gantiStatus)">&nbsp;Buka Print Out</button>
+                    <button type="button" class="btn btn-info fa fa-lock" ng-click="lock(gantiStatus);" ng-show="status == 0 && user.roles_id == 1">&nbsp;Lock</button>
+                    <button type="button" class="btn btn-default fa fa-unlock" ng-click="unlock(gantiStatus);" ng-show="status == 1 && user.roles_id == 1">&nbsp;Unlock</button>
+                    <button type="button" class="btn btn-warning fa fa-print" ng-show="user.roles_id == 1" ng-click="bukaPrint(gantiStatus)">&nbsp;Buka Print Out</button>
                     <button type="button" class="btn btn-success fa fa-check"  ng-click="modal()">&nbsp;Pengecualian BBK</button>
                     <button type="button" class="btn btn-info fa fa-copy" ng-click="copy();">&nbsp;Salin BBK</button>
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
@@ -26,6 +28,16 @@
                             <label class="col-md-3">No. Wo</label>
                             <div class="col-md-9">
                                 <input class="form-control" st-search="no_wo" type="text"  ng-model="tanggal">
+                            </div>
+                        </div>
+                        <div class="form-group" ng-show="user.roles_id == 1">
+                            <label class="col-md-3">Status</label>
+                            <div class="col-md-9">
+                                <select stInputEvent="change" st-search="lock" class="form-control" ng-model="status">
+                                    <option value="">.: Pilih Status :.</option>
+                                    <option value="1">Lock</option>
+                                    <option value="0">Unlock</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -49,7 +61,7 @@
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th ng-show="user.id == 1">#</th>
+                            <th ng-show="user.roles_id == 1">#</th>
                             <th st-sort="no_bbk">No. BBK</th>
                             <th st-sort="tanggal">Tanggal</th>
                             <th st-sort="no_wo">No. Wo</th>
@@ -61,7 +73,7 @@
                     </thead>
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
-                            <td ng-show="user.id == 1">
+                            <td ng-show="user.roles_id == 1">
                                 <label class="i-checks" ng-show="row.status == 1">
                                     <input type="checkbox" ng-model="gantiStatus[row.no_bbk]" ><i></i> 
                                 </label>
@@ -72,24 +84,24 @@
                             <td>{{row.bagian}}</td>
                             <td>{{row.penerima}}</td>
                             <td>{{row.petugas}}</td>
-                            <td ng-hide="is_view == true">
-                                <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                                    <button type="button" ng-show="row.status == 0 || user.id == 1" class="btn btn-info fa fa-edit" ng-click="update(row)" title="Edit BBK"></button>
-                                    <button type="button" ng-show="row.status == 0 || user.id == 1" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" title="Hapus BBK"></button>
+                            <td>
+                                <div ng-show="row.lock == 0 || user.roles_id == 1" class="btn-group pull-right"  role="group" style="margin-top: -3px;">
+                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
+                                    <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" ></button>
                                 </div> 
                             </td>
                         </tr>
                     </tbody>
                     <tbody ng-show="isLoading">
                         <tr>
-                            <td colspan="8" class="text-center" ng-if="user.id == 1">Loading ... </td>
-                            <td colspan="7" class="text-center" ng-if="user.id != 1">Loading ... </td>
+                            <td colspan="7" class="text-center" ng-if="user.roles_id != 1">Loading ... </td>
+                            <td colspan="8" class="text-center" ng-if="(status == 1 || status == 0) && user.roles_id == 1">Loading ... </td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" ng-if="user.id == 1" colspan="8"></td>
-                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" ng-if="user.id != 1" colspan="7"></td>
+                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="7" ng-if="user.roles_id != 1"></td>
+                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="8" ng-if="(status == 1 || status == 0) && user.roles_id == 1"></td>
                         </tr>
                 </table>		
             </div>
@@ -109,7 +121,7 @@
                     <button type="button" class="btn btn-warning fa fa-copy" ng-click="copy();">&nbsp;Salin BBK</button>
                     <button type="button" class="btn btn-success fa fa-check"  ng-click="modal()">&nbsp;Pengecualian BBK</button>
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-show="is_view" ng-click="create();">&nbsp;Tambah Data</button>
-                    <button type="button" class="btn btn-info fa fa-print"  ng-show="is_view" ng-print print-element-id="printArea" ng-click="simpanPrint(form.no_bbk)" ng-disabled="is_print == 1 && user.id != 1">&nbsp;Print</button>
+                    <button type="button" class="btn btn-info fa fa-print"  ng-show="is_view" ng-print print-element-id="printArea" ng-click="simpanPrint(form.no_bbk)" ng-disabled="is_print == 1 && user.roles_id != 1">&nbsp;Print</button>
                 </div>
             </div>
             <div class="panel-body">

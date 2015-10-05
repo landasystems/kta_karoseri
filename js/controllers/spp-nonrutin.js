@@ -36,6 +36,36 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.isLoading = false;
     };
 
+    $scope.pilih = {};
+
+    $scope.lock = function () {
+        if (confirm("Apa anda yakin akan memproses item ini ?")) {
+            Data.post('spprutin/lock/', $scope.pilih).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan");
+                } else {
+                    $scope.is_edit = false;
+                    $scope.callServer(tableStateRef); //reload grid ulang
+                    toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
+                }
+            });
+        }
+    };
+
+    $scope.unlock = function () {
+        if (confirm("Apa anda yakin akan memproses item ini ?")) {
+            Data.post('spprutin/unlock/', $scope.pilih).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan");
+                } else {
+                    $scope.is_edit = false;
+                    $scope.callServer(tableStateRef); //reload grid ulang
+                    toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
+                }
+            });
+        }
+    };
+
     $scope.excel = function (no_spp) {
         Data.get('sppnonrutin/view/' + no_spp).then(function (data) {
             window.location = 'api/web/sppnonrutin/print';
@@ -195,9 +225,9 @@ app.controller('modalCtrl', function ($scope, Data, $modalInstance, form) {
 
     $scope.formmodal = form.detail;
     $scope.is_create = form.is_create;
-    if($scope.is_create == true){
+    if ($scope.is_create == true) {
         $scope.formmodal.p = new Date();
-    }else{
+    } else {
         $scope.formmodal.p = new Date($scope.formmodal.p);
     }
 //    $scope.woMasuk = [];

@@ -38,9 +38,35 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         $scope.listsupplier = data.data;
     });
 
+    $scope.lock = function (form) {
+        if (confirm("Apa anda yakin akan memproses item ini ?")) {
+            Data.post('po/lock/', {id: form}).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan");
+                } else {
+                    $scope.is_edit = false;
+                    $scope.callServer(tableStateRef); //reload grid ulang
+                    toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
+                }
+            });
+        }
+    };
+
+    $scope.unlock = function (form) {
+        if (confirm("Apa anda yakin akan memproses item ini ?")) {
+            Data.post('po/unlock/', {id: form}).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan");
+                } else {
+                    $scope.is_edit = false;
+                    $scope.callServer(tableStateRef); //reload grid ulang
+                    toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
+                }
+            });
+        }
+    };
 
     $scope.bukaPrint = function (form) {
-//        console.log(form);
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
             Data.post('po/bukaprint/', {nota: form}).then(function (result) {
                 if (result.status == 0) {

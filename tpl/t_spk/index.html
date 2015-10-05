@@ -7,7 +7,7 @@
             <div class="panel-heading">
                 <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                    <button type="button" class="btn btn-warning fa fa-print" ng-show="user.id == '1'" ng-click="bukaPrint(gantiStatus)">&nbsp;Buka Print Out</button>
+                    <button type="button" class="btn btn-warning fa fa-print" ng-show="user.roles_id == '1'" ng-click="bukaPrint(gantiStatus)">&nbsp;Buka Print Out</button>
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>
@@ -39,7 +39,7 @@
                 <table class="table table-striped table-hover" >
                     <thead>
                         <tr>
-                            <th ng-show="user.id == '1'">&nbsp;#</th>
+                            <th ng-show="user.roles_id == '1'">&nbsp;#</th>
                             <th>No. Wo</th>
                             <th>PIC</th>
                             <th>Customer</th>
@@ -50,7 +50,7 @@
                     </thead>
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
-                            <td ng-show="user.id == '1'">
+                            <td ng-show="user.roles_id == '1'">
                                 <label class="i-checks">
                                     <input type="checkbox" ng-model="gantiStatus[row.id_spk]" ><i></i> 
                                 </label>
@@ -62,8 +62,8 @@
                             <td>{{row.jabatan}}</td>
                             <td ng-hide="is_view == true">
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                                    <button type="button" ng-show="row.sts_print == 0 || user.id == 1" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
-                                    <button type="button" ng-show="row.sts_print == 0 || user.id == 1" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" ></button>
+                                    <button type="button" ng-show="row.sts_print == 0 || user.roles_id == 1" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
+                                    <button type="button" ng-show="row.sts_print == 0 || user.roles_id == 1" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" ></button>
                                 </div> 
                             </td>
                         </tr>
@@ -90,7 +90,7 @@
             <div class="panel-heading">
                 {{formtitle}}
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-hide="is_print == false" ng-show="is_view">
-                    <button type="button" class="btn btn-primary fa fa-print" ng-click="updt_st(form.id_spk)"  ng-print print-element-id="printArea" ng-disabled="form.status == '1' && user.id != '1'">&nbsp;Print</button>
+                    <button type="button" class="btn btn-primary fa fa-print" ng-click="updt_st(form.id_spk)"  ng-print print-element-id="printArea" ng-disabled="form.status == '1' && user.roles_id != '1'">&nbsp;Print</button>
                 </div> 
             </div>
             <div class="panel-body">

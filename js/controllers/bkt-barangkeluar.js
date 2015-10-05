@@ -13,6 +13,36 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     $scope.is_print = 0;
     $scope.err_pengambilan = false;
 
+    $scope.pilih = {};
+
+    $scope.lock = function (form) {
+        if (confirm("Apa anda yakin akan memproses item ini ?")) {
+            Data.post('bbk/lock/', {id: form}).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan");
+                } else {
+                    $scope.is_edit = false;
+                    $scope.callServer(tableStateRef); //reload grid ulang
+                    toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
+                }
+            });
+        }
+    };
+
+    $scope.unlock = function (form) {
+        if (confirm("Apa anda yakin akan memproses item ini ?")) {
+            Data.post('bbk/unlock/', {id: form}).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan");
+                } else {
+                    $scope.is_edit = false;
+                    $scope.callServer(tableStateRef); //reload grid ulang
+                    toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
+                }
+            });
+        }
+    };
+
     $scope.bukaPrint = function (form) {
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
             Data.post('bbk/bukaprint/', {no_bbk: form}).then(function (result) {
@@ -111,7 +141,9 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             Data.post('bbk/listbarang', {nama: $query, no_wo: no_wo, kd_jab: kd_jab, listBarang: $scope.detailBbk}).then(function (data) {
                 $scope.resultsbarang = data.data;
             });
-            $scope.riwayatAmbil(no_wo, kd_jab);
+            if ($scope.is_create == true) {
+                $scope.riwayatAmbil(no_wo, kd_jab);
+            }
         } else if ($query.length >= 2) {
             Data.post('bbk/listbarang', {nama: $query, no_wo: no_wo, kd_jab: kd_jab, listBarang: $scope.detailBbk}).then(function (data) {
                 $scope.resultsbarang = data.data;
@@ -136,16 +168,12 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     };
 
     $scope.removeRow = function (paramindex) {
-//        if ($scope.err_pengambilan == false) {
-            var comArr = eval($scope.detailBbk);
-            if (comArr.length > 1) {
-                $scope.detailBbk.splice(paramindex, 1);
-            } else {
-                alert("Something gone wrong");
-            }
-//        } else {
-//            toaster.pop('error', "Sisa pengambilan bahan telah habis");
-//        }
+        var comArr = eval($scope.detailBbk);
+        if (comArr.length > 1) {
+            $scope.detailBbk.splice(paramindex, 1);
+        } else {
+            alert("Something gone wrong");
+        }
     };
 
     $scope.open1 = function ($event) {
@@ -314,6 +342,8 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                 Data.get('pengguna/profile').then(function (data) {
                     $scope.form.petugas = data.data.nama;
                 });
+            }else{
+                 $scope.riwayatAmbil($scope.form.no_wo, $scope.form.kd_jab);
             }
 
             if (jQuery.isEmptyObject(data.detail)) {

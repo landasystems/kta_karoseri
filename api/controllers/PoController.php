@@ -37,9 +37,33 @@ class PoController extends Controller {
                     'update' => ['post'],
                     'bukaprint' => ['post'],
                     'delete' => ['delete'],
+                    'lock' => ['post'],
+                    'unlock' => ['post'],
                 ],
             ]
         ];
+    }
+
+    public function actionLock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+        
+        foreach ($centang as $key => $val) {
+            $status = TransPo::findOne($key);
+            $status->status = 0;
+            $status->save();
+        }
+    }
+
+    public function actionUnlock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = TransPo::findOne($key);
+            $status->lock = 0;
+            $status->save();
+        }
     }
 
     public function beforeAction($event) {
@@ -305,7 +329,7 @@ class PoController extends Controller {
             if ($params['bulan']) {
                 $m = $params['bulan'];
             }
-            
+
             if ($params['tahun']) {
                 $y = $params['tahun'];
             }
@@ -313,12 +337,12 @@ class PoController extends Controller {
             $d = $this->hitung_hari($m, $y);
 
             $start = $y . '-01-01';
-            
+
             $finish = $y . '-' . $m . '-' . $d;
-            
+
             $query->andFilterWhere(['between', 'dpo.tgl_pengiriman', $start, $finish]);
         }
-        
+
         $data = $this->retRekap($query);
 
         $query->limit(null);
@@ -440,6 +464,7 @@ class PoController extends Controller {
         $model = new TransPo();
         $model->attributes = $params['formpo'];
         $model->suplier = $params['formpo']['supplier']['kd_supplier'];
+        $model->lock = 1;
         if (!empty($model->tanggal)) {
             $model->tanggal = date("Y-m-d", strtotime($params['formpo']['tanggal']));
         } else {
@@ -478,6 +503,7 @@ class PoController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params['formpo'];
+        $model->lock = 1;
         if (!empty($model->tanggal)) {
             $model->tanggal = date("Y-m-d", strtotime($params['formpo']['tanggal']));
         } else {

@@ -37,9 +37,33 @@ class SpprutinController extends Controller {
                     'requiredpurchase' => ['get'],
                     'getdetail' => ['post'],
                     'excelmonitoring' => ['get'],
+                    'lock' => ['post'],
+                    'unlock' => ['post'],
                 ],
             ]
         ];
+    }
+
+    public function actionLock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = TransSpp::findOne($key);
+            $status->lock = 1;
+            $status->save();
+        }
+    }
+
+    public function actionUnlock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = TransSpp::findOne($key);
+            $status->lock = 0;
+            $status->save();
+        }
     }
 
     public function actionExcelmonitoring() {
@@ -413,6 +437,7 @@ class SpprutinController extends Controller {
         $model->tgl1 = date('d/m/Y', strtotime($params['form']['periode']['startDate']));
         $model->tgl2 = date('d/m/Y', strtotime($params['form']['periode']['endDate']));
         $model->no_proyek = 'Rutin';
+        $model->lock = 1;
         if ($model->save()) {
             $deleteAll = DetSpp::deleteAll('no_spp="' . $model->no_spp . '"');
             foreach ($params['details'] as $val) {

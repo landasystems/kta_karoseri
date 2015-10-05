@@ -7,8 +7,8 @@
             <div class="panel-heading">
                 <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-                    <button type="button" class="btn btn-info fa fa-plus-square-o" ng-click="validasi(pilih);" ng-show="status == 0 && user.roles_id == 1">&nbsp;Validasi Data</button>
-                    <button type="button" class="btn btn-success fa fa-plus-square-o" ng-click="bukavalidasi(pilih);" ng-show="status == 1 && user.roles_id == 1">&nbsp;Buka Validasi</button>
+                    <button type="button" class="btn btn-info fa fa-lock" ng-click="validasi(pilih);" ng-show="status == 0 && user.roles_id == 1">&nbsp;Validasi Data</button>
+                    <button type="button" class="btn btn-success fa fa-unlock" ng-click="bukavalidasi(pilih);" ng-show="status == 1 && user.roles_id == 1">&nbsp;Buka Validasi</button>
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>

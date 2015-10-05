@@ -36,9 +36,33 @@ class BbkController extends Controller {
                     'pengecualian' => ['post'],
                     'bukaprint' => ['post'],
                     'riwayatambil' => ['post'],
+                    'lock' => ['post'],
+                    'unlock' => ['post'],
                 ],
             ]
         ];
+    }
+
+    public function actionLock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = TransBbk::findOne($key);
+            $status->lock = 1;
+            $status->save();
+        }
+    }
+
+    public function actionUnlock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = TransBbk::findOne($key);
+            $status->lock = 0;
+            $status->save();
+        }
     }
 
     public function actionRiwayatambil() {
@@ -424,7 +448,7 @@ class BbkController extends Controller {
         $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '-';
         $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '-';
         $model->penerima = isset($params['bbk']['penerima']['nik']) ? $params['bbk']['penerima']['nik'] : '-';
-
+        $model->lock = 1;
         if ($model->save()) {
             $detailBbk = $params['detailBbk'];
             foreach ($detailBbk as $val) {
@@ -459,7 +483,7 @@ class BbkController extends Controller {
         $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '-';
         $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '-';
         $model->penerima = isset($params['bbk']['penerima']['nik']) ? $params['bbk']['penerima']['nik'] : '-';
-
+        $model->lock = 1;
         if ($model->save()) {
             // mengembalikan stok barang
             $detail = DetBbk::find()->where('no_bbk = "' . $model->no_bbk . '"')->all();
