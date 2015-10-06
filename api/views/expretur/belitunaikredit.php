@@ -26,6 +26,7 @@ foreach ($models as $key => $val) {
     $data[$val['bayar']]['nota'][$val['nota']]['body'][$i]['nama_supplier'] = $val['nama_supplier'];
     $i++;
 }
+$kode_print = substr('00000' . $no_print, strlen($no_print));
 ?>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
 <div style="width:26cm">
@@ -43,7 +44,7 @@ foreach ($models as $key => $val) {
             <table style="font-size:12px;">
                 <tr>
                     <td>NOMOR</td>
-                    <td> : </td>
+                    <td> : <?php echo "LJB/PO/".date("y")."/".date("m")."/".$kode_print;?></td>
                 </tr>
                 <tr>
                     <td>PERIODE</td>
@@ -168,7 +169,10 @@ foreach ($models as $key => $val) {
 </div>
 <?php
 if (isset($_GET['print'])) {
-    ?>
+    $model = \app\models\JmlLaporan::findOne(['id' => 1]);
+    $model->jumlah = $no_print;
+    $model->save();
+?>
     <script type="text/javascript">
         window.print();
         setTimeout(function () {
