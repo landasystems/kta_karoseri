@@ -89,6 +89,21 @@ class PoController extends Controller {
         return true;
     }
 
+    public function actionJmlprint(){
+       $query = new Query;
+        $query->from('jml_laporan as jl')
+                ->select('jl.jumlah')
+                ->where(['id' => 1]);
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+        
+//        $model = \app\models\JmlLaporan::findOne(['id' => 1]);
+//        $model->jumlah = ($models + 1);
+//        $model->save();
+        
+        return $models['jumlah']+1;
+    }
+    
     public function actionKode() {
         $query = new Query;
         $query->from('trans_po')
@@ -663,7 +678,7 @@ class PoController extends Controller {
         $filter = $_SESSION['filter'];
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/belitunaikredit", ['models' => $models, 'filter' => $filter]);
+        return $this->render("/expretur/belitunaikredit", ['models' => $models, 'filter' => $filter,'no_print' => $this->actionJmlprint()]);
     }
 
     public function actionExcelpantau() {
