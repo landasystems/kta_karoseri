@@ -32,8 +32,9 @@ class Wip extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['act_finish'], 'safe'],
+            [['act_finish','hasil','hk'], 'safe'],
             [['ket'], 'string'],
+             [['hasil','hk'], 'integer'],
             [['no_wo', 'nik'], 'string', 'max' => 20],
             [['kd_kerja'], 'string', 'max' => 7],
             [['plan_start', 'plan_finish', 'act_start'], 'string', 'max' => 10]

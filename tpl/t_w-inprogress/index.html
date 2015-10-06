@@ -68,7 +68,7 @@
                             <table class="table table-striped b-t b-light">
                                   <thead>
                                  <tr>
-                                        <th class="panel-heading text-muted font-bold" colspan="7">Detail Work In Proses</th>
+                                        <th class="panel-heading text-muted font-bold" colspan="9">Detail Work In Proses</th>
                                         <th class="panel-heading text-muted font-bold" ><button ng-click="addDetail()" class="btn btn-success"  title="Tambah Detail"><i class="fa fa-plus-square"></i></button></th>
                                     </tr>
                                 <tr>
@@ -80,6 +80,8 @@
                                     <th>Act Tgl Mulai</th>
                                     <th>Act Tgl Akhir</th>
                                     <th>Keterangan</th>
+                                    <th>Hasil</th>
+                                    <th>HK</th>
                                     <th></th>
                                 </tr>
                                   </thead>
@@ -113,6 +115,14 @@
                                     </td>
                                     <td style="margin:0px;padding:0px;">
                                         {{det.ket}}
+                                        <!--<input type="text" class="form-control" ng-model="det.keterangan" disabled="true"/>-->
+                                    </td>
+                                    <td style="margin:0px;padding:0px;">
+                                        {{det.hasil}}%
+                                        <!--<input type="text" class="form-control" ng-model="det.keterangan" disabled="true"/>-->
+                                    </td>
+                                    <td style="margin:0px;padding:0px;">
+                                        {{det.hk}}
                                         <!--<input type="text" class="form-control" ng-model="det.keterangan" disabled="true"/>-->
                                     </td>
                                     <td style="margin:0px;padding:0px;width:7%" ng-hide="is_view">
