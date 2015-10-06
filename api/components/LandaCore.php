@@ -1,8 +1,7 @@
 <?php
 
 namespace app\components;
- 
- 
+
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
@@ -35,7 +34,7 @@ class LandaCore extends Component {
         if (empty($filename) || empty($id)) {
             return array('small' => bu('img/150x150-noimage.jpg'), 'medium' => bu('img/350x350-noimage.jpg'), 'big' => bu('img/700x700-noimage.jpg'));
         } else {
-            return array('small' => bu('images/'.$path . $id . '-150x150-' . $filename), 'medium' => bu('images/'.$path . $id . '-350x350-' . $filename), 'big' => bu('images/'.$path . $id . '-700x700-' . $filename));
+            return array('small' => bu('images/' . $path . $id . '-150x150-' . $filename), 'medium' => bu('images/' . $path . $id . '-350x350-' . $filename), 'big' => bu('images/' . $path . $id . '-700x700-' . $filename));
         }
     }
 
@@ -55,42 +54,17 @@ class LandaCore extends Component {
             unlink($medium);
         if (file_exists($big))
             unlink($big);
-
-        //Yii::log('images/' . $path . $id . '-700x700-' . $newFileName, 'info');
         $image = new Image(param('pathImg') . $path . $filename);
         $image->smart_resize(150, 150, $crop);
         $image->save($small);
         $image->smart_resize(350, 350, $crop);
         $image->save($medium);
-//        $image->smart_resize(700,700);
-//        $image->save('images/' . $path . $id . '-700x700-' . $newFileName);
         $image->resize(700, 700, Image::WIDTH)->quality(80);
         $image->save($big);
-//        if ($crop) {
-//            $image->resize(450, 450, Image::AUTO)->quality(65);
-//            $image->crop(350, 350);
-//        } else {
-//            $image->resize(350, 350, Image::AUTO)->quality(65);
-//        }
-//        $image->save('images/' . $path . $id . '-350x350-' . $newFileName);
-//        if ($crop) {
-//            $image->resize(250, 250, Image::AUTO)->quality(50);
-//            $image->crop(150, 150);
-//        } else {
-//            $image->resize(150, 150, Image::AUTO)->quality(50);
-//        }
-//        $image->save('images/' . $path . $id . '-150x150-' . $newFileName);
-        //delete original file
         unlink(param('pathImg') . $path . $filename);
     }
 
     public function registerAssetCss($file, $media = '') {
-        //trace(Yii::getPathOfAlias('common.extensions.landa.assets.css') . '/'.$file);
-//        Yii::app()->clientScript->registerCssFile(
-//                Yii::app()->assetManager->publish(
-//                        Yii::getPathOfAlias('common.extensions.landa.assets.css') . '/' . $file
-//                )
-//        );
         $assetUrl = app()->assetManager->publish(Yii::getPathOfAlias('common.extensions.landa.assets'));
         cs()->registerCssFile($assetUrl . '/css/' . $file, $media);
     }
@@ -130,7 +104,7 @@ class LandaCore extends Component {
     public function rp($price = 0, $prefix = true, $decimal = 0) {
         if (isset($_GET['xls'])) //jika export excel ada, landa rp tidak berlaku
             return $price;
-        
+
         if ($price === '-') {
             return '';
         } else {
@@ -138,6 +112,30 @@ class LandaCore extends Component {
                 return $price;
             } else {
                 $rp = ($prefix) ? 'Rp. ' : '';
+
+                if ($price < 0) {
+                    $price = (float) $price * -1;
+                    $result = '(' . $rp . number_format($price, $decimal, ",", ".") . ')';
+                } else {
+                    $price = (float) $price;
+                    $result = $rp . number_format($price, $decimal, ",", ".");
+                }
+                return $result;
+            }
+        }
+    }
+    
+    public function price($price = 0, $prefix = true, $decimal = 0) {
+        if (isset($_GET['xls'])) //jika export excel ada, landa rp tidak berlaku
+            return $price;
+
+        if ($price === '-') {
+            return '';
+        } else {
+            if ($prefix === "-") {
+                return $price;
+            } else {
+                $rp = ($prefix) ? '' : '';
 
                 if ($price < 0) {
                     $price = (float) $price * -1;
@@ -486,8 +484,8 @@ class LandaCore extends Component {
     function loginRequired() {
         if (!isset(user()->id))
             app()->request->redirect(url('site/login'));
-            
     }
+
     function date2Ind($str) {
         setlocale(LC_TIME, 'id_ID');
         $date = strftime("%d %B %Y", strtotime($str));

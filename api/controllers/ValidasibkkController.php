@@ -36,7 +36,6 @@ class ValidasibkkController extends Controller {
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
-//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -79,7 +78,7 @@ class ValidasibkkController extends Controller {
                 ->limit($limit)
                 ->from('autentikasi_bbk as ab')
                 ->leftJoin('barang as b', 'b.kd_barang = ab.kd_barang')
-                ->where('ab.status = 0')
+                ->where('ab.status = 1')
                 ->orderBy($sort)
                 ->select("ab.*, b.nm_barang");
 
@@ -90,6 +89,11 @@ class ValidasibkkController extends Controller {
                 $query->andFilterWhere(['like', $key, $val]);
             }
         }
+
+        session_start();
+//        if ($_SESSION['user']['roles_id'] != 1) {
+            $query->andWhere('ab.m_roles_id = "' . $_SESSION['user']['roles_id'] . '"');
+//        }
 
         $command = $query->createCommand();
         $models = $command->queryAll();

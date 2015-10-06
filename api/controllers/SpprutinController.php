@@ -37,9 +37,33 @@ class SpprutinController extends Controller {
                     'requiredpurchase' => ['get'],
                     'getdetail' => ['post'],
                     'excelmonitoring' => ['get'],
+                    'lock' => ['post'],
+                    'unlock' => ['post'],
                 ],
             ]
         ];
+    }
+
+    public function actionLock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = TransSpp::findOne($key);
+            $status->lock = 1;
+            $status->save();
+        }
+    }
+
+    public function actionUnlock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = TransSpp::findOne($key);
+            $status->lock = 0;
+            $status->save();
+        }
     }
 
     public function actionExcelmonitoring() {
@@ -338,7 +362,7 @@ class SpprutinController extends Controller {
     public function actionView($id) {
 
         $query = new Query;
-        $query->select("trans_spp.*, det_spp.*, barang.*, jenis_brg.*, det_spp.saldo as sld, det_spp.qty as jmlspp")
+        $query->select("trans_spp.*, det_spp.*, barang.nm_barang, barang.satuan, barang.min, barang.max, jenis_brg.*, det_spp.saldo as sld, det_spp.qty as jmlspp")
                 ->from('trans_spp')
                 ->join('JOIN', 'det_spp', 'det_spp.no_spp = trans_spp.no_spp')
                 ->join('LEFT JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang')
@@ -413,6 +437,7 @@ class SpprutinController extends Controller {
         $model->tgl1 = date('d/m/Y', strtotime($params['form']['periode']['startDate']));
         $model->tgl2 = date('d/m/Y', strtotime($params['form']['periode']['endDate']));
         $model->no_proyek = 'Rutin';
+        $model->lock = 1;
         if ($model->save()) {
             $deleteAll = DetSpp::deleteAll('no_spp="' . $model->no_spp . '"');
             foreach ($params['details'] as $val) {
@@ -420,8 +445,18 @@ class SpprutinController extends Controller {
                 $det->attributes = $val;
                 $det->no_spp = $model->no_spp;
                 $det->kd_barang = (empty($val['barang']['kd_barang'])) ? '-' : $val['barang']['kd_barang'];
-                $det->saldo = $val['barang']['saldo'];
-                $det->qty = $val['barang']['qty'];
+                if (isset($val['barang']['saldo'])) {
+                    $det->saldo = $val['barang']['saldo'];
+                } else {
+                    $det->qty = $val['qty'];
+                }
+
+                if (isset($val['barang']['saldo'])) {
+                    $det->qty = $val['barang']['qty'];
+                } else {
+                    $det->qty = $val['qty'];
+                }
+
                 $det->p = (!empty($val['p']) ? date('Y-m-d', strtotime($val['p'])) : null);
                 $det->no_wo = (empty($val['wo']['no_wo'])) ? '-' : $val['wo']['no_wo'];
                 $det->save();
@@ -519,7 +554,20 @@ class SpprutinController extends Controller {
         foreach ($detSpp as $key => $val) {
             $detail[$key] = $val->attributes;
             $detail[$key]['wo'] = (isset($val->wo)) ? $val->wo->attributes : [];
-            $detail[$key]['barang'] = (isset($val->barang)) ? $val->barang->attributes : [];
+//            $detail[$key]['barang'] = (isset($val->barang)) ? $val->barang->attributes : [];
+            if (isset($val->barang)) {
+                $detail[$key]['barang'] = array(
+                    'kd_barang' => $val->barang->kd_barang,
+                    'nm_barang' => $val->barang->nm_barang,
+                    'min' => $val->barang->min,
+                    'max' => $val->barang->max,
+                    'satuan' => $val->barang->satuan,
+                    'saldo' => $val->saldo,
+                    'qty' => $val->qty,
+                );
+            } else {
+                $detail[$key]['barang'] = [];
+            }
         }
         $this->setHeader(200);
         echo json_encode(['status' => 1, 'data' => $data, 'details' => $detail]);

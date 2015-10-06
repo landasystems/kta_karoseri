@@ -10,6 +10,36 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal, keyboard
     $scope.openedDet = -1;
     $scope.tanggal = [];
 
+    $scope.pilih = {};
+
+    $scope.lock = function () {
+        if (confirm("Apa anda yakin akan memproses item ini ?")) {
+            Data.post('spprutin/lock/', $scope.pilih).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan");
+                } else {
+                    $scope.is_edit = false;
+                    $scope.callServer(tableStateRef); //reload grid ulang
+                    toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
+                }
+            });
+        }
+    };
+
+    $scope.unlock = function () {
+        if (confirm("Apa anda yakin akan memproses item ini ?")) {
+            Data.post('spprutin/unlock/', $scope.pilih).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan");
+                } else {
+                    $scope.is_edit = false;
+                    $scope.callServer(tableStateRef); //reload grid ulang
+                    toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
+                }
+            });
+        }
+    };
+
     $scope.open1 = function ($event) {
         $event.preventDefault();
         $event.stopPropagation();

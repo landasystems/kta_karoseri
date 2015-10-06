@@ -68,22 +68,22 @@ foreach ($models as $val) {
                         <td class="border-all">' . $det['nama_barang'] . '</td>
                         <td align="center" class="border-all">' . $det['satuan'] . '</td>
                         <td align="center" class="border-all">' . $det['qty'] . '</td>
-                        <td align="right" class="border-all">' . $det['harga'] . '</td>
-                        <td align="right" class="border-all">' . $det['harga'] * $det['qty'] . '</td>
+                        <td align="right" class="border-all">' . (Yii::$app->landa->price($det['harga'])) . '</td>
+                        <td align="right" class="border-all">' . (Yii::$app->landa->price($det['harga'] * $det['qty'])) . '</td>
                         <td class="border-all">' . $det['ket'] . '</td>
                     </tr>';
                 }
 
                 echo '<tr>
                             <td colspan="5" align="left" class="border-all"><b>Sub Total</b></td>
-                            <td align="right" class="border-all"><b>' . $total . '</b></td>
+                            <td align="right" class="border-all"><b>' . (Yii::$app->landa->price($total)) . '</b></td>
                             <td class="border-all"></td>
                         </tr>';
             }
             ?>
             <tr>
                 <td colspan="5" align="left" class="border-all"><b>Grand Total</b></td>
-                <td align="right" class="border-all"><b><?php echo $grandTotal ?></b></td>
+                <td align="right" class="border-all"><b><?php echo Yii::$app->landa->price($grandTotal) ?></b></td>
                 <td class="border-all"></td>
             </tr>
         </table>

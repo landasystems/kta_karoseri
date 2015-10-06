@@ -34,9 +34,33 @@ class BbmController extends Controller {
                     'detailstok' => ['post'],
                     'excelserahterima' => ['get'],
                     'caribarang' => ['post'],
+                    'lock' => ['post'],
+                    'unlock' => ['post'],
                 ],
             ]
         ];
+    }
+
+    public function actionLock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = TransBbm::findOne($key);
+            $status->lock = 1;
+            $status->save();
+        }
+    }
+
+    public function actionUnlock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = TransBbm::findOne($key);
+            $status->lock = 0;
+            $status->save();
+        }
     }
 
     public function actionCaribarang() {
@@ -339,7 +363,7 @@ class BbmController extends Controller {
         $model->kd_suplier = $params['form']['kd_supplier'];
         $model->no_wo = (isset($params['form']['wo']['no_wo']) ? $params['form']['wo']['no_wo'] : '-');
         $model->no_po = (isset($params['form']['po']['nota'])) ? $params['form']['po']['nota'] : NULL;
-
+        $model->lock = 1;
         if ($model->save()) {
             //ambil no spp
             $no_spp = \app\models\TransPo::find()->where('nota="' . $model->no_po . '"')->one();
@@ -387,12 +411,12 @@ class BbmController extends Controller {
             $model->kd_suplier = $params['form']['kd_suplier'];
         } else if (isset($params['form']['kd_supplier'])) {
             $model->kd_suplier = $params['form']['kd_supplier'];
-        }else{
+        } else {
             $model->kd_suplier = '-';
         }
         $model->no_wo = (isset($params['form']['wo']['no_wo'])) ? $params['form']['wo']['no_wo'] : '-';
         $model->no_po = (isset($params['form']['po']['nota'])) ? $params['form']['po']['nota'] : NULL;
-
+        $model->lock = 1;
         if ($model->save()) {
             //ambil no spp
             $no_spp = \app\models\TransPo::find()->where('nota="' . $model->no_po . '"')->one();
@@ -414,7 +438,7 @@ class BbmController extends Controller {
                 $det->attributes = $val;
                 $det->kd_barang = $val['barang']['kd_barang'];
                 $det->no_bbm = $model->no_bbm;
-                 $det->no_po = $model->no_po;
+                $det->no_po = $model->no_po;
                 $det->save();
 
                 //update tanggal aktual spp

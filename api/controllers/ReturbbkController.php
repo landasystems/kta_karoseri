@@ -27,9 +27,33 @@ class ReturbbkController extends Controller {
                     'excel' => ['get'],
                     'rekap' => ['get'],
                     'barangkeluar' => ['post'],
+                    'lock' => ['post'],
+                    'unlock' => ['post'],
                 ],
             ]
         ];
+    }
+
+    public function actionLock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = ReturBbk::findOne($key);
+            $status->lock = 1;
+            $status->save();
+        }
+    }
+
+    public function actionUnlock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = ReturBbk::findOne($key);
+            $status->lock = 0;
+            $status->save();
+        }
     }
 
     public function beforeAction($event) {

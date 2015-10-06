@@ -83,9 +83,18 @@
                 <form name="landaform" class="form-horizontal form-validation">
                     <div class="col-md-6">
                         <div class="form-group">
+                            <label class="col-sm-3 control-label">Pilih Format Kode</label>
+                            <div class="col-sm-9">
+
+                                <label class="btn btn-default" ng-click="created_kode('IB')" ng-model="format_kode" btn-radio="'IB'"  required> IB </label>
+                                <label class="btn btn-default" ng-click="created_kode('IV')" ng-model="format_kode" btn-radio="'IV'"  required> IV </label>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-3 control-label">Kode Titipan</label>
                             <div class="col-sm-9">
-                                <input type="text" class="form-control" ng-model="form.kd_titipan" ng-readonly="is_create == false" required>
+                                <input type="text" class="form-control" ng-model="form.kd_titipan" ng-readonly="true">
                             </div>
                         </div>
                         <div class="form-group">
@@ -171,7 +180,8 @@
                             <label class="col-sm-3 control-label">Merk</label>
                             <div class="col-sm-9">
                                 <div class="input-group">
-                                    <select class="form-control" ng-change="typeChassis(form.merk);getchassis(form.merk, form.tipe)" ng-model="form.merk" ng-disabled="is_view" required style="width: 245px;">
+                                    <select class="form-control" ng-change="typeChassis(form.merk);
+                                                    getchassis(form.merk, form.tipe)" ng-model="form.merk" ng-disabled="is_view" required style="width: 245px;">
                                         <option value="">-Pilih Merk-</option>
                                         <option ng-repeat="merk in listMerk" value="{{merk.merk}}" ng-selected="{{merk.merk == form.merk}}" >{{merk.merk}}</option>
                                     </select>
@@ -270,22 +280,22 @@
                     <td width="14%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                        {{form.tgl_terima | date}}
+                        {{form.tgl_terima| date}}
                     </td>
                     <td width="20%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                       {{form.serah_terima | date}} 
+                        {{form.serah_terima| date}} 
                     </td>
                     <td width="12%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                       NB-01021
+                        NB-01021
                     </td>
                     <td width="20%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                       {{form.no_chassis}} 
+                        {{form.no_chassis}} 
                     </td>
                 </tr>
             </table>
@@ -299,17 +309,17 @@
                     <td width="20%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                       {{form.tgl_prd | date}} 
+                        {{form.tgl_prd| date}} 
                     </td>
                     <td width="12%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                     {{form.mrek}}/{{form.tipe}} 
+                        {{form.mrek}}/{{form.tipe}} 
                     </td>
                     <td width="20%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                      {{form.no_mesin}}
+                        {{form.no_mesin}}
                     </td>
                 </tr>
             </table>
@@ -323,17 +333,17 @@
                     <td width="20%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                       {{form.tgl_pdc | date}} 
+                        {{form.tgl_pdc| date}} 
                     </td>
                     <td width="12%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                       {{form.model | date}} 
+                        {{form.model| date}} 
                     </td>
                     <td width="20%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                       {{form.warna.warna}}
+                        {{form.warna.warna}}
                     </td>
                 </tr>
             </table>
@@ -345,11 +355,11 @@
                     <td valign="top" style="font-size: 10px;">
                         {{form.driver}}
                     </td>
-                    
+
                 </tr>
             </table>
-            
-            
+
+
 
         </div>
 

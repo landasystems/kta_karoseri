@@ -32,9 +32,33 @@ class AdditionalbomController extends Controller {
                     'kode' => ['get'],
                     'tipe' => ['get'],
                     'cari' => ['post'],
+                    'validasi' => ['post'],
+                    'bukavalidasi' => ['post'],
                 ],
             ]
         ];
+    }
+
+    public function actionValidasi() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = TransAdditionalBom::findOne($key);
+            $status->status = 1;
+            $status->save();
+        }
+    }
+
+    public function actionBukavalidasi() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = TransAdditionalBom::findOne($key);
+            $status->status = 0;
+            $status->save();
+        }
     }
 
     public function actionCari() {
@@ -134,7 +158,7 @@ class AdditionalbomController extends Controller {
                 ->join('JOIN', 'chassis', 'trans_additional_bom.kd_chassis = chassis.kd_chassis')
                 ->join('JOIN', 'model', 'trans_additional_bom.kd_model=model.kd_model')
                 ->orderBy($sort)
-                ->select("trans_additional_bom.id as id_tambahan, trans_additional_bom.kd_bom, trans_additional_bom.tgl_buat, trans_additional_bom_wo.*, chassis.*, model.*");
+                ->select("trans_additional_bom.status, trans_additional_bom.foto, trans_additional_bom.id as id_tambahan, trans_additional_bom.kd_bom, trans_additional_bom.tgl_buat, trans_additional_bom_wo.*, chassis.*, model.*");
 
         //filter
         if (isset($params['filter'])) {
@@ -158,13 +182,14 @@ class AdditionalbomController extends Controller {
             $data[$val['id_tambahan']]['merk'] = $val['merk'];
             $data[$val['id_tambahan']]['tipe'] = $val['tipe'];
             $data[$val['id_tambahan']]['model'] = $val['model'];
+            $data[$val['id_tambahan']]['status'] = $val['status'];
             $data[$val['id_tambahan']]['no_wo'] = join(',', $wo[$val['id_tambahan']]);
+            $data[$val['id_tambahan']]['foto'] = json_decode($val['foto'], true);
         }
 
         $totalItems = $query->count();
 
         $this->setHeader(200);
-
         echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
@@ -214,9 +239,6 @@ class AdditionalbomController extends Controller {
                 //delete detail optional
                 $detOptional = DetAdditionalBom::deleteAll('tran_additional_bom_id = "' . $valNowo->tran_additional_bom_id . '"');
 
-                //hapus tran additional bom
-                $deleteAdditional = TransAdditionalBom::deleteAll('id="' . $valNowo->tran_additional_bom_id . '"');
-
                 //hapus wo
                 $deleteWo = TransAdditionalBomWo::deleteAll('id="' . $valNowo->id . '"');
             }
@@ -226,6 +248,10 @@ class AdditionalbomController extends Controller {
         $model->attributes = $params['tambahItem'];
         $model->kd_bom = $params['tambahItem']['kd_bom']['kd_bom'];
         $model->kd_model = $params['tambahItem']['kd_model']['kd_model'];
+        if (isset($params['tambahItem']['foto'])) {
+            $model->foto = json_encode($params['tambahItem']['foto']);
+        }
+        $model->status = 0;
         $model->no_wo = '';
 
         if ($model->save()) {
@@ -277,6 +303,9 @@ class AdditionalbomController extends Controller {
         $model->kd_bom = $params['tambahItem']['kd_bom']['kd_bom'];
         $model->kd_model = $params['tambahItem']['kd_model']['kd_model'];
         $model->no_wo = '';
+        if (isset($params['tambahItem']['foto'])) {
+            $model->foto = json_encode($params['tambahItem']['foto']);
+        }
 
         if ($model->save()) {
             //save nomer wo

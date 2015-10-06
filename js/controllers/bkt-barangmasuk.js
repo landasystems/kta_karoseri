@@ -11,6 +11,36 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
     $scope.err_jml = false;
     $scope.jml_po = 0;
 
+    $scope.pilih = {};
+
+    $scope.lock = function () {
+        if (confirm("Apa anda yakin akan memproses item ini ?")) {
+            Data.post('bbm/lock/', $scope.pilih).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan");
+                } else {
+                    $scope.is_edit = false;
+                    $scope.callServer(tableStateRef); //reload grid ulang
+                    toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
+                }
+            });
+        }
+    };
+
+    $scope.unlock = function () {
+        if (confirm("Apa anda yakin akan memproses item ini ?")) {
+            Data.post('bbm/unlock/', $scope.pilih).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan");
+                } else {
+                    $scope.is_edit = false;
+                    $scope.callServer(tableStateRef); //reload grid ulang
+                    toaster.pop('success', "Berhasil", "Data Berhasil Terproses");
+                }
+            });
+        }
+    };
+
     $scope.kalkulasi = function (jml, jml_po) {
         $scope.jml_po = jml_po;
         var selisih = jml_po - jml;

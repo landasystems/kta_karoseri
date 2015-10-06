@@ -36,9 +36,33 @@ class BbkController extends Controller {
                     'pengecualian' => ['post'],
                     'bukaprint' => ['post'],
                     'riwayatambil' => ['post'],
+                    'lock' => ['post'],
+                    'unlock' => ['post'],
                 ],
             ]
         ];
+    }
+
+    public function actionLock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = TransBbk::findOne($key);
+            $status->lock = 1;
+            $status->save();
+        }
+    }
+
+    public function actionUnlock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = TransBbk::findOne($key);
+            $status->lock = 0;
+            $status->save();
+        }
     }
 
     public function actionRiwayatambil() {
@@ -51,7 +75,7 @@ class BbkController extends Controller {
                     ->join('LEFT JOIN', 'tbl_jabatan', 'tbl_jabatan.id_jabatan = trans_bbk.kd_jab')
                     ->select('trans_bbk.tanggal,tbl_jabatan.jabatan,barang.nm_barang, det_bbk.jml')
                     ->orderBy('trans_bbk.tanggal DESC')
-                    ->where('trans_bbk.no_wo = "'.$params['no_wo']['no_wo'].'" and trans_bbk.kd_jab = "'.$params['kd_jab']['id_jabatan'].'"');
+                    ->where('trans_bbk.no_wo = "' . $params['no_wo']['no_wo'] . '" and trans_bbk.kd_jab = "' . $params['kd_jab']['id_jabatan'] . '"');
             $command = $query->createCommand();
             $models = $command->queryAll();
 
@@ -95,12 +119,57 @@ class BbkController extends Controller {
     public function actionPengecualian() {
         $params = json_decode(file_get_contents("php://input"), true);
         if (isset($params['no_wo'])) {
+            $optional = \app\models\TransAdditionalBomWo::find()
+                    ->joinWith('transadditionalbom')
+                    ->where(['trans_additional_bom_wo.no_wo' => $params['no_wo']['no_wo']])
+                    ->andWhere(['trans_additional_bom.status' => 1])
+                    ->all();
+
+            //jika tidak ada optional
+            if (empty($optional) or count($optional) == 0) {
+                $query = new Query;
+                $query->from('det_standar_bahan as dsb')
+//                        ->join('LEFT JOIN', 'barang as b', 'b.kd_barang = dsb.kd_barang')
+                        ->join('LEFT JOIN', 'tbl_jabatan as tj', 'tj.id_jabatan = dsb.kd_jab')
+                        ->join('LEFT JOIN', 'spk', 'spk.kd_bom = dsb.kd_bom')
+                        ->join('LEFT JOIN', 'wo_masuk as wm', 'spk.no_spk = wm.no_spk')
+                        ->select('tj.id_jabatan as kd_jabatan, '
+                                . 'tj.jabatan as bagian, dsb.qty as jml, dsb.ket as ket')
+                        ->where('dsb.kd_barang = "' . $params['kd_barang']['kd_barang'] . '" and wm.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_kerja']['id_jabatan'] . '"');
+            } else {
+                $query = new Query;
+                $query->from('det_additional_bom as dsb')
+//                        ->join('LEFT JOIN', 'barang as b', 'dsb.kd_barang = b.kd_barang')
+                        ->join('LEFT JOIN', 'tbl_jabatan as tj', 'tj.id_jabatan = dsb.kd_jab')
+                        ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dsb.tran_additional_bom_id')
+                        ->join('LEFT JOIN', 'trans_additional_bom_wo as tsbw', ' tsb.id = tsbw.tran_additional_bom_id')
+                        ->select('tj.id_jabatan as kd_jabatan, '
+                                . 'tj.jabatan as bagian, dsb.qty as jml, dsb.ket as ket')
+                        ->where('dsb.kd_barang = "' . $params['kd_barang']['kd_barang'] . '" and tsbw.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_kerja']['id_jabatan'] . '"');
+            }
+            $command = $query->createCommand();
+            $models = $command->query()->read();
+            $jml = $models['jml'];
+
+            $persen = ($params['jml'] / $jml) * 100;
+
+            $roles_id = 1;
+            if ($persen <= 5) {
+                $roles_id = 2;
+            } else if ($persen > 5 && $persen <= 10) {
+                $roles_id = 3;
+            } else if ($persen > 10) {
+                $roles_id = 4;
+            }
+
             $model = new AutentikasiBbk;
             $model->attributes = $params;
             $model->no_wo = $params['no_wo']['no_wo'];
             $model->kd_barang = $params['kd_barang']['kd_barang'];
             $model->kd_kerja = $params['kd_kerja']['id_jabatan'];
+            $model->standard = $jml;
             $model->status = 0;
+            $model->m_roles_id = $roles_id;
 
             if ($model->save()) {
                 $this->setHeader(200);
@@ -132,7 +201,11 @@ class BbkController extends Controller {
                 }
             }
 
-            $optional = \app\models\TransAdditionalBomWo::find()->where(['no_wo' => $params['no_wo']['no_wo']])->all();
+            $optional = \app\models\TransAdditionalBomWo::find()
+                    ->joinWith('transadditionalbom')
+                    ->where(['trans_additional_bom_wo.no_wo' => $params['no_wo']['no_wo']])
+                    ->andWhere(['trans_additional_bom.status' => 1])
+                    ->all();
 
             //jika tidak ada optional
             if (empty($optional) or count($optional) == 0) {
@@ -173,8 +246,6 @@ class BbkController extends Controller {
             $commandBbk = $queryBbk->createCommand();
             $modelsBbk = $commandBbk->queryAll();
 
-
-
             $detBbk = array();
             foreach ($modelsBbk as $valBbk) {
                 $detBbk[$valBbk['kd_barang']]['jml_keluar'] = isset($detBbk[$valBbk['kd_barang']]['jml']) ? $detBbk[$valBbk['kd_barang']]['jml'] + $valBbk['jml'] : $valBbk['jml'];
@@ -202,7 +273,7 @@ class BbkController extends Controller {
                 $det[$i]['satuan'] = $val['satuan'];
                 $det[$i]['nm_barang'] = $val['nm_barang'];
                 if (isset($detPengecualian[$val['kd_barang']])) {
-                    $val['jml'] = $detPengecualian[$val['kd_barang']]['jml'];
+                    $val['jml'] += $detPengecualian[$val['kd_barang']]['jml'];
                 }
                 $det[$i]['stok_sekarang'] = $val['stok'];
                 $det[$i]['sisa_pengambilan'] = isset($detBbk[$val['kd_barang']]['jml_keluar']) ? $val['jml'] - $detBbk[$val['kd_barang']]['jml_keluar'] : $val['jml'];
@@ -214,7 +285,7 @@ class BbkController extends Controller {
             $query = new Query;
             $query->from('barang')
                     ->select("*")
-                    ->orderBy('kd_barang ASC')
+                    ->orderBy('nm_barang ASC')
                     ->where('nm_barang like "%' . $params['nama'] . '%"');
 
             $command = $query->createCommand();
@@ -420,7 +491,7 @@ class BbkController extends Controller {
         $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '-';
         $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '-';
         $model->penerima = isset($params['bbk']['penerima']['nik']) ? $params['bbk']['penerima']['nik'] : '-';
-
+        $model->lock = 1;
         if ($model->save()) {
             $detailBbk = $params['detailBbk'];
             foreach ($detailBbk as $val) {
@@ -455,7 +526,7 @@ class BbkController extends Controller {
         $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '-';
         $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '-';
         $model->penerima = isset($params['bbk']['penerima']['nik']) ? $params['bbk']['penerima']['nik'] : '-';
-
+        $model->lock = 1;
         if ($model->save()) {
             // mengembalikan stok barang
             $detail = DetBbk::find()->where('no_bbk = "' . $model->no_bbk . '"')->all();

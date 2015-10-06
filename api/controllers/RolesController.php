@@ -69,7 +69,7 @@ class RolesController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "nama DESC";
+        $sort = "id asc";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
