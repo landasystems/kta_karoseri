@@ -1,7 +1,8 @@
 app.controller('barangCtrl', function ($scope, Data, toaster, FileUploader, $modal) {
     var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
     var uploader = $scope.uploader = new FileUploader({
-        url: 'img/upload.php?folder=barang&kode=',
+        url: 'img/upload.php?folder=barang&kode=' + kode_unik,
+        removeAfterUpload: true,
     });
     uploader.filters.push({
         name: 'imageFilter',
@@ -14,6 +15,7 @@ app.controller('barangCtrl', function ($scope, Data, toaster, FileUploader, $mod
             return x;
         }
     });
+
 //    uploader.filters.push({
 //        name: 'sizeFilter',
 //        fn: function (item) {
@@ -27,8 +29,20 @@ app.controller('barangCtrl', function ($scope, Data, toaster, FileUploader, $mod
     $scope.gambar = [];
 
     // CALLBACKS
-    uploader.onSuccessItem = function (fileItem, response, status, headers) {
-        $scope.gambar.unshift(response);
+    uploader.onSuccessItem = function (fileItem, response) {
+        if (response.answer == 'File transfer completed') {
+            $scope.gambar.unshift({name: response.name});
+            $scope.form.foto = $scope.gambar;
+        }
+    };
+
+    $scope.removeFoto = function (paramindex) {
+        var comArr = eval($scope.gambar);
+        if (comArr.length > 1) {
+            $scope.gambar.splice(paramindex, 1);
+        } else {
+            alert("Something gone wrong");
+        }
         $scope.form.foto = $scope.gambar;
     };
 
@@ -97,7 +111,7 @@ app.controller('barangCtrl', function ($scope, Data, toaster, FileUploader, $mod
     };
     $scope.update = function (form) {
         $scope.form = form;
-        $scope.gambar = $scope.form.foto;
+        $scope.gambar = ($scope.form.foto == null) ? [] : $scope.form.foto;
         $scope.selectJenis(form);
         $scope.is_create = false;
         $scope.is_edit = true;

@@ -197,7 +197,7 @@
                                 Foto
                             </tab-heading>
                             <div class="hbox hbox-auto-xs hbox-auto-sm"nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
-                                <div class="row" ng-show="!is_edit">
+                                <div class="row" ng-show="!is_view">
                                     <div class="col-md-4">
                                         <div class="wrapper-md dker b-b">
                                             <h3 class="m-n font-thin">Select files</h3>
@@ -215,10 +215,6 @@
                                         </div>
                                     </div>
                                     <div class="col-md-8">
-                                        <div class="wrapper-md bg-light dk b-b">
-                                            <span class="pull-right m-t-xs">Queue length: <b class="badge bg-info">{{ uploader.queue.length}}</b></span>
-                                            <h3 class="m-n font-thin">Detail Gambar</h3>      
-                                        </div>
                                         <div class="wrapper-md">
                                             <table class="table table-striped">
                                                 <thead>
@@ -280,9 +276,14 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="col-md-4" ng-repeat="slide in gambar">
+                                        <div class="wrapper-md dker b-b" style="margin-bottom: 25px;">
+                                            <h3 class="m-n font-thin">Detail Foto</h3>
+                                        </div>
+                                        <div ng-repeat="slide in gambar" class="col-md-4 m-b repeat-animation hide-fade">
                                             <a href="" ng-click="modal(slide.name)"><img ng-src="img/barang/{{slide.name}}" class="img-full"></a>
-                                            <p align="center" style="padding:10px;" ng-show="!is_edit"><a href=""><i class="btn btn-danger fa fa-trash" title="Hapus"></i></a></p>
+                                            <p align="center" style="padding:10px;" ng-show="!is_view">
+                                                <a href="" ng-click="removeFoto($index)"><i class="btn btn-danger fa fa-trash" title="Hapus"></i></a>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
