@@ -351,9 +351,9 @@ class BarangController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
-        
+
         $data = array();
-        foreach($models as $key => $val){
+        foreach ($models as $key => $val) {
             $data[$key] = $val;
             $data[$key]['foto'] = json_decode($val['foto'], true);
         }
@@ -376,7 +376,9 @@ class BarangController extends Controller {
         $model = new Barang();
         $model->attributes = $params;
         $model->jenis = $params['jenis']['kd_jenis'];
-
+        if (isset($params['foto'])) {
+            $model->foto = json_encode($params['foto']);
+        }
         if ($model->save()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -389,14 +391,11 @@ class BarangController extends Controller {
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
-        $ft = $model->foto;
         $model->attributes = $params;
-        $model->foto = json_encode($params['foto']);
-        $model->jenis = $params['jenis']['kd_jenis'];
-
-        if (empty($model->foto)) {
-            $model->foto = $ft;
+        if (isset($params['foto'])) {
+            $model->foto = json_encode($params['foto']);
         }
+        $model->jenis = $params['jenis']['kd_jenis'];
 
         if ($model->save()) {
             $this->setHeader(200);

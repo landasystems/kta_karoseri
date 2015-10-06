@@ -200,9 +200,15 @@ class BomController extends Controller {
         $models = $command->queryAll();
         $totalItems = $query->count();
 
+        $data = array();
+        foreach ($models as $key => $val) {
+            $data[$key] = $val;
+            $data[$key]['foto'] = json_decode($val['foto'], true);
+        }
+
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
     public function actionRekap() {
@@ -724,6 +730,9 @@ class BomController extends Controller {
         $model->attributes = $params['bom'];
         $model->kd_model = isset($params['bom']['kd_model']['kd_model']) ? $params['bom']['kd_model']['kd_model'] : '-';
         $model->status = 0;
+        if (isset($params['bom']['foto'])) {
+            $model->foto = json_encode($params['bom']['foto']);
+        }
 
         if ($model->save()) {
             $detailBom = $params['detailBom'];
@@ -744,11 +753,14 @@ class BomController extends Controller {
     }
 
     public function actionUpdate($id) {
+//        echo file_get_contents("php://input");
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params['bom'];
         $model->kd_model = isset($params['bom']['kd_model']['kd_model']) ? $params['bom']['kd_model']['kd_model'] : '-';
-
+        if (isset($params['bom']['foto'])) {
+            $model->foto = json_encode($params['bom']['foto']);
+        }
         if ($model->save()) {
             $deleteDetail = BomDet::deleteAll(['kd_bom' => $model->kd_bom]);
             $detailBom = $params['detailBom'];

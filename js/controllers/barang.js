@@ -143,6 +143,7 @@ app.controller('barangCtrl', function ($scope, Data, toaster, FileUploader, $mod
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
                 $scope.is_edit = false;
+                $scope.barang = [];
                 $scope.callServer(tableStateRef); //reload grid ulang
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
             }

@@ -15,7 +15,7 @@ use Yii;
  * @property integer $status
  * @property string $jenis
  * @property integer $umur
- * @property string $gambar
+ * @property string $foto
  */
 class TransAdditionalBom extends \yii\db\ActiveRecord
 {
@@ -33,12 +33,12 @@ class TransAdditionalBom extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['tgl_buat'], 'safe'],
+            [['tgl_buat','foto'], 'safe'],
             [['status', 'umur'], 'integer'],
             [['no_wo', 'kd_chassis','kd_bom'], 'string', 'max' => 20],
             [['kd_model'], 'string', 'max' => 5],
             [['jenis'], 'string', 'max' => 10],
-            [['gambar'], 'string', 'max' => 500]
+//            [[''], 'string', 'max' => 500]
         ];
     }
 
@@ -56,7 +56,7 @@ class TransAdditionalBom extends \yii\db\ActiveRecord
             'status' => 'Status',
             'jenis' => 'Jenis',
             'umur' => 'Umur',
-            'gambar' => 'Gambar',
+            'foto' => 'Gambar',
         ];
     }
     
