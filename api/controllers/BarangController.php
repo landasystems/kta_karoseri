@@ -351,10 +351,16 @@ class BarangController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
+        
+        $data = array();
+        foreach($models as $key => $val){
+            $data[$key] = $val;
+            $data[$key]['foto'] = json_decode($val['foto'], true);
+        }
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
     public function actionView($id) {
@@ -385,6 +391,7 @@ class BarangController extends Controller {
         $model = $this->findModel($id);
         $ft = $model->foto;
         $model->attributes = $params;
+        $model->foto = json_encode($params['foto']);
         $model->jenis = $params['jenis']['kd_jenis'];
 
         if (empty($model->foto)) {
