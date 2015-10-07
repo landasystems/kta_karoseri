@@ -219,20 +219,13 @@
                                         <label class="btn btn-default" ng-model="form.jenis"  btn-radio="'Small Bus'">Mini Bus</label>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4 col-sm-12">
-                                <!--<img ng-src="img/{{(form.gambar) ? 'bom/'+form.gambar : 'noimage.jpg'}}" class="img-thumbnail">-->
-                                <!--<input type="file" nv-file-select="" uploader="uploader" />-->
-                            </div>          
+                            </div>  
                             <div class="line line-dashed b-b line-lg pull-in"></div>
                             <h5 class="font-bold">- Detail Bill Of Material</h5>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Filter Berdasarkan Bagian</label>
                                 <div class="col-sm-4">
                                     <input type="text" class="form-control" ng-model="cari" style="width:300px;">
-                                </div>
-                                <div class="col-sm-6" align="center">
-                                    <!--<button type="submit" class="btn btn-primary btn-lg fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, detBom)">&nbsp;Simpan Perubahan</button>-->
                                 </div>
                             </div>
                             <div class="line line-dashed b-b line-lg pull-in"></div>
@@ -247,7 +240,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!--<div class="panel-body">-->
                                 <div class="table-responsive">
                                     <table class="table table-striped b-t b-light">
                                         <thead>
@@ -287,10 +279,9 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <!--</div>-->
                             </div>
                         </tab>
-                        <tab>
+                        <tab ng-if="!is_create">
                             <tab-heading>
                                 Foto
                             </tab-heading>
@@ -377,10 +368,10 @@
                                         <div class="wrapper-md dker b-b" style="margin-bottom: 25px;">
                                             <h3 class="m-n font-thin">Detail Foto</h3>
                                         </div>
-                                        <div ng-repeat="slide in gambar" class="col-md-4 m-b repeat-animation hide-fade">
-                                            <a href="" ng-click="modalGambar(slide.name)"><img ng-src="img/bom/{{slide.name}}" class="img-full"></a>
+                                        <div ng-repeat="slide in gambar" class="col-md-2 m-b repeat-animation hide-fade">
+                                            <a href="" ng-click="modalFoto(form.id, slide.name)"><img ng-src="img/bom/{{form.id}}-150x150-{{slide.name}}" class="img-thumbnail"></a>
                                             <p align="center" style="padding:10px;" ng-show="!is_view">
-                                                <a href="" ng-click="removeFoto($index)"><i class="btn btn-danger fa fa-trash" title="Hapus"></i></a>
+                                                <a href="" ng-click="removeFoto($index, slide.name)"><i class="btn btn-danger fa fa-trash" title="Hapus"></i></a>
                                             </p>
                                         </div>
                                     </div>
