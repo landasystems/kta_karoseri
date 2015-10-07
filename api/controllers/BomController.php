@@ -39,9 +39,52 @@ class BomController extends Controller {
                     'detail' => ['get'],
                     'cari' => ['get'],
                     'womodel' => ['get'],
+                    'upload' => ['post'],
+                    'removegambar' => ['post'],
                 ],
             ]
         ];
+    }
+
+    public function actionUpload() {
+        if (!empty($_FILES)) {
+            $tempPath = $_FILES['file']['tmp_name'];
+            $newName = \Yii::$app->landa->urlParsing($_FILES['file']['name']);
+
+            $uploadPath = \Yii::$app->params['pathImg'] . $_GET['folder'] . DIRECTORY_SEPARATOR . $newName;
+
+            move_uploaded_file($tempPath, $uploadPath);
+            $a = \Yii::$app->landa->createImg($_GET['folder'] . '/', $newName, $_POST['kode']);
+
+            $answer = array('answer' => 'File transfer completed', 'name' => $newName);
+            if ($answer['answer'] == "File transfer completed") {
+                $bom = Bom::findOne($_POST['kode']);
+                $foto = json_decode($bom->foto, true);
+                $foto[] = array('name' => $newName);
+                $bom->foto = json_encode($foto);
+                $bom->save();
+            }
+
+            echo json_encode($answer);
+        } else {
+            echo 'No files';
+        }
+    }
+
+    public function actionRemovegambar() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $bom = Bom::findOne($params['kode']);
+        $foto = json_decode($bom->foto, true);
+        foreach ($foto as $key => $val) {
+            if ($val['name'] == $params['nama']) {
+                unset($foto[$key]);
+                \Yii::$app->landa->deleteImg('bom/', $params['kode'], $params['nama']);
+            }
+        }
+        $bom->foto = json_encode($foto);
+        $bom->save();
+
+        echo json_encode($foto);
     }
 
     public function actionWomodel() {

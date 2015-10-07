@@ -4,7 +4,6 @@ if (!empty($_FILES)) {
 
     $tempPath = $_FILES['file']['tmp_name'];
     $newName = $_GET['kode'] . "-" . $_FILES['file']['name'];
-//    $newName = $_FILES['file']['name'];
 
     $uploadPath = dirname(__FILE__) . DIRECTORY_SEPARATOR . $_GET['folder'] . DIRECTORY_SEPARATOR . $newName;
 
@@ -15,7 +14,6 @@ if (!empty($_FILES)) {
 
     echo $json;
 } else {
-
     echo 'No files';
 }
 ?>

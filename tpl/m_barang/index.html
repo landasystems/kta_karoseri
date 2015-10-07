@@ -192,7 +192,7 @@
                                 </div>  
                             </div>
                         </tab>
-                        <tab>
+                        <tab ng-if="!is_create">
                             <tab-heading>
                                 Foto
                             </tab-heading>
@@ -261,7 +261,7 @@
                                                         <div class="progress-bar progress-bar-striped bg-info" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
                                                     </div>
                                                 </div>
-                                                <button type="button" class="btn btn-addon btn-success" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
+                                                <button type="button" class="btn btn-addon btn-success" ng-click="uploadGambar(form.kd_barang)" ng-disabled="!uploader.getNotUploadedItems().length">
                                                     <i class="fa fa-arrow-circle-o-up"></i> Upload all
                                                 </button>
                                                 <button type="button" class="btn btn-addon btn-warning" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
@@ -279,10 +279,10 @@
                                         <div class="wrapper-md dker b-b" style="margin-bottom: 25px;">
                                             <h3 class="m-n font-thin">Detail Foto</h3>
                                         </div>
-                                        <div ng-repeat="slide in gambar" class="col-md-4 m-b repeat-animation hide-fade">
-                                            <a href="" ng-click="modal(slide.name)"><img ng-src="img/barang/{{slide.name}}" class="img-full"></a>
+                                        <div ng-repeat="slide in gambar" class="col-md-2 m-b repeat-animation hide-fade">
+                                            <a href="" ng-click="modal(form.kd_barang, slide.name)"><img ng-src="img/barang/{{form.kd_barang}}-150x150-{{slide.name}}" class="img-thumbnail"></a>
                                             <p align="center" style="padding:10px;" ng-show="!is_view">
-                                                <a href="" ng-click="removeFoto($index)"><i class="btn btn-danger fa fa-trash" title="Hapus"></i></a>
+                                                <a href="" ng-click="removeFoto($index, slide.name)"><i class="btn btn-danger fa fa-trash" title="Hapus"></i></a>
                                             </p>
                                         </div>
                                     </div>

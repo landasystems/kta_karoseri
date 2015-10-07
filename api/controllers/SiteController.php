@@ -61,30 +61,14 @@ class SiteController extends Controller {
     }
 
     public function actionCoba() {
-        $optional = \app\models\TransAdditionalBomWo::find()
-                ->joinWith('transadditionalbom')
-                ->where(['trans_additional_bom_wo.no_wo' => "NB-215031"])
-                ->andWhere(['trans_additional_bom.status'=>0])
-                ->all();
-
-        foreach ($optional as $key => $val) {
-            print_r($val);
+//        echo \Yii::$app->landa->rp(10000);
+        $a = \Yii::$app->landa->createImg('delivery/', '58413-hl-4-pasar-jodoh.jpg', 61);
+//        $a = 'a';
+        if ($a) {
+            echo 'sukses';
+        } else {
+            echo 'gagal';
         }
-
-//        $absen = AbsensiEttLog::find()
-//                ->joinWith('karyawan')
-//                ->select("emp.first_name, emp.pin, date(scan_date) as scan_date")
-////                ->where('date(scan_date) = "' . date("Y-m-d") . '"')
-//                ->limit(100)
-//                ->all();
-//
-//        foreach ($absen as $key => $val) {
-////            print_r($val) . '<br>';
-//            echo isset($val['karyawan']['first_name']) ? $val['karyawan']['first_name'] : '-' . '<br>';
-//        }
-//        echo json_encode($absen->pin);
-//        $aa = AbsensiEmp::find()->limit(10)->all();
-//        print_r($absen);
     }
 
     public function actionLogin() {
