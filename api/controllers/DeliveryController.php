@@ -28,9 +28,52 @@ class DeliveryController extends Controller {
                     'rekap' => ['get'],
                     'kode' => ['get'],
                     'excel' => ['get'],
+                    'upload' => ['post'],
+                    'removegambar' => ['post'],
                 ],
             ]
         ];
+    }
+
+    public function actionUpload() {
+        if (!empty($_FILES)) {
+            $tempPath = $_FILES['file']['tmp_name'];
+            $newName = \Yii::$app->landa->urlParsing($_FILES['file']['name']);
+
+            $uploadPath = \Yii::$app->params['pathImg'] . $_GET['folder'] . DIRECTORY_SEPARATOR . $newName;
+
+            move_uploaded_file($tempPath, $uploadPath);
+            $a = \Yii::$app->landa->createImg($_GET['folder'] . '/', $newName, $_POST['kode']);
+
+            $answer = array('answer' => 'File transfer completed', 'name' => $newName);
+            if ($answer['answer'] == "File transfer completed") {
+                $delivery = Delivery::findOne($_POST['kode']);
+                $foto = json_decode($delivery->foto, true);
+                $foto[] = array('name' => $newName);
+                $delivery->foto = json_encode($foto);
+                $delivery->save();
+            }
+
+            echo json_encode($answer);
+        } else {
+            echo 'No files';
+        }
+    }
+
+    public function actionRemovegambar() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $delivery = Delivery::findOne($params['kode']);
+        $foto = json_decode($delivery->foto, true);
+        foreach ($foto as $key => $val) {
+            if ($val['name'] == $params['nama']) {
+                unset($foto[$key]);
+                \Yii::$app->landa->deleteImg('delivery/', $params['kode'], $params['nama']);
+            }
+        }
+        $delivery->foto = json_encode($foto);
+        $delivery->save();
+
+        echo json_encode($foto);
     }
 
     public function beforeAction($event) {
@@ -128,7 +171,6 @@ class DeliveryController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('delivery')
-//                ->join('LEFT JOIN', 'customer as cu', 'delivery.kd_cust = cu.kd_cust')
                 ->join('JOIN', 'wo_masuk', 'delivery.no_wo = wo_masuk.no_wo')
                 ->join('JOIN', 'spk', 'spk.no_spk = wo_masuk.no_spk')
                 ->join('JOIN', 'chassis', 'chassis.kd_chassis = spk.kd_chassis')
@@ -167,10 +209,16 @@ class DeliveryController extends Controller {
             $nowo = \app\models\Womasuk::findOne($val['no_wo']);
             $models[$key]['nowo'] = (!empty($nowo)) ? $nowo->attributes : array();
         }
+        
+        $data = array();
+        foreach ($models as $key => $val) {
+            $data[$key] = $val;
+            $data[$key]['foto'] = json_decode($val['foto'], true);
+        }
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
     public function actionRekap() {
