@@ -159,7 +159,58 @@ class WipController extends Controller {
 
         echo json_encode(array('status' => 1, 'umur' => $selisih, 'detail' => $coba));
     }
+  public function actionIndex() {
+        //init variable
+        $params = $_REQUEST;
+        $filter = array();
+        $sort = "dw.no_wo DESC";
+        $offset = 0;
+        $limit = 10;
 
+        if (isset($params['limit']))
+            $limit = $params['limit'];
+        if (isset($params['offset']))
+            $offset = $params['offset'];
+
+        if (isset($params['sort'])) {
+            $sort = $params['sort'];
+            if (isset($params['order'])) {
+                if ($params['order'] == "false")
+                    $sort.=" ASC";
+                else
+                    $sort.=" DESC";
+            }
+        }
+
+        //create query
+        $query = new Query;
+        $query->offset($offset)
+                ->limit($limit)
+                ->from('det_wip as dw')
+                ->join('JOIN', 'view_wo_spk as vws', 'dw.no_wo = vws.no_wo')
+                ->join('JOIN', 'bagian', 'bagian.kd_bag = dw.kd_kerja')
+                ->orderBy($sort)
+                ->select("*");
+
+        //filter
+        if (isset($params['filter'])) {
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+                $query->andFilterWhere(['like', $key, $val]);
+            }
+        }
+
+        session_start();
+        $_SESSION['query'] = $query;
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $totalItems = $query->count();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
     public function actionRekap() {
         //init variable
         $params = $_REQUEST;

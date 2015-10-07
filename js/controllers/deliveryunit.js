@@ -2,7 +2,7 @@ app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
     var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
     var uploader = $scope.uploader = new FileUploader({
         url: 'img/upload.php?folder=delivery&kode=' + kode_unik,
-        queueLimit: 1,
+        
         removeAfterUpload: true,
     });
 

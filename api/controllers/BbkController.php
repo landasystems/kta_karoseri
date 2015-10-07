@@ -637,7 +637,7 @@ class BbkController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('view_bbk_rekap as rvb')
-                ->join('JOIN', 'tbl_karyawan as tbk', 'tbk.nik = rvb.penerima')
+                ->join('LEFT JOIN', 'tbl_karyawan as tbk', 'tbk.nik = rvb.penerima')
                 ->join('LEFT JOIN', 'tbl_jabatan as tbj', 'tbj.id_jabatan = tbk.jabatan')
                 ->orderBy($sort)
                 ->select("rvb.*,tbk.nama,tbj.jabatan");
@@ -681,15 +681,16 @@ class BbkController extends Controller {
     public function actionExcel() {
         session_start();
         $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/rbbk", ['models' => $models]);
+        return $this->render("/expretur/rbbk", ['models' => $models, 'filter' => $filter]);
     }
 
     public function actionExcelbk() {
         session_start();
         $query = $_SESSION['query'];
-        $filter = $_SESSION['filter'];
+        
 
         $command = $query->createCommand();
         $models = $command->queryAll();
