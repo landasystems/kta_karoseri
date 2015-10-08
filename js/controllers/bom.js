@@ -48,12 +48,14 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
         }
     };
     $scope.addDetail = function (detail) {
-        $scope.detBom.unshift({
+        var form = {
             kd_jab: '',
             kd_barang: '',
             qty: '',
             ket: '',
-        })
+        }
+        $scope.modal(form);
+        $scope.detBom.unshift(form);
     };
     $scope.removeRow = function (paramindex) {
         var comArr = eval($scope.detBom);
