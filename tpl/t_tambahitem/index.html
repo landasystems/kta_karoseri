@@ -113,12 +113,12 @@
     </div>
 
     <div class="wrapper-md" ng-show="is_edit" >
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                {{formtitle}} 
-            </div>
-            <div class="panel-body">
-                <form name="landaform" class="form-horizontal form-validation">
+        <form name="landaform" class="form-horizontal form-validation">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {{formtitle}} 
+                </div>
+                <div class="panel-body">
                     <tabset class="tab-container">
                         <tab>
                             <tab-heading>
@@ -144,11 +144,15 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label">Merk</label>
+                                    <label class="col-sm-4 control-label">Merk <span class="required"></span></label>
                                     <div class="col-sm-8">
                                         <div class="input-group">
-                                            <select class="form-control" ng-change="typeChassis(form.merk);
-                                                                getchassis(form.merk, form.tipe)" ng-model="form.merk" ng-disabled="is_view" style="width: 245px;">
+                                            <select class="form-control" 
+                                                    ng-change="typeChassis(form.merk);
+                                                                        getchassis(form.merk, form.tipe)" 
+                                                    ng-model="form.merk" 
+                                                    ng-disabled="is_view" 
+                                                    style="width: 245px;">
                                                 <option value="">-Pilih Merk-</option>
                                                 <option ng-repeat="merk in listMerk" value="{{merk.merk}}">{{merk.merk}}</option>
                                             </select>
@@ -156,26 +160,38 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label">Tipe</label>
+                                    <label class="col-sm-4 control-label">Tipe  <span class="required"></span></label>
                                     <div class="col-sm-8">
-                                        <select class="form-control" ng-change="getchassis(form.merk, form.tipe)" ng-model="form.tipe" ng-disabled="is_view" style="width: 245px;">
+                                        <select class="form-control" 
+                                                ng-change="getchassis(form.merk, form.tipe)" 
+                                                ng-model="form.tipe" 
+                                                ng-disabled="is_view" 
+                                                style="width: 245px;">
                                             <option value="">-Pilih Tipe-</option>
                                             <option ng-repeat="tipe in listTipe" value="{{tipe.tipe}}">{{tipe.tipe}}</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label">Kode Chassis</label>
+                                    <label class="col-sm-4 control-label">Kode Chassis  <span class="required"></span></label>
                                     <div class="col-sm-8">
-                                        <input type="text" class="form-control" ng-model="form.kd_chassis" readonly required ng-disabled="is_view">
+                                        <input type="text" class="form-control" 
+                                               ng-model="form.kd_chassis" 
+                                               readonly 
+                                               required 
+                                               ng-disabled="is_view">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label">No Wo</label>
+                                    <label class="col-sm-4 control-label">No Wo <span class="required"></span></label>
                                     <div class="col-sm-8">
-                                        <ui-select multiple ng-model="form.no_wo" theme="bootstrap">
+                                        <ui-select 
+                                            multiple 
+                                            ng-model="form.no_wo" 
+                                            theme="bootstrap" 
+                                            required>
                                             <ui-select-match  placeholder="Pilih No Wo">{{$item.no_wo}}</ui-select-match>
                                             <ui-select-choices refresh="cariWo($select.search)" repeat="no_wo in noWo | filter: $select.search">
                                                 {{no_wo.no_wo}}
@@ -184,10 +200,15 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label">Tanggal Buat</label>
+                                    <label class="col-sm-4 control-label">Tanggal Buat <span class="required"></span></label>
                                     <div class="col-sm-8">
                                         <div class="input-group">
-                                            <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-disabled="is_view" ng-model="form.tgl_buat" is-open="opened1" ng-click="open1($event)" />
+                                            <input type="text" class="form-control" 
+                                                   datepicker-popup="dd-MM-yyyy" 
+                                                   ng-disabled="is_view" 
+                                                   ng-model="form.tgl_buat" 
+                                                   is-open="opened1" 
+                                                   ng-click="open1($event)" />
                                             <span class="input-group-addon">
                                                 <i class="fa fa-calendar-o"></i>
                                             </span>
@@ -195,17 +216,21 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label">Model</label>
+                                    <label class="col-sm-4 control-label">Model  <span class="required"></span></label>
                                     <div class="col-sm-8">
                                         <div class="input-group">
-                                            <ui-select ng-model="form.kd_model" theme="bootstrap" ng-disabled="is_view" >
+                                            <ui-select ng-model="form.kd_model" 
+                                                       theme="bootstrap" 
+                                                       ng-disabled="is_view" 
+                                                       required>
                                                 <ui-select-match>{{$select.selected.model}}</ui-select-match>
                                                 <ui-select-choices refresh="cariModel($select.search)" repeat="val in results">
                                                     {{val.model}}
                                                 </ui-select-choices>
                                             </ui-select>
                                             <span class="input-group-btn">
-                                                <button ng-click="detail.modelKendaraan = undefined" class="btn btn-default">
+                                                <button ng-click="detail.modelKendaraan = undefined" 
+                                                        class="btn btn-default">
                                                     <span class="glyphicon glyphicon-trash"></span>
                                                 </button>
                                             </span>
@@ -379,12 +404,14 @@
                             </div>
                         </tab>
                     </tabset>
+                </div>
+                <footer class="panel-footer text-right bg-light lter">
                     <div align="center">
-                        <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
-                        <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, detTambahItem)">&nbsp;Simpan Perubahan</button>
+                        <button type="submit" class="btn btn-default btn-lg fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
+                        <button type="submit" class="btn btn-primary btn-lg fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, detTambahItem)">&nbsp;Simpan Perubahan</button>
                     </div>
-                </form>
+                </footer>
             </div>
-        </div>
+        </form>
     </div>
 </div>

@@ -41,9 +41,19 @@ class BomController extends Controller {
                     'womodel' => ['get'],
                     'upload' => ['post'],
                     'removegambar' => ['post'],
+                    'getfoto' => ['get'],
                 ],
             ]
         ];
+    }
+
+    public function actionGetfoto() {
+        $params = $_REQUEST;
+        if (isset($params['kode_bom'])) {
+            $bom = Bom::findOne($params['kode_bom']);
+            $foto = json_decode($bom->foto);
+            echo json_encode(array('data' => $foto));
+        }
     }
 
     public function actionUpload() {
@@ -123,10 +133,14 @@ class BomController extends Controller {
         $query->from('trans_standar_bahan')
                 ->join('JOIN', 'chassis', 'trans_standar_bahan.kd_chassis = chassis.kd_chassis')
                 ->select("trans_standar_bahan.*, chassis.merk")
-                ->where(['like', 'kd_bom', $params['nama']])
+                ->where(['like', 'trans_standar_bahan.kd_bom', $params['nama']])
                 ->andWhere('status = 1')
                 ->orderBy('kd_bom DESC')
                 ->limit(25);
+
+        if (isset($params['kd_chassis']) and ! empty($params['kd_chassis'])) {
+            $query->andWhere('trans_standar_bahan.kd_chassis = "' . $params['kd_chassis'] . '"');
+        }
 
         $command = $query->createCommand();
         $models = $command->queryAll();

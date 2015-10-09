@@ -57,8 +57,6 @@ class ValidasibombukaController extends Controller {
         $sort = "trans_standar_bahan.kd_bom DESC";
         $offset = 0;
         $limit = 20;
-        //        Yii::error($params);
-        //limit & offset pagination
         if (isset($params['limit']))
             $limit = $params['limit'];
         if (isset($params['offset']))
@@ -79,6 +77,7 @@ class ValidasibombukaController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
+                ->orderBy($sort)
                 ->from(['trans_standar_bahan','chassis','model'])
                 ->where('trans_standar_bahan.kd_chassis = chassis.kd_chassis and trans_standar_bahan.kd_model = model.kd_model and trans_standar_bahan.status=1')
                 ->select("*");
@@ -106,49 +105,6 @@ class ValidasibombukaController extends Controller {
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
-    }
-    public function actionView($id) {
-
-        $model = $this->findModel($id);
-
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-    }
-
-    public function actionCreate() {
-        $params = json_decode(file_get_contents("php://input"), true);
-        $centang = $params['kd_bom'];
-        
-        foreach($centang as $key => $val){
-            $status = Validasibom::findOne($key);
-            $status->status=0;
-            $status->save();
-            
-        }
-//        $model = new Validasibom();
-//        $model->attributes = $params;
-
-//        if ($status->save()) {
-//            $this->setHeader(200);
-//            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-//        } else {
-//            $this->setHeader(400);
-//            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-//        }
-    }
-
-    
-    public function actionDelete($id) {
-        $model = $this->findModel($id);
-
-        if ($model->delete()) {
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-        } else {
-
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-        }
     }
 
     protected function findModel($id) {

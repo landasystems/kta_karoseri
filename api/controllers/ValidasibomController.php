@@ -54,7 +54,7 @@ class ValidasibomController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "trans_standar_bahan.kd_bom DESC";
+        $sort = "trans_standar_bahan.tgl_buat DESC";
         $offset = 0;
         $limit = 20;
         //        Yii::error($params);
@@ -78,6 +78,7 @@ class ValidasibomController extends Controller {
         //create query
         $query = new Query;
         $query->offset($offset)
+                ->orderBy($sort)
                 ->limit($limit)
                 ->from(['trans_standar_bahan','chassis','model'])
                 ->where('trans_standar_bahan.kd_chassis = chassis.kd_chassis and trans_standar_bahan.kd_model = model.kd_model and trans_standar_bahan.status=0')
@@ -107,49 +108,7 @@ class ValidasibomController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
-    public function actionView($id) {
-
-        $model = $this->findModel($id);
-
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-    }
-
-    public function actionCreate() {
-        $params = json_decode(file_get_contents("php://input"), true);
-        $centang = $params['kd_bom'];
-        
-        foreach($centang as $key => $val){
-            $status = Validasibom::findOne($key);
-            $status->status=1;
-            $status->save();
-            
-        }
-//        $model = new Validasibom();
-//        $model->attributes = $params;
-
-//        if ($status->save()) {
-//            $this->setHeader(200);
-//            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-//        } else {
-//            $this->setHeader(400);
-//            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-//        }
-    }
-
-    
-    public function actionDelete($id) {
-        $model = $this->findModel($id);
-
-        if ($model->delete()) {
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-        } else {
-
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-        }
-    }
+   
 
     protected function findModel($id) {
         if (($model = Validasibom::findOne($id)) !== null) {
