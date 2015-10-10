@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\behaviors\SluggableBehavior;
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "serah_terima_in".
@@ -22,21 +25,19 @@ use Yii;
  * @property string $kd_warna
  * @property integer $status
  */
-class Serahterimain extends \yii\db\ActiveRecord
-{
+class Serahterimain extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'serah_terima_in';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['kd_titipan'], 'required'],
             [['tgl_terima', 'serah_terima', 'tgl_prd', 'tgl_pdc'], 'safe'],
@@ -52,8 +53,7 @@ class Serahterimain extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'kd_titipan' => 'Kd Titipan',
             'no_spk' => 'No Spk',
@@ -71,7 +71,26 @@ class Serahterimain extends \yii\db\ActiveRecord
             'status' => 'Status',
         ];
     }
+
     public function getWarna() {
         return $this->hasOne(Warna::className(), ['kd_warna' => 'kd_warna']);
     }
+
+    public function behaviors() {
+        return [
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'modified_by',
+            ],
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'modified_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['modified_at'],
+                ],
+            ],
+        ];
+    }
+
 }

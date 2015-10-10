@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\behaviors\SluggableBehavior;
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "trans_spp".
@@ -14,21 +17,19 @@ use Yii;
  * @property string $no_proyek
  * @property string $nm_proyek
  */
-class TransSpp extends \yii\db\ActiveRecord
-{
+class TransSpp extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'trans_spp';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['no_spp'], 'required'],
             [['tgl_trans'], 'safe'],
@@ -42,8 +43,7 @@ class TransSpp extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'no_spp' => 'No Spp',
             'tgl_trans' => 'Tgl Trans',
@@ -53,4 +53,22 @@ class TransSpp extends \yii\db\ActiveRecord
             'nm_proyek' => 'Nm Proyek',
         ];
     }
+
+    public function behaviors() {
+        return [
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'modified_by',
+            ],
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'modified_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['modified_at'],
+                ],
+            ],
+        ];
+    }
+
 }

@@ -1,8 +1,10 @@
 <?php
 
 namespace app\models;
-
 use Yii;
+use yii\db\ActiveRecord;
+use yii\behaviors\SluggableBehavior;
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "trans_standar_bahan".
@@ -31,7 +33,7 @@ class Bom extends \yii\db\ActiveRecord {
     public function rules() {
         return [
             [['kd_bom', 'kd_chassis', 'kd_model', 'tgl_buat'], 'required'],
-            [['tgl_buat','foto'], 'safe'],
+            [['tgl_buat', 'foto'], 'safe'],
             [['status', 'umur'], 'integer'],
             [['kd_bom', 'kd_chassis'], 'string', 'max' => 20],
             [['kd_model'], 'string', 'max' => 5],
@@ -59,6 +61,23 @@ class Bom extends \yii\db\ActiveRecord {
 
     public function getChassis() {
         return $this->hasOne(Barang::className(), ['kd_chassis' => 'kd_chassis']);
+    }
+
+    public function behaviors() {
+        return [
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'modified_by',
+            ],
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'modified_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['modified_at'],
+                ],
+            ],
+        ];
     }
 
 }
