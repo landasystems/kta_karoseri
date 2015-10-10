@@ -38,7 +38,6 @@ class ValidasibomController extends Controller {
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
-//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -50,7 +49,7 @@ class ValidasibomController extends Controller {
         return true;
     }
 
-   public function actionIndex() {
+    public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
@@ -76,25 +75,29 @@ class ValidasibomController extends Controller {
         }
 
         //create query
+
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from(['trans_standar_bahan','chassis','model'])
-                ->where('trans_standar_bahan.kd_chassis = chassis.kd_chassis and trans_standar_bahan.kd_model = model.kd_model and trans_standar_bahan.status=0')
+                ->from('trans_standar_bahan')
+                ->join('LEFT JOIN', 'chassis', 'trans_standar_bahan.kd_chassis = chassis.kd_chassis')
+                ->join('LEFT JOIN', 'model', 'trans_standar_bahan.kd_model=model.kd_model')
+                ->orderBy($sort)
+                ->where('trans_standar_bahan.status = 0')
                 ->select("*");
 
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                if($key == 'model'){
-                   $query->andFilterWhere(['like', 'model.'.$key, $val]); 
-                }elseif($key == 'merk'){
-                    $query->andFilterWhere(['like', 'chassis.'.$key, $val]);
-                }elseif($key == 'tipe'){
-                     $query->andFilterWhere(['like', 'chassis.'.$key, $val]);
-                }else{
-                $query->andFilterWhere(['like', $key, $val]);
+                if ($key == 'model') {
+                    $query->andFilterWhere(['like', 'model.' . $key, $val]);
+                } elseif ($key == 'merk') {
+                    $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
+                } elseif ($key == 'tipe') {
+                    $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
                 }
             }
         }
@@ -103,20 +106,30 @@ class ValidasibomController extends Controller {
         $models = $command->queryAll();
         $totalItems = $query->count();
 
+        $data = array();
+        foreach ($models as $key => $val) {
+            $data[$key] = $val;
+            $data[$key]['foto'] = json_decode($val['foto'], true);
+        }
+
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $centang = $params['kd_bom'];
-        
-        foreach($centang as $key => $val){
-            $status = Validasibom::findOne($key);
-            $status->status=1;
+        if (isset($params['bom'])) {
+            $status = Validasibom::findOne($params['bom']);
+            $status->status = 1;
             $status->save();
-            
+        } else {
+            $centang = $params['kd_bom'];
+            foreach ($centang as $key => $val) {
+                $status = Validasibom::findOne($key);
+                $status->status = 1;
+                $status->save();
+            }
         }
     }
 

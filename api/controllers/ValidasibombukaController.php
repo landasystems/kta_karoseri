@@ -76,6 +76,7 @@ class ValidasibombukaController extends Controller {
         //create query
         $query = new Query;
         $query->offset($offset)
+                ->orderBy($sort)
                 ->limit($limit)
                 ->from(['trans_standar_bahan','chassis','model'])
                 ->where('trans_standar_bahan.kd_chassis = chassis.kd_chassis and trans_standar_bahan.kd_model = model.kd_model and trans_standar_bahan.status=1')
