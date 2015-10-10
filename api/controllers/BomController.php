@@ -51,8 +51,10 @@ class BomController extends Controller {
         $params = $_REQUEST;
         if (isset($params['kode_bom'])) {
             $bom = Bom::findOne($params['kode_bom']);
-            $foto = json_decode($bom->foto);
-            echo json_encode(array('data' => $foto));
+            if (isset($bom->foto)) {
+                $foto = json_decode($bom->foto);
+                echo json_encode(array('data' => $foto));
+            }
         }
     }
 
@@ -240,8 +242,9 @@ class BomController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from(['trans_standar_bahan', 'chassis', 'model'])
-                ->where('trans_standar_bahan.kd_chassis = chassis.kd_chassis and trans_standar_bahan.kd_model=model.kd_model')
+                ->from('trans_standar_bahan')
+                ->join('LEFT JOIN', 'chassis', 'trans_standar_bahan.kd_chassis = chassis.kd_chassis')
+                ->join('LEFT JOIN', 'model', 'trans_standar_bahan.kd_model=model.kd_model')
                 ->orderBy($sort)
                 ->select("*");
 
@@ -745,8 +748,10 @@ class BomController extends Controller {
 
     public function actionView($id) {
         $query = new Query;
-        $query->from(['trans_standar_bahan', 'chassis', 'model'])
-                ->where('trans_standar_bahan.kd_model = model.kd_model and trans_standar_bahan.kd_chassis = chassis.kd_chassis and trans_standar_bahan.kd_bom="' . $id . '"')
+        $query->from('trans_standar_bahan')
+                ->join('LEFT JOIN', 'chassis', 'trans_standar_bahan.kd_chassis = chassis.kd_chassis')
+                ->join('LEFT JOIN', 'model', 'trans_standar_bahan.kd_model=model.kd_model')
+                ->where('trans_standar_bahan.kd_bom="' . $id . '"')
                 ->select("*");
 
         $command = $query->createCommand();

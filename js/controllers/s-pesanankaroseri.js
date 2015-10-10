@@ -178,6 +178,7 @@ app.controller('spkaroseriCtrl', function ($scope, Data, toaster, $modal) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
+                $scope.gambar = {};
                 $scope.is_edit = false;
                 $scope.callServer(tableStateRef); //reload grid ulang
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
@@ -188,6 +189,7 @@ app.controller('spkaroseriCtrl', function ($scope, Data, toaster, $modal) {
     $scope.cancel = function () {
         $scope.is_edit = false;
         $scope.is_view = false;
+        $scope.gambar = {};
     };
     $scope.delete = function (row) {
         if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
