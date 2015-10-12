@@ -1,3 +1,19 @@
+/*export excel */
+var saveExcel = (function () {
+    var a = document.createElement("a");
+    document.body.appendChild(a);
+    a.style = "display: none";
+    return function (data, fileName) {
+        var blob = new Blob([data], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+        var url = window.URL.createObjectURL(blob);
+
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        window.URL.revokeObjectURL(url);
+    };
+}());
+
 /* loader ajax */
 angular.module('app')
         .directive('uiButterbar', ['$rootScope', '$anchorScroll', function ($rootScope, $anchorScroll) {
@@ -26,6 +42,18 @@ angular.module('app')
                     return $sce.trustAsHtml(text);
                 };
             }]);
+
+/* datetime to date object */
+angular.module('app')
+        .filter("asDate", function () {
+            return function (input) {
+                if (input == "" || input == null) {
+                    return "";
+                } else {
+                    return new Date(input);
+                }
+            }
+        });
 
 /*pagination text*/
 angular.module('app')
@@ -69,56 +97,6 @@ angular.module('app')
                 };
             }]);
 
-//Directive enter
-angular.module('app')
-        .directive('ngEnter', function () {
-            return function (scope, element, attrs) {
-                element.bind("keydown keypress", function (event) {
-                    if (event.which === 13) {
-                        scope.$apply(function () {
-                            scope.$eval(attrs.ngEnter);
-                        });
-
-                        event.preventDefault();
-                    }
-                });
-            };
-        });
-
-angular.module('app')
-        .directive('shortcut', function () {
-            return {
-                restrict: 'E',
-                replace: true,
-                scope: true,
-                link: function postLink(scope, iElement, iAttrs) {
-                    jQuery(document).on('keypress', function (e) {
-                        scope.$apply(scope.keyPressed(e));
-                    });
-                }
-            };
-        });
-
-//alert
-angular.module('app')
-        .directive('confirm', [function () {
-                return {
-                    priority: 100,
-                    restrict: 'A',
-                    link: {
-                        pre: function (scope, element, attrs) {
-                            var msg = attrs.confirm || "Are you sure?";
-
-                            element.bind('click', function (event) {
-                                if (!confirm(msg)) {
-                                    event.stopImmediatePropagation();
-                                    event.preventDefault;
-                                }
-                            });
-                        }
-                    }
-                };
-            }]);
 
 /*directive print*/
 function printDirective() {
