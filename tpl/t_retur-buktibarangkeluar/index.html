@@ -7,12 +7,14 @@
             <div class="panel-heading">
                 <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
+                    <button type="button" class="btn btn-info fa fa-lock" ng-click="lock(pilih);" ng-show="status == 0 && user.roles_id == 1">&nbsp;Lock</button>
+                    <button type="button" class="btn btn-success fa fa-unlock" ng-click="unlock(pilih);" ng-show="status == 1 && user.roles_id == 1">&nbsp;Unlock</button>
                     <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>
             <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
                 <div class="form-horizontal">
-                    <div class="col-md-12 col-sm-12">
+                    <div class="col-md-6 col-sm-6">
                         <div class="form-group">
                             <label class="col-md-3">Kode Retur</label>
                             <div class="col-md-9">
@@ -26,12 +28,25 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-6 col-sm-6">
+                        <div class="form-group" ng-show="user.roles_id == 1">
+                            <label class="col-md-3">Status</label>
+                            <div class="col-md-9">
+                                <select stInputEvent="change" st-search="rb.lock" class="form-control" ng-model="status">
+                                    <option value="">.: Pilih Status :.</option>
+                                    <option value="1">Lock</option>
+                                    <option value="0">Unlock</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="table-responsive">
                 <table class="table table-striped table-hover" >
                     <thead>
                         <tr>
+                            <th ng-show="user.roles_id == 1"></th>
                             <th st-sort="rb.no_retur_bbk">Kode</th>
                             <th st-sort="rb.no_bbk">Kode BBK</th>
                             <th st-sort="rb.tgl">Tanggal</th>
@@ -43,6 +58,11 @@
                     </thead>
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
+                            <td ng-show="user.roles_id == 1">
+                                <label class="i-checks">
+                                    <input type="checkbox" ng-model="pilih.id[row.no_retur_bbk]"><i></i> 
+                                </label>
+                            </td>
                             <td>{{row.no_retur_bbk}}</td>
                             <td>{{row.no_bbk}}</td>
                             <td>{{row.tgl|date}}</td>
@@ -50,7 +70,7 @@
                             <td>{{row.alasan}}</td>
                             <td>{{row.ket}}</td>
                             <td>
-                                <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
+                                <div ng-show="row.lock == 0 || user.roles_id == 1" class="btn-group pull-right" role="group" style="margin-top: -3px;">
                                     <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
                                     <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);"></button>
                                 </div> 
@@ -59,12 +79,14 @@
                     </tbody>
                     <tbody ng-show="isLoading">
                         <tr>
-                            <td colspan="7" class="text-center">Loading ... </td>
+                            <td colspan="7" class="text-center" ng-if="user.roles_id != 1">Loading ... </td>
+                            <td colspan="8" class="text-center" ng-if="user.roles_id == 1">Loading ... </td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="7"></td>
+                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="7" ng-if="user.roles_id != 1"></td>
+                            <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="8" ng-if="user.roles_id == 1"></td>
                         </tr>
                 </table>		
             </div>

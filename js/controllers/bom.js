@@ -1,34 +1,12 @@
 app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateParams, $modal, keyboardManager) {
-    var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
-    var uploader = $scope.uploader = new FileUploader({
-        url: 'img/upload.php?folder=bom&kode=' + kode_unik,
-        queueLimit: 1,
-        removeAfterUpload: true,
-    });
-    uploader.filters.push({
-        name: 'imageFilter',
-        fn: function (item) {
-            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-            var x = '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-            if (!x) {
-                toaster.pop('error', "Jenis gambar tidak sesuai");
-            }
-            return x;
-        }
-    });
-
-    uploader.filters.push({
-        name: 'sizeFilter',
-        fn: function (item) {
-            var xz = item.size <= 1048576;
-            if (!xz) {
-                toaster.pop('error', "Ukuran gambar tidak boleh lebih dari 1 MB");
-            }
-        }
-    });
     Data.get('chassis/merk').then(function (data) {
         $scope.listMerk = data.data;
     });
+//    $scope.refres = function(){
+//        $scope.listTipe = [];
+//        $scope.form = {};
+//        
+//    };
     $scope.typeChassis = function (merk) {
         Data.get('chassis/tipe?merk=' + merk).then(function (data) {
             $scope.listTipe = data.data;
@@ -75,12 +53,14 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
         }
     };
     $scope.addDetail = function (detail) {
-        $scope.detBom.unshift({
+        var form = {
             kd_jab: '',
             kd_barang: '',
             qty: '',
             ket: '',
-        })
+        }
+        $scope.modal(form);
+        $scope.detBom.unshift(form);
     };
     $scope.removeRow = function (paramindex) {
         var comArr = eval($scope.detBom);
@@ -166,6 +146,7 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
         $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = false;
+        $scope.gambar = (form.foto == null) ? [] : form.foto;
         $scope.formtitle = "Edit Data : " + form.kd_bom;
         Data.get('chassis/tipe?merk=' + form.merk).then(function (data) {
             $scope.listTipe = data.data;
@@ -177,6 +158,7 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
         $scope.is_create = false;
         $scope.is_edit = true;
         $scope.is_view = true;
+        $scope.gambar = (form.foto == null) ? [] : form.foto;
         $scope.formtitle = "Lihat Data : " + form.kd_bom;
         Data.get('chassis/tipe?merk=' + form.merk).then(function (data) {
             $scope.listTipe = data.data;
@@ -191,30 +173,34 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
         $scope.selected(bom.kd_bom, kd_bom);
     };
     $scope.save = function (form, detail) {
-        if ($scope.uploader.queue.length > 0) {
-            $scope.uploader.uploadAll();
-            form.gambar = kode_unik + "-" + $scope.uploader.queue[0].file.name;
+        if (typeof form.foto != 'undefined' && form.foto.length > 0) {
+            var data = {
+                bom: form,
+                detailBom: detail,
+            };
+            var url = ($scope.is_create == true) ? 'bom/create/' : 'bom/update/' + form.kd_bom;
+            Data.post(url, data).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan", result.errors);
+                } else {
+                    $scope.is_create = false;
+                    $scope.is_edit = false;
+                    $scope.barang = [];
+                    $scope.gambar = [];
+                    $scope.callServer(tableStateRef); //reload grid ulang
+                    toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
+                }
+            });
+        } else {
+            toaster.pop('error', "Mohon upload gambar unit terlebih dahulu.");
         }
-        var data = {
-            bom: form,
-            detailBom: detail,
-        };
-        var url = ($scope.is_create == true) ? 'bom/create/' : 'bom/update/' + form.kd_bom;
-        Data.post(url, data).then(function (result) {
-            if (result.status == 0) {
-                toaster.pop('error', "Terjadi Kesalahan", result.errors);
-            } else {
-                $scope.is_create = false;
-                $scope.is_edit = false;
-                $scope.callServer(tableStateRef); //reload grid ulang
-                toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
-            }
-        });
     };
     $scope.cancel = function () {
         if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
             $scope.callServer(tableStateRef);
         }
+        $scope.barang = [];
+        $scope.gambar = [];
         $scope.is_edit = false;
         $scope.is_view = false;
     };
@@ -232,7 +218,7 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
             $scope.form.tgl_buat = new Date($scope.form.tgl_buat);
             if (kd_bom_baru != '') {
                 $scope.form.kd_bom = kd_bom_baru;
-                $scope.form.tgl_buat = '';
+                $scope.form.tgl_buat = new Date();
             }
 
             if (jQuery.isEmptyObject(data.detail)) {
@@ -249,6 +235,7 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
             }
         });
     }
+
     $scope.modal = function (form) {
         var modalInstance = $modal.open({
             templateUrl: 'tpl/t_bom/modal.html',
@@ -261,6 +248,7 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
             }
         });
     };
+
     if ($stateParams.form != null) { //pengecekan jika ada pencarian, dilempar ke view
         $scope.view($stateParams.form);
     }
@@ -270,6 +258,71 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
             $scope.save($scope.form, $scope.detBom);
         }
     });
+
+    //============================GAMBAR===========================//
+    var uploader = $scope.uploader = new FileUploader({
+        url: Data.base + 'bom/upload/?folder=bom',
+        formData: [],
+        removeAfterUpload: true,
+    });
+
+    $scope.uploadGambar = function (form) {
+        $scope.uploader.uploadAll();
+    };
+
+    uploader.filters.push({
+        name: 'imageFilter',
+        fn: function (item) {
+            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+            var x = '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+            if (!x) {
+                toaster.pop('error', "Jenis gambar tidak sesuai");
+            }
+            return x;
+        }
+    });
+
+    uploader.filters.push({
+        name: 'sizeFilter',
+        fn: function (item) {
+            var xz = item.size < 2097152;
+            if (!xz) {
+                toaster.pop('error', "Ukuran gambar tidak boleh lebih dari 2 MB");
+            }
+            return xz;
+        }
+    });
+
+    $scope.gambar = [];
+
+    uploader.onSuccessItem = function (fileItem, response) {
+        if (response.answer == 'File transfer completed') {
+            $scope.gambar.unshift({name: response.name});
+            $scope.form.foto = $scope.gambar;
+        }
+    };
+
+    uploader.onBeforeUploadItem = function (item) {
+        item.formData.push({
+            kode: $scope.form.kd_bom,
+        });
+    };
+
+    $scope.removeFoto = function (paramindex, namaFoto) {
+        var comArr = eval($scope.gambar);
+        Data.post('bom/removegambar', {kode: $scope.form.kd_bom, nama: namaFoto}).then(function (data) {
+            $scope.gambar.splice(paramindex, 1);
+        });
+
+        $scope.form.foto = $scope.gambar;
+    };
+
+    $scope.modalFoto = function (kd_bom, img) {
+        var modalInstance = $modal.open({
+            template: '<img src="img/bom/' + kd_bom + '-350x350-' + img + '" class="img-full" >',
+            size: 'md',
+        });
+    };
 });
 
 app.controller('modalCtrl', function ($scope, Data, $modalInstance, form) {

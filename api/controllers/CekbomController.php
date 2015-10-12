@@ -49,7 +49,7 @@ class CekbomController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "kd_bom DESC";
+        $sort = "tgl DESC";
         $offset = 0;
         $limit = 10;
 

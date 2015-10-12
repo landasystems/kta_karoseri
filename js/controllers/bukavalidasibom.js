@@ -1,4 +1,4 @@
-app.controller('validasibomCtrl', function ($scope, Data, toaster) {
+app.controller('bukavalidasibomCtrl', function ($scope, Data, toaster) {
 
 
     //init data;

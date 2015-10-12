@@ -83,8 +83,8 @@ class WipController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $query2 = new Query;
         $query2->from('det_wip as wip')
-                ->join('JOIN', 'bagian', 'bagian.kd_bag = wip.kd_kerja')
-                ->join('JOIN', 'tbl_karyawan as tk', 'tk.nik = wip.nik')
+                ->join('LEFT JOIN', 'bagian', 'bagian.kd_bag = wip.kd_kerja')
+                ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = wip.nik')
                 ->where('wip.no_wo = "' . $params['no_wo'] . '"')
                 ->orderBy("bagian.urutan ASC")
                 ->select('*');
@@ -95,29 +95,29 @@ class WipController extends Controller {
         if (!empty($detail)) {
             foreach ($detail as $key => $data) {
                 $coba[$key] = $data;
-                
-                if(!empty($data['plan_start']) && $data['plan_start']="-" && isset($data['plan_start'])){
+
+                if (!empty($data['plan_start']) && $data['plan_start'] != "-" && isset($data['plan_start'])) {
                     $tgPS = explode('/', $data['plan_start']);
                     $isips = $tgPS[2] . '-' . $tgPS[1] . '-' . $tgPS[0];
-                }else{
+                } else {
                     $isips = "";
                 }
-                
-                if(!empty($data['plan_finish']) && $data['plan_finish']="-" && isset($data['plan_finish'])){
-                     $tgPF = explode('/', $data['plan_finish']);
+
+                if (!empty($data['plan_finish']) && $data['plan_finish'] != "-" && isset($data['plan_finish'])) {
+                    $tgPF = explode('/', $data['plan_finish']);
                     $isipf = $tgPF[2] . '-' . $tgPF[1] . '-' . $tgPF[0];
-                }else{
+                } else {
                     $isipf = "";
                 }
-                
-                if(!empty($data['act_start']) && $data['act_start'] !="-" && isset($data['act_start'])){
-                     $tgPF = explode('/', $data['act_start']);
+
+                if (!empty($data['act_start']) && $data['act_start'] != "-" && isset($data['act_start'])) {
+                    $tgPF = explode('/', $data['act_start']);
                     $isias = $tgPF[2] . '-' . $tgPF[1] . '-' . $tgPF[0];
-                }else{
+                } else {
                     $isias = "";
                 }
-                
-                
+
+
 
                 $coba[$key]['plan_start'] = $isips;
                 $coba[$key]['plan_finish'] = $isipf;
@@ -160,6 +160,59 @@ class WipController extends Controller {
         echo json_encode(array('status' => 1, 'umur' => $selisih, 'detail' => $coba));
     }
 
+    public function actionIndex() {
+        //init variable
+        $params = $_REQUEST;
+        $filter = array();
+        $sort = "dw.no_wo DESC";
+        $offset = 0;
+        $limit = 10;
+
+        if (isset($params['limit']))
+            $limit = $params['limit'];
+        if (isset($params['offset']))
+            $offset = $params['offset'];
+
+        if (isset($params['sort'])) {
+            $sort = $params['sort'];
+            if (isset($params['order'])) {
+                if ($params['order'] == "false")
+                    $sort.=" ASC";
+                else
+                    $sort.=" DESC";
+            }
+        }
+
+        //create query
+        $query = new Query;
+        $query->offset($offset)
+                ->limit($limit)
+                ->from('det_wip as dw')
+                ->join('JOIN', 'view_wo_spk as vws', 'dw.no_wo = vws.no_wo')
+                ->join('JOIN', 'bagian', 'bagian.kd_bag = dw.kd_kerja')
+                ->orderBy($sort)
+                ->select("*");
+
+        //filter
+        if (isset($params['filter'])) {
+            $filter = (array) json_decode($params['filter']);
+            foreach ($filter as $key => $val) {
+                $query->andFilterWhere(['like', $key, $val]);
+            }
+        }
+
+        session_start();
+        $_SESSION['query'] = $query;
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $totalItems = $query->count();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+
     public function actionRekap() {
         //init variable
         $params = $_REQUEST;
@@ -189,10 +242,11 @@ class WipController extends Controller {
                 ->limit($limit)
                 ->from('det_wip as dw')
                 ->join('JOIN', 'view_wo_spk as vw', 'dw.no_wo = vw.no_wo')
+                ->join('LEFT JOIN', 'spk', 'vw.no_spk = spk.no_spk')
 //                ->groupBy('dw.no_wo')
-                ->where('dw.kd_kerja="BAG001"')
+                ->where('dw.kd_kerja="BAG001" and (dw.act_start IS NOT NULL or dw.act_start="" or dw.act_start="0000-00-00")')
                 ->orderBy($sort)
-                ->select("dw.plan_start, vw.*");
+                ->select("dw.act_start,dw.kd_kerja, vw.*,spk.jml_hari");
 
         //filter
         if (isset($params['filter'])) {
@@ -214,9 +268,85 @@ class WipController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
+    public function actionUpdate() {
+        $params = json_decode(file_get_contents("php://input"), true);
+
+        $deleteAll = Wip::deleteAll('no_wo="' . $params['wip']['no_wo']['no_wo'] . '"');
+        $tglibur = array();
+        $libur = \app\models\TblKalender::find()->where('YEAR(tgl)=2015')->all();
+        foreach ($libur as $as) {
+            $tglibur[] = $as['tgl'];
+        }
+        foreach ($params['detWip'] as $data) {
+            $model = new Wip();
+            $model->no_wo = isset($params['wip']['no_wo']['no_wo']) ? $params['wip']['no_wo']['no_wo'] : '-';
+            $model->kd_kerja = $data['proses']['kd_bag'];
+            $model->plan_start = date('d/m/Y', strtotime($data['plan_start']));
+            $model->plan_finish = date('d/m/Y', strtotime($data['plan_finish']));
+            $model->act_start = (!empty($data['act_start'])) ? date('d/m/Y', strtotime($data['act_start'])) : '';
+            $model->act_finish = (isset($data['act_finish'])) ? date('Y-m-d', strtotime($data['act_finish'])) : null;
+            $model->ket = $data['ket'];
+            $model->hasil = isset($data['hasil']) ? $data['hasil'] : null;
+            $model->nik = isset($data['pemborong']['nik']) ? $data['pemborong']['nik'] : '-';
+//            $model->hk = 3;
+            //============================== HITUNG HARI KERJA ===============================
+            if (!empty($data['act_start'])) {
+
+                $babi = date('Y-m-d', strtotime($data['act_start']));
+                $pecahP = explode("-", $babi);
+                $dateP = (isset($pecahP[2])) ? $pecahP[2] : 0;
+                $monthP = (isset($pecahP[1])) ? $pecahP[1] : 0;
+                $yearP = (isset($pecahP[0])) ? $pecahP[0] : 0;
+
+                $babi2 = date('Y-m-d', strtotime($data['act_finish']));
+                $pecahP2 = explode("-", $babi2);
+                $dateP2 = (isset($pecahP2[2])) ? $pecahP2[2] : 0;
+                $monthP2 = (isset($pecahP2[1])) ? $pecahP2[1] : 0;
+                $yearP2 = (isset($pecahP2[0])) ? $pecahP2[0] : 0;
+
+                // mencari total selisih hari dari tanggal awal dan akhir
+                $jdP = GregorianToJD($monthP, $dateP, $yearP);
+                $jdP2 = GregorianToJD($monthP2, $dateP2, $yearP2);
+                $ad = $jdP2 - $jdP;
+                $sHK2 = ($ad == 0) ? '1' : $ad;
+// =================HTUNG HARI LIBUR DAN MINGGU BODY WELDING=================
+                $libur1 = '';
+                $libur2 = '';
+                for ($i = 1; $i <= $sHK2; $i++) {
+
+                    // menentukan tanggal pada hari ke-i dari tanggal awal
+                    $tanggal = mktime(0, 0, 0, $monthP, $dateP + $i, $yearP);
+                    $tglstr = date("Y-m-d", $tanggal);
+
+                    // yang masuk dalam daftar tanggal merah selain minggu
+                    if (in_array($tglstr, $tglibur)) {
+                        $libur1++;
+                    }
+
+                    // yang merupakan hari minggu
+                    $minggu = date("l", strtotime($tglstr));
+
+                    if ($minggu == 'Sunday') {
+                        $libur2++;
+                    }
+                }
+                Yii::error($libur1);
+                $HK2 = $sHK2 - $libur1 - $libur2;
+                $model->hk = $HK2;
+            } else {
+                $model->hk = '';
+            }
+
+            $model->save();
+        }
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+    }
+
     public function actionExcel() {
         session_start();
         $query = $_SESSION['queryas'];
+        \Yii::error($query);
         $query->limit(null);
         $query->offset(null);
         $command = $query->createCommand();
@@ -224,7 +354,31 @@ class WipController extends Controller {
         return $this->render("/expretur/wip", ['models' => $models]);
     }
 
-    
+    public function actionKaryawan() {
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('tbl_karyawan')
+                ->select("*")
+                ->where(['like', 'nama', $params['karyawan']]);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+
+    public function actionProses() {
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('bagian')
+                ->select("*")
+                ->where(['like', 'bagian', $params['proses']]);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
 
     public function actionDelete() {
         $params = json_decode(file_get_contents("php://input"), true);

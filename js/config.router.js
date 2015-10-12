@@ -256,6 +256,19 @@ angular.module('app')
                                             }]
                                     }
                                 })
+                                // proyek
+                                .state('master.proyek', {
+                                    url: '/proyek',
+                                    templateUrl: 'tpl/m_proyek/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+
+                                                return $ocLazyLoad.load('js/controllers/proyek.js');
+
+                                            }]
+                                    }
+                                })
 
                                 // user
                                 .state('master.user', {
@@ -369,7 +382,11 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/validasibom.js');
+                                                return $ocLazyLoad.load(['angularFileUpload']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/validasibom.js');
+                                                        }
+                                                );
                                             }]
                                     }})
                                 //bukaValidasi bom
@@ -498,7 +515,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['angularFileUpload', ]).then(
+                                                return $ocLazyLoad.load(['angularFileUpload']).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/deliveryunit.js');
                                                         }
@@ -573,7 +590,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['daterangepicker','frAngular']).then(
+                                                return $ocLazyLoad.load(['daterangepicker', 'frAngular']).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/spp-rutin.js');
                                                         });
@@ -882,6 +899,19 @@ angular.module('app')
                                                 return $ocLazyLoad.load(['daterangepicker']).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/r_deliveryunit.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                .state('rekap.fluktuasi', {
+                                    url: '/fluktuasi-harga',
+                                    templateUrl: 'tpl/r_fluktuasi-harga/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load([]).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/r_fluktuasi.js');
                                                         }
                                                 );
                                             }]

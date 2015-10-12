@@ -72,27 +72,40 @@
     </div>
 
     <div class="wrapper-md" ng-show="is_edit">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                {{formtitle}}
-                <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-show="is_view">
-                    <button type="button" class="btn btn-primary fa fa-print" ng-print print-element-id="printArea"  ng-show="is_view == true">&nbsp;Print</button>
+        <form name="landaform" class="form-horizontal form-validation">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {{formtitle}}
+                    <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-show="is_view">
+                        <button type="button" class="btn btn-primary fa fa-print" ng-print print-element-id="printArea"  ng-show="is_view == true">&nbsp;Print</button>
+                    </div>
                 </div>
-            </div>
-            <div class="panel-body">
-                <form name="landaform" class="form-horizontal form-validation">
+                <div class="panel-body">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Kode Titipan</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control" ng-model="form.kd_titipan" ng-readonly="is_create == false" required>
+                            <label class="col-sm-4 control-label">Pilih Format Kode</label>
+                            <div class="col-sm-8">
+                                <label class="btn btn-default" ng-click="created_kode('IB')" ng-model="format_kode" btn-radio="'IB'"  required> IB </label>
+                                <label class="btn btn-default" ng-click="created_kode('IV')" ng-model="format_kode" btn-radio="'IV'"  required> IV </label>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Tanggal Terima</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">Kode Titipan</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" 
+                                       ng-model="form.kd_titipan" 
+                                       ng-readonly="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">Tanggal Terima <span class="required"></span></label>
+                            <div class="col-sm-8">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_terima" is-open="opened1" ng-click="open1($event)"/>
+                                    <input type="text" class="form-control" 
+                                           datepicker-popup="dd-MM-yyyy" 
+                                           ng-model="form.tgl_terima" 
+                                           is-open="opened1" 
+                                           ng-click="open1($event)" required="true"/>
                                     <span class="input-group-addon">
                                         <i class="fa fa-calendar-o"></i>
                                     </span>
@@ -100,10 +113,14 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Nama Customer</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">Nama Customer <span class="required"></span></label>
+                            <div class="col-sm-8">
                                 <div class="input-group">
-                                    <ui-select on-select="getCustomer(form,$item)" ng-model="form.customer" required theme="bootstrap" ng-disabled="is_view" >
+                                    <ui-select on-select="getCustomer(form,$item)" 
+                                               ng-model="form.customer" 
+                                               required 
+                                               theme="bootstrap" 
+                                               ng-disabled="is_view">
                                         <ui-select-match>{{$select.selected.nm_customer}}</ui-select-match>
                                         <ui-select-choices refresh="cariCustomer($select.search)" repeat="val in kdCust">
                                             <div ng-bind-html="val.nm_customer | highlight: $select.search"></div>
@@ -121,20 +138,24 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Alamat</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">Alamat</label>
+                            <div class="col-sm-8">
                                 <textarea class="form-control" ng-model="form.alamat1" ng-readonly="true"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Driver</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control" ng-model="form.driver" ng-readonly="is_view" >
+                            <label class="col-sm-4 control-label">Driver <span class="required"></span></label>
+                            <div class="col-sm-8">
+                                <input type="text" 
+                                       class="form-control" 
+                                       ng-model="form.driver" 
+                                       ng-readonly="is_view"
+                                       required="true">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Serah Terima kendaraan</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">Serah Terima kendaraan</label>
+                            <div class="col-sm-8">
                                 <div class="input-group">
                                     <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.serah_terima" is-open="opened2" ng-click="open2($event)"/>
                                     <span class="input-group-addon">
@@ -144,8 +165,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Diterima PRD</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">Diterima PRD</label>
+                            <div class="col-sm-8">
                                 <div class="input-group">
                                     <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_prd" is-open="opened3" ng-click="open3($event)"/>
                                     <span class="input-group-addon">
@@ -155,8 +176,8 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Diterima PDC</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">Diterima PDC</label>
+                            <div class="col-sm-8">
                                 <div class="input-group">
                                     <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_pdc" is-open="opened4" ng-click="open4($event)"/>
                                     <span class="input-group-addon">
@@ -168,58 +189,78 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Merk</label>
-                            <div class="col-sm-9">
-                                <div class="input-group">
-                                    <select class="form-control" ng-change="typeChassis(form.merk);getchassis(form.merk, form.tipe)" ng-model="form.merk" ng-disabled="is_view" required style="width: 245px;">
-                                        <option value="">-Pilih Merk-</option>
-                                        <option ng-repeat="merk in listMerk" value="{{merk.merk}}" ng-selected="{{merk.merk == form.merk}}" >{{merk.merk}}</option>
-                                    </select>
-                                </div>
+                            <label class="col-sm-4 control-label">Merk <span class="required"></span></label>
+                            <div class="col-sm-8">
+                                <select class="form-control" 
+                                        ng-change="typeChassis(form.merk);
+                                                        getchassis(form.merk, form.tipe)" 
+                                        ng-model="form.merk"
+                                        ng-disabled="is_view" 
+                                        required >
+                                    <option value="">-Pilih Merk-</option>
+                                    <option ng-repeat="merk in listMerk" value="{{merk.merk}}" ng-selected="{{merk.merk == form.merk}}" >{{merk.merk}}</option>
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Tipe</label>
-                            <div class="col-sm-9">
-                                <select class="form-control" ng-change="getchassis(form.merk, form.tipe)" ng-model="form.tipe" ng-disabled="is_view" required style="width: 245px;">
+                            <label class="col-sm-4 control-label">Tipe <span class="required"></span></label>
+                            <div class="col-sm-8">
+                                <select class="form-control" 
+                                        ng-change="getchassis(form.merk, form.tipe)" 
+                                        ng-model="form.tipe" 
+                                        ng-disabled="is_view" 
+                                        required>
                                     <option value="">-Pilih Tipe-</option>
                                     <option ng-repeat="tipe in listTipe" value="{{tipe.tipe}}" ng-selected="{{tipe.tipe == form.tipe}}">{{tipe.tipe}}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Kode Chassis</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">Kode Chassis</label>
+                            <div class="col-sm-8">
                                 <input type="text" class="form-control" ng-model="form.kd_chassis" readonly required ng-disabled="is_view">
                             </div>
                         </div>
-
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Model</label>
-                            <div class="col-sm-9">
-                                <select ng-change="changed(form)" class="form-control" style="width:100%" ng-model="form.kd_model" ng-disabled="is_view" data-placeholder="Pilih Model" required>
+                            <label class="col-sm-4 control-label">Model <span class="required"></span></label>
+                            <div class="col-sm-8">
+                                <select ng-change="changed(form)" 
+                                        class="form-control" 
+                                        style="width:100%" 
+                                        ng-model="form.kd_model" 
+                                        ng-disabled="is_view" 
+                                        data-placeholder="Pilih Model" 
+                                        required>
                                     <option value="Chassis Short">Chassis Short</option>
                                     <option value="Chassis Long">Chassis Long</option>
-                                    <option value="Chassis Cabin">Chassis cabin</option>
+                                    <option value="Chassis Cabin">Chassis Cabin</option>
+                                    <option value="Unit">Unit</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">No. Chassis</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control" ng-model="form.no_chassis">
+                            <label class="col-sm-4 control-label">No. Chassis <span class="required"></span></label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" ng-model="form.no_chassis" required="true">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">No. Mesin</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control" ng-model="form.no_mesin">
+                            <label class="col-sm-4 control-label">No. Mesin <span class="required"></span></label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" ng-model="form.no_mesin" required="true">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Kode Warna</label>
-                            <div class="col-sm-9">
-                                <ui-select tagging="tagTransform"   tagging-label="false" ng-model="form.warna" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 300px;" title="Choose a color">
+                            <label class="col-sm-4 control-label">Kode Warna <span class="required"></span></label>
+                            <div class="col-sm-8">
+                                <ui-select tagging="tagTransform" 
+                                           tagging-label="false" 
+                                           ng-model="form.warna" 
+                                           theme="bootstrap" 
+                                           sortable="true" 
+                                           ng-disabled="disabled" 
+                                           title="Choose a color"
+                                           required='true'>
                                     <ui-select-match placeholder="Pilih jenis kerjaan">{{$select.selected.warna}}</ui-select-match>
                                     <ui-select-choices repeat="warna in list_warna | filter:$select.search" >
                                         <small>
@@ -230,20 +271,21 @@
                             </div>
                         </div>
                         <div class="form-group" ng-show="is_view">
-                            <label class="col-sm-3 control-label">No WO</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">No WO</label>
+                            <div class="col-sm-8">
                                 <input type="text" ng-readonly="true" class="form-control" ng-model="form.no_wo">
                             </div>
                         </div>
                     </div>
-                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                </div>
+                <footer class="panel-footer text-right bg-light lter">
                     <div align="center">
-                        <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
-                        <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form)">&nbsp;Simpan Perubahan</button>
+                        <button type="submit" class="btn btn-default btn-lg fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
+                        <button type="submit" class="btn btn-primary btn-lg fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form)">&nbsp;Simpan Perubahan</button>
                     </div>
-                </form>
+                </footer>
             </div>
-        </div>
+        </form>
     </div>
     <div id="printArea" ng-show="is_view">
         <style>
@@ -270,22 +312,22 @@
                     <td width="14%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                        {{form.tgl_terima | date}}
+                        {{form.tgl_terima| date}}
                     </td>
                     <td width="20%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                       {{form.serah_terima | date}} 
+                        {{form.serah_terima| date}} 
                     </td>
                     <td width="12%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                       NB-01021
+                        NB-01021
                     </td>
                     <td width="20%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                       {{form.no_chassis}} 
+                        {{form.no_chassis}} 
                     </td>
                 </tr>
             </table>
@@ -299,17 +341,17 @@
                     <td width="20%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                       {{form.tgl_prd | date}} 
+                        {{form.tgl_prd| date}} 
                     </td>
                     <td width="12%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                     {{form.mrek}}/{{form.tipe}} 
+                        {{form.mrek}}/{{form.tipe}} 
                     </td>
                     <td width="20%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                      {{form.no_mesin}}
+                        {{form.no_mesin}}
                     </td>
                 </tr>
             </table>
@@ -323,17 +365,17 @@
                     <td width="20%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                       {{form.tgl_pdc | date}} 
+                        {{form.tgl_pdc| date}} 
                     </td>
                     <td width="12%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                       {{form.model | date}} 
+                        {{form.model| date}} 
                     </td>
                     <td width="20%">
                     </td>
                     <td valign="top" style="font-size: 10px;">
-                       {{form.warna.warna}}
+                        {{form.warna.warna}}
                     </td>
                 </tr>
             </table>
@@ -345,13 +387,8 @@
                     <td valign="top" style="font-size: 10px;">
                         {{form.driver}}
                     </td>
-                    
                 </tr>
             </table>
-            
-            
-
         </div>
-
     </div>
 </div>

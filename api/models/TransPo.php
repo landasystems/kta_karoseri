@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\behaviors\SluggableBehavior;
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "trans_po".
@@ -24,7 +27,9 @@ use Yii;
  * @property integer $bayar
  */
 class TransPo extends \yii\db\ActiveRecord {
-    public $supplier,$kode;
+
+    public $supplier, $kode;
+
     /**
      * @inheritdoc
      */
@@ -73,12 +78,30 @@ class TransPo extends \yii\db\ActiveRecord {
     public function getDetailPo() {
         return $this->hasOne(DetailPo::className(), ['nota' => 'nota']);
     }
+
     public function getTransSpp() {
         return $this->hasOne(TransSpp::className(), ['no_spp' => 'spp']);
     }
 
     public function getSupplier() {
         return $this->hasMany(Supplier::className(), ['kd_supplier' => 'suplier']);
+    }
+
+    public function behaviors() {
+        return [
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'modified_by',
+            ],
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'modified_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['modified_at'],
+                ],
+            ],
+        ];
     }
 
 }

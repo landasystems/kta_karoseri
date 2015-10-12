@@ -68,18 +68,18 @@ if (!empty($filter['tgl_periode'])) {
 
             $poBbm = new yii\db\Query;
             $poBbm->from('trans_po')
-                    ->join('JOIN', 'detail_po', 'detail_po.kd_barang = detail_po.kd_barang and trans_po.nota = detail_po.nota')
+                    ->join('JOIN', 'detail_po', ' trans_po.nota = detail_po.nota')
                     ->join('RIGHT JOIN', 'trans_bbm', 'trans_bbm.no_po = trans_po.nota')
                     ->join('RIGHT JOIN', 'det_bbm', 'det_bbm.kd_barang = detail_po.kd_barang and det_bbm.no_bbm = trans_bbm.no_bbm')
                     ->select("det_bbm.jumlah as jumlah_bbm, (" . $val['jumlah_spp'] . " - det_bbm.jumlah) as selisih")
                     ->where('trans_po.spp = "' . $val['no_spp'] . '" and detail_po.kd_barang = "' . $val['kd_barang'] . '"');
             $command = $poBbm->createCommand();
-            $models = $command->queryAll();
-//            if ($val['selisih'] > 0) {
+            $model = $command->queryAll();
 
-            if (!empty($models) && $models['selisih'] > 0) {
+            if (!empty($model)) {
 
-                foreach ($models as $value) {
+                foreach ($model as $value) {
+                    if($value['selisih'] > 0){
                     ?>
                     <tr>
                         <td style="text-align: center" class="border-bottom border-right"><?= $val['no_spp'] ?></td>
@@ -94,11 +94,12 @@ if (!empty($filter['tgl_periode'])) {
                         <td class="border-bottom border-right"></td>
                     </tr>
                     <?php
-//            }
+            }
                 }
-            }else if(empty ($models)){
-                 ?>
-                    <tr>
+            }
+//            else if(empty ($models)){
+//                 ?>
+<!--                    <tr>
                         <td style="text-align: center" class="border-bottom border-right"><?= $val['no_spp'] ?></td>
                         <td class="border-bottom border-right"><?= $val['kode_barang'] ?></td>
                         <td class="border-bottom border-right"> <?= $val['nm_barang'] ?></td>
@@ -109,9 +110,9 @@ if (!empty($filter['tgl_periode'])) {
                         <td class="border-bottom border-right"></td>
                         <td class="border-bottom border-right"></td>
                         <td class="border-bottom border-right"></td>
-                    </tr>
+                    </tr>-->
                     <?php
-            }
+//            }
         }
         ?>
     </table>

@@ -14,7 +14,7 @@ use Yii;
  * @property integer $status
  * @property string $jenis
  * @property integer $umur
- * @property string $gambar
+ * @property string $foto
  */
 class Validasibom extends \yii\db\ActiveRecord
 {
@@ -38,7 +38,7 @@ class Validasibom extends \yii\db\ActiveRecord
             [['kd_bom', 'kd_chassis'], 'string', 'max' => 20],
             [['kd_model'], 'string', 'max' => 5],
             [['jenis'], 'string', 'max' => 10],
-            [['gambar'], 'string', 'max' => 500],
+            [['foto'], 'string', 'max' => 500],
             [['kd_bom'], 'unique']
         ];
     }
@@ -56,7 +56,7 @@ class Validasibom extends \yii\db\ActiveRecord
             'status' => 'Status',
             'jenis' => 'Jenis',
             'umur' => 'Umur',
-            'gambar' => 'Gambar',
+            'foto' => 'Gambar',
         ];
     }
 }

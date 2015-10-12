@@ -51,21 +51,21 @@ if (!isset($_GET['print'])) {
                             <td class="border-all" width="35%">' . $det['nama_barang'] . '</td>
                             <td class="border-all" align="center" width="70">' . $det['satuan'] . '</td>
                             <td class="border-all" align="center" width="70">' . $det['jumlah'] . '</td>
-                            <td class="border-all" align="right" colspan="2" width="100">' . $det['harga'] . '</td>
-                            <td class="border-all" align="right" colspan="2" width="100">' . $det['harga'] * $det['jumlah'] . '</td>
+                            <td class="border-all" align="right" colspan="2" width="100">' . (Yii::$app->landa->price($det['harga'])) . '</td>
+                            <td class="border-all" align="right" colspan="2" width="100">' . (Yii::$app->landa->price($det['harga'] * $det['jumlah'])) . '</td>
                             <td class="border-all" colspan="2">' . $det['ket'] . '</td>
                         </tr>';
                 }
                 echo '<tr>
                             <td colspan="5" align="left" class="border-all"><b>Sub Total</b></td>
-                            <td colspan="2" align="right" class="border-all"><b>' . $total . '</b></td>
+                            <td colspan="2" align="right" class="border-all"><b>' . (Yii::$app->landa->price($total)) . '</b></td>
                             <td colspan="2" class="border-all"></td>
                         </tr>';
             }
             ?>
             <tr>
                 <td colspan="5" align="left" class="border-all"><b>Grand Total</b></td>
-                <td colspan="2" align="right" class="border-all"><b><?php echo $grandTotal ?></b></td>
+                <td colspan="2" align="right" class="border-all"><b><?php echo Yii::$app->landa->price($grandTotal) ?></b></td>
                 <td colspan="2" class="border-all"></td>
             </tr>
             <tr>

@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\behaviors\SluggableBehavior;
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "trans_bbk".
@@ -56,9 +59,26 @@ class TransBbk extends \yii\db\ActiveRecord {
 //    public function getPenerima() {
 ////        return $this->hasOne(Karyawan::className(), ['nik' => 'penerima']);
 //    }
-    
+
     public function getBagian() {
         return $this->hasOne(Jabatan::className(), ['id_jabatan' => 'kd_jab']);
+    }
+
+    public function behaviors() {
+        return [
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'modified_by',
+            ],
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'modified_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['modified_at'],
+                ],
+            ],
+        ];
     }
 
 }

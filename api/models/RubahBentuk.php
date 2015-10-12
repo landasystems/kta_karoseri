@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\behaviors\SluggableBehavior;
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "rubah_bentuk".
@@ -61,6 +64,23 @@ class RubahBentuk extends \yii\db\ActiveRecord
             'register_um' => 'Register Um',
             'no_garansi' => 'No Garansi',
             'garansi' => 'Garansi',
+        ];
+    }
+    
+    public function behaviors() {
+        return [
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'modified_by',
+            ],
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'modified_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['modified_at'],
+                ],
+            ],
         ];
     }
 }

@@ -61,47 +61,14 @@ class SiteController extends Controller {
     }
 
     public function actionCoba() {
-        $departement = \app\models\Department::find()
-                ->orderBy('id_department   ')
-                ->all();
-
-        echo '<table>';
-        foreach ($departement as $r) {
-            echo '<tr><td><b>' . $r->id_department . '| ' . $r->department . '</b></td><td></td><td></td><td></td><td></td></tr>';
-
-            $section = \app\models\Section::find()
-                    ->orderBy('id_section')
-                    ->where('dept="' . $r->id_department . '"')
-                    ->all();
-            foreach ($section as $s) {
-                echo '<tr><td></td><td>' . $s->id_section . '| ' . $s->section . '</td><td></td><td></td><td></td></tr>';
-
-                $subsection = \app\models\SubSection::find()
-                        ->orderBy('kd_kerja')
-                        ->where('id_section="' . $s->id_section . '"')
-                        ->all();
-                foreach ($subsection as $t) {
-                    echo '<tr><td></td><td></td><td>' . $t->kd_kerja . '| ' . $t->kerja . '</td><td></td><td></td></tr>';
-
-                    $jabatan = \app\models\Jabatan::find()
-                            ->orderBy('id_jabatan')
-                            ->where('krj="' . $t->kd_kerja . '"')
-                            ->all();
-                    foreach ($jabatan as $u) {
-                        echo '<tr><td></td><td></td><td></td><td>' . $u->id_jabatan . '| ' . $u->jabatan . '</td><td></td></tr>';
-                        
-                        $karyawan = \app\models\Karyawan::find()
-                                    ->orderBy('nik')
-                                    ->where('jabatan="' . $u->id_jabatan . '"')
-                                    ->all();
-                            foreach ($karyawan as $v) {
-                                echo '<tr><td></td><td></td><td></td><td></td><td>' . $v->nik . '| ' . $v->nama . '</td></tr>';
-                            }
-                    }
-                }
-            }
+//        echo \Yii::$app->landa->rp(10000);
+        $a = \Yii::$app->landa->createImg('delivery/', '58413-hl-4-pasar-jodoh.jpg', 61);
+//        $a = 'a';
+        if ($a) {
+            echo 'sukses';
+        } else {
+            echo 'gagal';
         }
-        echo '</table>';
     }
 
     public function actionLogin() {
@@ -111,6 +78,7 @@ class SiteController extends Controller {
         if (!empty($model)) {
             session_start();
             $_SESSION['user']['id'] = $model->id;
+            $_SESSION['user']['roles_id'] = $model->roles_id;
             $_SESSION['user']['username'] = $model->username;
             $_SESSION['user']['nama'] = $model->nama;
             $akses = (isset($model->roles->akses)) ? $model->roles->akses : '[]';

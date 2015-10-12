@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\behaviors\SluggableBehavior;
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "det_wip".
@@ -32,8 +35,9 @@ class Wip extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['act_finish'], 'safe'],
+            [['act_finish','hasil','hk'], 'safe'],
             [['ket'], 'string'],
+             [['hasil','hk'], 'integer'],
             [['no_wo', 'nik'], 'string', 'max' => 20],
             [['kd_kerja'], 'string', 'max' => 7],
             [['plan_start', 'plan_finish', 'act_start'], 'string', 'max' => 10]
@@ -54,6 +58,23 @@ class Wip extends \yii\db\ActiveRecord
             'act_finish' => 'Act Finish',
             'ket' => 'Ket',
             'nik' => 'Nik',
+        ];
+    }
+    
+     public function behaviors() {
+        return [
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'modified_by',
+            ],
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'modified_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['modified_at'],
+                ],
+            ],
         ];
     }
 }

@@ -1,30 +1,4 @@
-app.controller('barangCtrl', function ($scope, Data, toaster, FileUploader) {
-    var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
-    var uploader = $scope.uploader = new FileUploader({
-        url: 'img/upload.php?folder=barang&kode=' + kode_unik,
-        queueLimit: 1,
-        removeAfterUpload: true,
-    });
-    uploader.filters.push({
-        name: 'imageFilter',
-        fn: function (item) {
-            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-            var x = '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-            if(!x) {
-                toaster.pop('error', "Jenis gambar tidak sesuai");
-            }
-            return x;
-        }
-    });
-     uploader.filters.push({
-        name: 'sizeFilter', 
-        fn: function (item) {
-            var xz = item.size <= 1048576;
-            if(!xz) {
-                toaster.pop('error', "Ukuran gambar tidak boleh lebih dari 1 MB");
-            }
-        }
-    });
+app.controller('barangCtrl', function ($scope, Data, toaster, FileUploader, $modal) {
     //init data;
     var tableStateRef;
     var paramRef;
@@ -32,10 +6,12 @@ app.controller('barangCtrl', function ($scope, Data, toaster, FileUploader) {
     $scope.is_edit = false;
     $scope.is_view = false;
     $scope.is_create = false;
+    $scope.form = {};
     $scope.qty = function (max, saldo) {
         var qty = max - saldo;
         $scope.form.qty = qty;
     }
+
     Data.get('barang/jenis').then(function (data) {
         $scope.jenis_brg = data.jenis_brg;
     });
@@ -83,6 +59,7 @@ app.controller('barangCtrl', function ($scope, Data, toaster, FileUploader) {
     };
     $scope.update = function (form) {
         $scope.form = form;
+        $scope.gambar = ($scope.form.foto == null) ? [] : $scope.form.foto;
         $scope.selectJenis(form);
         $scope.is_create = false;
         $scope.is_edit = true;
@@ -92,6 +69,7 @@ app.controller('barangCtrl', function ($scope, Data, toaster, FileUploader) {
     };
     $scope.view = function (form) {
         $scope.form = form;
+        $scope.gambar = $scope.form.foto;
         $scope.selectJenis(form);
         $scope.is_create = false;
         $scope.is_edit = true;
@@ -107,25 +85,20 @@ app.controller('barangCtrl', function ($scope, Data, toaster, FileUploader) {
         }
     };
     $scope.save = function (form) {
-        if ($scope.uploader.queue.length > 0) {
-            $scope.uploader.uploadAll();
-            form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
-        } else {
-            form.foto = '';
-        }
-
         var url = ($scope.is_create == true) ? 'barang/create/' : 'barang/update/' + form.kd_barang;
         Data.post(url, form).then(function (result) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
-                $scope.is_edit = false;
+                $scope.form = {};
+                $scope.is_create = false;
                 $scope.callServer(tableStateRef); //reload grid ulang
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
             }
         });
     };
     $scope.cancel = function () {
+        $scope.gambar = [];
         $scope.is_edit = false;
         $scope.is_view = false;
         if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
@@ -138,6 +111,71 @@ app.controller('barangCtrl', function ($scope, Data, toaster, FileUploader) {
                 $scope.displayed.splice($scope.displayed.indexOf(row), 1);
             });
         }
-    }
-    ;
-});
+    };
+
+    //============================GAMBAR===========================//
+    var uploader = $scope.uploader = new FileUploader({
+        url: Data.base + 'barang/upload/?folder=barang',
+        formData: [],
+        removeAfterUpload: true,
+    });
+
+    $scope.uploadGambar = function (form) {
+        $scope.uploader.uploadAll();
+    };
+
+    uploader.filters.push({
+        name: 'imageFilter',
+        fn: function (item) {
+            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+            var x = '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+            if (!x) {
+                toaster.pop('error', "Jenis gambar tidak sesuai");
+            }
+            return x;
+        }
+    });
+
+    uploader.filters.push({
+        name: 'sizeFilter',
+        fn: function (item) {
+            var xz = item.size < 2097152;
+            if (!xz) {
+                toaster.pop('error', "Ukuran gambar tidak boleh lebih dari 2 MB");
+            }
+            return xz;
+        }
+    });
+
+    $scope.gambar = [];
+
+    uploader.onSuccessItem = function (fileItem, response) {
+        if (response.answer == 'File transfer completed') {
+            $scope.gambar.unshift({name: response.name});
+            $scope.form.foto = $scope.gambar;
+        }
+    };
+
+    uploader.onBeforeUploadItem = function (item) {
+        item.formData.push({
+            kode: $scope.form.kd_barang,
+        });
+    };
+
+    $scope.removeFoto = function (paramindex, namaFoto) {
+        var comArr = eval($scope.gambar);
+        Data.post('barang/removegambar', {kode: $scope.form.kd_barang, nama: namaFoto}).then(function (data) {
+            $scope.gambar.splice(paramindex, 1);
+        });
+
+        $scope.form.foto = $scope.gambar;
+    };
+
+    $scope.modal = function (kd_barang, img) {
+        var modalInstance = $modal.open({
+            template: '<img src="img/barang/' + kd_barang + '-350x350-' + img + '" class="img-full" >',
+            size: 'md',
+        });
+    };
+}
+);

@@ -39,6 +39,7 @@ class WomasukController extends Controller {
                     'getsti' => ['post'],
                     'select' => ['post'],
                     'bukaprint' => ['post'],
+                    'proyek' => ['get'],
                 ],
             ]
         ];
@@ -91,6 +92,32 @@ class WomasukController extends Controller {
         \Yii::error($params);
     }
 
+    public function actionProyek() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        Yii::error($_GET['kd']);
+        $aa = $_GET['kd'];
+        $query = new Query;
+        $query->from('wo_masuk')
+                ->select('*')
+                ->orderBy('in_spk_marketing DESC')
+                ->where('year(in_spk_marketing) = "' . date("Y") . '" and no_wo like "%' . $aa . '%"')
+                ->limit(1);
+
+        $command = $query->createCommand();
+        $asu = $command->queryall();
+
+
+        if (empty($asu)) {
+            $kode = $aa . date("y") . '0001';
+        } else {
+            $lastKode = substr($asu['no_wo'], -4) + 1;
+            $kode = $aa . date("y") . substr('000' . $lastKode, -4);
+//                $kode = 'NB-';
+        }
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'code' => $kode));
+    }
+
     public function actionGetspk() {
         $params = json_decode(file_get_contents("php://input"), true);
 
@@ -133,16 +160,20 @@ class WomasukController extends Controller {
 
         if (empty($asu)) {
             if ($jenis == 'Mini Bus') {
-                $kode = 'NV-' . date("y") . '0001';
+//                $kode = 'NV-' . date("y") . '0001';
+                $kode = 'NV-';
             } else {
-                $kode = 'NV-' . date("y") . '0001';
+//                $kode = 'NV-' . date("y") . '0001';
+                $kode = 'NV-';
             }
         } else {
             $lastKode = substr($asu['no_wo'], -4) + 1;
             if ($jenis == 'Mini Bus') {
-                $kode = 'NB-' . date("y") . substr('000' . $lastKode, -4);
+//                $kode = 'NB-' . date("y") . substr('000' . $lastKode, -4);
+                $kode = 'NB-';
             } else {
-                $kode = 'NB-' . date("y") . substr('000' . $lastKode, -4);
+//                $kode = 'NB-' . date("y") . substr('000' . $lastKode, -4);
+                $kode = 'NB-';
             }
         }
 
@@ -931,7 +962,6 @@ class WomasukController extends Controller {
             }
         } else {
             // eksterior
-            
             // ====================== WARNA ================================
             $eksterior = new Query;
             $eksterior->from('mini_eks')
@@ -1072,10 +1102,11 @@ class WomasukController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        
+        \Yii::error($params);
         $model = new Womasuk();
         $model->attributes = $params['womasuk'];
         $model->no_spk = $params['womasuk']['spk']['no_spk'];
+        $model->kode_proyek = $params['womasuk']['kode'];
 //        $model->in_spk_marketing =date('Y-m-d', strtotime($params['womasuk']['tgl'])) ;
 
 
@@ -1133,7 +1164,7 @@ class WomasukController extends Controller {
 //                    }
 //                    $warna->attributes = $params;
 //                    if ($warna->save()) {
-                        $eks->warna = $params['eksterior']['warna']['kd_warna'];
+                    $eks->warna = $params['eksterior']['warna']['kd_warna'];
 //                    }
                 }
                 if (!empty($params['eksterior']['warna2']['kd_warna'])) {
@@ -1144,7 +1175,7 @@ class WomasukController extends Controller {
 //                    }
 //                    $warna->attributes = $params;
 //                    if ($warna->save()) {
-                        $eks->warna2 = $params['eksterior']['warna2']['kd_warna'];
+                    $eks->warna2 = $params['eksterior']['warna2']['kd_warna'];
 //                    }
                 }
                 if (!empty($params['eksterior']['strip']['strip'])) {
@@ -1307,11 +1338,10 @@ class WomasukController extends Controller {
 
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-       Yii::error($params);
+        Yii::error($params);
         $model = $this->findModel($params['womasuk']['no_wo']);
-
         $model->attributes = $params['womasuk'];
-
+        $model->kode_proyek = $params['womasuk']['kode'];
 
 
         if ($model->save()) {
@@ -1320,18 +1350,17 @@ class WomasukController extends Controller {
                 $eks = Smalleks::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
                 if (empty($eks)) {
                     $eks = new Smalleks();
-                    $eks->no_wo =$params['womasuk']['no_wo'];
+                    $eks->no_wo = $params['womasuk']['no_wo'];
                 }
-                
             } else {
                 $eks = Minieks::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
                 if (empty($eks)) {
                     $eks = new Minieks();
-                    $eks->no_wo =$params['womasuk']['no_wo'];
+                    $eks->no_wo = $params['womasuk']['no_wo'];
                 }
             }
 //            $eks = $table;
-            
+
             if (!empty($params['eksterior']['plat']['plat_body'])) {
                 $eks->plat_body = $params['eksterior']['plat']['plat_body'];
             }
@@ -1379,20 +1408,20 @@ class WomasukController extends Controller {
 //                    }
 //                    $warna->attributes = $params;
 //                    if ($warna->save()) {
-                        $eks->warna = $params['eksterior']['warna']['kd_warna'];
+                $eks->warna = $params['eksterior']['warna']['kd_warna'];
 //                    }
-                }
-                if (!empty($params['eksterior']['warna2']['kd_warna'])) {
-                    //warna 2
+            }
+            if (!empty($params['eksterior']['warna2']['kd_warna'])) {
+                //warna 2
 //                    $warna = Warna::findOne($params['eksterior']['warna2']['kd_warna']);
 //                    if (empty($warna)) {
 //                        $warna = new Warna();
 //                    }
 //                    $warna->attributes = $params;
 //                    if ($warna->save()) {
-                        $eks->warna2 = $params['eksterior']['warna2']['kd_warna'];
+                $eks->warna2 = $params['eksterior']['warna2']['kd_warna'];
 //                    }
-                }
+            }
             if (isset($params['eksterior']['strip']['strip'])) {
                 $eks->strip = $params['eksterior']['strip']['strip'];
             }
@@ -1411,7 +1440,7 @@ class WomasukController extends Controller {
                     $int = new Miniint();
                     $int->no_wo = $params['womasuk']['no_wo'];
                 }
-                
+
                 if (!empty($params['interior']['plavon']['plavon'])) {
                     $int->plavon = $params['interior']['plavon']['plavon'];
                 }
@@ -1541,7 +1570,7 @@ class WomasukController extends Controller {
 
 // UPDATE STI CUSTOMER
 //            $spk = \app\models\Spk::findOne('no_spk='.$params['womasuk']['spk']['no_spk']);
-            $spk = \app\models\Spkaroseri::find()->where('no_spk="' . $params['womasuk']['spk']['no_spk'].'"')->one();
+            $spk = \app\models\Spkaroseri::find()->where('no_spk="' . $params['womasuk']['spk']['no_spk'] . '"')->one();
             $sti = \app\models\Serahterimain::find()->where('kd_titipan="' . $params['womasuk']['titipan']['kd_titipan'] . '"')->one();
             $sti->kd_cust = $spk->kd_customer;
             $sti->no_spk = $spk->no_spk;

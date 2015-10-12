@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\behaviors\SluggableBehavior;
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "det_uji_mutu".
@@ -47,6 +50,23 @@ class DetUjimutu extends \yii\db\ActiveRecord
             'kelas' => 'Kelas',
             'biaya' => 'Biaya',
             'bentuk_baru' => 'Bentuk Baru',
+        ];
+    }
+    
+    public function behaviors() {
+        return [
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'modified_by',
+            ],
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'modified_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['modified_at'],
+                ],
+            ],
         ];
     }
 }

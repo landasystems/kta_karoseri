@@ -39,9 +39,66 @@ class BomController extends Controller {
                     'detail' => ['get'],
                     'cari' => ['get'],
                     'womodel' => ['get'],
+                    'upload' => ['post'],
+                    'removegambar' => ['post'],
+                    'getfoto' => ['get'],
                 ],
             ]
         ];
+    }
+
+    public function actionGetfoto() {
+        $params = $_REQUEST;
+        if (isset($params['kode_bom'])) {
+            $bom = Bom::findOne($params['kode_bom']);
+            if (isset($bom->foto)) {
+                $foto = json_decode($bom->foto);
+                echo json_encode(array('data' => $foto));
+            }
+        }
+    }
+
+    public function actionUpload() {
+        if (!empty($_FILES)) {
+            $tempPath = $_FILES['file']['tmp_name'];
+            $newName = \Yii::$app->landa->urlParsing($_FILES['file']['name']);
+
+            $uploadPath = \Yii::$app->params['pathImg'] . $_GET['folder'] . DIRECTORY_SEPARATOR . $newName;
+
+            move_uploaded_file($tempPath, $uploadPath);
+            $a = \Yii::$app->landa->createImg($_GET['folder'] . '/', $newName, $_POST['kode']);
+
+            $answer = array('answer' => 'File transfer completed', 'name' => $newName);
+            if ($answer['answer'] == "File transfer completed") {
+                $bom = Bom::findOne($_POST['kode']);
+                if (!empty($bom)) {
+                    $foto = json_decode($bom->foto, true);
+                    $foto[] = array('name' => $newName);
+                    $bom->foto = json_encode($foto);
+                    $bom->save();
+                }
+            }
+
+            echo json_encode($answer);
+        } else {
+            echo 'No files';
+        }
+    }
+
+    public function actionRemovegambar() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $bom = Bom::findOne($params['kode']);
+        $foto = json_decode($bom->foto, true);
+        foreach ($foto as $key => $val) {
+            if ($val['name'] == $params['nama']) {
+                unset($foto[$key]);
+                \Yii::$app->landa->deleteImg('bom/', $params['kode'], $params['nama']);
+            }
+        }
+        $bom->foto = json_encode($foto);
+        $bom->save();
+
+        echo json_encode($foto);
     }
 
     public function actionWomodel() {
@@ -80,10 +137,14 @@ class BomController extends Controller {
         $query->from('trans_standar_bahan')
                 ->join('JOIN', 'chassis', 'trans_standar_bahan.kd_chassis = chassis.kd_chassis')
                 ->select("trans_standar_bahan.*, chassis.merk")
-                ->where(['like', 'kd_bom', $params['nama']])
+                ->where(['like', 'trans_standar_bahan.kd_bom', $params['nama']])
                 ->andWhere('status = 1')
                 ->orderBy('kd_bom DESC')
                 ->limit(25);
+
+        if (isset($params['kd_chassis']) and ! empty($params['kd_chassis'])) {
+            $query->andWhere('trans_standar_bahan.kd_chassis = "' . $params['kd_chassis'] . '"');
+        }
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -183,8 +244,9 @@ class BomController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from(['trans_standar_bahan', 'chassis', 'model'])
-                ->where('trans_standar_bahan.kd_chassis = chassis.kd_chassis and trans_standar_bahan.kd_model=model.kd_model')
+                ->from('trans_standar_bahan')
+                ->join('LEFT JOIN', 'chassis', 'trans_standar_bahan.kd_chassis = chassis.kd_chassis')
+                ->join('LEFT JOIN', 'model', 'trans_standar_bahan.kd_model=model.kd_model')
                 ->orderBy($sort)
                 ->select("*");
 
@@ -200,9 +262,15 @@ class BomController extends Controller {
         $models = $command->queryAll();
         $totalItems = $query->count();
 
+        $data = array();
+        foreach ($models as $key => $val) {
+            $data[$key] = $val;
+            $data[$key]['foto'] = json_decode($val['foto'], true);
+        }
+
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
     public function actionRekap() {
@@ -298,8 +366,11 @@ class BomController extends Controller {
         $i = 0;
         foreach ($models as $val) {
             //cek optional BOM
-//            $optional = \app\models\TransAdditionalBom::findAll(['no_wo' => $val['no_wo']]);
-            $optional = \app\models\TransAdditionalBomWo::find()->where(['no_wo' => $val['no_wo']])->all();
+            $optional = \app\models\TransAdditionalBomWo::find()
+                    ->joinWith('transadditionalbom')
+                    ->where(['trans_additional_bom_wo.no_wo' => $val['no_wo']])
+                    ->andWhere(['trans_additional_bom.status' => 1])
+                    ->all();
 
             //jika tidak ada optional ambil dari trans_standar_bahan
             if (empty($optional) or count($optional) == 0) {
@@ -354,7 +425,11 @@ class BomController extends Controller {
         $no_wo = $params['no_wo']['no_wo'];
 
         //cek optional BOM
-        $optional = \app\models\TransAdditionalBomWo::find()->where('no_wo = "' . $no_wo . '"')->all();
+        $optional = \app\models\TransAdditionalBomWo::find()
+                ->joinWith('transadditionalbom')
+                ->where(['trans_additional_bom_wo.no_wo' => $no_wo])
+                ->andWhere(['trans_additional_bom.status' => 1])
+                ->all();
 
         //jika tidak ada optional ambil dari trans_standar_bahan
         if (empty($optional) or count($optional) == 0) {
@@ -376,7 +451,6 @@ class BomController extends Controller {
                     ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
                     ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dts.tran_additional_bom_id')
                     ->join('LEFT JOIN', 'trans_additional_bom_wo as wm', ' tsb.id = wm.tran_additional_bom_id')
-//                        ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo  = tsbw.no_wo')
                     ->orderBy('tjb.urutan_produksi ASC, tjb.jabatan ASC, brg.nm_barang ASC')
                     ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
         }
@@ -463,8 +537,11 @@ class BomController extends Controller {
             if ($jWo <= 5) {
 
                 //cek optional BOM
-//                $optional = \app\models\TransAdditionalBom::find()->where('no_wo = "' . $noWo . '"')->all();
-                $optional = \app\models\TransAdditionalBomWo::find()->where(['no_wo' => $noWo])->all();
+                $optional = \app\models\TransAdditionalBomWo::find()
+                        ->joinWith('transadditionalbom')
+                        ->where(['trans_additional_bom_wo.no_wo' => $noWo])
+                        ->andWhere(['trans_additional_bom.status' => 1])
+                        ->all();
 
                 //jika tidak ada optional ambil dari trans_standar_bahan
                 if (empty($optional) or count($optional) == 0) {
@@ -552,8 +629,11 @@ class BomController extends Controller {
             if ($jWo <= 5) {
 
                 //cek optional BOM
-//                $optional = \app\models\TransAdditionalBom::find()->where('no_wo = "' . $noWo . '"')->all();
-                $optional = \app\models\TransAdditionalBomWo::find()->where(['no_wo' => $noWo])->all();
+                $optional = \app\models\TransAdditionalBomWo::find()
+                        ->joinWith('transadditionalbom')
+                        ->where(['trans_additional_bom_wo.no_wo' => $noWo])
+                        ->andWhere(['trans_additional_bom.status' => 1])
+                        ->all();
 
                 //jika tidak ada optional ambil dari trans_standar_bahan
                 if (empty($optional) or count($optional) == 0) {
@@ -644,7 +724,7 @@ class BomController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->queryAll();
-        
+
         $det = $detail->createCommand();
         $modelsDetail = $det->queryAll();
 
@@ -670,8 +750,10 @@ class BomController extends Controller {
 
     public function actionView($id) {
         $query = new Query;
-        $query->from(['trans_standar_bahan', 'chassis', 'model'])
-                ->where('trans_standar_bahan.kd_model = model.kd_model and trans_standar_bahan.kd_chassis = chassis.kd_chassis and trans_standar_bahan.kd_bom="' . $id . '"')
+        $query->from('trans_standar_bahan')
+                ->join('LEFT JOIN', 'chassis', 'trans_standar_bahan.kd_chassis = chassis.kd_chassis')
+                ->join('LEFT JOIN', 'model', 'trans_standar_bahan.kd_model=model.kd_model')
+                ->where('trans_standar_bahan.kd_bom="' . $id . '"')
                 ->select("*");
 
         $command = $query->createCommand();
@@ -712,6 +794,9 @@ class BomController extends Controller {
         $model->attributes = $params['bom'];
         $model->kd_model = isset($params['bom']['kd_model']['kd_model']) ? $params['bom']['kd_model']['kd_model'] : '-';
         $model->status = 0;
+        if (isset($params['bom']['foto'])) {
+            $model->foto = json_encode($params['bom']['foto']);
+        }
 
         if ($model->save()) {
             $detailBom = $params['detailBom'];
@@ -732,11 +817,14 @@ class BomController extends Controller {
     }
 
     public function actionUpdate($id) {
+//        echo file_get_contents("php://input");
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params['bom'];
         $model->kd_model = isset($params['bom']['kd_model']['kd_model']) ? $params['bom']['kd_model']['kd_model'] : '-';
-
+        if (isset($params['bom']['foto'])) {
+            $model->foto = json_encode($params['bom']['foto']);
+        }
         if ($model->save()) {
             $deleteDetail = BomDet::deleteAll(['kd_bom' => $model->kd_bom]);
             $detailBom = $params['detailBom'];

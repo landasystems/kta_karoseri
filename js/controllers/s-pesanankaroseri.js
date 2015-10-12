@@ -1,4 +1,4 @@
-app.controller('spkaroseriCtrl', function ($scope, Data, toaster) {
+app.controller('spkaroseriCtrl', function ($scope, Data, toaster, $modal) {
 //init data
     var tableStateRef;
     $scope.displayed = [];
@@ -8,10 +8,18 @@ app.controller('spkaroseriCtrl', function ($scope, Data, toaster) {
     $scope.jenis_kmp = [];
     $scope.bagian = '-';
     $scope.is_ppn = false;
+    $scope.form = {};
 
     Data.get('chassis/merk').then(function (data) {
         $scope.listMerk = data.data;
     });
+
+    $scope.modalFoto = function (kd_bom, img) {
+        var modalInstance = $modal.open({
+            template: '<img src="img/bom/' + kd_bom + '-350x350-' + img + '" class="img-full" >',
+            size: 'md',
+        });
+    };
 
     $scope.typeChassis = function (merk) {
         Data.get('chassis/tipe?merk=' + merk).then(function (data) {
@@ -22,12 +30,20 @@ app.controller('spkaroseriCtrl', function ($scope, Data, toaster) {
     $scope.getchassis = function (merk, tipe) {
         Data.get('bom/chassis/?merk=' + merk + '&tipe=' + tipe).then(function (data) {
             $scope.form.kd_chassis = data.kode;
+            $scope.cariBom('');
         });
     };
 
     $scope.kode = function (tipe) {
         Data.post('spkaroseri/kode', {tipe: tipe}).then(function (data) {
             $scope.form.no_spk = data.kode;
+        });
+    };
+
+    $scope.gambar;
+    $scope.getFoto = function (kode_bom) {
+        Data.get('bom/getfoto', {kode_bom: kode_bom}).then(function (data) {
+            $scope.gambar = data.data;
         });
     }
 
@@ -80,8 +96,12 @@ app.controller('spkaroseriCtrl', function ($scope, Data, toaster) {
     }
 
     $scope.cariBom = function ($query) {
-        if ($query.length >= 3) {
-            Data.get('bom/cari', {nama: $query}).then(function (data) {
+        if (typeof $scope.form.kd_chassis != "undefined" && $scope.form.kd_chassis != "") {
+            Data.get('bom/cari', {nama: $query, kd_chassis: $scope.form.kd_chassis}).then(function (data) {
+                $scope.rBom = data.data;
+            });
+        } else if ($query.length >= 3) {
+            Data.get('bom/cari', {nama: $query, kd_chassis: $scope.form.kd_chassis}).then(function (data) {
                 $scope.rBom = data.data;
             });
         }
@@ -158,6 +178,7 @@ app.controller('spkaroseriCtrl', function ($scope, Data, toaster) {
             if (result.status == 0) {
                 toaster.pop('error', "Terjadi Kesalahan", result.errors);
             } else {
+                $scope.gambar = {};
                 $scope.is_edit = false;
                 $scope.callServer(tableStateRef); //reload grid ulang
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
@@ -168,6 +189,7 @@ app.controller('spkaroseriCtrl', function ($scope, Data, toaster) {
     $scope.cancel = function () {
         $scope.is_edit = false;
         $scope.is_view = false;
+        $scope.gambar = {};
     };
     $scope.delete = function (row) {
         if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
@@ -180,6 +202,7 @@ app.controller('spkaroseriCtrl', function ($scope, Data, toaster) {
         Data.get('spkaroseri/view/' + no_spk).then(function (data) {
             $scope.form = data.data;
             $scope.form.tgl = new Date($scope.form.tgl);
+            $scope.getFoto($scope.form.kd_bom.kd_bom);
         });
     }
 });

@@ -20,6 +20,7 @@ class PoController extends Controller {
                 'actions' => [
                     'index' => ['get'],
                     'rekap' => ['get'],
+                    'fluktuasi' => ['post'],
                     'view' => ['get'],
                     'listsupplier' => ['get'],
                     'listspp' => ['get'],
@@ -36,9 +37,33 @@ class PoController extends Controller {
                     'update' => ['post'],
                     'bukaprint' => ['post'],
                     'delete' => ['delete'],
+                    'lock' => ['post'],
+                    'unlock' => ['post'],
                 ],
             ]
         ];
+    }
+
+    public function actionLock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+        
+        foreach ($centang as $key => $val) {
+            $status = TransPo::findOne($key);
+            $status->status = 0;
+            $status->save();
+        }
+    }
+
+    public function actionUnlock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = TransPo::findOne($key);
+            $status->lock = 0;
+            $status->save();
+        }
     }
 
     public function beforeAction($event) {
@@ -64,6 +89,21 @@ class PoController extends Controller {
         return true;
     }
 
+    public function actionJmlprint(){
+       $query = new Query;
+        $query->from('jml_laporan as jl')
+                ->select('jl.jumlah')
+                ->where(['id' => 1]);
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+        
+//        $model = \app\models\JmlLaporan::findOne(['id' => 1]);
+//        $model->jumlah = ($models + 1);
+//        $model->save();
+        
+        return $models['jumlah']+1;
+    }
+    
     public function actionKode() {
         $query = new Query;
         $query->from('trans_po')
@@ -268,6 +308,69 @@ class PoController extends Controller {
         return ['data' => $data, 'totalItems' => $totalItems];
     }
 
+    public function hitung_hari($m, $y) {
+
+        $hasil = cal_days_in_month(CAL_GREGORIAN, $m, $y);
+
+        return $hasil;
+    }
+
+    public function actionFluktuasi() {
+        session_start();
+        $params = json_decode(file_get_contents("php://input"), true);
+        $filter = array();
+        $sort = "dpo.tgl_pengiriman ASC";
+        $offset = 0;
+        $limit = 10;
+
+        //create query
+        $query = new Query;
+        $query->offset($offset)
+                ->from('detail_po as dpo')
+                ->join('JOIN', 'trans_po', 'trans_po.nota = dpo.nota')
+                ->join('LEFT JOIN', 'det_spp', "det_spp.no_spp = trans_po.spp and det_spp.kd_barang = dpo.kd_barang")
+                ->join('LEFT JOIN', 'supplier', 'supplier.kd_supplier = trans_po.suplier')
+                ->join('JOIN', 'det_bbm', 'det_bbm.no_po = trans_po.nota and det_bbm.kd_barang = dpo.kd_barang')
+                ->join('LEFT JOIN', 'trans_bbm', 'trans_bbm.no_bbm = det_bbm.no_bbm')
+                ->join('JOIN', 'barang', 'barang.kd_barang = dpo.kd_barang')
+                ->join('LEFT JOIN', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
+                ->orderBy($sort)
+                ->groupBy('dpo.harga')
+                ->select("dpo.*,trans_po.bayar,supplier.nama_supplier,trans_bbm.surat_jalan,det_bbm.tgl_terima, det_bbm.no_bbm, barang.kd_barang as kode_barang,barang.nm_barang, barang.satuan,barang.harga as hrg_barang");
+        //filter
+
+        if (isset($params['bulan']) && isset($params['tahun'])) {
+
+
+            if ($params['bulan']) {
+                $m = $params['bulan'];
+            }
+
+            if ($params['tahun']) {
+                $y = $params['tahun'];
+            }
+
+            $d = $this->hitung_hari($m, $y);
+
+            $start = $y . '-01-01';
+
+            $finish = $y . '-' . $m . '-' . $d;
+
+            $query->andFilterWhere(['between', 'dpo.tgl_pengiriman', $start, $finish]);
+        }
+
+        $data = $this->retRekap($query);
+
+        
+        $query->offset(0);
+        $_SESSION['queryfluktuasi'] = $query;
+        $_SESSION['filterfluktuasi'] = $filter;
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $data['data'], 'totalItems' => $data['totalItems']), JSON_PRETTY_PRINT);
+    }
+
     public function searchBrg($id) {
         $patern = $id;
         $query = new Query;
@@ -377,6 +480,7 @@ class PoController extends Controller {
         $model = new TransPo();
         $model->attributes = $params['formpo'];
         $model->suplier = $params['formpo']['supplier']['kd_supplier'];
+        $model->lock = 1;
         if (!empty($model->tanggal)) {
             $model->tanggal = date("Y-m-d", strtotime($params['formpo']['tanggal']));
         } else {
@@ -395,7 +499,7 @@ class PoController extends Controller {
                 $det = new DetailPo();
                 $det->attributes = $val;
                 $det->kd_barang = $val['data_barang']['kd_barang'];
-                if (!empty($det -> tgl_pengiriman)) {
+                if (!empty($det->tgl_pengiriman)) {
                     $det->tgl_pengiriman = date("Y-m-d", strtotime($val['data_barang']['tgl_pengiriman']));
                 } else {
                     $det->tgl_pengiriman = NULL;
@@ -415,6 +519,7 @@ class PoController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params['formpo'];
+        $model->lock = 1;
         if (!empty($model->tanggal)) {
             $model->tanggal = date("Y-m-d", strtotime($params['formpo']['tanggal']));
         } else {
@@ -573,7 +678,7 @@ class PoController extends Controller {
         $filter = $_SESSION['filter'];
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/belitunaikredit", ['models' => $models, 'filter' => $filter]);
+        return $this->render("/expretur/belitunaikredit", ['models' => $models, 'filter' => $filter,'no_print' => $this->actionJmlprint()]);
     }
 
     public function actionExcelpantau() {
@@ -587,12 +692,10 @@ class PoController extends Controller {
 
     public function actionExcelfluktuasi() {
         session_start();
-        $query = $_SESSION['query'];
-        $query->groupBy('dpo.harga');
-        $filter = $_SESSION['filter'];
+        $query = $_SESSION['queryfluktuasi'];
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/rekapfluktuasiharga", ['models' => $models, 'filter' => $filter]);
+        return $this->render("/expretur/rekapfluktuasiharga", ['models' => $models]);
     }
 
 }

@@ -34,9 +34,33 @@ class BbmController extends Controller {
                     'detailstok' => ['post'],
                     'excelserahterima' => ['get'],
                     'caribarang' => ['post'],
+                    'lock' => ['post'],
+                    'unlock' => ['post'],
                 ],
             ]
         ];
+    }
+
+    public function actionLock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = TransBbm::findOne($key);
+            $status->lock = 1;
+            $status->save();
+        }
+    }
+
+    public function actionUnlock() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $centang = $params['id'];
+
+        foreach ($centang as $key => $val) {
+            $status = TransBbm::findOne($key);
+            $status->lock = 0;
+            $status->save();
+        }
     }
 
     public function actionCaribarang() {
@@ -238,10 +262,9 @@ class BbmController extends Controller {
                 ->join('LEFT JOIN', 'supplier as su', 'tb.kd_suplier= su.kd_supplier')
                 ->join('LEFT JOIN', 'trans_po as po', 'tb.no_po= po.nota')
                 ->join('LEFT JOIN', 'trans_spp as spp', 'spp.no_spp= po.spp')
-                ->join('JOIN', 'barang', 'barang.kd_barang = db.kd_barang')
-                ->join('LEFT JOIN', 'jenis_brg as jb', 'barang.jenis = jb.kd_jenis')
+                ->join('LEFT JOIN', 'barang', 'barang.kd_barang = db.kd_barang')
                 ->orderBy($sort)
-                ->select("spp.no_spp,po.nota,tb.tgl_nota as tanggal_nota,db.tgl_terima, db.no_bbm as no_bbm, barang.kd_barang as kd_barang, barang.nm_barang,
+                ->select("po.bayar,spp.no_spp,po.nota,tb.tgl_nota as tanggal_nota,db.tgl_terima, db.no_bbm as no_bbm, barang.kd_barang as kd_barang, barang.nm_barang,
                     barang.satuan, db.jumlah as jumlah, tb.surat_jalan, db.no_po, su.nama_supplier, db.keterangan");
         //filter
 //        print_r($params['limit']);
@@ -257,6 +280,8 @@ class BbmController extends Controller {
                     $query->andFilterWhere(['between', 'tb.tgl_nota', $start, $end]);
                 } elseif ($key == 'kat' && !empty($val)) {
                     $query->andFilterWhere(['=', 'barang.kat', $val]);
+                } elseif ($key == 'bayar' && !empty($val)) {
+                    $query->andFilterWhere(['=', 'po.bayar', $val]);
                 } else {
                     $query->andFilterWhere(['LIKE', $key, $val]);
                 }
@@ -339,7 +364,7 @@ class BbmController extends Controller {
         $model->kd_suplier = $params['form']['kd_supplier'];
         $model->no_wo = (isset($params['form']['wo']['no_wo']) ? $params['form']['wo']['no_wo'] : '-');
         $model->no_po = (isset($params['form']['po']['nota'])) ? $params['form']['po']['nota'] : NULL;
-
+        $model->lock = 1;
         if ($model->save()) {
             //ambil no spp
             $no_spp = \app\models\TransPo::find()->where('nota="' . $model->no_po . '"')->one();
@@ -387,12 +412,12 @@ class BbmController extends Controller {
             $model->kd_suplier = $params['form']['kd_suplier'];
         } else if (isset($params['form']['kd_supplier'])) {
             $model->kd_suplier = $params['form']['kd_supplier'];
-        }else{
+        } else {
             $model->kd_suplier = '-';
         }
         $model->no_wo = (isset($params['form']['wo']['no_wo'])) ? $params['form']['wo']['no_wo'] : '-';
         $model->no_po = (isset($params['form']['po']['nota'])) ? $params['form']['po']['nota'] : NULL;
-
+        $model->lock = 1;
         if ($model->save()) {
             //ambil no spp
             $no_spp = \app\models\TransPo::find()->where('nota="' . $model->no_po . '"')->one();
@@ -414,7 +439,7 @@ class BbmController extends Controller {
                 $det->attributes = $val;
                 $det->kd_barang = $val['barang']['kd_barang'];
                 $det->no_bbm = $model->no_bbm;
-                 $det->no_po = $model->no_po;
+                $det->no_po = $model->no_po;
                 $det->save();
 
                 //update tanggal aktual spp

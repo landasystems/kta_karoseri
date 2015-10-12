@@ -30,9 +30,52 @@ class BarangController extends Controller {
                     'excelpergerakan' => ['get'],
                     'rekapbbmbbk' => ['post'],
                     'excelbbmbbk' => ['get'],
+                    'upload' => ['post'],
+                    'removegambar' => ['post'],
                 ],
             ]
         ];
+    }
+
+    public function actionUpload() {
+        if (!empty($_FILES)) {
+            $tempPath = $_FILES['file']['tmp_name'];
+            $newName = \Yii::$app->landa->urlParsing($_FILES['file']['name']);
+
+            $uploadPath = \Yii::$app->params['pathImg'] . $_GET['folder'] . DIRECTORY_SEPARATOR . $newName;
+
+            move_uploaded_file($tempPath, $uploadPath);
+            $a = \Yii::$app->landa->createImg($_GET['folder'] . '/', $newName, $_POST['kode']);
+
+            $answer = array('answer' => 'File transfer completed', 'name' => $newName);
+            if ($answer['answer'] == "File transfer completed") {
+                $barang = Barang::findOne($_POST['kode']);
+                $foto = json_decode($barang->foto, true);
+                $foto[] = array('name' => $newName);
+                $barang->foto = json_encode($foto);
+                $barang->save();
+            }
+
+            echo json_encode($answer);
+        } else {
+            echo 'No files';
+        }
+    }
+
+    public function actionRemovegambar() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $barang = Barang::findOne($params['kode']);
+        $foto = json_decode($barang->foto, true);
+        foreach ($foto as $key => $val) {
+            if ($val['name'] == $params['nama']) {
+                unset($foto[$key]);
+                \Yii::$app->landa->deleteImg('barang/', $params['kode'], $params['nama']);
+            }
+        }
+        $barang->foto = json_encode($foto);
+        $barang->save();
+
+        echo json_encode($foto);
     }
 
     public function beforeAction($event) {
@@ -351,10 +394,15 @@ class BarangController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
+        $data = array();
+        foreach ($models as $key => $val) {
+            $data[$key] = $val;
+            $data[$key]['foto'] = json_decode($val['foto'], true);
+        }
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
     public function actionView($id) {
@@ -370,7 +418,9 @@ class BarangController extends Controller {
         $model = new Barang();
         $model->attributes = $params;
         $model->jenis = $params['jenis']['kd_jenis'];
-
+        if (isset($params['foto'])) {
+            $model->foto = json_encode($params['foto']);
+        }
         if ($model->save()) {
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
@@ -383,13 +433,11 @@ class BarangController extends Controller {
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
-        $ft = $model->foto;
         $model->attributes = $params;
-        $model->jenis = $params['jenis']['kd_jenis'];
-
-        if (empty($model->foto)) {
-            $model->foto = $ft;
+        if (isset($params['foto'])) {
+            $model->foto = json_encode($params['foto']);
         }
+        $model->jenis = $params['jenis']['kd_jenis'];
 
         if ($model->save()) {
             $this->setHeader(200);

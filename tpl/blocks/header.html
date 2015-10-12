@@ -84,15 +84,18 @@
                                 </ul>
                             </div>
                             <div class="col-xs-3">
-                                <div class="m-l-xs m-t-xs m-b-xs font-bold">Pengguna</div>
+                                <!--<div class="m-l-xs m-t-xs m-b-xs font-bold">Pengguna</div>-->
                                 <ul class="list-unstyled l-h-2x">
-
+                                    <li ng-show="user.akses.master_proyek">
+                                        <a ui-sref="master.proyek"><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Proyek</a>
+                                    </li>
                                     <li ng-show="user.akses.master_roles">
                                         <a ui-sref="master.roles"><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Hak Akses</a>
                                     </li>
                                     <li ng-show="user.akses.master_user">
                                         <a ui-sref="master.user"><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>User</a>
                                     </li>
+                                    
                                 </ul>
                             </div>
 
@@ -280,6 +283,9 @@
                                 <ul class="list-unstyled l-h-2x">
                                     <li ng-show="user.akses.rekap_deliveryunit">
                                         <a ui-sref='rekap.deliveryunit'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Delivery Unit</a>
+                                    </li>
+                                    <li ng-show="user.akses.rekap_fluktuasi">
+                                        <a ui-sref='rekap.fluktuasi'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Fluktuasi Harga</a>
                                     </li>
                                     <li ng-show="user.akses.rekap_monitoring">
                                         <a ui-sref='rekap.monitoring'><i class="fa fa-fw fa-angle-right text-muted m-r-xs"></i>Monitoring</a>
