@@ -637,7 +637,7 @@ class PoController extends Controller {
     public function actionBrgspp() {
         $param = $_REQUEST;
         $query = new Query;
-        if (empty($param['nospp']) || $param['nospp'] == '-') {
+        if (!isset($param['nospp']) || $param['nospp'] == '-') {
             $query->from('barang')
                     ->select("*")
                     ->where(['like', 'nm_barang', $param['namabrg']])

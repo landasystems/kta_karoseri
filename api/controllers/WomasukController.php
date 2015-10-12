@@ -1106,7 +1106,7 @@ class WomasukController extends Controller {
         $model = new Womasuk();
         $model->attributes = $params['womasuk'];
         $model->no_spk = $params['womasuk']['spk']['no_spk'];
-        $model->kode_proyek = $params['womasuk']['kode'];
+        $model->kode = $params['womasuk']['kode'];
 //        $model->in_spk_marketing =date('Y-m-d', strtotime($params['womasuk']['tgl'])) ;
 
 
@@ -1341,7 +1341,7 @@ class WomasukController extends Controller {
         Yii::error($params);
         $model = $this->findModel($params['womasuk']['no_wo']);
         $model->attributes = $params['womasuk'];
-        $model->kode_proyek = $params['womasuk']['kode'];
+        $model->kode = $params['womasuk']['kode'];
 
 
         if ($model->save()) {
