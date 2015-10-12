@@ -455,7 +455,7 @@ class BbkController extends Controller {
         $model->no_wo = array('no_wo' => $model->no_wo);
 
         $detail = DetBbk::find()
-                        ->with('barang')
+                        ->joinWith('barang')
                         ->where('no_bbk="' . $model->no_bbk . '"')->all();
 
         $i = 0;

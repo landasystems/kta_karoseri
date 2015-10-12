@@ -1,15 +1,13 @@
 <div ng-controller="validasibomCtrl">
     <div class="bg-light lter b-b wrapper-md">
-        <h1 class="m-n font-thin h3">Data Master - Validasi Bom</h1>
+        <h1 class="m-n font-thin h3">Validasi Bill Of Material</h1>
     </div>
     <div class="wrapper-md" ng-show="!is_edit">
         <form name="centang">
-            <!--<input type="text" ng-model="form."/>-->
             <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
                 <div class="panel-heading">
                     <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
                     <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
-
                         <button type="button" class="btn btn-primary fa fa-check" ng-click="save(form)">&nbsp;Proses Data</button>
                     </div> 
                 </div>
@@ -19,41 +17,25 @@
                             <label class="col-sm-2 control-label">Kode Bom</label>
                             <div class="col-sm-3">
                                 <input st-search="kd_bom" class="form-control"/>
-
                             </div>
                             <label class="col-sm-2 control-label">Merk</label>
                             <div class="col-sm-3">
                                 <input st-search="merk" class="form-control"/>
-
                             </div>
-
-
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Tipe</label>
                             <div class="col-sm-3">
                                 <input st-search="tipe" class="form-control"/>
-
                             </div>
                             <label class="col-sm-2 control-label">Model</label>
                             <div class="col-sm-3">
                                 <input st-search="model" class="form-control"/>
-
                             </div>
-
-
                         </div>
-
-                        <div class="form-group">
-
-
-
-                        </div>
-
                     </div>
                 </div>
                 <div class="table-responsive">
-
                     <table class="table table-striped table-hover" >
                         <thead>
                             <tr>
@@ -66,7 +48,7 @@
                             </tr>
                         </thead>
                         <tbody ng-show="!isLoading">
-                            <tr ng-repeat="row in displayed">
+                            <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
                                 <td><label class="i-checks">
                                         <input type="checkbox" ng-model="form.kd_bom[row.kd_bom]" ><i></i> 
                                     </label></td>
@@ -74,68 +56,230 @@
                                 <td>{{row.merk}}</td>
                                 <td>{{row.tipe}}</td>
                                 <td>{{row.model}}</td>
-                                <td>{{row.tgl_buat | date:'dd - MMM - yyyy'}}</td>
-
+                                <td>{{row.tgl_buat| date:'dd - MMM - yyyy'}}</td>
                             </tr>
                         </tbody>
                         <tbody ng-show="isLoading">
                             <tr>
-                                <td colspan="4" class="text-center">Loading ... </td>
+                                <td colspan="6" class="text-center">Loading ... </td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="2" class="text-center" st-pagination="" st-items-by-page="20" st-template="tpl/blocks/pagination.custom.html">
-                                </td>
+                                <td colspan="6" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html"></td>
                             </tr>
                     </table>
-
                 </div>
             </div>
         </form>
     </div>
 
-    <!--FORM-->
-
     <div class="wrapper-md" ng-show="is_edit">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                {{formtitle}} 
-            </div>
-            <div class="panel-body">
-                <form name="landaform" class="form-horizontal form-validation ">
-
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Nama</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" ng-model="form.nama" ng-disabled="is_view" required />
+        <form name="landaform" class="form-horizontal form-validation">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-12">
+                            {{formtitle}} 
                         </div>
-                        <label class="col-sm-2 control-label">Username</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="form-control" ng-model="form.username" ng-disabled="is_view" required />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Roles</label>
-                        <div class="col-sm-4">
-                            <select class="form-control" ng-model="form.roles_id" ng-disabled="is_view" required>
-                                <option value="">-- Pilih Roles --</option>
-                                <option ng-repeat="roles in roles_id" value="{{roles.id}}">{{roles.nama}}</option>
-                            </select>
-                        </div>
-                        <label class="col-sm-2 control-label">Password</label>
-                        <div class="col-sm-4">
-                            <input type="password" class="form-control" ng-model="form.password" ng-disabled="is_view" required />
+                        <div class="col-md-9 col-sm-12" align="right">
+                            <div class="pull-right dropdown" style="margin-top: 0px" dropdown="" ng-show="is_view">
+                                <button type="button" class="btn btn-info" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Laporan HPP <span class="caret"></span></button>
+                                <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 269px;">
+                                    <li><a href="#" ng-click="printTrans(form.kd_bom)">Print</a></li>
+                                    <li><a href="#" ng-click="excelTrans(form.kd_bom)">Export Excel</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-4 col-sm-offset-2">
-                            <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
-                            <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form)">&nbsp;Simpan</button>
-                        </div>
-                    </div>	
-                </form>
+                </div>
+                <div class="panel-body">
+                    <tabset class="tab-container">
+                        <tab>
+                            <tab-heading>
+                                Data BOM
+                            </tab-heading>
+                            <div class="col-md-4 col-sm-12">
+                                <div class="form-group" ng-if="is_copy">
+                                    <label class="col-sm-4 control-label">Cari BOM</label>
+                                    <div class="col-sm-8">
+                                        <div class="input-group">
+                                            <ui-select on-select="copyData(form.kode_asli,form.kd_bom)" ng-model="form.kode_asli" ng-disabled="is_view" theme="bootstrap">
+                                                <ui-select-match>{{$select.selected.kd_bom}}</ui-select-match>
+                                                <ui-select-choices refresh="cariBom($select.search)" repeat="val in rBom">
+                                                    {{val.kd_bom}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            <span class="input-group-btn">
+                                                <button ng-click="form.kode_asli = undefined" class="btn btn-default">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Kode BOM</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" ng-model="form.kd_bom" ng-disabled="is_view" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Merk</label>
+                                    <div class="col-sm-8">
+                                        <div class="input-group">
+                                            <select class="form-control" ng-model="form.merk" ng-change="typeChassis(form.merk);
+                                                            getchassis(form.merk, form.tipe)" ng-disabled="is_view" style="width: 245px;" required>
+                                                <option value="">-Pilih Merk-</option>
+                                                <option ng-repeat="valMerk in listMerk" value="{{valMerk.merk}}">{{valMerk.merk}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Tipe</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" ng-change="getchassis(form.merk, form.tipe)" ng-model="form.tipe" ng-disabled="is_view" required style="width: 245px;">
+                                            <option value="">-Pilih Tipe-</option>
+                                            <option ng-repeat="tipe in listTipe" value="{{tipe.tipe}}">{{tipe.tipe}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Kode Chassis</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control" ng-model="form.kd_chassis" readonly required ng-disabled="is_view">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-12">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Tanggal Buat</label>
+                                    <div class="col-sm-8">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-disabled="is_view" ng-model="form.tgl_buat" is-open="opened1" ng-click="open1($event)" />
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar-o"></i>
+                                            </span>
+                                        </div> 
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Model</label>
+                                    <div class="col-sm-8">
+                                        <div class="input-group">
+                                            <ui-select ng-model="form.kd_model" theme="bootstrap" ng-disabled="is_view" required>
+                                                <ui-select-match>{{$select.selected.model}}</ui-select-match>
+                                                <ui-select-choices refresh="cariModel($select.search)" repeat="val in results">
+                                                    {{val.model}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                            <span class="input-group-btn">
+                                                <button ng-click="form.kd_model = undefined" class="btn btn-default">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Jenis</label>
+                                    <div class="col-sm-8">
+                                        <label class="btn btn-default" ng-model="form.jenis" btn-radio="'Small Bus'">Small Bus</label>
+                                        <label class="btn btn-default" ng-model="form.jenis"  btn-radio="'Mini Bus'">Mini Bus</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <h5 class="font-bold">- Detail Bill Of Material</h5>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Filter Berdasarkan Bagian</label>
+                                <div class="col-sm-4">
+                                    <input type="text" class="form-control" ng-model="cari" style="width:300px;">
+                                </div>
+                            </div>
+                            <div class="line line-dashed b-b line-lg pull-in"></div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            Detail BOM
+                                        </div>
+                                        <div class="col-md-9" align="right">
+                                            <button ng-click="addDetail(detail)" class="btn btn-success" ng-hide="is_view" title="Tambah Detail"><i class="fa fa-plus-square"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-striped b-t b-light">
+                                        <thead>
+                                            <tr>
+                                                <th>Bagian</th>
+                                                <th>Barang</th>
+                                                <th width="150">Harga</th>
+                                                <th width="100">Qty / Satuan</th>
+                                                <th width="300">Keterangan</th>
+                                                <th width="80" ng-hide="is_view" style="margin:0px;padding:0px;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="detail in detBom| filter : cari" style="margin:0px;padding:0px;" >
+                                                <td>    
+                                                    {{detail.bagian.jabatan}}
+                                                </td>
+                                                <td>
+                                                    {{detail.barang.nm_barang}} 
+                                                </td>
+                                                <td align="right">
+                                                    {{detail.barang.harga|currency}}
+                                                </td>
+                                                <td align="center">    
+                                                    {{detail.qty}} {{detail.barang.satuan}}
+                                                </td>
+                                                <td>
+                                                    {{detail.ket}}
+                                                </td>
+                                                <td style="margin:0px;padding:0px;" ng-hide="is_view">
+                                                    <div class="btn-group pull-right" role="group">
+                                                        <button ng-click="modal(detail)" class="btn btn-info" title="Edit Detail"><i class="fa fa-pencil-square-o"></i></button>
+                                                        <button ng-click="removeRow($index)" class="btn btn-danger" title="Hapus Detail" ng-disabled="is_view""><i class="fa fa-trash-o"></i></button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </tab>
+                        <tab ng-if="!is_create">
+                            <tab-heading>
+                                Foto
+                            </tab-heading>
+                            <div class="hbox hbox-auto-xs hbox-auto-sm">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="wrapper-md dker b-b" style="margin-bottom: 25px;">
+                                            <h3 class="m-n font-thin">Detail Foto</h3>
+                                        </div>
+                                        <div ng-repeat="slide in gambar" class="col-md-2 m-b repeat-animation hide-fade">
+                                            <a href="" ng-click="modalFoto(form.kd_bom, slide.name)"><img ng-src="img/bom/{{form.kd_bom}}-150x150-{{slide.name}}" class="img-thumbnail"></a>
+                                            <p align="center" style="padding:10px;" ng-show="!is_view">
+                                                <a href="" ng-click="removeFoto($index, slide.name)"><i class="btn btn-danger fa fa-trash" title="Hapus"></i></a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </tab>
+                    </tabset>
+                </div>
+                <footer class="panel-footer text-right bg-light lter">
+                    <div align="center">
+                        <button type="submit" class="btn btn-default btn-lg fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
+                        <button type="submit" class="btn btn-primary btn-lg fa fa-save" ng-click="save(form.kd_bom)">&nbsp;Validasi Bill Of Material</button>
+                    </div>
+                </footer>
             </div>
-        </div>
+        </form>
     </div>
 </div>

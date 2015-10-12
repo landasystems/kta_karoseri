@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\behaviors\SluggableBehavior;
+use yii\behaviors\BlameableBehavior;
 
 /**
  * This is the model class for table "trans_additional_bom".
@@ -17,25 +20,23 @@ use Yii;
  * @property integer $umur
  * @property string $foto
  */
-class TransAdditionalBom extends \yii\db\ActiveRecord
-{
+class TransAdditionalBom extends \yii\db\ActiveRecord {
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'trans_additional_bom';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
-    {
+    public function rules() {
         return [
-            [['tgl_buat','foto'], 'safe'],
+            [['tgl_buat', 'foto'], 'safe'],
             [['status', 'umur'], 'integer'],
-            [['no_wo', 'kd_chassis','kd_bom'], 'string', 'max' => 20],
+            [['no_wo', 'kd_chassis', 'kd_bom'], 'string', 'max' => 20],
             [['kd_model'], 'string', 'max' => 5],
             [['jenis'], 'string', 'max' => 10],
 //            [[''], 'string', 'max' => 500]
@@ -45,8 +46,7 @@ class TransAdditionalBom extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'ID',
             'no_wo' => 'No Wo',
@@ -59,8 +59,26 @@ class TransAdditionalBom extends \yii\db\ActiveRecord
             'foto' => 'Gambar',
         ];
     }
-    
+
     public function getWo() {
         return $this->hasMany(TransAdditionalBomWo::className(), ['tran_additional_bom_id' => 'id']);
     }
+
+    public function behaviors() {
+        return [
+            [
+                'class' => BlameableBehavior::className(),
+                'createdByAttribute' => 'created_by',
+                'updatedByAttribute' => 'modified_by',
+            ],
+            'timestamp' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'modified_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['modified_at'],
+                ],
+            ],
+        ];
+    }
+
 }

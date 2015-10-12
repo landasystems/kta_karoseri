@@ -382,7 +382,11 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load('js/controllers/validasibom.js');
+                                                return $ocLazyLoad.load(['angularFileUpload']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/validasibom.js');
+                                                        }
+                                                );
                                             }]
                                     }})
                                 //bukaValidasi bom
@@ -511,7 +515,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['angularFileUpload' ]).then(
+                                                return $ocLazyLoad.load(['angularFileUpload']).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/deliveryunit.js');
                                                         }
@@ -586,7 +590,7 @@ angular.module('app')
                                     resolve: {
                                         deps: ['$ocLazyLoad',
                                             function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['daterangepicker','frAngular']).then(
+                                                return $ocLazyLoad.load(['daterangepicker', 'frAngular']).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/spp-rutin.js');
                                                         });

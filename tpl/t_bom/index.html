@@ -74,33 +74,33 @@
     </div>
 
     <div class="wrapper-md" ng-show="is_edit">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-md-3 col-sm-12">
-                        {{formtitle}} 
-                    </div>
-                    <div class="col-md-9 col-sm-12" align="right">
-                        <div class="pull-right dropdown" style="margin-top: 0px" dropdown="" ng-show="is_view">
-                            <button type="button" class="btn btn-info" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Laporan HPP <span class="caret"></span></button>
-                            <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 269px;">
-                                <li><a href="#" ng-click="printTrans(form.kd_bom)">Print</a></li>
-                                <li><a href="#" ng-click="excelTrans(form.kd_bom)">Export Excel</a></li>
-                            </ul>
+        <form name="landaform" class="form-horizontal form-validation">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-12">
+                            {{formtitle}} 
+                        </div>
+                        <div class="col-md-9 col-sm-12" align="right">
+                            <div class="pull-right dropdown" style="margin-top: 0px" dropdown="" ng-show="is_view">
+                                <button type="button" class="btn btn-info" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Laporan HPP <span class="caret"></span></button>
+                                <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 269px;">
+                                    <li><a href="#" ng-click="printTrans(form.kd_bom)">Print</a></li>
+                                    <li><a href="#" ng-click="excelTrans(form.kd_bom)">Export Excel</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="panel-body">
-                <form name="landaform" class="form-horizontal form-validation">
+                <div class="panel-body">
                     <tabset class="tab-container">
                         <tab>
                             <tab-heading>
-                                Data Barang
+                                Data BOM
                             </tab-heading>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group" ng-if="is_copy">
-                                    <label class="col-sm-4 control-label">Cari BOM</label>
+                                    <label class="col-sm-4 control-label">Cari BOM <span class="required"></span></label>
                                     <div class="col-sm-8">
                                         <div class="input-group">
                                             <ui-select on-select="copyData(form.kode_asli,form.kd_bom)" ng-model="form.kode_asli" ng-disabled="is_view" theme="bootstrap">
@@ -118,17 +118,22 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label">Kode BOM</label>
+                                    <label class="col-sm-4 control-label">Kode BOM <span class="required"></span></label>
                                     <div class="col-sm-8">
-                                        <input type="text" class="form-control" ng-model="form.kd_bom" ng-disabled="is_view" readonly>
+                                        <input type="text" class="form-control" ng-model="form.kd_bom" ng-disabled="is_view" readonly require>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label">Merk</label>
+                                    <label class="col-sm-4 control-label">Merk <span class="required"></span></label>
                                     <div class="col-sm-8">
                                         <div class="input-group">
-                                            <select class="form-control" ng-model="form.merk" ng-change="typeChassis(form.merk);
-                                                                getchassis(form.merk, form.tipe)" ng-disabled="is_view" style="width: 245px;" required>
+                                            <select class="form-control" 
+                                                    ng-model="form.merk" 
+                                                    ng-change="typeChassis(form.merk);
+                                                                        getchassis(form.merk, form.tipe)" 
+                                                    ng-disabled="is_view" 
+                                                    style="width: 245px;" 
+                                                    required>
                                                 <option value="">-Pilih Merk-</option>
                                                 <option ng-repeat="valMerk in listMerk" value="{{valMerk.merk}}">{{valMerk.merk}}</option>
                                             </select>
@@ -136,27 +141,43 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label">Tipe</label>
+                                    <label class="col-sm-4 control-label">Tipe <span class="required"></span></label>
                                     <div class="col-sm-8">
-                                        <select class="form-control" ng-change="getchassis(form.merk, form.tipe)" ng-model="form.tipe" ng-disabled="is_view" required style="width: 245px;">
+                                        <select class="form-control" 
+                                                ng-change="getchassis(form.merk, form.tipe)" 
+                                                ng-model="form.tipe" 
+                                                ng-disabled="is_view" 
+                                                required 
+                                                style="width: 245px;">
                                             <option value="">-Pilih Tipe-</option>
                                             <option ng-repeat="tipe in listTipe" value="{{tipe.tipe}}">{{tipe.tipe}}</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label">Kode Chassis</label>
+                                    <label class="col-sm-4 control-label">Kode Chassis <span class="required"></span></label>
                                     <div class="col-sm-8">
-                                        <input type="text" class="form-control" ng-model="form.kd_chassis" readonly required ng-disabled="is_view">
+                                        <input type="text" 
+                                               class="form-control" 
+                                               ng-model="form.kd_chassis" 
+                                               readonly 
+                                               required 
+                                               ng-disabled="is_view">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-12">
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label">Tanggal Buat</label>
+                                    <label class="col-sm-4 control-label">Tanggal Buat <span class="required"></span></label>
                                     <div class="col-sm-8">
                                         <div class="input-group">
-                                            <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-disabled="is_view" ng-model="form.tgl_buat" is-open="opened1" ng-click="open1($event)" />
+                                            <input type="text" 
+                                                   class="form-control" 
+                                                   datepicker-popup="dd-MM-yyyy" 
+                                                   ng-disabled="is_view" 
+                                                   ng-model="form.tgl_buat" 
+                                                   is-open="opened1" 
+                                                   ng-click="open1($event)" />
                                             <span class="input-group-addon">
                                                 <i class="fa fa-calendar-o"></i>
                                             </span>
@@ -164,10 +185,14 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label">Model</label>
+                                    <label class="col-sm-4 control-label">Model <span class="required"></span></label>
                                     <div class="col-sm-8">
                                         <div class="input-group">
-                                            <ui-select ng-model="form.kd_model" theme="bootstrap" ng-disabled="is_view" >
+                                            <ui-select 
+                                                ng-model="form.kd_model" 
+                                                theme="bootstrap" 
+                                                ng-disabled="is_view" 
+                                                required>
                                                 <ui-select-match>{{$select.selected.model}}</ui-select-match>
                                                 <ui-select-choices refresh="cariModel($select.search)" repeat="val in results">
                                                     {{val.model}}
@@ -184,8 +209,8 @@
                                 <div class="form-group">
                                     <label class="col-sm-4 control-label">Jenis</label>
                                     <div class="col-sm-8">
-                                        <label class="btn btn-default" ng-model="form.jenis" btn-radio="'Mini Bus'">Small Bus</label>
-                                        <label class="btn btn-default" ng-model="form.jenis"  btn-radio="'Small Bus'">Mini Bus</label>
+                                        <label class="btn btn-default" ng-model="form.jenis" btn-radio="'Small Bus'">Small Bus</label>
+                                        <label class="btn btn-default" ng-model="form.jenis"  btn-radio="'Mini Bus'">Mini Bus</label>
                                     </div>
                                 </div>
                             </div>
@@ -348,12 +373,14 @@
                             </div>
                         </tab>
                     </tabset>
+                </div>
+                <footer class="panel-footer text-right bg-light lter">
                     <div align="center">
-                        <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
-                        <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, detBom)">&nbsp;Simpan Perubahan</button>
+                        <button type="submit" class="btn btn-default btn-lg fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
+                        <button type="submit" class="btn btn-primary btn-lg fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, detBom)">&nbsp;Simpan Perubahan</button>
                     </div>
-                </form>
+                </footer>
             </div>
-        </div>
+        </form>
     </div>
 </div>

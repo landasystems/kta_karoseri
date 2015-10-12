@@ -102,119 +102,119 @@
                                 Data Delivery Unit
                             </tab-heading>
                             <div class="row">
-                            <div class="col-md-6 col-sm-12">
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">No Wo</label>
-                            <div class="col-sm-8">
-                                <div class="input-group">
-                                    <ui-select on-select="pilih(form, $item)" ng-model="form.nowo" theme="bootstrap">
-                                        <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
-                                        <ui-select-choices refresh="cariProduk($select.search)" repeat="val in results">
-                                            {{val.no_wo}}
-                                        </ui-select-choices>
-                                    </ui-select>
-                                    <span class="input-group-btn">
-                                        <button ng-click="form.nowo = undefined" class="btn btn-default">
-                                            <span class="glyphicon glyphicon-trash"></span>
-                                        </button>
-                                    </span>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">No Wo</label>
+                                        <div class="col-sm-8">
+                                            <div class="input-group">
+                                                <ui-select on-select="pilih(form, $item)" ng-model="form.nowo" theme="bootstrap">
+                                                    <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
+                                                    <ui-select-choices refresh="cariProduk($select.search)" repeat="val in results">
+                                                        {{val.no_wo}}
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                                <span class="input-group-btn">
+                                                    <button ng-click="form.nowo = undefined" class="btn btn-default">
+                                                        <span class="glyphicon glyphicon-trash"></span>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Merk</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" ng-model="form.merk" ng-readonly="true" placeholder="Merk">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Model</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" ng-model="form.model" ng-readonly="true" placeholder="Model">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Sales</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" ng-model="form.sales" ng-readonly="true" placeholder="Sales">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Delivery</label>
+                                        <div class="col-sm-8">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_delivery" is-open="opened1" ng-click="open1($event)"/>
+                                                <span class="input-group-addon">
+                                                    <i class="fa fa-calendar-o"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Merk</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" ng-model="form.merk" ng-readonly="true" placeholder="Merk">
-                            </div>
-                        </div>
+                                <div class="col-md-6 col-sm-12">
 
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Model</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" ng-model="form.model" ng-readonly="true" placeholder="Model">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Sales</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" ng-model="form.sales" ng-readonly="true" placeholder="Sales">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Delivery</label>
-                            <div class="col-sm-8">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-model="form.tgl_delivery" is-open="opened1" ng-click="open1($event)"/>
-                                    <span class="input-group-addon">
-                                        <i class="fa fa-calendar-o"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">No Delivery</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" ng-model="form.no_delivery"  ng-disabled="true">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Tujuan</label>
+                                        <div class="col-sm-8">
+                                            <label class="btn btn-default"  ng-model="form.tujuan" btn-radio="'cabang'"  required>Kantor Cabang</label>
+                                            <label class="btn btn-default"  ng-model="form.tujuan" btn-radio="'customer'"  required> Customer</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" ng-hide="form.tujuan == 'customer'">
+                                        <label class="col-sm-4 control-label"></label>
+                                        <div class="col-sm-8">
+                                            <div >
+                                                <input type="text" class="form-control" ng-model="form.cabang" ng-disabled="is_view" placeholder="Cabang">
+                                            </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">No Delivery</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" ng-model="form.no_delivery"  ng-disabled="true">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Tujuan</label>
-                            <div class="col-sm-8">
-                                <label class="btn btn-default"  ng-model="form.tujuan" btn-radio="'cabang'"  required>Kantor Cabang</label>
-                                <label class="btn btn-default"  ng-model="form.tujuan" btn-radio="'customer'"  required> Customer</label>
-                            </div>
-                        </div>
-                        <div class="form-group" ng-hide="form.tujuan == 'customer'">
-                            <label class="col-sm-4 control-label"></label>
-                            <div class="col-sm-8">
-                                <div >
-                                    <input type="text" class="form-control" ng-model="form.cabang" ng-disabled="is_view" placeholder="Cabang">
-                                </div>
+                                        </div>
 
-                            </div>
+                                    </div>
+                                    <div class="form-group" ng-hide="form.tujuan == 'cabang'">
+                                        <label class="col-sm-4 control-label"></label>
 
-                        </div>
-                        <div class="form-group" ng-hide="form.tujuan == 'cabang'">
-                            <label class="col-sm-4 control-label"></label>
+                                        <div class="col-sm-8">
+                                            <div>
+                                                <!--<input type="text" class="form-control" ng-model="form.customer" ng-disabled="is_view" placeholder="">-->
+                                                <textarea class="form-control" ng-model="form.customer" ng-readonly="is_view" style=" height: 103px; width: 243px;" ></textarea>
+                                                <!--                                    <div class="input-group">
+                                                                                        <ui-select on-select="getCustomer(form,$item)" ng-model="form.customer" theme="bootstrap" ng-disabled="is_view" >
+                                                                                            <ui-select-match>{{$select.selected.nm_customer}}</ui-select-match>
+                                                                                            <ui-select-choices refresh="cariCustomer($select.search)" repeat="val in sCUstomer">
+                                                                                                <span title ="{{val.alamat1}}"> {{val.nm_customer}}</span>
+                                                                                                <span title ="{{val.alamat1}}"> {{val.alamat1}}</span>
+                                                                                            </ui-select-choices>
+                                                                                        </ui-select>
+                                                                                        <span class="input-group-btn">
+                                                                                            <button ng-click="form.customer = undefined" class="btn btn-default">
+                                                                                                <span class="glyphicon glyphicon-trash"></span>
+                                                                                            </button>
+                                                                                        </span>
+                                                                                    </div>-->
+                                            </div>
 
-                            <div class="col-sm-8">
-                                <div>
-                                    <!--<input type="text" class="form-control" ng-model="form.customer" ng-disabled="is_view" placeholder="">-->
-                                    <textarea class="form-control" ng-model="form.customer" ng-readonly="is_view" style=" height: 103px; width: 243px;" ></textarea>
-                                    <!--                                    <div class="input-group">
-                                                                            <ui-select on-select="getCustomer(form,$item)" ng-model="form.customer" theme="bootstrap" ng-disabled="is_view" >
-                                                                                <ui-select-match>{{$select.selected.nm_customer}}</ui-select-match>
-                                                                                <ui-select-choices refresh="cariCustomer($select.search)" repeat="val in sCUstomer">
-                                                                                    <span title ="{{val.alamat1}}"> {{val.nm_customer}}</span>
-                                                                                    <span title ="{{val.alamat1}}"> {{val.alamat1}}</span>
-                                                                                </ui-select-choices>
-                                                                            </ui-select>
-                                                                            <span class="input-group-btn">
-                                                                                <button ng-click="form.customer = undefined" class="btn btn-default">
-                                                                                    <span class="glyphicon glyphicon-trash"></span>
-                                                                                </button>
-                                                                            </span>
-                                                                        </div>-->
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">Driver / Exp</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" ng-model="form.driver" ng-disabled="is_view" placeholder="Driver" required>
+                                        </div>
+                                    </div>
                                 </div>
 
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-4 control-label">Driver / Exp</label>
-                            <div class="col-sm-8">
-                                <input type="text" class="form-control" ng-model="form.driver" ng-disabled="is_view" placeholder="Driver" required>
-                            </div>
-                        </div>
-                    </div>
-                    
                             </div>
                         </tab>
-                        <tab>
+                        <tab ng-if="!is_create">
                             <tab-heading>
-                               Foto
+                                Foto
                             </tab-heading>
                             <div class="hbox hbox-auto-xs hbox-auto-sm"nv-file-drop="" uploader="uploader" filters="queueLimit, customFilter">
                                 <div class="row" ng-show="!is_view">
@@ -299,10 +299,10 @@
                                         <div class="wrapper-md dker b-b" style="margin-bottom: 25px;">
                                             <h3 class="m-n font-thin">Detail Foto</h3>
                                         </div>
-                                        <div ng-repeat="slide in gambar" class="col-md-4 m-b repeat-animation hide-fade">
-                                            <a href="" ng-click="modal(slide.name)"><img ng-src="img/delivery/{{slide.name}}" class="img-full"></a>
+                                        <div ng-repeat="slide in gambar" class="col-md-2 m-b repeat-animation hide-fade">
+                                            <a href="" ng-click="modal(form.id, slide.name)"><img ng-src="img/delivery/{{form.id}}-150x150-{{slide.name}}" class="img-thumbnail"></a>
                                             <p align="center" style="padding:10px;" ng-show="!is_view">
-                                                <a href="" ng-click="removeFoto($index)"><i class="btn btn-danger fa fa-trash" title="Hapus"></i></a>
+                                                <a href="" ng-click="removeFoto($index, slide.name)"><i class="btn btn-danger fa fa-trash" title="Hapus"></i></a>
                                             </p>
                                         </div>
                                     </div>
@@ -310,7 +310,7 @@
                             </div>
                         </tab>
                     </tabset>
-                    
+
 
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <div align="center">

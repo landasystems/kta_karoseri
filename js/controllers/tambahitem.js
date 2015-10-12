@@ -85,12 +85,14 @@ app.controller('tambahItemCtrl', function ($scope, Data, toaster, FileUploader, 
     $scope.is_create = false;
 
     $scope.addDetail = function (detail) {
-        $scope.detTambahItem.unshift({
+        var form = {
             kd_jab: '',
             kd_barang: '',
             qty: '',
             ket: '',
-        })
+        }
+        $scope.modal(form);
+        $scope.detTambahItem.unshift(form);
     };
 
     $scope.removeRow = function (paramindex) {

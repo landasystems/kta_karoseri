@@ -48,12 +48,14 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
         }
     };
     $scope.addDetail = function (detail) {
-        $scope.detBom.unshift({
+        var form = {
             kd_jab: '',
             kd_barang: '',
             qty: '',
             ket: '',
-        })
+        }
+        $scope.modal(form);
+        $scope.detBom.unshift(form);
     };
     $scope.removeRow = function (paramindex) {
         var comArr = eval($scope.detBom);
@@ -207,7 +209,7 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
             $scope.form.tgl_buat = new Date($scope.form.tgl_buat);
             if (kd_bom_baru != '') {
                 $scope.form.kd_bom = kd_bom_baru;
-                $scope.form.tgl_buat = '';
+                $scope.form.tgl_buat = new Date();
             }
 
             if (jQuery.isEmptyObject(data.detail)) {

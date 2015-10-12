@@ -20,8 +20,6 @@ class PembatalanchassisController extends Controller {
                     'index' => ['get'],
                     'view' => ['get'],
                     'create' => ['post'],
-                    'update' => ['post'],
-                    'delete' => ['delete'],
                 ],
             ]
         ];
@@ -79,7 +77,7 @@ class PembatalanchassisController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from(['serah_terima_in', 'customer', 'chassis'])
-                ->where('serah_terima_in.kd_cust = customer.kd_cust and serah_terima_in.kd_chassis = chassis.kd_chassis and serah_terima_in.status = 1 and serah_terima_in.no_spk = "-" or serah_terima.no_spk is NULL')
+                ->where('serah_terima_in.kd_cust = customer.kd_cust and serah_terima_in.kd_chassis = chassis.kd_chassis and serah_terima_in.status = 1 and serah_terima_in.no_spk = "-" or serah_terima_in.no_spk is NULL')
                 ->select("*")
                 ->orderBy($sort);
 
@@ -117,33 +115,6 @@ class PembatalanchassisController extends Controller {
             $status = Serahterimain::findOne($key);
             $status->status = 0;
             $status->save();
-        }
-    }
-
-    public function actionUpdate($id) {
-        $params = json_decode(file_get_contents("php://input"), true);
-        $model = $this->findModel($id);
-        $model->attributes = $params;
-
-        if ($model->save()) {
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-        } else {
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
-        }
-    }
-
-    public function actionDelete($id) {
-        $model = $this->findModel($id);
-
-        if ($model->delete()) {
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
-        } else {
-
-            $this->setHeader(400);
-            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
     }
 

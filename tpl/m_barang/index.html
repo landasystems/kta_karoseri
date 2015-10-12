@@ -18,8 +18,8 @@
                 <div class="form-horizontal">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Jenis</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">Jenis</label>
+                            <div class="col-sm-8">
                                 <select st-search="jenis_brg" class="form-control">
                                     <option value="">-Pilih Jenis-</option>
                                     <option ng-repeat="jenis in jenis_brg" value="{{jenis.jenis_brg}}">{{jenis.jenis_brg}}</option>
@@ -27,8 +27,8 @@
                             </div>
                         </div>    
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Kategori</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">Kategori</label>
+                            <div class="col-sm-8">
                                 <select st-search="kat" class="form-control">
                                     <option value="">.:Pilih Jenis:.</option>
                                     <option value="Rutin">Rutin</option>
@@ -39,14 +39,14 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Kode Barang</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">Kode Barang</label>
+                            <div class="col-sm-8">
                                 <input st-search="kd_barang" class="form-control"/>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Nama Barang</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-4 control-label">Nama Barang</label>
+                            <div class="col-sm-8">
                                 <input st-search="nm_barang" class="form-control"/>
                             </div>
                         </div>
@@ -98,24 +98,24 @@
     </div>
 
     <div class="wrapper-md" ng-show="is_edit">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                {{formtitle}} 
-            </div>
-            <div class="panel-body">
-                <form name="landaform" class="form-horizontal form-validation">
+        <form name="landaform" class="form-horizontal form-validation">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {{formtitle}} 
+                </div>
+                <div class="panel-body">
                     <tabset class="tab-container">
                         <tab>
                             <tab-heading>
                                 Data Barang
                             </tab-heading>
                             <div class="row">
-                                <div class="col-md-4 col-sm-12">
+                                <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">Jenis</label>
-                                        <div class="col-sm-10">
+                                        <label class="col-sm-4 control-label">Jenis <span class="required"></span></label>
+                                        <div class="col-sm-8">
                                             <div class="input-group">
-                                                <ui-select on-select="kode($select.selected)" ng-disabled="is_view" ng-model="form.jenis" theme="bootstrap">
+                                                <ui-select on-select="kode($select.selected)" ng-disabled="is_view" ng-model="form.jenis" theme="bootstrap" require>
                                                     <ui-select-match>{{$select.selected.jenis_brg}}</ui-select-match>
                                                     <ui-select-choices refresh="cariJenis($select.search)" repeat="jenis in jenis_brg">
                                                         {{jenis.jenis_brg}}
@@ -130,63 +130,100 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">Kode</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" ng-model="form.kd_barang" ng-disabled="is_view" readonly>
+                                        <label class="col-sm-4 control-label">Kode</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" 
+                                                   ng-model="form.kd_barang" 
+                                                   ng-disabled="is_view" 
+                                                   readonly>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">Nama</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" ng-model="form.nm_barang" ng-disabled="is_view" required>
+                                        <label class="col-sm-4 control-label">Nama <span class="required"></span></label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" 
+                                                   ng-model="form.nm_barang" 
+                                                   ng-disabled="is_view" 
+                                                   required>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">Harga</label>
-                                        <div class="col-sm-10">
+                                        <label class="col-sm-4 control-label">Harga <span class="required"></span></label>
+                                        <div class="col-sm-8">
                                             <div class="input-group">
                                                 <span class="input-group-addon">Rp</span>
-                                                <input type="text" class="form-control" ng-model="form.harga" ng-disabled="is_view" required>
+                                                <input type="text" class="form-control" 
+                                                       ng-model="form.harga" 
+                                                       ng-disabled="is_view" 
+                                                       required 
+                                                       ng-pattern="/^[0-9]+$/">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">Satuan</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" ng-model="form.satuan" ng-disabled="is_view" required>
+                                        <label class="col-sm-4 control-label">Satuan <span class="required"></span></label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" 
+                                                   ng-model="form.satuan" 
+                                                   ng-disabled="is_view" 
+                                                   required>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">Kategori</label>
-                                        <div class="col-sm-10">
-                                            <label class="btn btn-default" ng-model="form.kat"  btn-radio="'Rutin'" required>Rutin</label>
-                                            <label class="btn btn-default" ng-model="form.kat"  btn-radio="'Non Rutin'" required>Non Rutin</label>
+                                        <label class="col-sm-4 control-label">Kategori <span class="required"></span></label>
+                                        <div class="col-sm-8">
+                                            <label class="btn btn-default" 
+                                                   ng-model="form.kat"  
+                                                   btn-radio="'Rutin'" 
+                                                   required>Rutin</label>
+                                            <label class="btn btn-default" 
+                                                   ng-model="form.kat" 
+                                                   btn-radio="'Non Rutin'" 
+                                                   required>Non Rutin</label>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 col-sm-12">
+                                <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">Max</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" ng-model="form.max" ng-disabled="is_view" required ng-keyup="qty(form.max, form.saldo)">
+                                        <label class="col-sm-4 control-label">Max <span class="required"></span></label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" 
+                                                   ng-model="form.max" 
+                                                   ng-disabled="is_view" 
+                                                   required 
+                                                   ng-pattern="/^[0-9]+$/" 
+                                                   ng-keyup="qty(form.max, form.saldo)">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">Min</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" ng-model="form.min" ng-disabled="is_view" required>
+                                        <label class="col-sm-4 control-label">Min <span class="required"></span></label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" 
+                                                   ng-model="form.min" 
+                                                   ng-disabled="is_view"
+                                                   ng-pattern="/^[0-9]+$/"
+                                                   required>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">Saldo</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" ng-model="form.saldo" ng-disabled="is_view" required ng-keyup="qty(form.max, form.saldo)">
+                                        <label class="col-sm-4 control-label">Saldo <span class="required"></span></label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" 
+                                                   ng-model="form.saldo"
+                                                   ng-disabled="is_view" 
+                                                   required 
+                                                   ng-pattern="/^[0-9]+$/" 
+                                                   ng-keyup="qty(form.max, form.saldo)">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="col-sm-2 control-label">Qty</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" ng-model="form.qty" ng-disabled="is_view" required readonly>
+                                        <label class="col-sm-4 control-label">Qty <span class="required"></span></label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" 
+                                                   ng-model="form.qty" 
+                                                   ng-disabled="is_view" 
+                                                   required 
+                                                   readonly>
                                         </div>
                                     </div>
                                 </div>  
@@ -290,12 +327,14 @@
                             </div>
                         </tab>
                     </tabset>
+                </div>
+                <footer class="panel-footer text-right bg-light lter">
                     <div align="center">
-                        <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
-                        <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form)">&nbsp;Simpan Perubahan</button>
+                        <button type="submit" class="btn btn-default btn-lg fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
+                        <button type="submit" class="btn btn-primary btn-lg fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form)">&nbsp;Simpan Perubahan</button>
                     </div>
-                </form>
+                </footer>
             </div>
-        </div>
+        </form>
     </div>
 </div>

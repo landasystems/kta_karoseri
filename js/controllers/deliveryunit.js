@@ -1,36 +1,73 @@
-app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
-    var kode_unik = new Date().getUTCMilliseconds() + "" + (Math.floor(Math.random() * (20 - 10 + 1)) + 10);
+app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader, $modal) {
+    //============================GAMBAR===========================//
     var uploader = $scope.uploader = new FileUploader({
-        url: 'img/upload.php?folder=delivery&kode=' + kode_unik,
-        
+        url: Data.base + 'delivery/upload/?folder=delivery',
+        formData: [],
         removeAfterUpload: true,
     });
+
+    $scope.uploadGambar = function (form) {
+        $scope.uploader.uploadAll();
+    };
 
     uploader.filters.push({
         name: 'imageFilter',
         fn: function (item) {
             var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
             var x = '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-            if(!x) {
+            if (!x) {
                 toaster.pop('error', "Jenis gambar tidak sesuai");
             }
             return x;
         }
     });
-    
+
     uploader.filters.push({
-        name: 'sizeFilter', 
+        name: 'sizeFilter',
         fn: function (item) {
-            var xz = item.size <= 1048576;
-            if(!xz) {
-                toaster.pop('error', "Ukuran gambar tidak boleh lebih dari 1 MB");
+            var xz = item.size < 2097152;
+            if (!xz) {
+                toaster.pop('error', "Ukuran gambar tidak boleh lebih dari 2 MB");
             }
+            return xz;
         }
     });
+
+    $scope.gambar = [];
+
+    uploader.onSuccessItem = function (fileItem, response) {
+        if (response.answer == 'File transfer completed') {
+            $scope.gambar.unshift({name: response.name});
+            $scope.form.foto = $scope.gambar;
+        }
+    };
+
+    uploader.onBeforeUploadItem = function (item) {
+        item.formData.push({
+            kode: $scope.form.id,
+        });
+    };
+
+    $scope.removeFoto = function (paramindex, namaFoto) {
+        var comArr = eval($scope.gambar);
+        Data.post('delivery/removegambar', {kode: $scope.form.id, nama: namaFoto}).then(function (data) {
+            $scope.gambar.splice(paramindex, 1);
+        });
+
+        $scope.form.foto = $scope.gambar;
+    };
+
+    $scope.modal = function (id, img) {
+        var modalInstance = $modal.open({
+            template: '<img src="img/delivery/' + id + '-350x350-' + img + '" class="img-full" >',
+            size: 'md',
+        });
+    };
+
     //init data
     var tableStateRef;
     var paramRef;
-    
+
     $scope.displayed = [];
     $scope.is_edit = false;
     $scope.is_print = false;
@@ -38,7 +75,7 @@ app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
     $scope.is_create = false;
     $scope.is_create = false;
 
-   
+
 
     $scope.open1 = function ($event) {
         $event.preventDefault();
@@ -65,13 +102,11 @@ app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
     };
 
     $scope.pilih = function (form, $item) {
-        
+
         Data.post('delivery/customer/', $item).then(function (data) {
-//            $scope.sCUstomer = data.customer;
-        
-        form.customer = data.customer.nm_customer+" - "+data.customer.alamat1 ;
-        form.kd_cust = data.customer.kd_cust;
-            
+            form.customer = data.customer.nm_customer + " - " + data.customer.alamat1;
+            form.kd_cust = data.customer.kd_cust;
+
         });
         form.merk = $item.merk;
         form.model = $item.model;
@@ -101,8 +136,8 @@ app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
 
         $scope.isLoading = false;
     };
-    
-     $scope.printG = function () {
+
+    $scope.printG = function () {
         Data.get('delivery', paramRef).then(function (data) {
             window.open = 'api/web/delivery/garansi';
         });
@@ -128,7 +163,8 @@ app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + form.no_wo;
         $scope.form = form;
-        $scope.form.customer = form.customer.nm_customer+" - "+form.customer.alamat1;
+        $scope.gambar = $scope.form.foto;
+        $scope.form.customer = form.customer.nm_customer + " - " + form.customer.alamat1;
         $scope.form.tgl_delivery = new Date(form.tgl_delivery);
     };
     $scope.view = function (form) {
@@ -138,7 +174,7 @@ app.controller('deliveryCtrl', function ($scope, Data, toaster, FileUploader) {
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.no_wo;
         $scope.form = form;
-//        $scope.selected(form.id);
+        $scope.gambar = $scope.form.foto;
     };
     $scope.save = function (form) {
         if ($scope.uploader.queue.length > 0) {
