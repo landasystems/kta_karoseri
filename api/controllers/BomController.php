@@ -71,10 +71,12 @@ class BomController extends Controller {
             $answer = array('answer' => 'File transfer completed', 'name' => $newName);
             if ($answer['answer'] == "File transfer completed") {
                 $bom = Bom::findOne($_POST['kode']);
-                $foto = json_decode($bom->foto, true);
-                $foto[] = array('name' => $newName);
-                $bom->foto = json_encode($foto);
-                $bom->save();
+                if (!empty($bom)) {
+                    $foto = json_decode($bom->foto, true);
+                    $foto[] = array('name' => $newName);
+                    $bom->foto = json_encode($foto);
+                    $bom->save();
+                }
             }
 
             echo json_encode($answer);

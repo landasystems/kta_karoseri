@@ -2,6 +2,11 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
     Data.get('chassis/merk').then(function (data) {
         $scope.listMerk = data.data;
     });
+//    $scope.refres = function(){
+//        $scope.listTipe = [];
+//        $scope.form = {};
+//        
+//    };
     $scope.typeChassis = function (merk) {
         Data.get('chassis/tipe?merk=' + merk).then(function (data) {
             $scope.listTipe = data.data;
@@ -168,23 +173,27 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
         $scope.selected(bom.kd_bom, kd_bom);
     };
     $scope.save = function (form, detail) {
-        var data = {
-            bom: form,
-            detailBom: detail,
-        };
-        var url = ($scope.is_create == true) ? 'bom/create/' : 'bom/update/' + form.kd_bom;
-        Data.post(url, data).then(function (result) {
-            if (result.status == 0) {
-                toaster.pop('error', "Terjadi Kesalahan", result.errors);
-            } else {
-                $scope.is_create = false;
-                $scope.is_edit = false;
-                $scope.barang = [];
-                $scope.gambar = [];
-                $scope.callServer(tableStateRef); //reload grid ulang
-                toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
-            }
-        });
+        if (typeof form.foto != 'undefined' && form.foto.length > 0) {
+            var data = {
+                bom: form,
+                detailBom: detail,
+            };
+            var url = ($scope.is_create == true) ? 'bom/create/' : 'bom/update/' + form.kd_bom;
+            Data.post(url, data).then(function (result) {
+                if (result.status == 0) {
+                    toaster.pop('error', "Terjadi Kesalahan", result.errors);
+                } else {
+                    $scope.is_create = false;
+                    $scope.is_edit = false;
+                    $scope.barang = [];
+                    $scope.gambar = [];
+                    $scope.callServer(tableStateRef); //reload grid ulang
+                    toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
+                }
+            });
+        } else {
+            toaster.pop('error', "Mohon upload gambar unit terlebih dahulu.");
+        }
     };
     $scope.cancel = function () {
         if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi
