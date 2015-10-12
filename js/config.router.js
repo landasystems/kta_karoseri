@@ -256,6 +256,19 @@ angular.module('app')
                                             }]
                                     }
                                 })
+                                // proyek
+                                .state('master.proyek', {
+                                    url: '/proyek',
+                                    templateUrl: 'tpl/m_proyek/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+
+                                                return $ocLazyLoad.load('js/controllers/proyek.js');
+
+                                            }]
+                                    }
+                                })
 
                                 // user
                                 .state('master.user', {

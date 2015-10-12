@@ -59,6 +59,16 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
     Data.post('womasuk/warna').then(function(data) {
         $scope.list_warna = data.warna;
     });
+     Data.get('proyek/list').then(function(data) {
+        $scope.proyeklist = data.proyek;
+    });
+    $scope.getnw = function (form) {
+       
+          Data.get('womasuk/proyek?kd=' + form).then(function (data) {
+               console.log(data);
+            $scope.form.no_wo = data.code;
+        });
+    };
 
     $scope.cariSpk = function($query) {
         if ($query.length >= 3) {
@@ -255,9 +265,11 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
                 $scope.inter = data.interior;
                
             }
+            console.log(data.det);
 //            $scope.form.tgl = data.in_spk_marketing;
             $scope.form.warna = data.det.warna;
             $scope.form.no_wo = data.det.no_wo;
+//            $scope.form.kode = data.kode_proyek;
             $scope.form.customer = data.det.customer;
             $scope.form.sales = data.det.sales;
             $scope.form.pemilik = data.det.pemilik;
@@ -289,6 +301,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
             form.merk = data.spk.merk;
             form.model_chassis = data.spk.model_chassis;
             form.jenis = data.spk.jenis;
+            
             form.in_spk_marketing = data.spk.tgl;
             form.tipe = data.spk.tipe;
             form.model = data.spk.model;
