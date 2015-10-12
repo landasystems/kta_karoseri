@@ -269,8 +269,7 @@ class SppnonrutinController extends Controller {
         $model->tgl1 = date('d/m/Y', strtotime($params['form']['periode']['startDate']));
         $model->tgl2 = date('d/m/Y', strtotime($params['form']['periode']['endDate']));
         $model->no_proyek = 'Non Rutin';
-        $model->lock = 1;
-        if ($model->save()) {
+       if ($model->save()) {
             $deleteAll = DetSpp::deleteAll('no_spp="' . $model->no_spp . '"');
             foreach ($params['details'] as $val) {
 

@@ -113,14 +113,15 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
             $scope.form.kd_bom = data.kode;
         });
         $scope.form.tgl_buat = new Date();
-        $scope.detBom = [
-            {
-                kd_jab: '',
-                kd_barang: '',
-                qty: '',
-                ket: '',
-            }
-        ];
+        $scope.detBom = [];
+//        $scope.detBom = [
+//            {
+//                kd_jab: '',
+//                kd_barang: '',
+//                qty: '',
+//                ket: '',
+//            }
+//        ];
     };
     $scope.copy = function (form, detail) {
         $scope.is_copy = true;

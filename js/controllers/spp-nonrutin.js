@@ -88,18 +88,19 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
         Data.get('sppnonrutin/kode').then(function (data) {
             $scope.form.no_spp = data.kode;
         });
-        $scope.sppDet = [{
-                id: '',
-                no_spp: '',
-                kd_barang: '',
-                saldo: '',
-                qty: '',
-                ket: '',
-                p: '',
-                a: '',
-                stat_spp: '',
-                no_wo: '',
-            }];
+        $scope.sppDet = [];
+//        $scope.sppDet = [{
+//                id: '',
+//                no_spp: '',
+//                kd_barang: '',
+//                saldo: '',
+//                qty: '',
+//                ket: '',
+//                p: '',
+//                a: '',
+//                stat_spp: '',
+//                no_wo: '',
+//            }];
     };
     
     $scope.update = function (form) {
