@@ -193,7 +193,7 @@
                                             <b ng-repeat="noWo in detail.no_wo">{{noWo.no_wo}}{{$last ? '' : ', '}}</b>
                                         </td>
                                         <td  ng-hide="is_view">
-                                            <button ng-click="modal(sppDet, detail)" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
+                                            <button ng-click="modal(detail)" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
                                             <button ng-click="removeRow($index)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
                                         </td>
                                     </tr>
