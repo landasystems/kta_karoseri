@@ -159,7 +159,8 @@ class WipController extends Controller {
 
         echo json_encode(array('status' => 1, 'umur' => $selisih, 'detail' => $coba));
     }
-  public function actionIndex() {
+
+    public function actionIndex() {
         //init variable
         $params = $_REQUEST;
         $filter = array();
@@ -211,6 +212,7 @@ class WipController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
+
     public function actionRekap() {
         //init variable
         $params = $_REQUEST;
@@ -268,7 +270,7 @@ class WipController extends Controller {
 
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($params);
+
         $deleteAll = Wip::deleteAll('no_wo="' . $params['wip']['no_wo']['no_wo'] . '"');
         $tglibur = array();
         $libur = \app\models\TblKalender::find()->where('YEAR(tgl)=2015')->all();
@@ -281,9 +283,9 @@ class WipController extends Controller {
             $model->kd_kerja = $data['proses']['kd_bag'];
             $model->plan_start = date('d/m/Y', strtotime($data['plan_start']));
             $model->plan_finish = date('d/m/Y', strtotime($data['plan_finish']));
-            $model->act_start =(!empty($data['act_start'])) ? date('d/m/Y', strtotime($data['act_start'])) : '';
+            $model->act_start = (!empty($data['act_start'])) ? date('d/m/Y', strtotime($data['act_start'])) : '';
             $model->act_finish = (isset($data['act_finish'])) ? date('Y-m-d', strtotime($data['act_finish'])) : null;
-            $model->ket =  $data['ket'];
+            $model->ket = $data['ket'];
             $model->hasil = isset($data['hasil']) ? $data['hasil'] : null;
             $model->nik = isset($data['pemborong']['nik']) ? $data['pemborong']['nik'] : '-';
 //            $model->hk = 3;
@@ -308,9 +310,10 @@ class WipController extends Controller {
                 $ad = $jdP2 - $jdP;
                 $sHK2 = ($ad == 0) ? '1' : $ad;
 // =================HTUNG HARI LIBUR DAN MINGGU BODY WELDING=================
+                $libur1 = '';
+                $libur2 = '';
                 for ($i = 1; $i <= $sHK2; $i++) {
-                    $libur1 = '';
-                    $libur2 = '';
+
                     // menentukan tanggal pada hari ke-i dari tanggal awal
                     $tanggal = mktime(0, 0, 0, $monthP, $dateP + $i, $yearP);
                     $tglstr = date("Y-m-d", $tanggal);
@@ -321,10 +324,13 @@ class WipController extends Controller {
                     }
 
                     // yang merupakan hari minggu
-                    if ((date("N", $tanggal) == 7)) {
+                    $minggu = date("l", strtotime($tglstr));
+
+                    if ($minggu == 'Sunday') {
                         $libur2++;
                     }
                 }
+                Yii::error($libur1);
                 $HK2 = $sHK2 - $libur1 - $libur2;
                 $model->hk = $HK2;
             } else {
