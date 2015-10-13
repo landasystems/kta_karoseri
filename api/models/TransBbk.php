@@ -32,7 +32,7 @@ class TransBbk extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['no_bbk'], 'required'],
+            [['no_bbk','penerima'], 'required'],
             [['tanggal'], 'safe'],
             [['status'], 'integer'],
             [['no_bbk', 'no_wo'], 'string', 'max' => 10],
