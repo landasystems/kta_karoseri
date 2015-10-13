@@ -324,7 +324,6 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                     $scope.form.petugas = data.data.nama;
                 });
                 $scope.form.no_wo = '';
-                $scope.form.penerima = '';
             } else {
                 $scope.riwayatAmbil($scope.form.no_wo, $scope.form.kd_jab);
             }
@@ -390,7 +389,6 @@ app.controller('modalCtrl', function ($scope, Data, $modalInstance, form, toaste
             });
         }
     }
-
     $scope.simpan = function (form) {
         var url = 'bbk/pengecualian';
         Data.post(url, form).then(function (result) {

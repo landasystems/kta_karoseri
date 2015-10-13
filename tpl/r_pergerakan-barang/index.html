@@ -45,9 +45,9 @@
                                             <table>
                                                 <tr>
                                                     <td><input type="button" class="btn btn-primary" value="Tampilkan" ng-click="view(form)"></td>
-                                                    <td
+                                                    <td>
                                                         <div class="pull-left dropdown" style="margin-top: 0px" dropdown="">
-                                                            <button type="button" class="btn btn-info" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Stok Bahan Mingguan<span class="caret"></span></button>
+                                                            <button type="button" class="btn btn-info" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Stok Bahan Mingguan V 1<span class="caret"></span></button>
                                                             <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 269px;">
                                                                 <li><a href="#" ng-click="print(form)">Print</a></li>
                                                                 <li><a href="#" ng-click="excel(form)">Export Excel</a></li>
@@ -56,7 +56,16 @@
                                                     </td>
                                                     <td>
                                                         <div class="pull-left dropdown" style="margin-top: 0px" dropdown="">
-                                                            <button type="button" class="btn btn-success" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Barang Masuk dan Barang Keluar <span class="caret"></span></button>
+                                                            <button type="button" class="btn btn-warning" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Stok Bahan Mingguan V 2<span class="caret"></span></button>
+                                                            <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 269px;">
+                                                                <li><a href="#" ng-click="printminggu(form)">Print</a></li>
+                                                                <li><a href="#" ng-click="excelminggu(form)">Export Excel</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="pull-left dropdown" style="margin-top: 0px" dropdown="">
+                                                            <button type="button" class="btn btn-success" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. BBM dan BBK <span class="caret"></span></button>
                                                             <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 269px;">
                                                                 <li><a href="#" ng-click="printBbmBbk(form)">Print</a></li>
                                                                 <li><a href="#" ng-click="excelBbmBbk(form)">Export Excel</a></li>

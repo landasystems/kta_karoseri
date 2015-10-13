@@ -28,6 +28,7 @@ class BarangController extends Controller {
                     'cari' => ['get'],
                     'rekappergerakan' => ['post'],
                     'excelpergerakan' => ['get'],
+                    'excelpergerakan2' => ['get'],
                     'rekapbbmbbk' => ['post'],
                     'excelbbmbbk' => ['get'],
                     'upload' => ['post'],
@@ -106,8 +107,8 @@ class BarangController extends Controller {
         $tglStart = '';
         $tglEnd = '';
 
-        $value = explode(' - ', date("Y-m-d", strtotime($params['tanggal']['startDate'])));
-        $start = explode('-', $value[0]);
+        $start = date("Y-m-d", strtotime($params['tanggal']['startDate']));
+        $start = explode('-', $start);
         $tgl = array();
         for ($i = 1; $i <= 6; $i++) {
             $new = mktime(0, 0, 0, $start[1], $start[2] + $i, $start[0]);
@@ -184,6 +185,48 @@ class BarangController extends Controller {
         $_SESSION['periode'] = date("d/m/Y", strtotime($tglStart)) . ' - ' . date("d/m/Y", strtotime($tglEnd));
         $_SESSION['tanggal'] = $tgl;
         echo json_encode(array('status' => 1, 'data' => $data));
+    }
+
+    public function actionExcelpergerakan2() {
+        session_start();
+
+        $tgl = isset($_SESSION['tanggal']) ? $_SESSION['tanggal'] : '';
+        $bbm = $_SESSION['queryBbm'];
+        $bbk = $_SESSION['queryBbk'];
+
+        $bbm->where(null);
+        $bbm->where(['det_bbm.tgl_terima' => $tgl]);
+        $commandBbm = $bbm->createCommand();
+        $modelBBM = $commandBbm->queryAll();
+
+        $bbk->where(null);
+        $bbk->where(['trans_bbk.tanggal' => $tgl]);
+        $commandBbk = $bbk->createCommand();
+        $modelBBK = $commandBbk->queryAll();
+
+        $data = array();
+        foreach ($modelBBM as $valBbm) {
+            $data[$valBbm['kd_barang']]['kd_barang'] = $valBbm['kd_barang'];
+            $data[$valBbm['kd_barang']]['barang'] = $valBbm['nm_barang'];
+            $data[$valBbm['kd_barang']]['satuan'] = $valBbm['satuan'];
+            $data[$valBbm['kd_barang']]['stok_minim'] = $valBbm['min'];
+            $data[$valBbm['kd_barang']]['saldo_awal'] = $valBbm['saldo'];
+            $data[$valBbm['kd_barang']]['stok_keluar'] = 0;
+            $data[$valBbm['kd_barang']]['stok_masuk'] = isset($data[$valBbm['kd_barang']]['stok_masuk']) ? $data[$valBbm['kd_barang']]['stok_masuk'] + $valBbm['jumlah'] : $valBbm['jumlah'];
+        }
+
+        foreach ($modelBBK as $valBbk) {
+            $data[$valBbk['kd_barang']]['kd_barang'] = $valBbk['kd_barang'];
+            $data[$valBbk['kd_barang']]['barang'] = $valBbk['nm_barang'];
+            $data[$valBbk['kd_barang']]['satuan'] = $valBbk['satuan'];
+            $data[$valBbk['kd_barang']]['stok_minim'] = $valBbk['min'];
+            $data[$valBbk['kd_barang']]['saldo_awal'] = $valBbk['saldo'];
+            $data[$valBbk['kd_barang']]['stok_masuk'] = isset($data[$valBbk['kd_barang']]['stok_masuk']) ? $data[$valBbk['kd_barang']]['stok_masuk'] : 0;
+            $data[$valBbk['kd_barang']]['stok_keluar'] = (isset($data[$valBbk['kd_barang']]['stok_keluar']) ? $data[$valBbk['kd_barang']]['stok_keluar'] : 0 ) + $valBbk['jml'];
+        }
+
+        $periode = $_SESSION['periode'];
+        return $this->render("/expretur/pergerakanbarang2", ['models' => $data, 'tgl' => $tgl, 'periode' => $periode]);
     }
 
     public function actionExcelpergerakan() {
