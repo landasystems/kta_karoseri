@@ -59,32 +59,42 @@ class JabatanController extends Controller {
     }
 
     public function actionListkaryawanabsent() {
-
+        $param = $_REQUEST;
+        
         $absen = AbsensiEttLog::find()
-                ->joinWith('karyawan')
+                ->joinWith('emp')
+//                ->joinWith('karyawan')
                 ->select("emp.first_name, emp.pin, date(scan_date) as scan_date")
                 ->where('date(scan_date) = "' . date("Y-m-d") . '"')
+                ->andWhere('emp.first_name like "%' . $param['nama'] . '%" or emp.last_name like "%' . $param['nama'] . '%"')
                 ->limit(100)
                 ->all();
-
-        $sudahAbsen = array();
+        $data = array();
         foreach ($absen as $key => $val) {
-            $sudahAbsen[] = $val['karyawan']['nik'];
+            $data[$key]['nik'] = $val->emp->nik;
+            $data[$key]['nama'] = $val->emp->first_name;
         }
 
-        $param = $_REQUEST;
-        $query = new Query;
-        $query->from('tbl_karyawan')
-                ->select("nik, nama")
-                ->where('nama like "%' . $param['nama'] . '%"')
-                ->andWhere(['nik' => $sudahAbsen]);
 
-        $command = $query->createCommand();
-        $models = $command->queryAll();
 
-        $this->setHeader(200);
+//        $sudahAbsen = array();
+//        foreach ($absen as $key => $val) {
+//            $sudahAbsen[] = $val['karyawan']['nik'];
+//        }
+//
+//        $param = $_REQUEST;
+//        $query = new Query;
+//        $query->from('tbl_karyawan')
+//                ->select("nik, nama")
+//                ->where('nama like "%' . $param['nama'] . '%"')
+//                ->andWhere(['nik' => $sudahAbsen]);
+//
+//        $command = $query->createCommand();
+//        $models = $command->queryAll();
+//
+//        $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'data' => $models));
+        echo json_encode(array('status' => 1, 'data' => $data));
     }
 
     public function actionListkaryawan() {

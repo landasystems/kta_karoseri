@@ -67,7 +67,7 @@ class BbkController extends Controller {
 
     public function actionRiwayatambil() {
         $params = json_decode(file_get_contents("php://input"), true);
-        if (!empty($params['no_wo']) and ! empty($params['kd_jab'])) {
+        if (!empty($params['no_wo']) and ! empty($params['kd_jab']) and $params['no_wo']['no_wo'] != '-') {
             $query = new Query;
             $query->from('trans_bbk')
                     ->join('LEFT JOIN', 'det_bbk', 'det_bbk.no_bbk = trans_bbk.no_bbk')
@@ -419,7 +419,19 @@ class BbkController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
+                if ($key == 'barang') {
+                    $brg = $this->searchBrg($val);
+                    foreach ($brg as $brg_val) {
+                        $query->orFilterWhere(['=', 'tb.no_bbk', $brg_val]);
+                    }
+                } else if ($key == 'keterangan') {
+                    $brg = $this->searchKet($val);
+                    foreach ($brg as $brg_val) {
+                        $query->orFilterWhere(['=', 'tb.no_bbk', $brg_val]);
+                    }
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+                }
             }
         }
 
@@ -430,6 +442,43 @@ class BbkController extends Controller {
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+
+    public function searchKet($id) {
+        $patern = $id;
+        $query = new Query;
+        $query->from('det_bbk')
+                ->select("*")
+                ->andFilterWhere(['like', 'det_bbk.ket', $patern]);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $data = array();
+        foreach ($models as $key) {
+            $data[] = $key['no_bbk'];
+        }
+
+        $this->setHeader(200);
+        return $data;
+    }
+
+    public function searchBrg($id) {
+        $patern = $id;
+        $query = new Query;
+        $query->from('det_bbk')
+                ->join('JOIN', 'barang', 'barang.kd_barang = det_bbk.kd_barang')
+                ->select('det_bbk.no_bbk, barang.nm_barang');
+        $query->andFilterWhere(['like', 'barang.nm_barang', $patern]);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $data = array();
+        foreach ($models as $key) {
+            $data[] = $key['no_bbk'];
+        }
+
+        $this->setHeader(200);
+        return $data;
     }
 
     public function actionView($id) {
@@ -690,7 +739,7 @@ class BbkController extends Controller {
     public function actionExcelbk() {
         session_start();
         $query = $_SESSION['query'];
-        
+
 
         $command = $query->createCommand();
         $models = $command->queryAll();

@@ -242,9 +242,10 @@ class WipController extends Controller {
                 ->limit($limit)
                 ->from('det_wip as dw')
                 ->join('JOIN', 'view_wo_spk as vw', 'dw.no_wo = vw.no_wo')
+                ->join('LEFT JOIN', 'delivery as d', 'dw.no_wo = d.no_wo')
                 ->join('LEFT JOIN', 'spk', 'vw.no_spk = spk.no_spk')
 //                ->groupBy('dw.no_wo')
-                ->where('dw.kd_kerja="BAG001" and (dw.act_start IS NOT NULL or dw.act_start="" or dw.act_start="0000-00-00")')
+                ->where('dw.kd_kerja="BAG001" and d.no_wo IS NULL and (dw.act_start IS NOT NULL or dw.act_start="" or dw.act_start="0000-00-00")')
                 ->orderBy($sort)
                 ->select("dw.act_start,dw.kd_kerja, vw.*,spk.jml_hari");
 

@@ -5,7 +5,7 @@
          
 -------------------------------------------------------------- */
 @media print {
-	.page-break	{ display: block; page-break-before: always; }
+    .page-break	{ display: block; page-break-before: always; }
 }
 body { 
     width:100% !important;
@@ -177,22 +177,23 @@ span.label{width: 180px;display: inline-table;}
     font-family: "Draft";        
 }
 #print_bbm{        
-    font-size: 10pt;      
-    letter-spacing: 1pt;
+    font-size: 8pt;      
+    /*letter-spacing: 1pt;*/
     margin: 0px;
     padding: 0px;
-    font-family: Sans Serif;        
+    font-family: "Draft";     
 }
 .print_bbk_td{
     padding: 0px;
-    font-size: 6pt;
+    font-size: 7pt;
     vertical-align: top;
     font-family: "Draft";      
 }
 .print_bbm_td{
-    font-size: 10pt;
+    padding: 2px;
+    font-size: 7pt;
     vertical-align: top;
-    font-family: Sans Serif;
+    font-family: "Draft"; 
 }
 
 .border-left {

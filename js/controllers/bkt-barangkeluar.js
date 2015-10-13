@@ -13,6 +13,19 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     $scope.is_print = 0;
     $scope.err_pengambilan = false;
 
+    $scope.refresh = function () {
+        $scope.displayed = [];
+        $scope.gantiStatus = {};
+        $scope.form = {};
+        $scope.err_pengambilan = false;
+        $scope.sisa_pengambilan = 0;
+        $scope.stok_sekarang = 0;
+        $scope.results = [];
+        $scope.resultriwayat = [];
+        $scope.resultsbarang = [];
+        $scope.detailBbk = [];
+    }
+
     $scope.pilih = {};
 
     $scope.lock = function (form) {
@@ -137,7 +150,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     }
 
     $scope.listBarang = function ($query, no_wo, kd_jab) {
-        if (typeof $scope.form.no_wo != "undefined" && typeof $scope.form.kd_jab != "undefined") {
+        if (typeof $scope.form.no_wo != "undefined" && typeof $scope.form.kd_jab != "undefined" && $scope.is_create == true) {
             Data.post('bbk/listbarang', {nama: $query, no_wo: no_wo, kd_jab: kd_jab, listBarang: $scope.detailBbk}).then(function (data) {
                 $scope.resultsbarang = data.data;
             });
@@ -184,6 +197,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
 
     $scope.copyData = function (bbk, kd_bbk) {
         $scope.form = bbk;
+        $scope.form.no_wo = {};
         $scope.selected(bbk.no_bbk, kd_bbk);
     };
 
@@ -274,6 +288,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
+        $scope.is_create = false;
         $scope.formtitle = "Lihat Data : " + form.no_bbk;
         $scope.form = form;
         $scope.form.tanggal = new Date(form.tanggal);
@@ -304,6 +319,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                     $scope.is_edit = false;
                     $scope.create($scope.form);
                     $scope.callServer(tableStateRef); //reload grid ulang
+                    $scope.refresh();
                 }
             });
         } else {
@@ -317,6 +333,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
         $scope.is_edit = false;
         $scope.is_view = false;
         $scope.err_pengambilan = false;
+        $scope.refresh();
     };
 
     $scope.delete = function (row) {

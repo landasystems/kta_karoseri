@@ -1,5 +1,5 @@
 app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
-    //init data
+//init data
 
     var tableStateRef;
     $scope.displayed = [];
@@ -10,9 +10,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
     $scope.openedDet = -1;
     $scope.err_jml = false;
     $scope.jml_po = 0;
-
     $scope.pilih = {};
-
     $scope.lock = function () {
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
             Data.post('bbm/lock/', $scope.pilih).then(function (result) {
@@ -26,7 +24,6 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
             });
         }
     };
-
     $scope.unlock = function () {
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
             Data.post('bbm/unlock/', $scope.pilih).then(function (result) {
@@ -40,7 +37,6 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
             });
         }
     };
-
     $scope.kalkulasi = function (jml, jml_po) {
         $scope.jml_po = jml_po;
         var selisih = jml_po - jml;
@@ -78,10 +74,9 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
             });
         }
     };
-
     $scope.cariBarang = function ($query, $po) {
         $scope.results = [];
-        if (typeof $scope.form.po != "undefined") {
+        if (typeof $scope.form.po != "undefined" && $scope.is_create == true) {
             Data.post('bbm/caribarang', {barang: $query, no_po: $po, listBarang: $scope.detBbm}).then(function (data) {
                 if ($scope.is_create == false) {
                     angular.forEach(data.data, function ($value, $key) {
@@ -92,8 +87,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
                     $scope.results = data.data;
                 }
             });
-        } else
-        if ($query.length >= 3) {
+        } else if ($query.length >= 3) {
             Data.post('bbm/caribarang', {barang: $query, no_po: $po, listBarang: $scope.detBbm}).then(function (data) {
                 if ($scope.is_create == false) {
                     angular.forEach(data.data, function ($value, $key) {
@@ -105,9 +99,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
                 }
             });
         }
-    }
-    ;
-
+    };
     $scope.getPo = function (form) {
         $scope.form.nm_supplier = form.nama_supplier;
         $scope.form.kd_supplier = form.kd_supplier;
@@ -120,14 +112,12 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
             });
         }
     };
-
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
         var limit = tableState.pagination.number || 10;
         var param = {offset: offset, limit: limit};
-
         if (tableState.sort.predicate) {
             param['sort'] = tableState.sort.predicate;
             param['order'] = tableState.sort.reverse;
@@ -140,10 +130,8 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
-
         $scope.isLoading = false;
     };
-
     $scope.create = function (form) {
         $scope.is_create = true;
         $scope.is_edit = true;
@@ -179,6 +167,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
     };
     $scope.view = function (form) {
         $scope.is_edit = true;
+        $scope.is_false = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.no_bbm;
         $scope.form = form;
@@ -218,7 +207,6 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
         $scope.is_view = false;
         $scope.err_jml = false;
     };
-
     $scope.delete = function (row) {
         if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
             Data.delete('bbm/delete/' + row.no_bbm).then(function (result) {
@@ -268,11 +256,9 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
     $scope.excel = function (id) {
         window.location = 'api/web/bbm/exceldet/' + id;
     };
-
     keyboardManager.bind('ctrl+s', function () {
         if ($scope.is_edit == true) {
             $scope.save($scope.form, $scope.detBbm);
         }
     });
-
 });

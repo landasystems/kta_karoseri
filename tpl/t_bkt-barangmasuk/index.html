@@ -263,37 +263,37 @@
             <table width="100%" style="height: 1.5 cm;">
                 <thead>
                     <tr>
-                        <td id="print_bbm" style="border: 1px #000 solid;width: 35%; font-size: 9pt; padding: 2px;">
+                        <td id="print_bbm" style="border: 1px #000 solid;width: 35%; padding: 2px;">
                             <table>
                                 <tr>
-                                    <td>Tanggal</td>
-                                    <td width="1">:</td>
-                                    <td>{{form.tgl_nota| date:"dd-MM-yyyy"}}</td>
+                                    <td id="print_bbm">Tanggal</td>
+                                    <td id="print_bbm" width="1">:</td>
+                                    <td id="print_bbm">{{form.tgl_nota| date:"dd-MM-yyyy"}}</td>
                                 </tr>
                                 <tr>
-                                    <td>No. BBM</td>
-                                    <td>:</td>
-                                    <td>{{form.no_bbm}}</td>
+                                    <td id="print_bbm">No. BBM</td>
+                                    <td id="print_bbm">:</td>
+                                    <td id="print_bbm">{{form.no_bbm}}</td>
                                 </tr>
                                 <tr>
-                                    <td>No. PO</td>
-                                    <td>:</td>
-                                    <td>{{form.no_po}}</td>
+                                    <td id="print_bbm">No. PO</td>
+                                    <td id="print_bbm">:</td>
+                                    <td id="print_bbm">{{form.no_po}}</td>
                                 </tr>
                             </table>
                         </td>
                         <td></td>
-                        <td style="border: 1px #000 solid; width: 62%; vertical-align: top; font-size: 9pt; padding: 2px;" id="print_bbm">
+                        <td style="border: 1px #000 solid; width: 62%; vertical-align: top; padding: 2px;" id="print_bbm">
                             <table>
                                 <tr>
-                                    <td>Dari</td>
-                                    <td width="1">:</td>
-                                    <td>{{form.nm_supplier}} - {{form.alamat_supplier}} </td>
+                                    <td id="print_bbm" width="30">Dari</td>
+                                    <td id="print_bbm" width="1">:</td>
+                                    <td id="print_bbm">{{form.nm_supplier}} - {{form.alamat_supplier}} </td>
                                 </tr>
                                 <tr>
-                                    <td>SJ</td>
-                                    <td width="1">:</td>
-                                    <td>{{form.surat_jalan}}</td>
+                                    <td id="print_bbm">SJ</td>
+                                    <td id="print_bbm" width="1">:</td>
+                                    <td id="print_bbm">{{form.surat_jalan}}</td>
                                 </tr>
                             </table>    
                         </td>
@@ -303,11 +303,11 @@
             <table width="100%" style="height: 5cm; margin-top: 3px; border: 1px #000 solid;  border-collapse: collapse;">
                 <thead>
                     <tr>
-                        <td style="width: 1cm; text-align: center; border-right: 1px #000 solid;border-bottom: 1px #000 solid; height: 10px;" class="print_bbm_td">No</td>
-                        <td style="width: 7cm; text-align: center; border-right: 1px #000 solid;border-bottom: 1px #000 solid; height: 10px;" class="print_bbm_td">Nama Barang</td>
-                        <td style="width: 2cm; text-align: center; border-right: 1px #000 solid;border-bottom: 1px #000 solid; height: 10px;" class="print_bbm_td">Qty</td>
-                        <td style="width: 3.5cm; text-align: center; border-right: 1px #000 solid;border-bottom: 1px #000 solid; height: 10px;" class="print_bbm_td">Kode Barang</td>
-                        <td style="width: 6cm; text-align: center;border-bottom: 1px #000 solid;height: 10px;" class="print_bbm_td">Keterangan</td>
+                        <th style="width: 0.5cm; height: 15px; vertical-align: middle;" align="center" class="print_bbm_td border-all">No</th>
+                        <th style="width: 7cm; height: 15px; vertical-align: middle;" align="center" class="print_bbm_td border-all">Nama Barang</th>
+                        <th style="width: 1cm; height: 15px; vertical-align: middle;" align="center" class="print_bbm_td border-all">Qty</th>
+                        <th style="width: 1.5cm; height: 15px; vertical-align: middle;" align="center" class="print_bbm_td border-all">Kode Barang</th>
+                        <th style="height: 15px; vertical-align: middle;" align="center" class="print_bbm_td border-all">Keterangan</th>
                     </tr>
                 </thead>
                 <tbody>

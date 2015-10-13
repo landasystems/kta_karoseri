@@ -257,7 +257,7 @@ class RekapController extends Controller {
                 ->join('LEFT JOIN', 'chassis', 'chassis.kd_chassis = vws.kd_chassis')
                 ->join('LEFT JOIN', 'model', 'model.kd_model = vws.kd_model')
                 ->join('LEFT JOIN', 'customer', 'customer.kd_cust = vws.kd_cust')
-                ->join('LEFT JOIN', 'serah_terima_in as sti', 'sti.no_spk = vws.no_spk')
+                ->join('LEFT JOIN', 'serah_terima_in as sti', 'sti.kd_titipan = vws.kd_titipan')
                 ->join('LEFT JOIN', 'spk', 'vws.no_spk = spk.no_spk')
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
                 ->where('tk.department="DPRT005" and wm.tgl_keluar IS NOT NULL')
@@ -287,10 +287,8 @@ class RekapController extends Controller {
                     $query->andFilterWhere(['like', 'customer.' . $key, $val]);
                 } elseif ($key == 'jenis') {
                     $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
-                } elseif ($key == 'merk') {
-                    $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
-                } elseif ($key == 'tipe') {
-                    $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
                 }
             }
         }
@@ -465,7 +463,7 @@ class RekapController extends Controller {
             $start = '';
             $end = '';
         }
-        
+
         $query->limit(null);
         $query->offset(null);
 
@@ -509,7 +507,7 @@ class RekapController extends Controller {
         foreach ($hari as $data) {
             $kerek[] = ['name' => date('d-m-Y', strtotime($data['tgl'])), 'y' => (int) $data['jumlah']];
         }
-        return json_encode(array('merk' => $aa, 'sales' => $asu, 'model' => $babi, 'hari' => $kerek,'start'=>$start, 'end'=>$end), JSON_PRETTY_PRINT);
+        return json_encode(array('merk' => $aa, 'sales' => $asu, 'model' => $babi, 'hari' => $kerek, 'start' => $start, 'end' => $end), JSON_PRETTY_PRINT);
     }
 
 }
