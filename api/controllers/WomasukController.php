@@ -93,34 +93,26 @@ class WomasukController extends Controller {
     }
 
     public function actionProyek() {
-        $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($_GET['kd']);
-        $aa = $_GET['kd'];
+        $params = $_REQUEST;
+        $filter_name = $params['kd'] . "-2" . date("y");
         $query = new Query;
-        $query->from('wo_masuk')
-                ->select('*')
-                ->orderBy('in_spk_marketing DESC')
-                ->where('year(in_spk_marketing) = "' . date("Y") . '" and no_wo like "%' . $aa . '%"')
+        $query->from('wo_masuk ')
+                ->select("no_wo")
+                ->where(['SUBSTR(no_wo,1,7)' => $filter_name])
+                ->orderBy('no_wo DESC')
                 ->limit(1);
-
         $command = $query->createCommand();
-        $asu = $command->queryall();
-
-
-        if (empty($asu)) {
-            $kode = $aa . date("y") . '0001';
-        } else {
-            $lastKode = substr($asu['no_wo'], -4) + 1;
-            $kode = $aa . date("y") . substr('000' . $lastKode, -4);
-//                $kode = 'NB-';
-        }
+        $models = $command->query()->read();
+        $kode_mdl = (substr($models['no_wo'], 7) + 1);
+//        $kode = $filter_name.substr('0000' . $kode_mdl, strlen($kode_mdl));
+        $kode = $filter_name . $kode_mdl;
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'code' => $kode));
+        echo json_encode(array('status' => 1, 'data' => $kode, 'hasil' => $models));
     }
 
     public function actionGetspk() {
         $params = json_decode(file_get_contents("php://input"), true);
-
+        Yii::error($params);
         if (!empty($params['spk']['no_spk'])) {
             $spk = $params['spk']['no_spk'];
         } else {
@@ -144,7 +136,14 @@ class WomasukController extends Controller {
         if (!empty($params['spk']['no_spk'])) {
             $jenis = $models['jenis'];
         } else {
-            $jenis = $params['jenis'];
+            $query2 = new Query;
+            $query2->from('view_wo_spk')
+                    ->where('nowo = "' . $params['no_wo'] . '"')
+                    ->select("jenis");
+            $command2 = $query2->createCommand();
+            $models2 = $command->query()->read();
+//            $jenis = (!empty($models2['jenis'])) ? $models2['jenis'] : $params['jenis'];
+            $jenis = $models2['jenis'];
         }
 
         // kode
@@ -895,7 +894,6 @@ class WomasukController extends Controller {
 
     public function actionSelect() {
         $params = json_decode(file_get_contents("php://input"), true);
-
         $model = $this->findModel($params['no_wo']);
         $data = $model->attributes;
         $query = new Query;
@@ -932,7 +930,15 @@ class WomasukController extends Controller {
             $data['titipan'] = (!empty($nowo)) ? $nowo->attributes : array();
             $data['titipan']['warna'] = (!empty($nowo)) ? $nowo->warna->attributes : array();
         }
-        if ($params['jenis'] == "Small Bus") {
+
+ $query2 = new Query;
+            $query2->from('view_wo_spk')
+                    ->where('nowo = "' . $params['no_wo'] . '"')
+                    ->select("jenis");
+            $command2 = $query2->createCommand();
+            $models2 = $command->query()->read();
+            $jenis = (!empty($models2['jenis'])) ? $models2['jenis'] : $params['jenis'];
+        if ($jenis == "Small Bus") {
             // eksterior
             $eksterior = new Query;
             $eksterior->from('small_eks')
@@ -1004,7 +1010,7 @@ class WomasukController extends Controller {
 
 
         //=================== EKTERIOR===================
-        if ($params['jenis'] == "Small Bus") {
+        if ($jenis == "Small Bus") {
             $table = 'small';
         } else {
             $table = 'mini';
@@ -1037,7 +1043,7 @@ class WomasukController extends Controller {
             $eks['lain2'] = $asi['lain2'];
         }
 //        ============= INTERIOR ===================
-        if ($params['jenis'] == "Small Bus") {
+        if ($jenis == "Small Bus") {
             $queryint = new Query;
             $queryint->from('small_int')
                     ->where("no_wo='" . $model['no_wo'] . "'")
@@ -1102,12 +1108,12 @@ class WomasukController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        \Yii::error($params);
+        Yii::error($params);
         $model = new Womasuk();
         $model->attributes = $params['womasuk'];
         $model->no_spk = $params['womasuk']['spk']['no_spk'];
         $model->kode = $params['womasuk']['kode'];
-//        $model->in_spk_marketing =date('Y-m-d', strtotime($params['womasuk']['tgl'])) ;
+        $model->tgl_kontrak = date('Y-m-d', strtotime($params['womasuk']['tgl_kontrak'])) ;
 
 
         if ($model->save()) {

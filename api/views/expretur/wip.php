@@ -1,7 +1,7 @@
 <?php
 //if (!isset($_GET['print'])) {
 //    header("Content-type: application/vnd-ms-excel");
-//    header("Content-Disposition: attachment; filename=excel-rekap-lapwomasuk.xls");
+//    header("Content-Disposition: attachment; filename=excel-rekap-wip.xls");
 //}
 ?>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
@@ -180,7 +180,7 @@ foreach ($models as $key => $val) {
                  <td class="border-all" style="font-size:8px"></td>
                  <td class="border-all" style="font-size:8px">' . (isset($data[$s['nowo']]['BAG0010']) ? $data[$s['nowo']]['BAG0010'] . ' %' : '') . '</td>
                  <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($hk[$s['nowo']]['BAG010']) ? $hk[$s['nowo']]['BAG010'] : '') . '</td>
-                     <td class="border-all" style="font-size:8px">' . (isset($end[$s['nowo']]['BAG011']) ? date('d-m-Y', strtotime($end[$s['nowo']]['BAG011'])) : '') . '</td>
+                     <td class="border-all" style="font-size:8px"></td>
                  <td class="border-all" style="font-size:8px"></td>';
 
             echo' </tr>

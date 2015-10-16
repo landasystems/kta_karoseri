@@ -62,13 +62,24 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
      Data.get('proyek/list').then(function(data) {
         $scope.proyeklist = data.proyek;
     });
-    $scope.getnw = function (form) {
-       
-          Data.get('womasuk/proyek?kd=' + form).then(function (data) {
-               console.log(data);
-            $scope.form.no_wo = data.code;
-        });
-    };
+//    $scope.getnw = function (form) {
+//       
+//          Data.get('womasuk/proyek?kd=' + form).then(function (data) {
+//               console.log(data);
+//            $scope.form.no_wo = data.code;
+//        });
+//    };
+    $scope.getnw = function (kode) {
+//        var kods = $scope.form.kd_titipan;
+//        var buat = $scope.is_create;
+//        if (buat == true) {
+            Data.get('womasuk/proyek', {kd: kode}).then(function (data) {
+                $scope.form.no_wo = data.data;
+            });
+//        } else {
+//            $scope.form.kd_titipan = kods;
+//        }
+    }
 
     $scope.cariSpk = function($query) {
         if ($query.length >= 3) {
@@ -185,13 +196,6 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         }
     };
     $scope.save = function(form, eks, inter) {
-
-        if ($scope.uploader.queue.length > 0) {
-            $scope.uploader.uploadAll();
-            form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
-        } else {
-            form.foto = '';
-        }
         var data = {
             womasuk: form,
             eksterior: eks,
@@ -223,7 +227,6 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
     };
     $scope.copyData = function(nowo, nowo_baru) {
         $scope.form = nowo;
-
         Data.post('womasuk/view/', nowo).then(function(data) {
             $scope.form = data.data;
             $scope.eks = data.eksterior;
@@ -288,7 +291,6 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.form.warna = data.data.titipan.warna.warna;
 
             $scope.getSpk(form);
-            console.log(data);
            
 
 
@@ -296,7 +298,6 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
     }
     $scope.getSpk = function(form, items) {
 //        form.no_spk = items.no_spk;
-
         Data.post('womasuk/getspk/', form).then(function(data) {
             form.merk = data.spk.merk;
             form.model_chassis = data.spk.model_chassis;
