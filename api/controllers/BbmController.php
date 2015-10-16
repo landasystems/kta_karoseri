@@ -381,6 +381,7 @@ class BbmController extends Controller {
                     $det->kd_barang = $val['barang']['kd_barang'];
                     $det->no_bbm = $model->no_bbm;
                     $det->no_po = $model->no_po;
+                    $det->no_po = $model->tgl_nota;
                     $det->save();
 
                     if (!empty($no_spp)) {
@@ -444,6 +445,7 @@ class BbmController extends Controller {
                 $det->kd_barang = $val['barang']['kd_barang'];
                 $det->no_bbm = $model->no_bbm;
                 $det->no_po = $model->no_po;
+                $det->no_po = $model->tgl_nota;
                 $det->save();
 
                 //update tanggal aktual spp
