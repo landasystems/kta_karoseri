@@ -15,7 +15,10 @@ body {
     font-family: Garamond,"Times New Roman", serif; 
     color: #000; 
     background: none; 
-    font-size: 14pt; }
+    font-size: 14pt; 
+    -webkit-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+}
 
 /* Headings */
 h1,h2,h3,h4,h5,h6 { page-break-after:avoid; }
@@ -174,14 +177,22 @@ span.label{width: 180px;display: inline-table;}
     letter-spacing: 1pt;
     margin: 0px;
     padding: 0px;
-    font-family: "Draft";        
+    font-family: "Calibri";        
 }
 #print_bbm{        
-    font-size: 8pt;      
-    /*letter-spacing: 1pt;*/
+    font-size: 7pt;      
+    letter-spacing: 1pt;
     margin: 0px;
     padding: 0px;
-    font-family: "Draft";     
+    font-family: "Calibri";     
+}
+#print_po{        
+    padding: 3px;
+    font-size: 8pt;    
+    letter-spacing: 1pt;
+    margin: 0px;
+    padding: 0px;
+    font-family: "Calibri";        
 }
 .print_bbk_td{
     padding: 0px;

@@ -238,22 +238,24 @@
                                         <center style="margin-top: 10px;"><h1>{{stok_sekarang}}</h1></center>
                                     </div>
                                 </div>
-                                <div class="row" style="margin-top: 10px;">
-                                    <table class="table table-stripped table-scroll" style="margin-bottom: 0px; padding-bottom: 0px; font-size: 12px; height: 150px; overflow-y: scroll">
+                                <div class="row table-outter" style="margin-top: 10px;">
+                                    <table class="table table-stripped table-scroll" >
                                         <thead>
                                             <tr>
-                                                <th width="25">Tanggal</th>
-                                                <th>Bagian</th>
-                                                <th>Barang</th>
-                                                <th width="10">Jml</th>
+                                                <th style="width:60px;">Tanggal</th>
+                                                <th style="width:200px;">PLK Kerja</th>
+                                                <th style="width:350px;">Barang</th>
+                                                <th style="width:70px;">Jml</th>
+                                                <th style="width:350px;">Bagian</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr ng-repeat="data in resultriwayat">
-                                                <td>{{data.tanggal| date:'dd/M/yyyy'}}</td>
+                                                <td>{{data.tanggal| date:'dd/M/yy'}}</td>
                                                 <td>{{data.jabatan}}</td>
                                                 <td>{{data.nm_barang}}</td>
                                                 <td>{{data.jml}}</td>
+                                                <td>{{data.karyawan}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -280,9 +282,9 @@
                                     <tr ng-repeat="detail in detailBbk">
                                         <td>
                                 <ui-select uiselect-autofocus="open" on-select="detail.satuan = detail.kd_barang.satuan; detailstok(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang)" ng-disabled="is_view" ng-model="detail.kd_barang" theme="bootstrap">
-                                    <ui-select-match>{{$select.selected.nm_barang}}</ui-select-match>
+                                    <ui-select-match><b>{{$select.selected.kd_barang}} |- </b>{{$select.selected.nm_barang}}</ui-select-match>
                                     <ui-select-choices refresh="listBarang($select.search, form.no_wo, form.kd_jab)" repeat="val in resultsbarang">
-                                        {{val.nm_barang}}
+                                        <b>{{val.kd_barang}} |- </b>{{val.nm_barang}}
                                     </ui-select-choices>
                                 </ui-select>
                                 </td>

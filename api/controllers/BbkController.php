@@ -73,7 +73,8 @@ class BbkController extends Controller {
                     ->join('LEFT JOIN', 'det_bbk', 'det_bbk.no_bbk = trans_bbk.no_bbk')
                     ->join('LEFT JOIN', 'barang', 'barang.kd_barang = det_bbk.kd_barang')
                     ->join('LEFT JOIN', 'tbl_jabatan', 'tbl_jabatan.id_jabatan = trans_bbk.kd_jab')
-                    ->select('trans_bbk.tanggal,tbl_jabatan.jabatan,barang.nm_barang, det_bbk.jml')
+                    ->join('LEFT JOIN', 'tbl_karyawan','tbl_karyawan.nik = trans_bbk.penerima')
+                    ->select('tbl_karyawan.nama as karyawan, trans_bbk.tanggal,tbl_jabatan.jabatan,barang.nm_barang, det_bbk.jml')
                     ->orderBy('trans_bbk.tanggal DESC')
                     ->where('trans_bbk.no_wo = "' . $params['no_wo']['no_wo'] . '" and trans_bbk.kd_jab = "' . $params['kd_jab']['id_jabatan'] . '"');
             $command = $query->createCommand();
@@ -218,7 +219,7 @@ class BbkController extends Controller {
                         ->select('b.saldo as stok, wm.no_wo as no_wo, b.kd_barang as kd_barang, '
                                 . 'b.nm_barang as nm_barang, b.satuan, tj.id_jabatan as kd_jabatan, '
                                 . 'tj.jabatan as bagian, dsb.qty as jml, dsb.ket as ket')
-                        ->where('b.nm_barang like "%' . $params['nama'] . '%" and wm.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_jab']['id_jabatan'] . '"');
+                        ->where('(b.nm_barang like "%' . $params['nama'] . '%" or b.kd_barang like "%' . $params['nama'] . '%" ) and wm.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_jab']['id_jabatan'] . '"');
             } else {
                 $query = new Query;
                 $query->from('det_additional_bom as dsb')
@@ -229,7 +230,7 @@ class BbkController extends Controller {
                         ->select('b.saldo as stok, tsbw.no_wo as no_wo, b.kd_barang as kd_barang, '
                                 . 'b.nm_barang as nm_barang, b.satuan, tj.id_jabatan as kd_jabatan, '
                                 . 'tj.jabatan as bagian, dsb.qty as jml, dsb.ket as ket')
-                        ->where('b.nm_barang like "%' . $params['nama'] . '%" and tsbw.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_jab']['id_jabatan'] . '"');
+                        ->where('(b.nm_barang like "%' . $params['nama'] . '%" or b.kd_barang like "%' . $params['nama'] . '%" ) and tsbw.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_jab']['id_jabatan'] . '"');
             }
 
             $query->andWhere(['NOT IN', 'b.kd_barang', $kdBrg]);
@@ -286,7 +287,7 @@ class BbkController extends Controller {
             $query->from('barang')
                     ->select("*")
                     ->orderBy('nm_barang ASC')
-                    ->where('nm_barang like "%' . $params['nama'] . '%"');
+                    ->where('nm_barang like "%' . $params['nama'] . '%" or kd_barang like "%' . $params['nama'] . '%" ');
 
             $command = $query->createCommand();
             $models = $command->queryAll();
