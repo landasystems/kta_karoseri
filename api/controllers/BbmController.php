@@ -69,8 +69,11 @@ class BbmController extends Controller {
         foreach ($params['listBarang'] as $val) {
             $kdBrg[] = isset($val['kd_barang']) ? $val['kd_barang'] : '';
         }
+        $models = array();
         $barang = isset($params['barang']) ? $params['barang'] : '';
         $po = isset($params['no_po']) ? $params['no_po'] : '';
+
+        //=================== AMBIL BARANG PO =====================//
         $query = new Query;
         $query->from('detail_po')
                 ->join('JOIN', 'barang', 'barang.kd_barang = detail_po.kd_barang')
@@ -84,6 +87,7 @@ class BbmController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
 
+        //===================== AMBIL JUMLAH PO PER BARANG ==================//
         $data = array();
         $i = 0;
         foreach ($models as $key => $val) {

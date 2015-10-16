@@ -604,6 +604,7 @@ class PoController extends Controller {
         $query = new Query;
         $query->from('trans_po')
                 ->join('LEFT JOIN', 'supplier', 'trans_po.suplier=supplier.kd_supplier')
+                ->orderBy('nota DESC')
                 ->select("*")
                 ->where(['like', 'nota', $params['nama']])
                 ->limit(10);

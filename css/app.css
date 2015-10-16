@@ -10,14 +10,10 @@
 .table-scroll th{
     padding:2px 2px; 
     font-size: 10px;
-    /*font-size:15px; color:#444;*/ 
-    /*background:#66C2E0;*/
 }
 .table-scroll td{
     font-size: 10px;
     padding:2px 2px; 
-    /*padding:5px 10px;*/ 
-    /*height:35px;*/
 }
 
 .table-outter { overflow-x: scroll; }
