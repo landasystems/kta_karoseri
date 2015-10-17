@@ -95,25 +95,25 @@
     <!--FORM-->
 
     <div class="wrapper-md" ng-show="is_edit">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-md-6">
-                        {{formtitle}}
-                    </div>
-                    <div class="col-md-6">
-                        <div class="pull-right dropdown" dropdown="" ng-show="is_view">
-                            <button type="button"  class="btn btn-primary" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">&nbsp;&nbsp; Laporan SPP Rutin <span class="caret"></span></button>
-                            <ul class="dropdown-menu" style="width: 185px;background-color: #F7F7F7;">
-                                <li><a href="#" ng-click="excel(form.no_spp)">Excel</a></li>
-                                <li><a href="#" ng-click="print(form.no_spp)">Print</a></li>
-                            </ul>
-                        </div>  
+        <form name="landaform" class="form-horizontal form-validation ">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{formtitle}}
+                        </div>
+                        <div class="col-md-6">
+                            <div class="pull-right dropdown" dropdown="" ng-show="is_view">
+                                <button type="button"  class="btn btn-primary" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">&nbsp;&nbsp; Laporan SPP Rutin <span class="caret"></span></button>
+                                <ul class="dropdown-menu" style="width: 185px;background-color: #F7F7F7;">
+                                    <li><a href="#" ng-click="excel(form.no_spp)">Excel</a></li>
+                                    <li><a href="#" ng-click="print(form.no_spp)">Print</a></li>
+                                </ul>
+                            </div>  
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="panel-body">
-                <form name="landaform" class="form-horizontal form-validation ">
+                <div class="panel-body">
                     <div class="col-md-6 col-sm-12">
                         <div class="img-thumbnail" style="padding: 20px;">
                             <div class="form-group">
@@ -144,7 +144,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-sm-12" ng-show="is_create == true">
+                    <div class="col-md-6 col-sm-12" ng-show="is_create == false && is_view == false">
                         <div class="img-thumbnail" style="padding: 20px;">
                             <h4 class="page-header" style="margin-top: 0px;">Pengisian Tanggal SPP</h4>
                             <div class="form-group">
@@ -197,7 +197,7 @@
                                     <tr ng-repeat="detail in sppDet">
                                         <td width="10">
                                             <label class="i-checks">
-                                                <input type="checkbox" ng-model="detail.centang" ><i></i> 
+                                                <input type="checkbox" ng-model="detail.centang" ng-click="checkedIndex(detail)"><i></i> 
                                             </label>
                                         </td>
                                         <td align="center">
@@ -233,13 +233,14 @@
                             </table>
                         </div>
                     </div>
-                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                </div>
+                <footer class="panel-footer text-right bg-light lter">
                     <div align="center">
-                        <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
-                        <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, sppDet)">&nbsp;Simpan Perubahan</button>
+                        <button type="submit" class="btn btn-default btn-lg fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
+                        <button type="submit" class="btn btn-primary btn-lg fa fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, sppDet)">&nbsp;Simpan Perubahan</button>
                     </div>
-                </form>
+                </footer>
             </div>
-        </div>
+        </form>
     </div>
 </div>

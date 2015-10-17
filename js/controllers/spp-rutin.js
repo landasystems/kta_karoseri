@@ -246,11 +246,31 @@ app.controller('sppRutinCtrl', function ($scope, Data, toaster, $modal, keyboard
                 $value.centang = false;
             }
         })
+    };
+
+    $scope.chckedIndexs = [];
+    $scope.checkedIndex = function (detail) {
+        if ($scope.chckedIndexs.indexOf(detail) === -1) {
+            $scope.chckedIndexs.push(detail);
+        }
+        else {
+            $scope.chckedIndexs.splice($scope.chckedIndexs.indexOf(detail), 1);
+        }
     }
 
     keyboardManager.bind('ctrl+s', function () {
         if ($scope.is_edit == true && $scope.is_view == false) {
             $scope.save($scope.form, $scope.sppDet);
+        }
+    });
+
+    keyboardManager.bind('delete', function () {
+        if ($scope.is_edit == true && $scope.is_view == false) {
+            angular.forEach($scope.chckedIndexs, function (value, index) {
+                var index = $scope.sppDet.indexOf(value);
+                $scope.sppDet.splice($scope.sppDet.indexOf(value), 1);
+            });
+            $scope.chckedIndexs = [];
         }
     });
 

@@ -1,6 +1,11 @@
 app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManager) {
 //init data
     var tableStateRef;
+    $scope.detailstok = function (sisa, stok) {
+        $scope.sisa_pengambilan = sisa;
+        $scope.stok_sekarang = stok;
+    }
+
     $scope.refresh = function () {
         $scope.jenis_kmp = [];
         $scope.bagian = '-';
@@ -27,9 +32,9 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             }];
         $scope.detailstok(0, 0);
     };
-    
+
     $scope.refresh();
-    
+
     $scope.lock = function (form) {
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
             Data.post('bbk/lock/', {id: form}).then(function (result) {
@@ -43,7 +48,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             });
         }
     }
-    
+
     $scope.unlock = function (form) {
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
             Data.post('bbk/unlock/', {id: form}).then(function (result) {
@@ -57,7 +62,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             });
         }
     }
-    
+
     $scope.bukaPrint = function (form) {
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
             Data.post('bbk/bukaprint/', {no_bbk: form}).then(function (result) {
@@ -70,13 +75,13 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             });
         }
     }
-    
+
     $scope.simpanPrint = function (no_bbk) {
         Data.get('bbk/print', {no_bbk: no_bbk}).then(function (data) {
             $scope.is_print = 1;
         });
     }
-    
+
     $scope.modal = function (form) {
         var modalInstance = $modal.open({
             templateUrl: 'tpl/t_bkt-barangkeluar/modal.html',
@@ -85,11 +90,9 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             resolve: {
                 form: function () {
                     return form;
-                }
-            }
+                }}
         });
     }
-    
     $scope.kalkulasi = function (sisa, stok, jml_keluar) {
         if (typeof $scope.form.no_wo != "undefined") {
             var sSisa = sisa - jml_keluar;
@@ -116,12 +119,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             $scope.stok_sekarang = stok - jml_keluar;
         }
     }
-    
-    $scope.detailstok = function (sisa, stok) {
-        $scope.sisa_pengambilan = sisa;
-        $scope.stok_sekarang = stok;
-    }
-    
+
     $scope.cariWo = function ($query) {
         Data.get('wo/wospk', {nama: $query}).then(function (data) {
             $scope.results = data.data;
@@ -166,9 +164,9 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
 
     $scope.addDetail = function () {
         $scope.autoSelect = true;
-        if (typeof $scope.detailBbk[0].ket == "undefined" || $scope.detailBbk[0].ket == "") {
-            toaster.pop('error', "Keterangan tidak boleh kosong");
-        } else {
+//        if (typeof $scope.detailBbk[0].ket == "undefined" || $scope.detailBbk[0].ket == "") {
+//            toaster.pop('error', "Keterangan tidak boleh kosong");
+//        } else {
             if ($scope.err_pengambilan == false) {
                 $scope.detailBbk.unshift({
                     kd_barang: '',
@@ -178,7 +176,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             } else {
                 toaster.pop('error', "Sisa pengambilan bahan telah habis");
             }
-        }
+//        }
     };
     $scope.removeRow = function (paramindex) {
         var comArr = eval($scope.detailBbk);
@@ -282,7 +280,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     };
 
     $scope.save = function (form, detail) {
-        if ($scope.err_pengambilan == false) {
+        if ($scope.err_pengambilan == false && form.penerima == '') {
             var data = {
                 bbk: form,
                 detailBbk: detail,
@@ -305,6 +303,8 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                     $scope.create($scope.form);
                 }
             });
+        } else if (form.penerima != '') {
+            toaster.pop('error', "Penerima tidak boleh kosong");
         } else {
             toaster.pop('error', "Semua data harus benar");
         }
