@@ -73,7 +73,7 @@ class BbkController extends Controller {
                     ->join('LEFT JOIN', 'det_bbk', 'det_bbk.no_bbk = trans_bbk.no_bbk')
                     ->join('LEFT JOIN', 'barang', 'barang.kd_barang = det_bbk.kd_barang')
                     ->join('LEFT JOIN', 'tbl_jabatan', 'tbl_jabatan.id_jabatan = trans_bbk.kd_jab')
-                    ->join('LEFT JOIN', 'tbl_karyawan','tbl_karyawan.nik = trans_bbk.penerima')
+                    ->join('LEFT JOIN', 'tbl_karyawan', 'tbl_karyawan.nik = trans_bbk.penerima')
                     ->select('tbl_karyawan.nama as karyawan, trans_bbk.tanggal,tbl_jabatan.jabatan,barang.nm_barang, det_bbk.jml, barang.satuan')
                     ->orderBy('trans_bbk.tanggal DESC')
                     ->where('trans_bbk.no_wo = "' . $params['no_wo']['no_wo'] . '" and trans_bbk.kd_jab = "' . $params['kd_jab']['id_jabatan'] . '"');
@@ -470,6 +470,7 @@ class BbkController extends Controller {
                 ->join('JOIN', 'barang', 'barang.kd_barang = det_bbk.kd_barang')
                 ->select('det_bbk.no_bbk, barang.nm_barang');
         $query->andFilterWhere(['like', 'barang.nm_barang', $patern]);
+        $query->orFilterWhere(['=', 'barang.kd_barang', $patern]);
 
         $command = $query->createCommand();
         $models = $command->queryAll();
