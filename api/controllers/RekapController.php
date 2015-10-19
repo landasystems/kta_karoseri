@@ -170,10 +170,10 @@ class RekapController extends Controller {
                 ->join('JOIN', 'chassis', 'chassis.kd_chassis = vws.kd_chassis')
                 ->join('JOIN', 'model', 'model.kd_model = vws.kd_model')
                 ->join('JOIN', 'customer', 'customer.kd_cust = vws.kd_cust')
-                ->join('JOIN', 'serah_terima_in as sti', 'sti.no_spk = vws.no_spk')
+                ->join('LEFT JOIN', 'serah_terima_in as sti', 'sti.no_spk = vws.no_spk')
                 ->join('JOIN', 'spk', 'vws.no_spk = spk.no_spk')
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                ->where('tk.department="DPRT005" and wm.tgl_keluar IS NOT NULL')
+                ->where(' wm.tgl_keluar IS NOT NULL')
                 ->orderBy($sort)
                 ->select("sti.tgl_terima, customer.provinsi, customer.nm_customer, chassis.jenis, spk.no_spk, vws.no_wo, sti.kd_titipan, wm.tgl_keluar ,
                         chassis.merk, chassis.tipe, model.model, tk.nama, spk.jml_unit");

@@ -130,7 +130,7 @@ class DeliveryController extends Controller {
                 ->One();
 //        Yii::error($cek);
         if (!empty($cek)) {
-            $kode_mdl = (substr($models['no_delivery'], -4) + 1);
+            $kode_mdl = (substr($models['no_delivery'], -3) + 1);
             $kode = substr('0000' . $kode_mdl, strlen($kode_mdl));
             $kode = "DU-" . date("y") . $kode;
         } else {
