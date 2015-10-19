@@ -116,6 +116,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         });
 
     };
+    
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
@@ -195,6 +196,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
             });
         }
     };
+    
     $scope.save = function(form, eks, inter) {
         var data = {
             womasuk: form,
@@ -225,6 +227,11 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
             });
         }
     };
+    $scope.print = function (no_wo) {
+        Data.get('womasuk/sqlprint/',  {kd: no_wo}).then(function (data) {
+            window.open('api/web/womasuk/print');
+        });
+    };
     $scope.copyData = function(nowo, nowo_baru) {
         $scope.form = nowo;
         Data.post('womasuk/view/', nowo).then(function(data) {
@@ -232,7 +239,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.eks = data.eksterior;
             $scope.inter = data.interior[0];
             $scope.form.warna = data.det.warna;
-            $scope.form.no_spk = '234';
+//            $scope.form.no_spk = data;
             $scope.form.customer = data.det.customer;
             $scope.form.sales = data.det.sales;
             $scope.form.pemilik = data.det.pemilik;
@@ -242,7 +249,6 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.form.model = data.det.model;
             $scope.form.no_rangka = data.det.no_rangka;
             $scope.form.no_mesin = data.det.no_mesin;
-            $scope.form.jenis = data.det.jenis;
             $scope.form.jenis = data.det.jenis;
             $scope.form.no_spk = data.data.no_spk.as;
             $scope.form.no_wo = data.code;
