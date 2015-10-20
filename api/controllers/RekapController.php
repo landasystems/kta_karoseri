@@ -176,7 +176,7 @@ class RekapController extends Controller {
                 ->where(' wm.tgl_keluar IS NOT NULL')
                 ->orderBy($sort)
                 ->select("sti.tgl_terima, customer.provinsi, customer.nm_customer, chassis.jenis, spk.no_spk, vws.no_wo, sti.kd_titipan, wm.tgl_keluar ,
-                        chassis.merk, chassis.tipe, model.model, tk.nama, spk.jml_unit");
+                        chassis.merk, chassis.tipe, model.model, tk.nama, spk.jml_unit,vws.no_chassis,vws.no_mesin");
 //filter
 
         if (isset($params['filter'])) {
