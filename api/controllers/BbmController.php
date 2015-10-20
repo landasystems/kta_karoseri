@@ -171,6 +171,26 @@ class BbmController extends Controller {
         echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
+    public function searchBrg($id) {
+        $patern = $id;
+        $query = new Query;
+        $query->from('det_bbm')
+                ->join('JOIN', 'barang', 'barang.kd_barang = det_bbm.kd_barang')
+                ->select('det_bbm.no_bbm, barang.nm_barang');
+        $query->andFilterWhere(['like', 'barang.nm_barang', $patern]);
+        $query->orFilterWhere(['=', 'barang.kd_barang', $patern]);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $data = array();
+        foreach ($models as $key) {
+            $data[] = $key['no_bbm'];
+        }
+
+        $this->setHeader(200);
+        return $data;
+    }
+
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
@@ -210,7 +230,14 @@ class BbmController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
+                if ($key == 'barang') {
+                    $brg = $this->searchBrg($val);
+                    foreach ($brg as $brg_val) {
+                        $query->orFilterWhere(['=', 'tb.no_bbm', $brg_val]);
+                    }
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+                }
             }
         }
 

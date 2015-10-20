@@ -252,10 +252,10 @@
                                         <tbody>
                                             <tr ng-repeat="data in resultriwayat">
                                                 <td>{{data.tanggal| date:'dd/M/yy'}}</td>
-                                                <td>{{data.jabatan}}</td>
+                                                <td>{{data.karyawan}}</td>
                                                 <td>{{data.nm_barang}}</td>
                                                 <td>{{data.jml}} {{data.satuan}}</td>
-                                                <td>{{data.karyawan}}</td>
+                                                <td>{{data.jabatan}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -328,32 +328,78 @@
     </div>
 
     <div id="printArea" ng-show="is_view">
+        <style>
+            /*            @page {
+                            size: A5;
+                            margin: 0;
+                        }*/
+
+            @media screen {
+                table#footer_wrapper {
+                    display: none;
+                }
+            }
+
+            @media print {
+                tfoot { visibility: hidden; }
+
+                table#footer_wrapper {
+                    margin: 0px 2px 0px 7px;
+                    position: fixed;
+                    bottom: 0;
+                }
+
+                table#footer_content {
+                    font-weight: bold;
+                }
+                tfoot { visibility: hidden; }
+
+                div#header_wrapper {
+                    margin: 0px 2px 0px 7px;
+                    position: fixed;
+                    top: 0cm;
+                }
+
+                div#header_wrapper {
+                    font-weight: bold;
+                }
+
+                div#body_wrapper {
+                    margin: 0px 2px 0px 7px;
+                    position: fixed;
+                    top: 1.3cm;
+                }
+            }
+
+        </style>
         <!--<div style="width: 11.1cm; margin: 0px;">-->
         <div style="width: 9.1cm; margin: 0px;">
             <!--<table style="width: 11.1cm; height: 1cm;">-->
-            <table style="width: 9.1cm; height: 0.5cm; padding: 0px">
-                <tr>
-                    <td width="50%" id="print_bbk">
-                        PT. KARYA TUGAS ANDA <br>
-                        Sukorejo - Pasuruan
-                    </td>
-                    <td valign="top" style="text-align: right; font-size: 6pt;" id="print_bbk">
-                        NO DOC FR-WHS-004-REV.00
-                    </td>
-                </tr>
-            </table>
-            <center id="print_bbk">
-                *** BUKTI BARANG KELUAR ***
-            </center>
-            <table style="width: 9.1cm; margin-top: 5px;height: 0.4cm;">
-                <tr id="print_bbk">
-                    <td id="print_bbk" width="30%">NO WO {{form.no_wo.no_wo}}</td>
-                    <td id="print_bbk" width="30%">No BBK {{form.no_bbk}}</td>
-                    <td id="print_bbk">{{form.kd_jab.jabatan}}</td>
-                </tr>
-            </table>
-            <div>
-                <table width="100%" style="border-collapse: collapse;height:4cm;">
+            <div id="header_wrapper">
+                <table style="width: 9.1cm; height: 0.5cm; padding: 0px">
+                    <tr>
+                        <td width="50%" id="print_bbk">
+                            PT. KARYA TUGAS ANDA <br>
+                            Sukorejo - Pasuruan
+                        </td>
+                        <td valign="top" style="text-align: right; font-size: 6pt;" id="print_bbk">
+                            NO DOC FR-WHS-004-REV.00
+                        </td>
+                    </tr>
+                </table>
+                <center id="print_bbk">
+                    *** BUKTI BARANG KELUAR ***
+                </center>
+                <table style="width: 9.1cm; margin-top: 5px;height: 0.4cm;">
+                    <tr id="print_bbk">
+                        <td id="print_bbk" width="30%">NO WO {{form.no_wo.no_wo}}</td>
+                        <td id="print_bbk" width="30%">No BBK {{form.no_bbk}}</td>
+                        <td id="print_bbk">{{form.kd_jab.jabatan}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div id="body_wrapper">
+                <table style="width: 9.1cm; border-collapse: collapse;height:4cm;">
                     <thead>
                         <tr style="height:10pt; border-top: 1px #000 solid; border-bottom: 1px #000 solid;">
                             <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 0.7cm;" align="center">No.</td>
@@ -382,11 +428,11 @@
                     </tr>
                 </table>
             </div>
-            <table style="width: 9.1cm; margin-bottom: 0px;">
+            <table style="width: 9.1cm; margin-bottom: 0px;" id="footer_wrapper">
                 <tr>
-                    <td width="40%"></td>
-                    <td width="6%"></td>
-                    <td width="47%" align="center" id="print_bbk">Sukorejo, {{tgl_Print| date}}</td>
+                    <td width="45%"></td>
+                    <td width="10%"></td>
+                    <td width="45%" align="center" id="print_bbk">Sukorejo, {{tgl_Print| date}}</td>
                 </tr>
                 <tr>
                     <td align="center" id="print_bbk">Dikeluarkan Oleh :</td>
