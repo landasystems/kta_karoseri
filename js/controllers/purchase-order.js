@@ -330,7 +330,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
                     toaster.pop('error', "Terjadi Kesalahan", result.errors);
                 } else {
                     $scope.is_edit = false;
-                    $scope.view(result.data.nota);
+                    $scope.view(result.data);
                     toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
                 }
             });

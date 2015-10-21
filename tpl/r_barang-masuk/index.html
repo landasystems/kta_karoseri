@@ -26,7 +26,14 @@
                                 </ul>
                             </div>
                             <div class="pull-right dropdown" style="margin-top: 0px" dropdown="">
-                                <button type="button" class="btn btn-success" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Barang Masuk <span class="caret"></span></button>
+                                <button type="button" class="btn btn-warning" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. BBM Cash / Kredit<span class="caret"></span></button>
+                                <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 260px;">
+                                    <li><a href="#" ng-click="print2()">Print</a></li>
+                                    <li><a href="#" ng-click="excel2()">Export Excel</a></li>
+                                </ul>
+                            </div>
+                            <div class="pull-right dropdown" style="margin-top: 0px" dropdown="">
+                                <button type="button" class="btn btn-success" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Barang Masuk<span class="caret"></span></button>
                                 <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 260px;">
                                     <li><a href="#" ng-click="print()">Print</a></li>
                                     <li><a href="#" ng-click="excel()">Export Excel</a></li>
@@ -74,9 +81,9 @@
                             <div class="form-group">
                                 <div class="control-group">
                                     <div class="col-sm-4">
-                                        <select st-search="bayar" class="form-control">
+                                        <select st-search="bayar" class="form-control" ng-model="bayar">
                                             <option value="">.:Pilih Jenis Pembayaran:.</option>
-                                            <option value="0">LUNAS</option>
+                                            <option value="0">CASH</option>
                                             <option value="1">KREDIT</option>
                                         </select>
                                     </div>

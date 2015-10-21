@@ -5,7 +5,13 @@
          
 -------------------------------------------------------------- */
 @media print {
-    .page-break	{ display: block; page-break-before: always; }
+    .page-break	{ 
+        display: block; 
+        page-break-before: always; }
+    body{
+        -webkit-transform-origin: 0 0;
+        -moz-transform-origin: 0 0;
+    }
 }
 body { 
     width:100% !important;
@@ -173,11 +179,13 @@ span.label{width: 180px;display: inline-table;}
 
 #print_bbk{        
     padding: 0px;
-    font-size: 6pt;    
-    letter-spacing: 1pt;
+    font-size: 10pt;    
+    /*letter-spacing: 1pt;*/
     margin: 0px;
     padding: 0px;
-    font-family: "Calibri";        
+    font-family: "Arial";        
+    -webkit-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
 }
 #print_bbm{        
     font-size: 7pt;      
@@ -196,15 +204,21 @@ span.label{width: 180px;display: inline-table;}
 }
 .print_bbk_td{
     padding: 0px;
-    font-size: 7pt;
+    font-size: 10pt;    
+    /*letter-spacing: 1pt;*/
+    margin: 0px;
+    padding: 0px;
+    font-family: "Arial";        
     vertical-align: top;
-    font-family: "Draft";      
+    -webkit-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+
 }
 .print_bbm_td{
     padding: 2px;
     font-size: 7pt;
     vertical-align: top;
-    font-family: "Draft"; 
+    font-family: "Calibri"; 
 }
 
 .border-left {

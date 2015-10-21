@@ -45,7 +45,7 @@
                                             <table>
                                                 <tr>
                                                     <td><input type="button" class="btn btn-primary" value="Tampilkan" ng-click="view(form)"></td>
-                                                    <td>
+<!--                                                    <td>
                                                         <div class="pull-left dropdown" style="margin-top: 0px" dropdown="">
                                                             <button type="button" class="btn btn-info" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Stok Bahan Mingguan V 1<span class="caret"></span></button>
                                                             <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 269px;">
@@ -53,10 +53,10 @@
                                                                 <li><a href="#" ng-click="excel(form)">Export Excel</a></li>
                                                             </ul>
                                                         </div>
-                                                    </td>
+                                                    </td>-->
                                                     <td>
                                                         <div class="pull-left dropdown" style="margin-top: 0px" dropdown="">
-                                                            <button type="button" class="btn btn-warning" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Stok Bahan Mingguan V 2<span class="caret"></span></button>
+                                                            <button type="button" class="btn btn-warning" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Stok Bahan Mingguan<span class="caret"></span></button>
                                                             <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 269px;">
                                                                 <li><a href="#" ng-click="printminggu(form)">Print</a></li>
                                                                 <li><a href="#" ng-click="excelminggu(form)">Export Excel</a></li>
@@ -108,7 +108,7 @@
                             <td>{{row.saldo_awal}}</td>
                             <td>{{row.stok_masuk}}</td>
                             <td>{{row.stok_keluar}}</td>
-                            <td>{{row.saldo_akhir}}</td>
+                            <td>{{(row.saldo_awal + row.stok_masuk * 1) - row.stok_keluar}}</td>
                         </tr>
                         <tr>
                             <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="9"></td>
