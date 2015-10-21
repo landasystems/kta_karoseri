@@ -309,7 +309,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     };
 
     $scope.save = function (form, detail) {
-        if ($scope.err_pengambilan == false && form.penerima != '') {
+        if ($scope.err_pengambilan == false && (typeof form.penerima && form.penerima != '')) {
             var data = {
                 bbk: form,
                 detailBbk: detail,
@@ -332,7 +332,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                     $scope.create($scope.form);
                 }
             });
-        } else if (form.penerima == '') {
+        } else if (typeof form.penerima == 'undefined' || form.penerima == '') {
             toaster.pop('error', "Penerima tidak boleh kosong");
         } else {
             toaster.pop('error', "Semua data harus benar");
@@ -382,7 +382,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
         });
     };
     keyboardManager.bind('ctrl+s', function () {
-        if ($scope.is_edit == true) {
+        if ($scope.is_create == true) {
             $scope.save($scope.form, $scope.detailBbk);
         }
     });
