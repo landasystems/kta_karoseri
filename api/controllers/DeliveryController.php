@@ -116,26 +116,18 @@ class DeliveryController extends Controller {
     }
 
     public function actionKode() {
+        $filter_name = "DU-".date("y");
         $query = new Query;
         $query->from('delivery')
-                ->select('*')
+                ->select("no_delivery")
+                ->where(['SUBSTR(no_delivery,1,5)' => $filter_name])
                 ->orderBy('no_delivery DESC')
                 ->limit(1);
-
         $command = $query->createCommand();
         $models = $command->query()->read();
-
-        $cek = Delivery::find()
-                ->where('no_delivery = "DU-' . date("y") . '0001"')
-                ->One();
-//        Yii::error($cek);
-        if (!empty($cek)) {
-            $kode_mdl = (substr($models['no_delivery'], -3) + 1);
-            $kode = substr('0000' . $kode_mdl, strlen($kode_mdl));
-            $kode = "DU-" . date("y") . $kode;
-        } else {
-            $kode = "DU-" . date("y") . '0001';
-        }
+        $kode_mdl = (substr($models['no_delivery'], 5) + 1);
+//        $kode = $filter_name.substr('0000' . $kode_mdl, strlen($kode_mdl));
+        $kode = $filter_name.$kode_mdl;
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'kode' => $kode));

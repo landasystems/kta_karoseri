@@ -1,9 +1,9 @@
 
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
-<table style="border-collapse: collapse; font-size: 11.5px;margin-top: 0px;" width="100%"  border="1">
+<table style="border-collapse: collapse; font-size: 11.5px;margin-top: 0px;text-decoration-color: #000000" width="100%"  border="1">
     <tr>
-        <td colspan="5"><b> <div style="text-transform: uppercase;text-align: right;margin-right: 20px">WORK ORDER {{form.jenis}}</div></b></td>
-        <td style="text-align: right;margin-right: 10px">FR-PPC-003 Rev 02</td>
+        <td colspan="5"><b> <div style="text-transform: uppercase;text-align: right;margin-right: 20px">WORK ORDER <?php echo $models['jenis'] ?></div></b></td>
+        <td style="text-align: right;">FR-PPC-003 Rev 02</td>
     </tr>
     <tr>
         <td style=" border-right: 1px #000 solid;border-left: 1px #000 solid;border-bottom: 1px #000 solid;border-top: 1px #000 solid;" colspan="6"><b>I. DATA UNIT</b></td>
@@ -12,25 +12,25 @@
         <td style="border-bottom: 1px solid #000000;">No WO</td>
         <td style="border-bottom: 1px solid #000000;" colspan="2">: <b><?php echo $models['no_wo'] ?></b></td>
         <td style="border-bottom: 1px solid #000000;">Model</td>
-        <td colspan="2" style="border-bottom: 1px solid #000000;">: <?php echo $models['model'] ?></td>
+        <td colspan="2" style="border-right: 1px #000 solid;border-bottom: 1px solid #000000;">: <?php echo $models['model'] ?></td>
     </tr>
     <tr>
         <td style="border-bottom: 1px solid #000000;">Customer</td>
         <td colspan="2" style="border-bottom: 1px solid #000000;">: <?php echo $models['nm_customer'] ?></td>
         <td style="border-bottom: 1px solid #000000;">No.Rangka</td>
-        <td colspan="2" style="border-bottom: 1px solid #000000;">: <?php echo $models['no_chassis'] ?></td>
+        <td colspan="2" style="border-right: 1px #000 solid;border-bottom: 1px solid #000000;">: <?php echo $models['no_chassis'] ?></td>
     </tr>
     <tr>
         <td style="border-bottom: 1px solid #000000;">Merk</td>
         <td colspan="2" style="border-bottom: 1px solid #000000;">: <?php echo $models['merk'] ?></td>
         <td style="border-bottom: 1px solid #000000;">No Mesin</td>
-        <td colspan="2" style="border-bottom: 1px solid #000000;">: <?php echo $models['no_mesin'] ?></td>
+        <td colspan="2" style="border-right: 1px #000 solid;border-bottom: 1px solid #000000;">: <?php echo $models['no_mesin'] ?></td>
     </tr>
     <tr>
         <td style="border-bottom: 1px solid #000000;">type</td>
         <td colspan="2" style="border-bottom: 1px solid #000000;">: <?php echo $models['tipe'] ?></td>
         <td style="border-bottom: 1px solid #000000;">Tgl Masuk</td>
-        <td colspan="2" style="border-bottom: 1px solid #000000;">: <?php echo $models['tgl_terima'] ?></td>
+        <td colspan="2" style="border-right: 1px #000 solid;border-bottom: 1px solid #000000;">: <?php echo $models['tgl_terima'] ?></td>
     </tr>
     <tr>
         <td colspan="6">
@@ -184,30 +184,30 @@
                     $int = \app\models\Smallint::find()->where('no_wo="' . $models['no_wo'] . '"')->one();
                     ?>
                     <tr style="padding: 0px">
-                        <td style="padding: 1px;text-align: center;width: 1%"><b><b>I</b></b></td>
-                        <td style="padding: 1px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Plavon</b></td>
-                        <td style="padding: 1px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15% ">&nbsp;<?php echo $int['plavon'] ?></td>
+                        <td style="padding: 0px;text-align: center;width: 1%"><b><b>I</b></b></td>
+                        <td style="padding: 0px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Plavon</b></td>
+                        <td style="padding: 0px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15% ">&nbsp;<?php echo $int['plavon'] ?></td>
                         <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%"></td>
                         <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%"></td>
                     </tr>
                     <tr style="padding: 0px;">
-                        <td style="padding: 1px;text-align: center;width: 1%"><b>N</b></td>
-                        <td style="padding: 1px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Bagasi Dalam</b></td>
-                        <td style="padding: 1px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;<?php echo $int['bagasi_dalam'] ?></td>
+                        <td style="padding: 0px;text-align: center;width: 1%"><b>N</b></td>
+                        <td style="padding: 0px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Bagasi Dalam</b></td>
+                        <td style="padding: 0px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;<?php echo $int['bagasi_dalam'] ?></td>
                         <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                         <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                     </tr>
                     <tr style="padding: 0px">
-                        <td  style="padding: 1px;text-align: center;width: 1%"><b>T</b></td>
-                        <td style="padding: 1px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Duchting</b></td>
-                        <td style="padding: 1px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;<?php echo $int['duchting_louver'] ?></td>
+                        <td  style="padding:0px;text-align: center;width: 1%"><b>T</b></td>
+                        <td style="padding: 0px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Duchting</b></td>
+                        <td style="padding: 0px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;<?php echo $int['duchting_louver'] ?></td>
                         <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                         <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                     </tr>
                     <tr style="padding: 0px">
-                        <td style="padding: 1px;text-align: center;width: 1%"><b>E</b></td>
-                        <td style="padding: 1px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Trimming</b></td>
-                        <td style="padding: 1px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;<?php echo $int['trimming_deck'] ?></td>
+                        <td style="padding: 0px;text-align: center;width: 1%"><b>E</b></td>
+                        <td style="padding: 0px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Trimming</b></td>
+                        <td style="padding: 0px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;<?php echo $int['trimming_deck'] ?></td>
                         <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                         <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                     </tr>
@@ -261,16 +261,16 @@
                         <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                     </tr>
                     <tr ng-if="form.jenis == 'Small Bus'">
-                        <td style="padding: 1px;text-align: center;width: 1%"></td>
-                        <td style="padding: 1px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Pengmn Kc Smpg</b></td>
-                        <td style="padding: 1px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;<?php echo $int['pengaman_kaca_samping'] ?></td>
+                        <td style="padding: 0px;text-align: center;width: 1%"></td>
+                        <td style="padding: 0px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Pengmn Kc Smpg</b></td>
+                        <td style="padding: 0px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;<?php echo $int['pengaman_kaca_samping'] ?></td>
                         <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                         <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                     </tr>
                     <tr ng-if="form.jenis == 'Small Bus'">
-                        <td style="padding: 1px;text-align: center;width: 1%"></td>
-                        <td style="padding: 1px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Pengmn </b></td>
-                        <td style="padding: 1px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;<?php echo $int['pengaman_driver'] ?></td>
+                        <td style="padding: 0px;text-align: center;width: 1%"></td>
+                        <td style="padding: 0px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Pengmn </b></td>
+                        <td style="padding: 0px;border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;<?php echo $int['pengaman_driver'] ?></td>
                         <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                         <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                     </tr>
@@ -561,11 +561,11 @@
                 </tr>
                 <tr> 
                     <td style="border-left: 1px solid #000000;border-right: 1px solid #000000;"></td>
-                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 10px;">TGL : </td>
-                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 10px;">TGL : </td>
-                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 10px;">TGL : </td>
-                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 10px;">TGL : </td>
-                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 10px;">TGL : </td>
+                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 10px;">TGL : <?php echo date('d-m-Y') ?></td>
+                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 10px;">TGL : <?php echo date('d-m-Y') ?></td>
+                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 10px;">TGL : <?php echo date('d-m-Y') ?></td>
+                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 10px;">TGL : <?php echo date('d-m-Y') ?></td>
+                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 10px;">TGL : <?php echo date('d-m-Y') ?></td>
                 </tr>
             </table>
         </td>

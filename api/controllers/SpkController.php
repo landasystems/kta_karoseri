@@ -338,7 +338,7 @@ class SpkController extends Controller {
         Yii::error($params);
         $model = new Spk();
         $model->no_wo = $params['spk']['no_wo']['no_wo'];
-        $model->nik = $params['spk']['pic']['nik'];
+        $model->nik = (!empty($params['spk']['pic']['nik'])) ? $params['spk']['pic']['nik'] : null;
         $model->kd_jab = $params['spk']['jabatan']['id_jabatan'];
         $model->status = 0;
 
@@ -389,7 +389,7 @@ class SpkController extends Controller {
         Yii::error($params);
         $model = $this->findModel($id);
         $model->no_wo = $params['spk']['no_wo']['no_wo'];
-        $model->nik = $params['spk']['pic']['nik'];
+        $model->nik = (!empty($params['spk']['pic']['nik'])) ? $params['spk']['pic']['nik'] : null;
         $model->kd_jab = $params['spk']['jabatan']['id_jabatan'];
 
 

@@ -152,10 +152,17 @@ app.controller('spkCtrl', function ($scope, Data, toaster) {
                 if (result.status == 0) {
                     toaster.pop('error', "Terjadi Kesalahan", result.errors);
                 } else {
+                    toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
+                    if ($scope.is_create == true) {
+                        var popupWin = window.open('', '_blank', 'width=1000,height=700');
+                        var elem = document.getElementById('printArea');
+                        popupWin.document.open()
+                        popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print();window.close();">' + elem.innerHTML + '</html>');
+                        popupWin.document.close();
+                    }
+                    $scope.is_create = false;
                     $scope.is_edit = false;
-                    $scope.form = {};
-                    $scope.callServer(tableStateRef); //reload grid ulang
-                    toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
+                    $scope.create($scope.form);
                 }
             });
         }
@@ -182,7 +189,6 @@ app.controller('spkCtrl', function ($scope, Data, toaster) {
             $scope.form.id_spk = id_spk;
             $scope.detKerja = data.detail;
             $scope.sJabatan = data.jabatan;
-            $scope.form.test =data.data.jabatan.jabatan ;
 
         });
 

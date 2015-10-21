@@ -163,19 +163,16 @@
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    Detail SPK Pekerjaan
-                                </div>
-                                <div class="col-md-9" align="right">
-                                    <button ng-click="addDetail()" class="btn btn-success" ng-hide="is_view" title="Tambah Detail"><i class="fa fa-plus-square"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="table-responsive">
+                    
                             <table class="table table-striped b-t b-light">
+                                <tr>
+                                    <td>
+                                        <b> Detail SPK Pekerjaan</b>
+                                    </td>
+                                    <td style="text-align: right">
+                                        <button ng-click="addDetail()" class="btn btn-success" ng-hide="is_view" title="Tambah Detail"><i class="fa fa-plus-square"></i></button>
+                                    </td>
+                                </tr>
                                 <tr ng-repeat="detail in detKerja">
                                     <td>
                                 <ui-select tagging="tagTransform"  on-select="nambahIsi(detail,$item)" tagging-label="false" ng-model="detail.nm_kerja" theme="bootstrap" sortable="true" ng-disabled="is_view" style="width: 600px;" title="Choose a color">
@@ -195,7 +192,6 @@
                                 </td>
                                 </tr>
                             </table>
-                        </div>
                     </div>
                     <div align="center">
                         <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
@@ -204,13 +200,13 @@
                 </form>
             </div>
         </div>
-    </div>
     <div id="printArea" ng-show="is_view">
-        <table width="100%"  style="border-collapse: collapse;  font-size: 12px;">
+        <div style="width:350px;margin-left: 5px;margin-top: 5px;"">
+        <table width="50%"  style="border-collapse: collapse;  font-size: 12px;text-decoration-color: #000000">
             <tr>
                 <td colspan="5" style="padding: 8px;border: 1px solid #000">
                     <div style="border: 1px solid #000">
-                        <center><h3>SPK {{form.test.split(' ')[0]}} {{form.jenis | uppercase}}</h3></center>
+                        <center><h4 >SPK {{form.jabatan.jabatan}} {{form.jenis | uppercase}}</h4></center>
                     </div>
                 </td>
             </tr>
@@ -219,15 +215,15 @@
                     <table width="100%" style="font-size: 12px;">
                         <tr>
                             <td ><b>No. Wo</b></td>
-                            <td>: {{form.no_wo.no_wo}}</td>
+                            <td>: <b>{{form.no_wo.no_wo}}</b></td>
                             <td ><b>Model</b></td>
-                            <td>: {{form.model}}</td>
+                            <td style="font-size: 12px">: {{form.model}}</td>
                         </tr>
                         <tr>
                             <td ><b>Customer</b></td>
-                            <td>: {{form.nm_customer}}</td>
+                            <td style="font-size: 12px">: {{form.nm_customer}}</td>
                             <td><b>Chassis</b></td>
-                            <td>: {{form.merk}}/{{form.tipe}}</td>
+                            <td style="font-size: 12px">: {{form.merk}}/{{form.tipe}}</td>
                         </tr>
                     </table>
                 </td>
@@ -256,17 +252,17 @@
             <td style="border-collapse: collapse; ">
                 <table width="100%" style="border-collapse: collapse; border: 1px #000 solid; font-size: 11px; margin-top: -2px; ">
                     <tr >
-                        <td rowspan="3" colspan="2" valign="middle" class="border-all">
-                    <center>SPK DITERIMA</center>
+                        <td rowspan="3" colspan="2" valign="middle" class="border-all" style="font-size: 12px">
+                    <center><b>SPK DITERIMA</b></center>
             </td>
             <td class="border-all" ><center>PEMBORONG</center></td>
         <td class="border-all"><center>PENGAWAS</center></td>
         <td class="border-all"><center>PPC</center></td>
         </tr>
         <tr>
-            <td class="border-all"><br><br></td>
-            <td class="border-all"><br><br></td>
-            <td class="border-all"><br><br></td>
+            <td class="border-all"><br><br><br><br></td>
+            <td class="border-all"><br><br><br><br></td>
+            <td class="border-all"><br><br><br><br></td>
         </tr>
 
         <tr>
@@ -275,14 +271,14 @@
             <td class="border-all" width="80">Tgl:</td>
         </tr>
         <tr>
-            <td rowspan="3" colspan="2" valign="middle" class="border-all">
-        <center>SPK DITERIMA UNIT</center>
+            <td rowspan="3" colspan="2" valign="middle" class="border-all" style="font-size: 12px">
+        <center><b>SPK DITERIMA UNIT</b></center>
         </td>
         </tr>
         <tr>
-            <td class="border-all"><br><br></td>
-            <td class="border-all"><br><br></td>
-            <td class="border-all"><br><br></td>
+            <td class="border-all"><br><br><br><br></td>
+            <td class="border-all"><br><br><br><br></td>
+            <td class="border-all"><br><br><br><br></td>
         </tr>
 
         <tr>
@@ -295,5 +291,6 @@
         </td>
         </tr>
         </table>
+    </div>
     </div>
 </div>
