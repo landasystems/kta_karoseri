@@ -282,7 +282,9 @@ class BbkController extends Controller {
             }
 
             echo json_encode(array('status' => 1, 'data' => $det));
+//            echo '1';
         } else {
+//            echo '2';
             $query = new Query;
             $query->from('barang')
                     ->select("*")
