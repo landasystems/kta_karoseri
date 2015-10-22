@@ -33,9 +33,10 @@ class TransBbk extends \yii\db\ActiveRecord {
     public function rules() {
         return [
             [['kd_jab', 'no_bbk', 'penerima'], 'required'],
-            [['tanggal'], 'safe'],
+            [['tanggal', 'no_wo'], 'safe'],
+            [['no_bbk'], 'unique'],
             [['status'], 'integer'],
-            [['no_bbk'], 'string', 'max' => 10],
+//            [['no_bbk'], 'string', 'max' => 10],
             [['petugas'], 'string', 'max' => 50],
         ];
     }

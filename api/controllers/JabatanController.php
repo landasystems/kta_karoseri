@@ -65,7 +65,7 @@ class JabatanController extends Controller {
         $absen = AbsensiEttLog::find()
                 ->joinWith('emp')
 //                ->joinWith('karyawan')
-                ->select("emp.first_name, emp.pin, date(scan_date) as scan_date")
+                ->select("emp.first_name, emp.nik, emp.pin, date(scan_date) as scan_date")
                 ->where('date(scan_date) = "' . date("Y-m-d") . '"')
                 ->andWhere('emp.first_name like "%' . $param['nama'] . '%" or emp.last_name like "%' . $param['nama'] . '%"')
                 ->limit(100)
@@ -73,7 +73,7 @@ class JabatanController extends Controller {
         $data = array();
         foreach ($absen as $key => $val) {
             $data[$key]['nik'] = $val->emp->nik;
-            $data[$key]['nama'] = $val->emp->first_name;
+            $data[$key]['nama'] = $val->emp->first_name.' '.$val->emp->last_name;
         }
 
         echo json_encode(array('status' => 1, 'data' => $data));
@@ -94,7 +94,7 @@ class JabatanController extends Controller {
             $data = array();
             foreach ($absen as $key => $val) {
                 $data[$key]['nik'] = $val->emp->nik;
-                $data[$key]['nama'] = $val->emp->first_name;
+                  $data[$key]['nama'] = $val->emp->first_name.' '.$val->emp->last_name;
             }
 
             echo json_encode(array('status' => 1, 'data' => $data));

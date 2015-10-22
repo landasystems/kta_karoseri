@@ -737,7 +737,7 @@
                                         <input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control angka" ng-keyup="kalkulasi(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang, detail.jml);">
                                     </td>
                                     <td>{{detail.satuan}}</td>
-                                    <td><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control" ng-enter="addDetail('');" event-focus-id="0" required></td>
+                                    <td><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control" ng-enter="addDetail('');" event-focus-id="0"></td>
                                     <td ng-show="is_view != true">
                                         <button ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view" style="width:50px;" title="Hapus Detail"><i class="fa fa-trash-o"></i></button>
                                     </td>
