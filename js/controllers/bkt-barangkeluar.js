@@ -98,33 +98,35 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
 
     $scope.kalkulasi2 = function (sisa, stok, jml_keluar) {
         $scope.err_pengambilan = false;
-        if (typeof $scope.form.no_wo != "undefined") {
-            var sSisa = sisa - jml_keluar;
-            var sStok = stok - jml_keluar;
-            if (sisa == 0) {
-                $scope.err_pengambilan = true;
-                toaster.pop('error', "Sisa pengambilan bahan telah habis");
-            } else if (stok == 0) {
-                $scope.err_pengambilan = true;
-                toaster.pop('error', "Stok bahan telah habis");
-            } else if (sSisa >= 0 && sStok >= 0) {
-                $scope.err_pengambilan = false;
-                $scope.detailBbk.sisa_pengambilan = sisa - jml_keluar;
+        if (jml_keluar != '' || jml_keluar > 0) {
+            if (typeof $scope.form.no_wo != "undefined") {
+                var sSisa = sisa - jml_keluar;
+                var sStok = stok - jml_keluar;
+                if (sisa == 0) {
+                    $scope.err_pengambilan = true;
+                    toaster.pop('error', "Sisa pengambilan bahan telah habis");
+                } else if (stok <= 0) {
+                    $scope.err_pengambilan = true;
+                    toaster.pop('error', "Stok bahan telah habis");
+                } else if (sSisa >= 0 && sStok >= 0) {
+                    $scope.err_pengambilan = false;
+                    $scope.detailBbk.sisa_pengambilan = sisa - jml_keluar;
+                    $scope.detailBbk.stok_sekarang = stok - jml_keluar;
+                    ($scope.detailBbk.sisa_pengambilan > 0) ? $scope.detailBbk.jml = $scope.detailBbk.jml : $scope.detailBbk.jml = 0;
+                    ($scope.detailBbk.sisa_pengambilan >= 0) ? $scope.detailBbk.sisa_pengambilan = $scope.detailBbk.sisa_pengambilan : $scope.detailBbk.sisa_pengambilan = 0;
+                } else {
+                    $scope.err_pengambilan = true;
+                    toaster.pop('error', "Jumlah tidak boleh melebihi sisa pengambilan bahan");
+                }
+            } else {
+                $scope.sisa_pengambilan = 0;
                 $scope.detailBbk.stok_sekarang = stok - jml_keluar;
-                ($scope.detailBbk.sisa_pengambilan > 0) ? $scope.detailBbk.jml = $scope.detailBbk.jml : $scope.detailBbk.jml = 0;
-                ($scope.detailBbk.sisa_pengambilan >= 0) ? $scope.detailBbk.sisa_pengambilan = $scope.detailBbk.sisa_pengambilan : $scope.detailBbk.sisa_pengambilan = 0;
-            } else {
-                $scope.err_pengambilan = true;
-                toaster.pop('error', "Jumlah tidak boleh melebihi sisa pengambilan bahan");
-            }
-        } else {
-            $scope.sisa_pengambilan = 0;
-            $scope.detailBbk.stok_sekarang = stok - jml_keluar;
-            if ($scope.detailBbk.stok_sekarang < 0) {
-                toaster.pop('error', "Jumlah tidak boleh melebihi stok sekarang");
-                $scope.err_pengambilan = true;
-            } else {
-                $scope.err_pengambilan = false;
+                if ($scope.detailBbk.stok_sekarang < 0) {
+                    toaster.pop('error', "Jumlah tidak boleh melebihi stok sekarang");
+                    $scope.err_pengambilan = true;
+                } else {
+                    $scope.err_pengambilan = false;
+                }
             }
         }
     }
@@ -184,9 +186,9 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             $scope.resultskaryawan = data.data;
         });
     }
-    
+
     $scope.cariKaryawanPerJabatan = function ($query) {
-        Data.get('jabatan/listkaryawanabsentjabatan', {nama: $query}).then(function (data) {
+        Data.get('jabatan/listkaryawanabsentjabatan', {jabatan: $query}).then(function (data) {
             $scope.resultskaryawan = data.data;
         });
     }

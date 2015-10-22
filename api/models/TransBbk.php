@@ -35,7 +35,7 @@ class TransBbk extends \yii\db\ActiveRecord {
             [['kd_jab', 'no_bbk', 'penerima'], 'required'],
             [['tanggal'], 'safe'],
             [['status'], 'integer'],
-            [['no_bbk', 'no_wo'], 'string', 'max' => 10],
+            [['no_bbk'], 'string', 'max' => 10],
             [['petugas'], 'string', 'max' => 50],
         ];
     }

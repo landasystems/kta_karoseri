@@ -28,6 +28,7 @@ class JabatanController extends Controller {
                     'kode' => ['get'],
                     'listkaryawan' => ['get'],
                     'listkaryawanabsent' => ['get'],
+                    'listkaryawanabsentjabatan' => ['get'],
                     'listkaryawansales' => ['get'],
                     'cari' => ['get'],
                 ],
@@ -60,7 +61,7 @@ class JabatanController extends Controller {
 
     public function actionListkaryawanabsent() {
         $param = $_REQUEST;
-        
+
         $absen = AbsensiEttLog::find()
                 ->joinWith('emp')
 //                ->joinWith('karyawan')
@@ -75,26 +76,29 @@ class JabatanController extends Controller {
             $data[$key]['nama'] = $val->emp->first_name;
         }
 
-
-
-//        $sudahAbsen = array();
-//        foreach ($absen as $key => $val) {
-//            $sudahAbsen[] = $val['karyawan']['nik'];
-//        }
-//
-//        $param = $_REQUEST;
-//        $query = new Query;
-//        $query->from('tbl_karyawan')
-//                ->select("nik, nama")
-//                ->where('nama like "%' . $param['nama'] . '%"')
-//                ->andWhere(['nik' => $sudahAbsen]);
-//
-//        $command = $query->createCommand();
-//        $models = $command->queryAll();
-//
-//        $this->setHeader(200);
-
         echo json_encode(array('status' => 1, 'data' => $data));
+    }
+
+    public function actionListkaryawanabsentjabatan() {
+        $param = $_REQUEST;
+
+        if (isset($param['jabatan'])) {
+            $absen = AbsensiEttLog::find()
+                    ->joinWith('emp')
+                    ->join('LEFT JOIN', 'purchassing.tbl_karyawan', 'purchassing.tbl_karyawan.nik = emp.nik')
+                    ->select("emp.first_name, emp.pin, date(scan_date) as scan_date")
+                    ->where('date(scan_date) = "' . date("Y-m-d") . '"')
+                    ->andWhere('purchassing.tbl_karyawan.jabatan = "' . $param['jabatan'] . '"')
+                    ->limit(100)
+                    ->all();
+            $data = array();
+            foreach ($absen as $key => $val) {
+                $data[$key]['nik'] = $val->emp->nik;
+                $data[$key]['nama'] = $val->emp->first_name;
+            }
+
+            echo json_encode(array('status' => 1, 'data' => $data));
+        }
     }
 
     public function actionListkaryawan() {

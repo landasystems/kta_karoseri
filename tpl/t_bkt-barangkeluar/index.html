@@ -217,9 +217,9 @@
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">Bagian</label>
                                         <div class="col-sm-9">
-                                            <ui-select ng-model="form.kd_jab" ng-disabled="is_view" theme="bootstrap" on-select='listBarang2("", form.no_wo, form.kd_jab);'>
+                                            <ui-select ng-model="form.kd_jab" ng-disabled="is_view" theme="bootstrap" on-select='listBarang2("", form.no_wo, form.kd_jab); cariKaryawanPerJabatan(form.kd_jab.id_jabatan)'>
                                                 <ui-select-match>{{$select.selected.jabatan}}</ui-select-match>
-                                                <ui-select-choices refresh="cariJabatan($select.search)" repeat="val in resultsjabatan">
+                                                <ui-select-choices  repeat="val in resultsjabatan">
                                                     {{val.jabatan}}
                                                 </ui-select-choices>
                                             </ui-select>
@@ -231,7 +231,7 @@
                                             <!--<div class="input-group">-->
                                             <ui-select ng-model="form.penerima" ng-disabled="is_view" theme="bootstrap" required>
                                                 <ui-select-match>{{$select.selected.nama}}</ui-select-match>
-                                                <ui-select-choices refresh="cariKaryawanPerJabatan()" repeat="val in resultskaryawan">
+                                                <ui-select-choices refresh="cariKaryawanPerJabatan(form.kd_jab.id_jabatan)" repeat="val in resultskaryawan">
                                                     {{val.nama}}
                                                 </ui-select-choices>
                                             </ui-select>
