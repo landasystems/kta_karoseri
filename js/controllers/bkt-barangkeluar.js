@@ -33,6 +33,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             }];
         $scope.detailstok(0, 0);
         $scope.noWoasli = '';
+        $scope.halamanPrint = 0;
     };
 
     $scope.refresh();
@@ -411,6 +412,15 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
 
     $scope.save = function (form, detail) {
         if ($scope.err_pengambilan == false && (typeof form.penerima && form.penerima != '')) {
+            $scope.detailBbk = [];
+            angular.forEach(detail, function ($value, $key) {
+                if ($value.jml > 0) {
+                    $scope.detailBbk.push($value);
+                }
+            });
+
+            $scope.detPrint($scope.detailBbk);
+
             var data = {
                 bbk: form,
                 detailBbk: detail,
@@ -423,9 +433,10 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                         error = error + $value + "\n";
                     });
                     toaster.pop('error', "Terjadi Kesalahan", error);
-
                 } else {
                     toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
+
+
                     if ($scope.is_create == true) {
                         var popupWin = window.open('', '_blank', 'width=1000,height=700');
                         var elem = document.getElementById('printArea');
@@ -433,6 +444,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                         popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print();window.close();">' + elem.innerHTML + '</html>');
                         popupWin.document.close();
                     }
+                    $scope.refresh();
                     $scope.is_create = false;
                     $scope.is_edit = false;
                     $scope.create($scope.form);
@@ -475,6 +487,10 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                 $scope.riwayatAmbil($scope.form.no_wo, $scope.form.kd_jab);
             }
 
+            if ($scope.form.no_wo != '-') {
+                $scope.form.kat_bbk = 'produksi';
+            }
+
             if (jQuery.isEmptyObject(data.detail)) {
                 $scope.detailBbk = [{
                         kd_barang: '',
@@ -482,10 +498,38 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                         ket: '',
                     }];
             } else {
-                $scope.detailBbk = data.detail;
+                $scope.detailBbk = [];
+                angular.forEach(data.detail, function ($value, $key) {
+                    if ($value.jml > 0) {
+                        $scope.detailBbk.push($value);
+                    }
+                });
             }
+
+            $scope.detPrint($scope.detailBbk);
+
         });
     };
+
+    $scope.detPrint = function (detail) {
+        $scope.halamanPrint = Math.ceil(detail.length / 8);
+        $scope.detailBbkPrint = [];
+        var index = 0;
+        var no = 1;
+        for (i = 0; i < $scope.halamanPrint; i++) {
+            var newDet = [];
+            for (a = 1; a <= 8; a++) {
+                if (typeof detail[index] != "undefined") {
+                    detail[index]['no'] = no;
+                    newDet.push(detail[index]);
+                    $scope.detailBbkPrint[i] = newDet;
+                    no++;
+                }
+                index++;
+            }
+        }
+    }
+
     keyboardManager.bind('ctrl+s', function () {
         if ($scope.is_create == true) {
             $scope.save($scope.form, $scope.detailBbk);
@@ -509,6 +553,7 @@ app.controller('modalCtrl', function ($scope, Data, $modalInstance, form, toaste
         $event.stopPropagation();
         $scope.opened1 = true;
     };
+
     $scope.cariWo = function ($query) {
         if ($query.length >= 3) {
             Data.get('wo/wospk', {nama: $query}).then(function (data) {

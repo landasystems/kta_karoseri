@@ -184,9 +184,9 @@
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">Jenis BBK</label>
                                         <div class="col-sm-9">
-                                            <div ng-if="is_create == true">
-                                                <label class="btn btn-default" ng-model="form.kat_bbk" btn-radio="'produksi'">Produksi</label>
-                                                <label class="btn btn-default" ng-model="form.kat_bbk" btn-radio="'umum'">Umum</label>
+                                            <div>
+                                                <label class="btn btn-default" ng-model="form.kat_bbk" btn-radio="'produksi'" ng-disabled="is_create != true">Produksi</label>
+                                                <label class="btn btn-default" ng-model="form.kat_bbk" btn-radio="'umum'"  ng-disabled="is_create != true">Umum</label>
                                             </div>
                                         </div>
                                     </div>
@@ -219,7 +219,7 @@
                                         <div class="col-sm-9">
                                             <ui-select ng-model="form.kd_jab" ng-disabled="is_view" theme="bootstrap" on-select='listBarang2("", form.no_wo, form.kd_jab); cariKaryawanPerJabatan(form.kd_jab.id_jabatan)'>
                                                 <ui-select-match>{{$select.selected.jabatan}}</ui-select-match>
-                                                <ui-select-choices  repeat="val in resultsjabatan">
+                                                <ui-select-choices refresh="cariJabatan($select.search)" repeat="val in resultsjabatan">
                                                     {{val.jabatan}}
                                                 </ui-select-choices>
                                             </ui-select>
@@ -289,8 +289,8 @@
                                         </tr>
                                         <tr>
                                             <th>Barang</th>
-                                            <th style="width:100px">Sisa</th>
-                                            <th style="width:100px">Stok</th>
+                                            <th style="width:100px" ng-show="is_create">Sisa</th>
+                                            <th style="width:100px" ng-show="is_create">Stok</th>
                                             <th style="width:100px">Jumlah</th>
                                             <th style="width:100px">Satuan</th>
                                             <th style="width:400px">Keterangan</th>
@@ -298,14 +298,14 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr ng-repeat="detail in detailBbk" ng-show="detail.kd_barang != ''">
+                                        <tr ng-repeat="detail in detailBbk" >
                                             <td>
-                                                {{detail.kd_barang.nm_barang}}
+                                                <b>{{detail.kd_barang.kd_barang}} |- </b>{{detail.kd_barang.nm_barang}}
                                             </td>
-                                            <td>
+                                            <td ng-show="is_create">
                                                 {{detail.kd_barang.sisa_pengambilan}}
                                             </td>
-                                            <td>
+                                            <td ng-show="is_create">
                                                 {{detail.kd_barang.stok_sekarang}}
                                             </td>
                                             <td>
@@ -348,9 +348,7 @@
                     }
                 }
             </style>
-            <!--<div style="width: 11.1cm; margin: 0px;">-->
-            <div style="margin: 0px; width: 15cm;">
-                <!--<table style="width: 11.1cm; height: 1cm;">-->
+            <div style="margin: 0px; width: 15cm; height: 14cm" ng-repeat="hal in detailBbkPrint">
                 <table style="height: 0.5cm; padding: 0px">
                     <tr>
                         <td width="50%" id="print_bbk">
@@ -372,7 +370,7 @@
                         <td id="print_bbk">{{form.kd_jab.jabatan}}</td>
                     </tr>
                 </table>
-                <div style="height:7.5cm;">
+                <div style="height:8.5cm;">
                     <table width="100%" style="border-collapse: collapse;">
                         <thead>
                             <tr style="height:10pt; border-top: 1px #000 solid; border-bottom: 1px #000 solid;">
@@ -381,27 +379,20 @@
                                 <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 3cm;" align="center">Nama Barang</td>
                                 <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 0.8cm;" align="center">Jml</td>
                                 <td class="print_bbk_td border-top border-bottom" style="width: 0.8cm;" align="center">Sat</td>
-                                <!--<td class="print_bbk_td border-top border-bottom" style="width: 2.2cm;" align="center">Ket</td>-->
                             </tr>
                         </thead>
-                        <tbody ng-repeat="detail in detailBbk">
-                            <tr style="height:8pt;">
-                                <td class="print_bbk_td" align="center">{{$index + 1}}</td>
+                        <tbody ng-repeat="detail in hal">
+                            <tr style="height:8pt;" ng-show="detail.kd_barang != '' && detail.kd_barang.sisa_pengambilan > 0">
+                                <td class="print_bbk_td" align="center">{{detail.no}}</td>
                                 <td class="print_bbk_td" align="center">{{detail.kd_barang.kd_barang}}</td>
                                 <td class="print_bbk_td">{{detail.kd_barang.nm_barang}}</td>
                                 <td class="print_bbk_td" align="center">{{detail.jml}} </td>
                                 <td class="print_bbk_td" align="center">{{detail.satuan}}</td>
-                                <!--<td class="print_bbk_td">{{detail.ket}}</td>-->
                             </tr>
-                            <tr style="height:8pt;margin:0pt;padding:0pt">
+                            <tr style="height:8pt;margin:0pt;padding:0pt" ng-show="detail.jml > 0">
                                 <td colspan="5" class="print_bbk_td">Ket : {{detail.ket}}</td>
                             </tr>
                         </tbody>
-                        <!--                    <tbody>
-                                                <tr style="border-top: 1px #000 solid;">
-                                                    <td colspan="5" style=""></td>
-                                                </tr>
-                                            </tbody>-->
                     </table>
                 </div>
                 <table style="bottom: 0.1cm">

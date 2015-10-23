@@ -87,7 +87,7 @@ class JabatanController extends Controller {
                     ->joinWith('emp')
                     ->join('LEFT JOIN', 'purchassing.tbl_karyawan', 'purchassing.tbl_karyawan.nik = emp.nik')
                     ->select("emp.first_name, emp.pin, date(scan_date) as scan_date")
-                    ->where('date(scan_date) = "' . date("Y-m-d") . '"')
+//                    ->where('date(scan_date) = "' . date("Y-m-d") . '"')
                     ->andWhere('purchassing.tbl_karyawan.jabatan = "' . $param['jabatan'] . '"')
                     ->limit(100)
                     ->all();
