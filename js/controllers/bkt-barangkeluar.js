@@ -487,8 +487,10 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                 $scope.riwayatAmbil($scope.form.no_wo, $scope.form.kd_jab);
             }
 
-            if ($scope.form.no_wo != '-') {
+            if ($scope.form.no_wo.no_wo != '-') {
                 $scope.form.kat_bbk = 'produksi';
+            }else{
+                $scope.form.kat_bbk = 'umum';
             }
 
             if (jQuery.isEmptyObject(data.detail)) {
@@ -507,7 +509,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             }
 
             $scope.detPrint($scope.detailBbk);
-
+            
         });
     };
 
