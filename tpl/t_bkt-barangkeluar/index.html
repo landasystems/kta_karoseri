@@ -1,5 +1,5 @@
 <div ng-controller="bbkCtrl">
-    <div ng-show="user.roles_id == 1">
+    <div ng-if="user.roles_id == 1">
         <div class="bg-light lter b-b wrapper-md">
             <h1 class="m-n font-thin h3">Bukti Barang Keluar</h1>
         </div>
@@ -418,7 +418,7 @@
             </div>
         </div>
     </div>
-    <div ng-show="user.roles_id > 1">
+    <div ng-if="user.roles_id > 1">
         <div class="bg-light lter b-b wrapper-md">
             <h1 class="m-n font-thin h3">Bukti Barang Keluar</h1>
         </div>
@@ -765,7 +765,7 @@
                 }
             </style>
             <!--<div style="width: 11.1cm; margin: 0px;">-->
-            <div style="margin: 0px; width: 15cm;">
+            <div style="margin: 0px; width: 16cm;" ng-repeat="hal in detailBbkPrint">
                 <!--<table style="width: 11.1cm; height: 1cm;">-->
                 <table style="height: 0.5cm; padding: 0px">
                     <tr>
@@ -788,7 +788,7 @@
                         <td id="print_bbk">{{form.kd_jab.jabatan}}</td>
                     </tr>
                 </table>
-                <div style="height:7.5cm;">
+                <div style="height:7.3cm;">
                     <table width="100%" style="border-collapse: collapse;">
                         <thead>
                             <tr style="height:10pt; border-top: 1px #000 solid; border-bottom: 1px #000 solid;">
@@ -800,9 +800,9 @@
                                 <!--<td class="print_bbk_td border-top border-bottom" style="width: 2.2cm;" align="center">Ket</td>-->
                             </tr>
                         </thead>
-                        <tbody ng-repeat="detail in detailBbk">
+                        <tbody ng-repeat="detail in hal">
                             <tr style="height:8pt;">
-                                <td class="print_bbk_td" align="center">{{$index + 1}}</td>
+                                <td class="print_bbk_td" align="center">{{detail.no}}</td>
                                 <td class="print_bbk_td" align="center">{{detail.kd_barang.kd_barang}}</td>
                                 <td class="print_bbk_td">{{detail.kd_barang.nm_barang}}</td>
                                 <td class="print_bbk_td" align="center">{{detail.jml}} </td>
@@ -840,6 +840,7 @@
                         <td align="center" id="print_bbk">{{form.penerima.nama}}</td>
                     </tr>
                 </table>
+                <br>
             </div>
         </div>
     </div>

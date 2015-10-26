@@ -5,6 +5,8 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
         $scope.sisa_pengambilan = sisa;
         $scope.stok_sekarang = stok;
     }
+    
+    $scope.tgl_Print = new Date();
 
     $scope.refresh = function () {
         $scope.jenis_kmp = [];

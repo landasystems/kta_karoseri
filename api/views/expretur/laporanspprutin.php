@@ -117,8 +117,8 @@ foreach ($models as $val) {
                     <td class="border-right border-bottom" style="text-align:center; width: 45px;">&nbsp;<?= $vals['kd_barang'] ?></td>
                     <td class="border-right border-bottom" style="width: 250px;"><?= $vals['nm_barang'] ?></td>
                     <td class="border-right border-bottom" style="text-align:center; width: 45px;"><?= $vals['satuan'] ?></td>
-                    <td class="border-right border-bottom" style="text-align:center; width: 25px;">&nbsp;<?= $vals['min'] ?></td>
                     <td class="border-right border-bottom" style="text-align:center; width: 25px;">&nbsp;<?= $vals['max'] ?></td>
+                    <td class="border-right border-bottom" style="text-align:center; width: 25px;">&nbsp;<?= $vals['min'] ?></td>
                     <td class="border-right border-bottom" style="text-align:center; width: 25px;">&nbsp;<?= $vals['saldo'] ?></td>
                     <td class="border-right border-bottom" style="text-align:center; width: 45px;">&nbsp;<?= $vals['qty'] ?></td>
                     <td class="border-right border-bottom" style="width: 220px;"><?= $vals['ket'] ?></td>

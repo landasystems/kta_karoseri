@@ -199,12 +199,12 @@ class BarangController extends Controller {
         $bbm = $_SESSION['queryBbm'];
         $bbk = $_SESSION['queryBbk'];
 
-        $bbm->where(null);
+//        $bbm->where(null);
         $bbm->where(['det_bbm.tgl_terima' => $tgl]);
         $commandBbm = $bbm->createCommand();
         $modelBBM = $commandBbm->queryAll();
 
-        $bbk->where(null);
+//        $bbk->where(null);
         $bbk->where(['trans_bbk.tanggal' => $tgl]);
         $commandBbk = $bbk->createCommand();
         $modelBBK = $commandBbk->queryAll();
@@ -222,14 +222,6 @@ class BarangController extends Controller {
             $saldo[$valBbm['kd_barang']] = isset($saldo[$valBbm['kd_barang']]) ? $saldo[$valBbm['kd_barang']] - $valBbm['jumlah'] : $valBbm['saldo'] - $valBbm['jumlah'];
             $data[$valBbm['kd_barang']]['saldo_awal'] = $saldo[$valBbm['kd_barang']];
             $data[$valBbm['kd_barang']]['saldo_akhir'] = $data[$valBbm['kd_barang']]['saldo_awal'] + $data[$valBbm['kd_barang']]['stok_masuk'];
-
-//            $data[$valBbm['kd_barang']]['kd_barang'] = $valBbm['kd_barang'];
-//            $data[$valBbm['kd_barang']]['barang'] = $valBbm['nm_barang'];
-//            $data[$valBbm['kd_barang']]['satuan'] = $valBbm['satuan'];
-//            $data[$valBbm['kd_barang']]['stok_minim'] = $valBbm['min'];
-//            $data[$valBbm['kd_barang']]['saldo_awal'] = $valBbm['saldo'];
-//            $data[$valBbm['kd_barang']]['stok_keluar'] = 0;
-//            $data[$valBbm['kd_barang']]['stok_masuk'] = isset($data[$valBbm['kd_barang']]['stok_masuk']) ? $data[$valBbm['kd_barang']]['stok_masuk'] + $valBbm['jumlah'] : $valBbm['jumlah'];
         }
 
         foreach ($modelBBK as $valBbk) {
@@ -243,14 +235,6 @@ class BarangController extends Controller {
             $saldo[$valBbk['kd_barang']] = isset($saldo[$valBbk['kd_barang']]) ? $saldo[$valBbk['kd_barang']] + $valBbk['jml'] : $valBbk['saldo'] + $valBbk['jml'];
             $data[$valBbk['kd_barang']]['saldo_awal'] = $saldo[$valBbk['kd_barang']];
             $data[$valBbk['kd_barang']]['saldo_akhir'] = (isset($data[$valBbk['kd_barang']]['saldo_akhir']) ? $data[$valBbk['kd_barang']]['saldo_akhir'] : $data[$valBbk['kd_barang']]['saldo_awal'] ) - $valBbk['jml'];
-
-//            $data[$valBbk['kd_barang']]['kd_barang'] = $valBbk['kd_barang'];
-//            $data[$valBbk['kd_barang']]['barang'] = $valBbk['nm_barang'];
-//            $data[$valBbk['kd_barang']]['satuan'] = $valBbk['satuan'];
-//            $data[$valBbk['kd_barang']]['stok_minim'] = $valBbk['min'];
-//            $data[$valBbk['kd_barang']]['saldo_awal'] = $valBbk['saldo'];
-//            $data[$valBbk['kd_barang']]['stok_masuk'] = isset($data[$valBbk['kd_barang']]['stok_masuk']) ? $data[$valBbk['kd_barang']]['stok_masuk'] : 0;
-//            $data[$valBbk['kd_barang']]['stok_keluar'] = (isset($data[$valBbk['kd_barang']]['stok_keluar']) ? $data[$valBbk['kd_barang']]['stok_keluar'] : 0 ) + $valBbk['jml'];
         }
 
         $periode = $_SESSION['periode'];
