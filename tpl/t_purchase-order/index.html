@@ -155,6 +155,7 @@
                                 <div class="form-group" ng-hide="form.status_po == 0">
                                     <label class="col-sm-3 control-label">No. SPP</label>
                                     <div class="col-sm-6">
+                                        {{form.listspp.no_spp}}
                                         <div class="input-group">
                                             <ui-select on-select="cariBarang('',form.listspp.no_spp)"  ng-model="form.listspp" ng-readonly="form.status_po == '0'" theme="bootstrap">
                                                 <ui-select-match>{{$select.selected.no_spp}} - {{$select.selected.no_proyek}}</ui-select-match>
@@ -217,7 +218,7 @@
                                         <th class="panel-heading text-muted font-bold" ng-hide="is_view == true"><button ng-click="addDetail()" title="Tambah Data" class="btn btn-success" ng-disabled="is_view"><i class="fa fa-plus"></i></button></th>
                                     </tr>
                                     <tr>
-                                        <th style="text-align: center;">Nama Barang</th>
+                                        <th style="text-align: center; width:200px;">Nama Barang</th>
                                         <th style="text-align: center;">QTY</th>
                                         <th style="text-align: center;">Satuan</th>
                                         <th style="text-align: center;">Harga</th>
@@ -230,9 +231,9 @@
                                 <tbody>
                                     <tr ng-repeat="detail in detsPo">
                                         <td>
-                                            <div class="input-group">
-                                                <ui-select on-select="pilih(detail, $item)" ng-model="detail.data_barang" theme="bootstrap">
-                                                    <ui-select-match>{{$select.selected.nm_barang}}</ui-select-match>
+                                            <div class="input-group" style="width:100%;">
+                                                <ui-select style="width:100%;" on-select="pilih(detail, $item)" ng-model="detail.data_barang" theme="bootstrap">
+                                                    <ui-select-match >{{$select.selected.nm_barang}}</ui-select-match>
                                                     <ui-select-choices refresh="cariBarang($select.search,form.listspp.no_spp)" repeat="val in resultsbrg">
                                                         {{val.nm_barang}}
                                                     </ui-select-choices>
@@ -246,13 +247,13 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input style="width:70px;" type="text" class="form-control" ng-model="detail.jml" ng-change="subtotal()" ng-disabled="is_view" ng-readonly="is_edit == false" required>
+                                            <input style="width:50px;" type="text" class="form-control" ng-model="detail.jml" ng-change="subtotal()" ng-disabled="is_view" ng-readonly="is_edit == false" required>
                                         </td>
-                                        <td> 
+                                        <td style="width: 70px;"> 
                                             <input type="text" class="form-control" ng-model="detail.data_barang.satuan" ng-disabled="is_view" ng-readonly="true">
                                         </td>
                                         <td>
-                                            <div class="input-group" style="margin:0px;">
+                                            <div class="input-group" style="margin:0px;width:150px;">
                                                 <span class="input-group-addon">Rp</span>
                                                 <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.harga" ng-disabled="is_view" ng-readonly="is_edit == false">
                                             </div>
