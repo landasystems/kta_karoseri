@@ -271,7 +271,22 @@
         </form>
     </div>
     <div id="printArea" ng-show="is_view">
-        <div style="margin: 0px;">
+        <style media="print">
+            @media print {
+                html, body {
+                    display: block; 
+                    font-family: "Calibri";
+                    margin: 0;
+                    -webkit-transform-origin: 0 0;
+                    -moz-transform-origin: 0 0;
+                }
+
+                @page {
+                    size: 24cm 14cm;
+                }
+            }
+        </style>
+        <div style="margin: 0px; width: 21.5cm; height: 14cm">
             <table width="100%" class="no-border">
                 <tr>
                     <td width="50%" id="print_bbm">
@@ -310,7 +325,7 @@
                             </table>
                         </td>
                         <td></td>
-                        <td style="border: 1px #000 solid; width: 62%; vertical-align: top; padding: 2px;" id="print_bbm">
+                        <td style="border: 1px #000 solid; width: 64%; vertical-align: top; padding: 2px;" id="print_bbm">
                             <table>
                                 <tr>
                                     <td id="print_bbm" width="30">Dari</td>
@@ -327,13 +342,13 @@
                     </tr>
                 </thead>
             </table>
-            <table width="100%" style="height: 4cm; margin-top: 3px; border: 1px #000 solid;  border-collapse: collapse;">
+            <table width="100%" style="height: 4.2cm; margin-top: 3px; border: 1px #000 solid;  border-collapse: collapse;">
                 <thead>
                     <tr>
-                        <th style="width: 0.5cm; height: 15px; vertical-align: middle;" align="center" class="print_bbm_td border-all">No</th>
+                        <th style="width: 1cm; height: 15px; vertical-align: middle;" align="center" class="print_bbm_td border-all">No</th>
                         <th style="width: 7cm; height: 15px; vertical-align: middle;" align="center" class="print_bbm_td border-all">Nama Barang</th>
-                        <th style="width: 1cm; height: 15px; vertical-align: middle;" align="center" class="print_bbm_td border-all">Qty</th>
-                        <th style="width: 1.5cm; height: 15px; vertical-align: middle;" align="center" class="print_bbm_td border-all">Kode Barang</th>
+                        <th style="width: 2cm; height: 15px; vertical-align: middle;" align="center" class="print_bbm_td border-all">Qty</th>
+                        <th style="width: 3.2cm; height: 15px; vertical-align: middle;" align="center" class="print_bbm_td border-all">Kode Barang</th>
                         <th style="height: 15px; vertical-align: middle;" align="center" class="print_bbm_td border-all">Keterangan</th>
                     </tr>
                 </thead>

@@ -282,7 +282,9 @@ class BbkController extends Controller {
             }
 
             echo json_encode(array('status' => 1, 'data' => $det));
+//            echo '1';
         } else {
+//            echo '2';
             $query = new Query;
             $query->from('barang')
                     ->select("*")
@@ -537,33 +539,38 @@ class BbkController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new TransBbk();
         $model->attributes = $params['bbk'];
-        $model->tanggal = date("Y-m-d", strtotime($params['bbk']['tanggal']));
-        $model->status = 0;
-        $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '-';
-        $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '-';
-        $model->penerima = isset($params['bbk']['penerima']['nik']) ? $params['bbk']['penerima']['nik'] : '-';
-        $model->lock = 1;
-        if ($model->save()) {
-            $detailBbk = $params['detailBbk'];
-            foreach ($detailBbk as $val) {
-                if (isset($val['kd_barang']['kd_barang'])) {
-                    $det = new DetBbk();
-                    $det->attributes = $val;
-                    $det->kd_barang = $val['kd_barang']['kd_barang'];
-                    $det->no_bbk = $model->no_bbk;
-                    $det->save();
+        if ($model->validate()) {
+            $model->tanggal = date("Y-m-d", strtotime($params['bbk']['tanggal']));
+            $model->status = 0;
+            $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '-';
+            $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '-';
+            $model->penerima = isset($params['bbk']['penerima']['nik']) ? $params['bbk']['penerima']['nik'] : '-';
+            $model->lock = 1;
+            if ($model->save()) {
+                $detailBbk = $params['detailBbk'];
+                foreach ($detailBbk as $val) {
+                    if (isset($val['kd_barang']['kd_barang']) and $val['jml'] > 0) {
+                        $det = new DetBbk();
+                        $det->attributes = $val;
+                        $det->kd_barang = $val['kd_barang']['kd_barang'];
+                        $det->no_bbk = $model->no_bbk;
+                        $det->save();
 
-                    //update stok barang
-                    $barang = Barang::find()->where('kd_barang="' . $det->kd_barang . '"')->one();
-                    $barang->saldo -= $det->jml;
-                    $barang->save();
+                        //update stok barang
+                        $barang = Barang::find()->where('kd_barang="' . $det->kd_barang . '"')->one();
+                        $barang->saldo -= $det->jml;
+                        $barang->save();
+                    }
                 }
-            }
 
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+                $this->setHeader(200);
+                echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+            } else {
+                $this->setHeader(400);
+                echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+            }
         } else {
-            $this->setHeader(400);
+//          $this->setHeader(400);
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
     }
