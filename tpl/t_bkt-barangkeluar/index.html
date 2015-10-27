@@ -367,22 +367,22 @@
                 div#body_wrapper {
                     margin: 0px 2px 0px 7px;
                     position: fixed;
-                    top: 1.3cm;
+                    top: 2cm;
                 }
             }
 
         </style>
         <!--<div style="width: 11.1cm; margin: 0px;">-->
-        <div style="width: 9.1cm; margin: 0px;">
+        <div style="width: 11cm; margin: 0px;">
             <!--<table style="width: 11.1cm; height: 1cm;">-->
             <div id="header_wrapper">
-                <table style="width: 9.1cm; height: 0.5cm; padding: 0px">
+                <table style="width: 12cm; height: 0.5cm; padding: 0px">
                     <tr>
                         <td width="50%" id="print_bbk">
                             PT. KARYA TUGAS ANDA <br>
                             Sukorejo - Pasuruan
                         </td>
-                        <td valign="top" style="text-align: right; font-size: 6pt;" id="print_bbk">
+                        <td valign="top" style="text-align: right;" id="print_bbk">
                             NO DOC FR-WHS-004-REV.00
                         </td>
                     </tr>
@@ -390,7 +390,7 @@
                 <center id="print_bbk">
                     *** BUKTI BARANG KELUAR ***
                 </center>
-                <table style="width: 9.1cm; margin-top: 5px;height: 0.4cm;">
+                <table style="width: 11cm; margin-top: 5px;height: 0.4cm;">
                     <tr id="print_bbk">
                         <td id="print_bbk" width="30%">NO WO {{form.no_wo.no_wo}}</td>
                         <td id="print_bbk" width="30%">No BBK {{form.no_bbk}}</td>
@@ -399,7 +399,7 @@
                 </table>
             </div>
             <div id="body_wrapper">
-                <table style="width: 9.1cm; border-collapse: collapse;height:4cm;">
+                <table style="width: 11cm; border-collapse: collapse;height:4cm;">
                     <thead>
                         <tr style="height:10pt; border-top: 1px #000 solid; border-bottom: 1px #000 solid;">
                             <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 0.7cm;" align="center">No.</td>
@@ -419,16 +419,18 @@
                             <td class="print_bbk_td" align="center">{{detail.satuan}}</td>
                             <!--<td class="print_bbk_td">{{detail.ket}}</td>-->
                         </tr>
-                        <tr style="margin:0pt;padding:0pt">
+                        <tr style="margin:0pt;padding:0pt" style="height:8pt;">
                             <td colspan="5" class="print_bbk_td">Ket : {{detail.ket}}</td>
                         </tr>
                     </tbody>
-                    <tr style="border-top: 1px #000 solid;">
-                        <td colspan="5" style=""></td>
-                    </tr>
+                    <tbody>
+                        <tr style="border-top: 1px #000 solid;">
+                            <td colspan="5" style=""></td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
-            <table style="width: 9.1cm; margin-bottom: 0px;" id="footer_wrapper">
+            <table style="width: 11cm; margin-bottom: 0px;" id="footer_wrapper">
                 <tr>
                     <td width="45%"></td>
                     <td width="10%"></td>
