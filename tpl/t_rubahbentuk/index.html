@@ -231,17 +231,24 @@
                 font-size: 9pt; 
                 font-family: Arial
             }
+             @media print {
+                html, body {
+                    display: block; 
+                    font-family: "Arial";
+                    margin: 0;
+                }
+
+
+            }
         </style>
-        <p class="print" style="position: absolute; left: 6.5cm; top: 98px;font-size: 8pt">{{form.nm_customer}}</p>
-        <p class="print" style="position: absolute; left: 6.5cm; top: 122px;font-size: 8pt /*0.7cm*/ /*0.5cm*/">{{form.alamat1}}</p>
-        <p class="print" style="position: absolute; left: 6.5cm; top: 146px;font-size: 8pt /*0.7cm*/ /*0.3cm*/">-</p>
-        <p class="print" style="position: absolute; left: 6.5cm; top: 170px;font-size: 8pt /*0.7cm*/ /*0.3cm*/">{{form.merk}}</p>
-        <p class="print" style="position: absolute; left: 6.5cm; top: 196px;font-size: 8pt /*0.7cm*/ /*0.3cm*/">{{form.no_chassis}}/{{form.no_mesin}}</p>
-        <p class="print" style="position: absolute; left: 6.5cm; top: 218px;font-size: 8pt /*0.7cm*/ /*0.5cm*/">CHASSIS</p>
-        <p class="print" style="position: absolute; left: 6.5cm; top: 242px;font-size: 8pt /*0.8cm*/ /*0.5cm*/">DIPPING</p>
-        <p class="print" style="position: absolute; left: 6.5cm; top: 266px;font-size: 8pt /*0.8cm*/ /*0.6cm*/">{{form.bentuk_baru}}</p>
-        <p class="print" style="position: absolute; left: 6.5cm; top: 290px;font-size: 8pt /*0.8cm*//*0.2cm*/">{{form.warna_baru}}</p>
-        <p class="print" style="position: absolute; left: 6.5cm; top: 314px;font-size: 8pt /*0.8cm*//*0.3cm*/">{{form.ket}}</p>
-        <p class="print" style="position: absolute; left: 6.5cm; top: 338px;font-size: 8pt /*4.2cm*/">{{form.tgl| date}}</p>
+        <p class="print" style="position: absolute; left: 15.3cm; top: 5cm;font-size: 9pt">{{form.kd_rubah}}</p><br><br>
+        <p class="print" style="position: absolute; left: 16cm; top: 9.9cm;font-size: 9pt /*0.7cm*/ /*0.3cm*/">{{form.merk}}</p>
+        <p class="print" style="position: absolute; left: 16cm; top: 10.6cm;font-size: 9pt /*0.7cm*/ /*0.3cm*/">{{form.no_chassis}}/{{form.no_mesin}}</p>
+        <p class="print" style="position: absolute; left: 16cm; top: 11.6cm;font-size: 9pt /*0.7cm*/ /*0.5cm*/">CHASSIS</p>
+        <p class="print" style="position: absolute; left: 16cm; top: 12.6cm;font-size: 9pt /*0.8cm*/ /*0.5cm*/">DIPPING</p>
+        <p class="print" style="position: absolute; left: 16cm; top: 13.6cm;font-size: 9pt /*0.8cm*/ /*0.6cm*/">{{form.bentuk_baru}}</p>
+        <p class="print" style="position: absolute; left: 16cm; top: 14.6cm;font-size: 9pt /*0.8cm*//*0.2cm*/">{{form.warna_baru}}</p>
+        <p class="print" style="position: absolute; left: 16cm; top: 15.6cm;font-size: 9pt /*0.8cm*//*0.3cm*/">{{form.ket}}</p>
+        <!--<p class="print" style="position: absolute; left: 7.5cm; top: 170px;font-size: 9pt /*4.2cm*/">{{form.tgl| date}}</p>-->
     </div>
 </div>

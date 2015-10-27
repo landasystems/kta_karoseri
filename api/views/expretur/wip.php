@@ -1,7 +1,7 @@
 <?php
 if (!isset($_GET['print'])) {
     header("Content-type: application/vnd-ms-excel");
-    header("Content-Disposition: attachment; filename=excel-rekap-wip.xls");
+    header("Content-Disposition: attachment; filename=rekap-wip.xls");
 }
 ?>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />

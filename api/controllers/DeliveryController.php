@@ -163,11 +163,11 @@ class DeliveryController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('delivery')
-                ->join('JOIN', 'wo_masuk', 'delivery.no_wo = wo_masuk.no_wo')
-                ->join('JOIN', 'spk', 'spk.no_spk = wo_masuk.no_spk')
-                ->join('JOIN', 'chassis', 'chassis.kd_chassis = spk.kd_chassis')
-                ->join('JOIN', 'model', 'model.kd_model = spk.kd_model')
-                ->join('JOIN', 'tbl_karyawan', 'tbl_karyawan.nik = spk.nik')
+                ->join('LEFT JOIN', 'wo_masuk', 'delivery.no_wo = wo_masuk.no_wo')
+                ->join('LEFT JOIN', 'spk', 'spk.no_spk = wo_masuk.no_spk')
+                ->join('LEFT JOIN', 'chassis', 'chassis.kd_chassis = spk.kd_chassis')
+                ->join('LEFT JOIN', 'model', 'model.kd_model = spk.kd_model')
+                ->join('LEFT JOIN', 'tbl_karyawan', 'tbl_karyawan.nik = spk.nik')
                 ->join('LEFT JOIN', 'serah_terima_in', 'serah_terima_in.kd_titipan = wo_masuk.kd_titipan')
                 ->join('LEFT JOIN', 'warna', 'serah_terima_in.kd_warna = warna.kd_warna')
                 ->orderBy($sort)
@@ -319,8 +319,8 @@ class DeliveryController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
 //        Yii::error($params);
         $model = new Delivery();
-
         $model->attributes = $params;
+        $model->tgl_delivery = date('Y-m-d', strtotime($params['tgl_delivery']));
         if ($params['tujuan'] == 'customer') {
             $model->kd_cust = $params['kd_cust'];
             $model->cabang = "";
@@ -348,6 +348,7 @@ class DeliveryController extends Controller {
         \Yii::error($params);
         $model = $this->findModel($id);
         $model->attributes = $params;
+        $model->tgl_delivery = date('Y-m-d', strtotime($params['tgl_delivery']));
         if ($params['tujuan'] == 'customer') {
             $model->kd_cust = $params['kd_cust'];
             $model->cabang = "";

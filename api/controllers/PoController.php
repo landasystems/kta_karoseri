@@ -192,12 +192,20 @@ class PoController extends Controller {
             } else {
                 $data[$i]['bayar'] = 'Kredit';
             }
+            if ($data[$i]['status'] == '0') {
+                $data[$i]['status_nama'] = 'Belum';
+            } else {
+                $data[$i]['status_nama'] = 'Sudah';
+            }
+            
             $sup = \app\models\Supplier::find()
                     ->where(['kd_supplier' => $data[$i]['suplier']])
                     ->One();
             $supplier = (isset($sup->nama_supplier)) ? $sup->nama_supplier : '';
 //            $data[$i]['suplier'] = $supplier;
             $i++;
+            
+            
         }
 
         $this->setHeader(200);
