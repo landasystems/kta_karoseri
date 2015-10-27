@@ -116,7 +116,7 @@ class DeliveryController extends Controller {
     }
 
     public function actionKode() {
-        $filter_name = "DU-".date("y");
+        $filter_name = "DU-" . date("y");
         $query = new Query;
         $query->from('delivery')
                 ->select("no_delivery")
@@ -127,7 +127,7 @@ class DeliveryController extends Controller {
         $models = $command->query()->read();
         $kode_mdl = (substr($models['no_delivery'], 5) + 1);
 //        $kode = $filter_name.substr('0000' . $kode_mdl, strlen($kode_mdl));
-        $kode = $filter_name.$kode_mdl;
+        $kode = $filter_name . $kode_mdl;
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'kode' => $kode));
@@ -183,8 +183,9 @@ class DeliveryController extends Controller {
                     $query->andFilterWhere(['like', 'model.' . $key, $val]);
                 } elseif ($key == 'merk') {
                     $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
                 }
-                $query->andFilterWhere(['like', $key, $val]);
             }
         }
 
@@ -201,7 +202,7 @@ class DeliveryController extends Controller {
             $nowo = \app\models\Womasuk::findOne($val['no_wo']);
             $models[$key]['nowo'] = (!empty($nowo)) ? $nowo->attributes : array();
         }
-        
+
         $data = array();
         foreach ($models as $key => $val) {
             $data[$key] = $val;

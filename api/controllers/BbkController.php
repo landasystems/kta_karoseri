@@ -416,6 +416,7 @@ class BbkController extends Controller {
                 ->leftJoin('tbl_karyawan as tk', 'tb.penerima = tk.nik')
                 ->leftJoin('tbl_jabatan as tj', 'tj.id_jabatan  = tb.kd_jab')
                 ->orderBy($sort)
+                ->where('tb.kd_jab != "-" and (tb.penerima is not null or tb.penerima != "-")')
                 ->select("tb.*, tk.nama as penerima, tj.jabatan as bagian");
 
         //filter
@@ -549,7 +550,7 @@ class BbkController extends Controller {
             if ($model->save()) {
                 $detailBbk = $params['detailBbk'];
                 foreach ($detailBbk as $val) {
-                    if (isset($val['kd_barang']['kd_barang']) and $val['jml'] > 0) {
+                    if (isset($val['kd_barang']['kd_barang']) and ( $val['jml'] > 0 or ! empty($val['jml']))) {
                         $det = new DetBbk();
                         $det->attributes = $val;
                         $det->kd_barang = $val['kd_barang']['kd_barang'];

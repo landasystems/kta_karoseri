@@ -2,6 +2,8 @@
 if (!isset($_GET['printlap'])) {
     header("Content-type: application/vnd-ms-excel");
     header("Content-Disposition: attachment; filename=excel-laporan-spp-rutin.xls");
+} else {
+    echo '<link rel="stylesheet" href="../../../css/print.css" type="text/css" />';
 }
 $data = array();
 $i = 0;
@@ -22,7 +24,6 @@ foreach ($models as $val) {
     $i++;
 }
 ?>
-<link rel="stylesheet" href="../../../css/print.css" type="text/css" />
 <div style="width:24cm">
     <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 9px;" width="100%">
         <tr>
@@ -117,8 +118,8 @@ foreach ($models as $val) {
                     <td class="border-right border-bottom" style="text-align:center; width: 45px;">&nbsp;<?= $vals['kd_barang'] ?></td>
                     <td class="border-right border-bottom" style="width: 250px;"><?= $vals['nm_barang'] ?></td>
                     <td class="border-right border-bottom" style="text-align:center; width: 45px;"><?= $vals['satuan'] ?></td>
-                    <td class="border-right border-bottom" style="text-align:center; width: 25px;">&nbsp;<?= $vals['min'] ?></td>
                     <td class="border-right border-bottom" style="text-align:center; width: 25px;">&nbsp;<?= $vals['max'] ?></td>
+                    <td class="border-right border-bottom" style="text-align:center; width: 25px;">&nbsp;<?= $vals['min'] ?></td>
                     <td class="border-right border-bottom" style="text-align:center; width: 25px;">&nbsp;<?= $vals['saldo'] ?></td>
                     <td class="border-right border-bottom" style="text-align:center; width: 45px;">&nbsp;<?= $vals['qty'] ?></td>
                     <td class="border-right border-bottom" style="width: 220px;"><?= $vals['ket'] ?></td>
