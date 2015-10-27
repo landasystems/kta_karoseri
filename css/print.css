@@ -17,11 +17,11 @@ body {
     width:100% !important;
     margin:0 !important;
     padding:0 !important;
-    line-height: 1.1; 
-    font-family: Garamond,"Times New Roman", serif; 
+    /*line-height: 1.1;*/ 
+    /*font-family: Garamond,"Times New Roman", serif;*/ 
     color: #000; 
     background: none; 
-    font-size: 14pt; 
+    /*font-size: 14pt;*/ 
     -webkit-transform-origin: 0 0;
     -moz-transform-origin: 0 0;
 }

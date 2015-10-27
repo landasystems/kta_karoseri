@@ -700,7 +700,7 @@ class BbkController extends Controller {
                 ->join('RIGHT JOIN', 'trans_bbk as trbk', 'trbk.no_bbk = rvb.no_bbk')
                 ->join('LEFT JOIN', 'tbl_jabatan as tbj', 'tbj.id_jabatan = trbk.kd_jab')
                 ->orderBy($sort)
-                ->select("rvb.*,tbk.nama,tbj.jabatan");
+                ->select("rvb.*,tbk.nama,tbj.jabatan,jb.jenis_brg");
 
         //filter
         if (isset($params['filter'])) {
