@@ -83,8 +83,6 @@
                             <td>{{row.status_nama}}</td>
                             <td>
                                 <div class="btn-group pull-right"  role="group" style="margin-top: -3px;">
-                                    <!--<button type="button" class="btn glyphicon glyphicon-ok" ng-show="row.status == '0'"></button>-->
-<!--                                    <button type="button" class="btn glyphicon glyphicon-remove"ng-show="row.status == '1'""></button>-->
                                     <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
                                     <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" ng-show="user.roles_id == 1 || user.roles_id == 16" class="btn-group pull-right"></button>
                                 </div>
@@ -221,7 +219,7 @@
                                         <th style="text-align: center; width:200px;">Nama Barang</th>
                                         <th style="text-align: center;">QTY</th>
                                         <th style="text-align: center;">Satuan</th>
-                                        <th style="text-align: center;">Harga</th>
+                                        <th style="text-align: center;margin:0px;width:150px;">Harga</th>
                                         <th style="text-align: center;">Jumlah</th>
                                         <th style="text-align: center;">Tgl Pengiriman</th>
                                         <th style="text-align: center;">Keterangan</th>
@@ -232,7 +230,7 @@
                                     <tr ng-repeat="detail in detsPo">
                                         <td>
                                             <div class="input-group" style="width:100%;">
-                                                <ui-select style="width:100%;" on-select="pilih(detail, $item)" ng-model="detail.data_barang" theme="bootstrap">
+                                                <ui-select on-select="pilih(detail, $item)" ng-model="detail.data_barang" theme="bootstrap">
                                                     <ui-select-match >{{$select.selected.nm_barang}}</ui-select-match>
                                                     <ui-select-choices refresh="cariBarang($select.search,form.listspp.no_spp)" repeat="val in resultsbrg">
                                                         {{val.nm_barang}}
@@ -420,11 +418,11 @@
                 }
 
                 @page {
-                    size: 10cm 9.5cm;
+                    size: 10cm 22cm;
                 }
             }
         </style>
-        <div style="margin: 0px; width: 15cm;">
+        <div style="margin:10px; width: 33cm;">
             <table width="100%" class="border-all" style="border-collapse: collapse;">
                 <tr style="height: 1.8cm;">
                     <td style="padding: 10px" colspan="2">
