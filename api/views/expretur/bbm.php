@@ -4,17 +4,17 @@ if (!isset($_GET['print'])) {
     header("Content-Disposition: attachment; filename=excel-laporan-barang-masuk.xls");
 }
 $data = array();
-foreach ($models as $val) {
+foreach ($models as $key => $val) {
     $data[$val['tanggal_nota']]['tanggal_nota'] = $val['tanggal_nota'];
-    $data[$val['tanggal_nota']]['body'][$val['no_bbm']]['no_bbm'] = $val['no_bbm'];
-    $data[$val['tanggal_nota']]['body'][$val['no_bbm']]['kd_barang'] = $val['kd_barang'];
-    $data[$val['tanggal_nota']]['body'][$val['no_bbm']]['nm_barang'] = $val['nm_barang'];
-    $data[$val['tanggal_nota']]['body'][$val['no_bbm']]['satuan'] = $val['satuan'];
-    $data[$val['tanggal_nota']]['body'][$val['no_bbm']]['jumlah'] = $val['jumlah'];
-    $data[$val['tanggal_nota']]['body'][$val['no_bbm']]['surat_jalan'] = $val['surat_jalan'];
-    $data[$val['tanggal_nota']]['body'][$val['no_bbm']]['no_po'] = $val['no_po'];
-    $data[$val['tanggal_nota']]['body'][$val['no_bbm']]['nama_supplier'] = $val['nama_supplier'];
-    $data[$val['tanggal_nota']]['body'][$val['no_bbm']]['keterangan'] = $val['keterangan'];
+    $data[$val['tanggal_nota']]['body'][$key]['no_bbm'] = $val['no_bbm'];
+    $data[$val['tanggal_nota']]['body'][$key]['kd_barang'] = $val['kd_barang'];
+    $data[$val['tanggal_nota']]['body'][$key]['nm_barang'] = $val['nm_barang'];
+    $data[$val['tanggal_nota']]['body'][$key]['satuan'] = $val['satuan'];
+    $data[$val['tanggal_nota']]['body'][$key]['jumlah'] = $val['jumlah'];
+    $data[$val['tanggal_nota']]['body'][$key]['surat_jalan'] = $val['surat_jalan'];
+    $data[$val['tanggal_nota']]['body'][$key]['no_po'] = $val['no_po'];
+    $data[$val['tanggal_nota']]['body'][$key]['nama_supplier'] = $val['nama_supplier'];
+    $data[$val['tanggal_nota']]['body'][$key]['keterangan'] = $val['keterangan'];
 }
 ?>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
@@ -73,7 +73,7 @@ foreach ($models as $val) {
     }
     ?>
 
-    <table class="border-all" style="border-collapse: collapse; font-size: 11px; margin-top:-2px;" width="100%">
+    <table class="border-all" style="border-collapse: collapse; font-size: 12px; margin-top:-2px;" width="100%">
         <tr>
             <th class="border-all back-grey">TANGGAL</th>
             <th class="border-all back-grey">NO BBM</th>
@@ -100,7 +100,8 @@ foreach ($models as $val) {
             <td valign="top" class="border-all"></td>
             <td valign="top" class="border-all"></td>
             <?php
-            foreach ($val['body'] as $key) {
+            $sorted = Yii::$app->landa->array_orderby($val['body'], 'nm_barang', SORT_ASC);
+            foreach ($sorted  as $key) {
                 ?>
                 <tr>
                     <td valign="top" class="border-all" align="center"></td>

@@ -58,7 +58,8 @@ if (!isset($_GET['print'])) {
         <?php
         $bbm = 0;
         $bbk = 0;
-        foreach ($models as $val) {
+        $sorted = Yii::$app->landa->array_orderby($models, 'golongan', SORT_ASC, 'barang', SORT_ASC);
+        foreach ($sorted as $val) {
             $bbm += $val['jmlBbm'];
             $bbk += $val['jmlBbk'];
             echo '<tr>';
@@ -74,8 +75,8 @@ if (!isset($_GET['print'])) {
         ?>
         <tr>
             <td colspan="4" class="border-all back-grey" align="center">JUMLAH ITEM BARANG</td> 
-            <td class="border-all back-grey" align="center"><?php echo $bbm?></td>
-            <td class="border-all back-grey" align="center"><?php echo $bbk?></td>
+            <td class="border-all back-grey" align="center"><?php echo $bbm ?></td>
+            <td class="border-all back-grey" align="center"><?php echo $bbk ?></td>
             <td class="border-all back-grey"></td>
         </tr>
     </table>
@@ -84,10 +85,10 @@ if (!isset($_GET['print'])) {
 if (isset($_GET['print'])) {
     ?>
     <script type="text/javascript">
-                window.print();
-                setTimeout(function() {
-                    window.close();
-                }, 1);
+        window.print();
+        setTimeout(function () {
+            window.close();
+        }, 1);
     </script>
     <?php
 }

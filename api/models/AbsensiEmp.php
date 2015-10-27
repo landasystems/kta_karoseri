@@ -124,4 +124,8 @@ class AbsensiEmp extends \yii\db\ActiveRecord {
         ];
     }
 
+    public function getKaryawan() {
+        return $this->hasOne(Karyawan::className(), ['pin' => 'pin']);
+    }
+
 }

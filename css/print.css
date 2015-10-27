@@ -5,7 +5,13 @@
          
 -------------------------------------------------------------- */
 @media print {
-    .page-break	{ display: block; page-break-before: always; }
+    .page-break	{ 
+        display: block; 
+        page-break-before: always; }
+    body{
+        -webkit-transform-origin: 0 0;
+        -moz-transform-origin: 0 0;
+    }
 }
 body { 
     width:100% !important;
@@ -172,19 +178,22 @@ span.label{width: 180px;display: inline-table;}
 }
 
 #print_bbk{        
-    padding: 0px;
-    font-size: 8pt;    
+    font-size: 9pt;    
     /*letter-spacing: 1pt;*/
     margin: 0px;
     padding: 0px;
-    font-family: "Roman";        
+    font-family: "Arial";        
+    -webkit-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
 }
 #print_bbm{        
-    font-size: 7pt;      
-    letter-spacing: 1pt;
+    font-size: 9pt;      
+    /*letter-spacing: 1pt;*/
     margin: 0px;
     padding: 0px;
-    font-family: "Roman";     
+    font-family: "Arial";     
+    -webkit-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
 }
 #print_po{        
     padding: 3px;
@@ -192,19 +201,30 @@ span.label{width: 180px;display: inline-table;}
     letter-spacing: 1pt;
     margin: 0px;
     padding: 0px;
-    font-family: "Roman";        
+    font-family: "Arial";      
+    -webkit-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
 }
 .print_bbk_td{
     padding: 0px;
-    font-size: 8pt;
+    font-size: 9pt;    
+    /*letter-spacing: 1pt;*/
+    margin: 0px;
+    padding: 0px;
+    font-family: "Arial";        
     vertical-align: top;
-    font-family: "Draft";      
+    -webkit-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+
 }
 .print_bbm_td{
-    padding: 2px;
-    font-size: 7pt;
+    padding: 0px;
+    font-size: 9pt;
     vertical-align: top;
-    font-family: "Draft"; 
+    font-family: "Arial"; 
+    vertical-align: top;
+    -webkit-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
 }
 
 .border-left {

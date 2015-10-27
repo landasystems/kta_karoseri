@@ -47,7 +47,7 @@ class PoController extends Controller {
     public function actionLock() {
         $params = json_decode(file_get_contents("php://input"), true);
         $centang = $params['id'];
-        
+
         foreach ($centang as $key => $val) {
             $status = TransPo::findOne($key);
             $status->status = 0;
@@ -89,21 +89,21 @@ class PoController extends Controller {
         return true;
     }
 
-    public function actionJmlprint(){
-       $query = new Query;
+    public function actionJmlprint() {
+        $query = new Query;
         $query->from('jml_laporan as jl')
                 ->select('jl.jumlah')
                 ->where(['id' => 1]);
         $command = $query->createCommand();
         $models = $command->query()->read();
-        
+
 //        $model = \app\models\JmlLaporan::findOne(['id' => 1]);
 //        $model->jumlah = ($models + 1);
 //        $model->save();
-        
-        return $models['jumlah']+1;
+
+        return $models['jumlah'] + 1;
     }
-    
+
     public function actionKode() {
         $query = new Query;
         $query->from('trans_po')
@@ -192,12 +192,20 @@ class PoController extends Controller {
             } else {
                 $data[$i]['bayar'] = 'Kredit';
             }
+            if ($data[$i]['status'] == '0') {
+                $data[$i]['status_nama'] = 'Belum';
+            } else {
+                $data[$i]['status_nama'] = 'Sudah';
+            }
+            
             $sup = \app\models\Supplier::find()
                     ->where(['kd_supplier' => $data[$i]['suplier']])
                     ->One();
             $supplier = (isset($sup->nama_supplier)) ? $sup->nama_supplier : '';
 //            $data[$i]['suplier'] = $supplier;
             $i++;
+            
+            
         }
 
         $this->setHeader(200);
@@ -361,7 +369,7 @@ class PoController extends Controller {
 
         $data = $this->retRekap($query);
 
-        
+
         $query->offset(0);
         $_SESSION['queryfluktuasi'] = $query;
         $_SESSION['filterfluktuasi'] = $filter;
@@ -638,7 +646,8 @@ class PoController extends Controller {
     public function actionBrgspp() {
         $param = $_REQUEST;
         $query = new Query;
-        if (!isset($param['nospp']) || $param['nospp'] == '-') {
+        $models = array();
+        if ((!isset($param['nospp']) || $param['nospp'] == '-' || $param['nospp'] == "") and ! empty($param['namabrg'])) {
             $query->from('barang')
                     ->select("*")
                     ->where(['like', 'nm_barang', $param['namabrg']])
@@ -647,7 +656,7 @@ class PoController extends Controller {
 
             $command = $query->createCommand();
             $models = $command->queryAll();
-        } else {
+        } else if (isset($param['nospp']) and $param['nospp'] != "") {
             $query->from("det_spp")
                     ->join('JOIN', 'barang', 'barang.kd_barang = det_spp.kd_barang ')
                     ->where('det_spp.no_spp =' . $param['nospp'])
@@ -679,7 +688,7 @@ class PoController extends Controller {
         $filter = $_SESSION['filter'];
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/belitunaikredit", ['models' => $models, 'filter' => $filter,'no_print' => $this->actionJmlprint()]);
+        return $this->render("/expretur/belitunaikredit", ['models' => $models, 'filter' => $filter, 'no_print' => $this->actionJmlprint()]);
     }
 
     public function actionExcelpantau() {

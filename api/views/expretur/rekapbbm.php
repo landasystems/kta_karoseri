@@ -75,7 +75,8 @@ foreach ($models as $val) {
                 <td style="vertical-align:top" class="border-right"></td>
             </tr>
             <?php
-            foreach ($key['body'] as $val) {
+            $sorted = Yii::$app->landa->array_orderby($key['body'], 'nm_barang', SORT_ASC);
+            foreach ($sorted as $val) {
                 ?>
                 <tr>
                     <td style="vertical-align:top" class="border-right border-bottom"></td>

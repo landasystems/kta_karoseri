@@ -71,10 +71,10 @@ class SpkController extends Controller {
 
     public function actionKerja() {
         $params = json_decode(file_get_contents("php://input"), true);
-
+        \Yii::error($params);
         $query = new Query;
         $query->from('kerja')
-                ->where('kd_jab="' . $params['id_jabatan'] . '"')
+                ->where('kd_jab="' . $params['jabatan']['id_jabatan'] . '"')
                 ->select("*");
 
         $command = $query->createCommand();
@@ -82,7 +82,7 @@ class SpkController extends Controller {
         $query2 = new Query;
         $query2->from('kerja')
                 ->orderBy('nm_kerja ASC')
-                ->where('kd_jab="' . $params['id_jabatan'] . '"')
+                ->where('kd_jab="' . $params['jabatan']['id_jabatan'] . '" and jenis like "%' . $params['no_wo']['jenis'] . '%"')
                 ->select("*");
         $command2 = $query2->createCommand();
         $detail = $command2->queryAll();
@@ -272,11 +272,12 @@ class SpkController extends Controller {
                 ->join('JOIN', 'view_wo_spk as vw', 'trans_spkerja.no_wo = vw.no_wo')
                 ->join('JOIN', 'tbl_jabatan', 'trans_spkerja.kd_jab = tbl_jabatan.id_jabatan')
                 ->where(' trans_spkerja.no_wo = "' . $model['no_wo'] . '"')
-                ->select("trans_spkerja.id as id_spk,trans_spkerja.no_wo,vw.nm_customer, vw.model,tbl_jabatan.jabatan, vw.merk, vw.tipe");
+                ->select("trans_spkerja.id as id_spk,trans_spkerja.no_wo,vw.nm_customer, vw.model,tbl_jabatan.jabatan, vw.merk, vw.tipe,vw.jenis");
         $command2 = $query2->createCommand();
         $models2 = $command2->query()->read();
 
-        $data = ['nm_customer' => $models2['nm_customer'], 'model' => $models2['model'], 'merk' => $models2['merk'], 'tipe' => $models2['tipe']];
+        $data = ['nm_customer' => $models2['nm_customer'], 'model' => $models2['model'], 'merk' => $models2['merk'], 'tipe' => $models2['tipe']
+                , 'jenis' => $models2['jenis'], 'jabatan' => $models2['jabatan']];
         //no wo
         $nowo = Spk::find()
                 ->where(['id' => $model['id']])
@@ -337,7 +338,7 @@ class SpkController extends Controller {
         Yii::error($params);
         $model = new Spk();
         $model->no_wo = $params['spk']['no_wo']['no_wo'];
-        $model->nik = $params['spk']['pic']['nik'];
+        $model->nik = (!empty($params['spk']['pic']['nik'])) ? $params['spk']['pic']['nik'] : null;
         $model->kd_jab = $params['spk']['jabatan']['id_jabatan'];
         $model->status = 0;
 
@@ -388,7 +389,7 @@ class SpkController extends Controller {
         Yii::error($params);
         $model = $this->findModel($id);
         $model->no_wo = $params['spk']['no_wo']['no_wo'];
-        $model->nik = $params['spk']['pic']['nik'];
+        $model->nik = (!empty($params['spk']['pic']['nik'])) ? $params['spk']['pic']['nik'] : null;
         $model->kd_jab = $params['spk']['jabatan']['id_jabatan'];
 
 

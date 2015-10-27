@@ -116,26 +116,18 @@ class DeliveryController extends Controller {
     }
 
     public function actionKode() {
+        $filter_name = "DU-" . date("y");
         $query = new Query;
         $query->from('delivery')
-                ->select('*')
+                ->select("no_delivery")
+                ->where(['SUBSTR(no_delivery,1,5)' => $filter_name])
                 ->orderBy('no_delivery DESC')
                 ->limit(1);
-
         $command = $query->createCommand();
         $models = $command->query()->read();
-
-        $cek = Delivery::find()
-                ->where('no_delivery = "DU-' . date("y") . '0001"')
-                ->One();
-//        Yii::error($cek);
-        if (!empty($cek)) {
-            $kode_mdl = (substr($models['no_delivery'], -3) + 1);
-            $kode = substr('0000' . $kode_mdl, strlen($kode_mdl));
-            $kode = "DU-" . date("y") . $kode;
-        } else {
-            $kode = "DU-" . date("y") . '0001';
-        }
+        $kode_mdl = (substr($models['no_delivery'], 5) + 1);
+//        $kode = $filter_name.substr('0000' . $kode_mdl, strlen($kode_mdl));
+        $kode = $filter_name . $kode_mdl;
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'kode' => $kode));
@@ -171,11 +163,11 @@ class DeliveryController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('delivery')
-                ->join('JOIN', 'wo_masuk', 'delivery.no_wo = wo_masuk.no_wo')
-                ->join('JOIN', 'spk', 'spk.no_spk = wo_masuk.no_spk')
-                ->join('JOIN', 'chassis', 'chassis.kd_chassis = spk.kd_chassis')
-                ->join('JOIN', 'model', 'model.kd_model = spk.kd_model')
-                ->join('JOIN', 'tbl_karyawan', 'tbl_karyawan.nik = spk.nik')
+                ->join('LEFT JOIN', 'wo_masuk', 'delivery.no_wo = wo_masuk.no_wo')
+                ->join('LEFT JOIN', 'spk', 'spk.no_spk = wo_masuk.no_spk')
+                ->join('LEFT JOIN', 'chassis', 'chassis.kd_chassis = spk.kd_chassis')
+                ->join('LEFT JOIN', 'model', 'model.kd_model = spk.kd_model')
+                ->join('LEFT JOIN', 'tbl_karyawan', 'tbl_karyawan.nik = spk.nik')
                 ->join('LEFT JOIN', 'serah_terima_in', 'serah_terima_in.kd_titipan = wo_masuk.kd_titipan')
                 ->join('LEFT JOIN', 'warna', 'serah_terima_in.kd_warna = warna.kd_warna')
                 ->orderBy($sort)
@@ -191,8 +183,9 @@ class DeliveryController extends Controller {
                     $query->andFilterWhere(['like', 'model.' . $key, $val]);
                 } elseif ($key == 'merk') {
                     $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
                 }
-                $query->andFilterWhere(['like', $key, $val]);
             }
         }
 
@@ -209,7 +202,7 @@ class DeliveryController extends Controller {
             $nowo = \app\models\Womasuk::findOne($val['no_wo']);
             $models[$key]['nowo'] = (!empty($nowo)) ? $nowo->attributes : array();
         }
-        
+
         $data = array();
         foreach ($models as $key => $val) {
             $data[$key] = $val;
@@ -326,8 +319,8 @@ class DeliveryController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
 //        Yii::error($params);
         $model = new Delivery();
-
         $model->attributes = $params;
+        $model->tgl_delivery = date('Y-m-d', strtotime($params['tgl_delivery']));
         if ($params['tujuan'] == 'customer') {
             $model->kd_cust = $params['kd_cust'];
             $model->cabang = "";
@@ -355,6 +348,7 @@ class DeliveryController extends Controller {
         \Yii::error($params);
         $model = $this->findModel($id);
         $model->attributes = $params;
+        $model->tgl_delivery = date('Y-m-d', strtotime($params['tgl_delivery']));
         if ($params['tujuan'] == 'customer') {
             $model->kd_cust = $params['kd_cust'];
             $model->cabang = "";

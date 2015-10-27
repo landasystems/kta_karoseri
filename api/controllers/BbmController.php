@@ -26,6 +26,7 @@ class BbmController extends Controller {
                     'delete' => ['delete'],
                     'kode' => ['get'],
                     'excel' => ['get'],
+                    'excel2' => ['get'],
                     'excelrekap' => ['get'],
                     'exceldet' => ['get'],
                     'rekap' => ['get'],
@@ -562,6 +563,18 @@ class BbmController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/bbm", ['models' => $models, 'filter' => $filter]);
+    }
+    
+    public function actionExcel2() {
+        session_start();
+        $query = $_SESSION['query'];
+        $query->orderBy('barang.nm_barang ASC, tb.tgl_nota ASC'
+                . '');
+        $filter = $_SESSION['filter'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        
+        return $this->render("/expretur/bbm2", ['models' => $models, 'filter' => $filter]);
     }
 
     public function actionExcelrekap() {

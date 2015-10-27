@@ -55,13 +55,15 @@ app.controller('spkaroseriCtrl', function ($scope, Data, toaster, $modal) {
         var ppn = 0;
         var total = 0;
 
-        if ($scope.is_ppn == true) {
+        if ($scope.form.is_ppn == "1") {
             ppn = (10 / 100) * (harga_karoseri * jml);
             $scope.form.ppn = ppn;
         } else {
             $scope.form.ppn = 0;
             ppn = 0;
         }
+        
+//        console.log(ppn);
 
         var jml_harga = (harga_karoseri * jml) + harga_optional;
         $scope.form.jml_harga = jml_harga;

@@ -282,7 +282,9 @@ class BbkController extends Controller {
             }
 
             echo json_encode(array('status' => 1, 'data' => $det));
+//            echo '1';
         } else {
+//            echo '2';
             $query = new Query;
             $query->from('barang')
                     ->select("*")
@@ -414,6 +416,7 @@ class BbkController extends Controller {
                 ->leftJoin('tbl_karyawan as tk', 'tb.penerima = tk.nik')
                 ->leftJoin('tbl_jabatan as tj', 'tj.id_jabatan  = tb.kd_jab')
                 ->orderBy($sort)
+                ->where('tb.kd_jab != "-" and (tb.penerima is not null or tb.penerima != "-")')
                 ->select("tb.*, tk.nama as penerima, tj.jabatan as bagian");
 
         //filter
@@ -537,33 +540,38 @@ class BbkController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new TransBbk();
         $model->attributes = $params['bbk'];
-        $model->tanggal = date("Y-m-d", strtotime($params['bbk']['tanggal']));
-        $model->status = 0;
-        $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '-';
-        $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '-';
-        $model->penerima = isset($params['bbk']['penerima']['nik']) ? $params['bbk']['penerima']['nik'] : '-';
-        $model->lock = 1;
-        if ($model->save()) {
-            $detailBbk = $params['detailBbk'];
-            foreach ($detailBbk as $val) {
-                if (isset($val['kd_barang']['kd_barang'])) {
-                    $det = new DetBbk();
-                    $det->attributes = $val;
-                    $det->kd_barang = $val['kd_barang']['kd_barang'];
-                    $det->no_bbk = $model->no_bbk;
-                    $det->save();
+        if ($model->validate()) {
+            $model->tanggal = date("Y-m-d", strtotime($params['bbk']['tanggal']));
+            $model->status = 0;
+            $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '-';
+            $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '-';
+            $model->penerima = isset($params['bbk']['penerima']['nik']) ? $params['bbk']['penerima']['nik'] : '-';
+            $model->lock = 1;
+            if ($model->save()) {
+                $detailBbk = $params['detailBbk'];
+                foreach ($detailBbk as $val) {
+                    if (isset($val['kd_barang']['kd_barang']) and ( $val['jml'] > 0 or ! empty($val['jml']))) {
+                        $det = new DetBbk();
+                        $det->attributes = $val;
+                        $det->kd_barang = $val['kd_barang']['kd_barang'];
+                        $det->no_bbk = $model->no_bbk;
+                        $det->save();
 
-                    //update stok barang
-                    $barang = Barang::find()->where('kd_barang="' . $det->kd_barang . '"')->one();
-                    $barang->saldo -= $det->jml;
-                    $barang->save();
+                        //update stok barang
+                        $barang = Barang::find()->where('kd_barang="' . $det->kd_barang . '"')->one();
+                        $barang->saldo -= $det->jml;
+                        $barang->save();
+                    }
                 }
-            }
 
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+                $this->setHeader(200);
+                echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+            } else {
+                $this->setHeader(400);
+                echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+            }
         } else {
-            $this->setHeader(400);
+//          $this->setHeader(400);
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
     }
@@ -662,7 +670,7 @@ class BbkController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tanggal DESC";
+        $sort = "rvb.tanggal DESC";
         $offset = 0;
         $limit = 10;
 
@@ -689,17 +697,11 @@ class BbkController extends Controller {
                 ->limit($limit)
                 ->from('view_bbk_rekap as rvb')
                 ->join('LEFT JOIN', 'tbl_karyawan as tbk', 'tbk.nik = rvb.penerima')
-                ->join('LEFT JOIN', 'tbl_jabatan as tbj', 'tbj.id_jabatan = tbk.jabatan')
+                ->join('RIGHT JOIN', 'trans_bbk as trbk', 'trbk.no_bbk = rvb.no_bbk')
+                ->join('LEFT JOIN', 'tbl_jabatan as tbj', 'tbj.id_jabatan = trbk.kd_jab')
                 ->orderBy($sort)
-                ->select("rvb.*,tbk.nama,tbj.jabatan");
+                ->select("rvb.*,tbk.nama,tbj.jabatan,jb.jenis_brg");
 
-//                ->from('trans_bbk as trbk')
-//                ->join('JOIN','det_bbk as detbk','detbk.no_bbk = trbk.no_bbk')
-//                ->join('LEFT JOIN','barang as brg','brg.kd_barang = detbk.kd_barang')
-//                ->join('JOIN','tbl_karyawan as tbk','tbk.nik = trbk.penerima')
-//                ->join('JOIN','tbl_jabatan as tbj','tbj.id_jabatan = trbk.kd_jab')
-//                ->orderBy($sort)
-//                ->select("trbk.*,detbk.*,brg.satuan,brg.nm_barang,tbk.nama,tbj.jabatan");
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
@@ -717,6 +719,8 @@ class BbkController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->queryAll();
+        
+
         $totalItems = $query->count();
         $query->limit(null);
         $query->offset(null);
@@ -728,6 +732,7 @@ class BbkController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
+
 
     public function actionExcel() {
         session_start();
@@ -741,7 +746,7 @@ class BbkController extends Controller {
     public function actionExcelbk() {
         session_start();
         $query = $_SESSION['query'];
-
+        $filter = $_SESSION['filter'];
 
         $command = $query->createCommand();
         $models = $command->queryAll();

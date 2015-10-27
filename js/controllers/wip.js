@@ -26,6 +26,7 @@ app.controller('wipCtrl', function ($scope, Data, toaster, $modal) {
 
     $scope.pilih = function (form, $item) {
         Data.post('wip/getnowo/', $item).then(function (data) {
+            console.log(data);
             var newDet = [{
                     id: 0,
                     no_wo: '',
