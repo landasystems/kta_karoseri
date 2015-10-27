@@ -114,11 +114,6 @@ class BarangController extends Controller {
             $new = mktime(0, 0, 0, $start[1], $start[2] + $i, $start[0]);
             $newDate = date("Y-m-d", $new);
             $tgl[] = $newDate;
-
-//            if ($i == 1)
-//                $tglStart = $newDate;
-//            if ($i == 6)
-//                $tglEnd = $newDate;
         }
 
         $tglStart = date("Y-m-d", strtotime($params['tanggal']['startDate']));
@@ -195,17 +190,17 @@ class BarangController extends Controller {
     public function actionExcelpergerakan2() {
         session_start();
 
-        $tgl = isset($_SESSION['tanggal']) ? $_SESSION['tanggal'] : '';
+        $tgl = isset($_SESSION['tanggal']) ? $_SESSION['tanggal'] : array();
         $bbm = $_SESSION['queryBbm'];
         $bbk = $_SESSION['queryBbk'];
 
 //        $bbm->where(null);
-        $bbm->where(['det_bbm.tgl_terima' => $tgl]);
+//        $bbm->where(['det_bbm.tgl_terima' => $tgl]);
         $commandBbm = $bbm->createCommand();
         $modelBBM = $commandBbm->queryAll();
 
 //        $bbk->where(null);
-        $bbk->where(['trans_bbk.tanggal' => $tgl]);
+//        $bbk->where(['trans_bbk.tanggal' => $tgl]);
         $commandBbk = $bbk->createCommand();
         $modelBBK = $commandBbk->queryAll();
 

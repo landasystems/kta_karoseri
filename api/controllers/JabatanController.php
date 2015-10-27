@@ -31,6 +31,7 @@ class JabatanController extends Controller {
                     'listkaryawanabsentjabatan' => ['get'],
                     'listkaryawansales' => ['get'],
                     'cari' => ['get'],
+                    'cari2' => ['get'],
                 ],
             ]
         ];
@@ -59,6 +60,62 @@ class JabatanController extends Controller {
         return true;
     }
 
+    public function actionCari2() {
+        $params = $_REQUEST;
+
+        if (isset($params['no_wo']) and ! empty($params['no_wo'])) {
+
+            $optional = \app\models\TransAdditionalBomWo::find()
+                    ->joinWith('transadditionalbom')
+                    ->where(['trans_additional_bom_wo.no_wo' => $params['no_wo']])
+                    ->andWhere(['trans_additional_bom.status' => 1])
+                    ->all();
+
+            //jika tidak ada optional ambil dari trans_standar_bahan
+            if (empty($optional) or count($optional) == 0) {
+                //create query
+                $query = new Query;
+                $query->from('det_standar_bahan as dts')
+                        ->join('JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
+                        ->join('JOIN', 'spk', 'spk.kd_bom = dts.kd_bom')
+                        ->join('JOIN', 'wo_masuk as wm', 'wm.no_spk  = spk.no_spk')
+                        ->join('JOIN', 'trans_standar_bahan as tsb', 'tsb.kd_bom  = spk.kd_bom')
+                        ->orderBy('tjb.urutan_produksi ASC, tjb.jabatan ASC')
+                        ->groupBy('tjb.id_jabatan')
+                        ->where('wm.no_wo = "' . $params['no_wo'] . '"')
+                        ->andWhere('tjb.jabatan like "%' . $params['nama'] . '%"')
+                        ->select("tjb.*");
+            } else {
+                //create query
+                $query = new Query;
+                $query->from('det_additional_bom as dts')
+                        ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
+                        ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dts.tran_additional_bom_id')
+                        ->join('LEFT JOIN', 'trans_additional_bom_wo as tsbw', ' tsb.id = tsbw.tran_additional_bom_id')
+                        ->orderBy('tjb.urutan_produksi ASC, tjb.jabatan ASC')
+                        ->groupBy('tjb.id_jabatan')
+                        ->where('tsbw.no_wo = "' . $params['no_wo'] . '"')
+                        ->andWhere('tjb.jabatan like "%' . $params['nama'] . '%"')
+                        ->select("tjb.*");
+            }
+        } else {
+            $param = $_REQUEST;
+            $query = new Query;
+            $query->from('tbl_jabatan')
+                    ->select("*")
+                    ->orderBy('jabatan ASC')
+                    ->where('jabatan like "%' . $param['nama'] . '%"')
+                    ->orWhere(['like', 'id_jabatan', $param['nama']]);
+        }
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+
     public function actionListkaryawanabsent() {
         $param = $_REQUEST;
 
@@ -73,7 +130,7 @@ class JabatanController extends Controller {
         $data = array();
         foreach ($absen as $key => $val) {
             $data[$key]['nik'] = $val->emp->nik;
-            $data[$key]['nama'] = $val->emp->first_name.' '.$val->emp->last_name;
+            $data[$key]['nama'] = $val->emp->first_name . ' ' . $val->emp->last_name;
         }
 
         echo json_encode(array('status' => 1, 'data' => $data));
@@ -87,14 +144,14 @@ class JabatanController extends Controller {
                     ->joinWith('emp')
                     ->join('LEFT JOIN', 'purchassing.tbl_karyawan', 'purchassing.tbl_karyawan.nik = emp.nik')
                     ->select("emp.first_name, emp.pin, date(scan_date) as scan_date")
-//                    ->where('date(scan_date) = "' . date("Y-m-d") . '"')
+                    ->where('date(scan_date) = "' . date("Y-m-d") . '"')
                     ->andWhere('purchassing.tbl_karyawan.jabatan = "' . $param['jabatan'] . '"')
                     ->limit(100)
                     ->all();
             $data = array();
             foreach ($absen as $key => $val) {
                 $data[$key]['nik'] = $val->emp->nik;
-                  $data[$key]['nama'] = $val->emp->first_name.' '.$val->emp->last_name;
+                $data[$key]['nama'] = $val->emp->first_name . ' ' . $val->emp->last_name;
             }
 
             echo json_encode(array('status' => 1, 'data' => $data));

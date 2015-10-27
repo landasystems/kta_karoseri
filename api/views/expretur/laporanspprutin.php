@@ -2,6 +2,8 @@
 if (!isset($_GET['printlap'])) {
     header("Content-type: application/vnd-ms-excel");
     header("Content-Disposition: attachment; filename=excel-laporan-spp-rutin.xls");
+} else {
+    echo '<link rel="stylesheet" href="../../../css/print.css" type="text/css" />';
 }
 $data = array();
 $i = 0;
@@ -22,7 +24,6 @@ foreach ($models as $val) {
     $i++;
 }
 ?>
-<link rel="stylesheet" href="../../../css/print.css" type="text/css" />
 <div style="width:24cm">
     <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 9px;" width="100%">
         <tr>

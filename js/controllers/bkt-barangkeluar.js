@@ -5,7 +5,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
         $scope.sisa_pengambilan = sisa;
         $scope.stok_sekarang = stok;
     }
-    
+
     $scope.tgl_Print = new Date();
 
     $scope.refresh = function () {
@@ -180,6 +180,12 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
 
     $scope.cariJabatan = function ($query) {
         Data.get('jabatan/cari', {nama: $query}).then(function (data) {
+            $scope.resultsjabatan = data.data;
+        });
+    }
+
+    $scope.cariJabatan2 = function (no_wo, nama) {
+        Data.get('jabatan/cari2', {no_wo: no_wo, nama: nama}).then(function (data) {
             $scope.resultsjabatan = data.data;
         });
     }
@@ -491,7 +497,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
 
             if ($scope.form.no_wo.no_wo != '-') {
                 $scope.form.kat_bbk = 'produksi';
-            }else{
+            } else {
                 $scope.form.kat_bbk = 'umum';
             }
 
@@ -511,7 +517,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             }
 
             $scope.detPrint($scope.detailBbk);
-            
+
         });
     };
 
