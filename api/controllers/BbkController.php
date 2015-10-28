@@ -696,10 +696,10 @@ class BbkController extends Controller {
                 ->limit($limit)
                 ->from('view_bbk_rekap as rvb')
                 ->join('LEFT JOIN', 'tbl_karyawan as tbk', 'tbk.nik = rvb.penerima')
-                ->join('RIGHT JOIN', 'trans_bbk as trbk', 'trbk.no_bbk = rvb.no_bbk')
+                ->join('LEFT JOIN', 'trans_bbk as trbk', 'trbk.no_bbk = rvb.no_bbk')
                 ->join('LEFT JOIN', 'tbl_jabatan as tbj', 'tbj.id_jabatan = trbk.kd_jab')
                 ->orderBy($sort)
-                ->select("rvb.*,tbk.nama,tbj.jabatan,jb.jenis_brg");
+                ->select("rvb.*,tbk.nama,tbj.jabatan");
 
         //filter
         if (isset($params['filter'])) {
