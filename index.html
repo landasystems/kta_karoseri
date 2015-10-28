@@ -122,9 +122,10 @@
 
             function printHTML() {
                 useDefaultPrinter();
-
+                qz.setPaperSize("3in", "5in");  // US Letter
+                qz.setAutoSize(true);
                 // Append our image (only one image can be appended per print)
-                qz.appendHTML('<html><body>' + $("#printArea").html() + '</body></html>');
+                qz.appendHTML('<html><head><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body>' + $("#printArea").html() + '</body></html>');
 
                 qz.printHTML();
             }

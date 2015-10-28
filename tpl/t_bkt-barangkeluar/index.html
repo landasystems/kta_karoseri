@@ -136,7 +136,8 @@
                             <button type="button" class="btn btn-success fa fa-check"  ng-click="modal()">&nbsp;Pengecualian BBK</button>
                             <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-show="is_view" ng-click="create();">&nbsp;Tambah Data</button>
                             <!--<button type="button" class="btn btn-info fa fa-print"  ng-show="is_view" ng-print print-element-id="printArea" ng-click="simpanPrint(form.no_bbk)" ng-disabled="is_print == 1 && user.roles_id != 1">&nbsp;Print</button>-->
-                            <button type="button" class="btn btn-info fa fa-print"  ng-show="is_view" ng-print print-element-id="printArea">&nbsp;Print</button>
+                            <!--<button type="button" class="btn btn-info fa fa-print"  ng-show="is_view" ng-print print-element-id="printArea">&nbsp;Print</button>-->
+                            <button type="button" class="btn btn-info fa fa-print"  ng-show="is_view" onclick="printHTML()">&nbsp;Print</button>
                         </div>
                     </div>
                     <div class="panel-body">
@@ -245,16 +246,6 @@
                                     </div>
                                 </div>
                                 <div class="col-md-7 col-sm-12">
-                                    <!--                                    <div class="row">
-                                                                            <div class="col-md-6 col-sm-12 thumb-wrapper">
-                                                                                <center><h4>Sisa Pengambilan</h4></center>
-                                                                                <center style="margin-top: 10px;"><h1>{{sisa_pengambilan}}</h1></center>
-                                                                            </div>
-                                                                            <div class="col-md-6 col-sm-12 thumb-wrapper">
-                                                                                <center><h4>Stok Sekarang</h4></center>
-                                                                                <center style="margin-top: 10px;"><h1>{{stok_sekarang}}</h1></center>
-                                                                            </div>
-                                                                        </div>-->
                                     <div class="row table-outter" style="margin-top: 10px; height: 220px;">
                                         <table class="table table-stripped table-scroll" >
                                             <thead>
@@ -285,8 +276,7 @@
                                     <thead>
                                         <tr>
                                             <th class="panel-heading text-muted font-bold" colspan="6">Detail BBK</th>
-                                            <!--<th class="panel-heading text-muted font-bold" ><button ng-click="addDetail()" class="btn btn-success" ng-hide="is_view" title="Tambah Detail"><i class="fa fa-plus-square"></i></button></th>-->
-                                        </tr>
+                                          </tr>
                                         <tr>
                                             <th>Barang</th>
                                             <th style="width:100px" ng-show="is_create">Sisa</th>
@@ -313,10 +303,7 @@
                                             </td>
                                             <td>{{detail.satuan}}</td>
                                             <td><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control"></td>
-                                            <!--                                            <td ng-show="is_view != true">
-                                                                                            <button ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view" style="width:50px;" title="Hapus Detail"><i class="fa fa-trash-o"></i></button>
-                                                                                        </td>-->
-                                        </tr>
+                                          </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -333,86 +320,71 @@
         </div>
 
         <div id="printArea" ng-show="is_view">
-            <style media="print">
-                @media print {
-                    html, body {
-                        display: block; 
-                        font-family: "Calibri";
-                        margin: 0;
-                        -webkit-transform-origin: 0 0;
-                        -moz-transform-origin: 0 0;
-                    }
-
-                    @page {
-                        size: 10cm 9.5cm;
-                    }
-                }
-            </style>
-            <div style="margin: 0px; width: 15cm; height: 14cm" ng-repeat="hal in detailBbkPrint">
-                <table style="height: 0.5cm; padding: 0px">
+            <div style="margin: 0px; width: 10cm; height: 13cm" ng-repeat="hal in detailBbkPrint">
+                <table style="height: 0.5cm; padding: 0px"  width="100%">
                     <tr>
-                        <td width="50%" id="print_bbk">
+                        <td width="50%" id="print_bbk" style="font-size: 9pt; font-family: Roman">
                             PT. KARYA TUGAS ANDA <br>
                             Sukorejo - Pasuruan
                         </td>
-                        <td valign="top" style="text-align: right;" id="print_bbk">
+                        <td valign="top" id="print_bbk" style="text-align: right; font-size: 9pt; font-family: Roman">
                             NO DOC FR-WHS-004-REV.00
                         </td>
                     </tr>
                 </table>
-                <center id="print_bbk">
+                <center id="print_bbk" style="font-size: 9pt; font-family: Roman">
                     *** BUKTI BARANG KELUAR ***
                 </center>
                 <table style="margin-top: 5px;height: 0.4cm;">
                     <tr id="print_bbk">
-                        <td id="print_bbk" width="30%">NO WO {{form.no_wo.no_wo}}</td>
-                        <td id="print_bbk" width="30%">No BBK {{form.no_bbk}}</td>
-                        <td id="print_bbk">{{form.kd_jab.jabatan}}</td>
+                        <td id="print_bbk" width="30%" style="font-size: 8pt; font-family: Roman">NO WO {{form.no_wo.no_wo}}</td>
+                        <td id="print_bbk" width="30%" style="font-size: 8pt; font-family: Roman">No BBK {{form.no_bbk}}</td>
+                        <td id="print_bbk" style="font-size: 8pt; font-family: Roman">{{form.kd_jab.jabatan}}</td>
                     </tr>
                 </table>
-                <div style="height:8.5cm;">
+                <div style="height:5.5cm;">
                     <table width="100%" style="border-collapse: collapse;">
                         <thead>
                             <tr style="height:10pt; border-top: 1px #000 solid; border-bottom: 1px #000 solid;">
-                                <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 0.7cm;" align="center">No.</td>
-                                <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 1.6cm;" align="center">Kode</td>
-                                <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 3cm;" align="center">Nama Barang</td>
-                                <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 0.8cm;" align="center">Jml</td>
-                                <td class="print_bbk_td border-top border-bottom" style="width: 0.8cm;" align="center">Sat</td>
+                                <td class="print_bbk_td border-top border-bottom" style="font-size: 8pt; font-family: Roman; border-right: 1px #000 solid; width: 0.7cm;" align="center">No.</td>
+                                <td class="print_bbk_td border-top border-bottom" style="font-size: 8pt; font-family: Roman; border-right: 1px #000 solid; width: 1.6cm;" align="center">Kode</td>
+                                <td class="print_bbk_td border-top border-bottom" style="font-size: 8pt; font-family: Roman; border-right: 1px #000 solid; width: 3cm;" align="center">Nama Barang</td>
+                                <td class="print_bbk_td border-top border-bottom" style="font-size: 8pt; font-family: Roman; border-right: 1px #000 solid; width: 0.8cm;" align="center">Jml</td>
+                                <td class="print_bbk_td border-top border-bottom" style="font-size: 8pt; font-family: Roman; width: 0.8cm;" align="center">Sat</td>
                             </tr>
                         </thead>
                         <tbody ng-repeat="detail in hal">
                             <tr style="height:8pt;" ng-show="detail.kd_barang != '' && detail.kd_barang.sisa_pengambilan > 0">
-                                <td class="print_bbk_td" align="center">{{detail.no}}</td>
-                                <td class="print_bbk_td" align="center">{{detail.kd_barang.kd_barang}}</td>
-                                <td class="print_bbk_td">{{detail.kd_barang.nm_barang}}</td>
-                                <td class="print_bbk_td" align="center">{{detail.jml}} </td>
-                                <td class="print_bbk_td" align="center">{{detail.satuan}}</td>
+                                <td class="print_bbk_td" align="center" style=" font-family: Roman; font-size: 8pt;">{{detail.no}}</td>
+                                <td class="print_bbk_td" align="center" style=" font-family: Roman; font-size: 8pt;">{{detail.kd_barang.kd_barang}}</td>
+                                <td class="print_bbk_td" style=" font-family: Roman; font-size: 8pt;">{{detail.kd_barang.nm_barang}}</td>
+                                <td class="print_bbk_td" align="center" style=" font-family: Roman; font-size: 8pt;">{{detail.jml}} </td>
+                                <td class="print_bbk_td" align="center" style=" font-family: Roman; font-size: 8pt;">{{detail.satuan}}</td>
                             </tr>
                             <tr style="height:8pt;margin:0pt;padding:0pt" ng-show="detail.jml > 0">
-                                <td colspan="5" class="print_bbk_td">Ket : {{detail.ket}}</td>
+                                <td colspan="5" class="print_bbk_td" style=" font-family: Roman; font-size: 8pt;">Ket : {{detail.ket}}</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <table style="bottom: 0.1cm">
+                <table style="bottom: 0.1cm;" width="100%">
                     <tr>
                         <td width="40%"></td>
                         <td width="6%"></td>
-                        <td width="47%" align="center" id="print_bbk">Sukorejo, {{tgl_Print| date}}</td>
+                        <td width="47%" align="center" id="print_bbk" style=" font-family: Roman; font-size: 8pt;">Sukorejo, {{tgl_Print| date}}</td>
                     </tr>
                     <tr>
-                        <td align="center" id="print_bbk">Dikeluarkan Oleh :</td>
+                        <td align="center" id="print_bbk" style=" font-family: Roman; font-size: 8pt;">Dikeluarkan Oleh :</td>
                         <td></td>
-                        <td align="center" id="print_bbk">Yang Menerima :</td>
+                        <td align="center" id="print_bbk" style=" font-family: Roman; font-size: 8pt;">Yang Menerima :</td>
                     </tr>
                     <tr>
                         <td colspan="3"><br></td>
                     </tr>
                     <tr>
-                        <td align="center" id="print_bbk">{{form.petugas}}</td>
+                        <td align="center" id="print_bbk" style=" font-family: Roman; font-size: 8pt;">{{form.petugas}}</td>
                         <td></td>
-                        <td align="center" id="print_bbk">{{form.penerima.nama}}</td>
+                        <td align="center" id="print_bbk" style=" font-family: Roman; font-size: 8pt;">{{form.penerima.nama}}</td>
                     </tr>
                 </table>
             </div>
