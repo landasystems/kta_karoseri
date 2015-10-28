@@ -347,45 +347,9 @@
                         size: 10cm 9.5cm;
                     }
                 }
-            }
-
-            @media print {
-                tfoot { visibility: hidden; }
-
-                table#footer_wrapper {
-                    margin: 0px 2px 0px 7px;
-                    position: fixed;
-                    bottom: 0;
-                }
-
-                table#footer_content {
-                    font-weight: bold;
-                }
-                tfoot { visibility: hidden; }
-
-                div#header_wrapper {
-                    margin: 0px 2px 0px 7px;
-                    position: fixed;
-                    top: 0cm;
-                }
-
-                div#header_wrapper {
-                    font-weight: bold;
-                }
-
-                div#body_wrapper {
-                    margin: 0px 2px 0px 7px;
-                    position: fixed;
-                    top: 2cm;
-                }
-            }
-
-        </style>
-        <!--<div style="width: 11.1cm; margin: 0px;">-->
-        <div style="width: 11cm; margin: 0px;">
-            <!--<table style="width: 11.1cm; height: 1cm;">-->
-            <div id="header_wrapper">
-                <table style="width: 12cm; height: 0.5cm; padding: 0px">
+            </style>
+            <div style="margin: 0px; width: 15cm; height: 14cm" ng-repeat="hal in detailBbkPrint">
+                <table style="height: 0.5cm; padding: 0px">
                     <tr>
                         <td width="50%" id="print_bbk">
                             PT. KARYA TUGAS ANDA <br>
@@ -399,66 +363,485 @@
                 <center id="print_bbk">
                     *** BUKTI BARANG KELUAR ***
                 </center>
-                <table style="width: 11cm; margin-top: 5px;height: 0.4cm;">
+                <table style="margin-top: 5px;height: 0.4cm;">
                     <tr id="print_bbk">
                         <td id="print_bbk" width="30%">NO WO {{form.no_wo.no_wo}}</td>
                         <td id="print_bbk" width="30%">No BBK {{form.no_bbk}}</td>
                         <td id="print_bbk">{{form.kd_jab.jabatan}}</td>
                     </tr>
                 </table>
-            </div>
-            <div id="body_wrapper">
-                <table style="width: 11cm; border-collapse: collapse;height:4cm;">
-                    <thead>
-                        <tr style="height:10pt; border-top: 1px #000 solid; border-bottom: 1px #000 solid;">
-                            <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 0.7cm;" align="center">No.</td>
-                            <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 1.6cm;" align="center">Kode</td>
-                            <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 3cm;" align="center">Nama Barang</td>
-                            <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 0.8cm;" align="center">Jml</td>
-                            <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 0.8cm;" align="center">Sat</td>
-                            <!--<td class="print_bbk_td border-top border-bottom" style="width: 2.2cm;" align="center">Ket</td>-->
-                        </tr>
-                    </thead>
-                    <tbody ng-repeat="detail in detailBbk">
-                        <tr style="height:8pt;">
-                            <td class="print_bbk_td" align="center">{{$index + 1}}</td>
-                            <td class="print_bbk_td" align="center">{{detail.kd_barang.kd_barang}}</td>
-                            <td class="print_bbk_td">{{detail.kd_barang.nm_barang}}</td>
-                            <td class="print_bbk_td" align="center">{{detail.jml}} </td>
-                            <td class="print_bbk_td" align="center">{{detail.satuan}}</td>
-                            <!--<td class="print_bbk_td">{{detail.ket}}</td>-->
-                        </tr>
-                        <tr style="margin:0pt;padding:0pt" style="height:8pt;">
-                            <td colspan="5" class="print_bbk_td">Ket : {{detail.ket}}</td>
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr style="border-top: 1px #000 solid;">
-                            <td colspan="5" style=""></td>
-                        </tr>
-                    </tbody>
+                <div style="height:8.5cm;">
+                    <table width="100%" style="border-collapse: collapse;">
+                        <thead>
+                            <tr style="height:10pt; border-top: 1px #000 solid; border-bottom: 1px #000 solid;">
+                                <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 0.7cm;" align="center">No.</td>
+                                <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 1.6cm;" align="center">Kode</td>
+                                <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 3cm;" align="center">Nama Barang</td>
+                                <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 0.8cm;" align="center">Jml</td>
+                                <td class="print_bbk_td border-top border-bottom" style="width: 0.8cm;" align="center">Sat</td>
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="detail in hal">
+                            <tr style="height:8pt;" ng-show="detail.kd_barang != '' && detail.kd_barang.sisa_pengambilan > 0">
+                                <td class="print_bbk_td" align="center">{{detail.no}}</td>
+                                <td class="print_bbk_td" align="center">{{detail.kd_barang.kd_barang}}</td>
+                                <td class="print_bbk_td">{{detail.kd_barang.nm_barang}}</td>
+                                <td class="print_bbk_td" align="center">{{detail.jml}} </td>
+                                <td class="print_bbk_td" align="center">{{detail.satuan}}</td>
+                            </tr>
+                            <tr style="height:8pt;margin:0pt;padding:0pt" ng-show="detail.jml > 0">
+                                <td colspan="5" class="print_bbk_td">Ket : {{detail.ket}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <table style="bottom: 0.1cm">
+                    <tr>
+                        <td width="40%"></td>
+                        <td width="6%"></td>
+                        <td width="47%" align="center" id="print_bbk">Sukorejo, {{tgl_Print| date}}</td>
+                    </tr>
+                    <tr>
+                        <td align="center" id="print_bbk">Dikeluarkan Oleh :</td>
+                        <td></td>
+                        <td align="center" id="print_bbk">Yang Menerima :</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><br></td>
+                    </tr>
+                    <tr>
+                        <td align="center" id="print_bbk">{{form.petugas}}</td>
+                        <td></td>
+                        <td align="center" id="print_bbk">{{form.penerima.nama}}</td>
+                    </tr>
                 </table>
             </div>
-            <table style="width: 11cm; margin-bottom: 0px;" id="footer_wrapper">
-                <tr>
-                    <td width="45%"></td>
-                    <td width="10%"></td>
-                    <td width="45%" align="center" id="print_bbk">Sukorejo, {{tgl_Print| date}}</td>
-                </tr>
-                <tr>
-                    <td align="center" id="print_bbk">Dikeluarkan Oleh :</td>
-                    <td></td>
-                    <td align="center" id="print_bbk">Yang Menerima :</td>
-                </tr>
-                <tr>
-                    <td colspan="3"><br></td>
-                </tr>
-                <tr>
-                    <td align="center" id="print_bbk">{{form.petugas}}</td>
-                    <td></td>
-                    <td align="center" id="print_bbk">{{form.penerima.nama}}</td>
-                </tr>
-            </table>
+        </div>
+    </div>
+    <div ng-if="user.roles_id > 1">
+        <div class="bg-light lter b-b wrapper-md">
+            <h1 class="m-n font-thin h3">Bukti Barang Keluar</h1>
+        </div>
+        <div class="wrapper-md" ng-show="!is_edit">
+            <div class="panel panel-default" st-pipe="callServer" st-table="displayed">
+                <div class="panel-heading">
+                    <button class="btn btn-default btn-xs" ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">Pencarian</button>
+                    <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
+                        <button type="button" class="btn btn-info fa fa-lock" ng-click="lock(gantiStatus);" ng-show="status == 0 && user.roles_id == 1">&nbsp;Lock</button>
+                        <button type="button" class="btn btn-default fa fa-unlock" ng-click="unlock(gantiStatus);" ng-show="status == 1 && user.roles_id == 1">&nbsp;Unlock</button>
+                        <button type="button" class="btn btn-warning fa fa-print" ng-show="user.roles_id == 1" ng-click="bukaPrint(gantiStatus)">&nbsp;Buka Print Out</button>
+                        <button type="button" class="btn btn-success fa fa-check"  ng-click="modal()">&nbsp;Pengecualian BBK</button>
+                        <button type="button" class="btn btn-info fa fa-copy" ng-click="copy();">&nbsp;Salin BBK</button>
+                        <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
+                    </div> 
+                </div>
+                <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
+                    <div class="form-horizontal">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-3">No. BBK</label>
+                                <div class="col-md-9">
+                                    <input st-search="no_bbk" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3">No. Wo</label>
+                                <div class="col-md-9">
+                                    <input class="form-control" st-search="no_wo" type="text"  ng-model="tanggal">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3">Barang</label>
+                                <div class="col-md-9">
+                                    <input st-search="barang" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group" ng-show="user.roles_id == 1">
+                                <label class="col-md-3">Status</label>
+                                <div class="col-md-9">
+                                    <select stInputEvent="change" st-search="lock" class="form-control" ng-model="status">
+                                        <option value="">.: Pilih Status :.</option>
+                                        <option value="1">Lock</option>
+                                        <option value="0">Unlock</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-md-3">Bagian</label>
+                                <div class="col-md-9">
+                                    <input st-search="tj.jabatan" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3">Penerima</label>
+                                <div class="col-md-9">
+                                    <input st-search="penerima" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3">Keterangan</label>
+                                <div class="col-md-9">
+                                    <input st-search="keterangan" class="form-control"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th ng-show="user.roles_id == 1">#</th>
+                                <th st-sort="no_bbk">No. BBK</th>
+                                <th st-sort="tanggal">Tanggal</th>
+                                <th st-sort="no_wo">No. Wo</th>
+                                <th st-sort="tj.jabatan">Bagian</th>
+                                <th st-sort="tb.penerima">Penerima</th>
+                                <th st-sort="tb.petugas">Petugas</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody ng-show="!isLoading">
+                            <tr ng-repeat="row in displayed" ng-dblclick="view(row)">
+                                <td ng-show="user.roles_id == 1">
+                                    <label class="i-checks" ng-show="row.status == 1">
+                                        <input type="checkbox" ng-model="gantiStatus[row.no_bbk]" ><i></i> 
+                                    </label>
+                                </td>
+                                <td>{{row.no_bbk}}</td>
+                                <td>{{row.tanggal| date}}</td>
+                                <td>{{row.no_wo}}</td>
+                                <td>{{row.bagian}}</td>
+                                <td>{{row.penerima}}</td>
+                                <td>{{row.petugas}}</td>
+                                <td>
+                                    <div ng-show="row.lock == 0 || user.roles_id == 1" class="btn-group pull-right"  role="group" style="margin-top: -3px;">
+                                        <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
+                                        <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" ></button>
+                                    </div> 
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody ng-show="isLoading">
+                            <tr>
+                                <td colspan="7" class="text-center" ng-if="user.roles_id != 1">Loading ... </td>
+                                <td colspan="8" class="text-center" ng-if="user.roles_id == 1">Loading ... </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="7" ng-if="user.roles_id != 1"></td>
+                                <td class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html" colspan="8" ng-if="user.roles_id == 1"></td>
+                            </tr>
+                    </table>		
+                </div>
+            </div>
+        </div>
+
+        <div class="wrapper-md" ng-show="is_edit">
+            <style>
+                .form-group {
+                    margin-bottom: 5px;
+                }
+            </style>
+            <form name="landaform" class="form-horizontal form-validation">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        {{formtitle}} 
+                        <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
+                            <button type="button" class="btn btn-warning fa fa-copy" ng-click="copy();">&nbsp;Salin BBK</button>
+                            <button type="button" class="btn btn-success fa fa-check"  ng-click="modal()">&nbsp;Pengecualian BBK</button>
+                            <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-show="is_view" ng-click="create();">&nbsp;Tambah Data</button>
+                            <!--<button type="button" class="btn btn-info fa fa-print"  ng-show="is_view" ng-print print-element-id="printArea" ng-click="simpanPrint(form.no_bbk)" ng-disabled="is_print == 1 && user.roles_id != 1">&nbsp;Print</button>-->
+                            <button type="button" class="btn btn-info fa fa-print"  ng-show="is_view" ng-print print-element-id="printArea">&nbsp;Print</button>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <div class="alert alert-danger" ng-show="is_view">
+                                <p>Nota Bukti Barang Keluar hanya boleh di print 1 kali, silahkan hubungi admin untuk menPrint ulang </p>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5 col-sm-12">
+                                    <div class="form-group" ng-if="is_copy">
+                                        <label class="col-sm-3 control-label">Cari BBK</label>
+                                        <div class="col-sm-9">
+                                            <div class="input-group">
+                                                <ui-select on-select="copyData(form.kode_asli,form.no_bbk)" ng-model="form.kode_asli" ng-disabled="is_view" theme="bootstrap">
+                                                    <ui-select-match>{{$select.selected.no_bbk}}</ui-select-match>
+                                                    <ui-select-choices refresh="cariBbk($select.search)" repeat="val in resultBbk">
+                                                        {{val.no_bbk}}
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                                <span class="input-group-btn">
+                                                    <button ng-click="form.kode_asli = undefined" class="btn btn-default" ng-disabled="is_view">
+                                                        <span class="glyphicon glyphicon-trash"></span>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">No. BBK</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" readonly ng-model="form.no_bbk" ng-disabled="is_view" readonly required placeholder="Nomor BBK">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Tanggal</label>
+                                        <div class="col-sm-9">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" datepicker-popup="dd-MM-yyyy" ng-disabled="is_view" ng-model="form.tanggal" is-open="opened1" ng-click="open1($event)" placeholder="Tanggal Barang Keluar"/>
+                                                <span class="input-group-addon">
+                                                    <i class="fa fa-calendar-o"></i>
+                                                </span>
+                                            </div> 
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">No Wo</label>
+                                        <div class="col-sm-9">
+                                            <div class="input-group">
+                                                <span class="input-group-btn">
+                                                    <button ng-click="form.no_wo = undefined" class="btn btn-default" ng-disabled="is_view">
+                                                        <span class="glyphicon glyphicon-trash"></span>
+                                                    </button>
+                                                </span>
+                                                <ui-select focus-on='first' ng-model="form.no_wo" ng-disabled="is_view" theme="bootstrap" on-select='listBarang("", form.no_wo, form.kd_jab);'>
+                                                    <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
+                                                    <ui-select-choices refresh="cariWo($select.search)" repeat="val in results">
+                                                        {{val.no_wo}}
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Bagian</label>
+                                        <div class="col-sm-9">
+                                            <ui-select ng-model="form.kd_jab" ng-disabled="is_view" theme="bootstrap" on-select='listBarang("", form.no_wo, form.kd_jab);'>
+                                                <ui-select-match>{{$select.selected.jabatan}}</ui-select-match>
+                                                <ui-select-choices refresh="cariJabatan($select.search)" repeat="val in resultsjabatan">
+                                                    {{val.jabatan}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Penerima</label>
+                                        <div class="col-sm-9">
+                                            <!--<div class="input-group">-->
+                                            <ui-select ng-model="form.penerima" ng-disabled="is_view" theme="bootstrap" required>
+                                                <ui-select-match>{{$select.selected.nama}}</ui-select-match>
+                                                <ui-select-choices refresh="cariKaryawan($select.search)" repeat="val in resultskaryawan">
+                                                    {{val.nama}}
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">Pelaku Gudang</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" readonly ng-model="form.petugas" ng-disabled="is_view" required placeholder="Petugas">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-7 col-sm-12">
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-12 thumb-wrapper">
+                                            <center><h4>Sisa Pengambilan</h4></center>
+                                            <center style="margin-top: 10px;"><h1>{{sisa_pengambilan}}</h1></center>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12 thumb-wrapper">
+                                            <center><h4>Stok Sekarang</h4></center>
+                                            <center style="margin-top: 10px;"><h1>{{stok_sekarang}}</h1></center>
+                                        </div>
+                                    </div>
+                                    <div class="row table-outter" style="margin-top: 10px;">
+                                        <table class="table table-stripped table-scroll" >
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:60px;">Tanggal</th>
+                                                    <th style="width:200px;">PLK Kerja</th>
+                                                    <th style="width:300px;">Barang</th>
+                                                    <th style="width:80px;">Jml</th>
+                                                    <th style="width:350px;">Bagian</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="data in resultriwayat">
+                                                    <td>{{data.tanggal| date:'dd/M/yy'}}</td>
+                                                    <td>{{data.karyawan}}</td>
+                                                    <td>{{data.nm_barang}}</td>
+                                                    <td>{{data.jml}} {{data.satuan}}</td>
+                                                    <td>{{data.jabatan}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <table class="table table-striped b-t b-light" style='margin-top: 0px;'>
+                                    <thead>
+                                        <tr>
+                                            <th class="panel-heading text-muted font-bold" colspan="4">Detail BBK</th>
+                                            <th class="panel-heading text-muted font-bold" ><button ng-click="addDetail()" class="btn btn-success" ng-hide="is_view" title="Tambah Detail"><i class="fa fa-plus-square"></i></button></th>
+                                        </tr>
+                                        <tr>
+                                            <th>Barang</th>
+                                            <th style="width:100px">Jumlah</th>
+                                            <th style="width:100px">Satuan</th>
+                                            <th style="width:400px">Keterangan</th>
+                                            <th width="50" ng-show="is_view != true"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="detail in detailBbk">
+                                            <td>
+                                    <ui-select ng-if="autoSelect == true" 
+                                               uiselect-autofocus="open"
+                                               on-select="detail.satuan = detail.kd_barang.satuan; detailstok(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang)" 
+                                               ng-disabled="is_view" 
+                                               ng-model="detail.kd_barang" 
+                                               theme="bootstrap">
+                                        <ui-select-match><b>{{$select.selected.kd_barang}} |- </b>{{$select.selected.nm_barang}}</ui-select-match>
+                                        <ui-select-choices refresh="listBarang($select.search, form.no_wo, form.kd_jab)" repeat="val in resultsbarang">
+                                            <b>{{val.kd_barang}} |- </b>{{val.nm_barang}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    <ui-select ng-if="autoSelect == false" 
+                                               on-select="detail.satuan = detail.kd_barang.satuan; detailstok(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang)" 
+                                               ng-disabled="is_view" 
+                                               ng-model="detail.kd_barang" 
+                                               theme="bootstrap">
+                                        <ui-select-match><b>{{$select.selected.kd_barang}} |- </b>{{$select.selected.nm_barang}}</ui-select-match>
+                                        <ui-select-choices refresh="listBarang($select.search, form.no_wo, form.kd_jab)" repeat="val in resultsbarang">
+                                            <b>{{val.kd_barang}} |- </b>{{val.nm_barang}}
+                                        </ui-select-choices>
+                                    </ui-select>
+                                    </td>
+                                    <td>
+                                        <input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control angka" ng-keyup="kalkulasi(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang, detail.jml);">
+                                    </td>
+                                    <td>{{detail.satuan}}</td>
+                                    <td><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control" ng-enter="addDetail('');" event-focus-id="0"></td>
+                                    <td ng-show="is_view != true">
+                                        <button ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view" style="width:50px;" title="Hapus Detail"><i class="fa fa-trash-o"></i></button>
+                                    </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="panel-footer text-right bg-light lter">
+                        <div align="center">
+                            <button type="submit" class="btn btn-default btn-lg fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
+                            <button type="submit" class="btn btn-primary fa btn-lg fa-save" ng-hide="is_view" ng-disabled="landaform.$invalid" ng-click="save(form, detailBbk);">&nbsp;Simpan Perubahan</button>
+                        </div>
+                    </footer>
+                </div>
+            </form>
+        </div>
+
+        <div id="printArea" ng-show="is_view">
+            <style media="print">
+                @media print {
+                    html, body {
+                        display: block; 
+                        font-family: "Calibri";
+                        margin: 0;
+                        -webkit-transform-origin: 0 0;
+                        -moz-transform-origin: 0 0;
+                    }
+
+                    @page {
+                        size: 10cm 9.5cm;
+                    }
+                }
+            </style>
+            <!--<div style="width: 11.1cm; margin: 0px;">-->
+            <div style="margin: 0px; width: 16cm;" ng-repeat="hal in detailBbkPrint">
+                <!--<table style="width: 11.1cm; height: 1cm;">-->
+                <table style="height: 0.5cm; padding: 0px">
+                    <tr>
+                        <td width="50%" id="print_bbk">
+                            PT. KARYA TUGAS ANDA <br>
+                            Sukorejo - Pasuruan
+                        </td>
+                        <td valign="top" style="text-align: right;" id="print_bbk">
+                            NO DOC FR-WHS-004-REV.00
+                        </td>
+                    </tr>
+                </table>
+                <center id="print_bbk">
+                    *** BUKTI BARANG KELUAR ***
+                </center>
+                <table style="margin-top: 5px;height: 0.4cm;">
+                    <tr id="print_bbk">
+                        <td id="print_bbk" width="30%">NO WO {{form.no_wo.no_wo}}</td>
+                        <td id="print_bbk" width="30%">No BBK {{form.no_bbk}}</td>
+                        <td id="print_bbk">{{form.kd_jab.jabatan}}</td>
+                    </tr>
+                </table>
+                <div style="height:7.3cm;">
+                    <table width="100%" style="border-collapse: collapse;">
+                        <thead>
+                            <tr style="height:10pt; border-top: 1px #000 solid; border-bottom: 1px #000 solid;">
+                                <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 0.7cm;" align="center">No.</td>
+                                <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 1.6cm;" align="center">Kode</td>
+                                <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 3cm;" align="center">Nama Barang</td>
+                                <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 0.8cm;" align="center">Jml</td>
+                                <td class="print_bbk_td border-top border-bottom" style="width: 0.8cm;" align="center">Sat</td>
+                                <!--<td class="print_bbk_td border-top border-bottom" style="width: 2.2cm;" align="center">Ket</td>-->
+                            </tr>
+                        </thead>
+                        <tbody ng-repeat="detail in hal">
+                            <tr style="height:8pt;">
+                                <td class="print_bbk_td" align="center">{{detail.no}}</td>
+                                <td class="print_bbk_td" align="center">{{detail.kd_barang.kd_barang}}</td>
+                                <td class="print_bbk_td">{{detail.kd_barang.nm_barang}}</td>
+                                <td class="print_bbk_td" align="center">{{detail.jml}} </td>
+                                <td class="print_bbk_td" align="center">{{detail.satuan}}</td>
+                                <!--<td class="print_bbk_td">{{detail.ket}}</td>-->
+                            </tr>
+                            <tr style="height:8pt;margin:0pt;padding:0pt">
+                                <td colspan="5" class="print_bbk_td">Ket : {{detail.ket}}</td>
+                            </tr>
+                        </tbody>
+                        <!--                    <tbody>
+                                                <tr style="border-top: 1px #000 solid;">
+                                                    <td colspan="5" style=""></td>
+                                                </tr>
+                                            </tbody>-->
+                    </table>
+                </div>
+                <table style="bottom: 0.1cm">
+                    <tr>
+                        <td width="40%"></td>
+                        <td width="6%"></td>
+                        <td width="47%" align="center" id="print_bbk">Sukorejo, {{tgl_Print| date}}</td>
+                    </tr>
+                    <tr>
+                        <td align="center" id="print_bbk">Dikeluarkan Oleh :</td>
+                        <td></td>
+                        <td align="center" id="print_bbk">Yang Menerima :</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><br></td>
+                    </tr>
+                    <tr>
+                        <td align="center" id="print_bbk">{{form.petugas}}</td>
+                        <td></td>
+                        <td align="center" id="print_bbk">{{form.penerima.nama}}</td>
+                    </tr>
+                </table>
+                <br>
+            </div>
         </div>
     </div>
 </div>
