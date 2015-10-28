@@ -208,13 +208,14 @@
                     <table class="table table-striped b-t b-light" style='margin-top: 25px;'>
                         <thead>
                             <tr>
-                                <th class="panel-heading text-muted font-bold" colspan="3">Detail BBM</th>
+                                <th class="panel-heading text-muted font-bold" colspan="4">Detail BBM</th>
                                 <th class="panel-heading text-muted font-bold" ><button ng-click="addDetail()" class="btn btn-success" ng-hide="is_view" title="Tambah Detail"><i class="fa fa-plus-square"></i></button></th>
                             </tr>
                             <tr>
                                 <th style="text-align: center; font-weight: bold;">Barang</th>
-                                <th style="text-align: center; font-weight: bold;width: 25%">Keterangan</th>
                                 <th style="text-align: center; font-weight: bold;width: 110px">Jml</th>
+                                <th style="text-align: center; font-weight: bold;width: 110px">Satuan</th>
+                                <th style="text-align: center; font-weight: bold;width: 25%">Keterangan</th>                                
                                 <th width="30" ng-show="is_view != true" style="margin:0px;padding:0px;"></th>
                             </tr>
                         </thead>
@@ -244,15 +245,17 @@
                         <td>
                             <input type="text" 
                                    ng-disabled="is_view" 
-                                   ng-model="detail.keterangan"  
-                                   class="form-control">
-                        </td>
-                        <td>
-                            <input type="text" 
-                                   ng-disabled="is_view" 
                                    ng-model="detail.jumlah" 
                                    ng-keyup="kalkulasi(detail.jumlah, detail.barang.sisa_ambil)" 
                                    class="form-control angka" 
+                                   ng-enter="addDetail();">
+                        </td>
+                        <td>{{detail.barang.satuan}}</td>
+                        <td>
+                            <input type="text" 
+                                   ng-disabled="is_view" 
+                                   ng-model="detail.keterangan"  
+                                   class="form-control"
                                    ng-enter="addDetail();">
                         </td>
                         <td ng-show="is_view != true" >

@@ -120,6 +120,7 @@ class WomasukController extends Controller {
 
     public function actionGetspk() {
         $params = json_decode(file_get_contents("php://input"), true);
+       
         if (!empty($params['spk']['no_spk'])) {
             $spk = $params['spk']['no_spk'];
         } else {
@@ -139,9 +140,18 @@ class WomasukController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->queryOne();
+        
+        $query2 = new Query;
+        $query2->from('view_wo_spk')
+                ->where('no_spk = "' . $spk . '"')
+                ->select("jenis");
+        $command2 = $query2->createCommand();
+        $models2 = $command->query()->read();
+        
+        $jenis = (!empty($models2['jenis'])) ? $models2['jenis'] : $params['jenis'];
+        
         // jenis kendaaraan
         if (!empty($params['spk']['no_spk'])) {
-            $jenis = $models['jenis'];
         } else {
             $query2 = new Query;
             $query2->from('view_wo_spk')
@@ -149,8 +159,6 @@ class WomasukController extends Controller {
                     ->select("jenis");
             $command2 = $query2->createCommand();
             $models2 = $command->query()->read();
-//            $jenis = (!empty($models2['jenis'])) ? $models2['jenis'] : $params['jenis'];
-            $jenis = $models2['jenis'];
         }
 
         // kode
@@ -188,7 +196,8 @@ class WomasukController extends Controller {
         } else {
             $table = 'small';
         }
-//============================= EKSTERIOR ================================            
+//============================= EKSTERIOR ================================ 
+            
         // PLAT BODY
         $queryplat = new Query;
         $queryplat->from($table . '_eks')
@@ -630,7 +639,7 @@ class WomasukController extends Controller {
         $exterior = ['plat' => $plat, 'ventilasi' => $ventilasi, 'spion' => $spion, 'kdepan' => $kdepan, 'kbelakang' => $kbelakang,
             'ksamping' => $ksamping, 'ldepan' => $ldepan, 'lbelakang' => $lbelakang, 'pdepan' => $pdepan, 'ppenumpang' => $ppenumpang, 'pbagasi' => $pbagasi,
             'pbelakang' => $pbelakang, 'wyper' => $wyper, 'akarat' => $akarat, 'strip' => $strip, 'letter' => $letter];
-
+//        \Yii::error($exterior);
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'spk' => $models, 'code' => $kode, 'eksterior' => $exterior, 'interior' => $interior));
     }
@@ -901,6 +910,7 @@ class WomasukController extends Controller {
 
     public function actionSelect() {
         $params = json_decode(file_get_contents("php://input"), true);
+        
         $model = $this->findModel($params['no_wo']);
         $data = $model->attributes;
         $query = new Query;
@@ -944,7 +954,9 @@ class WomasukController extends Controller {
                 ->select("jenis");
         $command2 = $query2->createCommand();
         $models2 = $command->query()->read();
+        
         $jenis = (!empty($models2['jenis'])) ? $models2['jenis'] : $params['jenis'];
+        
         if ($jenis == "Small Bus") {
             // eksterior
             $eksterior = new Query;
@@ -1022,7 +1034,6 @@ class WomasukController extends Controller {
         } else {
             $table = 'mini';
         }
-
         $querydriver_seat = new Query;
         $querydriver_seat->from($table . '_eks')
                 ->where("no_wo='" . $model['no_wo'] . "'")

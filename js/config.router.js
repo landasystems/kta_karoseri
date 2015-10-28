@@ -461,6 +461,20 @@ angular.module('app')
                                             }]
                                     }})
                                 //
+                                .state('transaksi.bktbarangkeluar2', {
+                                    url: '/bkt-barangkeluar2',
+                                    templateUrl: 'tpl/t_bkt-barangkeluar/index2.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['daterangepicker', 'frAngular']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/bkt-barangkeluar.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
                                 .state('transaksi.bktbarangmasuk', {
                                     url: '/bkt-barangmasuk',
                                     templateUrl: 'tpl/t_bkt-barangmasuk/index.html',

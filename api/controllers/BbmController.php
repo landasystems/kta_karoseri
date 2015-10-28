@@ -67,9 +67,11 @@ class BbmController extends Controller {
     public function actionCaribarang() {
         $params = json_decode(file_get_contents("php://input"), true);
         $kdBrg = array();
+        
         foreach ($params['listBarang'] as $val) {
             $kdBrg[] = isset($val['kd_barang']) ? $val['kd_barang'] : '';
         }
+        
         $models = array();
         $barang = isset($params['barang']) ? $params['barang'] : '';
         $po = isset($params['no_po']) ? $params['no_po'] : '';
@@ -78,7 +80,7 @@ class BbmController extends Controller {
         $query = new Query;
         $query->from('detail_po')
                 ->join('JOIN', 'barang', 'barang.kd_barang = detail_po.kd_barang')
-                ->select("barang.kd_barang, barang.nm_barang, detail_po.jml as jml_po, detail_po.nota")
+                ->select("barang.kd_barang, barang.nm_barang, barang.satuan, detail_po.jml as jml_po, detail_po.nota")
                 ->where(['like', 'barang.nm_barang', $barang])
                 ->orWhere(['like', 'barang.kd_barang', $barang])
                 ->andWhere(['like', 'detail_po.nota', $po])

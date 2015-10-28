@@ -303,7 +303,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         });
     }
     $scope.getSpk = function(form, items) {
-//        form.no_spk = items.no_spk;
+        
         Data.post('womasuk/getspk/', form).then(function(data) {
             form.merk = data.spk.merk;
             form.model_chassis = data.spk.model_chassis;
@@ -379,6 +379,13 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.tagTransformventilasi = function(newTag) {
         var item = {
             ventilasi_atas: newTag,
+        };
+
+        return item;
+    };
+    $scope.tagTransformspion = function(newTag) {
+        var item = {
+            kaca_spion: newTag,
         };
 
         return item;
