@@ -140,6 +140,7 @@ app.controller('rolesCtrl', function($scope, Data, toaster) {
             "transaksi_purchaseorder": false,
             "transaksi_bktbarangmasuk": false,
             "transaksi_bktbarangkeluar": false,
+             "transaksi_bktbarangkeluar2": false,
             "transaksi_valbarangkeluar": false,
             "transaksi_returbuktibarangmasuk": false,
             "transaksi_returbuktibarangkeluar": false,
