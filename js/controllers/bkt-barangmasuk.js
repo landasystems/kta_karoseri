@@ -25,6 +25,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
                 tgl_terima: '',
                 no_po: '',
             }];
+//        $scope.callServer(tableStateRef); 
     }
 
     $scope.refresh();
@@ -212,6 +213,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
         $scope.is_edit = false;
         $scope.is_view = false;
         $scope.err_jml = false;
+        $scope.refresh();
     };
     $scope.delete = function (row) {
         if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {

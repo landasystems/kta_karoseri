@@ -280,11 +280,10 @@ class BbkController extends Controller {
                 $det[$i]['sisa_pengambilan'] = isset($detBbk[$val['kd_barang']]['jml_keluar']) ? $val['jml'] - $detBbk[$val['kd_barang']]['jml_keluar'] : $val['jml'];
                 $i++;
             }
+            $sorted = Yii::$app->landa->array_orderby($det, 'nm_barang', SORT_ASC);
 
-            echo json_encode(array('status' => 1, 'data' => $det));
-//            echo '1';
+            echo json_encode(array('status' => 1, 'data' => $sorted));
         } else {
-//            echo '2';
             $query = new Query;
             $query->from('barang')
                     ->select("*")
@@ -719,7 +718,7 @@ class BbkController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->queryAll();
-        
+
 
         $totalItems = $query->count();
         $query->limit(null);
@@ -732,7 +731,6 @@ class BbkController extends Controller {
 
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
-
 
     public function actionExcel() {
         session_start();
