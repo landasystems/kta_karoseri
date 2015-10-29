@@ -187,6 +187,11 @@ class PoController extends Controller {
         $i = 0;
         foreach ($models as $key => $val) {
             $data[$key] = $val;
+            $spp = \app\models\TransSpp::findOne($val['spp']);
+            $data[$key]['listspp'] = (empty($spp)) ? [] : $spp->attributes;
+            $suplier = \app\models\Supplier::findOne($val['suplier']);
+            $data[$key]['supplier'] = (empty($suplier)) ? [] : $suplier->attributes;
+            
             if ($data[$i]['bayar'] == '0') {
                 $data[$i]['bayar'] = 'Tunai';
             } else {
@@ -198,14 +203,7 @@ class PoController extends Controller {
                 $data[$i]['status_nama'] = 'Sudah';
             }
             
-            $sup = \app\models\Supplier::find()
-                    ->where(['kd_supplier' => $data[$i]['suplier']])
-                    ->One();
-            $supplier = (isset($sup->nama_supplier)) ? $sup->nama_supplier : '';
-//            $data[$i]['suplier'] = $supplier;
             $i++;
-            
-            
         }
 
         $this->setHeader(200);

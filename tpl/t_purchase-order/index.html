@@ -84,7 +84,7 @@
                             <td>
                                 <div class="btn-group pull-right"  role="group" style="margin-top: -3px;">
                                     <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
-                                    <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" ng-show="user.roles_id == 1 || user.roles_id == 16" class="btn-group pull-right"></button>
+                                    <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row)" ng-show="user.roles_id == 1 || user.roles_id == 16" class="btn-group pull-right"></button>
                                 </div>
                             </td>
                         </tr>
@@ -422,7 +422,7 @@
                 }
             }
         </style>
-        <div style="margin:10px; width: 33cm;">
+        <div style="margin:10px; width:100% !inportant;"><!--width: 33cm;-->
             <table width="100%" class="border-all" style="border-collapse: collapse;">
                 <tr style="height: 1.8cm;">
                     <td style="padding: 10px" colspan="2">
