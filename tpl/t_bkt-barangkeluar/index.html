@@ -341,7 +341,7 @@
                     }
 
                     @page {
-                        size: 10cm 9.5cm;
+                        size: 14cm 9.5cm;
                     }
                 }
             </style>
@@ -354,7 +354,7 @@
                             PT. KARYA TUGAS ANDA <br>
                             Sukorejo - Pasuruan
                         </td>
-                        <td valign="top" style="text-align: right;" id="print_bbk">
+                        <td valign="top" style="text-align: right; font-size: 8pt" id="print_bbk">
                             NO DOC FR-WHS-004-REV.00
                         </td>
                     </tr>
@@ -362,14 +362,14 @@
                 <center id="print_bbk">
                     *** BUKTI BARANG KELUAR ***
                 </center>
-                <table style="margin-top: 5px;height: 0.4cm;">
+                <table style="margin-top: 5px;height: 0.4cm;" width="100%">
                     <tr id="print_bbk">
-                        <td id="print_bbk" width="30%">NO WO {{form.no_wo.no_wo}}</td>
-                        <td id="print_bbk" width="30%">No BBK {{form.no_bbk}}</td>
-                        <td id="print_bbk">{{form.kd_jab.jabatan}}</td>
+                        <td id="print_bbk" width="30%" style="font-size: 8pt">NO WO {{form.no_wo.no_wo}}</td>
+                        <td id="print_bbk" width="30%" style="font-size: 8pt">No BBK {{form.no_bbk}}</td>
+                        <td id="print_bbk" style="font-size: 8pt" width="40%">{{form.kd_jab.jabatan}}</td>
                     </tr>
                 </table>
-                <div style="height:7.3cm;">
+                <div style="height:7.5cm;">
                     <table width="100%" style="border-collapse: collapse;">
                         <thead>
                             <tr style="height:10pt; border-top: 1px #000 solid; border-bottom: 1px #000 solid;">
@@ -378,7 +378,6 @@
                                 <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 3cm;" align="center">Nama Barang</td>
                                 <td class="print_bbk_td border-top border-bottom" style="border-right: 1px #000 solid; width: 0.8cm;" align="center">Jml</td>
                                 <td class="print_bbk_td border-top border-bottom" style="width: 0.8cm;" align="center">Sat</td>
-                                <!--<td class="print_bbk_td border-top border-bottom" style="width: 2.2cm;" align="center">Ket</td>-->
                             </tr>
                         </thead>
                         <tbody ng-repeat="detail in hal">
@@ -388,17 +387,11 @@
                                 <td class="print_bbk_td">{{detail.kd_barang.nm_barang}}</td>
                                 <td class="print_bbk_td" align="center">{{detail.jml}} </td>
                                 <td class="print_bbk_td" align="center">{{detail.satuan}}</td>
-                                <!--<td class="print_bbk_td">{{detail.ket}}</td>-->
                             </tr>
                             <tr style="height:8pt;margin:0pt;padding:0pt">
                                 <td colspan="5" class="print_bbk_td">Ket : {{detail.ket}}</td>
                             </tr>
                         </tbody>
-                        <!--                    <tbody>
-                                                <tr style="border-top: 1px #000 solid;">
-                                                    <td colspan="5" style=""></td>
-                                                </tr>
-                                            </tbody>-->
                     </table>
                 </div>
                 <table style="bottom: 0.1cm">
@@ -421,7 +414,7 @@
                         <td align="center" id="print_bbk">{{form.penerima.nama}}</td>
                     </tr>
                 </table>
-                <br>
+                <div style="page-break-after: always"></div>
             </div>
         </div>
     </div>
