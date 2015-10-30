@@ -88,19 +88,21 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
         Data.get('sppnonrutin/kode').then(function (data) {
             $scope.form.no_spp = data.kode;
         });
-        $scope.sppDet = [{
-                id: '',
-                no_spp: '',
-                kd_barang: '',
-                saldo: '',
-                qty: '',
-                ket: '',
-                p: '',
-                a: '',
-                stat_spp: '',
-                no_wo: '',
-            }];
+        $scope.sppDet = [];
+//        $scope.sppDet = [{
+//                id: '',
+//                no_spp: '',
+//                kd_barang: '',
+//                saldo: '',
+//                qty: '',
+//                ket: '',
+//                p: '',
+//                a: '',
+//                stat_spp: '',
+//                no_wo: '',
+//            }];
     };
+    
     $scope.update = function (form) {
         $scope.is_create = false;
         $scope.is_edit = true;
@@ -113,6 +115,7 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.getDetail(form.no_spp);
         $scope.form.tgl_trans = new Date(form.tgl_trans);
     };
+    
     $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
@@ -123,6 +126,7 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.form.periode = {startDate: start, endDate: end};
         $scope.getDetail(form.no_spp);
     };
+    
     $scope.save = function (form, details) {
         var data = {
             form: form,
@@ -138,8 +142,8 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
                 toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
             }
         });
-
     };
+    
     $scope.cancel = function () {
         $scope.is_create = false;
         $scope.is_edit = false;
@@ -159,12 +163,13 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
             saldo: '',
             qty: '',
             ket: '',
-            p: '',
+            p: new Date(),
             a: '',
             stat_spp: '',
             no_wo: [],
         }
         $scope.sppDet.unshift(newDet);
+        $scope.modal(newDet);
     };
     $scope.removeRow = function (paramindex) {
         var comArr = eval($scope.sppDet);
@@ -179,7 +184,7 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
             $scope.sppDet = data.details;
         });
     };
-    $scope.modal = function (sppDet, detail) {
+    $scope.modal = function (detail) {
         var modalInstance = $modal.open({
             templateUrl: 'tpl/t_spp-nonrutin/modal.html',
             controller: 'modalCtrl',
@@ -187,7 +192,6 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
             resolve: {
                 form: function () {
                     var data = {
-                        sppDet: sppDet,
                         detail: detail,
                         is_create: $scope.is_create,
                     };

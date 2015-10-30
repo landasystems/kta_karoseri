@@ -62,13 +62,24 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
      Data.get('proyek/list').then(function(data) {
         $scope.proyeklist = data.proyek;
     });
-    $scope.getnw = function (form) {
-       
-          Data.get('womasuk/proyek?kd=' + form).then(function (data) {
-               console.log(data);
-            $scope.form.no_wo = data.code;
-        });
-    };
+//    $scope.getnw = function (form) {
+//       
+//          Data.get('womasuk/proyek?kd=' + form).then(function (data) {
+//               console.log(data);
+//            $scope.form.no_wo = data.code;
+//        });
+//    };
+    $scope.getnw = function (kode) {
+//        var kods = $scope.form.kd_titipan;
+//        var buat = $scope.is_create;
+//        if (buat == true) {
+            Data.get('womasuk/proyek', {kd: kode}).then(function (data) {
+                $scope.form.no_wo = data.data;
+            });
+//        } else {
+//            $scope.form.kd_titipan = kods;
+//        }
+    }
 
     $scope.cariSpk = function($query) {
         if ($query.length >= 3) {
@@ -105,6 +116,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         });
 
     };
+    
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
@@ -184,14 +196,8 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
             });
         }
     };
+    
     $scope.save = function(form, eks, inter) {
-
-        if ($scope.uploader.queue.length > 0) {
-            $scope.uploader.uploadAll();
-            form.foto = kode_unik + "-" + $scope.uploader.queue[0].file.name;
-        } else {
-            form.foto = '';
-        }
         var data = {
             womasuk: form,
             eksterior: eks,
@@ -221,15 +227,19 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
             });
         }
     };
+    $scope.print = function (no_wo) {
+        Data.get('womasuk/sqlprint/',  {kd: no_wo}).then(function (data) {
+            window.open('api/web/womasuk/print');
+        });
+    };
     $scope.copyData = function(nowo, nowo_baru) {
         $scope.form = nowo;
-
         Data.post('womasuk/view/', nowo).then(function(data) {
             $scope.form = data.data;
             $scope.eks = data.eksterior;
             $scope.inter = data.interior[0];
             $scope.form.warna = data.det.warna;
-            $scope.form.no_spk = '234';
+//            $scope.form.no_spk = data;
             $scope.form.customer = data.det.customer;
             $scope.form.sales = data.det.sales;
             $scope.form.pemilik = data.det.pemilik;
@@ -239,7 +249,6 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.form.model = data.det.model;
             $scope.form.no_rangka = data.det.no_rangka;
             $scope.form.no_mesin = data.det.no_mesin;
-            $scope.form.jenis = data.det.jenis;
             $scope.form.jenis = data.det.jenis;
             $scope.form.no_spk = data.data.no_spk.as;
             $scope.form.no_wo = data.code;
@@ -288,15 +297,13 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
             $scope.form.warna = data.data.titipan.warna.warna;
 
             $scope.getSpk(form);
-            console.log(data);
            
 
 
         });
     }
     $scope.getSpk = function(form, items) {
-//        form.no_spk = items.no_spk;
-
+        
         Data.post('womasuk/getspk/', form).then(function(data) {
             form.merk = data.spk.merk;
             form.model_chassis = data.spk.model_chassis;
@@ -372,6 +379,13 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
     $scope.tagTransformventilasi = function(newTag) {
         var item = {
             ventilasi_atas: newTag,
+        };
+
+        return item;
+    };
+    $scope.tagTransformspion = function(newTag) {
+        var item = {
+            kaca_spion: newTag,
         };
 
         return item;
@@ -485,7 +499,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
     };
     $scope.tagTransformlplavon = function(newTag) {
         var item = {
-            lantai_plavon: newTag,
+            lampu_plavon: newTag,
         };
 
         return item;

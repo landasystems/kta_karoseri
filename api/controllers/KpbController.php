@@ -127,6 +127,7 @@ class KpbController extends Controller {
                     ->join('LEFT JOIN', 'pekerjaan as p', 'tj.krj = p.kd_kerja')
                     ->join('LEFT JOIN', 'barang as b', 'dsb.kd_barang = b.kd_barang')
                     ->select("dsb.*, b.nm_barang, b.satuan, p.*")
+                    ->orderBy('b.nm_barang ASC')
                     ->where(['dsb.kd_bom' => $param['kd_bom']['kd_bom'], 'dsb.kd_jab' => $param['kd_jab']]);
         } else {
             $query = new Query;
@@ -136,6 +137,7 @@ class KpbController extends Controller {
                     ->join('LEFT JOIN', 'barang as b', 'dsb.kd_barang = b.kd_barang')
                     ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dsb.tran_additional_bom_id')
                     ->join('LEFT JOIN', 'trans_additional_bom_wo as tsbw', ' tsb.id = tsbw.tran_additional_bom_id')
+                    ->orderBy('b.nm_barang ASC')
                     ->select("dsb.*, b.nm_barang, b.satuan, p.*")
                     ->where(['tsbw.no_wo' => $param['kd_bom']['no_wo'], 'dsb.kd_jab' => $param['kd_jab']]);
         }

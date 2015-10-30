@@ -26,6 +26,7 @@ class BbmController extends Controller {
                     'delete' => ['delete'],
                     'kode' => ['get'],
                     'excel' => ['get'],
+                    'excel2' => ['get'],
                     'excelrekap' => ['get'],
                     'exceldet' => ['get'],
                     'rekap' => ['get'],
@@ -66,15 +67,20 @@ class BbmController extends Controller {
     public function actionCaribarang() {
         $params = json_decode(file_get_contents("php://input"), true);
         $kdBrg = array();
+        
         foreach ($params['listBarang'] as $val) {
             $kdBrg[] = isset($val['kd_barang']) ? $val['kd_barang'] : '';
         }
+        
+        $models = array();
         $barang = isset($params['barang']) ? $params['barang'] : '';
         $po = isset($params['no_po']) ? $params['no_po'] : '';
+
+        //=================== AMBIL BARANG PO =====================//
         $query = new Query;
         $query->from('detail_po')
                 ->join('JOIN', 'barang', 'barang.kd_barang = detail_po.kd_barang')
-                ->select("barang.kd_barang, barang.nm_barang, detail_po.jml as jml_po, detail_po.nota")
+                ->select("barang.kd_barang, barang.nm_barang, barang.satuan, detail_po.jml as jml_po, detail_po.nota")
                 ->where(['like', 'barang.nm_barang', $barang])
                 ->orWhere(['like', 'barang.kd_barang', $barang])
                 ->andWhere(['like', 'detail_po.nota', $po])
@@ -84,6 +90,7 @@ class BbmController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
 
+        //===================== AMBIL JUMLAH PO PER BARANG ==================//
         $data = array();
         $i = 0;
         foreach ($models as $key => $val) {
@@ -167,6 +174,26 @@ class BbmController extends Controller {
         echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
+    public function searchBrg($id) {
+        $patern = $id;
+        $query = new Query;
+        $query->from('det_bbm')
+                ->join('JOIN', 'barang', 'barang.kd_barang = det_bbm.kd_barang')
+                ->select('det_bbm.no_bbm, barang.nm_barang');
+        $query->andFilterWhere(['like', 'barang.nm_barang', $patern]);
+        $query->orFilterWhere(['=', 'barang.kd_barang', $patern]);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $data = array();
+        foreach ($models as $key) {
+            $data[] = $key['no_bbm'];
+        }
+
+        $this->setHeader(200);
+        return $data;
+    }
+
     public function actionIndex() {
         //init variable
         $params = $_REQUEST;
@@ -206,7 +233,14 @@ class BbmController extends Controller {
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
-                $query->andFilterWhere(['like', $key, $val]);
+                if ($key == 'barang') {
+                    $brg = $this->searchBrg($val);
+                    foreach ($brg as $brg_val) {
+                        $query->orFilterWhere(['=', 'tb.no_bbm', $brg_val]);
+                    }
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
+                }
             }
         }
 
@@ -377,6 +411,7 @@ class BbmController extends Controller {
                     $det->kd_barang = $val['barang']['kd_barang'];
                     $det->no_bbm = $model->no_bbm;
                     $det->no_po = $model->no_po;
+                    $det->no_po = $model->tgl_nota;
                     $det->save();
 
                     if (!empty($no_spp)) {
@@ -440,6 +475,7 @@ class BbmController extends Controller {
                 $det->kd_barang = $val['barang']['kd_barang'];
                 $det->no_bbm = $model->no_bbm;
                 $det->no_po = $model->no_po;
+                $det->no_po = $model->tgl_nota;
                 $det->save();
 
                 //update tanggal aktual spp
@@ -529,6 +565,18 @@ class BbmController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/bbm", ['models' => $models, 'filter' => $filter]);
+    }
+    
+    public function actionExcel2() {
+        session_start();
+        $query = $_SESSION['query'];
+        $query->orderBy('barang.nm_barang ASC, tb.tgl_nota ASC'
+                . '');
+        $filter = $_SESSION['filter'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        
+        return $this->render("/expretur/bbm2", ['models' => $models, 'filter' => $filter]);
     }
 
     public function actionExcelrekap() {

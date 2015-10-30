@@ -67,7 +67,7 @@ class AbsensiEttLog extends \yii\db\ActiveRecord {
         ];
     }
 
-    public function getKaryawan() {
+    public function getEmp() {
         return $this->hasOne(AbsensiEmp::className(), ['pin' => 'pin']);
     }
 

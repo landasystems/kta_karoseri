@@ -28,6 +28,7 @@ class BarangController extends Controller {
                     'cari' => ['get'],
                     'rekappergerakan' => ['post'],
                     'excelpergerakan' => ['get'],
+                    'excelpergerakan2' => ['get'],
                     'rekapbbmbbk' => ['post'],
                     'excelbbmbbk' => ['get'],
                     'upload' => ['post'],
@@ -106,22 +107,18 @@ class BarangController extends Controller {
         $tglStart = '';
         $tglEnd = '';
 
-        $value = explode(' - ', date("Y-m-d", strtotime($params['tanggal']['startDate'])));
-        $start = explode('-', $value[0]);
+        $start = date("Y-m-d", strtotime($params['tanggal']['startDate']));
+        $start = explode('-', $start);
         $tgl = array();
-        for ($i = 1; $i <= 6; $i++) {
-            $new = mktime(0, 0, 0, $start[1], $start[2] + $i, $start[0]);
-            $newDate = date("Y-m-d", $new);
-            $tgl[] = $newDate;
-
-//            if ($i == 1)
-//                $tglStart = $newDate;
-//            if ($i == 6)
-//                $tglEnd = $newDate;
-        }
+//        for ($i = 1; $i <= 6; $i++) {
+//            $new = mktime(0, 0, 0, $start[1], $start[2] + $i, $start[0]);
+//            $newDate = date("Y-m-d", $new);
+//            $tgl[] = $newDate;
+//        }
 
         $tglStart = date("Y-m-d", strtotime($params['tanggal']['startDate']));
         $tglEnd = date("Y-m-d", strtotime($params['tanggal']['endDate']));
+
 
         if (isset($params['limit']))
             $limit = $params['limit'];
@@ -140,14 +137,19 @@ class BarangController extends Controller {
         $modelBBM = $commandBBM->queryAll();
 
         $data = array();
+        $saldo = array();
         foreach ($modelBBM as $valBbm) {
             $data[$valBbm['kd_barang']]['kd_barang'] = $valBbm['kd_barang'];
             $data[$valBbm['kd_barang']]['barang'] = $valBbm['nm_barang'];
             $data[$valBbm['kd_barang']]['satuan'] = $valBbm['satuan'];
             $data[$valBbm['kd_barang']]['stok_minim'] = $valBbm['min'];
-            $data[$valBbm['kd_barang']]['saldo_awal'] = $valBbm['saldo'];
+            $data[$valBbm['kd_barang']]['saldo'] = $valBbm['saldo'];
             $data[$valBbm['kd_barang']]['stok_keluar'] = 0;
             $data[$valBbm['kd_barang']]['stok_masuk'] = isset($data[$valBbm['kd_barang']]['stok_masuk']) ? $data[$valBbm['kd_barang']]['stok_masuk'] + $valBbm['jumlah'] : $valBbm['jumlah'];
+
+            $saldo[$valBbm['kd_barang']] = isset($saldo[$valBbm['kd_barang']]) ? $saldo[$valBbm['kd_barang']] - $valBbm['jumlah'] : $this->stokakhirmingguan($valBbm['kd_barang'], $tglEnd, $valBbm['saldo']) - $valBbm['jumlah'];
+
+            $data[$valBbm['kd_barang']]['saldo_awal'] = $saldo[$valBbm['kd_barang']];
             $data[$valBbm['kd_barang']]['saldo_akhir'] = $data[$valBbm['kd_barang']]['saldo_awal'] + $data[$valBbm['kd_barang']]['stok_masuk'];
         }
 
@@ -171,10 +173,13 @@ class BarangController extends Controller {
             $data[$valBbk['kd_barang']]['barang'] = $valBbk['nm_barang'];
             $data[$valBbk['kd_barang']]['satuan'] = $valBbk['satuan'];
             $data[$valBbk['kd_barang']]['stok_minim'] = $valBbk['min'];
-            $data[$valBbk['kd_barang']]['saldo_awal'] = $valBbk['saldo'];
+            $data[$valBbk['kd_barang']]['saldo'] = $valBbk['saldo'];
             $data[$valBbk['kd_barang']]['stok_masuk'] = isset($data[$valBbk['kd_barang']]['stok_masuk']) ? $data[$valBbk['kd_barang']]['stok_masuk'] : 0;
             $data[$valBbk['kd_barang']]['stok_keluar'] = isset($data[$valBbk['kd_barang']]['stok_keluar']) ? $data[$valBbk['kd_barang']]['stok_keluar'] + $valBbk['jml'] : $valBbk['jml'];
-            $data[$valBbk['kd_barang']]['saldo_akhir'] = (isset($data[$valBbk['kd_barang']]['saldo_akhir']) ? $data[$valBbk['kd_barang']]['saldo_akhir'] : $valBbk['saldo'] ) - $valBbk['jml'];
+
+            $saldo[$valBbk['kd_barang']] = isset($saldo[$valBbk['kd_barang']]) ? $saldo[$valBbk['kd_barang']] + $valBbk['jml'] : $this->stokakhirmingguan($valBbk['kd_barang'], $tglEnd, $valBbk['saldo']) + $valBbk['jml'];
+            $data[$valBbk['kd_barang']]['saldo_awal'] = $saldo[$valBbk['kd_barang']];
+            $data[$valBbk['kd_barang']]['saldo_akhir'] = (isset($data[$valBbk['kd_barang']]['saldo_akhir']) ? $data[$valBbk['kd_barang']]['saldo_akhir'] : $data[$valBbk['kd_barang']]['saldo_awal'] ) - $valBbk['jml'];
             $i++;
         }
 
@@ -183,7 +188,85 @@ class BarangController extends Controller {
         $_SESSION['queryBbk'] = $bbk;
         $_SESSION['periode'] = date("d/m/Y", strtotime($tglStart)) . ' - ' . date("d/m/Y", strtotime($tglEnd));
         $_SESSION['tanggal'] = $tgl;
-        echo json_encode(array('status' => 1, 'data' => $data));
+        $_SESSION['tanggalEnd'] = $tglEnd;
+        
+        $sorted = Yii::$app->landa->array_orderby($data, 'barang', SORT_ASC);
+        echo json_encode(array('status' => 1, 'data' => $sorted));
+    }
+
+    public function stokakhirmingguan($kd_barang, $tanggal, $saldoSaatIni) {
+        $end = $start = explode('-', $tanggal);
+        $tglAfter = mktime(0, 0, 0, $end[1], $end[2] + 1, $end[0]);
+        $tglAfter = date("Y-m-d", $tglAfter);
+
+        $jmlbbk = new query;
+        $jmlbbk->from('trans_bbk')
+                ->join('JOIN', 'det_bbk', 'det_bbk.no_bbk = trans_bbk.no_bbk')
+                ->select('sum(det_bbk.jml) as jml_bbk')
+                ->where('det_bbk.kd_barang="' . $kd_barang . '" and (trans_bbk.tanggal >= "' . $tanggal . '" and trans_bbk.tanggal <= "' . date("Y-m-d") . '")');
+        $cJmlBbk = $jmlbbk->createCommand();
+        $mJmlBbk = $cJmlBbk->queryOne();
+
+        $jmlbbm = new query;
+        $jmlbbm->from('det_bbm')
+                ->select('sum(det_bbm.jumlah) as jml_bbm')
+                ->where('det_bbm.kd_barang= "' . $kd_barang . '" and (tgl_terima >= "' . $tanggal . '" and det_bbm.tgl_terima <= "' . date("Y-m-d") . '")');
+        $cJmlBbm = $jmlbbm->createCommand();
+        $mJmlBbm = $cJmlBbm->queryOne();
+
+        $stok = ($saldoSaatIni + $mJmlBbk['jml_bbk']) - $mJmlBbm['jml_bbm'];
+        return $stok;
+    }
+
+    public function actionExcelpergerakan2() {
+        session_start();
+
+        $tgl = isset($_SESSION['tanggal']) ? $_SESSION['tanggal'] : array();
+        $bbm = $_SESSION['queryBbm'];
+        $bbk = $_SESSION['queryBbk'];
+
+//        $bbm->where(null);
+//        $bbm->where(['det_bbm.tgl_terima' => $tgl]);
+        $commandBbm = $bbm->createCommand();
+        $modelBBM = $commandBbm->queryAll();
+
+//        $bbk->where(null);
+//        $bbk->where(['trans_bbk.tanggal' => $tgl]);
+        $commandBbk = $bbk->createCommand();
+        $modelBBK = $commandBbk->queryAll();
+
+        $data = array();
+        $saldo = array();
+        foreach ($modelBBM as $valBbm) {
+            $data[$valBbm['kd_barang']]['kd_barang'] = $valBbm['kd_barang'];
+            $data[$valBbm['kd_barang']]['barang'] = $valBbm['nm_barang'];
+            $data[$valBbm['kd_barang']]['satuan'] = $valBbm['satuan'];
+            $data[$valBbm['kd_barang']]['stok_minim'] = $valBbm['min'];
+            $data[$valBbm['kd_barang']]['stok_keluar'] = 0;
+            $data[$valBbm['kd_barang']]['stok_masuk'] = isset($data[$valBbm['kd_barang']]['stok_masuk']) ? $data[$valBbm['kd_barang']]['stok_masuk'] + $valBbm['jumlah'] : $valBbm['jumlah'];
+
+            $saldo[$valBbm['kd_barang']] = isset($saldo[$valBbm['kd_barang']]) ? $saldo[$valBbm['kd_barang']] - $valBbm['jumlah'] : $this->stokakhirmingguan($valBbm['kd_barang'], $_SESSION['tanggalEnd'], $valBbm['saldo']) - $valBbm['jumlah'];
+
+            $data[$valBbm['kd_barang']]['saldo_awal'] = $saldo[$valBbm['kd_barang']];
+            $data[$valBbm['kd_barang']]['saldo_akhir'] = $data[$valBbm['kd_barang']]['saldo_awal'] + $data[$valBbm['kd_barang']]['stok_masuk'];
+        }
+
+        foreach ($modelBBK as $valBbk) {
+            $data[$valBbk['kd_barang']]['kd_barang'] = $valBbk['kd_barang'];
+            $data[$valBbk['kd_barang']]['barang'] = $valBbk['nm_barang'];
+            $data[$valBbk['kd_barang']]['satuan'] = $valBbk['satuan'];
+            $data[$valBbk['kd_barang']]['stok_minim'] = $valBbk['min'];
+            $data[$valBbk['kd_barang']]['stok_masuk'] = isset($data[$valBbk['kd_barang']]['stok_masuk']) ? $data[$valBbk['kd_barang']]['stok_masuk'] : 0;
+            $data[$valBbk['kd_barang']]['stok_keluar'] = isset($data[$valBbk['kd_barang']]['stok_keluar']) ? $data[$valBbk['kd_barang']]['stok_keluar'] + $valBbk['jml'] : $valBbk['jml'];
+
+            $saldo[$valBbk['kd_barang']] = isset($saldo[$valBbk['kd_barang']]) ? $saldo[$valBbk['kd_barang']] + $valBbk['jml'] : $this->stokakhirmingguan($valBbk['kd_barang'], $_SESSION['tanggalEnd'], $valBbk['saldo']) + $valBbk['jml'];
+
+            $data[$valBbk['kd_barang']]['saldo_awal'] = $saldo[$valBbk['kd_barang']];
+            $data[$valBbk['kd_barang']]['saldo_akhir'] = (isset($data[$valBbk['kd_barang']]['saldo_akhir']) ? $data[$valBbk['kd_barang']]['saldo_akhir'] : $data[$valBbk['kd_barang']]['saldo_awal'] ) - $valBbk['jml'];
+        }
+
+        $periode = $_SESSION['periode'];
+        return $this->render("/expretur/pergerakanbarang2", ['models' => $data, 'tgl' => $tgl, 'periode' => $periode]);
     }
 
     public function actionExcelpergerakan() {
@@ -450,6 +533,14 @@ class BarangController extends Controller {
 
     public function actionDelete($id) {
         $model = $this->findModel($id);
+        
+        session_start();
+        
+        $trash = new \app\models\BarangTrash();
+        $trash->attributes = $model->attributes;
+        $trash->tgl_hapus = date("Y-m-d h:i:s");
+        $trash->user_id = $_SESSION['user']['id'];
+        $trash->save();
 
         if ($model->delete()) {
             $this->setHeader(200);

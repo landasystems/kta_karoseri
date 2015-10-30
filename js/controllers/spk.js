@@ -66,7 +66,7 @@ app.controller('spkCtrl', function ($scope, Data, toaster) {
     });
     $scope.getjabatan = function (form) {
 
-        Data.post('spk/kerja/', form.jabatan).then(function (data) {
+        Data.post('spk/kerja/', form).then(function (data) {
             $scope.sKerja = data.kerja;
             $scope.detKerja = data.detail;
 //            console.log(data.detail);
@@ -77,9 +77,11 @@ app.controller('spkCtrl', function ($scope, Data, toaster) {
     };
 
     $scope.pilih = function (form, $item) {
+        console.log($item);
         $scope.form.merk = $item.merk;
         $scope.form.model = $item.model;
         $scope.form.nm_customer = $item.nm_customer;
+        $scope.form.jenis = $item.jenis;
         $scope.detKerja = [{
                 nm_kerja: '',
             }];
@@ -150,10 +152,17 @@ app.controller('spkCtrl', function ($scope, Data, toaster) {
                 if (result.status == 0) {
                     toaster.pop('error', "Terjadi Kesalahan", result.errors);
                 } else {
+                    toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
+                    if ($scope.is_create == true) {
+                        var popupWin = window.open('', '_blank', 'width=1000,height=700');
+                        var elem = document.getElementById('printArea');
+                        popupWin.document.open()
+                        popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/print.css" /></head><body onload="window.print();window.close();">' + elem.innerHTML + '</html>');
+                        popupWin.document.close();
+                    }
+                    $scope.is_create = false;
                     $scope.is_edit = false;
-                    $scope.form = {};
-                    $scope.callServer(tableStateRef); //reload grid ulang
-                    toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
+                    $scope.create($scope.form);
                 }
             });
         }
@@ -175,6 +184,7 @@ app.controller('spkCtrl', function ($scope, Data, toaster) {
     };
     $scope.selected = function (id_spk) {
         Data.get('spk/view/' + id_spk).then(function (data) {
+            console.log(data);
             $scope.form = data.data;
             $scope.form.id_spk = id_spk;
             $scope.detKerja = data.detail;

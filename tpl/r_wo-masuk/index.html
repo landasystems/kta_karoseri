@@ -66,10 +66,10 @@
 
 
                                     <div class="col-sm-3">
-                                        <input placeholder="Merk" st-search="merk" class="form-control"/>
+                                        <input placeholder="No Rangka" st-search="sti.no_chassis" class="form-control"/>
                                     </div>
                                     <div class="col-sm-3">
-                                        <input placeholder="Model" st-search="model" class="form-control"/>
+                                        <input placeholder="No Mesin" st-search="sti.no_mesin" class="form-control"/>
                                     </div>
                                     <div class="col-sm-3">
                                         <input placeholder="Type" st-search="tipe" class="form-control"/>
@@ -78,38 +78,36 @@
                                 </div>
                             </div>
                             <!--</div>-->
-
-
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="table-responsive" ng-hide="paginations == 0">
-                <table class="table table-striped table-hover" >
+            <div class="table-responsive" ng-hide="paginations == 0" style="overflow-x: scroll;">
+                <table class="table">
                     <thead>
                         <tr>
-                            <th st-sort="nama">Jenis</th>
-                            <th st-sort="nm_customer">Customer</th>
-                            <th st-sort="nm_customer">NO WO</th>
-                            <th st-sort="kd_titipan">No SPK</th>
-                            <th st-sort="no_wo">Kode Titipan</th>
-                            <th st-sort="merk">Merk/Type</th>
-                            <th st-sort="no_chassis">Sales</th>
-                            <th st-sort="no_mesin">Model</th>
+                            <th st-sort="vws.jenis">Jenis</th>
+                            <th st-sort="customer.nm_customer">Customer</th>
+                            <th st-sort="wm.no_wo">NO WO</th>
+                            <th st-sort="spk.no_spk">No SPK</th>
+                            <th st-sort="sti.kd_titipan">Kode Titipan</th>
+                            <th st-sort="chassis.merk">Merk/Type</th>
+                            <th st-sort="tk.nama">Sales</th>
+                            <th st-sort="sti.no_chassis">No Rangka</th>
+                            <th st-sort="sti.no_mesin">No Mesin</th>
                         </tr>
                     </thead>
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed">
-                            <td>{{row.provinsi}}</td>
+                            <td>{{row.jenis}}</td>
                             <td>{{row.nm_customer}}</td>
                             <td>{{row.no_wo}}</td>
                             <td>{{row.no_spk}}</td>
                             <td>{{row.kd_titipan}}</td>
                             <td>{{row.merk}} {{row.tipe}}</td>
                             <td>{{row.nama}}</td>
-                            <td>{{row.model}}</td>
-
+                            <td>{{row.no_chassis}}</td>
+                            <td>{{row.no_mesin}}</td>
 
                         </tr>
                     </tbody>

@@ -10,7 +10,8 @@
                     <button type="button" class="btn btn-info fa fa-lock" ng-click="lock(gantiStatus);" ng-show="status == 0 && user.roles_id == 1">&nbsp;Lock</button>
                     <button type="button" class="btn btn-success fa fa-unlock" ng-click="unlock(gantiStatus);" ng-show="status == 1 && user.roles_id == 1">&nbsp;Unlock</button>
                     <button type="button" class="btn btn-warning fa fa-print" ng-show="user.roles_id == '1'" ng-click="bukaPrint(gantiStatus)">&nbsp;Buka Print Out</button>
-                    <button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
+                    <!--<button type="button" class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>-->
+                    <button type="button" ng-show="user.roles_id == 1 || user.roles_id == 16"  class="btn btn-primary fa fa-plus-square-o" ng-click="create();">&nbsp;Tambah Data</button>
                 </div> 
             </div>
             <div collapse="isCollapsed" class="panel-body collapse" style="height: 0px;">
@@ -64,6 +65,7 @@
                             <th st-sort="spp">No SPP</th>
                             <th st-sort="tanggal">tanggal</th>
                             <th st-sort="dikirim_ke">Tujuan Pengiriman</th>
+                            <th>Status Print</th>
                             <th style="text-align:right;" ng-hide="is_view == true">Action &nbsp;</th>
                         </tr>
                     </thead>
@@ -78,24 +80,25 @@
                             <td>{{row.spp}}</td>
                             <td>{{row.tanggal| date}}</td>
                             <td>{{row.dikirim_ke}}</td>
+                            <td>{{row.status_nama}}</td>
                             <td>
-                                <div ng-show="row.lock == 0 || user.roles_id == 1" class="btn-group pull-right"  role="group" style="margin-top: -3px;">
+                                <div class="btn-group pull-right"  role="group" style="margin-top: -3px;">
                                     <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
-                                    <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" ></button>
-                                </div> 
+                                    <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row)" ng-show="user.roles_id == 1 || user.roles_id == 16" class="btn-group pull-right"></button>
+                                </div>
                             </td>
                         </tr>
                     </tbody>
                     <tbody ng-show="isLoading">
                         <tr>
-                            <td colspan="6" class="text-center" ng-if="user.roles_id == 1">Loading ... </td>
-                            <td colspan="5" class="text-center" ng-if="user.roles_id != 1">Loading ... </td>
+                            <td colspan="7" class="text-center" ng-if="user.roles_id == 1">Loading ... </td>
+                            <td colspan="6" class="text-center" ng-if="user.roles_id != 1">Loading ... </td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="5" ng-if="user.roles_id != 1" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html"></td>
-                            <td colspan="6" ng-if="user.roles_id == 1" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html"></td>
+                            <td colspan="6" ng-if="user.roles_id != 1" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html"></td>
+                            <td colspan="7" ng-if="user.roles_id == 1" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html"></td>
                         </tr>
                 </table>		
             </div>
@@ -109,7 +112,8 @@
             <div class="panel-heading">
                 {{formtitle}}
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-hide="is_print == false">
-                    <button type="button" class="btn btn-primary fa fa-print" ng-click="updt_st(form.nota)" ng-print print-element-id="printArea" ng-disabled="form.status == '1' && user.roles_id != '1'">&nbsp;Print</button>
+                    <!--                    <button type="button" class="btn btn-primary fa fa-print" ng-click="updt_st(form.nota)" ng-print print-element-id="printArea" ng-disabled="form.status == '1' && user.roles_id != '1'">&nbsp;Print</button>-->
+                    <button type="button" class="btn btn-primary fa fa-print" ng-click="updt_st(form.nota)" ng-print print-element-id="printArea">&nbsp;Print</button>
                 </div> 
             </div>
             <div class="panel-body">
@@ -149,6 +153,7 @@
                                 <div class="form-group" ng-hide="form.status_po == 0">
                                     <label class="col-sm-3 control-label">No. SPP</label>
                                     <div class="col-sm-6">
+                                        <!--{{form.listspp.no_spp}}-->
                                         <div class="input-group">
                                             <ui-select on-select="cariBarang('',form.listspp.no_spp)"  ng-model="form.listspp" ng-readonly="form.status_po == '0'" theme="bootstrap">
                                                 <ui-select-match>{{$select.selected.no_spp}} - {{$select.selected.no_proyek}}</ui-select-match>
@@ -211,10 +216,10 @@
                                         <th class="panel-heading text-muted font-bold" ng-hide="is_view == true"><button ng-click="addDetail()" title="Tambah Data" class="btn btn-success" ng-disabled="is_view"><i class="fa fa-plus"></i></button></th>
                                     </tr>
                                     <tr>
-                                        <th style="text-align: center;">Nama Barang</th>
+                                        <th style="text-align: center; width:200px;">Nama Barang</th>
                                         <th style="text-align: center;">QTY</th>
                                         <th style="text-align: center;">Satuan</th>
-                                        <th style="text-align: center;">Harga</th>
+                                        <th style="text-align: center;margin:0px;width:150px;">Harga</th>
                                         <th style="text-align: center;">Jumlah</th>
                                         <th style="text-align: center;">Tgl Pengiriman</th>
                                         <th style="text-align: center;">Keterangan</th>
@@ -224,9 +229,9 @@
                                 <tbody>
                                     <tr ng-repeat="detail in detsPo">
                                         <td>
-                                            <div class="input-group">
+                                            <div class="input-group" style="width:100%;">
                                                 <ui-select on-select="pilih(detail, $item)" ng-model="detail.data_barang" theme="bootstrap">
-                                                    <ui-select-match>{{$select.selected.nm_barang}}</ui-select-match>
+                                                    <ui-select-match >{{$select.selected.nm_barang}}</ui-select-match>
                                                     <ui-select-choices refresh="cariBarang($select.search,form.listspp.no_spp)" repeat="val in resultsbrg">
                                                         {{val.nm_barang}}
                                                     </ui-select-choices>
@@ -240,13 +245,13 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <input style="width:70px;" type="text" class="form-control" ng-model="detail.jml" ng-change="subtotal()" ng-disabled="is_view" ng-readonly="is_edit == false" required>
+                                            <input style="width:50px;" type="text" class="form-control" ng-model="detail.jml" ng-change="subtotal()" ng-disabled="is_view" ng-readonly="is_edit == false" required>
                                         </td>
-                                        <td> 
+                                        <td style="width: 70px;"> 
                                             <input type="text" class="form-control" ng-model="detail.data_barang.satuan" ng-disabled="is_view" ng-readonly="true">
                                         </td>
                                         <td>
-                                            <div class="input-group" style="margin:0px;">
+                                            <div class="input-group" style="margin:0px;width:150px;">
                                                 <span class="input-group-addon">Rp</span>
                                                 <input type="text" class="form-control" ng-maxlength="15" ng-pattern="/^[0-9]+$/" ng-change="subtotal()"  ng-model="detail.harga" ng-disabled="is_view" ng-readonly="is_edit == false">
                                             </div>
@@ -402,115 +407,160 @@
     <!--PRINT-->
 
     <div id="printArea" ng-show="is_view">
-        <table class="table_po" style="border-collapse: collapse;font-size: 12px;">
-            <thead>
-                <tr>
-                    <td colspan="6" style="border-right:0px;padding: 10px" >
-                        <div style="border:1px solid #000;padding:5px ;border-collapse: collapse;">
-                            <div>
-                                <img ng-src="img/logo.png" align="left" style="margin-right: 8px"/>
-                            </div>
-                            <div>
-                                <center>
-                                    <h2>PURCHASE / WORK ORDER</h2>
+        <style media="print">
+            @media print {
+                html, body {
+                    display: block; 
+                    font-family: "Calibri";
+                    margin: 0;
+                    -webkit-transform-origin: 0 0;
+                    -moz-transform-origin: 0 0;
+                }
+
+                @page {
+                    size: 10cm 22cm;
+                }
+            }
+        </style>
+        <div style="margin:10px; width:100% !inportant;"><!--width: 33cm;-->
+            <table width="100%" class="border-all" style="border-collapse: collapse;">
+                <tr style="height: 1.8cm;">
+                    <td style="padding: 10px" colspan="2">
+                        <table class="border-all" style="border-collapse: collapse;">
+                            <tr>
+                                <td width="40">
+                                    <img ng-src="img/logo.png" align="left"/>
+                                </td>
+                                <td id="print_po" align="center" style="vertical-align: middle;">
+                                    <h2 style="margin: 0pt; padding: 0pt; font-size: 13pt;"><b>PURCHASE / WORK ORDER</b></h2>
                                     No. Dokumen : FR - PCH - 003
-                                </center>
-                            </div>
-                        </div>
+                                </td>
+                            </tr>
+                        </table>
                     </td>
+                </tr>
+                <tr style="height: 1.8cm;">
+                    <td style="margin: 0.1cm; width:40%">
+                        <table>
+                            <tr>
+                                <td width="50" id="print_po">Tanggal</td>
+                                <td width="2" id="print_po">:</td>
+                                <td id="print_po">{{form.tanggal| date:'dd MMMM yyyy'}}</td>
+                            </tr>
+                            <tr>
+                                <td width="50" id="print_po">Nomor</td>
+                                <td width="2" id="print_po">:</td>
+                                <td id="print_po">{{form.nota}}</td>
+                            </tr>
+                            <tr>
+                                <td width="50" id="print_po">SPP No.</td>
+                                <td width="2" id="print_po">:</td>
+                                <td id="print_po">{{form.spp}}</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table>
+                            <tr>
+                                <td width="70" id="print_po">Kepada Yth</td>
+                                <td width="2" id="print_po">:</td>
+                                <td id="print_po">{{form.supplier.nama_supplier}}</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <table width="100%" class="border-all" style="border-collapse: collapse; margin-top: -2px; height: 4.5cm;">
+                <tr style="height: 15px;">
+                    <th class="border-all" id="print_po" align="center" style="width:1cm">No.</th>
+                    <th class="border-all" id="print_po" align="center" style="width:8.5cm">URAIAN</th>
+                    <th class="border-all" id="print_po" align="center" style="width:2cm">KWANTUM</th>
+                    <th class="border-all" id="print_po" align="center" style="width:1.5cm">SATUAN</th>
+                    <th class="border-all" id="print_po" align="center" style="width:2.5cm">HARGA</th>
+                    <th class="border-all" id="print_po" align="center">JUMLAH</th>
+                </tr>
+                <tr ng-repeat="detail in detsPo" style="height: 10px;">
+                    <td id="print_po" align="center" class="border-left border-right">{{detail.data_barang.no}}</td>
+                    <td id="print_po" class="border-left border-right">{{detail.data_barang.nm_barang}} - {{detail.ket}}</td>
+                    <td id="print_po" align="center" class="border-left border-right">{{detail.jml}}</td>
+                    <td id="print_po" align="center" class="border-left border-right">{{detail.data_barang.satuan}}</td>
+                    <td id="print_po" align="right" class="border-left border-right">{{detail.harga| number}}</td>
+                    <td id="print_po" align="right" class="border-left border-right">{{detail.jumlah| number}}</td>
                 </tr>
                 <tr>
-                    <td colspan="6" style="border-right: 0px; border-left: 0px; border-right:0px">
-                        <div>
-                            <div class="kiri">
-                                <div>Tanggal  : {{form.tanggal| date:'dd MMMM yyyy'}}</div>
-                                <div>Nomor : {{form.nota}}</div>
-                                <div>Spp No. : {{form.spp}}</div>
-                            </div>
-                            <div class="kanan" style="text-align:left;">
-                                <div>Kepada Yth. : {{form.supplier.nama_supplier}}</div>
-                            </div>
-                        </div>
-                    </td>
+                    <td id="print_po" class="border-left border-right"></td>
+                    <td id="print_po" class="border-left border-right"></td>
+                    <td id="print_po" class="border-left border-right"></td>
+                    <td id="print_po" class="border-left border-right"></td>
+                    <td id="print_po" class="border-left border-right"></td>
+                    <td id="print_po" class="border-left border-right"></td>
                 </tr>
-            </thead>
-
-
-            <tbody  width="700">
-                <tr class="table_po tr">
-                    <th style="text-align: center;width: 5%">No.</th>
-                    <th style="width:200px;">URAIAN</th>
-                    <th style="text-align: center;width:5%">KWANTUM</th>
-                    <th style="text-align: center;width:6%">SATUAN</th>
-                    <th style="text-align: center;">HARGA</th>
-                    <th style="text-align: center;">JUMLAH</th>
-                </tr>
-                <tr class="table_po tr" ng-repeat="detail in detsPo">
-                    <td style="text-align:center;">{{detail.data_barang.no}}</td>
-                    <td>{{detail.data_barang.nm_barang}} - {{detail.ket}}</td>
-                    <td style="text-align:center;">{{detail.jml}}</td>
-                    <td style="text-align:center;">{{detail.data_barang.satuan}}</td>
-                    <td style="text-align:right;" width="19%">{{detail.harga| number}}</td>
-                    <td style=" text-align: right;  " width="19%">{{detail.jumlah| number}}</td>
-                </tr>
-
-
-                <tr style="border-bottom:0px">
-                    <td colspan="3">
+            </table>
+            <table width="100%" style="border-collapse: collapse; margin-top: -2px; margin-bottom:  -1px;" class="border-all">
+                <tr>
+                    <td style="vertical-align: top; width:9.5cm" id="print_po" class="border-right border-left">
                         Keterangan :
                         <div>- Jatuh Tempo &nbsp;&nbsp;:&nbsp; {{form.jatuh_tempo}} hari</div> 
                         <div>- Dikirim ke &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{form.dikirim_ke}}</div>
                         <div>- Pengiriman Tanggal : {{form.tanggal| date:'dd-MMMM-yyyy'}}</div>
                         <div>- Form asli ini berlaku untuk penagihan</div>
                         <div>- Spesifikasi teknis terlampir</div>
-                        <table class="tablepo" style="width:101% ;margin-left: -2px;margin-bottom: -2px;border-collapse: collapse;font-size: 12px;">
-                            <tr style="border-top:  1px solid #333;">
-                                <td style=" text-align:center;border-top:  1px solid #333;border-left:none;">Pemberi Order</td>
-                                <td style=" text-align:center;border-top:  1px solid #333;">Penerima Order</td>
+                        <table style="border-collapse: collapse; width:9.5cm; margin-left: -1px; margin-right: -1px;">
+                            <tr>
+                                <td class="border-all" id="print_po">Pemberi Order</td>
+                                <td class="border-all" id="print_po">Penerima Order</td>
                             </tr>
                             <tr height="80">
-                                <td style="border-left:  none;"></td>
-                                <td></td>
+                                <td style="border-left:  none;" class="border-all"></td>
+                                <td class="border-all"></td>
                             </tr>
                             <tr>
-                                <td style="border-left:none;border-bottom: none;">Tgl :</td>
-                                <td style="border-bottom: none;">Tgl :</td>
+                                <td class="border-all" id="print_po">Tgl :</td>
+                                <td class="border-all" id="print_po">Tgl :</td>
                             </tr>
                         </table>
                     </td>
-                    <td colspan="3" rowspan="3" style="border-right:none;" valign="top">
-                        <div>
-                            <div class="kiri">
-                                <div>Total pembelian / biaya </div>
-                                <div>Diskon</div>
-                                <div>Dasar pengenaan pajak</div>
-                                <div>PPN 10%</div>
-                                <div>Total yang harus dibayar</div>
-                                <div>Uang muka</div>
-                                <div>Sisa yang harus dibayar</div>
-                                <div>Terbilang</div>
-
-                            </div>
-                            <div class="kanan">
-                                <div>{{form.total|  currency:undefined:0}}</div>
-                                <div>{{form.nilai_diskon| currency:undefined:0 }}</div>
-                                <div>Rp. </div>
-                                <div>{{form.ppn| currency:undefined:0}}</div>
-                                <div>{{form.total_dibayar| currency:undefined:0}}</div>
-                                <div>{{form.dp| currency:undefined:0 }}</div>
-                                <div>{{form.sisa_dibayar| currency:undefined:0}}</div>
-                                <div> </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="kiri" style="margin-left: 3px;">
-                                {{form.terbilang| uppercase}}
-                            </div>
-                        </div>
+                    <td>
+                        <table>
+                            <tr>
+                                <td width="50%" id="print_po">Total pembelian / biaya </td>
+                                <td id="print_po">{{form.total|  currency:undefined:0}}</td>
+                            </tr>
+                            <tr>
+                                <td id="print_po">Diskon</td>
+                                <td id="print_po">{{form.nilai_diskon| currency:undefined:0 }}</td>
+                            </tr>
+                            <tr>
+                                <td id="print_po">Dasar pengenaan pajak</td>
+                                <td id="print_po">Rp. </td>
+                            </tr>
+                            <tr>
+                                <td id="print_po">PPN 10%</td>
+                                <td id="print_po">{{form.ppn| currency:undefined:0}}</td>
+                            </tr>
+                            <tr>
+                                <td id="print_po">Total yang harus dibayar</td>
+                                <td id="print_po">{{form.total_dibayar| currency:undefined:0}}</td>
+                            </tr>
+                            <tr>
+                                <td id="print_po">Uang muka</td>
+                                <td id="print_po">{{form.dp| currency:undefined:0 }}</td>
+                            </tr>
+                            <tr>
+                                <td id="print_po">Sisa yang harus dibayar</td>
+                                <td id="print_po">{{form.sisa_dibayar| currency:undefined:0}}</td>
+                            </tr>
+                            <tr>
+                                <td id="print_po">Terbilang :</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" id="print_po">{{form.terbilang| uppercase}}</td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
-            </tbody>
-        </table>
+            </table>
+        </div>
     </div>
-
 </div>

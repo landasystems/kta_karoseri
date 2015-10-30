@@ -78,11 +78,12 @@
     </div>
 
     <div id="printArea" style="width: 11cm;">
-        <h2 align="center">
+        <div style="width:350px;margin-left: 5px;margin-top: 5px;">
+        <h4 align="center">
             KARTU PENGAMBILAN BAHAN (KPB) <BR>
             {{form.no_wo.jenis| uppercase}}
-        </h2><br>
-        <p>NO WO : {{form.no_wo.no_wo}}
+        </h4>
+        <p style="font-size: 13pt">NO WO : {{form.no_wo.no_wo}}
         <table class="print-detail" style="font-size: 9pt">
             <thead>
                 <tr>
@@ -110,6 +111,7 @@
                 <td style="border: none; text-align: center; width: 30%">PEKERJA</td>
             </tr>
         </table>
+    </div>
     </div>
 </div>
 

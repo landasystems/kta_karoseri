@@ -269,8 +269,7 @@ class SppnonrutinController extends Controller {
         $model->tgl1 = date('d/m/Y', strtotime($params['form']['periode']['startDate']));
         $model->tgl2 = date('d/m/Y', strtotime($params['form']['periode']['endDate']));
         $model->no_proyek = 'Non Rutin';
-        $model->lock = 1;
-        if ($model->save()) {
+       if ($model->save()) {
             $deleteAll = DetSpp::deleteAll('no_spp="' . $model->no_spp . '"');
             foreach ($params['details'] as $val) {
 
@@ -398,7 +397,7 @@ class SppnonrutinController extends Controller {
                 $detail[$i]['saldo'] = $val->saldo;
                 $detail[$i]['p'] = $val->p;
                 $detail[$i]['no_wo'] = $woArr;
-                $detail[$i]['barang'] = array('kd_barang' => $val->barang->kd_barang, 'saldo' => $val->barang->saldo, 'nm_barang' => $val->barang->nm_barang, 'satuan' => $val->barang->satuan);
+                $detail[$i]['barang'] = array('kd_barang' => isset($val->barang->kd_barang) ? $val->barang->kd_barang : "-", 'saldo' => isset($val->barang->saldo) ? $val->barang->saldo : "-", 'nm_barang' => isset($val->barang->nm_barang) ? $val->barang->nm_barang : "-", 'satuan' => isset($val->barang->satuan) ? $val->barang->satuan : "-");
                 $woArr = array();
                 $i++;
             }

@@ -62,6 +62,7 @@
                                 <th st-sort="no_wo"></th>
                                 <th st-sort="no_wo">Jenis</th>
                                 <th st-sort="no_wo">No SPK</th>
+                                <th st-sort="no_wo">KD Titipan</th>
                                 <th st-sort="no_wo">No Wo</th>
                                 <th st-sort="no_wo">Tanggal Kontrak</th>
                                 <th st-sort="no_wo">Customer</th>
@@ -75,6 +76,7 @@
                                     </label></td>
                                 <td>{{row.jenis}}</td>
                                 <td>{{row.no_spk}}</td>
+                                <td>{{row.kd_titipan}}</td>
                                 <td>{{row.no_wo}}</td>
                                 <td>{{row.tgl_kontrak | date:'dd - MMM - yyyy'}}</td>
                                 <td>{{row.nm_customer}}</td>
@@ -110,7 +112,8 @@
             <div class="panel-heading">
                 {{formtitle}} 
                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;" ng-hide="is_print == false">
-                    <button type="button" class="btn btn-primary fa fa-print"   ng-print print-element-id="printArea" ng-disabled="status == '0'">&nbsp;Print</button>
+                    <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
+                    <button type="button" class="btn btn-primary fa fa-print"   ng-click="print(form.no_wo)"" ng-disabled="status == '0'">&nbsp;Print</button>
                 </div>
             </div>
             <div class="panel-body">
@@ -306,10 +309,10 @@
                                                                                             </div>
                                                                                         </div> -->
                                         </td>
-                                        <td width="30%" valign="top">
+<!--                                        <td width="30%" valign="top">
                                             <img ng-src="img/{{(form.foto) ? 'womasuk/'+form.foto : 'noimage.jpg'}}" class="img-thumbnail">
                                             <input type="file" nv-file-select="" uploader="uploader" />
-                                        </td>
+                                        </td>-->
                                     </tr>
                                 </table>
 
@@ -323,7 +326,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Plat Body</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformplat"   tagging-label="false" ng-model="eks.plat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformplat" ng-disabled="is_view"   tagging-label="false" ng-model="eks.plat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.plat_body}}</ui-select-match>
                                                         <ui-select-choices repeat="plat in list_plat | filter:$select.search" >
                                                             <small>
@@ -338,7 +341,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Ventilasi Atas</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformventilasi"   tagging-label="false" ng-model="eks.ventilasi" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformventilasi" ng-disabled="is_view"  tagging-label="false" ng-model="eks.ventilasi" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.ventilasi_atas}}</ui-select-match>
                                                         <ui-select-choices repeat="v in list_ventilasi | filter:$select.search" >
                                                             <small>
@@ -353,7 +356,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Kaca Spion</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformspion"   tagging-label="false" ng-model="eks.spion" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformspion" ng-disabled="is_view"  tagging-label="false" ng-model="eks.spion" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.kaca_spion}}</ui-select-match>
                                                         <ui-select-choices repeat="s in list_spion | filter:$select.search" >
                                                             <small>
@@ -368,7 +371,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Kaca Depan</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformkdepan"   tagging-label="false" ng-model="eks.kdepan" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformkdepan" ng-disabled="is_view"   tagging-label="false" ng-model="eks.kdepan" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.kaca_depan}}</ui-select-match>
                                                         <ui-select-choices repeat="kd in list_kdepan | filter:$select.search" >
                                                             <small>
@@ -383,7 +386,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Kaca Belakang</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformkbelakang"   tagging-label="false" ng-model="eks.kbelakang" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformkbelakang" ng-disabled="is_view"   tagging-label="false" ng-model="eks.kbelakang" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.kaca_belakang}}</ui-select-match>
                                                         <ui-select-choices repeat="kb in list_kbelakang | filter:$select.search" >
                                                             <small>
@@ -398,7 +401,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Kaca Samping</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformksamping"   tagging-label="false" ng-model="eks.ksamping" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformksamping" ng-disabled="is_view"   tagging-label="false" ng-model="eks.ksamping" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.kaca_samping}}</ui-select-match>
                                                         <ui-select-choices repeat="ks in list_ksamping | filter:$select.search" >
                                                             <small>
@@ -413,7 +416,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Lampu Depan</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformldepan"   tagging-label="false" ng-model="eks.ldepan" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformldepan" ng-disabled="is_view"   tagging-label="false" ng-model="eks.ldepan" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.lampu_depan}}</ui-select-match>
                                                         <ui-select-choices repeat="ld in list_ldepan | filter:$select.search" >
                                                             <small>
@@ -428,7 +431,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Lampu Belakang</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformlbelakang"   tagging-label="false" ng-model="eks.lbelakang" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformlbelakang" ng-disabled="is_view"   tagging-label="false" ng-model="eks.lbelakang" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.lampu_belakang}}</ui-select-match>
                                                         <ui-select-choices repeat="lb in list_lbelakang | filter:$select.search" >
                                                             <small>
@@ -443,7 +446,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Pintu Depan</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformpdepan"   tagging-label="false" ng-model="eks.pdepan" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformpdepan" ng-disabled="is_view"   tagging-label="false" ng-model="eks.pdepan" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.pintu_depan}}</ui-select-match>
                                                         <ui-select-choices repeat="pd in list_pdepan | filter:$select.search" >
                                                             <small>
@@ -460,7 +463,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Pintu Penumpang</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformppenumpang"   tagging-label="false" ng-model="eks.ppenumpang" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformppenumpang"  ng-disabled="is_view"  tagging-label="false" ng-model="eks.ppenumpang" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.pintu_penumpang}}</ui-select-match>
                                                         <ui-select-choices repeat="pp in list_ppenumpang | filter:$select.search" >
                                                             <small>
@@ -475,7 +478,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Pintu Bagasi Samping</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformpbagasi"   tagging-label="false" ng-model="eks.pbagasi" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformpbagasi" ng-disabled="is_view"   tagging-label="false" ng-model="eks.pbagasi" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.pintu_bagasi_samping}}</ui-select-match>
                                                         <ui-select-choices repeat="pb in list_pbagasi | filter:$select.search" >
                                                             <small>
@@ -490,7 +493,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Pintu Belakang</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformpbelakang"   tagging-label="false" ng-model="eks.pbelakang" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformpbelakang"  ng-disabled="is_view"  tagging-label="false" ng-model="eks.pbelakang" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.pintu_belakang}}</ui-select-match>
                                                         <ui-select-choices repeat="pb in list_pbelakang | filter:$select.search" >
                                                             <small>
@@ -505,7 +508,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Wyper Set</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformwyper"   tagging-label="false" ng-model="eks.wyper" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformwyper" ng-disabled="is_view"  tagging-label="false" ng-model="eks.wyper" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.wyper_set}}</ui-select-match>
                                                         <ui-select-choices repeat="w in list_wyper | filter:$select.search" >
                                                             <small>
@@ -520,7 +523,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Warna</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransform"   tagging-label="false" ng-model="eks.warna" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 300px;" title="Choose a color">
+                                                    <ui-select tagging="tagTransform" ng-disabled="is_view"  tagging-label="false" ng-model="eks.warna" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 300px;" title="Choose a color">
                                                         <ui-select-match placeholder="Pilih Warna">{{$select.selected.warna}}</ui-select-match>
                                                         <ui-select-choices repeat="warna in list_warna | filter:$select.search" >
                                                             <small>
@@ -533,7 +536,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Warna 2</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransform"   tagging-label="false" ng-model="eks.warna2" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 300px;" title="Choose a color">
+                                                    <ui-select tagging="tagTransform" ng-disabled="is_view"  tagging-label="false" ng-model="eks.warna2" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 300px;" title="Choose a color">
                                                         <ui-select-match placeholder="Pilih Warna">{{$select.selected.warna}}</ui-select-match>
                                                         <ui-select-choices repeat="warna in list_warna | filter:$select.search" >
                                                             <small>
@@ -546,7 +549,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Strip</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformstrip"   tagging-label="false" ng-model="eks.strip" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformstrip" ng-disabled="is_view"  tagging-label="false" ng-model="eks.strip" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.strip}}</ui-select-match>
                                                         <ui-select-choices repeat="s in list_strip | filter:$select.search" >
                                                             <small>
@@ -561,7 +564,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Letter</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformletter"   tagging-label="false" ng-model="eks.letter" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformletter" ng-disabled="is_view"  tagging-label="false" ng-model="eks.letter" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.letter}}</ui-select-match>
                                                         <ui-select-choices repeat="l in list_letter | filter:$select.search" >
                                                             <small>
@@ -593,7 +596,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Plavon</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformplavon"   tagging-label="false" ng-model="inter.plavon" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformplavon" ng-disabled="is_view"   tagging-label="false" ng-model="inter.plavon" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.plavon}}</ui-select-match>
                                                         <ui-select-choices repeat="l in list_plavon | filter:$select.search" >
                                                             <small>
@@ -608,7 +611,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Trimming Deck</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformtrimming"   tagging-label="false" ng-model="inter.trimming" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformtrimming" ng-disabled="is_view"  tagging-label="false" ng-model="inter.trimming" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.trimming_deck}}</ui-select-match>
                                                         <ui-select-choices repeat="l in list_trimming | filter:$select.search" >
                                                             <small>
@@ -623,7 +626,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Duchting Louver</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformduchting"   tagging-label="false" ng-model="inter.duchting" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformduchting" ng-disabled="is_view"  tagging-label="false" ng-model="inter.duchting" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.duchting_louver}}</ui-select-match>
                                                         <ui-select-choices repeat="l in list_duchting | filter:$select.search" >
                                                             <small>
@@ -638,7 +641,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Lampu Plavon</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformlplavon"   tagging-label="false" ng-model="inter.lplavon" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformlplavon" ng-disabled="is_view"  tagging-label="false" ng-model="inter.lplavon" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.lampu_plavon}}</ui-select-match>
                                                         <ui-select-choices repeat="l in list_lplavon | filter:$select.search" >
                                                             <small>
@@ -653,7 +656,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Lantai</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformlantai"   tagging-label="false" ng-model="inter.lantai" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformlantai" ng-disabled="is_view"  tagging-label="false" ng-model="inter.lantai" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.lantai}}</ui-select-match>
                                                         <ui-select-choices repeat="l in list_lantai | filter:$select.search" >
                                                             <small>
@@ -668,7 +671,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Karpet</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformkarpet"   tagging-label="false" ng-model="inter.karpet" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformkarpet" ng-disabled="is_view"  tagging-label="false" ng-model="inter.karpet" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.karpet}}</ui-select-match>
                                                         <ui-select-choices repeat="l in list_karpet | filter:$select.search" >
                                                             <small>
@@ -683,7 +686,7 @@
                                             <div class="form-group" ng-show="form.jenis == 'Small Bus'">
                                                 <label class="col-sm-3 control-label">Bagasi Dalam </label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformbdalam"   tagging-label="false" ng-model="inter.bdalam" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformbdalam" ng-disabled="is_view"  tagging-label="false" ng-model="inter.bdalam" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.bagasi_dalam}}</ui-select-match>
                                                         <ui-select-choices repeat="l in list_bagasi_dalam | filter:$select.search" >
                                                             <small>
@@ -698,7 +701,7 @@
                                             <div class="form-group" ng-show="form.jenis == 'Small Bus'">
                                                 <label class="col-sm-3 control-label">Dashboard</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformdashboard"   tagging-label="false" ng-model="inter.dashboard" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformdashboard" ng-disabled="is_view"  tagging-label="false" ng-model="inter.dashboard" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.dashboard}}</ui-select-match>
                                                         <ui-select-choices repeat="l in list_dashboard | filter:$select.search" >
                                                             <small>
@@ -713,7 +716,7 @@
                                             <div class="form-group" ng-show="form.jenis == 'Small Bus'">
                                                 <label class="col-sm-3 control-label">Peredam</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformperedam"   tagging-label="false" ng-model="inter.peredam" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                    <ui-select tagging="tagTransformperedam" ng-disabled="is_view"  tagging-label="false" ng-model="inter.peredam" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.peredam}}</ui-select-match>
                                                         <ui-select-choices repeat="l in list_peredam | filter:$select.search" >
                                                             <small>
@@ -733,7 +736,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Pegangan Tangan Atas</label>
                                                     <div class="col-sm-8">
-                                                        <ui-select tagging="tagTransformpegangan_atas"   tagging-label="false" ng-model="inter.pegangan_atas" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select tagging="tagTransformpegangan_atas" ng-disabled="is_view"   tagging-label="false" ng-model="inter.pegangan_atas" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                             <ui-select-match placeholder="">{{$select.selected.pegangan_tangan_atas}}</ui-select-match>
                                                             <ui-select-choices repeat="l in list_pegangan_atas | filter:$select.search" >
                                                                 <small>
@@ -748,7 +751,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Pengaman Penumpang</label>
                                                     <div class="col-sm-8">
-                                                        <ui-select tagging="tagTransformpengaman_penumpang"   tagging-label="false" ng-model="inter.pengaman_penumpang" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select tagging="tagTransformpengaman_penumpang" ng-disabled="is_view"  tagging-label="false" ng-model="inter.pengaman_penumpang" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                             <ui-select-match placeholder="">{{$select.selected.pengaman_penumpang}}</ui-select-match>
                                                             <ui-select-choices repeat="l in list_pengaman_penumpang | filter:$select.search" >
                                                                 <small>
@@ -763,7 +766,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Pengaman Kaca Samping</label>
                                                     <div class="col-sm-8">
-                                                        <ui-select tagging="tagTransformpengaman_kaca"   tagging-label="false" ng-model="inter.pengaman_kaca" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select tagging="tagTransformpengaman_kaca" ng-disabled="is_view"  tagging-label="false" ng-model="inter.pengaman_kaca" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                             <ui-select-match placeholder="">{{$select.selected.pengaman_kaca_samping}}</ui-select-match>
                                                             <ui-select-choices repeat="l in list_pengaman_kaca | filter:$select.search" >
                                                                 <small>
@@ -778,7 +781,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Pengaman Driver</label>
                                                     <div class="col-sm-8">
-                                                        <ui-select tagging="tagTransformpengaman_driver"   tagging-label="false" ng-model="inter.pengaman_driver" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select tagging="tagTransformpengaman_driver" ng-disabled="is_view"  tagging-label="false" ng-model="inter.pengaman_driver" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                             <ui-select-match placeholder="">{{$select.selected.pengaman_driver}}</ui-select-match>
                                                             <ui-select-choices repeat="l in list_pengaman_driver | filter:$select.search" >
                                                                 <small>
@@ -793,7 +796,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Gordyn</label>
                                                     <div class="col-sm-8">
-                                                        <ui-select tagging="tagTransformgordyn"   tagging-label="false" ng-model="inter.gordyn" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select tagging="tagTransformgordyn" ng-disabled="is_view"  tagging-label="false" ng-model="inter.gordyn" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                             <ui-select-match placeholder="">{{$select.selected.gordyn}}</ui-select-match>
                                                             <ui-select-choices repeat="l in list_gordyn | filter:$select.search" >
                                                                 <small>
@@ -808,7 +811,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Driver Fan</label>
                                                     <div class="col-sm-8">
-                                                        <ui-select tagging="tagTransformdriver_fan"   tagging-label="false" ng-model="inter.driver_fan" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select tagging="tagTransformdriver_fan" ng-disabled="is_view"  tagging-label="false" ng-model="inter.driver_fan" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                             <ui-select-match placeholder="">{{$select.selected.driver_fan}}</ui-select-match>
                                                             <ui-select-choices repeat="l in list_driver_fan | filter:$select.search" >
                                                                 <small>
@@ -823,7 +826,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Radio Tape</label>
                                                     <div class="col-sm-8">
-                                                        <ui-select tagging="tagTransformradio_tape"   tagging-label="false" ng-model="inter.radio_tape" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select tagging="tagTransformradio_tape" ng-disabled="is_view"  tagging-label="false" ng-model="inter.radio_tape" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                             <ui-select-match placeholder="">{{$select.selected.radio_tape}}</ui-select-match>
                                                             <ui-select-choices repeat="l in list_radio_tape | filter:$select.search" >
                                                                 <small>
@@ -838,7 +841,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Speak Seat</label>
                                                     <div class="col-sm-8">
-                                                        <ui-select tagging="tagTransformspek_seat"   tagging-label="false" ng-model="inter.spek_seat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select tagging="tagTransformspek_seat" ng-disabled="is_view"  tagging-label="false" ng-model="inter.spek_seat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                             <ui-select-match placeholder="">{{$select.selected.spek_seat}}</ui-select-match>
                                                             <ui-select-choices repeat="l in list_spek_seat | filter:$select.search" >
                                                                 <small>
@@ -853,7 +856,7 @@
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">Driver Seat</label>
                                                     <div class="col-sm-8">
-                                                        <ui-select tagging="tagTransformdriver_seat"   tagging-label="false" ng-model="inter.driver_seat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
+                                                        <ui-select tagging="tagTransformdriver_seat" ng-disabled="is_view"  tagging-label="false" ng-model="inter.driver_seat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 250px;" title="">
                                                             <ui-select-match placeholder="">{{$select.selected.driver_seat}}</ui-select-match>
                                                             <ui-select-choices repeat="l in list_driver_seat | filter:$select.search" >
                                                                 <small>
@@ -873,8 +876,8 @@
                                                     <div class="col-sm-8">
                                                         <div class="input-group">
                                                             <span class="input-group-addon">1</span>
-                                                            <ui-select tagging="tagTransformseat1"   tagging-label="false" ng-model="inter.seat_satu" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
-                                                                <ui-select-match style="width:100px;" placeholder="">{{$select.selected.konf_seat1}}</ui-select-match>
+                                                            <ui-select tagging="tagTransformseat1" ng-disabled="is_view"  tagging-label="false" ng-model="inter.seat_satu" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                                <ui-select-match  placeholder="">{{$select.selected.konf_seat1}}</ui-select-match>
                                                                 <ui-select-choices repeat="g in list_seat1 | filter:$select.search" >
                                                                     <small style="width:100px;">
                                                                         {{g.konf_seat1}} 
@@ -886,7 +889,7 @@
                                                         </div><br>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">2</span>
-                                                            <ui-select tagging="tagTransformseat2"   tagging-label="false" ng-model="inter.seat_dua" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                            <ui-select tagging="tagTransformseat2" ng-disabled="is_view"  tagging-label="false" ng-model="inter.seat_dua" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
                                                                 <ui-select-match placeholder="">{{$select.selected.konf_seat2}}</ui-select-match>
                                                                 <ui-select-choices repeat="l in list_seat2 | filter:$select.search" >
                                                                     <small>
@@ -899,7 +902,7 @@
                                                         </div><br>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">3</span>
-                                                            <ui-select tagging="tagTransformseat3"   tagging-label="false" ng-model="inter.seat_tiga" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                            <ui-select tagging="tagTransformseat3" ng-disabled="is_view"  tagging-label="false" ng-model="inter.seat_tiga" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
                                                                 <ui-select-match placeholder="">{{$select.selected.konf_seat3}}</ui-select-match>
                                                                 <ui-select-choices repeat="l in list_seat3 | filter:$select.search" >
                                                                     <small>
@@ -912,7 +915,7 @@
                                                         </div><br>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">4</span>
-                                                            <ui-select tagging="tagTransformseat4"   tagging-label="false" ng-model="inter.seat_empat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                            <ui-select tagging="tagTransformseat4" ng-disabled="is_view"  tagging-label="false" ng-model="inter.seat_empat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
                                                                 <ui-select-match placeholder="">{{$select.selected.konf_seat4}}</ui-select-match>
                                                                 <ui-select-choices repeat="l in list_seat4 | filter:$select.search" >
                                                                     <small>
@@ -925,7 +928,7 @@
                                                         </div><br>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">5</span>
-                                                            <ui-select tagging="tagTransformseat5"   tagging-label="false" ng-model="inter.seat_lima" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                            <ui-select tagging="tagTransformseat5" ng-disabled="is_view"  tagging-label="false" ng-model="inter.seat_lima" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
                                                                 <ui-select-match placeholder="">{{$select.selected.konf_seat5}}</ui-select-match>
                                                                 <ui-select-choices repeat="l in list_seat5 | filter:$select.search" >
                                                                     <small>
@@ -944,7 +947,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Cover Seat</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformcover_seat"   tagging-label="false" ng-model="inter.cover_seat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                    <ui-select tagging="tagTransformcover_seat" ng-disabled="is_view"  tagging-label="false" ng-model="inter.cover_seat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.cover_seat}}</ui-select-match>
                                                         <ui-select-choices repeat="l in list_cover_seat | filter:$select.search" >
                                                             <small>
@@ -959,7 +962,7 @@
                                             <div class="form-group" ng-show="form.jenis == 'Small Bus'" >
                                                 <label class="col-sm-3 control-label">Optional Seat</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformoptional_seat"   tagging-label="false" ng-model="inter.optional_seat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                    <ui-select tagging="tagTransformoptional_seat" ng-disabled="is_view"  tagging-label="false" ng-model="inter.optional_seat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.optional_seat}}</ui-select-match>
                                                         <ui-select-choices repeat="l in list_optional_seat | filter:$select.search" >
                                                             <small>
@@ -974,7 +977,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Total Seat</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformtotal_seat"   tagging-label="false" ng-model="inter.total_seat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                    <ui-select tagging="tagTransformtotal_seat" ng-disabled="is_view"  tagging-label="false" ng-model="inter.total_seat" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.total_seat}}</ui-select-match>
                                                         <ui-select-choices repeat="l in list_total_seat | filter:$select.search" >
                                                             <small>
@@ -989,7 +992,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Merk AC</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransformac"   tagging-label="false" ng-model="inter.ac" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
+                                                    <ui-select tagging="tagTransformac" ng-disabled="is_view"  tagging-label="false" ng-model="inter.ac" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 270px;" title="">
                                                         <ui-select-match placeholder="">{{$select.selected.merk_ac}}</ui-select-match>
                                                         <ui-select-choices repeat="l in list_ac | filter:$select.search" >
                                                             <small>
@@ -1022,8 +1025,8 @@
 
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <div align="center">
-                        <button type="submit" class="btn btn-default fa fa-arrow-circle-o-left" ng-click="cancel()">&nbsp;Back</button>
-                        <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view"  ng-click="save(form, eks, inter)">&nbsp;Simpan Perubahan</button>
+                        
+                        <button type="submit" class="btn btn-primary fa fa-save" ng-hide="is_view"   ng-click="save(form, eks, inter)">&nbsp;Simpan Perubahan</button>
                     </div>
 
                 </form>
@@ -1031,10 +1034,10 @@
         </div>
     </div>
     <div id="printArea" ng-show="is_view">
-        <table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
+        <table style="border-collapse: collapse; font-size: 11.5px;margin-top: 0px;" width="100%"  border="1">
             <tr>
-                <td colspan="5"><b> <div style="text-transform: uppercase;text-align: center;margin-left: 30px">WORK ORDER {{form.jenis}}</div></b></td>
-                <td >FR-PPC-003 Rev 02</td>
+                <td colspan="5"><b> <div style="text-transform: uppercase;text-align: right;margin-right: 20px">WORK ORDER {{form.jenis}}</div></b></td>
+                <td style="text-align: right;margin-right: 10px">FR-PPC-003 Rev 02</td>
             </tr>
             <tr>
                 <td style=" border-right: 1px #000 solid;border-left: 1px #000 solid;border-bottom: 1px #000 solid;border-top: 1px #000 solid;" colspan="6"><b>I. DATA UNIT</b></td>
@@ -1059,332 +1062,332 @@
             </tr>
             <tr>
                 <td style="border-bottom: 1px solid #000000;">type</td>
-                <td colspan="2" style="border-bottom: 1px solid #000000;">: {{form.type}}</td>
+                <td colspan="2" style="border-bottom: 1px solid #000000;">: {{form.tipe}}</td>
                 <td style="border-bottom: 1px solid #000000;">Tgl Masuk</td>
                 <td colspan="2" style="border-bottom: 1px solid #000000;">: {{form.tgl_terima}}</td>
             </tr>
             <tr>
                 <td colspan="6">
-                    <table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
+                    <table style="border-collapse: collapse; font-size: 11.5px;" width="100%"  border="1">
                         <tr>
                             <td  style="text-align: center;width: 1%;font-size: 10px;">II</td>
                             <td  style="border-bottom: 1px solid #000000;width:9%;"><b> SPESIFIKASI</b></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;text-align: center"> URAIAN</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;font-size: 10px;text-align: center"> V/X</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;text-align: center">KETERANGAN</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;text-align: center"><b> URAIAN</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;font-size: 10px;text-align: center"><b> V/X</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;text-align: center"><b>KETERANGAN</b></td>
                         </tr>
                         <tr>
-                            <td style="text-align: center;width: 1%;border-top: 1px solid #000000">E</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Plat Body</td>
+                            <td style="text-align: center;width: 1%;border-top: 1px solid #000000"><b>E</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Plat Body</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{eks.plat.plat_body}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
-                            <td style="text-align: center;width: 1%">K</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Ventilasi Atas</td>
+                            <td style="text-align: center;width: 1%"><b>K</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Ventilasi Atas</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{eks.ventilasi.ventilasi_atas}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
-                            <td style="text-align: center;width: 1%">S</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Kaca Spion</td>
+                            <td style="text-align: center;width: 1%"><b>S</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Kaca Spion</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{eks.spion.kaca_spion}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
-                            <td style="text-align: center;width: 1%">T</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Kaca Depan</td>
+                            <td style="text-align: center;width: 1%"><b>T</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Kaca Depan</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{eks.kdepan.kaca_depan}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
-                            <td style="text-align: center;width: 1%">E</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Kaca Belakang</td>
+                            <td style="text-align: center;width: 1%"><b>E</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Kaca Belakang</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{eks.kbelakang.kaca_belakang}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
-                            <td style="text-align: center;width: 1%">R</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Kaca Samping</td>
+                            <td style="text-align: center;width: 1%"><b>R</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Kaca Samping</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{eks.ksamping.kaca_samping}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
-                            <td style="text-align: center;width: 1%">I</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Lampu Depan</td>
+                            <td style="text-align: center;width: 1%"><b>I</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Lampu Depan</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{eks.ldepan.lampu_depan}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
-                            <td style="text-align: center;width: 1%">O</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Lampu Belakang</td>
+                            <td style="text-align: center;width: 1%"><b>O</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Lampu Belakang</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{eks.lbelakang.lampu_belakang}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
 
-                            <td style="text-align: center;width: 1%">R</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">Pintu Depan</td>
+                            <td style="text-align: center;width: 1%"><b>R</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;"><b>Pintu Depan</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">{{eks.pdepan.pintu_depan}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">Pintu Penumpang</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;"><b>Pintu Penumpang</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">{{eks.ppenumpang.pintu_penumpang}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">Pintu Bagasi Samping</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;"><b>Pintu Bagasi Samping</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">{{eks.pbagasi.pintu_bagasi_samping}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">Pintu Belakang</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;"><b>Pintu Belakang</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">{{eks.pbelakang.pintu_belakang}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">Wyper Set</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">{{eks.wyper.wyper_Set}}</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;"><b>Wyper Set</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">{{eks.wyper.wyper_set}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">Anti Karat</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;"><b>Anti Karat</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">{{eks.akarat.anti_karat}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">Warna</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;"><b>Warna</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">{{eks.warna.warna}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">Strip</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;"><b>Strip</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">{{eks.strip.strip}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">Letter</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;"><b>Letter</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">{{eks.letter.letter}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
                             <td  style="border-bottom:  1px solid #000000;text-align: center;width: 1%"></td>
-                            <td  style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;height: 30px;">Lain-lain</td>
+                            <td  style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;height: 30px;"><b>Lain-lain</b></td>
                             <td  style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">{{eks.lain2}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
-                            <td style="text-align: center;width: 1%">I</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Plavon</td>
+                            <td style="text-align: center;width: 1%"><b><b>I</b></b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Plavon</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15% ">&nbsp;{{inter.plavon.plavon}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Small Bus'">
-                            <td style="text-align: center;width: 1%">N</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Bagasi Dalam</td>
+                            <td style="text-align: center;width: 1%"><b>N</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Bagasi Dalam</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.bdalam.bagasi_dalam}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
-                            <td  style="text-align: center;width: 1%">N</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Duchting</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.duchting.duchting}}</td>
+                            <td  style="text-align: center;width: 1%"><b>N</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Duchting</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.duchting.duchting_louver}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
-                            <td style="text-align: center;width: 1%">T</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Trimming</td>
+                            <td style="text-align: center;width: 1%"><b>T</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Trimming</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.trimming.trimming_deck}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr>
-                            <td style="text-align: center;width: 1%">E</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Lampu Plavon</td>
+                            <td style="text-align: center;width: 1%"><b>E</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Lampu Plavon</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.lplavon.lampu_plavon}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Small Bus'">
-                            <td style="text-align: center;width: 1%">R</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Dashboard</td>
+                            <td style="text-align: center;width: 1%"><b>R</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Dashboard</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.dashboard.dashboard}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr >
-                            <td style="text-align: center;width: 1%">R</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Lantai</td>
+                            <td style="text-align: center;width: 1%"><b>R</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Lantai</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.lantai.lantai}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr >
-                            <td style="text-align: center;width: 1%">I</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Karpet</td>
+                            <td style="text-align: center;width: 1%"><b>I</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Karpet</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.karpet.karpet}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Mini Bus'">
-                            <td style="text-align: center;width: 1%">O</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Konf Seat 1</td>
+                            <td style="text-align: center;width: 1%"><b>O</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Konf Seat 1</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.seat_satu.konf_seat1}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Mini Bus'">
-                            <td style="text-align: center;width: 1%">R</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;"> &nbsp;Konf Seat 2</td>
+                            <td style="text-align: center;width: 1%"><b>R</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;"> &nbsp;<b>Konf Seat 2</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.seat_dua.konf_seat2}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Mini Bus'">
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Konf Seat 3</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.tiga.konf_seat3}}</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Konf Seat 3</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.seat_tiga.konf_seat3}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Mini Bus'">
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Konf Seat 4</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Konf Seat 4</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.seat_empat.konf_seat4}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Mini Bus'">
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;"> &nbsp;Konf Seat 5</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;"> &nbsp;<b>Konf Seat 5</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.seat_lima.konf_seat5}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Small Bus'">
-                            <td style="text-align: center;width: 1%">O</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Peredam</td>
+                            <td style="text-align: center;width: 1%"><b>O</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Peredam</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.peredam.peredam}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Small Bus'">
-                            <td style="text-align: center;width: 1%">R</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Peg Tgn Atas</td>
+                            <td style="text-align: center;width: 1%"><b>R</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Peg Tgn Atas</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.pegangan_atas.pegangan_tangan_atas}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Small Bus'">
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Pengmn Penumpang</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Pengmn Penumpang</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">{{inter.pegangan_atas.pegangan_tangan_atas}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Small Bus'">
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Pengmn Kc Smpg</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.pegangan_kaca.pegangan_kaca_samping}}</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Pengmn Kc Smpg</b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.pengaman_kaca.pengaman_kaca_samping}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Small Bus'">
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Pengmn Driver</td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.pegangan_diver.pegangan_driver}}</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Pengmn </b></td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.pengaman_driver.pengaman_driver}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Small Bus'">
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Gordyn</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Gordyn</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.gordyn.gordyn}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Small Bus'">
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Driver Fan</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Driver Fan</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.driver_fan.driver_fan}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Small Bus'">
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Radio Tape</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Radio Tape</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.radio_tape.radio_tape}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Small Bus'">
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Spek Seat</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Spek Seat</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.spek_seat.spek_seat}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr ng-if="form.jenis == 'Small Bus'">
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Driver Seat</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Driver Seat</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.driver_seat.driver_seat}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr >
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Cover Seat</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Cover Seat</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.cover_seat.cover_seat}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
-                        <tr >
+                        <tr ng-if="form.jenis == 'Small Bus'">
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Optional Seat</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Optional Seat</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.optional_seat.optional_seat}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr >
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Total Seat</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Total Seat</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.total_seat.total_seat}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>
                         </tr>
                         <tr >
                             <td style="text-align: center;width: 1%"></td>
-                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;Lain-lain</td>
+                            <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:9%;">&nbsp;<b>Lain-lain</b></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:15%;">&nbsp;{{inter.lain2}}</td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:2%;"></td>
                             <td style="border-left: 1px solid #000000;border-bottom: 1px solid #000000;width:13%;"></td>

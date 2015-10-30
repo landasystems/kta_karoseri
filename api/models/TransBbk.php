@@ -32,11 +32,11 @@ class TransBbk extends \yii\db\ActiveRecord {
      */
     public function rules() {
         return [
-            [['no_bbk'], 'required'],
-            [['tanggal'], 'safe'],
+            [['kd_jab', 'no_bbk', 'penerima'], 'required'],
+            [['tanggal', 'no_wo'], 'safe'],
+            [['no_bbk'], 'unique'],
             [['status'], 'integer'],
-            [['no_bbk', 'no_wo'], 'string', 'max' => 10],
-            [['penerima', 'kd_jab'], 'string', 'max' => 20],
+//            [['no_bbk'], 'string', 'max' => 10],
             [['petugas'], 'string', 'max' => 50],
         ];
     }
@@ -50,7 +50,7 @@ class TransBbk extends \yii\db\ActiveRecord {
             'no_wo' => 'No Wo',
             'tanggal' => 'Tanggal',
             'penerima' => 'Penerima',
-            'kd_jab' => 'Kd Jab',
+            'kd_jab' => 'Bagian',
             'petugas' => 'Petugas',
             'status' => 'Status',
         ];

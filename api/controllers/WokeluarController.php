@@ -168,14 +168,14 @@ class WokeluarController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('wo_masuk')
-                ->join('JOIN', 'spk', 'spk.no_spk = wo_masuk.no_spk')
-                ->join('JOIN', 'chassis', 'spk.kd_chassis = chassis.kd_chassis') // model chassis, merk, jenis, 
-                ->join('JOIN', 'tbl_karyawan as sales', 'spk.nik= sales.nik') // sales
-                ->join('JOIN', 'customer', 'spk.kd_customer = customer.kd_cust') // customer
-                ->join('JOIN', 'model', 'spk.kd_model = model.kd_model') // customer
+                ->join('LEFT JOIN', 'spk', 'spk.no_spk = wo_masuk.no_spk')
+                ->join('LEFT JOIN', 'chassis', 'spk.kd_chassis = chassis.kd_chassis') // model chassis, merk, jenis, 
+                ->join('LEFT JOIN', 'tbl_karyawan as sales', 'spk.nik= sales.nik') // sales
+                ->join('LEFT JOIN', 'customer', 'spk.kd_customer = customer.kd_cust') // customer
+                ->join('LEFT JOIN', 'model', 'spk.kd_model = model.kd_model') // customer
 //                ->join('JOIN', 'serah_terima_in', 'spk.no_spk = serah_terima_in.no_spk') // customer
 //                ->join('JOIN', 'warna', 'serah_terima_in.kd_warna = warna.kd_warna') // customer
-                ->where('wo_masuk.tgl_keluar is not null')
+                ->where('wo_masuk.tgl_keluar IS NOT NULL')
                 ->orderBy($sort)
                 ->select("*");
 

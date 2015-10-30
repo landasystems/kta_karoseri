@@ -40,6 +40,8 @@ class WomasukController extends Controller {
                     'select' => ['post'],
                     'bukaprint' => ['post'],
                     'proyek' => ['get'],
+                    'sqlprint' => ['get'],
+                    'print' => ['get'],
                 ],
             ]
         ];
@@ -93,34 +95,32 @@ class WomasukController extends Controller {
     }
 
     public function actionProyek() {
-        $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($_GET['kd']);
-        $aa = $_GET['kd'];
-        $query = new Query;
-        $query->from('wo_masuk')
-                ->select('*')
-                ->orderBy('in_spk_marketing DESC')
-                ->where('year(in_spk_marketing) = "' . date("Y") . '" and no_wo like "%' . $aa . '%"')
-                ->limit(1);
-
-        $command = $query->createCommand();
-        $asu = $command->queryall();
-
-
-        if (empty($asu)) {
-            $kode = $aa . date("y") . '0001';
+        $params = $_REQUEST;
+        $filter_name = $params['kd'] . "-2" . date("y");
+        $kata = strlen($params['kd']);
+        if ($kata == 2) {
+            $jml = 6;
         } else {
-            $lastKode = substr($asu['no_wo'], -4) + 1;
-            $kode = $aa . date("y") . substr('000' . $lastKode, -4);
-//                $kode = 'NB-';
+            $jml = 7;
         }
+        $query = new Query;
+        $query->from('wo_masuk ')
+                ->select("no_wo")
+                ->where(['SUBSTR(no_wo,1,' . $jml . ')' => $filter_name])
+                ->orderBy('no_wo DESC')
+                ->limit(1);
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+        $kode_mdl = (substr($models['no_wo'], $jml) + 1);
+//        $kode = $filter_name.substr('0000' . $kode_mdl, strlen($kode_mdl));
+        $kode = $filter_name . $kode_mdl;
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'code' => $kode));
+        echo json_encode(array('status' => 1, 'data' => $kode, 'hasil' => $models));
     }
 
     public function actionGetspk() {
         $params = json_decode(file_get_contents("php://input"), true);
-
+       
         if (!empty($params['spk']['no_spk'])) {
             $spk = $params['spk']['no_spk'];
         } else {
@@ -140,11 +140,25 @@ class WomasukController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->queryOne();
+        
+        $query2 = new Query;
+        $query2->from('view_wo_spk')
+                ->where('no_spk = "' . $spk . '"')
+                ->select("jenis");
+        $command2 = $query2->createCommand();
+        $models2 = $command->query()->read();
+        
+        $jenis = (!empty($models2['jenis'])) ? $models2['jenis'] : $params['jenis'];
+        
         // jenis kendaaraan
         if (!empty($params['spk']['no_spk'])) {
-            $jenis = $models['jenis'];
         } else {
-            $jenis = $params['jenis'];
+            $query2 = new Query;
+            $query2->from('view_wo_spk')
+                    ->where('nowo = "' . $params['no_wo'] . '"')
+                    ->select("jenis");
+            $command2 = $query2->createCommand();
+            $models2 = $command->query()->read();
         }
 
         // kode
@@ -182,7 +196,8 @@ class WomasukController extends Controller {
         } else {
             $table = 'small';
         }
-//============================= EKSTERIOR ================================            
+//============================= EKSTERIOR ================================ 
+            
         // PLAT BODY
         $queryplat = new Query;
         $queryplat->from($table . '_eks')
@@ -624,7 +639,7 @@ class WomasukController extends Controller {
         $exterior = ['plat' => $plat, 'ventilasi' => $ventilasi, 'spion' => $spion, 'kdepan' => $kdepan, 'kbelakang' => $kbelakang,
             'ksamping' => $ksamping, 'ldepan' => $ldepan, 'lbelakang' => $lbelakang, 'pdepan' => $pdepan, 'ppenumpang' => $ppenumpang, 'pbagasi' => $pbagasi,
             'pbelakang' => $pbelakang, 'wyper' => $wyper, 'akarat' => $akarat, 'strip' => $strip, 'letter' => $letter];
-
+//        \Yii::error($exterior);
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'spk' => $models, 'code' => $kode, 'eksterior' => $exterior, 'interior' => $interior));
     }
@@ -677,7 +692,7 @@ class WomasukController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "wo_masuk.tgl_kontrak DESC";
+        $sort = "wo_masuk.no_wo DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);
@@ -895,16 +910,16 @@ class WomasukController extends Controller {
 
     public function actionSelect() {
         $params = json_decode(file_get_contents("php://input"), true);
-
+        
         $model = $this->findModel($params['no_wo']);
         $data = $model->attributes;
         $query = new Query;
         $query->from('wo_masuk')
-                ->join('JOIN', 'spk', 'spk.no_spk = wo_masuk.no_spk')
-                ->join('JOIN', 'chassis', 'spk.kd_chassis = chassis.kd_chassis') // model chassis, merk, jenis, 
-                ->join('JOIN', 'tbl_karyawan as sales', 'spk.nik= sales.nik') // sales
-                ->join('JOIN', 'customer', 'spk.kd_customer = customer.kd_cust') // customer
-                ->join('JOIN', 'model', 'spk.kd_model = model.kd_model') // customer
+                ->join('LEFT JOIN', 'spk', 'spk.no_spk = wo_masuk.no_spk')
+                ->join('LEFT JOIN', 'chassis', 'spk.kd_chassis = chassis.kd_chassis') // model chassis, merk, jenis, 
+                ->join('LEFT JOIN', 'tbl_karyawan as sales', 'spk.nik= sales.nik') // sales
+                ->join('LEFT JOIN', 'customer', 'spk.kd_customer = customer.kd_cust') // customer
+                ->join('LEFT JOIN', 'model', 'spk.kd_model = model.kd_model') // customer
                 ->join('LEFT JOIN', 'serah_terima_in', 'spk.no_spk = serah_terima_in.no_spk') // customer
                 ->join('LEFT JOIN', 'warna', 'serah_terima_in.kd_warna = warna.kd_warna') // customer
                 ->where('wo_masuk.no_wo = "' . $params['no_wo'] . '"')
@@ -932,7 +947,17 @@ class WomasukController extends Controller {
             $data['titipan'] = (!empty($nowo)) ? $nowo->attributes : array();
             $data['titipan']['warna'] = (!empty($nowo)) ? $nowo->warna->attributes : array();
         }
-        if ($params['jenis'] == "Small Bus") {
+
+        $query2 = new Query;
+        $query2->from('view_wo_spk')
+                ->where('nowo = "' . $params['no_wo'] . '"')
+                ->select("jenis");
+        $command2 = $query2->createCommand();
+        $models2 = $command->query()->read();
+        
+        $jenis = (!empty($models2['jenis'])) ? $models2['jenis'] : $params['jenis'];
+        
+        if ($jenis == "Small Bus") {
             // eksterior
             $eksterior = new Query;
             $eksterior->from('small_eks')
@@ -1004,12 +1029,11 @@ class WomasukController extends Controller {
 
 
         //=================== EKTERIOR===================
-        if ($params['jenis'] == "Small Bus") {
+        if ($jenis == "Small Bus") {
             $table = 'small';
         } else {
             $table = 'mini';
         }
-
         $querydriver_seat = new Query;
         $querydriver_seat->from($table . '_eks')
                 ->where("no_wo='" . $model['no_wo'] . "'")
@@ -1037,7 +1061,7 @@ class WomasukController extends Controller {
             $eks['lain2'] = $asi['lain2'];
         }
 //        ============= INTERIOR ===================
-        if ($params['jenis'] == "Small Bus") {
+        if ($jenis == "Small Bus") {
             $queryint = new Query;
             $queryint->from('small_int')
                     ->where("no_wo='" . $model['no_wo'] . "'")
@@ -1102,12 +1126,12 @@ class WomasukController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        \Yii::error($params);
+//        Yii::error($params['no_spk']);
         $model = new Womasuk();
         $model->attributes = $params['womasuk'];
         $model->no_spk = $params['womasuk']['spk']['no_spk'];
-        $model->kode_proyek = $params['womasuk']['kode'];
-//        $model->in_spk_marketing =date('Y-m-d', strtotime($params['womasuk']['tgl'])) ;
+        $model->kode = $params['womasuk']['kode'];
+        $model->tgl_kontrak = date('Y-m-d', strtotime($params['womasuk']['tgl_kontrak']));
 
 
         if ($model->save()) {
@@ -1322,9 +1346,19 @@ class WomasukController extends Controller {
             }
 
             // UPDATE STI CUSTOMER
-            $sti = \app\models\Serahterimain::find()->where('kd_titipan="' . $params['womasuk']['titipan']['kd_titipan'] . '"')->one();
-            $sti->kd_cust = $params['womasuk']['spk']['kd_customer'];
-            $sti->no_spk = $params['womasuk']['spk']['no_spk'];
+            $kdtitipan = (!empty($params['womasuk']['titipan']['kd_titipan'])) ? $params['womasuk']['titipan']['kd_titipan'] : $params['kd_titipan'];
+//            if (!empty($params['kd_titipan'])) {
+                $cus = '';
+                $query = new Query;
+                $query->from('spk')
+                        ->where("no_spk='" . $model->no_spk . "'")
+                        ->select("*");
+                $command = $query->createCommand();
+                $cus = $command->query()->read();
+//            }
+            $sti = \app\models\Serahterimain::find()->where('kd_titipan="' . $kdtitipan . '"')->one();
+            $sti->kd_cust = (!empty($params['womasuk']['spk']['kd_customer'])) ? $params['womasuk']['spk']['kd_customer'] : $cus['kd_customer'];
+            $sti->no_spk = (!empty($params['womasuk']['spk']['no_spk'])) ? $params['womasuk']['spk']['no_spk'] : $cus['no_spk'];
             $sti->save();
 
 
@@ -1338,10 +1372,9 @@ class WomasukController extends Controller {
 
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($params);
         $model = $this->findModel($params['womasuk']['no_wo']);
         $model->attributes = $params['womasuk'];
-        $model->kode_proyek = $params['womasuk']['kode'];
+        $model->kode = $params['womasuk']['kode'];
 
 
         if ($model->save()) {
@@ -1695,6 +1728,26 @@ class WomasukController extends Controller {
         }
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $data), JSON_PRETTY_PRINT);
+    }
+    public function actionSqlprint() {
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->select("*")
+                ->from('view_wo_spk')
+                ->where('no_wo = "' . $params['kd'] . '"');
+
+        session_start();
+        $_SESSION['queryprint'] = $query;
+        $_SESSION['no_wo'] = $params['kd'];
+    }
+    public function actionPrint() {
+        session_start();
+        $query = $_SESSION['queryprint'];
+        $nowo = $_SESSION['no_wo'];
+        $command = $query->createCommand();
+        $models = $command->query()->read();
+       
+        return $this->render("/expretur/print_womasuk", ['models' => $models, 'id' => $nowo]);
     }
 
 }

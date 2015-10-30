@@ -1,17 +1,34 @@
 app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
-    //init data
+//init data
 
     var tableStateRef;
-    $scope.displayed = [];
-    $scope.is_edit = false;
-    $scope.is_view = false;
-    $scope.is_create = false;
-    $scope.detBbm = [];
-    $scope.openedDet = -1;
-    $scope.err_jml = false;
-    $scope.jml_po = 0;
 
-    $scope.pilih = {};
+    $scope.refresh = function () {
+        $scope.displayed = [];
+        $scope.is_edit = false;
+        $scope.is_view = false;
+        $scope.is_create = false;
+        $scope.detBbm = [];
+        $scope.openedDet = -1;
+        $scope.err_jml = false;
+        $scope.jml_po = 0;
+        $scope.pilih = {};
+        $scope.form = {};
+        $scope.autoSelect = false;
+        $scope.errorDetail = '';
+        $scope.detBbm = [{
+                id: '',
+                no_bbm: '',
+                barang: '',
+                jumlah: '',
+                keterangan: '',
+                tgl_terima: '',
+                no_po: '',
+            }];
+//        $scope.callServer(tableStateRef); 
+    }
+
+    $scope.refresh();
 
     $scope.lock = function () {
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
@@ -26,7 +43,6 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
             });
         }
     };
-
     $scope.unlock = function () {
         if (confirm("Apa anda yakin akan memproses item ini ?")) {
             Data.post('bbm/unlock/', $scope.pilih).then(function (result) {
@@ -40,13 +56,19 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
             });
         }
     };
-
     $scope.kalkulasi = function (jml, jml_po) {
         $scope.jml_po = jml_po;
         var selisih = jml_po - jml;
         if (selisih < 0) {
             toaster.pop('danger', "Error", "Jumlah tidak boleh melebihi jumlah dari PO sebesar " + $scope.jml_po);
             $scope.err_jml = true;
+            $scope.detBbm.jumlah = 0;
+            $scope.errorDetail = "\n Jumlah tidak boleh melebihi jumlah dari PO sebesar " + $scope.jml_po;
+        } else if (jml == 0 && jml != '') {
+            toaster.pop('danger', "Error", "Jumlah tidak boleh kosong " + $scope.jml_po);
+            $scope.err_jml = true;
+             $scope.detBbm.jumlah = 0;
+            $scope.errorDetail = "\n Jumlah tidak boleh melebihi jumlah dari PO sebesar " + $scope.jml_po;
         } else {
             $scope.err_jml = false;
         }
@@ -64,13 +86,6 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
         $event.stopPropagation();
         $scope.openedDet = $index;
     };
-    $scope.cariWo = function ($query) {
-        if ($query.length >= 3) {
-            Data.get('wo/cari', {no_wo: $query}).then(function (data) {
-                $scope.listWo = data.data;
-            });
-        }
-    };
     $scope.cariPo = function ($query) {
         if ($query.length >= 3) {
             Data.get('po/cari', {nama: $query}).then(function (data) {
@@ -78,10 +93,9 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
             });
         }
     };
-
     $scope.cariBarang = function ($query, $po) {
         $scope.results = [];
-        if (typeof $scope.form.po != "undefined") {
+        if (typeof $scope.form.po != "undefined" && $scope.is_create == true) {
             Data.post('bbm/caribarang', {barang: $query, no_po: $po, listBarang: $scope.detBbm}).then(function (data) {
                 if ($scope.is_create == false) {
                     angular.forEach(data.data, function ($value, $key) {
@@ -92,8 +106,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
                     $scope.results = data.data;
                 }
             });
-        } else
-        if ($query.length >= 3) {
+        } else if ($query.length >= 3) {
             Data.post('bbm/caribarang', {barang: $query, no_po: $po, listBarang: $scope.detBbm}).then(function (data) {
                 if ($scope.is_create == false) {
                     angular.forEach(data.data, function ($value, $key) {
@@ -105,9 +118,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
                 }
             });
         }
-    }
-    ;
-
+    };
     $scope.getPo = function (form) {
         $scope.form.nm_supplier = form.nama_supplier;
         $scope.form.kd_supplier = form.kd_supplier;
@@ -120,14 +131,12 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
             });
         }
     };
-
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
         var offset = tableState.pagination.start || 0;
         var limit = tableState.pagination.number || 10;
         var param = {offset: offset, limit: limit};
-
         if (tableState.sort.predicate) {
             param['sort'] = tableState.sort.predicate;
             param['order'] = tableState.sort.reverse;
@@ -140,32 +149,19 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
             $scope.displayed = data.data;
             tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
         });
-
         $scope.isLoading = false;
     };
-
     $scope.create = function (form) {
+        $scope.refresh();
+        $scope.autoSelect = false;
+        $scope.$broadcast('first');
         $scope.is_create = true;
         $scope.is_edit = true;
         $scope.is_view = false;
         $scope.formtitle = "Form Tambah Data";
-        $scope.form = {};
         $scope.form.tgl_nota = new Date();
-        $scope.detBbm = [{
-                id: '',
-                no_bbm: '',
-                barang: [
-                ],
-                jumlah: '',
-                keterangan: '',
-                tgl_terima: '',
-                no_po: '',
-            }];
         Data.get('bbm/kode', form).then(function (data) {
             $scope.form.no_bbm = data.kode;
-        });
-        Data.get('pengguna/profile').then(function (data) {
-            $scope.form.penerima = data.data.nama;
         });
     };
     $scope.update = function (form) {
@@ -179,6 +175,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
     };
     $scope.view = function (form) {
         $scope.is_edit = true;
+        $scope.is_false = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.no_bbm;
         $scope.form = form;
@@ -205,20 +202,19 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
                     }
                     $scope.is_create = false;
                     $scope.is_edit = false;
-                    $scope.view(result.data);
-                    $scope.callServer(tableStateRef); //reload grid ulang
+                    $scope.create($scope.form);
                 }
             });
         } else {
-            toaster.pop('danger', "Error", "Jumlah tidak boleh melebihi jumlah dari PO sebesar " + $scope.jml_po);
+            toaster.pop('danger', "Error", $scope.errorDetail);
         }
     };
     $scope.cancel = function () {
         $scope.is_edit = false;
         $scope.is_view = false;
         $scope.err_jml = false;
+        $scope.refresh();
     };
-
     $scope.delete = function (row) {
         if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {
             Data.delete('bbm/delete/' + row.no_bbm).then(function (result) {
@@ -227,6 +223,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
         }
     };
     $scope.addDetail = function () {
+        $scope.autoSelect = true;
         if ($scope.err_jml == false) {
             var newDet = {
                 id: '0',
@@ -238,7 +235,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
             $scope.setStatus();
             $scope.detBbm.unshift(newDet);
         } else {
-            toaster.pop('danger', "Error", "Jumlah tidak boleh melebihi jumlah dari PO sebesar " + $scope.jml_po);
+            toaster.pop('danger', "Error", $scope.errorDetail);
         }
     };
     $scope.removeRow = function (paramindex) {
@@ -268,11 +265,9 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
     $scope.excel = function (id) {
         window.location = 'api/web/bbm/exceldet/' + id;
     };
-
     keyboardManager.bind('ctrl+s', function () {
         if ($scope.is_edit == true) {
             $scope.save($scope.form, $scope.detBbm);
         }
     });
-
 });

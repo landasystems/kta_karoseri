@@ -170,13 +170,13 @@ class RekapController extends Controller {
                 ->join('JOIN', 'chassis', 'chassis.kd_chassis = vws.kd_chassis')
                 ->join('JOIN', 'model', 'model.kd_model = vws.kd_model')
                 ->join('JOIN', 'customer', 'customer.kd_cust = vws.kd_cust')
-                ->join('JOIN', 'serah_terima_in as sti', 'sti.no_spk = vws.no_spk')
+                ->join('LEFT JOIN', 'serah_terima_in as sti', 'sti.no_spk = vws.no_spk')
                 ->join('JOIN', 'spk', 'vws.no_spk = spk.no_spk')
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                ->where('tk.department="DPRT005" and wm.tgl_keluar IS NOT NULL')
+                ->where(' wm.tgl_keluar IS NOT NULL')
                 ->orderBy($sort)
                 ->select("sti.tgl_terima, customer.provinsi, customer.nm_customer, chassis.jenis, spk.no_spk, vws.no_wo, sti.kd_titipan, wm.tgl_keluar ,
-                        chassis.merk, chassis.tipe, model.model, tk.nama, spk.jml_unit");
+                        chassis.merk, chassis.tipe, model.model, tk.nama, spk.jml_unit,vws.no_chassis,vws.no_mesin");
 //filter
 
         if (isset($params['filter'])) {
@@ -257,10 +257,10 @@ class RekapController extends Controller {
                 ->join('LEFT JOIN', 'chassis', 'chassis.kd_chassis = vws.kd_chassis')
                 ->join('LEFT JOIN', 'model', 'model.kd_model = vws.kd_model')
                 ->join('LEFT JOIN', 'customer', 'customer.kd_cust = vws.kd_cust')
-                ->join('LEFT JOIN', 'serah_terima_in as sti', 'sti.no_spk = vws.no_spk')
+                ->join('LEFT JOIN', 'serah_terima_in as sti', 'sti.kd_titipan = vws.kd_titipan')
                 ->join('LEFT JOIN', 'spk', 'vws.no_spk = spk.no_spk')
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                ->where('tk.department="DPRT005" and wm.tgl_keluar IS NOT NULL')
+                ->where('tk.department="DPRT005" and wm.tgl_keluar IS NULL')
                 ->orderBy($sort)
                 ->select("sti.kd_titipan, spk.tgl, customer.provinsi, customer.nm_customer, spk.jml_unit, spk.no_spk, wm.no_wo, sti.no_chassis, sti.no_mesin, 
                             tk.nama, customer.market, model.model, chassis.merk, chassis.tipe, chassis.jenis");
@@ -287,10 +287,8 @@ class RekapController extends Controller {
                     $query->andFilterWhere(['like', 'customer.' . $key, $val]);
                 } elseif ($key == 'jenis') {
                     $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
-                } elseif ($key == 'merk') {
-                    $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
-                } elseif ($key == 'tipe') {
-                    $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
+                } else {
+                    $query->andFilterWhere(['like', $key, $val]);
                 }
             }
         }
@@ -465,7 +463,7 @@ class RekapController extends Controller {
             $start = '';
             $end = '';
         }
-        
+
         $query->limit(null);
         $query->offset(null);
 
@@ -509,7 +507,7 @@ class RekapController extends Controller {
         foreach ($hari as $data) {
             $kerek[] = ['name' => date('d-m-Y', strtotime($data['tgl'])), 'y' => (int) $data['jumlah']];
         }
-        return json_encode(array('merk' => $aa, 'sales' => $asu, 'model' => $babi, 'hari' => $kerek,'start'=>$start, 'end'=>$end), JSON_PRETTY_PRINT);
+        return json_encode(array('merk' => $aa, 'sales' => $asu, 'model' => $babi, 'hari' => $kerek, 'start' => $start, 'end' => $end), JSON_PRETTY_PRINT);
     }
 
 }

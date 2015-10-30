@@ -65,7 +65,8 @@ if (!isset($_GET['print'])) {
         <tbody>
             <?php
             $no = 1;
-            foreach ($models as $val) {
+            $sorted = Yii::$app->landa->array_orderby($models, 'barang', SORT_ASC);
+            foreach ($sorted as $val) {
                 echo '<tr>';
                 echo '<td align="center" class="border-bottom border-right">' . $no . '</td>';
                 echo '<td align="center" class="border-bottom border-right">' . $val['kd_barang'] . '</td>';

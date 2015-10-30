@@ -1,8 +1,8 @@
 <?php
-//if (!isset($_GET['print'])) {
-//    header("Content-type: application/vnd-ms-excel");
-//    header("Content-Disposition: attachment; filename=excel-rekap-lapwomasuk.xls");
-//}
+if (!isset($_GET['print'])) {
+    header("Content-type: application/vnd-ms-excel");
+    header("Content-Disposition: attachment; filename=rekap-wip.xls");
+}
 ?>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
 <table style="border-collapse: collapse; font-size: 10px;" width="100%"  border="1">
@@ -97,6 +97,7 @@ foreach ($models as $key => $val) {
     foreach ($detwip as $r) {
         $data[$val['no_wo']][$r['kd_kerja']] = $r['hasil'];
         $hk[$val['no_wo']][$r['kd_kerja']] = $r['hk'];
+        $end[$val['no_wo']][$r['kd_kerja']] = $r['act_finish'];
     }
 //    $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['kd_titipan'] = $val['kd_titipan'];
     $i++;
@@ -140,16 +141,16 @@ foreach ($models as $key => $val) {
 
       
         foreach ($data as $s) {
-            $deliver = \app\models\Delivery::find()->where('no_wo="' . $s['nowo'] . '"')->one();
-            if ($deliver['no_wo'] == $s['nowo']) {
-                $warna = 'class="back-grey"';
-            } else {
-                $warna = '';
-            }
+//            $deliver = \app\models\Delivery::find()->where('no_wo="' . $s['nowo'] . '"')->one();
+//            if ($deliver['no_wo'] == $s['nowo']) {
+//                $warna = 'class="back-grey"';
+//            } else {
+//                $warna = '';
+//            }
             $no++;
             
 
-            echo'<tr ' . $warna . '>
+            echo'<tr>
                  <td class="border-all" style="font-size:8px">' . $no . '</td>
                  <td class="border-all" style="font-size:8px">' . $s['nowo'] . '</td>
                  <td class="border-all" style="font-size:8px">' . $s['merk'] . '</td>
@@ -175,11 +176,11 @@ foreach ($models as $key => $val) {
                  <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($hk[$s['nowo']]['BAG009']) ? $hk[$s['nowo']]['BAG009'] : '') . '</td>
                  
                  <td class="border-all" style="font-size:8px">' . (isset($data[$s['nowo']]['BAG0010']) ? $data[$s['nowo']]['BAG0010'] . ' %' : '') . '</td>
-                 <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($hk[$s['nowo']]['BAG0010']) ? $hk[$s['nowo']]['BAG0010'] : '') . '</td>
+                 <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($hk[$s['nowo']]['BAG010']) ? $hk[$s['nowo']]['BAG010'] : '') . '</td>
                  <td class="border-all" style="font-size:8px"></td>
-                 <td class="border-all" style="font-size:8px"></td>
-                 <td class="border-all" style="font-size:8px"></td>
-                 <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px">' . (isset($data[$s['nowo']]['BAG0010']) ? $data[$s['nowo']]['BAG0010'] . ' %' : '') . '</td>
+                 <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($hk[$s['nowo']]['BAG010']) ? $hk[$s['nowo']]['BAG010'] : '') . '</td>
+                     <td class="border-all" style="font-size:8px"></td>
                  <td class="border-all" style="font-size:8px"></td>';
 
             echo' </tr>
@@ -195,8 +196,7 @@ foreach ($models as $key => $val) {
                             @media print
                             {
                                 table { page-break-after:auto }
-                                tr    { page-break-inside:avoid; page-break-after:auto }
-                                td    { page-break-inside:avoid; page-break-after:auto }
+                                   td    { page-break-inside:avoid; page-break-after:auto }
                                 thead { display:table-header-group }
                                 tfoot { display:table-footer-group }
                             }

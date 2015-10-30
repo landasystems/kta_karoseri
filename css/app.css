@@ -1,37 +1,23 @@
 /*Scrollable table*/
-.table-scroll table {
-    width: 100%;
+.table-outter {
+    border:1px solid black;
+    height: 150px;
+}
+.table-scroll{
+    table-layout: fixed; 
+    margin:0px auto 0px auto; 
+}
+.table-scroll th{
+    padding:2px 2px; 
+    font-size: 10px;
+}
+.table-scroll td{
+    font-size: 10px;
+    padding:2px 2px; 
 }
 
-.table-scroll thead, .table-scroll tbody, .table-scroll tr, .table-scroll td, .table-scroll th { display: block; }
-
-.table-scroll tr:after {
-    content: ' ';
-    display: block;
-    visibility: hidden;
-    clear: both;
-}
-
-.table-scroll thead th {
-    height: 30px;
-
-    /*text-align: left;*/
-}
-
-.table-scroll tbody {
-    height: 120px;
-    overflow-y: auto;
-}
-
-.table-scroll thead {
-    /* fallback */
-}
-
-
-.table-scroll tbody td, .table-scroll thead th {
-    width: 25%;
-    float: left;
-}
+.table-outter { overflow-x: scroll; }
+.table-scroll th, .table-scroll td { min-width: 200px; }
 
 /*---table margin & padding 0px*/
 .det-trans > tbody > tr > td{ 

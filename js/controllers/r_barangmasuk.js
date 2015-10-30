@@ -5,9 +5,8 @@ app.controller('returbarangmasukCtrl', function ($scope, Data, toaster) {
 
     $scope.displayed = [];
     $scope.paginations = 0;
-    $scope.is_edit = false;
-    $scope.is_view = false;
-    $scope.is_create = false;
+    $scope.bayar = '';
+    $scope.tanggal = '';
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -37,35 +36,87 @@ app.controller('returbarangmasukCtrl', function ($scope, Data, toaster) {
     };
 
     $scope.excel = function () {
-        Data.get('bbm/rekap', paramRef).then(function (data) {
-            window.location = 'api/web/bbm/excel';
-        });
+        if (typeof $scope.tanggal.startDate && $scope.tanggal.startDate == null) {
+            toaster.pop('error', "Terjadi Kesalahan", "Pilih periode terlebih dahulu");
+        } else {
+            Data.get('bbm/rekap', paramRef).then(function (data) {
+                window.location = 'api/web/bbm/excel';
+            });
+        }
     }
     $scope.print = function () {
-        Data.get('bbm/rekap', paramRef).then(function (data) {
-            window.open('api/web/bbm/excel?print=true', "", "width=500");
-        });
+        if (typeof $scope.tanggal.startDate && $scope.tanggal.startDate == null) {
+            toaster.pop('error', "Terjadi Kesalahan", "Pilih periode terlebih dahulu");
+        } else {
+            Data.get('bbm/rekap', paramRef).then(function (data) {
+                window.open('api/web/bbm/excel?print=true', "", "width=500");
+            });
+        }
+    }
+
+    $scope.excel2 = function () {
+        if (typeof $scope.tanggal.startDate && $scope.tanggal.startDate == null) {
+            toaster.pop('error', "Terjadi Kesalahan", "Pilih periode terlebih dahulu");
+        } else {
+            if ($scope.bayar == '') {
+                toaster.pop('error', "Terjadi Kesalahan", "Pilih jenis pembayaran terlebih dahulu");
+            } else {
+                Data.get('bbm/rekap', paramRef).then(function (data) {
+                    window.location = 'api/web/bbm/excel2';
+                });
+            }
+        }
+    }
+    $scope.print2 = function () {
+        if (typeof $scope.tanggal.startDate && $scope.tanggal.startDate == null) {
+            toaster.pop('error', "Terjadi Kesalahan", "Pilih periode terlebih dahulu");
+        } else {
+            if ($scope.bayar == '') {
+                toaster.pop('error', "Terjadi Kesalahan", "Pilih jenis pembayaran terlebih dahulu");
+            } else {
+                Data.get('bbm/rekap', paramRef).then(function (data) {
+                    window.open('api/web/bbm/excel2?print=true', "", "width=500");
+                });
+            }
+        }
     }
 
     $scope.excelRekap = function () {
-        Data.get('bbm/rekap', paramRef).then(function (data) {
-            window.location = 'api/web/bbm/excelrekap';
-        });
+        if (typeof $scope.tanggal.startDate && $scope.tanggal.startDate == null) {
+            toaster.pop('error', "Terjadi Kesalahan", "Pilih periode terlebih dahulu");
+        } else {
+            Data.get('bbm/rekap', paramRef).then(function (data) {
+                window.location = 'api/web/bbm/excelrekap';
+            });
+        }
     }
     $scope.printRekap = function () {
-        Data.get('bbm/rekap', paramRef).then(function (data) {
-            window.open('api/web/bbm/excelrekap?print=true', "", "width=500");
-        });
+        if (typeof $scope.tanggal.startDate && $scope.tanggal.startDate == null) {
+            toaster.pop('error', "Terjadi Kesalahan", "Pilih periode terlebih dahulu");
+        } else {
+            Data.get('bbm/rekap', paramRef).then(function (data) {
+                window.open('api/web/bbm/excelrekap?print=true', "", "width=500");
+            });
+        }
     }
 
     $scope.excelSerahTerima = function () {
-        Data.get('bbm/rekap', paramRef).then(function (data) {
-            window.location = 'api/web/bbm/excelserahterima';
-        });
+        if (typeof $scope.tanggal.startDate && $scope.tanggal.startDate == null) {
+            toaster.pop('error', "Terjadi Kesalahan", "Pilih periode terlebih dahulu");
+        } else {
+            Data.get('bbm/rekap', paramRef).then(function (data) {
+                window.location = 'api/web/bbm/excelserahterima';
+            });
+        }
     }
+
     $scope.printSerahTerima = function () {
-        Data.get('bbm/rekap', paramRef).then(function (data) {
-            window.open('api/web/bbm/excelserahterima?print=true', "", "width=500");
-        });
+        if (typeof $scope.tanggal.startDate && $scope.tanggal.startDate == null) {
+            toaster.pop('error', "Terjadi Kesalahan", "Pilih periode terlebih dahulu");
+        } else {
+            Data.get('bbm/rekap', paramRef).then(function (data) {
+                window.open('api/web/bbm/excelserahterima?print=true', "", "width=500");
+            });
+        }
     }
 })

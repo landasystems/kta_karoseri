@@ -69,10 +69,14 @@
                             <td>{{row.tgl1| date}}</td>
                             <td>{{row.tgl2| date}}</td>
                             <td>
+                                <!--                                <div ng-show="row.lock == 0 || user.roles_id == 1"  class="btn-group pull-right" role="group" style="margin-top: -3px;">
+                                                                    <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
+                                                                    <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" confirm="Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?"></button>
+                                                                </div> -->
                                 <div class="btn-group pull-right" role="group" style="margin-top: -3px;">
                                     <button type="button" class="btn btn-info fa fa-edit" ng-click="update(row)"></button>
                                     <button type="button" class="btn btn-danger fa fa-minus-circle" ng-click="delete(row);" confirm="Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?"></button>
-                                </div> 
+                                </div>
                             </td>
                         </tr>
                     </tbody>
@@ -193,7 +197,7 @@
                                             <b ng-repeat="noWo in detail.no_wo">{{noWo.no_wo}}{{$last ? '' : ', '}}</b>
                                         </td>
                                         <td  ng-hide="is_view">
-                                            <button ng-click="modal(sppDet, detail)" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
+                                            <button ng-click="modal(detail)" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
                                             <button ng-click="removeRow($index)" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
                                         </td>
                                     </tr>

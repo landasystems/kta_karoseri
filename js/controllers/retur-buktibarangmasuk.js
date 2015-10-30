@@ -41,7 +41,7 @@ app.controller('returBbmCtrl', function ($scope, Data, toaster) {
 
     $scope.kalkulasi = function (jml_bbm, jml_retur) {
         var selisih = jml_bbm - jml_retur;
-        if (selisih > 0) {
+        if (selisih >= 0) {
 
         } else {
             $scope.form.jml = 0;

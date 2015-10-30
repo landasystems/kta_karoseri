@@ -76,13 +76,13 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
                 }
             });
         }
-    }
+    };
 
     $scope.updt_st = function ($id) {
         Data.get('po/updtst/' + $id).then(function (data) {
             $scope.form.status = 1;
         });
-    }
+    };
 
     $scope.cariSpp = function ($query) {
 
@@ -91,7 +91,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
                 $scope.resultsspp = data.data;
             });
         }
-    }
+    };
     $scope.cariSuppiler = function ($query) {
 
         if ($query.length >= 3) {
@@ -99,32 +99,33 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
                 $scope.resultssupplier = data.data;
             });
         }
-    }
+    };
 
     $scope.cariBarang = function ($query1, $query2) {
-        if (typeof $scope.form.listspp != "undefined") {
+
+        if ($query1.length >= 3) {
             Data.get('po/brgspp', {namabrg: $query1, nospp: $query2}).then(function (data) {
                 $scope.resultsbrg = data.data;
             });
-        } else if ($query1.length >= 3) {
+        } else if (typeof $scope.form.listspp != "undefined") {
             Data.get('po/brgspp', {namabrg: $query1, nospp: $query2}).then(function (data) {
                 $scope.resultsbrg = data.data;
             });
         }
 //        console.log($scope.resultsbrg);
-    }
+    };
 
     $scope.pilih = function (detail, $item) {
         detail.harga = $item.harga;
         detail.jml = $item.jml;
         detail.satuan = $item.satuan;
         $scope.subtotal();
-    }
+    };
     $scope.pilihspp = function (detsPo, $item) {
         Data.get('po/cari', {nama: $item}).then(function (data) {
             detsPo = data.data;
         });
-    }
+    };
     $scope.subtotal = function () {
         var total = 0;
         var sub_total = 0;
@@ -157,7 +158,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         $scope.form.total_dibayar = Math.ceil(total_seluruh);
         $scope.form.sisa_dibayar = Math.ceil(sisa_bayar);
 
-    }
+    };
 
 
 
@@ -269,7 +270,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
 
         var lastPart = parts.pop();
         return minusStr + (parts.length > 0 ? parts.join(", ") + "  " : "") + lastPart;
-    }
+    };
 
 //button
     $scope.create = function (form) {
@@ -330,7 +331,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
                     toaster.pop('error', "Terjadi Kesalahan", result.errors);
                 } else {
                     $scope.is_edit = false;
-                    $scope.view(result.data.nota);
+                    $scope.view(result.data);
                     toaster.pop('success', "Berhasil", "Data berhasil tersimpan")
                 }
             });
@@ -355,6 +356,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     $scope.selected = function (id) {
         Data.get('po/view/' + id).then(function (data) {
             $scope.form = data.data;
+//            $scope.form.listspp.no_spp = data.listspp.no_spp;
             $scope.status = data.print;
             $scope.msg = data.msg;
             $scope.form.terbilang = $scope.keKata(data.data.total_dibayar) + ' RUPIAH';
@@ -375,7 +377,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
             $scope.subtotal();
         });
 
-    }
+    };
 
 
 })

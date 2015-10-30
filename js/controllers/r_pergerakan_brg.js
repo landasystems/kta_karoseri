@@ -25,6 +25,26 @@ app.controller('pergerakanBrgCtrl', function ($scope, Data, toaster) {
         }
     }
 
+    $scope.printminggu = function (form) {
+        if ('tanggal' in form && form.tanggal.startDate != null) {
+            Data.post('barang/rekappergerakan', form).then(function (data) {
+                window.open('api/web/barang/excelpergerakan2?print=true', "", "width=500");
+            });
+        } else {
+            toaster.pop('error', "Terjadi Kesalahan", "Masukkan periode terlebih dahulu");
+        }
+    }
+
+    $scope.excelminggu = function (form) {
+        if ('tanggal' in form && form.tanggal.startDate != null) {
+            Data.post('barang/rekappergerakan', form).then(function (data) {
+                window.location = 'api/web/barang/excelpergerakan2';
+            });
+        } else {
+            toaster.pop('error', "Terjadi Kesalahan", "Masukkan periode terlebih dahulu");
+        }
+    }
+
     $scope.excelBbmBbk = function (form) {
         if ('tanggal' in form && form.tanggal.startDate != null) {
             Data.post('barang/rekapbbmbbk', form).then(function (data) {

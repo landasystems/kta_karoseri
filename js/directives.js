@@ -171,3 +171,59 @@ angular.module('app')
                     }
                 };
             }]);
+
+
+//Directive enter
+angular.module('app')
+        .directive('ngEnter', function () {
+            return function (scope, element, attrs) {
+                element.bind("keydown keypress", function (event) {
+                    if (event.which === 13) {
+                        scope.$apply(function () {
+                            scope.$eval(attrs.ngEnter);
+                        });
+
+                        event.preventDefault();
+                    }
+                });
+            };
+        });
+
+//alert
+angular.module('app')
+        .directive('confirm', [function () {
+                return {
+                    priority: 100,
+                    restrict: 'A',
+                    link: {
+                        pre: function (scope, element, attrs) {
+                            var msg = attrs.confirm || "Are you sure?";
+
+                            element.bind('click', function (event) {
+                                if (!confirm(msg)) {
+                                    event.stopImmediatePropagation();
+                                    event.preventDefault;
+                                }
+                            });
+                        }
+                    }
+                };
+            }]);
+
+//focus
+app.directive("uiselectAutofocus", function ($timeout) {
+    return {
+        restrict: 'A',
+        require: 'uiSelect',
+        link: function (scope, elem, attr) {
+            $timeout(function () {
+                var input = elem.find('input');
+
+                if (attr.uiselectAutofocus == 'open')
+                    input.click();
+
+                input.focus()
+            }, 0);
+        }
+    }
+});

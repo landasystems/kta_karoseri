@@ -214,6 +214,7 @@ class ClaimunitController extends Controller {
         if (isset($params['no_wo'])) {
             $model = new DetClaim();
             $model->attributes = $params;
+            $model->tgl = date('Y-m-d', strtotime($params['tgl']));
 
             if (isset($params['no_wo']['no_wo']))
                 $model->no_wo = $params['no_wo']['no_wo'];
@@ -235,7 +236,7 @@ class ClaimunitController extends Controller {
         if (isset($params['no_wo'])) {
             $model = $this->findModel($id);
             $model->attributes = $params;
-
+            $model->tgl = date('Y-m-d', strtotime($params['tgl']));
             if (isset($params['no_wo']['no_wo']))
                 $model->no_wo = $params['no_wo']['no_wo'];
 

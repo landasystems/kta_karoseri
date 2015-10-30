@@ -87,7 +87,7 @@ class WipController extends Controller {
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = wip.nik')
                 ->where('wip.no_wo = "' . $params['no_wo'] . '"')
                 ->orderBy("bagian.urutan ASC")
-                ->select('*');
+                ->select('wip.*,bagian.*, tk.*');
         $command2 = $query2->createCommand();
         $detail = $command2->queryAll();
 
@@ -122,6 +122,7 @@ class WipController extends Controller {
                 $coba[$key]['plan_start'] = $isips;
                 $coba[$key]['plan_finish'] = $isipf;
                 $coba[$key]['act_start'] = $isias;
+                $coba[$key]['ket'] = $data['ket'];
                 $coba[$key]['act_finish'] = $data['act_finish'];
                 $coba[$key]['pemborong'] = ['nama' => $data['nama'], 'nik' => $data['nik']];
                 $coba[$key]['proses'] = ['bagian' => $data['bagian'], 'kd_bag' => $data['kd_bag']];
@@ -242,9 +243,10 @@ class WipController extends Controller {
                 ->limit($limit)
                 ->from('det_wip as dw')
                 ->join('JOIN', 'view_wo_spk as vw', 'dw.no_wo = vw.no_wo')
+                ->join('LEFT JOIN', 'delivery as d', 'dw.no_wo = d.no_wo')
                 ->join('LEFT JOIN', 'spk', 'vw.no_spk = spk.no_spk')
 //                ->groupBy('dw.no_wo')
-                ->where('dw.kd_kerja="BAG001" and (dw.act_start IS NOT NULL or dw.act_start="" or dw.act_start="0000-00-00")')
+                ->where('dw.kd_kerja="BAG001" and d.no_wo IS NULL and (dw.act_start IS NOT NULL or dw.act_start="" or dw.act_start="0000-00-00")')
                 ->orderBy($sort)
                 ->select("dw.act_start,dw.kd_kerja, vw.*,spk.jml_hari");
 
@@ -281,16 +283,16 @@ class WipController extends Controller {
             $model = new Wip();
             $model->no_wo = isset($params['wip']['no_wo']['no_wo']) ? $params['wip']['no_wo']['no_wo'] : '-';
             $model->kd_kerja = $data['proses']['kd_bag'];
-            $model->plan_start = date('d/m/Y', strtotime($data['plan_start']));
-            $model->plan_finish = date('d/m/Y', strtotime($data['plan_finish']));
+            $model->plan_start = (!empty($data['plan_start'])) ? date('d/m/Y', strtotime($data['plan_start'])) : '';
+            $model->plan_finish = (!empty($data['plan_finish'])) ? date('d/m/Y', strtotime($data['plan_finish'])) : '';
             $model->act_start = (!empty($data['act_start'])) ? date('d/m/Y', strtotime($data['act_start'])) : '';
-            $model->act_finish = (isset($data['act_finish'])) ? date('Y-m-d', strtotime($data['act_finish'])) : null;
+            $model->act_finish = (!empty($data['act_finish'])) ? date('Y-m-d', strtotime($data['act_finish'])) : '';
             $model->ket = $data['ket'];
             $model->hasil = isset($data['hasil']) ? $data['hasil'] : null;
             $model->nik = isset($data['pemborong']['nik']) ? $data['pemborong']['nik'] : '-';
 //            $model->hk = 3;
             //============================== HITUNG HARI KERJA ===============================
-            if (!empty($data['act_start'])) {
+            if (!empty($data['act_finish'])) {
 
                 $babi = date('Y-m-d', strtotime($data['act_start']));
                 $pecahP = explode("-", $babi);
