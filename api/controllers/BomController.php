@@ -817,7 +817,6 @@ class BomController extends Controller {
     }
 
     public function actionUpdate($id) {
-//        echo file_get_contents("php://input");
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params['bom'];
