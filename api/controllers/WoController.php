@@ -50,6 +50,7 @@ class WoController extends Controller {
 
     public function actionWospkselesai() {
         $params = $_REQUEST;
+        \Yii::error($params);
         $query = new Query;
         $query->from('view_wo_spk as vws')
                 ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo = vws.no_wo')
@@ -58,7 +59,7 @@ class WoController extends Controller {
                 ->join('JOIN','delivery','delivery.no_wo = wm.no_wo')
                 ->select("vws.*, tk.nama as sales, tk.lokasi_kntr as wilayah, wm.tgl_keluar as tgl_wo_keluar")
                 ->where(['like', 'vws.no_wo', $params['nama']])
-                ->andWhere('wm.tgl_keluar is not NULL')
+                ->andWhere('wm.tgl_keluar is not NULL and deliver.no_wo IS NOT NULL')
                 ->limit(20);
         $command = $query->createCommand();
         $models = $command->queryAll();
