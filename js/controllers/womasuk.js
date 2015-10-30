@@ -499,7 +499,7 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
     };
     $scope.tagTransformlplavon = function(newTag) {
         var item = {
-            lantai_plavon: newTag,
+            lampu_plavon: newTag,
         };
 
         return item;
