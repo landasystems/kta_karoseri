@@ -71,5 +71,6 @@
     </form>
 </div>
 <div class="modal-footer">                  
-    <button class="btn btn-primary" ng-click="cancel()">Close Form</button>
+    <button class="btn btn-primary" ng-click="cancel()" ng-if="formmodal.is_create == true">Close Form</button>
+    <button class="btn btn-primary" ng-click="save(formmodal)" ng-if="formmodal.is_create == false">Close Form</button>
 </div>

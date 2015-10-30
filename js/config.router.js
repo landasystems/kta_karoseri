@@ -321,6 +321,22 @@ angular.module('app')
                                             }]
                                     }
                                 })
+                                //BOM
+                                .state('transaksi.bom2', {
+                                    url: '/bom2',
+                                    params: {'form': null},
+                                    templateUrl: 'tpl/t_bom/index2.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['angularFileUpload', 'daterangepicker', 'frAngular']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/bom.js');
+                                                        }
+                                                );
+                                            }]
+                                    }
+                                })
                                 //cek BOM
                                 .state('transaksi.cekbom', {
                                     url: '/section',
