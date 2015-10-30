@@ -411,7 +411,7 @@
             @media print {
                 html, body {
                     display: block; 
-                    font-family: "Calibri";
+                    font-family: "Arial";
                     margin: 0;
                     -webkit-transform-origin: 0 0;
                     -moz-transform-origin: 0 0;
@@ -422,13 +422,13 @@
                 }
             }
         </style>
-        <div style="margin:10px; width:100% !inportant;"><!--width: 33cm;-->
-            <table width="100%" class="border-all" style="border-collapse: collapse;">
-                <tr style="height: 1.8cm;">
+        <div style="margin:7px;width:33cm; "><!--width:100% !inportant;-->
+            <table width="100%" class="border-all" style="border: 1px #000 solid; border-collapse: collapse;">
+                <tr style="height: 0.5cm;">
                     <td style="padding: 10px" colspan="2">
-                        <table class="border-all" style="border-collapse: collapse;">
+                        <table class="border-all" style="border: 1px #000 solid; border-collapse: collapse;">
                             <tr>
-                                <td width="40">
+                                <td style="width:50px">
                                     <img ng-src="img/logo.png" align="left"/>
                                 </td>
                                 <td id="print_po" align="center" style="vertical-align: middle;">
@@ -440,20 +440,20 @@
                     </td>
                 </tr>
                 <tr style="height: 1.8cm;">
-                    <td style="margin: 0.1cm; width:40%">
+                    <td style="margin: 0.5cm; width:40%">
                         <table>
                             <tr>
-                                <td width="50" id="print_po">Tanggal</td>
+                                <td style="width:50px" id="print_po">Tanggal</td>
                                 <td width="2" id="print_po">:</td>
                                 <td id="print_po">{{form.tanggal| date:'dd MMMM yyyy'}}</td>
                             </tr>
                             <tr>
-                                <td width="50" id="print_po">Nomor</td>
+                                <td style="width:50px" id="print_po">Nomor</td>
                                 <td width="2" id="print_po">:</td>
                                 <td id="print_po">{{form.nota}}</td>
                             </tr>
                             <tr>
-                                <td width="50" id="print_po">SPP No.</td>
+                                <td style="width:50px" id="print_po">SPP No.</td>
                                 <td width="2" id="print_po">:</td>
                                 <td id="print_po">{{form.spp}}</td>
                             </tr>
@@ -462,7 +462,7 @@
                     <td>
                         <table>
                             <tr>
-                                <td width="70" id="print_po">Kepada Yth</td>
+                                <td style="width:70px" id="print_po">Kepada Yth.</td>
                                 <td width="2" id="print_po">:</td>
                                 <td id="print_po">{{form.supplier.nama_supplier}}</td>
                             </tr>
@@ -470,10 +470,10 @@
                     </td>
                 </tr>
             </table>
-            <table width="100%" class="border-all" style="border-collapse: collapse; margin-top: -2px; height: 4.5cm;">
+            <table width="100%" class="border-all" style="border: 1px #000 solid; border-collapse: collapse; margin-top: -2px; height: 4.5cm;">
                 <tr style="height: 15px;">
                     <th class="border-all" id="print_po" align="center" style="width:1cm">No.</th>
-                    <th class="border-all" id="print_po" align="center" style="width:8.5cm">URAIAN</th>
+                    <th class="border-all" id="print_po" align="left" style="width:8.5cm">&nbsp;URAIAN</th>
                     <th class="border-all" id="print_po" align="center" style="width:2cm">KWANTUM</th>
                     <th class="border-all" id="print_po" align="center" style="width:1.5cm">SATUAN</th>
                     <th class="border-all" id="print_po" align="center" style="width:2.5cm">HARGA</th>
@@ -481,7 +481,7 @@
                 </tr>
                 <tr ng-repeat="detail in detsPo" style="height: 10px;">
                     <td id="print_po" align="center" class="border-left border-right">{{detail.data_barang.no}}</td>
-                    <td id="print_po" class="border-left border-right">{{detail.data_barang.nm_barang}} - {{detail.ket}}</td>
+                    <td style="width:503px" id="print_po" class="border-left border-right">&nbsp;{{detail.data_barang.nm_barang}} - {{detail.ket}}</td>
                     <td id="print_po" align="center" class="border-left border-right">{{detail.jml}}</td>
                     <td id="print_po" align="center" class="border-left border-right">{{detail.data_barang.satuan}}</td>
                     <td id="print_po" align="right" class="border-left border-right">{{detail.harga| number}}</td>
@@ -496,27 +496,27 @@
                     <td id="print_po" class="border-left border-right"></td>
                 </tr>
             </table>
-            <table width="100%" style="border-collapse: collapse; margin-top: -2px; margin-bottom:  -1px;" class="border-all">
+            <table width="100%" style="width:33cm; border-collapse: collapse; margin-top: -2px; margin-bottom:  -1px;" class="border-all">
                 <tr>
-                    <td style="vertical-align: top; width:9.5cm" id="print_po" class="border-right border-left">
-                        Keterangan :
-                        <div>- Jatuh Tempo &nbsp;&nbsp;:&nbsp; {{form.jatuh_tempo}} hari</div> 
-                        <div>- Dikirim ke &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{form.dikirim_ke}}</div>
-                        <div>- Pengiriman Tanggal : {{form.tanggal| date:'dd-MMMM-yyyy'}}</div>
-                        <div>- Form asli ini berlaku untuk penagihan</div>
-                        <div>- Spesifikasi teknis terlampir</div>
-                        <table style="border-collapse: collapse; width:9.5cm; margin-left: -1px; margin-right: -1px;">
+                    <td style="vertical-align: top; width:14.3cm" id="print_po" class="border-right border-left">
+                         &nbsp;Keterangan :
+                        <div>&nbsp; - Jatuh Tempo &nbsp;&nbsp;:&nbsp; {{form.jatuh_tempo}} hari</div> 
+                        <div>&nbsp; - Dikirim ke &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{form.dikirim_ke}}</div>
+                        <div>&nbsp; - Pengiriman Tanggal : {{form.tanggal| date:'dd-MMMM-yyyy'}}</div>
+                        <div>&nbsp; - Form asli ini berlaku untuk penagihan</div>
+                        <div>&nbsp; - Spesifikasi teknis terlampir</div>
+                        <table style="border-collapse: collapse; width:14.3cm; margin-left: -1px; margin-right: -1px;">
                             <tr>
-                                <td class="border-all" id="print_po">Pemberi Order</td>
-                                <td class="border-all" id="print_po">Penerima Order</td>
+                                <td class="border-all" id="print_po" style="text-align:center">Pemberi Order</td>
+                                <td class="border-all" id="print_po" style="text-align:center">Penerima Order</td>
                             </tr>
                             <tr height="80">
                                 <td style="border-left:  none;" class="border-all"></td>
                                 <td class="border-all"></td>
                             </tr>
                             <tr>
-                                <td class="border-all" id="print_po">Tgl :</td>
-                                <td class="border-all" id="print_po">Tgl :</td>
+                                <td class="border-all" id="print_po">Tgl. :</td>
+                                <td class="border-all" id="print_po">Tgl. :</td>
                             </tr>
                         </table>
                     </td>
