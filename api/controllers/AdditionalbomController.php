@@ -25,6 +25,9 @@ class AdditionalbomController extends Controller {
                     'view' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
+                    'createdetail' => ['post'],
+                    'updatedetail' => ['post'],
+                    'deletedetail' => ['post'],
                     'delete' => ['delete'],
                     'chassis' => ['get'],
                     'model' => ['get'],
@@ -152,6 +155,50 @@ class AdditionalbomController extends Controller {
         return true;
     }
 
+    public function actionCreatedetail() {
+        $params = json_decode(file_get_contents("php://input"), true);
+
+        if (isset($params['form']['barang']['kd_barang']) and isset($params['form']['bagian']['id_jabatan'])) {
+            $model = new DetAdditionalBom();
+            $model->attributes = $params['form'];
+            $model->kd_bom = $params['form']['kd_bom'];
+            $model->tran_additional_bom_id = $params['form']['tran_additional_bom_id'];
+            $model->kd_barang = isset($params['form']['barang']['kd_barang']) ? $params['form']['barang']['kd_barang'] : '-';
+            $model->kd_jab = isset($params['form']['bagian']['id_jabatan']) ? $params['form']['bagian']['id_jabatan'] : '-';
+            $model->save();
+
+            $this->setHeader(200);
+            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        }
+    }
+
+    public function actionUpdatedetail() {
+        $params = json_decode(file_get_contents("php://input"), true);
+
+        if (isset($params['form']['barang']['kd_barang']) and isset($params['form']['bagian']['id_jabatan'])) {
+            $model = DetAdditionalBom::find()->where('id="' . $params['form']['id'] . '"')->one();
+            $model->attributes = $params['form'];
+            $model->kd_bom = $params['form']['kd_bom'];
+            $model->tran_additional_bom_id = $params['form']['tran_additional_bom_id'];
+            $model->kd_barang = isset($params['form']['barang']['kd_barang']) ? $params['form']['barang']['kd_barang'] : '-';
+            $model->kd_jab = isset($params['form']['bagian']['id_jabatan']) ? $params['form']['bagian']['id_jabatan'] : '-';
+            $model->save();
+
+            $this->setHeader(200);
+            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        }
+    }
+
+    public function actionDeletedetail() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $model = DetAdditionalBom::deleteAll('id = "' . $params['form']['id'] . '"');
+        if ($model) {
+            echo 'sukses';
+        } else {
+            echo 'gagal';
+        }
+    }
+
     public function actionChassis() {
         $query = new Query;
         $query->from('chassis')
@@ -244,8 +291,6 @@ class AdditionalbomController extends Controller {
         $command = $query->createCommand();
         $models = $command->query()->read();
 
-//        \Yii::error($models);
-
         $no_wo = TransAdditionalBomWo::find()->where('tran_additional_bom_id="' . $id . '"')->all();
 
         $wo = array();
@@ -276,15 +321,8 @@ class AdditionalbomController extends Controller {
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
         foreach ($params['tambahItem']['no_wo'] as $val) {
-            //cari apakah wo sudah ada di optional
-            $detNowo = TransAdditionalBomWo::find()->where('no_wo="' . $val['no_wo'] . '"')->all();
-            foreach ($detNowo as $valNowo) {
-                //delete detail optional
-                $detOptional = DetAdditionalBom::deleteAll('tran_additional_bom_id = "' . $valNowo->tran_additional_bom_id . '"');
-
-                //hapus wo
-                $deleteWo = TransAdditionalBomWo::deleteAll('id="' . $valNowo->id . '"');
-            }
+            //hapus wo yang sudah terdapat di tambahan item
+            $deleteWo = TransAdditionalBomWo::deleteAll('id="' . $val['no_wo'] . '"');
         }
 
         $model = new TransAdditionalBom();
@@ -330,15 +368,8 @@ class AdditionalbomController extends Controller {
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
         foreach ($params['tambahItem']['no_wo'] as $val) {
-            //cari apakah wo sudah ada di optional
-            $detNowo = TransAdditionalBomWo::find()->where('no_wo="' . $val['no_wo'] . '"')->all();
-            foreach ($detNowo as $valNowo) {
-                //delete detail optional
-                $detOptional = DetAdditionalBom::deleteAll('tran_additional_bom_id = "' . $id . '"');
-
-                //hapus wo
-                $deleteWo = TransAdditionalBomWo::deleteAll('id="' . $valNowo->id . '"');
-            }
+            //hapus wo yang sudah terdapat di tambahan item
+            $deleteWo = TransAdditionalBomWo::deleteAll('id="' . $val['no_wo'] . '"');
         }
 
         $model = TransAdditionalBom::findOne($id);
@@ -359,19 +390,6 @@ class AdditionalbomController extends Controller {
                 $wo->save();
             }
 
-            //save detail bom
-            $detailBom = $params['detTambahItem'];
-            foreach ($detailBom as $val) {
-                if (isset($val['barang']['kd_barang'])) {
-                    $det = new DetAdditionalBom();
-                    $det->attributes = $val;
-                    $det->tran_additional_bom_id = $model->id;
-                    $det->kd_jab = $val['bagian']['id_jabatan'];
-                    $det->kd_barang = $val['barang']['kd_barang'];
-                    $det->kd_bom = $model->kd_bom;
-                    $det->save();
-                }
-            }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
         } else {

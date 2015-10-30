@@ -86,6 +86,7 @@ app.controller('tambahItemCtrl', function ($scope, Data, toaster, FileUploader, 
 
     $scope.addDetail = function (detail) {
         var form = {
+            id: '',
             kd_jab: '',
             kd_barang: '',
             qty: '',
@@ -94,14 +95,31 @@ app.controller('tambahItemCtrl', function ($scope, Data, toaster, FileUploader, 
         $scope.modal(form);
         $scope.detTambahItem.unshift(form);
     };
-
-    $scope.removeRow = function (paramindex) {
+    $scope.removeRow = function (detail) {
+        var index = -1;
         var comArr = eval($scope.detTambahItem);
-        if (comArr.length > 1) {
-            $scope.detTambahItem.splice(paramindex, 1);
-        } else {
-            alert("Something gone wrong");
+        for (var i = 0; i < comArr.length; i++) {
+            if (comArr[i] === detail) {
+                index = i;
+                break;
+            }
         }
+
+        if (index === -1) {
+            alert("Something gone wrong");
+        } else {
+            if ($scope.is_create == false) {
+                var url = 'additionalbom/deletedetail/';
+                var data = {
+                    form: detail
+                }
+                Data.post(url, data).then(function (result) {
+                    //
+                });
+            }
+        }
+
+        $scope.detTambahItem.splice(index, 1);
     };
 
     $scope.callServer = function callServer(tableState) {
@@ -134,6 +152,7 @@ app.controller('tambahItemCtrl', function ($scope, Data, toaster, FileUploader, 
         $scope.form.tgl_buat = new Date();
         $scope.detTambahItem = [
             {
+                id: '',
                 kd_jab: '',
                 kd_barang: '',
                 qty: '',
@@ -195,6 +214,7 @@ app.controller('tambahItemCtrl', function ($scope, Data, toaster, FileUploader, 
         $scope.gambar = [];
         $scope.is_edit = false;
         $scope.is_view = false;
+        $scope.is_create = false;
     };
 
     $scope.delete = function (row) {
@@ -255,13 +275,18 @@ app.controller('tambahItemCtrl', function ($scope, Data, toaster, FileUploader, 
     }
 
     $scope.modal = function (form) {
+        var data = form;
+        data.tran_additional_bom_id = $scope.form.id;
+        data.is_create = $scope.is_create;
+        data.kd_bom = $scope.form.kd_bom.kd_bom;
         var modalInstance = $modal.open({
             templateUrl: 'tpl/t_tambahitem/modal.html',
             controller: 'modalCtrl',
             size: 'lg',
+            backdrop: 'static',
             resolve: {
                 form: function () {
-                    return form;
+                    return data;
                 }
             }
         });
@@ -348,15 +373,35 @@ app.controller('modalCtrl', function ($scope, Data, $modalInstance, form) {
                 $scope.resultsjabatan = data.data;
             });
         }
-    }
+    };
+
     $scope.cariBarang = function ($query) {
         if ($query.length >= 3) {
             Data.get('barang/cari', {barang: $query}).then(function (data) {
                 $scope.resultsbarang = data.data;
             });
         }
-    }
+    };
+
     $scope.formmodal = form;
+    console.log($scope.formmodal);
+
+    $scope.save = function (formmodal) {
+        var data = {
+            form: formmodal,
+        };
+
+        var url = (formmodal.id == '') ? 'additionalbom/createdetail/' : 'additionalbom/updatedetail/';
+        Data.post(url, data).then(function (result) {
+            $scope.formmodal = result.data;
+            $modalInstance.dismiss('cancel');
+        });
+    };
+
+    $scope.cancel = function () {
+        $modalInstance.dismiss('cancel');
+    };
+
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
