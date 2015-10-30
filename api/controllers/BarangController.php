@@ -533,6 +533,14 @@ class BarangController extends Controller {
 
     public function actionDelete($id) {
         $model = $this->findModel($id);
+        
+        session_start();
+        
+        $trash = new \app\models\BarangTrash();
+        $trash->attributes = $model->attributes;
+        $trash->tgl_hapus = date("Y-m-d h:i:s");
+        $trash->user_id = $_SESSION['user']['id'];
+        $trash->save();
 
         if ($model->delete()) {
             $this->setHeader(200);

@@ -2,11 +2,7 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
     Data.get('chassis/merk').then(function (data) {
         $scope.listMerk = data.data;
     });
-//    $scope.refres = function(){
-//        $scope.listTipe = [];
-//        $scope.form = {};
-//        
-//    };
+
     $scope.typeChassis = function (merk) {
         Data.get('chassis/tipe?merk=' + merk).then(function (data) {
             $scope.listTipe = data.data;
@@ -52,8 +48,9 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
             });
         }
     };
-    $scope.addDetail = function (detail) {
+    $scope.addDetail = function () {
         var form = {
+            id: '',
             kd_jab: '',
             kd_barang: '',
             qty: '',
@@ -62,13 +59,31 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
         $scope.modal(form);
         $scope.detBom.unshift(form);
     };
-    $scope.removeRow = function (paramindex) {
+    $scope.removeRow = function (detail) {
+        var index = -1;
         var comArr = eval($scope.detBom);
-        if (comArr.length > 1) {
-            $scope.detBom.splice(paramindex, 1);
-        } else {
-            alert("Something gone wrong");
+        for (var i = 0; i < comArr.length; i++) {
+            if (comArr[i] === detail) {
+                index = i;
+                break;
+            }
         }
+
+        if (index === -1) {
+            alert("Something gone wrong");
+        } else {
+            if ($scope.is_create == false) {
+                var url = 'bom/deletedetail/';
+                var data = {
+                    form: detail
+                }
+                Data.post(url, data).then(function (result) {
+                    //
+                });
+            }
+        }
+
+        $scope.detBom.splice(index, 1);
     };
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
@@ -114,14 +129,6 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
         });
         $scope.form.tgl_buat = new Date();
         $scope.detBom = [];
-//        $scope.detBom = [
-//            {
-//                kd_jab: '',
-//                kd_barang: '',
-//                qty: '',
-//                ket: '',
-//            }
-//        ];
     };
     $scope.copy = function (form, detail) {
         $scope.is_copy = true;
@@ -238,13 +245,17 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
     }
 
     $scope.modal = function (form) {
+        var data = form;
+        data.kd_bom = $scope.form.kd_bom;
+        data.is_create = $scope.is_create;
         var modalInstance = $modal.open({
             templateUrl: 'tpl/t_bom/modal.html',
             controller: 'modalCtrl',
             size: 'lg',
+            backdrop: 'static',
             resolve: {
                 form: function () {
-                    return form;
+                    return data;
                 }
             }
         });
@@ -345,6 +356,19 @@ app.controller('modalCtrl', function ($scope, Data, $modalInstance, form) {
     }
 
     $scope.formmodal = form;
+
+    $scope.save = function (formmodal) {
+        var data = {
+            form: formmodal,
+        };
+
+        var url = (formmodal.id == '') ? 'bom/createdetail/' : 'bom/updatedetail/';
+        Data.post(url, data).then(function (result) {
+            $scope.formmodal = result.data;
+            $modalInstance.dismiss('cancel');
+        });
+    };
+
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
     };
