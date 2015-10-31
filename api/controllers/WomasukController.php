@@ -1208,6 +1208,9 @@ class WomasukController extends Controller {
                 if (!empty($params['eksterior']['letter']['letter'])) {
                     $eks->letter = $params['eksterior']['letter']['letter'];
                 }
+                if (!empty($params['eksterior']['akarat']['anti_karat'])) {
+                    $eks->letter = $params['eksterior']['akarat']['anti_karat'];
+                }
                 if (!empty($params['eksterior']['lain2'])) {
                     $eks->lain2 = $params['eksterior']['lain2'];
                 }
@@ -1372,6 +1375,7 @@ class WomasukController extends Controller {
 
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
+        Yii::error($params);
         $model = $this->findModel($params['womasuk']['no_wo']);
         $model->attributes = $params['womasuk'];
         $model->kode = $params['womasuk']['kode'];
@@ -1460,6 +1464,9 @@ class WomasukController extends Controller {
             }
             if (isset($params['eksterior']['letter']['letter'])) {
                 $eks->letter = $params['eksterior']['letter']['letter'];
+            }
+            if (isset($params['eksterior']['akarat']['anti_karat'])) {
+                $eks->anti_karat = $params['eksterior']['akarat']['anti_karat'];
             }
             if (isset($params['eksterior']['lain2'])) {
                 $eks->lain2 = $params['eksterior']['lain2'];
