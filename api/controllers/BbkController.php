@@ -539,12 +539,13 @@ class BbkController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new TransBbk();
         $model->attributes = $params['bbk'];
+        $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '';
+        $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '';
+        $model->penerima = isset($params['bbk']['penerima']['nik']) ? $params['bbk']['penerima']['nik'] : '';
+
         if ($model->validate()) {
             $model->tanggal = date("Y-m-d", strtotime($params['bbk']['tanggal']));
             $model->status = 0;
-            $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '-';
-            $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '-';
-            $model->penerima = isset($params['bbk']['penerima']['nik']) ? $params['bbk']['penerima']['nik'] : '-';
             $model->lock = 1;
             if ($model->save()) {
                 $detailBbk = $params['detailBbk'];
