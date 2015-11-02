@@ -212,7 +212,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     }
 
     $scope.listBarang = function ($query, no_wo, kd_jab) {
-        if (typeof no_wo != "undefined" && ($scope.noWoasli == no_wo.no_wo)) {
+        if (typeof no_wo != "undefined" && ($scope.noWoasli == no_wo.no_wo) && $scope.is_create == true) {
             toaster.pop('error', "Masukkan nomor wo yang lain");
             $scope.form.no_wo = '';
         } else {
@@ -491,6 +491,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                 });
                 $scope.noWoasli = $scope.form.no_wo.no_wo;
                 $scope.form.no_wo = '';
+                $scope.form.penerima = '';
             } else {
                 $scope.riwayatAmbil($scope.form.no_wo, $scope.form.kd_jab);
             }

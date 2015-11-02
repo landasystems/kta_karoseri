@@ -67,11 +67,11 @@ class BbmController extends Controller {
     public function actionCaribarang() {
         $params = json_decode(file_get_contents("php://input"), true);
         $kdBrg = array();
-        
+
         foreach ($params['listBarang'] as $val) {
             $kdBrg[] = isset($val['kd_barang']) ? $val['kd_barang'] : '';
         }
-        
+
         $models = array();
         $barang = isset($params['barang']) ? $params['barang'] : '';
         $po = isset($params['no_po']) ? $params['no_po'] : '';
@@ -399,41 +399,46 @@ class BbmController extends Controller {
         $model->no_wo = (isset($params['form']['wo']['no_wo']) ? $params['form']['wo']['no_wo'] : '-');
         $model->no_po = (isset($params['form']['po']['nota'])) ? $params['form']['po']['nota'] : NULL;
         $model->lock = 1;
-        if ($model->save()) {
-            //ambil no spp
-            $no_spp = \app\models\TransPo::find()->where('nota="' . $model->no_po . '"')->one();
 
-            $detailBbm = $params['detBbm'];
-            foreach ($detailBbm as $val) {
-                if (isset($val['barang']['kd_barang'])) {
-                    $det = new DetBbm();
-                    $det->attributes = $val;
-                    $det->kd_barang = $val['barang']['kd_barang'];
-                    $det->no_bbm = $model->no_bbm;
-                    $det->no_po = $model->no_po;
-                    $det->no_po = $model->tgl_nota;
-                    $det->save();
+        if ($model->validate()) {
+            if ($model->save()) {
+                //ambil no spp
+                $no_spp = \app\models\TransPo::find()->where('nota="' . $model->no_po . '"')->one();
 
-                    if (!empty($no_spp)) {
-                        //update tanggal aktual spp
-                        $detSpp = \app\models\DetSpp::find()->where('no_spp = "' . $no_spp->spp . '" and kd_barang="' . $det->kd_barang . '"')->one();
-                        if (!empty($detSpp)) {
-                            $detSpp->a = $model->tgl_nota;
-                            $detSpp->save();
+                $detailBbm = $params['detBbm'];
+                foreach ($detailBbm as $val) {
+                    if (isset($val['barang']['kd_barang'])) {
+                        $det = new DetBbm();
+                        $det->attributes = $val;
+                        $det->kd_barang = $val['barang']['kd_barang'];
+                        $det->no_bbm = $model->no_bbm;
+                        $det->no_po = $model->no_po;
+                        $det->save();
+
+                        if (!empty($no_spp)) {
+                            //update tanggal aktual spp
+                            $detSpp = \app\models\DetSpp::find()->where('no_spp = "' . $no_spp->spp . '" and kd_barang="' . $det->kd_barang . '"')->one();
+                            if (!empty($detSpp)) {
+                                $detSpp->a = $model->tgl_nota;
+                                $detSpp->save();
+                            }
                         }
+
+                        //update stok barang
+                        $barang = Barang::find()->where('kd_barang="' . $det->kd_barang . '"')->one();
+                        $barang->saldo += $det->jumlah;
+                        $barang->save();
                     }
-
-                    //update stok barang
-                    $barang = Barang::find()->where('kd_barang="' . $det->kd_barang . '"')->one();
-                    $barang->saldo += $det->jumlah;
-                    $barang->save();
                 }
-            }
 
-            $this->setHeader(200);
-            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+                $this->setHeader(200);
+                echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+            } else {
+                $this->setHeader(400);
+                echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+            }
         } else {
-            $this->setHeader(400);
+//          $this->setHeader(400);
             echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
         }
     }
@@ -566,7 +571,7 @@ class BbmController extends Controller {
         $models = $command->queryAll();
         return $this->render("/expretur/bbm", ['models' => $models, 'filter' => $filter]);
     }
-    
+
     public function actionExcel2() {
         session_start();
         $query = $_SESSION['query'];
@@ -575,7 +580,7 @@ class BbmController extends Controller {
         $filter = $_SESSION['filter'];
         $command = $query->createCommand();
         $models = $command->queryAll();
-        
+
         return $this->render("/expretur/bbm2", ['models' => $models, 'filter' => $filter]);
     }
 
