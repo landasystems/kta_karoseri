@@ -121,10 +121,11 @@ class JabatanController extends Controller {
 
         $absen = AbsensiEttLog::find()
                 ->joinWith('emp')
-//                ->joinWith('karyawan')
-                ->select("emp.first_name, emp.nik, emp.pin, date(scan_date) as scan_date")
+                ->join('LEFT JOIN', 'purchassing.tbl_karyawan', 'purchassing.tbl_karyawan.nik = emp.nik')
+                ->select("emp.first_name, emp.pin, date(scan_date) as scan_date")
                 ->where('date(scan_date) = "' . date("Y-m-d") . '"')
                 ->andWhere('emp.first_name like "%' . $param['nama'] . '%" or emp.last_name like "%' . $param['nama'] . '%"')
+                ->andWhere('emp.nik != "-"')
                 ->limit(100)
                 ->all();
         $data = array();

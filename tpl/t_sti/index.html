@@ -289,19 +289,20 @@
     </div>
     <div id="printArea" ng-show="is_view">
         <style>
-            .detail-barang td{
-                border-top: 1px;
-                border-left: 1px;
-                border-bottom: 1px;
-                border-right: 1px;
-                border:1px;
-                border-style:solid;
+            @media print {
+                html, body {
+                    display: block; 
+                    font-family: "Arial";
+                    margin: 0;
+                }
+
+
             }
         </style>
         <div style="margin-top: 0px">
             <table width="100%" class="no-border">
                 <tr>
-                    <td colspan="4" style="height: 1cm;">&nbsp;</td>
+                    <td colspan="4" style="height: 3.3cm;">&nbsp;</td>
                 </tr>
                 <tr>
                     <td colspan="4">&nbsp;</td>
@@ -309,83 +310,85 @@
             </table>
             <table width="100%" class="no-border">
                 <tr>
-                    <td width="14%">
+                    <td style="width:20%">
                     </td>
-                    <td valign="top" style="font-size: 10px;">
-                        {{form.tgl_terima| date}}
+                    <td valign="top"  style="font-size: 10pt">
+                        <b>{{form.tgl_terima| date:'dd/MM/yyyy'}}</b>
                     </td>
-                    <td width="20%">
+                    <td style="width:19%">
                     </td>
-                    <td valign="top" style="font-size: 10px;">
-                        {{form.serah_terima| date}} 
+                    <td valign="top" style="font-size: 10pt">
+                        <b> {{form.serah_terima| date:'dd/MM/yyyy'}} </b>
                     </td>
-                    <td width="12%">
+                    <td style="width:13%">
                     </td>
-                    <td valign="top" style="font-size: 10px;">
-                        NB-01021
+                    <td valign="top" style="font-size: 10pt;">
+                        <b> {{form.no_wo}}</b>
                     </td>
-                    <td width="20%">
+                    <td style="width:22%">
                     </td>
-                    <td valign="top" style="font-size: 10px;">
-                        {{form.no_chassis}} 
-                    </td>
-                </tr>
-            </table>
-            <table width="100%" class="no-border">
-                <tr>
-                    <td width="7%">
-                    </td>
-                    <td valign="top" style="font-size: 10px;">
-                        {{form.nm_customer}}
-                    </td>
-                    <td width="20%">
-                    </td>
-                    <td valign="top" style="font-size: 10px;">
-                        {{form.tgl_prd| date}} 
-                    </td>
-                    <td width="12%">
-                    </td>
-                    <td valign="top" style="font-size: 10px;">
-                        {{form.mrek}}/{{form.tipe}} 
-                    </td>
-                    <td width="20%">
-                    </td>
-                    <td valign="top" style="font-size: 10px;">
-                        {{form.no_mesin}}
+                    <td valign="top" style="font-size: 10pt;">
+                        <b> {{form.no_chassis}} </b>
                     </td>
                 </tr>
             </table>
-            <table width="100%" class="no-border">
+            <table width="100%" class="no-border" style="margin-top:-5px">
                 <tr>
-                    <td width="7%">
+                    <td style="width:55px">
                     </td>
-                    <td valign="top" style="font-size: 10px;">
-                        {{form.alamat1}}
+                    <td valign="top" style="font-size: 9pt;width: 220px">
+                        <b> {{form.nm_customer}}</b>
                     </td>
-                    <td width="20%">
+                    <td style="width:150px">
                     </td>
-                    <td valign="top" style="font-size: 10px;">
-                        {{form.tgl_pdc| date}} 
+                    <td valign="top" style="font-size: 10pt;width: 70px">
+                        <b> {{form.tgl_prd| date:'dd/MM/yyyy'}} </b>
                     </td>
-                    <td width="12%">
+                    <td style="width:85px">
                     </td>
-                    <td valign="top" style="font-size: 10px;">
-                        {{form.model| date}} 
+                    <td valign="top" style="font-size: 8pt; width: 180px">
+                        <b>  {{form.merk}}/{{form.tipe}} </b>
                     </td>
-                    <td width="20%">
+                    <td style="width:137px">
                     </td>
-                    <td valign="top" style="font-size: 10px;">
-                        {{form.warna.warna}}
+                    <td valign="top" style="font-size: 10pt;width: 180px">
+                        <b>{{form.no_mesin}}</b>
                     </td>
                 </tr>
             </table>
-            <table width="100%" class="no-border">
+            <table width="100%" class="no-border"  style="margin-top:-4px">
                 <tr>
-                    <td width="7%">
-                        {{form.driver}}
+                    <td style="width:48px">
                     </td>
-                    <td valign="top" style="font-size: 10px;">
-                        {{form.driver}}
+                    <td valign="top" style="font-size: 8pt;width: 220px;margin-top: -8px">
+                        <b>{{form.alamat1}}</b>
+                    </td>
+                     <td style="width:70px">
+                    </td>
+                    <td valign="top" style="font-size: 10pt;width:50px">
+                        <b>  {{form.tgl_pdc| date:'dd/MM/yyyy'}} </b>
+                    </td>
+                     <td style="width:85px">
+                    </td>
+                    <td valign="top" style="font-size: 10pt;width: 12%">
+                        <b> {{form.kd_model}} </b>
+                    </td>
+                    <td style="width:127px">
+                    </td>
+                    <td valign="top" style="font-size: 10pt;width: 80px">
+                        <b> {{form.warna.warna}}</b>
+                    </td>
+                </tr>
+            </table>
+            <table width="100%" class="no-border" style="margin-top:-7px">
+                <tr>
+                    <td  style="font-size: 10pt;width: 25px">
+                    </td>
+                    <td  style="font-size: 10pt;width: 10%">
+                        <b> {{form.driver}}</b>
+                    </td>
+                    <td valign="top" style="font-size: 10pt;">
+                        <b>  085745897506</b>
                     </td>
                 </tr>
             </table>

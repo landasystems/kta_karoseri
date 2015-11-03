@@ -25,7 +25,7 @@ foreach ($models as $val) {
 }
 ?>
 <div style="width:24cm">
-    <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 9px;" width="100%">
+    <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;" width="100%">
         <tr>
             <td class="border-right border-bottom"  rowspan="4" colspan="2" align="center" width="30%">
                 <br>

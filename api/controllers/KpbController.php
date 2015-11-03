@@ -51,14 +51,14 @@ class KpbController extends Controller {
 
     public function actionSimpanprint() {
         $param = json_decode(file_get_contents("php://input"), true);
-        $cek = Kpb::find()->where(['no_wo' => $param['no_wo'], 'kd_jab' => $param['kd_jab']])->one();
+        $cek = Kpb::find()->where(['no_wo' => $param['no_wo'], 'kd_jab' => $param['kd_jab']['id_jabatan']])->one();
         if (empty($cek)) {
             $kpb = new Kpb;
         } else {
             $kpb = $cek;
         }
         $kpb->no_wo = $param['no_wo'];
-        $kpb->kd_jab = $param['kd_jab'];
+        $kpb->kd_jab = $param['kd_jab']['id_jabatan'];
         $kpb->status = 1;
         $kpb->save();
         echo json_encode(array('status' => 0, 'error_code' => 400, 'msg' => 'Anda telah mencetak kartu pengambilan bahan, hubungi admin untuk mencetak ulang', 'print' => 1), JSON_PRETTY_PRINT);

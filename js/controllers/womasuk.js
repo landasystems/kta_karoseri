@@ -474,6 +474,13 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
 
         return item;
     };
+    $scope.tagTransformkarat = function(newTag) {
+        var item = {
+            anti_karat: newTag,
+        };
+
+        return item;
+    };
 
     //INTERIOR
     $scope.tagTransformplavon = function(newTag) {

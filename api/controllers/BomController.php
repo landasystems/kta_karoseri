@@ -822,34 +822,40 @@ class BomController extends Controller {
 
     public function actionCreatedetail() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = new BomDet();
-        $model->attributes = $params['form'];
-        $model->kd_barang = isset($params['form']['barang']['kd_barang']) ? $params['form']['barang']['kd_barang'] : '-';
-        $model->kd_jab = isset($params['form']['bagian']['id_jabatan']) ? $params['form']['bagian']['id_jabatan'] : '-';
-        $model->save();
 
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        if (isset($params['form']['barang']['kd_barang']) and isset($params['form']['bagian']['id_jabatan'])) {
+            $model = new BomDet();
+            $model->attributes = $params['form'];
+            $model->kd_barang = isset($params['form']['barang']['kd_barang']) ? $params['form']['barang']['kd_barang'] : '-';
+            $model->kd_jab = isset($params['form']['bagian']['id_jabatan']) ? $params['form']['bagian']['id_jabatan'] : '-';
+            $model->save();
+
+            $this->setHeader(200);
+            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        }
     }
 
     public function actionUpdatedetail() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = BomDet::find()->where('id="'.$params['form']['id'].'"')->one();
-        $model->attributes = $params['form'];
-        $model->kd_barang = isset($params['form']['barang']['kd_barang']) ? $params['form']['barang']['kd_barang'] : '-';
-        $model->kd_jab = isset($params['form']['bagian']['id_jabatan']) ? $params['form']['bagian']['id_jabatan'] : '-';
-        $model->save();
 
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        if (isset($params['form']['barang']['kd_barang']) and isset($params['form']['bagian']['id_jabatan'])) {
+            $model = BomDet::find()->where('id="' . $params['form']['id'] . '"')->one();
+            $model->attributes = $params['form'];
+            $model->kd_barang = isset($params['form']['barang']['kd_barang']) ? $params['form']['barang']['kd_barang'] : '-';
+            $model->kd_jab = isset($params['form']['bagian']['id_jabatan']) ? $params['form']['bagian']['id_jabatan'] : '-';
+            $model->save();
+
+            $this->setHeader(200);
+            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        }
     }
-    
-    public function actionDeletedetail(){
+
+    public function actionDeletedetail() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = BomDet::deleteAll('id = "'.$params['form']['id'].'"');
-        if($model){
+        $model = BomDet::deleteAll('id = "' . $params['form']['id'] . '"');
+        if ($model) {
             echo 'sukses';
-        }else{
+        } else {
             echo 'gagal';
         }
     }
