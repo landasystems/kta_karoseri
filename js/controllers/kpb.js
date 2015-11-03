@@ -33,13 +33,12 @@ app.controller('kpbCtrl', function ($scope, Data, toaster, $modal) {
     }
 
     $scope.listBagian = function (key) {
-//    if (typeof $scope.form.no_wo != "undefined") {
+        $scope.Listjabatan = [];
         Data.post('kpb/jabkpb', {key: $scope.form.no_wo}).then(function (data) {
-            $scope.Listjabatan = {};
-            $scope.Listjabatan = data.data;
-//            console.log(data.data)
+            angular.forEach(data.data, function ($value, $key) {
+                $scope.Listjabatan.push($value);
+            });
         });
-//    }
     }
 
     $scope.listBahan = function (kd_bom, kd_jab) {
