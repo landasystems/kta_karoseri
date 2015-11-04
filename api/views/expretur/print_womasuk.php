@@ -48,7 +48,7 @@
                 if ($models['jenis'] == "Small Bus") {
                     $eks = \app\models\Smalleks::find()->where('no_wo="' . $models['no_wo'] . '"')->one();
                     $warna = \app\models\Warna::find()->where('kd_warna="' . $eks['warna'] . '"')->one();
-                    $font = 'font-size:12.7px';
+                    $font = 'font-size:12.6px';
                 } else {
                     $eks = \app\models\Minieks::find()->where('no_wo="' . $models['no_wo'] . '"')->one();
                     $warna = \app\models\Warna::find()->where('kd_warna="' . $eks['warna'] . '"')->one();
@@ -551,7 +551,7 @@
                 if ($models['jenis'] == "Small Bus") {
                    
                     ?>
-            <table style="border-collapse: collapse; font-size: 11px;border-left: 1px #000000 solid;border-bottom:  :1px #000000 solid;border-top: 1px #000000 solid" width="100%"  >
+            <table style="border-collapse: collapse; font-size: 11px;border-left: 1px #000000 solid;border-bottom:1px #000000 solid;border-top: 1px #000000 solid" width="100%"  >
                 <tr>
                     <td style="border-left: 1px solid #000000;border-right: 1px solid #000000;font-weight: 300">
                         NOTE : 
@@ -606,7 +606,7 @@
             <?php
                 }else{
             ?>
-            <table style="border-collapse: collapse; font-size: 12px;border-left: 1px #000000 solid;border-bottom:  :1px #000000 solid;border-top: 1px #000000 solid" width="100%"  >
+            <table style="border-collapse: collapse; font-size: 12px;border-left: 1px #000000 solid;border-bottom:1px #000000 solid;border-top: 1px #000000 solid" width="100%"  >
                 <tr>
                     <td style="border-left: 1px solid #000000;border-right: 1px solid #000000;font-weight: 300">
                         NOTE : 

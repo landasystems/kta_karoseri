@@ -65,6 +65,7 @@
                             <th st-sort="spp">No SPP</th>
                             <th st-sort="tanggal">tanggal</th>
                             <th st-sort="dikirim_ke">Tujuan Pengiriman</th>
+                            <th st-sort="nama_supplier">Supplier</th>
                             <th>Status Print</th>
                             <th style="text-align:right;" ng-hide="is_view == true">Action &nbsp;</th>
                         </tr>
@@ -80,6 +81,7 @@
                             <td>{{row.spp}}</td>
                             <td>{{row.tanggal| date}}</td>
                             <td>{{row.dikirim_ke}}</td>
+                            <td>{{row.nama_supplier}}</td>
                             <td>{{row.status_nama}}</td>
                             <td>
                                 <div class="btn-group pull-right"  role="group" style="margin-top: -3px;">
@@ -418,11 +420,11 @@
                 }
 
                 @page {
-                    size: 10cm 22cm;
+                    size: 10cm 24cm;
                 }
             }
         </style>
-        <div style="margin:7px;width:100%; "><!--width:100% !inportant;-->
+        <div style="margin:7px;width:95%; "><!--width:100% !inportant;-->
             <table width="100%" class="border-all" style="text-align: center; border-right: 1px #000 solid; border-top: 1px #000 solid; border-left: 1px #000 solid; border-bottom: 1px #000 solid; border: 1px #000 solid; border-collapse: collapse;">
                 <tr style="height:1cm;">
                     <td style="padding: 10px" colspan="2">
@@ -500,7 +502,7 @@
                     </tr>
                 </tbody>
             </table>
-            <table width="100%" style="width:100%; border-collapse: collapse; margin-top: -2px; margin-bottom:  -1px; " class="border-all">
+            <table width="100%" style="width:100%; border-collapse: collapse; margin-top: -2px; margin-bottom:  -1px; font-size: 11px" class="border-all">
                 <tr>
                     <td style="vertical-align: top; width:14.3cm;border-right: 2px #000 solid;" id="print_po" class="border-right border-left">
                         &nbsp;Keterangan :
@@ -528,31 +530,31 @@
                         <table>
                             <tr>
                                 <td width="50%" id="print_po">Total pembelian / biaya </td>
-                                <td id="print_po">{{form.total|  currency:undefined:0}}</td>
+                                <td id="print_po" style="text-align:right">{{form.total|  currency:undefined:0}}</td>
                             </tr>
                             <tr>
                                 <td id="print_po">Diskon</td>
-                                <td id="print_po">{{form.nilai_diskon| currency:undefined:0 }}</td>
+                                <td id="print_po" style="text-align:right">{{form.nilai_diskon| currency:undefined:0 }}</td>
                             </tr>
                             <tr>
                                 <td id="print_po">Dasar pengenaan pajak</td>
-                                <td id="print_po">Rp. </td>
+                                <td id="print_po" style="text-align:right">Rp. </td>
                             </tr>
                             <tr>
                                 <td id="print_po">PPN 10%</td>
-                                <td id="print_po">{{form.ppn| currency:undefined:0}}</td>
+                                <td id="print_po" style="text-align:right">{{form.ppn| currency:undefined:0}}</td>
                             </tr>
                             <tr>
                                 <td id="print_po">Total yang harus dibayar</td>
-                                <td id="print_po">{{form.total_dibayar| currency:undefined:0}}</td>
+                                <td id="print_po" style="text-align:right">{{form.total_dibayar| currency:undefined:0}}</td>
                             </tr>
                             <tr>
                                 <td id="print_po">Uang muka</td>
-                                <td id="print_po">{{form.dp| currency:undefined:0 }}</td>
+                                <td id="print_po" style="text-align:right">{{form.dp| currency:undefined:0 }}</td>
                             </tr>
                             <tr>
                                 <td id="print_po">Sisa yang harus dibayar</td>
-                                <td id="print_po">{{form.sisa_dibayar| currency:undefined:0}}</td>
+                                <td id="print_po" style="text-align:right">{{form.sisa_dibayar| currency:undefined:0}}</td>
                             </tr>
                             <tr>
                                 <td id="print_po">Terbilang :</td>

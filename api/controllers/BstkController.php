@@ -95,7 +95,7 @@ class BstkController extends Controller {
                 ->join('JOIN', 'model as m', 's.kd_model = m.kd_model')
                 ->join('JOIN', 'chassis as c', 's.kd_chassis = c.kd_chassis')
                 ->orderBy($sort)
-                ->select("vw.*,delivery.tgl_delivery,sti.driver,cu.alamat1, cu.telp, b.id as id, b.no_wo as no_wo,b.tgl as tgl, c.merk as merk, c.tipe as tipe, m.kd_model as kd_model, m.model as model, wa.warna as warna, b.kd_warna as kd_warna, b.catatan as catatan");
+                ->select("vw.*,delivery.tgl_delivery,sti.driver,sti.tgl_terima,cu.alamat1, cu.telp, b.id as id, b.no_wo as no_wo,b.tgl as tgl, c.merk as merk, c.tipe as tipe, m.kd_model as kd_model, m.model as model, wa.warna as warna, b.kd_warna as kd_warna, b.catatan as catatan");
 
         //filter
         if (isset($params['filter'])) {
