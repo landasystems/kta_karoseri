@@ -140,155 +140,164 @@
     </div>
     <div id="printArea" ng-show="is_view">
         <style>
-            .detail-barang td{
-                border-top: 1px;
-                border-left: 1px;
-                border-bottom: 1px;
-                border-right: 1px;
-                border:1px;
-                border-style:solid;
+            @media print {
+                html, body {
+                    display: block; 
+                    font-family: "Arial";
+                }
+
+
             }
         </style>
-        <div style="margin-top: 0px">
+        <div style="margin-left: 12px">
             <table width="100%" class="no-border">
                 <tr>
-                    <td colspan="4" style="height: 2.3cm;">&nbsp;</td>
+                    <td colspan="4" style="height: 1.3cm;">&nbsp;</td>
                 </tr>
                 <tr>
                     <td colspan="4">&nbsp;</td>
                 </tr>
             </table>
-            <table width="100%" class="no-border">
+            <table width="100%" class="no-border" style="margin-left: -2px">
                 <tr>
-                    <td width="10%">
+                    <td style="width:13px">
                     </td>
-                    <td valign="top" rowspan="2" style="font-size: 10px;">
+                    <td valign="top"  style="font-size: 9pt;">
                         {{form.nm_customer}}
                     </td>
                     <td width="20%">
                     </td>
-                    <td valign="top" style="font-size: 10px;">
+                    <td valign="top" style="font-size: 9pt;">
                         
                     </td>
                 </tr>
+                
+            </table>
+            <table width="100%" class="no-border" style="margin-top:-4px;margin-left: 12px">
                 <tr>
-                    <td width="10%">
+                    <td style="width:13px">
                     </td>
-                    <td width="20%">
+                    <td  valign="top" style="font-size: 9pt; margin-top: 4px;width: 45%" rowspan="2">
+                        {{form.alamat1}}
                     </td>
-                    <td valign="top" style="font-size: 10px;">
-                        
+                    <td width="100px">
+                    </td>
+                    <td valign="top" style="font-size: 9pt;margin-top: 4px;">
+                     
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:13px">
+                        &nbsp;
+                    </td>
+                    <td valign="top"  style="font-size: 9pt;">
+                         &nbsp;
+                    </td>
+                    <td style="width:75px">
+                         &nbsp;
+                    </td>
+                    <td valign="top" style="font-size: 9pt;">
+                         &nbsp;
                     </td>
                 </tr>
             </table>
-            <table width="100%" class="no-border">
+<!--            <table width="100%" class="no-border">
                 <tr>
-                    <td width="10%">
-                    </td>
-                    <td  valign="top" style="font-size: 10px; margin-top: 4px;width: 42%" rowspan="2">
-                        {{form.alamat1}}
-                    </td>
-                    <td width="20%">
-                    </td>
-                    <td valign="top" style="font-size: 10px;margin-top: 4px;">
-                        {{form.driver}}
-                    </td>
-                </tr>
-                <tr>
-                    <td width="10%" >
+                    <td style="width:20px">
                     </td>
                     <td width="14%">
                     </td>
-                    <td valign="top" style="font-size: 10px;margin-left:19px;">
+                    <td valign="top" style="font-size: 9pt;margin-left:19px;">
                         {{form.tgl_delivery}}
                     </td>
                 </tr>
-            </table>
+            </table>-->
             
-            <table width="100%" class="no-border" style="margin-top:-3px;">
+            <table width="100%" class="no-border" style="margin-top:3.5px;margin-left: 12px">
                 <tr>
-                    <td width="10%">
+                    <td style="width:13px">
                     </td>
-                    <td valign="top" style="font-size: 10px; margin-top: 4px;width: 45%">
+                    <td valign="top" style="font-size: 9pt; margin-top: 4px;width: 200px">
                         {{form.telp}}
                     </td>
-                    <td width="20%">
+                    <td style="width:465px">
                     </td>
-                    <td valign="top" style="font-size: 10px;margin-top: 4px;">
-                        &nbsp;
+                    <td valign="top" style="font-size: 9pt;margin-top: 4px;">
+                        
                     </td>
                 </tr>
             </table>
-            <table width="100%" class="no-border">
+            <table width="100%" class="no-border" style="margin-left: 12px">
                 <tr>
-                    <td width="10%">
+                    <td style="width:13px">
                     </td>
-                    <td valign="top" style="font-size: 10px; margin-top: 4px;width: 45%">
+                    <td valign="top" style="font-size: 9pt; margin-top: 4px;width: 250px">
                         {{form.no_wo}}
                     </td>
-                    <td width="13%">
+                    <td style="width:500px">
                     </td>
-                    <td valign="top" style="font-size: 10px;margin-top: 4px;">
+                    <td valign="top" style="font-size: 9pt;margin-top: 4px;text-align: left">
                         {{form.no_chassis}}
                     </td>
                 </tr>
             </table>
-            <table width="100%" class="no-border">
+            <table width="100%" class="no-border" style="margin-left: 12px">
                 <tr>
-                    <td width="10%">
+                    <td style="width:13px">
                     </td>
-                    <td valign="top" style="font-size: 10px; margin-top: 4px;">
+                    <td valign="top" style="font-size: 9pt;width: 250px">
                         {{form.merk}} / {{form.tipe}}
                     </td>
-                    <td width="">
+                    <td style="width:500px">
                     </td>
-                    <td valign="top" style="font-size: 10px;margin-top: 4px;">
+                    <td valign="top" style="font-size: 9pt;text-align: left">
                         {{form.no_mesin}}
                     </td>
                 </tr>
             </table>
-            <table width="100%" class="no-border">
+            <table width="100%" class="no-border" style="margin-left: 12px">
                 <tr>
-                    <td width="10%">
+                    <td style="width:13px">
                     </td>
-                    <td valign="top" style="font-size: 10px; margin-top: 4px;">
-                        {{form.model}}
+                    <td valign="top" style="font-size: 9pt;width: 250px">
+                       {{form.model}}
                     </td>
-                    <td width="20%">
+                    <td style="width:500px">
                     </td>
-                    <td valign="top" style="font-size: 10px;margin-top: 4px;">
-                        
+                    <td valign="top" style="font-size: 9pt;text-align: left">
+                        {{form.tgl_terima | date:'dd/MM/yyyy'}}
                     </td>
                 </tr>
             </table>
-            <table width="100%" class="no-border">
+            
+            <table width="100%" class="no-border" style=";margin-left: 12px">
                 <tr>
-                    <td width="10%">
+                    <td style="width:10px">
                     </td>
-                    <td valign="top" style="font-size: 10px; margin-top: 4px;">
+                    <td valign="top" style="font-size: 9pt; margin-top: 4px;">
                         {{form.warna}}
                     </td>
                     <td width="20%">
                     </td>
-                    <td valign="top" style="font-size: 10px;margin-top: 4px;">
+                    <td valign="top" style="font-size: 9pt;margin-top: 4px;">
                         
                     </td>
                 </tr>
             </table>
             <table width="100%" class="no-border">
                 <tr>
-                    <td colspan="4" style="height: 20.3cm;">&nbsp;</td>
+                    <td colspan="4" style="height: 15.6cm;">&nbsp;</td>
                 </tr>
                 <tr>
                     <td colspan="4">&nbsp;</td>
                 </tr>
             </table>
-            <table width="100%" class="no-border">
+<table width="700px" class="no-border" style="margin-left:3px;">
                 <tr>
-                    <td valign="top" style="font-size: 10px; margin-top: 4px;">
+                    <td valign="top" style="font-size: 9pt; margin-top: 3px;padding-bottom: 3px;line-height:15px">
                         {{form.catatan}}
                     </td>
-                    </td>
+                    
                 </tr>
             </table>
             
