@@ -9,7 +9,7 @@ header("Content-Disposition: attachment; filename=excel-rekap-Barang_Keluar.xls"
       <table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
         <tr>
             <td rowspan="2" colspan="3" style="width:30%; border: 1px solid #000000; padding-bottom:5px; padding-top:5px;">
-                <h3 style="font-size: 16px;"><b><center>LAPORAN BARANG KELUAR</center>
+                <h3 style="font-size: 16px;"><b><center>LAPORAN BARANG KELUAR MINGGUAN</center>
                     <center>BBK</center></b></h3>
                 No Dok : FR-WHS-015-REV.00
             </td>
@@ -58,33 +58,30 @@ header("Content-Disposition: attachment; filename=excel-rekap-Barang_Keluar.xls"
 
     <table width="100%" border="1" style="border-collapse: collapse; font-size: 12px; margin-top:-2px;">
         <tr>
-            <th style="text-align: center;">TANGGAL</th>
-            <th style="text-align: center;">NO WO</th>
-            <th style="text-align: center;">NO BBK</th>
-            <th style="text-align: center;">BAGIAN</th>
-            <th style="text-align: center;">PLK KERJA</th>
+            <th style="text-align: center;">NO</th>
+            
             <th>KODE BARANG</th>
             <th>NAMA BARANG</th>
-            <th style="text-align: center;">SAT</th>
-            <th style="text-align: center;">JML</th>
-            <th>KET</th>
+            <th style="text-align: center;">SATUAN</th>
+            <th style="text-align: center;">JUMLAH</th>
+            
         </tr>
         <?php
+        $no=0;
         foreach ($models as $key) {
+            
             ?>
             <tr>
-                <td class="border-right" style="text-align: center;" valign="top"><?php echo date('d/m/y', strtotime($key['tanggal'])) ?></td>
-                <td class="border-right" style="text-align: center;" valign="top" width="90px">&nbsp;<?php echo $key['no_wo'] ?></td>
-                <td class="border-right" style="text-align: center;" valign="top" >&nbsp;<?php echo $key['no_bbk'] ?></td>
-                <td class="border-right" valign="top" width="100px"><?php echo $key['jabatan'] ?></td>
-                <td class="border-right" valign="top">&nbsp;<?php echo $key['nama'] ?></td>
+                
+                <td class="border-right" valign="top">&nbsp;<?=$no;?></td>
                 <td class="border-right" valign="top" width="100px">&nbsp;<?php echo $key['kd_barang'] ?></td>
                 <td class="border-right" valign="top"><?php echo $key['nm_barang'] ?></td>
                 <td class="border-right" style="text-align: center;" valign="top"><?php echo $key['satuan'] ?></td>
                 <td class="border-right" style="text-align: center;"valign="top">&nbsp;<?php echo $key['jml'] ?></td>
-                <td class="border-right" valign="top" width="100px"><?php echo $key['ket'] ?></td>
+                
             </tr>
             <?php
+            $no++;
         }
         ?>
     </table>

@@ -131,8 +131,8 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         var sub_total = 0;
 
         angular.forEach($scope.detsPo, function (detail) {
-            var jml = (detail.jml) ? parseInt(detail.jml) : 0;
-            var hrg = (detail.harga) ? parseInt(detail.harga) : 0;
+            var jml = (detail.jml) ? parseFloat(detail.jml) : 0;
+            var hrg = (detail.harga) ? parseFloat(detail.harga) : 0;
             sub_total = (jml * hrg);
             detail.jumlah = sub_total;
             total += sub_total;
@@ -217,60 +217,121 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         $scope.openedDet = $index;
     };
 
-    var satuan = {0: "nol", 1: "satu", 2: "dua", 3: "tiga", 4: "empat", 5: "lima", 6: "enam", 7: "tujuh", 8: "delapan", 9: "sembilan"};
-    var belasan = {10: "sepuluh", 11: "sebelas", 12: "dua belas", 13: "tiga belas", 14: "empat belas", 15: "lima belas", 16: "enam belas", 17: "tujuh belas", 18: "delapan belas", 19: "sembilan belas"};
-    var puluhan = {2: "dua puluh", 3: "tiga puluh", 4: "empat puluh", 5: "lima puluh", 6: "enam puluh", 7: "tujuh puluh", 8: "delapan puluh", 9: "sembilan puluh"};
-    var sekala = [
-        {name: "sptiliun", size: 24},
-        {name: "sextiliun", size: 21},
-        {name: "quintiliun", size: 18},
-        {name: "quadriliun", size: 15},
-        {name: "triliun", size: 12},
-        {name: "milyar", size: 9},
-        {name: "juta", size: 6},
-        {name: "ribu", size: 3},
-        {name: "ratus", size: 2}
-    ];
 
-    $scope.keKata = function (num) {
-        var parts = [], minusStr = "";
-        var satuantr = num.toString();
+    ////
+    var daftarAngka = new Array("", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan");
+    
+    
+     $scope.terbilang = function(nilai) {
+        var temp = '';
+        
+        var hasilBagi, sisaBagi; 
+        
+        var batas = 3; 
+        
+        var maxBagian = 5;
+        
+        var gradeNilai = new Array("", "ribu", "juta", "milyar", "triliun"); 
+        
+        nilai = $scope.hapusNolDiDepan(nilai);
+        var nilaiTemp = $scope.ubahStringKeArray(batas, maxBagian, nilai);
 
-        if (satuantr.length < 1) {
-            return "";
+        var j = nilai.length;
+
+        var banyakBagian = (j % batas) == 0 ? (j / batas) : Math.round(j / batas + 0.5);
+        var h = 0;
+        for (var i = banyakBagian - 1; i >= 0; i--) {
+            var nilaiSementara = parseInt(nilaiTemp[h]);
+            if (nilaiSementara == 1 && i == 1) {
+                temp += "seribu ";
+            }
+            else {
+                temp += $scope.ubahRatusanKeHuruf(nilaiTemp[h]) + " ";
+                
+                if (nilaiTemp[h] != "000") {
+                    temp += gradeNilai[i] + " ";
+                }
+            }
+            h++;
         }
+        return temp;
+    }
 
-        if (satuantr[0] == " ") {
-            minusStr = "minus ";
-            satuantr = satuantr.substring(1);
+    $scope.ubahStringKeArray = function(batas, maxBagian, kata) {
+        
+        var temp = new Array(maxBagian);
+        var j = kata.length;
+        
+        var banyakBagian = (j % batas) == 0 ? (j / batas) : Math.round(j / batas + 0.5);
+        for (var i = banyakBagian - 1; i >= 0; i--) {
+            var k = j - batas;
+            if (k < 0)
+                k = 0;
+            temp[i] = kata.substring(k, j);
+            j = k;
+            if (j == 0)
+                break;
         }
+        return temp;
+    }
 
-        for (var i = 0; i < sekala.length; i++) {
-            var scale = sekala[i];
-            if (satuantr.length > scale.size) {
-                var mag = satuantr.length - scale.size;
-                parts.push($scope.keKata(satuantr.substring(0, mag)) + " " + scale.name);
-                satuantr = satuantr.substring(mag).replace(/^[0]+/, '');
+    $scope.ubahRatusanKeHuruf = function(nilai) {
+        
+        var batas = 2;
+        
+        var maxBagian = 2;
+        var temp = $scope.ubahStringKeArray(batas, maxBagian, nilai);
+        var j = nilai.length;
+        var hasil = "";
+        
+        var banyakBagian = (j % batas) == 0 ? (j / batas) : Math.round(j / batas + 0.5);
+        for (var i = 0; i < banyakBagian; i++) {
+            
+            if (temp[i].length > 1) {
+                
+                if (temp[i].charAt(0) == '1') {
+                    if (temp[i].charAt(1) == '1') {
+                        hasil += "sebelas";
+                    }
+                    else if (temp[i].charAt(1) == '0') {
+                        hasil += "sepuluh";
+                    }
+                    else
+                        hasil += daftarAngka[temp[i].charAt(1) - '0'] + " belas ";
+                }
+                
+                else if (temp[i].charAt(0) == '0') {
+                    hasil += daftarAngka[temp[i].charAt(1) - '0'];
+                }
+                
+                else
+                    hasil += daftarAngka[temp[i].charAt(0) - '0'] + " puluh " + daftarAngka[temp[i].charAt(1) - '0'];
+            }
+            else {
+                
+                if (i == 0 && banyakBagian != 1) {
+                    if (temp[i].charAt(0) == '1')
+                        hasil += " seratus ";
+                    else if (temp[i].charAt(0) == '0')
+                        hasil += " ";
+                    else
+                        hasil += daftarAngka[parseInt(temp[i])] + " ratus ";
+                }
+                
+                else
+                    hasil += daftarAngka[parseInt(temp[i])];
             }
         }
-
-        num = parseInt(satuantr, 10);
-
-        if (num >= 20) {
-            var puluhantr = puluhan[Math.floor(num / 10)];
-            if (num % 10 !== 0) {
-                puluhantr += " " + satuan[num % 10];
-            }
-            parts.push(puluhantr);
-        } else if (num >= 10) {
-            parts.push(belasan[num]);
-        } else if (num >= 0) {
-            parts.push(satuan[num]);
+        return hasil;
+    }
+    $scope.hapusNolDiDepan = function(nilai) {
+        while (nilai.indexOf("0") == 0) {
+            nilai = nilai.substring(1, nilai.length);
         }
+        return nilai;
+    }
 
-        var lastPart = parts.pop();
-        return minusStr + (parts.length > 0 ? parts.join(", ") + "  " : "") + lastPart;
-    };
+
 
 //button
     $scope.create = function (form) {
@@ -356,10 +417,9 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     $scope.selected = function (id) {
         Data.get('po/view/' + id).then(function (data) {
             $scope.form = data.data;
-//            $scope.form.listspp.no_spp = data.listspp.no_spp;
             $scope.status = data.print;
             $scope.msg = data.msg;
-            $scope.form.terbilang = $scope.keKata(data.data.total_dibayar) + ' RUPIAH';
+            $scope.form.terbilang = $scope.terbilang(data.data.total_dibayar) + ' RUPIAH';
             $scope.detsPo = [];
             angular.forEach(data.detail, function ($value, $key) {
                 $scope.detsPo.push($value);

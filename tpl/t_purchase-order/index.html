@@ -424,55 +424,59 @@
                 }
             }
         </style>
-        <div style="margin:7px;width:95%; "><!--width:100% !inportant;-->
-            <table width="100%" class="border-all" style="text-align: center; border-right: 1px #000 solid; border-top: 1px #000 solid; border-left: 1px #000 solid; border-bottom: 1px #000 solid; border: 1px #000 solid; border-collapse: collapse;">
-                <tr style="height:1cm;">
-                    <td style="padding: 10px;font-size: 8pt;" colspan="2">
-                        <table class="border-all" style="border-left: 1px #000 solid; border: 1px #000 solid; border-collapse: collapse;">
-                            <tr>
-                                <td style="width:1.5cm;" style="border-left: 1px #000 solid;">
-                                    <img ng-src="img/logo.png" align="left"/>
-                                </td>
-                                <td id="print_po" align="center" style="vertical-align: middle;">
-                                    <h2 style="margin: 0pt; padding: 0pt; font-size: 13pt;"><b>PURCHASE / WORK ORDER</b></h2>
-                                    No. Dokumen : FR - PCH - 003
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr style="height: 1.8cm;">
-                    <td style="font-size: 8pt;margin: 0.5cm; width:50%">
-                        <table>
-                            <tr>
-                                <td style="width:1.5cm;" id="print_po">Tanggal</td>
-                                <td width="2" id="print_po">:</td>
-                                <td id="print_po">{{form.tanggal| date:'dd MMMM yyyy'}}</td>
-                            </tr>
-                            <tr>
-                                <td style="width:1.5cm;" id="print_po">Nomor</td>
-                                <td width="2" id="print_po">:</td>
-                                <td id="print_po">{{form.nota}}</td>
-                            </tr>
-                            <tr>
-                                <td style="width:1.5cm;" id="print_po">SPP No.</td>
-                                <td width="2" id="print_po">:</td>
-                                <td id="print_po">{{form.spp}}</td>
-                            </tr>
-                        </table>
-                    </td>
-                    <td style="font-size: 8pt;">
-                        <table>
-                            <tr>
-                                <td style="width:2cm;" id="print_po">Kepada Yth.</td>
-                                <td width="2" id="print_po">:</td>
-                                <td id="print_po">{{form.supplier.nama_supplier}}</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+        <div style="margin:7px;width:100%; "><!--width:100% !inportant;-->
+            <table class="border-all" style="width:100%;text-align: center; border-right: 1px #000 solid; border-top: 1px #000 solid; border-left: 1px #000 solid; border-bottom: 1px #000 solid; border: 1px #000 solid; border-collapse: collapse;">
+                <thead>
+                    <tr style="height:1cm;">
+                        <td style="padding: 10px;font-size: 8pt;" colspan="2">
+                            <table class="border-all" style="border-left: 1px #000 solid; border: 1px #000 solid; border-collapse: collapse;">
+                                <tr>
+                                    <td style="width:1.5cm;" style="border-left: 1px #000 solid;">
+                                        <img ng-src="img/logo.png" align="left"/>
+                                    </td>
+                                    <td id="print_po" align="center" style="vertical-align: middle;">
+                                        <h2 style="margin: 0pt; padding: 0pt; font-size: 13pt;"><b>PURCHASE / WORK ORDER</b></h2>
+                                        No. Dokumen : FR - PCH - 003
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="height: 1.8cm;">
+                        <td style="font-size: 8pt;margin: 0.5cm; width:50%">
+                            <table>
+                                <tr>
+                                    <td style="width:10%;" id="print_po">Tanggal</td>
+                                    <td width="2" id="print_po">:</td>
+                                    <td id="print_po">{{form.tanggal| date:'dd MMMM yyyy'}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;" id="print_po">Nomor</td>
+                                    <td width="2" id="print_po">:</td>
+                                    <td id="print_po">{{form.nota}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="width:10%;" id="print_po">SPP No.</td>
+                                    <td width="2" id="print_po">:</td>
+                                    <td id="print_po">{{form.spp}}</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="font-size: 8pt;">
+                            <table>
+                                <tr>
+                                    <td style="width:15%;" id="print_po">Kepada Yth.</td>
+                                    <td width="2" id="print_po">:</td>
+                                    <td id="print_po">{{form.supplier.nama_supplier}}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
-            <table width="100%" class="border-all" style="border: 1px #000 solid; border-collapse: collapse; margin-top: -1px; height: 3.5cm;">
+            <table class="border-all" style="with:100%;border: 1px #000 solid; border-collapse: collapse; margin-top: -1px; height: 3.5cm;">
                 <thead>
                     <tr style="height: 15px;font-size: 8pt;">
                         <th class="border-all border-top" id="print_po" style="width:1cm; text-align: center; border-top: 1px #000 solid;border-right: 2px #000 solid;">No.</th>
@@ -502,7 +506,7 @@
                     </tr>
                 </tbody>
             </table>
-            <table width="100%" style="width:100%; border-collapse: collapse; margin-top: -2px; margin-bottom:  -1px; font-size: 11px" class="border-all">
+            <table style="width:100%; border-collapse: collapse; margin-top: -2px; margin-bottom:  -1px; font-size: 11px" class="border-all">
                 <tr>
                     <td style="vertical-align: top; width:14.3cm;font-size: 8pt;border-right: 2px #000 solid;" id="print_po" class="border-right border-left">
                         &nbsp;Keterangan :
