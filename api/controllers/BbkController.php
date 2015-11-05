@@ -24,6 +24,7 @@ class BbkController extends Controller {
                     'view' => ['get'],
                     'excel' => ['get'],
                     'excelbk' => ['get'],
+                    'excelbkm' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
@@ -742,6 +743,14 @@ class BbkController extends Controller {
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/rbbk", ['models' => $models, 'filter' => $filter]);
+    }
+    public function actionExcelbkm() {
+        session_start();
+        $query = $_SESSION['query'];
+        $filter = $_SESSION['filter'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/rbbkm", ['models' => $models, 'filter' => $filter]);
     }
 
     public function actionExcelbk() {

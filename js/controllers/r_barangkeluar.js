@@ -46,6 +46,17 @@ app.controller('rekapbarangkeluarCtrl', function ($scope, Data, toaster) {
             window.location = 'api/web/bbk/excelbk';
         });
     }
+    $scope.excelbkm = function () {
+        Data.get('bbk/rekap', paramRef).then(function (data) {
+            window.location = 'api/web/bbk/excelbkm';
+        });
+    }
+    $scope.printbkm = function () {
+        Data.get('bbk/rekap', paramRef).then(function (data) {
+//            window.open = 'api/web/bbk/excelbk?print=true',"";
+              window.open('api/web/bbk/excelbkm?print=true', "", "width=500");
+        });
+    }
     $scope.printbk = function () {
         Data.get('bbk/rekap', paramRef).then(function (data) {
 //            window.open = 'api/web/bbk/excelbk?print=true',"";
