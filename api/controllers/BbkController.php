@@ -299,7 +299,7 @@ class BbkController extends Controller {
                 $det[$key]['satuan'] = $val['satuan'];
                 $det[$key]['nm_barang'] = $val['nm_barang'];
                 $det[$key]['stok_sekarang'] = $val['saldo'];
-                $det[$key]['sisa_pengambilan'] = 0;
+                $det[$key]['stok_barang'] = $val['saldo'];
             }
 
             $this->setHeader(200);
@@ -539,6 +539,7 @@ class BbkController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new TransBbk();
         $model->attributes = $params['bbk'];
+        $model->no_surat = $params['bbk']['no_surat'];
         $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '';
         $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '';
         $model->penerima = isset($params['bbk']['penerima']['nik']) ? $params['bbk']['penerima']['nik'] : '';
@@ -582,6 +583,7 @@ class BbkController extends Controller {
         $model->attributes = $params['bbk'];
         $model->tanggal = date("Y-m-d", strtotime($params['bbk']['tanggal']));
         $model->status = 0;
+        $model->no_surat = $params['bbk']['no_surat'];
         $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '-';
         $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '-';
         $model->penerima = isset($params['bbk']['penerima']['nik']) ? $params['bbk']['penerima']['nik'] : '-';

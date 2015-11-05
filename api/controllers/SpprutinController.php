@@ -592,14 +592,16 @@ class SpprutinController extends Controller {
     public function actionRequiredpurchase() {
         $model = Barang::find()
                 ->where('kat like "rutin%"')
-                ->andWhere('qty <= min')
-                ->andWhere('saldo < max')
+//                ->andWhere('qty <= min')
+                ->andWhere('saldo < min')
                 ->andWhere('min > 0')
+                ->orderBy('nm_barang ASC')
                 ->all();
         $data = [];
         if (!empty($model)) {
             foreach ($model as $key => $val) {
                 $data[$key]['barang'] = $val->attributes;
+                $data[$key]['barang']['qty'] = $val->max - $val->saldo;
             }
         }
         $totalItems = count($data);

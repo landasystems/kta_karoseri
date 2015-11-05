@@ -119,43 +119,74 @@ class JabatanController extends Controller {
     public function actionListkaryawanabsent() {
         $param = $_REQUEST;
 
-        $absen = AbsensiEttLog::find()
-                ->joinWith('emp')
-                ->join('LEFT JOIN', 'purchassing.tbl_karyawan', 'purchassing.tbl_karyawan.nik = emp.nik')
-                ->select("emp.first_name, emp.pin, date(scan_date) as scan_date")
-                ->where('date(scan_date) = "' . date("Y-m-d") . '"')
-                ->andWhere('emp.first_name like "%' . $param['nama'] . '%" or emp.last_name like "%' . $param['nama'] . '%"')
-                ->andWhere('emp.nik != "-"')
-                ->limit(100)
-                ->all();
-        $data = array();
-        foreach ($absen as $key => $val) {
-            $data[$key]['nik'] = $val->emp->nik;
-            $data[$key]['nama'] = $val->emp->first_name . ' ' . $val->emp->last_name;
-        }
+//        $absen = AbsensiEttLog::find()
+//                ->joinWith('emp')
+//                ->join('RIGHT JOIN', 'purchassing.tbl_karyawan', 'purchassing.tbl_karyawan.nik = emp.nik')
+//                ->select("emp.first_name, emp.pin, date(scan_date) as scan_date")
+//                ->groupBy("emp.pin") // nonaktifkan jika filter absen ingin diaktifkan
+////                ->where('date(scan_date) = "' . date("Y-m-d") . '"')
+//                ->andWhere('emp.first_name like "%' . $param['nama'] . '%" or emp.last_name like "%' . $param['nama'] . '%"')
+//                ->andWhere('emp.nik != "-"')
+//                ->limit(100)
+//                ->all();
 
-        echo json_encode(array('status' => 1, 'data' => $data));
+        $query = new Query;
+        $query->select("tk.nik, tk.nama, tjb.jabatan")
+                ->from('purchassing.tbl_karyawan as tk')
+                ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = tk.jabatan')
+                ->join('JOIN', 'ftm.emp as emp', 'emp.nik = tk.nik')
+                ->join('JOIN', 'ftm.att_log as att_log', 'att_log.pin = emp.pin')
+                ->where('date(att_log.scan_date) = "' . date("Y-m-d") . '"')
+                ->andWhere('tk.nama like "%' . $param['nama'] . '%"')
+                ->groupBy('tk.nik')
+                ->limit(20);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+//        $data = array();
+//        foreach ($absen as $key => $val) {
+//            $data[$key]['nik'] = $val->emp->nik;
+//            $data[$key]['nama'] = $val->emp->first_name . ' ' . $val->emp->last_name;
+//        }
+//        }
+
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionListkaryawanabsentjabatan() {
         $param = $_REQUEST;
 
         if (isset($param['jabatan'])) {
-            $absen = AbsensiEttLog::find()
-                    ->joinWith('emp')
-                    ->join('LEFT JOIN', 'purchassing.tbl_karyawan', 'purchassing.tbl_karyawan.nik = emp.nik')
-                    ->select("emp.first_name, emp.pin, date(scan_date) as scan_date")
-                    ->where('date(scan_date) = "' . date("Y-m-d") . '"')
-                    ->andWhere('purchassing.tbl_karyawan.jabatan = "' . $param['jabatan'] . '"')
-                    ->limit(100)
-                    ->all();
-            $data = array();
-            foreach ($absen as $key => $val) {
-                $data[$key]['nik'] = $val->emp->nik;
-                $data[$key]['nama'] = $val->emp->first_name . ' ' . $val->emp->last_name;
-            }
+//            $absen = AbsensiEttLog::find()
+//                    ->joinWith('emp')
+//                    ->join('LEFT JOIN', 'purchassing.tbl_karyawan', 'purchassing.tbl_karyawan.nik = emp.nik')
+//                    ->select("emp.first_name, emp.pin, date(scan_date) as scan_date")
+//                    ->where('date(scan_date) = "' . date("Y-m-d") . '"')
+//                    ->andWhere('purchassing.tbl_karyawan.jabatan = "' . $param['jabatan'] . '"')
+//                    ->limit(100)
+//                    ->all();
+//            $data = array();
+//            foreach ($absen as $key => $val) {
+//                $data[$key]['nik'] = $val->emp->nik;
+//                $data[$key]['nama'] = $val->emp->first_name . ' ' . $val->emp->last_name;
+//            }
 
-            echo json_encode(array('status' => 1, 'data' => $data));
+            $query = new Query;
+            $query->select("tk.nik, tk.nama, tjb.jabatan")
+                    ->from('purchassing.tbl_karyawan as tk')
+                    ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = tk.jabatan')
+                    ->join('JOIN', 'ftm.emp as emp', 'emp.nik = tk.nik')
+                    ->join('JOIN', 'ftm.att_log as att_log', 'att_log.pin = emp.pin')
+//                    ->where('date(att_log.scan_date) = "' . date("Y-m-d") . '"')
+                    ->andWhere('tk.jabatan = "' . $param['jabatan'] . '"')
+                    ->groupBy('tk.nik')
+                    ->limit(20);
+
+            $command = $query->createCommand();
+            $models = $command->queryAll();
+
+            echo json_encode(array('status' => 1, 'data' => $models));
         }
     }
 

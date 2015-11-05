@@ -25,7 +25,7 @@ foreach ($models as $val) {
 }
 ?>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
-<div style="width:26cm">
+<div style="width:21cm">
     <?php
     if (isset($_GET['print'])) {
         ?>
