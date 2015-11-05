@@ -6,6 +6,7 @@ if (!isset($_GET['print'])) {
 
 $i = 0;
 
+//========== Mencari jumlah BBK ============//
 $detBbk = array();
 foreach ($modelbbk as $valBbk) {
     $detBbk[$valBbk['id_jabatan']][$valBbk['kd_barang']]['jml'] = isset($detBbk[$valBbk['id_jabatan']][$valBbk['kd_barang']]['jml']) ? $detBbk[$valBbk['id_jabatan']][$valBbk['kd_barang']]['jml'] + $valBbk['jml'] : $valBbk['jml'];
@@ -14,9 +15,15 @@ foreach ($modelbbk as $valBbk) {
     }
 }
 
+$detRetur = array();
+foreach ($modelretur as $valRetur) {
+    $detRetur[$valRetur['kd_jab']][$valRetur['kd_barang']]['jml_retur'] = isset($detRetur[$valRetur['kd_jab']][$valRetur['kd_barang']]['jml']) ? $detRetur[$valRetur['kd_jab']][$valRetur['kd_barang']]['jml'] + $valRetur['jml'] : $valRetur['jml'];
+}
+
 $data = array();
 foreach ($models as $val) {
     $jKeluar = isset($detBbk[$val['id_jabatan']][$val['kd_barang']]['jml']) ? $detBbk[$val['id_jabatan']][$val['kd_barang']]['jml'] : 0;
+    $jRetur = isset($detRetur[$val['id_jabatan']][$val['kd_barang']]['jml_retur']) ? $detRetur[$val['id_jabatan']][$val['kd_barang']]['jml_retur'] : 0;
     $ket = isset($detBbk[$val['id_jabatan']][$val['kd_barang']]['ket']) ? join(',', $detBbk[$val['id_jabatan']][$val['kd_barang']]['ket']) : '-';
 
     $data[$val['no_wo']]['no_wo'] = $val['no_wo'];
@@ -28,7 +35,7 @@ foreach ($models as $val) {
     $data[$val['no_wo']]['jab'][$val['id_jabatan']]['body'][$val['kd_barang']]['qty'] = $val['qty'];
     $data[$val['no_wo']]['jab'][$val['id_jabatan']]['body'][$val['kd_barang']]['ket'] = $ket;
     $data[$val['no_wo']]['jab'][$val['id_jabatan']]['body'][$val['kd_barang']]['harga'] = Yii::$app->landa->price($val['harga']);
-    $data[$val['no_wo']]['jab'][$val['id_jabatan']]['body'][$val['kd_barang']]['jml_keluar'] = $jKeluar;
+    $data[$val['no_wo']]['jab'][$val['id_jabatan']]['body'][$val['kd_barang']]['jml_keluar'] = $jKeluar - $jRetur;
     $i++;
 }
 ?>

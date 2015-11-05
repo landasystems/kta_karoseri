@@ -458,17 +458,18 @@ class BomController extends Controller {
                     ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
         }
 
-        $queryBbk = new Query;
-        $queryBbk->from('trans_bbk as tb')
-                ->join('LEFT JOIN', 'det_bbk as db', 'tb.no_bbk = db.no_bbk')
-                ->select('db.kd_barang, db.jml, db.ket, tb.kd_jab as id_jabatan');
-
         $query->where(['=', 'wm.no_wo', $no_wo]);
-        $queryBbk->where(['=', 'tb.no_wo', $no_wo]);
 
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
+
+        //======== HITUNG JUMLAH BARANG KELUAR ============//
+        $queryBbk = new Query;
+        $queryBbk->from('trans_bbk as tb')
+                ->join('LEFT JOIN', 'det_bbk as db', 'tb.no_bbk = db.no_bbk')
+                ->select('db.kd_barang, db.jml, db.ket, tb.kd_jab as id_jabatan')
+                ->where(['=', 'tb.no_wo', $no_wo]);
 
         $commandBbk = $queryBbk->createCommand();
         $modelsBbk = $commandBbk->queryAll();
@@ -481,9 +482,26 @@ class BomController extends Controller {
             }
         }
 
+        //============ Menghitung retur ============//
+        $queryRetur = new Query;
+        $queryRetur->from('retur_bbk as rb')
+                ->join('JOIN', 'det_bbk as db', 'rb.no_bbk = db.no_bbk')
+                ->join('JOIN', 'trans_bbk as tb', 'tb.no_bbk = db.no_bbk')
+                ->select('db.kd_barang, db.jml, tb.kd_jab')
+                ->where('tb.no_wo = "' . $no_wo . '"');
+
+        $commandRetur = $queryRetur->createCommand();
+        $modelsRetur = $commandRetur->queryAll();
+
+        $detRetur = array();
+        foreach ($modelsRetur as $valRetur) {
+            $detRetur[$valRetur['kd_jab']][$valRetur['kd_barang']]['jml_retur'] = isset($detRetur[$valRetur['kd_jab']][$valRetur['kd_barang']]['jml']) ? $detRetur[$valRetur['kd_jab']][$valRetur['kd_barang']]['jml'] + $valRetur['jml'] : $valRetur['jml'];
+        }
+
         $detBom = array();
         foreach ($models as $val) {
             $jKeluar = isset($detBbk[$val['id_jabatan']][$val['kd_barang']]['jml']) ? $detBbk[$val['id_jabatan']][$val['kd_barang']]['jml'] : 0;
+            $jRetur = isset($detRetur[$val['id_jabatan']][$val['kd_barang']]['jml_retur']) ? $detRetur[$val['id_jabatan']][$val['kd_barang']]['jml_retur'] : 0;
             $ket = isset($detBbk[$val['id_jabatan']][$val['kd_barang']]['ket']) ? join(',', $detBbk[$val['id_jabatan']][$val['kd_barang']]['ket']) : '-';
 
             $detBom[$val['kd_barang']]['no_wo'] = $val['no_wo'];
@@ -492,7 +510,7 @@ class BomController extends Controller {
             $detBom[$val['kd_barang']]['satuan'] = $val['satuan'];
             $detBom[$val['kd_barang']]['harga'] = $val['harga'];
             $detBom[$val['kd_barang']]['qty'] = $val['qty'];
-            $detBom[$val['kd_barang']]['jml_keluar'] = $jKeluar;
+            $detBom[$val['kd_barang']]['jml_keluar'] = $jKeluar + $jRetur;
             $detBom[$val['kd_barang']]['ket'] = $ket;
             $detBom[$val['kd_barang']]['jabatan'] = $val['jabatan'];
         }
@@ -500,6 +518,7 @@ class BomController extends Controller {
         session_start();
         $_SESSION['query'] = $query;
         $_SESSION['bbk'] = $queryBbk;
+        $_SESSION['retur'] = $queryRetur;
         $_SESSION['filter'] = $no_wo;
 
 
@@ -523,7 +542,13 @@ class BomController extends Controller {
         $commandbbk = $bbk->createCommand();
         $modelbbk = $commandbbk->queryAll();
 
-        return $this->render("/expretur/r_bomwo", ['models' => $models, 'filter' => $filter, 'modelbbk' => $modelbbk]);
+        $retur = $_SESSION['retur'];
+        $retur->limit(null);
+        $retur->offset(null);
+        $commandretur = $retur->createCommand();
+        $modelretur = $commandretur->queryAll();
+
+        return $this->render("/expretur/r_bomwo", ['models' => $models, 'filter' => $filter, 'modelbbk' => $modelbbk, 'modelretur' => $modelretur]);
     }
 
     public function actionExcelrealisasimodel() {
@@ -568,7 +593,6 @@ class BomController extends Controller {
                             ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
                             ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dts.tran_additional_bom_id')
                             ->join('LEFT JOIN', 'trans_additional_bom_wo as wm', ' tsb.id = wm.tran_additional_bom_id')
-//                            ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo  = tsbw.no_wo')
                             ->orderBy('tjb.urutan_produksi ASC, tjb.jabatan ASC, brg.nm_barang ASC')
                             ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
                 }
@@ -587,6 +611,7 @@ class BomController extends Controller {
                 $commandBbk = $queryBbk->createCommand();
                 $modelsBbk = $commandBbk->queryAll();
 
+                //============= JUMLAH BKK =============//
                 $detBbk = array();
                 foreach ($modelsBbk as $valBbk) {
                     $detBbk[$valBbk['id_jabatan']][$valBbk['kd_barang']]['jml'] = isset($detBbk[$valBbk['id_jabatan']][$valBbk['kd_barang']]['jml']) ? $detBbk[$valBbk['id_jabatan']][$valBbk['kd_barang']]['jml'] + $valBbk['jml'] : $valBbk['jml'];
@@ -595,8 +620,25 @@ class BomController extends Controller {
                     }
                 }
 
+                //============ Menghitung retur ============//
+                $queryRetur = new Query;
+                $queryRetur->from('retur_bbk as rb')
+                        ->join('JOIN', 'det_bbk as db', 'rb.no_bbk = db.no_bbk')
+                        ->join('JOIN', 'trans_bbk as tb', 'tb.no_bbk = db.no_bbk')
+                        ->select('db.kd_barang, db.jml, tb.kd_jab')
+                        ->where('tb.no_wo = "' . $noWo . '"');
+
+                $commandRetur = $queryRetur->createCommand();
+                $modelsRetur = $commandRetur->queryAll();
+
+                $detRetur = array();
+                foreach ($modelsRetur as $valRetur) {
+                    $detRetur[$valRetur['kd_jab']][$valRetur['kd_barang']]['jml_retur'] = isset($detRetur[$valRetur['kd_jab']][$valRetur['kd_barang']]['jml']) ? $detRetur[$valRetur['kd_jab']][$valRetur['kd_barang']]['jml'] + $valRetur['jml'] : $valRetur['jml'];
+                }
+
                 foreach ($models as $val) {
                     $jKeluar = isset($detBbk[$val['id_jabatan']][$val['kd_barang']]) ? $detBbk[$val['id_jabatan']][$val['kd_barang']]['jml'] : 0;
+                    $jRetur = isset($detRetur[$val['id_jabatan']][$val['kd_barang']]['jml_retur']) ? $detRetur[$val['id_jabatan']][$val['kd_barang']]['jml_retur'] : 0;
                     $ket = isset($detBbk[$val['id_jabatan']][$val['kd_barang']]['ket']) ? join(',', $detBbk[$val['id_jabatan']][$val['kd_barang']]['ket']) : '-';
 
                     $detBom[$val['id_jabatan']]['title'] = $val['jabatan'];
@@ -605,7 +647,7 @@ class BomController extends Controller {
                     $detBom[$val['id_jabatan']]['body'][$val['kd_barang'] . $val['qty']]['satuan'] = $val['satuan'];
                     $detBom[$val['id_jabatan']]['body'][$val['kd_barang'] . $val['qty']]['harga'] = $val['harga'];
                     $detBom[$val['id_jabatan']]['body'][$val['kd_barang'] . $val['qty']]['qty'] = $val['qty'];
-                    $detBom[$val['id_jabatan']]['body'][$val['kd_barang'] . $val['qty']]['jml_keluar'][$val['no_wo']] = $jKeluar;
+                    $detBom[$val['id_jabatan']]['body'][$val['kd_barang'] . $val['qty']]['jml_keluar'][$val['no_wo']] = $jKeluar + $jRetur;
                     $detBom[$val['id_jabatan']]['body'][$val['kd_barang'] . $val['qty']]['ket'] = $ket;
                     $detBom[$val['id_jabatan']]['body'][$val['kd_barang'] . $val['qty']]['jabatan'] = $val['jabatan'];
                 }
@@ -658,7 +700,6 @@ class BomController extends Controller {
                             ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
                             ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dts.tran_additional_bom_id')
                             ->join('LEFT JOIN', 'trans_additional_bom_wo as wm', ' tsb.id = wm.tran_additional_bom_id')
-//                            ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo  = tsbw.no_wo')
                             ->orderBy('tjb.urutan_produksi ASC, tjb.jabatan ASC, brg.nm_barang ASC')
                             ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
                 }
@@ -678,6 +719,7 @@ class BomController extends Controller {
                 $commandBbk = $queryBbk->createCommand();
                 $modelsBbk = $commandBbk->queryAll();
 
+                //============= Menghitung BBK ===========//
                 $detBbk = array();
                 foreach ($modelsBbk as $valBbk) {
                     $detBbk[$valBbk['id_jabatan']][$valBbk['kd_barang']]['jml'] = isset($detBbk[$valBbk['id_jabatan']][$valBbk['kd_barang']]['jml']) ? $detBbk[$valBbk['id_jabatan']][$valBbk['kd_barang']]['jml'] + $valBbk['jml'] : $valBbk['jml'];
@@ -686,8 +728,25 @@ class BomController extends Controller {
                     }
                 }
 
+                //============ Menghitung retur ============//
+                $queryRetur = new Query;
+                $queryRetur->from('retur_bbk as rb')
+                        ->join('JOIN', 'det_bbk as db', 'rb.no_bbk = db.no_bbk')
+                        ->join('JOIN', 'trans_bbk as tb', 'tb.no_bbk = db.no_bbk')
+                        ->select('db.kd_barang, db.jml, tb.kd_jab')
+                        ->where('tb.no_wo = "' . $noWo . '"');
+
+                $commandRetur = $queryRetur->createCommand();
+                $modelsRetur = $commandRetur->queryAll();
+
+                $detRetur = array();
+                foreach ($modelsRetur as $valRetur) {
+                    $detRetur[$valRetur['kd_jab']][$valRetur['kd_barang']]['jml_retur'] = isset($detRetur[$valRetur['kd_jab']][$valRetur['kd_barang']]['jml']) ? $detRetur[$valRetur['kd_jab']][$valRetur['kd_barang']]['jml'] + $valRetur['jml'] : $valRetur['jml'];
+                }
+
                 foreach ($models as $val) {
                     $jKeluar = isset($detBbk[$val['id_jabatan']][$val['kd_barang']]) ? $detBbk[$val['id_jabatan']][$val['kd_barang']]['jml'] : 0;
+                    $jRetur = isset($detRetur[$val['id_jabatan']][$val['kd_barang']]['jml_retur']) ? $detRetur[$val['id_jabatan']][$val['kd_barang']]['jml_retur'] : 0;
                     $ket = isset($detBbk[$val['id_jabatan']][$val['kd_barang']]['ket']) ? join(',', $detBbk[$val['id_jabatan']][$val['kd_barang']]['ket']) : '-';
 
                     $detBom[$i]['no_wo'] = $val['no_wo'];
@@ -696,7 +755,7 @@ class BomController extends Controller {
                     $detBom[$i]['satuan'] = $val['satuan'];
                     $detBom[$i]['harga'] = $val['harga'];
                     $detBom[$i]['qty'] = $val['qty'];
-                    $detBom[$i]['jml_keluar'] = $jKeluar;
+                    $detBom[$i]['jml_keluar'] = $jKeluar + $jRetur;
                     $detBom[$i]['ket'] = $ket;
                     $detBom[$i]['jabatan'] = $val['jabatan'];
                     $i++;
