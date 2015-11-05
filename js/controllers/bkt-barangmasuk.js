@@ -4,7 +4,6 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
     var tableStateRef;
 
     $scope.refresh = function () {
-        $scope.displayed = [];
         $scope.is_edit = false;
         $scope.is_view = false;
         $scope.is_create = false;
@@ -25,7 +24,6 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
                 tgl_terima: '',
                 no_po: '',
             }];
-//        $scope.callServer(tableStateRef); 
     }
 
     $scope.refresh();
@@ -67,7 +65,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
         } else if (jml == 0 && jml != '') {
             toaster.pop('danger', "Error", "Jumlah tidak boleh kosong " + $scope.jml_po);
             $scope.err_jml = true;
-             $scope.detBbm.jumlah = 0;
+            $scope.detBbm.jumlah = 0;
             $scope.errorDetail = "\n Jumlah tidak boleh melebihi jumlah dari PO sebesar " + $scope.jml_po;
         } else {
             $scope.err_jml = false;
@@ -210,10 +208,8 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
         }
     };
     $scope.cancel = function () {
-        $scope.is_edit = false;
-        $scope.is_view = false;
-        $scope.err_jml = false;
         $scope.refresh();
+        $scope.callServer(tableStateRef); //reload grid ulang
     };
     $scope.delete = function (row) {
         if (confirm("Menghapus data akan berpengaruh terhadap transaksi lain yang berhubungan, apakah anda yakin ?")) {

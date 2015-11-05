@@ -62,8 +62,9 @@ class JabatanController extends Controller {
 
     public function actionCari2() {
         $params = $_REQUEST;
+        $models = array();
 
-        if (isset($params['no_wo']) and ! empty($params['no_wo'])) {
+        if (isset($params['no_wo']) and ! empty($params['no_wo']) and $params['kat_bbk'] == 'produksi') {
 
             $optional = \app\models\TransAdditionalBomWo::find()
                     ->joinWith('transadditionalbom')
@@ -75,6 +76,7 @@ class JabatanController extends Controller {
             if (empty($optional) or count($optional) == 0) {
                 //create query
                 $query = new Query;
+
                 $query->from('det_standar_bahan as dts')
                         ->join('JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
                         ->join('JOIN', 'spk', 'spk.kd_bom = dts.kd_bom')
@@ -85,9 +87,13 @@ class JabatanController extends Controller {
                         ->where('wm.no_wo = "' . $params['no_wo'] . '"')
                         ->andWhere('tjb.jabatan like "%' . $params['nama'] . '%"')
                         ->select("tjb.*");
+
+                $command = $query->createCommand();
+                $models = $command->queryAll();
             } else {
                 //create query
                 $query = new Query;
+
                 $query->from('det_additional_bom as dts')
                         ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
                         ->join('LEFT JOIN', 'trans_additional_bom as tsb', 'tsb.id  = dts.tran_additional_bom_id')
@@ -97,19 +103,22 @@ class JabatanController extends Controller {
                         ->where('tsbw.no_wo = "' . $params['no_wo'] . '"')
                         ->andWhere('tjb.jabatan like "%' . $params['nama'] . '%"')
                         ->select("tjb.*");
+
+                $command = $query->createCommand();
+                $models = $command->queryAll();
             }
-        } else {
-            $param = $_REQUEST;
+        } else if ($params['kat_bbk'] == 'umum') {
             $query = new Query;
+
             $query->from('tbl_jabatan')
                     ->select("*")
                     ->orderBy('jabatan ASC')
-                    ->where('jabatan like "%' . $param['nama'] . '%"')
-                    ->orWhere(['like', 'id_jabatan', $param['nama']]);
-        }
+                    ->where('jabatan like "%' . $params['nama'] . '%"')
+                    ->orWhere(['like', 'id_jabatan', $params['nama']]);
 
-        $command = $query->createCommand();
-        $models = $command->queryAll();
+            $command = $query->createCommand();
+            $models = $command->queryAll();
+        }
 
         $this->setHeader(200);
 
@@ -136,7 +145,7 @@ class JabatanController extends Controller {
                 ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = tk.jabatan')
                 ->join('JOIN', 'ftm.emp as emp', 'emp.nik = tk.nik')
                 ->join('JOIN', 'ftm.att_log as att_log', 'att_log.pin = emp.pin')
-                ->where('date(att_log.scan_date) = "' . date("Y-m-d") . '"')
+//                ->where('date(att_log.scan_date) = "' . date("Y-m-d") . '"')
                 ->andWhere('tk.nama like "%' . $param['nama'] . '%"')
                 ->groupBy('tk.nik')
                 ->limit(20);
@@ -178,7 +187,7 @@ class JabatanController extends Controller {
                     ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = tk.jabatan')
                     ->join('JOIN', 'ftm.emp as emp', 'emp.nik = tk.nik')
                     ->join('JOIN', 'ftm.att_log as att_log', 'att_log.pin = emp.pin')
-//                    ->where('date(att_log.scan_date) = "' . date("Y-m-d") . '"')
+                    ->where('date(att_log.scan_date) = "' . date("Y-m-d") . '"')
                     ->andWhere('tk.jabatan = "' . $param['jabatan'] . '"')
                     ->groupBy('tk.nik')
                     ->limit(20);
