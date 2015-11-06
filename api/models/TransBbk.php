@@ -33,7 +33,7 @@ class TransBbk extends \yii\db\ActiveRecord {
     public function rules() {
         return [
             [['kd_jab', 'no_bbk', 'penerima'], 'required'],
-            [['tanggal', 'no_wo'], 'safe'],
+            [['tanggal', 'no_wo','no_surat'], 'safe'],
             [['no_bbk'], 'unique'],
             [['status'], 'integer'],
 //            [['no_bbk'], 'string', 'max' => 10],
@@ -53,6 +53,7 @@ class TransBbk extends \yii\db\ActiveRecord {
             'kd_jab' => 'Bagian',
             'petugas' => 'Petugas',
             'status' => 'Status',
+            'no_surat' => 'No Surat',
         ];
     }
 

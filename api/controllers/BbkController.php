@@ -33,6 +33,7 @@ class BbkController extends Controller {
                     'detailstok' => ['post'],
                     'rekap' => ['get'],
                     'listbarang' => ['post'],
+                    'listbarang2' => ['post'],
                     'print' => ['get'],
                     'pengecualian' => ['post'],
                     'bukaprint' => ['post'],
@@ -676,6 +677,7 @@ class BbkController extends Controller {
 //        $model->penerima = array('nik' => isset($model->nik) ? $model->nik : '-', 'nama' => isset($model->nama) ? $model->nama : '-');
         $model->penerima = $penerima;
         $model->no_wo = array('no_wo' => $model->no_wo);
+        $model->no_surat = !empty($model->no_surat) ? $model->no_surat : '-';
 
         $detail = DetBbk::find()
                         ->joinWith('barang')
