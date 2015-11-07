@@ -150,8 +150,8 @@ class ClaimunitController extends Controller {
 
             $sisa = $s['sisa'];
         }
-        
-        if($sisa < 0){
+
+        if ($sisa < 0) {
             $sisa = 0;
         }
 
@@ -313,6 +313,7 @@ class ClaimunitController extends Controller {
     public function actionChar() {
         session_start();
         $query = $_SESSION['query'];
+        $query2 = $query;
         $filter = $_SESSION['filter'];
         if (!empty($filter['tgl_periode'])) {
             $value = explode(' - ', $filter['tgl_periode']);
@@ -322,6 +323,12 @@ class ClaimunitController extends Controller {
             $start = '';
             $end = '';
         }
+
+        $query2->groupBy("dc.kd_jns")
+                ->select("vws.jenis,jk.bag,jk.jns_komplain, count(jk.jns_komplain) as jumlahnya");
+
+        $command2 = $query2->createCommand();
+        $modelnya = $command2->queryAll();
 
         $query->groupBy("dc.kd_jns")
                 ->select("jk.stat,jk.bag,jk.jns_komplain,count(dc.kd_jns) as jumlah");
@@ -346,7 +353,24 @@ class ClaimunitController extends Controller {
             }
         }
 
-        return json_encode(array('Interior' => $in, 'Eksterior' => $ex, 'start' => $start, 'end' => $end), JSON_PRETTY_PRINT);
+        $sb = [];
+        $mb = [];
+        $s = 0;
+        $m = 0;
+
+        foreach ($modelnya as $key => $val) {
+            if ($val['jenis'] == "Small Bus") {
+                $sb['jns_komplain'][$s] = $val['jns_komplain'];
+                $sb['jumlahnya'][$s] = (int) $val['jumlahnya'];
+                $s++;
+            } else {
+                $mb['jns_komplain'][$m] = $val['jns_komplain'];
+                $mb['jumlahnya'][$m] = (int) $val['jumlahnya'];
+                $m++;
+            }
+        }
+
+        return json_encode(array('Small_Bus' => $sb,'Mini_Bus' => $mb, 'Interior' => $in, 'Eksterior' => $ex, 'start' => $start, 'end' => $end), JSON_PRETTY_PRINT);
     }
 
 }

@@ -219,7 +219,7 @@
                                     </tr>
                                     <tr>
                                         <th style="text-align: center; width:200px;">Nama Barang</th>
-                                        <th style="text-align: center;">QTY</th>
+                                        <th style="text-align: center; width:90px;">QTY</th>
                                         <th style="text-align: center;">Satuan</th>
                                         <th style="text-align: center;margin:0px;width:150px;">Harga</th>
                                         <th style="text-align: center;">Jumlah</th>
@@ -231,7 +231,7 @@
                                 <tbody>
                                     <tr ng-repeat="detail in detsPo">
                                         <td>
-                                            <div class="input-group" style="width:100%;">
+                                            <div class="input-group" style="width:{{lebar}};">
                                                 <ui-select on-select="pilih(detail, $item)" ng-model="detail.data_barang" theme="bootstrap">
                                                     <ui-select-match >{{$select.selected.nm_barang}}</ui-select-match>
                                                     <ui-select-choices refresh="cariBarang($select.search,form.listspp.no_spp)" repeat="val in resultsbrg">
@@ -246,11 +246,11 @@
                                                 <!--<input type="text" class="form-control" ng-model="detail.data_barang.nm_barang" ng-disabled="is_view" ng-readonly="true">-->
                                             </div>
                                         </td>
-                                        <td>
-                                            <input style="width:50px;" type="text" class="form-control" ng-model="detail.jml" ng-change="subtotal()" ng-disabled="is_view" ng-readonly="is_edit == false" required>
+                                        <td style="width:90px;text-align: center;">
+                                            <input style="width:90px;text-align: center;" type="text" class="form-control" ng-model="detail.jml" ng-change="subtotal()" ng-disabled="is_view" ng-readonly="is_edit == false" required>
                                         </td>
                                         <td style="width: 70px;"> 
-                                            <input type="text" class="form-control" ng-model="detail.data_barang.satuan" ng-disabled="is_view" ng-readonly="true">
+                                            <input style="width: 70px;" type="text" class="form-control" ng-model="detail.data_barang.satuan" ng-disabled="is_view" ng-readonly="true">
                                         </td>
                                         <td>
                                             <div class="input-group" style="margin:0px;width:150px;">
@@ -424,17 +424,17 @@
                 }
             }
         </style>
-        <div style="margin:7px;width:100%; "><!--width:100% !inportant;-->
+        <div style="margin:7px;width:98%;"><!--width:100% !inportant;-->
             <table class="border-all" style="width:100%;text-align: center; border-right: 1px #000 solid; border-top: 1px #000 solid; border-left: 1px #000 solid; border-bottom: 1px #000 solid; border: 1px #000 solid; border-collapse: collapse;">
                 <thead>
                     <tr style="height:1cm;">
-                        <td style="padding: 10px;font-size: 8pt;" colspan="2">
+                        <td style="padding: 10px;font-size: 9pt;" colspan="2">
                             <table class="border-all" style="border-left: 1px #000 solid; border: 1px #000 solid; border-collapse: collapse;">
                                 <tr>
-                                    <td style="width:1.5cm;" style="border-left: 1px #000 solid;">
+                                    <td style="border-left: 1px #000 solid;"><!--1,5cm-->
                                         <img ng-src="img/logo.png" align="left"/>
                                     </td>
-                                    <td id="print_po" align="center" style="vertical-align: middle;">
+                                    <td id="print_po" style="text-align: center;vertical-align: middle;">
                                         <h2 style="margin: 0pt; padding: 0pt; font-size: 13pt;"><b>PURCHASE / WORK ORDER</b></h2>
                                         No. Dokumen : FR - PCH - 003
                                     </td>
@@ -444,30 +444,30 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr style="height: 1.8cm;">
-                        <td style="font-size: 8pt;margin: 0.5cm; width:50%">
-                            <table>
+                    <tr style="height: 1.3cm;">
+                        <td style="font-size: 9pt;margin: 0.5cm; width:50%">
+                            <table style="width:100%;">
                                 <tr>
-                                    <td style="width:10%;" id="print_po">Tanggal</td>
+                                    <td style="width:20%;" id="print_po">Tanggal</td>
                                     <td width="2" id="print_po">:</td>
                                     <td id="print_po">{{form.tanggal| date:'dd MMMM yyyy'}}</td>
                                 </tr>
                                 <tr>
-                                    <td style="width:10%;" id="print_po">Nomor</td>
+                                    <td style="width:20%;" id="print_po">Nomor</td>
                                     <td width="2" id="print_po">:</td>
                                     <td id="print_po">{{form.nota}}</td>
                                 </tr>
                                 <tr>
-                                    <td style="width:10%;" id="print_po">SPP No.</td>
+                                    <td style="width:20%;" id="print_po">SPP No.</td>
                                     <td width="2" id="print_po">:</td>
                                     <td id="print_po">{{form.spp}}</td>
                                 </tr>
                             </table>
                         </td>
-                        <td style="font-size: 8pt;">
-                            <table>
+                        <td style="font-size: 9pt;">
+                            <table style="width:100%;">
                                 <tr>
-                                    <td style="width:15%;" id="print_po">Kepada Yth.</td>
+                                    <td style="width:28%;" id="print_po">Kepada Yth.</td>
                                     <td width="2" id="print_po">:</td>
                                     <td id="print_po">{{form.supplier.nama_supplier}}</td>
                                 </tr>
@@ -476,25 +476,26 @@
                     </tr>
                 </tbody>
             </table>
-            <table class="border-all" style="with:100%;border: 1px #000 solid; border-collapse: collapse; margin-top: -1px; height: 3.5cm;">
+            <table class="border-all" style="with:100%;border: 1px #000 solid; border-collapse: collapse;border-bottom: 1px #000 solid; margin-top: -1px; height:4cm;">
                 <thead>
-                    <tr style="height: 15px;font-size: 8pt;">
-                        <th class="border-all border-top" id="print_po" style="width:1cm; text-align: center; border-top: 1px #000 solid;border-right: 2px #000 solid;">No.</th>
-                        <th class="border-all border-top" id="print_po" style="width:8.5cm; text-align: left; border-top: 1px #000 solid;">&nbsp;URAIAN</th>
-                        <th class="border-all border-top" id="print_po" style="width:2cm; text-align: center; border-top: 1px #000 solid;">KWANTUM</th>
-                        <th class="border-all border-top" id="print_po" style="width:1.5cm; text-align: center; border-top: 1px #000 solid;">SATUAN</th>
-                        <th class="border-all border-top" id="print_po" style="width:2.5cm; text-align: center; border-top: 1px #000 solid; border-left: 1px #000 solid; border-right: 1px #000 solid;">HARGA</th>
-                        <th class="border-all border-top" id="print_po" style="text-align: center;border-top: 1px #000 solid; border-left: 1px #000 solid;">JUMLAH</th>
-                    </tr>
+                    <tr style="height: 15px;font-size: 9pt;">
+                        <th class="border-all border-top" id="print_po" style="width:1cm; text-align: center; border-bottom: 2px #000 solid; border-top: 1px #000 solid;border-right: 2px #000 solid;">No.</th>
+                        <th class="border-all border-top" id="print_po" style="width:8.5cm; text-align: left; border-bottom: 2px #000 solid; border-top: 1px #000 solid;">&nbsp;URAIAN</th>
+                        <th class="border-all border-top" id="print_po" style="width:2cm; text-align: center; border-bottom: 2px #000 solid; border-top: 1px #000 solid;">KWANTUM</th>
+                        <th class="border-all border-top" id="print_po" style="width:1.5cm; text-align: center; border-top: 2px #000 solid; border-bottom: 1px #000 solid;">SATUAN</th>
+                        <th class="border-all border-top" id="print_po" style="width:2.5cm; text-align: center; border-top: 2px #000 solid; border-bottom: 2px #000 solid; border-left: 1px #000 solid; border-right: 1px #000 solid;">HARGA</th>
+                        <th class="border-all border-top" id="print_po" style="text-align: center; border-bottom: 2px #000 solid; border-top: 1px #000 solid; border-left: 1px #000 solid;" colspan="2">JUMLAH</th>
+                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="detail in detsPo" style="height: 10px;">
-                        <td id="print_po" style="font-size: 8pt;text-align: center" class="border-left border-right">{{detail.data_barang.no}}</td>
-                        <td style="font-size: 8pt;width:503px;border-left: 2px #000 solid;" id="print_po" class="border-left border-right">&nbsp;{{detail.data_barang.nm_barang}} - {{detail.ket}}</td>
-                        <td id="print_po" style="font-size: 8pt;text-align:center;" class="border-left border-right">{{detail.jml}}</td>
-                        <td id="print_po" style="font-size: 8pt;text-align:center; border-left: 2px #000 solid; border-right: 1px #000 solid;" class="border-left border-right">{{detail.data_barang.satuan}}</td>
-                        <td id="print_po" style="font-size: 8pt;text-align:right; border-left: 2px #000 solid; border-right: 1px #000 solid;" class="border-left border-right">{{detail.harga| number}}</td>
-                        <td id="print_po" style="font-size: 8pt;text-align:right; border-left: 2px #000 solid; border-right: 1px #000 solid;" class="border-left border-right">{{detail.jumlah| number}}</td>
+                        <td id="print_po" style="font-size: 9pt;text-align: center" class="border-left border-right">{{detail.data_barang.no}}</td>
+                        <td style="font-size: 9pt;width:503px;border-left: 2px #000 solid;" id="print_po" class="border-left border-right">&nbsp;{{detail.data_barang.nm_barang}} - {{detail.ket}}</td>
+                        <td id="print_po" style="font-size: 9pt;text-align:center;" class="border-left border-right">{{detail.jml}}</td>
+                        <td id="print_po" style="font-size: 9pt;text-align:center; border-left: 2px #000 solid; border-right: 1px #000 solid;" class="border-left border-right">{{detail.data_barang.satuan}}</td>
+                        <td id="print_po" style="font-size: 9pt;text-align:right; border-left: 2px #000 solid; border-right: 1px #000 solid;" class="border-left border-right">{{detail.harga| number}}</td>
+                        <td id="print_po" style="font-size: 9pt;text-align:right; border-left: 2px #000 solid;" class="border-left">{{detail.jumlah| number}}</td>
+                        <td style="border-right: 1px #000 solid;" class="border-right"></td>
                     </tr>
                     <tr>
                         <td id="print_po" style="border-left: 2px #000 solid; border-right: 1px #000 solid;" class="border-left border-right"></td>
@@ -502,13 +503,14 @@
                         <td id="print_po" style="border-left: 2px #000 solid; border-right: 1px #000 solid;" class="border-left border-right"></td>
                         <td id="print_po" style="border-left: 2px #000 solid; border-right: 1px #000 solid;" class="border-left border-right"></td>
                         <td id="print_po" style="border-left: 2px #000 solid; border-right: 1px #000 solid;" class="border-left border-right"></td>
-                        <td id="print_po" style="border-left: 2px #000 solid; border-right: 1px #000 solid;" class="border-left border-right"></td>
+                        <td id="print_po" style="border-left: 2px #000 solid;" class="border-left"></td>
+                        <td style="border-right: 1px #000 solid;" class="border-right"></td>
                     </tr>
                 </tbody>
             </table>
-            <table style="width:100%; border-collapse: collapse; margin-top: -2px; margin-bottom:  -1px; font-size: 11px" class="border-all">
+            <table style="width:100%; border-collapse: collapse; border-top: 1px #000 solid; margin-top: -1px; margin-bottom:  -1px; font-size: 11px" class="border-all">
                 <tr>
-                    <td style="vertical-align: top; width:14.3cm;font-size: 8pt;border-right: 2px #000 solid;" id="print_po" class="border-right border-left">
+                    <td style="vertical-align: top; width:14.3cm;font-size: 9pt;border-right: 2px #000 solid;border-top: 1px #000 solid;" id="print_po" class="border-right border-left">
                         &nbsp;Keterangan :
                         <div>&nbsp; - Jatuh Tempo &nbsp;&nbsp;:&nbsp; {{form.jatuh_tempo}} hari</div> 
                         <div>&nbsp; - Dikirim ke &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{form.dikirim_ke}}</div>
@@ -517,55 +519,55 @@
                         <div>&nbsp; - Spesifikasi teknis terlampir</div>
                         <table style="border-collapse: collapse; width:14.3cm; margin-left: -1px; margin-right: -2px;">
                             <tr>
-                                <td class="border-all" id="print_po" style="font-size: 8pt;text-align:center; border-left: 1px #000 solid; border-right: 1px #000 solid; border-top: 1px #000 solid;">Pemberi Order</td>
-                                <td class="border-all" id="print_po" style="font-size: 8pt;text-align:center; border-left: 2px #000 solid; border-right: 1px #000 solid; border-top: 1px #000 solid;">Penerima Order</td>
+                                <td class="border-all" id="print_po" style="font-size: 9pt;text-align:center; border-left: 1px #000 solid; border-right: 1px #000 solid; border-top: 1px #000 solid;">Pemberi Order</td>
+                                <td class="border-all" id="print_po" style="font-size: 9pt;text-align:center; border-left: 2px #000 solid; border-right: 1px #000 solid; border-top: 1px #000 solid;">Penerima Order</td>
                             </tr>
-                            <tr height="80">
+                            <tr style="height:1.7cm;">
                                 <td style="border-left:  none;" class="border-all" style="border-right: 1px #000 solid;"></td>
                                 <td class="border-all" style="border-left: 1px #000 solid; border-right: 2px #000 solid;"></td>
                             </tr>
                             <tr>
-                                <td class="border-all" style="font-size: 8pt;border-left: 1px #000 solid; border-right: 1px #000 solid;" id="print_po">Tgl. :</td>
-                                <td class="border-all" style="font-size: 8pt;border-left: 1px #000 solid; border-right: 2px #000 solid;" id="print_po">Tgl. :</td>
+                                <td class="border-all" style="font-size: 9pt;border-top: 1px #000 solid; border-left: 1px #000 solid; border-right: 1px #000 solid;" id="print_po">Tgl. :</td>
+                                <td class="border-all" style="font-size: 9pt;border-top: 1px #000 solid; border-left: 1px #000 solid; border-right: 2px #000 solid;" id="print_po">Tgl. :</td>
                             </tr>
                         </table>
                     </td>
-                    <td style="border-left: 2px #000 solid;">
+                    <td style="border-left: 2px #000 solid;border-top: 1px #000 solid;">
                         <table>
                             <tr>
-                                <td width="80%" id="print_po">Total pembelian / biaya </td>
+                                <td width="75%" style="font-size: 9pt;" id="print_po">Total pembelian / biaya </td>
                                 <td id="print_po">{{form.total|  currency:undefined:0}}</td>
                             </tr>
                             <tr>
-                                <td id="print_po" style="font-size: 8pt;">Diskon</td>
-                                <td id="print_po" style="font-size: 8pt;text-align:right">{{form.nilai_diskon| currency:undefined:0 }}</td>
+                                <td id="print_po" style="font-size: 9pt;">Diskon</td>
+                                <td id="print_po" style="font-size: 9pt;text-align:left">{{form.nilai_diskon| currency:undefined:0 }}</td>
                             </tr>
                             <tr>
-                                <td id="print_po" style="font-size: 8pt;">Dasar pengenaan pajak</td>
-                                <td id="print_po" style="font-size: 8pt;text-align:right">Rp. </td>
+                                <td id="print_po" style="font-size: 9pt;">Dasar pengenaan pajak</td>
+                                <td id="print_po" style="font-size: 9pt;text-align:left">Rp. </td>
                             </tr>
                             <tr>
-                                <td id="print_po" style="font-size: 8pt;">PPN 10%</td>
-                                <td id="print_po" style="font-size: 8pt;text-align:right">{{form.ppn| currency:undefined:0}}</td>
+                                <td id="print_po" style="font-size: 9pt;">PPN 10%</td>
+                                <td id="print_po" style="font-size: 9pt;text-align:left">{{form.ppn| currency:undefined:0}}</td>
                             </tr>
                             <tr>
-                                <td id="print_po" style="font-size: 8pt;">Total yang harus dibayar</td>
-                                <td id="print_po" style="font-size: 8pt;text-align:right">{{form.total_dibayar| currency:undefined:0}}</td>
+                                <td id="print_po" style="font-size: 9pt;">Total yang harus dibayar</td>
+                                <td id="print_po" style="font-size: 9pt;text-align:left">{{form.total_dibayar| currency:undefined:0}}</td>
                             </tr>
                             <tr>
-                                <td id="print_po" style="font-size: 8pt;">Uang muka</td>
-                                <td id="print_po" style="font-size: 8pt;text-align:right">{{form.dp| currency:undefined:0 }}</td>
+                                <td id="print_po" style="font-size: 9pt;">Uang muka</td>
+                                <td id="print_po" style="font-size: 9pt;text-align:left">{{form.dp| currency:undefined:0 }}</td>
                             </tr>
                             <tr>
-                                <td id="print_po" style="font-size: 8pt;">Sisa yang harus dibayar</td>
-                                <td id="print_po" style="font-size: 8pt;text-align:right">{{form.sisa_dibayar| currency:undefined:0}}</td>
+                                <td id="print_po" style="font-size: 9pt;">Sisa yang harus dibayar</td>
+                                <td id="print_po" style="font-size: 9pt;text-align:left">{{form.sisa_dibayar| currency:undefined:0}}</td>
                             </tr>
                             <tr>
-                                <td id="print_po" style="font-size: 8pt;">Terbilang :</td>
+                                <td id="print_po" style="font-size: 9pt;">Terbilang :</td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td colspan="2" id="print_po" style="font-size: 8pt;">{{form.terbilang| uppercase}}</td>
+                                <td colspan="2" id="print_po" style="font-size: 9pt;">{{form.terbilang| uppercase}}</td>
                             </tr>
                         </table>
                     </td>
