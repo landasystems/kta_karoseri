@@ -5,7 +5,7 @@ header("Content-Disposition: attachment; filename=excel-rekap-Barang_Keluar.xls"
 }
 ?>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
-<div style="width:26cm">
+<div style="width:21cm">
       <table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
         <tr>
             <td rowspan="2" colspan="3" style="width:30%; border: 1px solid #000000; padding-bottom:5px; padding-top:5px;">

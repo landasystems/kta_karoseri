@@ -61,14 +61,84 @@ class SiteController extends Controller {
     }
 
     public function actionCoba() {
-//        echo \Yii::$app->landa->rp(10000);
-        $a = \Yii::$app->landa->createImg('delivery/', '58413-hl-4-pasar-jodoh.jpg', 61);
-//        $a = 'a';
-        if ($a) {
-            echo 'sukses';
-        } else {
-            echo 'gagal';
-        }
+        $query = new Query;
+        $query->select("tk.nik, tk.nama, tjb.jabatan")
+                ->from('purchassing.tbl_karyawan as tk')
+                ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = tk.jabatan')
+                ->join('JOIN', 'ftm.emp as emp', 'emp.nik = tk.nik')
+                ->join('JOIN', 'ftm.att_log as att_log', 'att_log.pin = emp.pin')
+//                    ->where('date(att_log.scan_date) = "' . date("Y-m-d") . '"')
+                ->andWhere('tk.jabatan = "JBTN002"')
+                ->groupBy('tk.nik')
+                ->limit(20);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        echo json_encode(array('status' => 1, 'data' => $models));
+//        $query = new Query;
+//        $query->select("tk.nik, tk.nama, tjb.jabatan")
+//                ->from('purchassing.tbl_karyawan as tk')
+//                ->join('LEFT JOIN','tbl_jabatan as tjb','tjb.id_jabatan = tk.jabatan')
+//                ->join('JOIN', 'ftm.emp as emp', 'emp.nik = tk.nik')
+//                ->join('JOIN', 'ftm.att_log as att_log', 'att_log.pin = emp.pin')
+//                ->where('date(att_log.scan_date) = "' . date("Y-m-d") . '"');
+//
+//        $command = $query->createCommand();
+//        $models = $command->queryAll();
+
+        echo json_encode($models);
+//        $query = new Query;
+//        $query->from('det_standar_bahan as dts')
+//                ->join('JOIN', 'barang as brg', 'dts.kd_barang = brg.kd_barang')
+//                ->join('JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
+//                ->join('JOIN', 'spk', 'spk.kd_bom = dts.kd_bom')
+//                ->join('JOIN', 'wo_masuk as wm', 'wm.no_spk  = spk.no_spk')
+//                ->join('JOIN', 'trans_standar_bahan as tsb', 'tsb.kd_bom  = spk.kd_bom')
+//                ->orderBy('tjb.urutan_produksi ASC, tjb.jabatan ASC, brg.nm_barang ASC')
+//                ->where('wm.no_wo = "NDP-215133" ')
+//                ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
+//
+//        $command = $query->createCommand();
+//        $models = $command->queryAll();
+//
+//        $data = array();
+//        foreach ($models as $key => $val) {
+//            $query2 = new Query;
+//            $query2->from('tbl_karyawan')
+//                    ->select('nama, nik')
+//                    ->where('tbl_karyawan.jabatan = "' . $val['id_jabatan'] . '" and status = "Kerja"');
+//            $command2 = $query2->createCommand();
+//            $models2 = $command2->queryAll();
+//
+//            $arr = array();
+//            foreach ($models2 as $vv) {
+//                $arr[] = " (<b>" . $vv['nik'] . "</b>) " . $vv['nama'];
+//            }
+//
+//            $karyawan[$val['id_jabatan']] = join($arr, ",");
+//
+//            $data[$val['id_jabatan']]['id_jabatan'] = $val['id_jabatan'];
+//            $data[$val['id_jabatan']]['bagian'] = $val['jabatan'];
+//            $data[$val['id_jabatan']]['karyawan'] = $karyawan;
+//            $data[$val['id_jabatan']]['body'][$key]['barang'] = $val['nm_barang'];
+//        }
+//
+//        foreach ($data as $val) {
+//            echo '<b>' . $val['bagian'] . '</b><br>';
+//            echo '<table>';
+//            echo '<tr>';
+//            echo '<td style="width: 100px;vertical-align:top"><b>KARYAWAN</b></td>';
+//            echo '<td width=1 style="vertical-align:top">:</td>';
+//            echo '<td>' . $karyawan[$val['id_jabatan']] . '</td>';
+//            echo '</tr>';
+//            echo '</table>';
+//            echo '<b>BARANG</b><br>';
+//            foreach ($val['body'] as $val2) {
+//                echo ' -| ' . $val2['barang'] . '</br>';
+//            }
+//            echo '<hr>';
+//        }
     }
 
     public function actionLogin() {

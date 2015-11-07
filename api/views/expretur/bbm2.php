@@ -6,10 +6,10 @@ if (!isset($_GET['print'])) {
 
 if ($filter['bayar'] == "0") {
     $hd = "CASH";
-    $no = 008;
+    $no = '008';
 } else {
     $hd = "KREDIT";
-    $no = 009;
+    $no = '009';
 }
 ?>
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
