@@ -326,6 +326,7 @@ class ClaimunitController extends Controller {
 
         $query2->groupBy("dc.kd_jns")
                 ->select("vws.jenis,jk.bag,jk.jns_komplain, count(jk.jns_komplain) as jumlahnya");
+//                ->orderBy("jumlahnya desc");
 
         $command2 = $query2->createCommand();
         $modelnya = $command2->queryAll();
@@ -353,24 +354,34 @@ class ClaimunitController extends Controller {
             }
         }
 
+        $sorted = Yii::$app->landa->array_orderby($modelnya, 'jumlahnya', SORT_DESC);
+
+
         $sb = [];
         $mb = [];
         $s = 0;
         $m = 0;
 
-        foreach ($modelnya as $key => $val) {
+
+
+        foreach ($sorted as $key => $val) {
+//             rsort($val['jumlahnya']);
             if ($val['jenis'] == "Small Bus") {
-                $sb['jns_komplain'][$s] = $val['jns_komplain'];
-                $sb['jumlahnya'][$s] = (int) $val['jumlahnya'];
-                $s++;
+                IF ($s <= 9) {
+                    $sb['jns_komplain'][$s] = $val['jns_komplain'];
+                    $sb['jumlahnya'][$s] = (int) $val['jumlahnya'];
+                    $s++;
+                }
             } else {
-                $mb['jns_komplain'][$m] = $val['jns_komplain'];
-                $mb['jumlahnya'][$m] = (int) $val['jumlahnya'];
-                $m++;
+                if ($m <= 9) {
+                    $mb['jns_komplain'][$m] = $val['jns_komplain'];
+                    $mb['jumlahnya'][$m] = (int) $val['jumlahnya'];
+                    $m++;
+                }
             }
         }
-
-        return json_encode(array('Small_Bus' => $sb,'Mini_Bus' => $mb, 'Interior' => $in, 'Eksterior' => $ex, 'start' => $start, 'end' => $end), JSON_PRETTY_PRINT);
+        
+        return json_encode(array('Small_Bus' => $sb, 'Mini_Bus' => $mb, 'Interior' => $in, 'Eksterior' => $ex, 'start' => $start, 'end' => $end), JSON_PRETTY_PRINT);
     }
 
 }

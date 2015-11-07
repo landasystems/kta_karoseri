@@ -59,10 +59,10 @@ app.controller('rekapclaimCtrl', function ($scope, Data, toaster) {
                     }
                 },
                 series: [
-                    {"name": "JUMLAH KOMPLAIN SMALL BUSS", "data": sbjumlah}
+                    {"name": "JUMLAH KOMPLAIN BUS", "data": sbjumlah}
                 ],
                 title: {
-                    text: 'JENIS KOMPLAIN SMALL BUS'
+                    text: 'JENIS KOMPLAIN BUS'
                 },
                 credits: {
                     enabled: false
@@ -79,10 +79,10 @@ app.controller('rekapclaimCtrl', function ($scope, Data, toaster) {
                     }
                 },
                 series: [
-                    {"name": "JUMLAH KOMPLAIN MINI BUS", "data": mbjumlah}
+                    {"name": "JUMLAH KOMPLAIN VAN", "data": mbjumlah}
                 ],
                 title: {
-                    text: 'JENIS KOMPLAIN MINI BUS'
+                    text: 'JENIS KOMPLAIN VAN'
                 },
                 credits: {
                     enabled: false
