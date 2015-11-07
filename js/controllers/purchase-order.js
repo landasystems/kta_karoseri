@@ -338,6 +338,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         $scope.is_edit = true;
         $scope.is_print = false;
         $scope.is_view = false;
+        $scope.lebar = "200px";
         $scope.is_create = true;
         $scope.formtitle = "Form Tambah Data";
         $scope.form = {};
@@ -361,6 +362,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         $scope.is_print = false;
         $scope.is_edit = true;
         $scope.is_view = false;
+        $scope.lebar = "102%";
         $scope.is_create = false;
         $scope.formtitle = "Edit Data : " + row.nota
         $scope.form.tanggal = new Date(row.tanggal);
@@ -373,6 +375,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         $scope.is_print = true;
         $scope.is_edit = true;
         $scope.is_view = true;
+        $scope.lebar = "102%";
         $scope.formtitle = "Lihat Data : " + row.nota;
         $scope.form.tanggal = new Date(row.tanggal);
         $scope.selected(row.nota);
