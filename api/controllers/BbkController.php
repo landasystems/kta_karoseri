@@ -421,7 +421,7 @@ class BbkController extends Controller {
             $queryRetur->from('retur_bbk as rb')
                     ->join('JOIN', 'det_bbk as db', 'rb.no_bbk = db.no_bbk')
                     ->join('JOIN', 'trans_bbk as tb', 'tb.no_bbk = db.no_bbk')
-                    ->select('db.kd_barang, db.jml')
+                    ->select('db.kd_barang, rb.jml')
                     ->where('tb.no_wo = "' . $params['no_wo']['no_wo'] . '" and tb.kd_jab = "' . $params['kd_jab']['id_jabatan'] . '"');
 
             $commandRetur = $queryRetur->createCommand();
