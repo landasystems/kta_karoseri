@@ -38,8 +38,8 @@ foreach ($models as $key => $val) {
     }
 }
 ?>
-<div style="width:24cm">
-    <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;" width="100%">
+<div style="width:21cm">
+    <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 13px;" width="100%">
         <tr>
             <td class="border-right border-bottom"  rowspan="4" colspan="2" align="center" width="30%">
                 <br>

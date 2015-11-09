@@ -14,6 +14,13 @@
                         </ul>
                     </div> &nbsp;&nbsp;&nbsp;
                     <div class="pull-right dropdown" style="margin-top: -4px" dropdown="">
+                        <button type="button" class="btn btn-success" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Rekap BBK Mingguan<span class="caret"></span></button>
+                        <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 260px;">
+                            <li><a href="#" ng-click="printbkm()">Print</a></li>
+                            <li><a href="#" ng-click="excelbkm()">Export Excel</a></li>
+                        </ul>
+                    </div> &nbsp;&nbsp;&nbsp;
+                    <div class="pull-right dropdown" style="margin-top: -4px" dropdown="">
                         <button type="button" class="btn btn-primary" dropdown-toggle="" aria-haspopup="true" aria-expanded="true">Lap. Rekap BBK <span class="caret"></span></button>
                         <ul class="dropdown-menu" style="background-color: #F7F7F7; width: 260px;">
                             <li><a href="#" ng-click="printbk()">Print</a></li>
@@ -105,8 +112,6 @@
                             <td>{{row.satuan}}</td>
                             <td>{{row.jml}}</td>
                             <td>{{row.ket}}</td>
-
-
                         </tr>
                     </tbody>
                     <tbody ng-show="isLoading">

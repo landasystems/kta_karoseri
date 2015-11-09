@@ -2,7 +2,7 @@ app.controller('rekapbarangkeluarCtrl', function ($scope, Data, toaster) {
     //init data
     var tableStateRef;
     var paramRef;
-    
+
     $scope.displayed = [];
     $scope.paginations = 0;
     $scope.is_edit = false;
@@ -28,14 +28,14 @@ app.controller('rekapbarangkeluarCtrl', function ($scope, Data, toaster) {
             $scope.displayed = data.data;
             $scope.displayedPrint = data.dataPrint;
             $scope.paginations = data.totalItems;
-            if(data.totalItems != 0) {
+            if (data.totalItems != 0) {
                 tableState.pagination.numberOfPages = Math.ceil(data.totalItems / limit);
             }
         });
 
         $scope.isLoading = false;
     };
-    
+
     $scope.excel = function () {
         Data.get('bbk/rekap', paramRef).then(function (data) {
             window.location = 'api/web/bbk/excel';
@@ -46,19 +46,28 @@ app.controller('rekapbarangkeluarCtrl', function ($scope, Data, toaster) {
             window.location = 'api/web/bbk/excelbk';
         });
     }
+    $scope.excelbkm = function () {
+        Data.get('bbk/rekap', paramRef).then(function (data) {
+            window.location = 'api/web/bbk/excelbkm';
+        });
+    }
+    $scope.printbkm = function () {
+        Data.get('bbk/rekap', paramRef).then(function (data) {
+            window.open('api/web/bbk/excelbkm?print=true', "", "width=500");
+        });
+    }
     $scope.printbk = function () {
         Data.get('bbk/rekap', paramRef).then(function (data) {
-//            window.open = 'api/web/bbk/excelbk?print=true',"";
-              window.open('api/web/bbk/excelbk?print=true', "", "width=500");
+            window.open('api/web/bbk/excelbk?print=true', "", "width=500");
         });
     }
     $scope.print = function () {
         Data.get('bbk/rekap', paramRef).then(function (data) {
 //            window.open = 'api/web/bbk/excelbk?print=true',"";
-              window.open('api/web/bbk/excel?print=true', "", "width=500");
+            window.open('api/web/bbk/excel?print=true', "", "width=500");
         });
     }
-   
+
 
 
 })

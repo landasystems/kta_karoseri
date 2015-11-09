@@ -46,8 +46,52 @@ app.controller('rekapclaimCtrl', function ($scope, Data, toaster) {
             var exjeniskmp = data.Eksterior.jns_komplain;
             var injumlah = data.Interior.jumlah;
             var injeniskmp = data.Interior.jns_komplain;
+            var sbjumlah = data.Small_Bus.jumlahnya;
+            var sbjeniskmp = data.Small_Bus.jns_komplain;
+            var mbjumlah = data.Mini_Bus.jumlahnya;
+            var mbjeniskmp = data.Mini_Bus.jns_komplain;
 
 //    console.log(injeniskmp);
+            $scope.chartConfigSb = {
+                options: {
+                    chart: {
+                        type: 'bar'
+                    }
+                },
+                series: [
+                    {"name": "JUMLAH KOMPLAIN BUS", "data": sbjumlah}
+                ],
+                title: {
+                    text: 'JENIS KOMPLAIN BUS'
+                },
+                credits: {
+                    enabled: false
+                },
+                xAxis: {
+                    categories: sbjeniskmp,
+                },
+                loading: false
+            }
+            $scope.chartConfigMb = {
+                options: {
+                    chart: {
+                        type: 'bar'
+                    }
+                },
+                series: [
+                    {"name": "JUMLAH KOMPLAIN VAN", "data": mbjumlah}
+                ],
+                title: {
+                    text: 'JENIS KOMPLAIN VAN'
+                },
+                credits: {
+                    enabled: false
+                },
+                xAxis: {
+                    categories: mbjeniskmp,
+                },
+                loading: false
+            }
             $scope.chartConfigEx = {
                 options: {
                     chart: {
