@@ -376,7 +376,8 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
         $scope.opened1 = true;
     };
     $scope.copyData = function (bbk, kd_bbk) {
-        $scope.form = bbk;
+        $scope.form = bbk;        
+        $scope.form.tanggal = new Date();
         $scope.selected(bbk.no_bbk, kd_bbk);
     };
     $scope.cariBbk = function ($query) {
@@ -536,11 +537,9 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             $scope.form = data.data;
 //            console.log(data.data);
 
-            if ($scope.form.no_surat == '') {
+            if ($scope.form.no_surat == '' && $scope.form.no_wo.no_wo != '') {
                 $scope.form.kat_bbk = 'produksi';
-            } else if ($scope.form.no_wo.no_wo == '' && $scope.form.no_surat == '-') {
-                $scope.form.kat_bbk = '';
-            } else {
+            }  else {
                 $scope.form.kat_bbk = 'umum';
             }
 
@@ -573,8 +572,6 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             }
 
             $scope.detPrint($scope.detailBbk);
-            
-//            console.log($scope.form);
         });
     };
 

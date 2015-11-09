@@ -661,7 +661,6 @@ class BbkController extends Controller {
                         ->leftJoin('tbl_karyawan as tk', 'trans_bbk.penerima = tk.nik')
                         ->leftJoin('tbl_jabatan as tj', 'tj.id_jabatan  = trans_bbk.kd_jab')
                         ->select("trans_bbk.*, tk.nik, tk.nama")
-//                        ->with(['penerima', 'bagian'])
                         ->where('no_bbk="' . $id . '"')->one();
 
         $query = new Query;
@@ -674,7 +673,6 @@ class BbkController extends Controller {
         $penerima = $command->query()->read();
 
         $model->kd_jab = array('id_jabatan' => isset($model->bagian->id_jabatan) ? $model->bagian->id_jabatan : '-', 'jabatan' => isset($model->bagian->jabatan) ? $model->bagian->jabatan : '-');
-//        $model->penerima = array('nik' => isset($model->nik) ? $model->nik : '-', 'nama' => isset($model->nama) ? $model->nama : '-');
         $model->penerima = $penerima;
         $model->no_wo = array('no_wo' => $model->no_wo);
         $model->no_surat = !empty($model->no_surat) ? $model->no_surat : '-';
@@ -712,7 +710,8 @@ class BbkController extends Controller {
         $model = new TransBbk();
         $model->attributes = $params['bbk'];
         $model->no_surat = isset($params['bbk']['no_surat']) ? $params['bbk']['no_surat'] : '';
-        $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '';
+        $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo'][
+                'no_wo'] : '';
         $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '';
         $model->penerima = isset($params['bbk']['penerima']['nik']) ? $params['bbk']['penerima']['nik'] : '';
 
@@ -757,7 +756,8 @@ class BbkController extends Controller {
         $model->status = 0;
         $model->no_surat = isset($params['bbk']['no_surat']) ? $params['bbk']['no_surat'] : '';
         $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '-';
-        $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '-';
+        $model->kd_jab = isset($params['bbk']['kd_jab'][
+                        'id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '-';
         $model->penerima = isset($params['bbk']['penerima']['nik']) ? $params['bbk']['penerima']['nik'] : '-';
         $model->lock = 1;
         if ($model->save()) {
@@ -870,11 +870,14 @@ class BbkController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('view_bbk_rekap as rvb')
-                ->join('LEFT JOIN', 'tbl_karyawan as tbk', 'tbk.nik = rvb.penerima')
-                ->join('LEFT JOIN', 'trans_bbk as trbk', 'trbk.no_bbk = rvb.no_bbk')
+                ->join('LEFT JOIN', 'tbl_kary
+            awan as tbk', 'tbk.nik = rvb.penerima')
+                ->join('LEFT JOIN', '
+            trans_bbk as trbk', 'trbk.no_bbk = rvb.no_bbk')
                 ->join('LEFT JOIN', 'tbl_jabatan as tbj', 'tbj.id_jabatan = trbk.kd_jab')
                 ->orderBy($sort)
                 ->select("rvb.*,tbk.nama,tbj.jabatan");
+
 
         //filter
         if (isset($params['filter'])) {
@@ -950,5 +953,15 @@ class BbkController extends Controller {
     }
 
 }
-
 ?>
+        
+
+
+
+
+
+
+
+
+
+
