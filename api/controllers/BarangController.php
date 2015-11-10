@@ -110,11 +110,6 @@ class BarangController extends Controller {
         $start = date("Y-m-d", strtotime($params['tanggal']['startDate']));
         $start = explode('-', $start);
         $tgl = array();
-//        for ($i = 1; $i <= 6; $i++) {
-//            $new = mktime(0, 0, 0, $start[1], $start[2] + $i, $start[0]);
-//            $newDate = date("Y-m-d", $new);
-//            $tgl[] = $newDate;
-//        }
 
         $tglStart = date("Y-m-d", strtotime($params['tanggal']['startDate']));
         $tglEnd = date("Y-m-d", strtotime($params['tanggal']['endDate']));
@@ -125,10 +120,11 @@ class BarangController extends Controller {
 
         $bbm = new Query;
         $bbm->from('det_bbm')
+                ->join('Join', 'trans_bbm', 'trans_bbm.no_bbm = det_bbm.no_bbm')
                 ->join('Join', 'barang', 'barang.kd_barang = det_bbm.kd_barang')
-                ->select("det_bbm.tgl_terima, barang.kd_barang, barang.nm_barang, barang.satuan, barang.min, barang.saldo, det_bbm.jumlah")
+                ->select("trans_bbm.tgl_nota, barang.kd_barang, barang.nm_barang, barang.satuan, barang.min, barang.saldo, det_bbm.jumlah")
                 ->orderBy('barang.nm_barang')
-                ->where('det_bbm.tgl_terima >= "' . $tglStart . '" and det_bbm.tgl_terima <= "' . $tglEnd . '"');
+                ->where('trans_bbm.tgl_nota >= "' . $tglStart . '" and trans_bbm.tgl_nota <= "' . $tglEnd . '"');
 
         if (isset($params['barang']))
             $bbm->andFilterWhere(['det_bbm.kd_barang' => $params['barang']['kd_barang']]);
@@ -189,7 +185,7 @@ class BarangController extends Controller {
         $_SESSION['periode'] = date("d/m/Y", strtotime($tglStart)) . ' - ' . date("d/m/Y", strtotime($tglEnd));
         $_SESSION['tanggal'] = $tgl;
         $_SESSION['tanggalEnd'] = $tglEnd;
-        
+
         $sorted = Yii::$app->landa->array_orderby($data, 'barang', SORT_ASC);
         echo json_encode(array('status' => 1, 'data' => $sorted));
     }
@@ -533,9 +529,9 @@ class BarangController extends Controller {
 
     public function actionDelete($id) {
         $model = $this->findModel($id);
-        
+
         session_start();
-        
+
         $trash = new \app\models\BarangTrash();
         $trash->attributes = $model->attributes;
         $trash->tgl_hapus = date("Y-m-d h:i:s");
