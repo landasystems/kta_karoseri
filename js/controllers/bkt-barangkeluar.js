@@ -109,6 +109,11 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             $scope.detailBbk[indek]['kd_barang']['sisa_pengambilan'] = tmpSisa;
             $scope.detailBbk[indek]['kd_barang']['stok_sekarang'] = tmpStok;
 
+            if ($scope.is_copy == true) {
+                var tmpSisa = $scope.detailBbk[indek]['sisa_ambil'] + $scope.detailBbk[indek]['jmlKeluar'];
+                $scope.detailBbk[indek]['kd_barang']['sisa_pengambilan'] = tmpSisa  - jml;
+            }
+
             if ((jml != '' || jml > 0)) {
                 if (tmpSisa < 0) {
                     $scope.err_pengambilan = true;
@@ -376,7 +381,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
         $scope.opened1 = true;
     };
     $scope.copyData = function (bbk, kd_bbk) {
-        $scope.form = bbk;        
+        $scope.form = bbk;
         $scope.form.tanggal = new Date();
         $scope.selected(bbk.no_bbk, kd_bbk);
     };
@@ -535,11 +540,10 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     $scope.selected = function (id, id_baru) {
         Data.get('bbk/view/' + id).then(function (data) {
             $scope.form = data.data;
-//            console.log(data.data);
 
-            if ($scope.form.no_surat == '' && $scope.form.no_wo.no_wo != '') {
+            if ($scope.form.no_wo.no_wo != '-' && $scope.form.no_wo.no_wo != '') {
                 $scope.form.kat_bbk = 'produksi';
-            }  else {
+            } else {
                 $scope.form.kat_bbk = 'umum';
             }
 
@@ -566,7 +570,18 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                 $scope.detailBbk = [];
                 angular.forEach(data.detail, function ($value, $key) {
                     if ($value.jml > 0) {
-                        $scope.detailBbk.push($value);
+                        var barang = {
+                            kd_barang: $value,
+                            sisa_ambil: $value.sisa_pengambilan,
+                            stok_sekarang: $value.stok_sekarang,
+                            error_kalkulasi: false,
+                            error_field: false,
+                            jml: $value.jml,
+                            jmlKeluar: $value.jml,
+                            ket: $value.ket,
+                            satuan: $value.satuan,
+                        }
+                        $scope.detailBbk.push(barang);
                     }
                 });
             }

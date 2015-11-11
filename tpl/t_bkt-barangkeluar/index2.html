@@ -333,10 +333,11 @@
                                 </ui-select>
                                 </td>
                                 <td ng-if="form.kat_bbk == 'produksi'">
-                                    <b>{{detail.kd_barang.kd_barang}} |- </b>{{detail.kd_barang.nm_barang}}
+                                   <b>{{detail.kd_barang.kd_barang}} |- </b>{{detail.kd_barang.nm_barang}}
                                 </td>
                                 <td ng-show="is_create">
-                                    <p ng-show="form.kat_bbk == 'produksi'">{{detail.kd_barang.standard}}<p><p ng-show="form.kat_bbk == 'umum'">-</p>
+                                    <p ng-show="form.kat_bbk == 'produksi'">{{detail.kd_barang.standard}}<p>
+                                    <p ng-show="form.kat_bbk == 'umum'">-</p>
                                 </td>
                                 <td ng-show="is_create">
                                     <p ng-show="form.kat_bbk == 'produksi'">{{detail.kd_barang.sisa_pengambilan}}<p><p ng-show="form.kat_bbk == 'umum'">-</p>

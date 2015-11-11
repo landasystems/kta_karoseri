@@ -122,7 +122,7 @@ class BarangController extends Controller {
         $bbm->from('det_bbm')
                 ->join('Join', 'trans_bbm', 'trans_bbm.no_bbm = det_bbm.no_bbm')
                 ->join('Join', 'barang', 'barang.kd_barang = det_bbm.kd_barang')
-                ->select("trans_bbm.tgl_nota, barang.kd_barang, barang.nm_barang, barang.satuan, barang.min, barang.saldo, det_bbm.jumlah")
+                ->select("trans_bbm.tgl_nota as tgl_terima, barang.kd_barang, barang.nm_barang, barang.satuan, barang.min, barang.saldo, det_bbm.jumlah")
                 ->orderBy('barang.nm_barang')
                 ->where('trans_bbm.tgl_nota >= "' . $tglStart . '" and trans_bbm.tgl_nota <= "' . $tglEnd . '"');
 
@@ -323,11 +323,12 @@ class BarangController extends Controller {
 
         $bbm = new Query;
         $bbm->from('det_bbm')
+                ->join('Join', 'trans_bbm', 'trans_bbm.no_bbm = det_bbm.no_bbm')
                 ->join('Join', 'barang', 'barang.kd_barang = det_bbm.kd_barang')
                 ->join('Join', 'jenis_brg', 'jenis_brg.kd_jenis = barang.jenis')
-                ->select("det_bbm.tgl_terima, barang.kd_barang, barang.nm_barang, barang.satuan, barang.min, barang.saldo, det_bbm.jumlah, jenis_brg.jenis_brg as golongan")
+                ->select("trans_bbm.tgl_nota as tgl_terima, barang.kd_barang, barang.nm_barang, barang.satuan, barang.min, barang.saldo, det_bbm.jumlah, jenis_brg.jenis_brg as golongan")
                 ->orderBy('jenis_brg.jenis_brg ASC, barang.nm_barang ASC')
-                ->where('det_bbm.tgl_terima >= "' . $tglStart . '" and det_bbm.tgl_terima <= "' . $tglEnd . '"');
+                ->where('trans_bbm.tgl_nota >= "' . $tglStart . '" and trans_bbm.tgl_nota <= "' . $tglEnd . '"');
 
         if (isset($params['barang']))
             $bbm->andFilterWhere(['det_bbm.kd_barang' => $params['barang']['kd_barang']]);
