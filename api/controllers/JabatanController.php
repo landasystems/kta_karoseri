@@ -145,7 +145,7 @@ class JabatanController extends Controller {
                 ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = tk.jabatan')
                 ->join('JOIN', 'ftm.emp as emp', 'emp.nik = tk.nik')
                 ->join('JOIN', 'ftm.att_log as att_log', 'att_log.pin = emp.pin')
-//                ->where('date(att_log.scan_date) = "' . date("Y-m-d") . '"')
+                ->where('date(att_log.scan_date) = "' . date("Y-m-d") . '"')
                 ->andWhere('tk.nama like "%' . $param['nama'] . '%"')
                 ->groupBy('tk.nik')
                 ->limit(20);
@@ -189,6 +189,7 @@ class JabatanController extends Controller {
                     ->join('JOIN', 'ftm.att_log as att_log', 'att_log.pin = emp.pin')
                     ->where('date(att_log.scan_date) = "' . date("Y-m-d") . '"')
                     ->andWhere('tk.jabatan = "' . $param['jabatan'] . '"')
+                    ->andWhere('tk.nama like "%' . $param['nama'] . '%"')
                     ->groupBy('tk.nik')
                     ->limit(20);
 

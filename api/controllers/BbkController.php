@@ -351,7 +351,8 @@ class BbkController extends Controller {
             }
         }
 
-        if ((isset($params['no_wo']['no_wo']) && ($params['no_wo']['no_wo'] != "-" and !empty($params['no_wo']['no_wo']))) and ( isset($params['kd_jab']['id_jabatan']) && !empty($params['kd_jab']['id_jabatan']))) {
+        if ((isset($params['no_wo']['no_wo']) && ($params['no_wo']['no_wo'] != "-" and ! empty($params['no_wo']['no_wo']))) and ( isset($params['kd_jab']['id_jabatan']) && !empty($params['kd_jab']['id_jabatan']))) {
+
             //===================Cek apakah ada optional=======================//
             $optional = \app\models\TransAdditionalBomWo::find()
                     ->joinWith('transadditionalbom')
@@ -711,7 +712,7 @@ class BbkController extends Controller {
         $params['id_barang'] = $id_barang;
 
         $barang = $this->detailbarang($params);
-        
+
         $data = array();
         foreach ($barang as $key => $val) {
             if (isset($params['no_wo']['no_wo']) && (!empty($params['no_wo']['no_wo']) && $params['no_wo']['no_wo'] != "-")) {
@@ -895,10 +896,8 @@ class BbkController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('view_bbk_rekap as rvb')
-                ->join('LEFT JOIN', 'tbl_kary
-            awan as tbk', 'tbk.nik = rvb.penerima')
-                ->join('LEFT JOIN', '
-            trans_bbk as trbk', 'trbk.no_bbk = rvb.no_bbk')
+                ->join('LEFT JOIN', 'tbl_karyawan as tbk', 'tbk.nik = rvb.penerima')
+                ->join('LEFT JOIN', 'trans_bbk as trbk', 'trbk.no_bbk = rvb.no_bbk')
                 ->join('LEFT JOIN', 'tbl_jabatan as tbj', 'tbj.id_jabatan = trbk.kd_jab')
                 ->orderBy($sort)
                 ->select("rvb.*,tbk.nama,tbj.jabatan");

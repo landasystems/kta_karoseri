@@ -111,7 +111,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
 
             if ($scope.is_copy == true) {
                 var tmpSisa = $scope.detailBbk[indek]['sisa_ambil'] + $scope.detailBbk[indek]['jmlKeluar'];
-                $scope.detailBbk[indek]['kd_barang']['sisa_pengambilan'] = tmpSisa  - jml;
+                $scope.detailBbk[indek]['kd_barang']['sisa_pengambilan'] = tmpSisa - jml;
             }
 
             if ((jml != '' || jml > 0)) {
@@ -229,6 +229,8 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
         Data.get('jabatan/cari2', {no_wo: no_wo, nama: nama, kat_bbk: $scope.form.kat_bbk}).then(function (data) {
             $scope.resultsjabatan = data.data;
         });
+
+        $scope.kalkulasiCopy();
     }
 
     $scope.cariKaryawan = function ($query) {
@@ -237,8 +239,8 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
         });
     }
 
-    $scope.cariKaryawanPerJabatan = function ($query) {
-        Data.get('jabatan/listkaryawanabsentjabatan', {jabatan: $query}).then(function (data) {
+    $scope.cariKaryawanPerJabatan = function ($jabatan, $query) {
+        Data.get('jabatan/listkaryawanabsentjabatan', {jabatan: $jabatan, nama: $query}).then(function (data) {
             $scope.resultskaryawan = data.data;
         });
     }
@@ -353,6 +355,8 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                     $scope.resultsbarang = data.data;
                 });
             }
+
+            $scope.kalkulasiCopy();
         }
     }
 
@@ -581,6 +585,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                             ket: $value.ket,
                             satuan: $value.satuan,
                         }
+
                         $scope.detailBbk.push(barang);
                     }
                 });
@@ -589,6 +594,14 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             $scope.detPrint($scope.detailBbk);
         });
     };
+
+    $scope.kalkulasiCopy = function () {
+        if ($scope.is_copy == true) {
+            angular.forEach($scope.detailBbk, function ($value, $key) {
+                $scope.kalkulasi2($key);
+            });
+        }
+    }
 
     $scope.detPrint = function (detail) {
         $scope.halamanPrint = Math.ceil(detail.length / 8);
