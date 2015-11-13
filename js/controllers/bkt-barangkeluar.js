@@ -111,7 +111,11 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
 
             if ($scope.is_copy == true) {
                 var tmpSisa = $scope.detailBbk[indek]['sisa_ambil'] + $scope.detailBbk[indek]['jmlKeluar'];
-                $scope.detailBbk[indek]['kd_barang']['sisa_pengambilan'] = tmpSisa - jml;
+                if (tmpSisa - jml > 0) {
+                    $scope.detailBbk[indek]['kd_barang']['sisa_pengambilan'] = tmpSisa - jml;
+                } else {
+                    $scope.detailBbk[indek]['kd_barang']['sisa_pengambilan'] = tmpSisa;
+                }
             }
 
             if ((jml != '' || jml > 0)) {
@@ -322,19 +326,19 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                     })
                 });
                 if ($scope.is_create == true) {
-                    //$scope.riwayatAmbil(no_wo, kd_jab);
+                    $scope.riwayatAmbil(no_wo, kd_jab);
                 }
             }
             //=============== jika copy bbk ================//
-            else if (typeof $scope.form.no_wo != "undefined" && $scope.form.no_wo != '' && typeof $scope.form.kd_jab != "undefined" && $scope.is_create == true && $scope.is_copy == true) {
+            else if (typeof $scope.form.no_wo != "undefined" && $scope.form.no_wo != '' && typeof $scope.form.kd_jab != "undefined" && $scope.is_copy == true) {
                 Data.post('bbk/listbarang2', {nama: $query, no_wo: no_wo, kd_jab: kd_jab, listBarang: [{}]}).then(function (data) {
                     angular.forEach(data.data, function ($value, $key) {
                         $scope.resultsbarang.push($value);
                         angular.forEach($scope.detailBbk, function ($value2, $key2) {
                             if ($value2.kd_barang.kd_barang == $value.kd_barang) {
                                 $scope.detailBbk[$key2]['kd_barang'] = $value;
-                                $scope.detailBbk[$key2]['sisa_ambil'] = $value.sisa_pengambilan;
-                                $scope.detailBbk[$key2]['stok_sekarang'] = $value.stok_sekarang;
+                                $scope.detailBbk[$key2]['sisa_ambil'] = $value.sisa_pengambilan - $scope.detailBbk[$key2]['jml'];
+                                $scope.detailBbk[$key2]['stok_sekarang'] = $value.stok_sekarang - $scope.detailBbk[$key2]['jml'];
                                 $scope.detailBbk[$key2]['error_kalkulasi'] = false;
                                 $scope.detailBbk[$key2]['error_field'] = false;
                                 $scope.kalkulasi2($key2);
@@ -345,9 +349,12 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                         });
                     });
                 });
+
                 if ($scope.is_create == true) {
                     $scope.riwayatAmbil(no_wo, kd_jab);
                 }
+                $scope.kalkulasiCopy();
+                console.log($scope.detailBbk);
             }
             //================ jika no wo kosong ===============//
             else if ($query.length >= 2) {
@@ -356,7 +363,8 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                 });
             }
 
-            $scope.kalkulasiCopy();
+
+//            $scope.kalkulasiCopy();
         }
     }
 
