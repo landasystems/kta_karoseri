@@ -110,7 +110,6 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             $scope.detailBbk[indek]['kd_barang']['stok_sekarang'] = tmpStok;
 
             if ($scope.is_copy == true) {
-                var tmpSisa = $scope.detailBbk[indek]['sisa_ambil'] + $scope.detailBbk[indek]['jmlKeluar'];
                 if (tmpSisa - jml > 0) {
                     $scope.detailBbk[indek]['kd_barang']['sisa_pengambilan'] = tmpSisa - jml;
                 } else {
@@ -234,7 +233,9 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             $scope.resultsjabatan = data.data;
         });
 
-        $scope.kalkulasiCopy();
+        if ($scope.is_create == true && $scope.form.no_wo != '') {
+            $scope.kalkulasiCopy();
+        }
     }
 
     $scope.cariKaryawan = function ($query) {
@@ -353,8 +354,11 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                 if ($scope.is_create == true) {
                     $scope.riwayatAmbil(no_wo, kd_jab);
                 }
-                $scope.kalkulasiCopy();
-                console.log($scope.detailBbk);
+
+                if ($scope.is_copy == false) {
+                    $scope.kalkulasiCopy();
+                }
+//                console.log($scope.detailBbk);
             }
             //================ jika no wo kosong ===============//
             else if ($query.length >= 2) {

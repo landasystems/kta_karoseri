@@ -401,7 +401,7 @@ class BbkController extends Controller {
 
             $detBbk = array();
             foreach ($modelsBbk as $valBbk) {
-                $detBbk[$valBbk['kd_barang']]['jml_keluar'] = isset($detBbk[$valBbk['kd_barang']]['jml_keluar']) ? $detBbk[$valBbk['kd_barang']]['jml_keluar'] + $valBbk['jml'] : $valBbk['jml'];
+                $detBbk[$valBbk['kd_barang']]['jml_keluar'] = isset($detBbk[$valBbk['kd_barang']]['jml']) ? $detBbk[$valBbk['kd_barang']]['jml'] + $valBbk['jml'] : $valBbk['jml'];
             }
 
             //============= Menghitung pengecualian =============//
