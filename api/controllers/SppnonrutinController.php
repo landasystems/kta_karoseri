@@ -269,31 +269,34 @@ class SppnonrutinController extends Controller {
         $model->tgl1 = date('d/m/Y', strtotime($params['form']['periode']['startDate']));
         $model->tgl2 = date('d/m/Y', strtotime($params['form']['periode']['endDate']));
         $model->no_proyek = 'Non Rutin';
-       if ($model->save()) {
+        if ($model->save()) {
             $deleteAll = DetSpp::deleteAll('no_spp="' . $model->no_spp . '"');
             foreach ($params['details'] as $val) {
 
-                if (empty($val['no_wo'])) {
-                    $det = new DetSpp();
-                    $det->attributes = $val;
-                    $det->no_spp = $model->no_spp;
-                    $det->kd_barang = (empty($val['barang']['kd_barang'])) ? '-' : $val['barang']['kd_barang'];
-                    $det->saldo = $val['saldo'];
-                    $det->p = isset($val['p']) ? date('Y-m-d', strtotime($val['p'])) : null;
-                    $det->no_wo = '-';
-                    $det->save();
-                } else {
-                    foreach ($val['no_wo'] as $valWo) {
+                if ($val['qty'] > 0 and !empty($val['qty'])) {
+                    if (empty($val['no_wo'])) {
                         $det = new DetSpp();
                         $det->attributes = $val;
                         $det->no_spp = $model->no_spp;
                         $det->kd_barang = (empty($val['barang']['kd_barang'])) ? '-' : $val['barang']['kd_barang'];
                         $det->saldo = $val['saldo'];
                         $det->p = isset($val['p']) ? date('Y-m-d', strtotime($val['p'])) : null;
-                        $det->no_wo = (empty($valWo['no_wo'])) ? '-' : $valWo['no_wo'];
+                        $det->no_wo = '-';
                         $det->save();
+                    } else {
+                        foreach ($val['no_wo'] as $valWo) {
+                            $det = new DetSpp();
+                            $det->attributes = $val;
+                            $det->no_spp = $model->no_spp;
+                            $det->kd_barang = (empty($val['barang']['kd_barang'])) ? '-' : $val['barang']['kd_barang'];
+                            $det->saldo = $val['saldo'];
+                            $det->p = isset($val['p']) ? date('Y-m-d', strtotime($val['p'])) : null;
+                            $det->no_wo = (empty($valWo['no_wo'])) ? '-' : $valWo['no_wo'];
+                            $det->save();
+                        }
                     }
                 }
+                
             }
             $this->setHeader(200);
             echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
