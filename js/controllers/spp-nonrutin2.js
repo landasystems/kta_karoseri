@@ -7,6 +7,7 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
     $scope.is_view = false;
     $scope.is_create = false;
     $scope.sppDet = [];
+    $scope.detBaru = false;
     $scope.open1 = function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
@@ -102,7 +103,7 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
 //                no_wo: '',
 //            }];
     };
-    
+
     $scope.update = function (form) {
         $scope.is_create = false;
         $scope.is_edit = true;
@@ -115,7 +116,7 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.getDetail(form.no_spp);
         $scope.form.tgl_trans = new Date(form.tgl_trans);
     };
-    
+
     $scope.view = function (form) {
         $scope.is_edit = true;
         $scope.is_view = true;
@@ -126,7 +127,7 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
         $scope.form.periode = {startDate: start, endDate: end};
         $scope.getDetail(form.no_spp);
     };
-    
+
     $scope.save = function (form, details) {
         var data = {
             form: form,
@@ -143,7 +144,7 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
             }
         });
     };
-    
+
     $scope.cancel = function () {
         $scope.is_create = false;
         $scope.is_edit = false;
@@ -167,8 +168,8 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
             a: '',
             stat_spp: '',
             no_wo: [],
-        }
-        $scope.sppDet.unshift(newDet);
+        };
+        $scope.detBaru = true;
         $scope.modal(newDet);
     };
     $scope.removeRow = function (paramindex) {
@@ -184,20 +185,27 @@ app.controller('sppNonRutinCtrl', function ($scope, Data, toaster, $modal) {
             $scope.sppDet = data.details;
         });
     };
+    $scope.editDetail = function (data) {
+        $scope.detBaru = false;
+        $scope.modal(data);
+    }
     $scope.modal = function (detail) {
+        console.log($scope.detBaru);
         var modalInstance = $modal.open({
-            templateUrl: 'tpl/t_spp-nonrutin/modal.html',
+            templateUrl: 'tpl/t_spp-nonrutin/modal2.html',
             controller: 'modalCtrl',
             size: 'lg',
+            backdrop: 'static',
             resolve: {
                 form: function () {
                     var data = {
                         detail: detail,
                         is_create: $scope.is_create,
+                        detailSpp: $scope.sppDet,
+                        detBaru: $scope.detBaru,
                     };
                     return data;
-
-                }
+                },
             }
         });
     };
@@ -212,6 +220,38 @@ app.controller('modalCtrl', function ($scope, Data, $modalInstance, form) {
             });
         }
     };
+
+
+    $scope.formmodal = form.detail;
+    $scope.is_create = form.is_create;
+    $scope.detBaru = form.detBaru;
+
+    $scope.detSpp = [{
+            p: $scope.formmodal.p,
+            no_wo: $scope.formmodal.no_wo,
+        }];
+
+    $scope.addDetail = function (data) {
+       
+        var dt = {
+            barang: data.kd_barang,
+            qty: data.qty,
+            ket: data.ket,
+            p: $scope.formmodal.p,
+            no_wo: $scope.formmodal.no_wo,
+        };
+
+//        $scope.detSpp.unshift({
+//            barang: '',
+//            qty: '',
+//            ket: '',
+//            p: $scope.formmodal.p,
+//            no_wo: $scope.formmodal.no_wo,
+//        });
+
+        $scope.detSpp.push(dt);
+    }
+
     $scope.listWo = [];
     $scope.cariWo = function ($query) {
         if ($query.length >= 3) {
@@ -227,32 +267,30 @@ app.controller('modalCtrl', function ($scope, Data, $modalInstance, form) {
         $scope.opened2 = true;
     };
 
-    $scope.formmodal = form.detail;
-    $scope.is_create = form.is_create;
+
     if ($scope.is_create == true) {
         $scope.formmodal.p = new Date();
     } else {
         $scope.formmodal.p = new Date($scope.formmodal.p);
     }
-//    $scope.woMasuk = [];
-//    $scope.woMasuk = form.no_wo;
-//    $scope.woSelected = function (formmodal, woMasuk, items) {
-//        var mongo = form.sppDet;
-//        var index = mongo.indexOf(form.detail);
-//        var data = {
-//            barang: formmodal.barang,
-//            qty: formmodal.qty,
-//            ket: formmodal.ket,
-//            p: formmodal.p,
-//            no_wo: items.no_wo
-//        };
-//        if (woMasuk.length == 1) {
-//            mongo[index] = data;
-//        } else {
-//            mongo.unshift(data);
-//        }
-//    };
+
     $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
+
+        if (form.detBaru == true) {
+            angular.forEach($scope.detSpp, function ($value, $key) {
+                if (typeof $value.qty != 'undefined' && ($value.qty).length > 0) {
+                    (form.detailSpp).push({
+                        barang: $value.barang,
+                        qty: $value.qty,
+                        ket: $value.ket,
+                        p: $scope.formmodal.p,
+                        no_wo: $scope.formmodal.no_wo,
+                    });
+                }
+            });
+        }
+
+        form.detBaru = false;
     };
 });

@@ -614,6 +614,20 @@ angular.module('app')
                                             }]
                                     }})
                                 //
+                                .state('transaksi.sppnonrutin2', {
+                                    url: '/spp-nonrutin2',
+                                    templateUrl: 'tpl/t_spp-nonrutin/index2.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/spp-nonrutin2.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
                                 .state('transaksi.spprutin', {
                                     url: '/spp-rutin',
                                     templateUrl: 'tpl/t_spp-rutin/index.html',

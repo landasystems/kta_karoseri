@@ -138,6 +138,7 @@ app.controller('rolesCtrl', function ($scope, Data, toaster) {
             "transaksi_buktiterima": false,
             "transaksi_spprutin": false,
             "transaksi_sppnonrutin": false,
+            "transaksi_sppnonrutin2": false,
             "transaksi_purchaseorder": false,
             "transaksi_bktbarangmasuk": false,
             "transaksi_bktbarangkeluar": false,
