@@ -207,7 +207,6 @@
                                     <input type="text" class="form-control" 
                                            ng-model="form.telp" 
                                            ng-disabled="is_view" 
-                                           ng-pattern="/^[0-9]+$/"
                                            required>
                                 </div>
                             </div>
@@ -215,7 +214,6 @@
                                 <label class="col-sm-4 control-label">Fax <span class="required"></span></label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" 
-                                           ng-pattern="/^[0-9]+$/" 
                                            ng-model="form.fax"
                                            ng-disabled="is_view" 
                                            required>
@@ -225,7 +223,6 @@
                                 <label class="col-sm-4 control-label">Hp <span class="required"></span></label>
                                 <div class="col-sm-8">
                                     <input type="text" class="form-control" 
-                                           ng-pattern="/^[0-9]+$/" 
                                            ng-model="form.hp"
                                            ng-disabled="is_view" 
                                            required>
@@ -234,7 +231,7 @@
                             <div class="form-group">
                                 <label class="col-sm-4 control-label">Email <span class="required"></span></label>
                                 <div class="col-sm-8">
-                                    <input type="email" class="form-control" 
+                                    <input type="text" class="form-control" 
                                            ng-model="form.email" 
                                            ng-disabled="is_view"
                                            required>
