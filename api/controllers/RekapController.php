@@ -192,8 +192,8 @@ class RekapController extends Controller {
                     $query->andFilterWhere(['like', 'vws.' . $key, $val]);
                 } elseif ($key == 'no_spk') {
                     $query->andFilterWhere(['like', 'spk.' . $key, $val]);
-                } elseif ($key == 'model') {
-                    $query->andFilterWhere(['like', 'model.' . $key, $val]);
+                } elseif ($key == 'no_chassis') {
+                    $query->andFilterWhere(['like', 'vws.' . $key, $val]);
                 } elseif ($key == 'nama') {
                     $query->andFilterWhere(['like', 'customer.' . $key, $val]);
                 } elseif ($key == 'nm_customer') {
@@ -202,8 +202,8 @@ class RekapController extends Controller {
                     $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
                 } elseif ($key == 'merk') {
                     $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
-                } elseif ($key == 'tipe') {
-                    $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
+                } elseif ($key == 'no_mesin') {
+                    $query->andFilterWhere(['like', 'vws.' . $key, $val]);
                 }
             }
         }
