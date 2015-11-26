@@ -333,13 +333,13 @@
                                 <tr>
                                     <td id="print_bbm" width="30">Dari</td>
                                     <td id="print_bbm" width="1">:</td>
-                                    <td id="print_bbm">{{form.po.nm_supplier}} - {{form.po.alamat_supplier}} </td>
+                                    <td id="print_bbm">{{form.po.nm_supplier}}<br>{{form.po.alamat_supplier}} </td>
                                 </tr>
-                                <tr>
-                                    <td id="print_bbm">SJ</td>
-                                    <td id="print_bbm" width="1">:</td>
-                                    <td id="print_bbm">{{form.surat_jalan}}</td>
-                                </tr>
+                                <!--                                <tr>
+                                                                    <td id="print_bbm">SJ</td>
+                                                                    <td id="print_bbm" width="1">:</td>
+                                                                    <td id="print_bbm">{{form.surat_jalan}}</td>
+                                                                </tr>-->
                             </table>    
                         </td>
                     </tr>
@@ -361,7 +361,9 @@
                         <td style="border-right: 1px #000 solid;" class="print_bbm_td">{{detail.barang.nm_barang}}</td>
                         <td style="text-align: center; border-right: 1px #000 solid;" class="print_bbm_td">{{detail.jumlah}} {{detail.barang.satuan}}</td>
                         <td style="text-align: center; border-right: 1px #000 solid;" class="print_bbm_td">{{detail.barang.kd_barang}}</td>
-                        <td class="print_bbm_td" style="border-right: none;">{{detail.keterangan}}</td>
+                        <!--<td class="print_bbm_td" style="border-right: none;">{{detail.keterangan}}</td>-->
+                        <td class="print_bbm_td" style="border-right: none;" ng-if="$index == 0">{{detail.keterangan}}. ( SJ : {{form.surat_jalan}} )</td>
+                        <td class="print_bbm_td" style="border-right: none;" ng-if="$index > 0">{{detail.keterangan}}</td>
                     </tr>
                     <tr>
                         <td style="border-right: 1px #000 solid;"></td>

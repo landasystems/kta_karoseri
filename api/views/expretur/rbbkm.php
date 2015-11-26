@@ -12,8 +12,16 @@ foreach ($models as $key => $val) {
     $data[$val['kd_barang']]['jml'] = isset($data[$val['kd_barang']]['jml']) ? $data[$val['kd_barang']]['jml'] + $val['jml'] : $val['jml'];
 }
 ?>
+<!--<style>
+    @media print{
+        @page {
+            size: portrait;
+            margin: 25px;
+        }
+    }
+</style>-->
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
-<div style="width:26cm">
+<div style="width:21cm">
     <?php
     if (isset($_GET['print'])) {
         ?>

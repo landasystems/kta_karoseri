@@ -44,7 +44,7 @@ app.controller('returBbmCtrl', function ($scope, Data, toaster) {
         if (selisih >= 0) {
 
         } else {
-            $scope.form.jml = 0;
+//            $scope.form.jml = 0;
             toaster.pop('error', "Jumlah retur tidak boleh 0 / melebihi jumlah BBK");
         }
     }

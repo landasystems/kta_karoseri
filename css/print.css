@@ -229,22 +229,22 @@ span.label{width: 180px;display: inline-table;}
 
 .border-left {
     border-left: 1px #000 solid;
-    padding: 2px;
+    padding: 1px;
 }
 
 .border-top {
     border-top: 1px #000 solid;
-    padding: 2px;
+    padding: 1px;
 }
 
 .border-right {
     border-right: 1px #000 solid;
-    padding: 2px;
+    padding: 1px;
 }
 
 .border-bottom {
     border-bottom: 1px #000 solid;
-    padding: 2px;
+    padding: 1px;
 }
 
 .border-all {
@@ -252,7 +252,7 @@ span.label{width: 180px;display: inline-table;}
     border-left: 1px #000 solid;
     border-top: 1px #000 solid;
     border-right: 1px #000 solid;
-    padding: 2px;
+    padding: 1px;
 }
 
 .back-grey{
@@ -280,4 +280,10 @@ td {
 
 th{
     vertical-align: middle;
+}
+
+table.table-print tr td, table.table-print tr th {
+    page-break-inside: avoid;
+    page-break-after: avoid;
+     page-break-before: avoid;
 }

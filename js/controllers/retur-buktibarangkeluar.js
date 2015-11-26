@@ -40,12 +40,14 @@ app.controller('returbbkCtrl', function ($scope, Data, toaster) {
     };
 
     $scope.kalkulasi = function (jml_bbk, jml_keluar) {
-        var selisih = jml_bbk - jml_keluar;
-        if (selisih >= 0) {
+        if (jml_keluar != '') {
+            var selisih = jml_bbk - jml_keluar;
+            if (selisih >= 0) {
 
-        } else {
-            $scope.form.jml = 0;
-            toaster.pop('error', "Jumlah retur tidak boleh 0 / melebihi jumlah BBK");
+            } else {
+//            $scope.form.jml = 0;
+                toaster.pop('error', "Jumlah retur tidak boleh 0 / melebihi jumlah BBK");
+            }
         }
     }
 

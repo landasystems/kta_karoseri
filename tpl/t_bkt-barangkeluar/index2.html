@@ -339,11 +339,14 @@
                                     <p ng-show="form.kat_bbk == 'produksi'">{{detail.kd_barang.standard}}<p>
                                     <p ng-show="form.kat_bbk == 'umum'">-</p>
                                 </td>
-                                <td ng-show="is_create">
-                                    <p ng-show="form.kat_bbk == 'produksi'">{{detail.kd_barang.sisa_pengambilan}}<p><p ng-show="form.kat_bbk == 'umum'">-</p>
+                                <td ng-show="is_create">{{detail.kd_barang.sisa_pengambilan}}
+<!--                                    <p ng-if="form.kat_bbk == 'produksi'"><p>
+                                    <p ng-if="form.kat_bbk == 'umum'">{{detail.kd_barang.sisa_pengambilan}}</p>-->
                                 </td>
                                 <td ng-show="is_create">
-                                    <p ng-show="form.kat_bbk == 'produksi'">{{detail.kd_barang.stok_sekarang}}</p><p ng-show="form.kat_bbk == 'umum'">{{detail.kd_barang.stok_sekarang}}<p>
+                                    {{detail.kd_barang.stok_sekarang}}
+<!--                                    <p ng-show="form.kat_bbk == 'produksi'"></p>
+                                    <p ng-show="form.kat_bbk == 'umum'">{{detail.kd_barang.stok_sekarang}}<p>-->
                                 </td>
                                 <td ng-if="form.kat_bbk == 'produksi'">
                                     <input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control angka" ng-change="kalkulasi2($index);" ng-readonly="detail.error_kalkulasi == true">
@@ -390,7 +393,8 @@
             }
         </style>
         <!--<div style="width: 11.1cm; margin: 0px;">-->
-        <div style="margin: 0px; width: 16cm;" ng-repeat="hal in detailBbkPrint">
+        <div style="margin: 0px; width: 16cm; height: 12.5cm" ng-repeat="hal in detailBbkPrint">
+            <!--<div style="page-break-after:always;">-->
             <!--<table style="width: 11.1cm; height: 1cm;">-->
             <table style="height: 0.5cm; padding: 0px">
                 <tr>
@@ -458,7 +462,8 @@
                     <td align="center" id="print_bbk">{{form.penerima.nama}}</td>
                 </tr>
             </table>
-            <!--<div style="page-break-after: always"></div>-->
+            <!--<div style="page-break-after:  avoid"></div>-->
+            <!--</div>-->
         </div>
     </div>
 </div>
