@@ -56,26 +56,31 @@ class SiteController extends Controller {
     }
 
     public function actionLogout() {
+
         session_start();
         session_destroy();
     }
 
     public function actionCoba() {
-        $query = new Query;
-        $query->select("tk.nik, tk.nama, tjb.jabatan")
-                ->from('purchassing.tbl_karyawan as tk')
-                ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = tk.jabatan')
-                ->join('JOIN', 'ftm.emp as emp', 'emp.nik = tk.nik')
-                ->join('JOIN', 'ftm.att_log as att_log', 'att_log.pin = emp.pin')
-//                    ->where('date(att_log.scan_date) = "' . date("Y-m-d") . '"')
-                ->andWhere('tk.jabatan = "JBTN002"')
-                ->groupBy('tk.nik')
-                ->limit(20);
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        echo json_encode(array('status' => 1, 'data' => $models));
+        header("Expires: " . gmdate("D, d M Y H:i:s", time()) . " GMT");
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        header("Cache-Control: no-cache, must-revalidate");
+        header("Pragma: no-cache");
+//        $query = new Query;
+//        $query->select("tk.nik, tk.nama, tjb.jabatan")
+//                ->from('purchassing.tbl_karyawan as tk')
+//                ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = tk.jabatan')
+//                ->join('JOIN', 'ftm.emp as emp', 'emp.nik = tk.nik')
+//                ->join('JOIN', 'ftm.att_log as att_log', 'att_log.pin = emp.pin')
+////                    ->where('date(att_log.scan_date) = "' . date("Y-m-d") . '"')
+//                ->andWhere('tk.jabatan = "JBTN002"')
+//                ->groupBy('tk.nik')
+//                ->limit(20);
+//
+//        $command = $query->createCommand();
+//        $models = $command->queryAll();
+//
+//        echo json_encode(array('status' => 1, 'data' => $models));
 //        $query = new Query;
 //        $query->select("tk.nik, tk.nama, tjb.jabatan")
 //                ->from('purchassing.tbl_karyawan as tk')
@@ -86,8 +91,7 @@ class SiteController extends Controller {
 //
 //        $command = $query->createCommand();
 //        $models = $command->queryAll();
-
-        echo json_encode($models);
+//        echo json_encode($models);
 //        $query = new Query;
 //        $query->from('det_standar_bahan as dts')
 //                ->join('JOIN', 'barang as brg', 'dts.kd_barang = brg.kd_barang')
@@ -170,6 +174,12 @@ class SiteController extends Controller {
 
         header($status_header);
         header('Content-type: ' . $content_type);
+
+        header("Expires: Tue, 01 Jan 2000 00:00:00 GMT");
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
     }
 
     private function _getStatusCodeMessage($status) {

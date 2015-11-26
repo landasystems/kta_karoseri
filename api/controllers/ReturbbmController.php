@@ -303,7 +303,7 @@ class ReturbbmController extends Controller {
         if ($model->alasan == 'Tidak Sesuai') {
             //kembalikan stok barang ke semula
             $barang = Barang::find()->where('kd_barang="' . $params['kd_barang']['kd_barang'] . '"')->one();
-            $barang->saldo -= $model->jml;
+            $barang->saldo += $model->jml;
             $barang->save();
         }
         $model->attributes = $params;
@@ -314,7 +314,7 @@ class ReturbbmController extends Controller {
             if ($model->alasan == 'Tidak Sesuai') {
                 //update stok barang dengan yang baru
                 $barang = Barang::find()->where('kd_barang="' . $params['kd_barang']['kd_barang'] . '"')->one();
-                $barang->saldo += $model->jml;
+                $barang->saldo -= $model->jml;
                 $barang->save();
             }
             $this->setHeader(200);

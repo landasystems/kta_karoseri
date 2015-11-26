@@ -24,20 +24,24 @@ foreach ($models as $val) {
     $i++;
 }
 ?>
-<div style="width:24cm">
-    <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;" width="100%">
+<!--<style>
+    @media print{
+        @page {
+            size: portrait;
+            margin: 25px;
+        }
+    }
+</style>-->
+<div style="width:100%">
+    <table class="table-print" style="border-collapse: collapse; border: 1px #000 solid; font-size: 10px;" width="100%" style="height: 150px;">
         <tr>
             <td class="border-right border-bottom"  rowspan="4" colspan="2" align="center" width="30%">
-                <br>
-                <br>
-                <p><b style="margin: 2px;font-size:14px;">SURAT PERINTAH PEMBELIAN</b></p>
-                <h1 style="margin: 2px;" style="font-size:16px;">RUTIN</h1>
-                <p style="font-size:11px;">No Dokument :  FR-INV-013 Rev.03</p>
-                <br><br>
-
+                <p style="margin-top: 10px;"><b style="margin: 2px;font-size:12px;">SURAT PERINTAH PEMBELIAN</b></p>
+                <h1 style="margin: 1px;" style="font-size:13px;">RUTIN</h1>
+                <p style="font-size:10px; margin-bottom: 10px;">No Dokument :  FR-INV-013 Rev.03</p>
             </td>
             <td class="border-right border-bottom"  rowspan="4" colspan="3" valign="top">
-                <table style="font-size:11px;">
+                <table style="font-size:10px;">
                     <tr>
                         <td>No. SPP</td>
                         <td> : <?= $id ?></td>
@@ -65,29 +69,28 @@ foreach ($models as $val) {
 
                 </table>
             </td>
-            <td class="border-right border-bottom" style="text-align: center;width:10%;">Dibuat Oleh</td>
+            <td class="border-right border-bottom" style="text-align: center;width:10%; height:25px;">Dibuat Oleh</td>
             <td class="border-right border-bottom" style="text-align: center;width:10%;">Diperiksa Oleh</td>
             <td class="border-right border-bottom" style="text-align: center;width:10%;">Diketahui Oleh</td>
             <td class="border-right border-bottom" style="text-align: center;width:10%;">Diterima Oleh</td>
         </tr>
         <tr>
-            <td class="border-right border-bottom" style="text-align: center;" rowspan="2"></td>
-            <td class="border-right border-bottom" style="text-align: center;" rowspan="2"></td>
-            <td class="border-right border-bottom" style="text-align: center;"rowspan="2"></td>
-            <td class="border-right border-bottom" style="text-align: center;"rowspan="2"></td>
+            <td class="border-right border-bottom" style="text-align: center;"></td>
+            <td class="border-right border-bottom" style="text-align: center;"></td>
+            <td class="border-right border-bottom" style="text-align: center;"></td>
+            <td class="border-right border-bottom" style="text-align: center;"></td>
         </tr>
-        <tr></tr>
         <tr>
-            <td class="border-right border-bottom" style="text-align: center;">Inventory</td>
+            <td class="border-right border-bottom" style="text-align: center; height: 25px;">Inventory</td>
             <td class="border-right border-bottom" style="text-align: center;">ADH</td>
             <td class="border-right border-bottom" style="text-align: center;">Finance</td>
             <td class="border-right border-bottom" style="text-align: center;">Purchasing</td>
         </tr>
     </table>
-    <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 10px; margin-top:-2px;" width='100%'>
+    <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 9px; margin-top:-2px;" width='100%'>
         <tr>
             <th class="border-right border-bottom" style="text-align: center;" rowspan="2">NO</th>
-            <th class="border-right border-bottom" style="text-align: center;" rowspan="2" width="75">KODE BARANG</th>
+            <th class="border-right border-bottom" style="text-align: center;" rowspan="2" width="55">KODE BARANG</th>
             <th class="border-right border-bottom" style="text-align: center;" rowspan="2">URAIAN</th>
             <th class="border-right border-bottom" style="text-align: center;" rowspan="2">SAT</th>
             <th class="border-right border-bottom" style="text-align: center;" rowspan="2">MAX. STOK</th>
@@ -99,8 +102,8 @@ foreach ($models as $val) {
 
         </tr>
         <tr>
-            <th class="border-right border-bottom" style="text-align: center;">P</th>
-            <th class="border-right border-bottom" style="text-align: center;">A</th>
+            <th class="border-right border-bottom" style="text-align: center;" width="45">P</th>
+            <th class="border-right border-bottom" style="text-align: center;" width="45">A</th>
         </tr>
 
         <?php
@@ -123,8 +126,8 @@ foreach ($models as $val) {
                     <td class="border-right border-bottom" style="text-align:center; width: 25px;">&nbsp;<?= $vals['saldo'] ?></td>
                     <td class="border-right border-bottom" style="text-align:center; width: 45px;">&nbsp;<?= $vals['qty'] ?></td>
                     <td class="border-right border-bottom" style="width: 220px;"><?= $vals['ket'] ?></td>
-                    <td class="border-right border-bottom" width="40"><?= $p; ?></td>
-                    <td class="border-right border-bottom" width="40"><?= $a; ?></td>
+                    <td class="border-right border-bottom" width="45"><?= $p; ?></td>
+                    <td class="border-right border-bottom" width="45"><?= $a; ?></td>
                 </tr>
                 <?php
                 $no++;

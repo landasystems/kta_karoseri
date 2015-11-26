@@ -1,5 +1,6 @@
 app.controller('barangCtrl', function ($scope, Data, toaster, FileUploader, $modal) {
     //init data;
+
     var tableStateRef;
     var paramRef;
     $scope.displayed = [];

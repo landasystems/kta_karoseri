@@ -19,8 +19,16 @@ foreach ($models as $val) {
     $data[$val['no_bbm']]['body'][$val['kd_barang']]['keterangan'] = $val['keterangan'];
 }
 ?>
+<!--<style>
+    @media print{
+        @page {
+            size: portrait;
+            margin: 25px;
+        }
+    }
+</style>-->
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
-<div style="width:21cm">
+<div style="width:100%">
     <?php
     if (isset($_GET['print'])) {
         ?>

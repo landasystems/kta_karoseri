@@ -324,6 +324,7 @@ class BbkController extends Controller {
                 $det[$key]['kd_barang'] = $val['kd_barang'];
                 $det[$key]['satuan'] = $val['satuan'];
                 $det[$key]['nm_barang'] = $val['nm_barang'];
+                $det[$key]['stok_barang'] = $val['saldo'];
                 $det[$key]['stok_sekarang'] = $val['saldo'];
                 $det[$key]['sisa_pengambilan'] = 0;
             }
@@ -386,6 +387,9 @@ class BbkController extends Controller {
                         ->where('(b.nm_barang like "%' . $params['nama'] . '%" or b.kd_barang like "%' . $params['nama'] . '%" ) and tsbw.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_jab']['id_jabatan'] . '"');
             }
 
+            if (isset($params['copy_bbk']) && $params['copy_bbk'] == "ya")
+                $query->andWhere(['IN', 'b.kd_barang', $kdBrg]);
+
             $command = $query->createCommand();
             $models = $command->queryAll();
 
@@ -395,6 +399,9 @@ class BbkController extends Controller {
                     ->join('JOIN', 'det_bbk as db', 'tb.no_bbk = db.no_bbk')
                     ->select('db.kd_barang, db.jml')
                     ->where('tb.no_wo = "' . $params['no_wo']['no_wo'] . '" and tb.kd_jab = "' . $params['kd_jab']['id_jabatan'] . '"');
+
+//            if (isset($params['copy_bbk']) && $params['copy_bbk'] == "ya")
+//                $queryBbk->andWhere(['IN', 'db.kd_barang', $kdBrg]);
 
             $commandBbk = $queryBbk->createCommand();
             $modelsBbk = $commandBbk->queryAll();
@@ -437,7 +444,6 @@ class BbkController extends Controller {
             }
 
             //================ masukkan data ke dalam array untu ditampilkan =============//
-
             $det = array();
             $i = 0;
             foreach ($models as $val) {

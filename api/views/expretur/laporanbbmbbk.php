@@ -4,8 +4,16 @@ if (!isset($_GET['print'])) {
     header("Content-Disposition: attachment; filename=excel-Laporan-bbm-dan-bbk.xls");
 }
 ?>
+<!--<style>
+    @media print{
+        @page {
+            size: portrait;
+            margin: 25px;
+        }
+    }
+</style>-->
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
-<div style="width:21cm">
+<div style="width:100%">
     <table style="border-collapse: collapse; border: 1px #000 solid; font-size: 12px;" width="100%" border="1">
         <tr>
             <td rowspan="2" style="vertical-align: middle;text-align: center;width: 30%;" class="border-all">

@@ -101,7 +101,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
 
     $scope.kalkulasi2 = function (indek) {
         if ($scope.form.kat_bbk == 'produksi') {
-            var jml = ($scope.detailBbk[indek]['jml']) ? parseInt($scope.detailBbk[indek]['jml']) : 0;
+            var jml = ($scope.detailBbk[indek]['jml']) ? $scope.detailBbk[indek]['jml'] : 0;
 
             var tmpSisa = $scope.detailBbk[indek]['sisaAmbil'];
             var tmpStok = $scope.detailBbk[indek]['stok_sekarang'];
@@ -153,7 +153,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                 }
             });
         } else {
-            var jml = ($scope.detailBbk[indek]['jml']) ? parseInt($scope.detailBbk[indek]['jml']) : 0;
+            var jml = ($scope.detailBbk[indek]['jml']) ? $scope.detailBbk[indek]['jml'] : 0;
 
             var tmpStok = $scope.detailBbk[indek]['kd_barang']['stok_barang'];
 
@@ -336,11 +336,12 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                 var Detail = $scope.detailBbk;
                 delete $scope.detailBbk;
                 var Det = [];
-                Data.post('bbk/listbarang2', {nama: $query, no_wo: no_wo, kd_jab: kd_jab, listBarang: [{}]}).then(function (data) {
+                Data.post('bbk/listbarang2', {nama: $query, no_wo: no_wo, kd_jab: kd_jab, listBarang: Detail, copy_bbk: "ya"}).then(function (data) {
+                    console.log(data + " <- BRG NEW");
                     angular.forEach(data.data, function ($value, $key) {
                         $scope.resultsbarang.push($value);
                         angular.forEach(Detail, function ($value2, $key2) {
-                            if ($value2.kd_barang.kd_barang == $value.kd_barang) {
+                            if ($key == $key2) {
                                 var barang = {
                                     kd_barang: $value,
                                     sisaAmbil: $value.sisa_pengambilan,
@@ -358,6 +359,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                     });
                     $scope.detailBbk = Det;
                     $scope.kalkulasiCopy();
+
                 });
 
                 if ($scope.is_create == true) {
@@ -602,8 +604,8 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                         $scope.detailBbk.push(barang);
                     }
                 });
-
             }
+            console.log($scope.detailBbk + " <- ASLI");
 
             $scope.detPrint($scope.detailBbk);
         });
