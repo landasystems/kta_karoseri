@@ -103,7 +103,7 @@ if (!isset($_GET['print'])) {
         foreach ($data as $key) {
             echo '<tr>'
             . '<td class="border-all"></td>'
-            . '<td class="border-all back-blue">' . $key['title']['lokasi'] . ' :</td>'
+            . '<td class="border-all back-blue" style="background-color:blue; color:#ffffff">' . $key['title']['lokasi'] . ' :</td>'
             . '<td class="border-all"></td>'
             . '<td class="border-all"></td>'
             . '<td class="border-all"></td>'
@@ -115,7 +115,7 @@ if (!isset($_GET['print'])) {
             foreach ($key['sales'] as $val) {
                 echo '<tr>'
                 . '<td class="border-all"></td>'
-                . '<td style="width:100px;" class="border-all back-yellow">' . $val['sales'] . '</td>'
+                . '<td style="width:100px;background-color:yellow" class="border-all back-yellow">' . $val['sales'] . '</td>'
                 . '<td class="border-all"></td>'
                 . '<td class="border-all"></td>'
                 . '<td class="border-all"></td>'
@@ -128,7 +128,7 @@ if (!isset($_GET['print'])) {
                 foreach ($val['jenis'] as $val2) {
                     echo '<tr>'
                     . '<td class="border-all"></td>'
-                    . '<td class="border-all back-grey">' . $val2['jenis'] . '</td>'
+                    . '<td class="border-all back-grey" style="background-color:gray;color:#ffffff">' . $val2['jenis'] . '</td>'
                     . '<td class="border-all"></td>'
                     . '<td class="border-all"></td>'
                     . '<td class="border-all"></td>'

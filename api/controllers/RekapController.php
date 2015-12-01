@@ -477,7 +477,7 @@ class RekapController extends Controller {
         $sales = $command2->queryAll();
         $asu = array();
         foreach ($sales as $data) {
-            $asu[] = ['name' => $data['nama'], 'y' => (int) $data['jumlah']];
+            $asu[] = ['name' => $data['nama'].'(10)', 'y' => (int) $data['jumlah']];
         }
         // Berdasarkan Merk
         $query->select("chassis.merk,count(*) as jumlah");
