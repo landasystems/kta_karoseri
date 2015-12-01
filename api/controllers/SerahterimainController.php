@@ -164,6 +164,7 @@ class SerahterimainController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
+      
         $model = Serahterimain::find()->where('kd_titipan="' . $params['kd_titipan'] . '"')->one();
         if (empty($model)) {
             $model = new Serahterimain();
@@ -173,9 +174,10 @@ class SerahterimainController extends Controller {
         $model->status = 1;
 
         $warna = \app\models\Warna::find()->where('kd_warna="' . $params['warna']['kd_warna'] . '"')->one();
+          Yii::error($warna);
         if (empty($warna)) {
             $warna = new \app\models\Warna();
-            $warna->attributes = $params;
+            $warna->warna = $params['warna']['warna'];
             $warna->save();
         }
         $model->kd_warna = $warna->kd_warna;
@@ -190,6 +192,7 @@ class SerahterimainController extends Controller {
 
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
+        Yii::error($params);
         $model = $this->findModel($id);
         $model->attributes = $params;
         $warna = \app\models\Warna::findOne($params['warna']['kd_warna']);
