@@ -369,6 +369,20 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
 
         });
     };
+    $scope.tagTransformwarna2 = function(newTag) {
+        var item = {
+            plat_body: newTag,
+        };
+
+        return item;
+    };
+    $scope.tagTransformwarna1 = function(newTag) {
+        var item = {
+            plat_body: newTag,
+        };
+
+        return item;
+    };
     $scope.tagTransformplat = function(newTag) {
         var item = {
             plat_body: newTag,
