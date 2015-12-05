@@ -28,8 +28,16 @@ foreach ($models as $key => $val) {
 }
 $kode_print = substr('00000' . $no_print, strlen($no_print));
 ?>
+<!--<style>
+    @media print{
+        @page {
+            size: landscape;
+            margin: 25px;
+        }
+    }
+</style>-->
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
-<div style="width:26cm">
+<div >
     <table style="border-collapse: collapse; font-size: 12px;" width="100%" border="1">
         <tr>
             <td class="border-right" rowspan="4" colspan="3">

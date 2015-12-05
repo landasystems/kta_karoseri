@@ -269,6 +269,19 @@ angular.module('app')
                                             }]
                                     }
                                 })
+                                // warna
+                                .state('master.warna', {
+                                    url: '/warna',
+                                    templateUrl: 'tpl/m_warna/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+
+                                                return $ocLazyLoad.load('js/controllers/warna.js');
+
+                                            }]
+                                    }
+                                })
 
                                 // user
                                 .state('master.user', {
@@ -609,6 +622,20 @@ angular.module('app')
                                                 return $ocLazyLoad.load(['daterangepicker']).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/spp-nonrutin.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
+                                //
+                                .state('transaksi.sppnonrutin2', {
+                                    url: '/spp-nonrutin2',
+                                    templateUrl: 'tpl/t_spp-nonrutin/index2.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['daterangepicker']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/spp-nonrutin2.js');
                                                         }
                                                 );
                                             }]

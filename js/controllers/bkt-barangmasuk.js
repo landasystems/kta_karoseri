@@ -94,7 +94,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
     $scope.cariBarang = function ($query, $po) {
         $scope.results = [];
         if (typeof $scope.form.po != "undefined" && $scope.is_create == true) {
-            Data.post('bbm/caribarang', {barang: $query, no_po: $po, listBarang: $scope.detBbm}).then(function (data) {
+            Data.post('bbm/caribarang2', {barang: $query, no_po: $po, listBarang: $scope.detBbm}).then(function (data) {
                 if ($scope.is_create == false) {
                     angular.forEach(data.data, function ($value, $key) {
                         $scope.results.push($value);
@@ -105,7 +105,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
                 }
             });
         } else if ($query.length >= 3) {
-            Data.post('bbm/caribarang', {barang: $query, no_po: $po, listBarang: $scope.detBbm}).then(function (data) {
+            Data.post('bbm/caribarang2', {barang: $query, no_po: $po, listBarang: $scope.detBbm}).then(function (data) {
                 if ($scope.is_create == false) {
                     angular.forEach(data.data, function ($value, $key) {
                         $scope.results.push($value);

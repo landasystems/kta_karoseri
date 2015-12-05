@@ -35,6 +35,7 @@ class BbmController extends Controller {
                     'detailstok' => ['post'],
                     'excelserahterima' => ['get'],
                     'caribarang' => ['post'],
+                    'caribarang2' => ['post'],
                     'lock' => ['post'],
                     'unlock' => ['post'],
                 ],
@@ -113,6 +114,80 @@ class BbmController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $models));
     }
 
+    public function actionCaribarang2() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $kdBrg = array();
+
+        foreach ($params['listBarang'] as $val) {
+            $kdBrg[] = isset($val['kd_barang']) ? $val['kd_barang'] : '';
+        }
+
+        $models = array();
+        $barang = isset($params['barang']) ? $params['barang'] : '';
+        $po = isset($params['no_po']) ? $params['no_po'] : '';
+
+        //=================== AMBIL BARANG PO =====================//
+        $query = new Query;
+        $query->from('detail_po')
+                ->join('JOIN', 'barang', 'barang.kd_barang = detail_po.kd_barang')
+                ->select("barang.kd_barang, barang.nm_barang, barang.satuan, detail_po.jml as jml_po, detail_po.nota")
+                ->where(['like', 'barang.nm_barang', $barang])
+                ->orWhere(['like', 'barang.kd_barang', $barang])
+                ->andWhere(['like', 'detail_po.nota', $po])
+                ->andWhere(['NOT IN', 'barang.kd_barang', $kdBrg])
+                ->andWhere("barang.nm_barang != '-' && barang.kd_barang != '-'");
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        //===================== AMBIL JUMLAH BBM PER BARANG ==================//
+        $query = new Query;
+        $query->from('det_bbm')
+                ->join('JOIN', 'trans_bbm', 'det_bbm.no_bbm = trans_bbm.no_bbm')
+                ->select('*')
+                ->where('trans_bbm.no_po = "' . $po . '"');
+        $command = $query->createCommand();
+        $bbm = $command->queryAll();
+
+        $detBbm = array();
+        foreach ($bbm as $valBbm) {
+            $detBbm[$valBbm['kd_barang']]['jml_bbm'] = isset($detBbm[$valBbm['kd_barang']]['jml_bbm']) ? $detBbm[$valBbm['kd_barang']]['jml_bbm'] + $valBbm['jumlah'] : $valBbm['jumlah'];
+        }
+
+        //===================== JUMLAH RETUR ======================//
+        $queryRetur = new Query;
+        $queryRetur->from('retur_bbm as rb')
+                ->join('JOIN', 'det_bbm as db', 'rb.no_bbm = db.no_bbm')
+                ->join('JOIN', 'trans_bbm as tb', 'tb.no_bbm = db.no_bbm')
+                ->select('db.kd_barang, rb.jml')
+                ->where('tb.no_po = "' . $po . '"');
+
+        $commandRetur = $queryRetur->createCommand();
+        $modelsRetur = $commandRetur->queryAll();
+
+        $detRetur = array();
+        foreach ($modelsRetur as $valRetur) {
+            $detRetur[$valRetur['kd_barang']]['jml_retur'] = isset($detRetur[$valRetur['kd_barang']]['jml']) ? $detRetur[$valRetur['kd_barang']]['jml'] + $valRetur['jml'] : $valRetur['jml'];
+        }
+
+
+        $data = array();
+        $i = 0;
+        foreach ($models as $key => $val) {
+            $bbm = isset($detBbm[$val['kd_barang']]['jml_bbm']) ? $detBbm[$val['kd_barang']]['jml_bbm'] : 0;
+            $retur = isset($detRetur[$val['kd_barang']]['jml_retur']) ? $detRetur[$val['kd_barang']]['jml_retur'] : 0;
+
+            $models[$key] = $val;
+            $models[$i]['jml_po'] = $val['jml_po'];
+            $models[$i]['telah_diambil'] = $bbm - $retur;
+            $models[$i]['sisa_ambil'] = $val['jml_po'] - $bbm + $retur;
+            $i++;
+        }
+
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+
     public function actionListbbm() {
         $param = $_REQUEST;
         $query = new Query;
@@ -163,11 +238,11 @@ class BbmController extends Controller {
         if (empty($cek)) {
             $command = $query->createCommand();
             $models = $command->query()->read();
-            $urut = substr($models['no_bbm'], 4) + 1;
-            $kode = substr('0000' . $urut, strlen($urut));
+            $urut = substr($models['no_bbm'], 5) + 1;
+            $kode = substr('00000' . $urut, strlen($urut));
             $kode = "BM" . date("y") . $kode;
         } else {
-            $kode = "BM" . date("y") . "0001";
+            $kode = "BM" . date("y") . "00001";
         }
         $this->setHeader(200);
 
@@ -342,13 +417,15 @@ class BbmController extends Controller {
 
         $model = $this->findModel($id);
         $data = $model->attributes;
-        $data['po'] = array('nota' => $model->no_po);
+
         $querySup = new Query;
         $querySup->select("*")
                 ->from('supplier')
                 ->where('kd_supplier="' . $model->kd_suplier . '"');
         $commandSup = $querySup->createCommand();
         $sup = $commandSup->query()->read();
+
+        $data['po'] = array('nota' => $model->no_po, 'kd_supplier' => $sup['kd_supplier'], 'nm_supplier' => $sup['nama_supplier'], 'alamat_supplier' => $sup['alamat']);
 
         $det = DetBbm::find()
                 ->with(['barang'])
@@ -392,9 +469,9 @@ class BbmController extends Controller {
 
         $model = new TransBbm();
         $model->attributes = $params['form'];
-        $findNumber = TransBbm::find()->orderBy('no_bbm DESC')->one();
-        $lastNumber = (int) substr($findNumber->no_bbm, -5);
-        $model->no_bbm = 'BM' . date('y', strtotime($model->tgl_nota)) . substr('00000' . ($lastNumber + 1), -5);
+//        $findNumber = TransBbm::find()->orderBy('no_bbm DESC')->one();
+//        $lastNumber = (int) substr($findNumber->no_bbm, -5);
+//        $model->no_bbm = 'BM' . date('y', strtotime($model->tgl_nota)) . substr('00000' . ($lastNumber + 1), -5);
         $model->kd_suplier = $params['form']['kd_supplier'];
         $model->no_wo = (isset($params['form']['wo']['no_wo']) ? $params['form']['wo']['no_wo'] : '-');
         $model->no_po = (isset($params['form']['po']['nota'])) ? $params['form']['po']['nota'] : NULL;
@@ -413,6 +490,7 @@ class BbmController extends Controller {
                         $det->kd_barang = $val['barang']['kd_barang'];
                         $det->no_bbm = $model->no_bbm;
                         $det->no_po = $model->no_po;
+                        $det->tgl_terima = $model->tgl_nota;
                         $det->save();
 
                         if (!empty($no_spp)) {
@@ -480,7 +558,7 @@ class BbmController extends Controller {
                 $det->kd_barang = $val['barang']['kd_barang'];
                 $det->no_bbm = $model->no_bbm;
                 $det->no_po = $model->no_po;
-                $det->no_po = $model->tgl_nota;
+                $det->tgl_terima = $model->tgl_nota;
                 $det->save();
 
                 //update tanggal aktual spp

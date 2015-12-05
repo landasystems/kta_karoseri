@@ -217,7 +217,7 @@ class DeliveryController extends Controller {
     public function actionRekap() {
         $params = $_REQUEST;
         $filter = array();
-        $sort = "dev.id desc";
+        $sort = "dev.tgl_delivery ASC";
         $offset = 0;
         $limit = 10;
 

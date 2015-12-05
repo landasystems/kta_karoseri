@@ -191,7 +191,7 @@ class PoController extends Controller {
             $data[$key]['listspp'] = (empty($spp)) ? [] : $spp->attributes;
             $suplier = \app\models\Supplier::findOne($val['suplier']);
             $data[$key]['supplier'] = (empty($suplier)) ? [] : $suplier->attributes;
-            
+
             if ($data[$i]['bayar'] == '0') {
                 $data[$i]['bayar'] = 'Tunai';
             } else {
@@ -202,7 +202,7 @@ class PoController extends Controller {
             } else {
                 $data[$i]['status_nama'] = 'Sudah';
             }
-            
+
             $i++;
         }
 
@@ -611,17 +611,23 @@ class PoController extends Controller {
         $query->from('trans_po')
                 ->join('LEFT JOIN', 'supplier', 'trans_po.suplier=supplier.kd_supplier')
                 ->orderBy('nota DESC')
-                ->select("*")
+                ->select("trans_po.*, supplier.*")
                 ->where(['like', 'nota', $params['nama']])
                 ->limit(10);
 
         $command = $query->createCommand();
         $models = $command->queryAll();
-        Yii::error($models);
+
+        $data = array();
+        foreach ($models as $key => $val) {
+            $data[$key] = $val;
+            $data[$key]['nm_supplier'] = $val['nama_supplier'];
+            $data[$key]['alamat_supplier'] = $val['alamat'];
+        }
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'data' => $models));
+        echo json_encode(array('status' => 1, 'data' => $data));
     }
 
     public function actionSelect() {

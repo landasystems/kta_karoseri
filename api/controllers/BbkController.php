@@ -324,6 +324,7 @@ class BbkController extends Controller {
                 $det[$key]['kd_barang'] = $val['kd_barang'];
                 $det[$key]['satuan'] = $val['satuan'];
                 $det[$key]['nm_barang'] = $val['nm_barang'];
+                $det[$key]['stok_barang'] = $val['saldo'];
                 $det[$key]['stok_sekarang'] = $val['saldo'];
                 $det[$key]['sisa_pengambilan'] = 0;
             }
@@ -334,18 +335,24 @@ class BbkController extends Controller {
         }
     }
 
-    public function actionListbarang2() {
-        $params = json_decode(file_get_contents("php://input"), true);
-
-        if (!empty($params['no_wo']) and ! empty($params['kd_jab'])) {
-
-            //cek optional bom            
-            $kdBrg = array();
-            if (isset($params['listBarang'])) {
-                foreach ($params['listBarang'] as $val) {
-                    $kdBrg[] = isset($val['kd_barang']['kd_barang']) ? $val['kd_barang']['kd_barang'] : '';
-                }
+    public function detailbarang($params) {
+        //cek apakah barang sudah ada di list waktu update dan tambah            
+        $kdBrg = array();
+        if (isset($params['listBarang'])) {
+            foreach ($params['listBarang'] as $val) {
+                $kdBrg[] = isset($val['kd_barang']['kd_barang']) ? $val['kd_barang']['kd_barang'] : '';
             }
+        }
+
+        //masukkan id barang waktu view
+        $idBrg = array();
+        if (isset($params['id_barang'])) {
+            foreach ($params['id_barang'] as $val) {
+                $idBrg[] = isset($val) ? $val : '';
+            }
+        }
+
+        if ((isset($params['no_wo']['no_wo']) && ($params['no_wo']['no_wo'] != "-" and ! empty($params['no_wo']['no_wo']))) and ( isset($params['kd_jab']['id_jabatan']) && !empty($params['kd_jab']['id_jabatan']))) {
 
             //===================Cek apakah ada optional=======================//
             $optional = \app\models\TransAdditionalBomWo::find()
@@ -380,7 +387,8 @@ class BbkController extends Controller {
                         ->where('(b.nm_barang like "%' . $params['nama'] . '%" or b.kd_barang like "%' . $params['nama'] . '%" ) and tsbw.no_wo = "' . $params['no_wo']['no_wo'] . '" and tj.id_jabatan = "' . $params['kd_jab']['id_jabatan'] . '"');
             }
 
-            $query->andWhere(['NOT IN', 'b.kd_barang', $kdBrg]);
+            if (isset($params['copy_bbk']) && $params['copy_bbk'] == "ya")
+                $query->andWhere(['IN', 'b.kd_barang', $kdBrg]);
 
             $command = $query->createCommand();
             $models = $command->queryAll();
@@ -391,6 +399,9 @@ class BbkController extends Controller {
                     ->join('JOIN', 'det_bbk as db', 'tb.no_bbk = db.no_bbk')
                     ->select('db.kd_barang, db.jml')
                     ->where('tb.no_wo = "' . $params['no_wo']['no_wo'] . '" and tb.kd_jab = "' . $params['kd_jab']['id_jabatan'] . '"');
+
+//            if (isset($params['copy_bbk']) && $params['copy_bbk'] == "ya")
+//                $queryBbk->andWhere(['IN', 'db.kd_barang', $kdBrg]);
 
             $commandBbk = $queryBbk->createCommand();
             $modelsBbk = $commandBbk->queryAll();
@@ -421,7 +432,7 @@ class BbkController extends Controller {
             $queryRetur->from('retur_bbk as rb')
                     ->join('JOIN', 'det_bbk as db', 'rb.no_bbk = db.no_bbk')
                     ->join('JOIN', 'trans_bbk as tb', 'tb.no_bbk = db.no_bbk')
-                    ->select('db.kd_barang, db.jml')
+                    ->select('db.kd_barang, rb.jml')
                     ->where('tb.no_wo = "' . $params['no_wo']['no_wo'] . '" and tb.kd_jab = "' . $params['kd_jab']['id_jabatan'] . '"');
 
             $commandRetur = $queryRetur->createCommand();
@@ -433,14 +444,13 @@ class BbkController extends Controller {
             }
 
             //================ masukkan data ke dalam array untu ditampilkan =============//
-
             $det = array();
             $i = 0;
             foreach ($models as $val) {
                 $jBbk = isset($detBbk[$val['kd_barang']]['jml_keluar']) ? $detBbk[$val['kd_barang']]['jml_keluar'] : 0;
                 $jRetur = isset($detRetur[$val['kd_barang']]['jml_retur']) ? $detRetur[$val['kd_barang']]['jml_retur'] : 0;
 
-
+                $det[$i]['standard'] = $val['jml'];
                 $det[$i]['kd_barang'] = $val['kd_barang'];
                 $det[$i]['satuan'] = $val['satuan'];
                 $det[$i]['nm_barang'] = $val['nm_barang'];
@@ -451,15 +461,17 @@ class BbkController extends Controller {
                 $det[$i]['sisa_pengambilan'] = $val['jml'] - $jBbk + $jRetur;
                 $i++;
             }
-            $sorted = Yii::$app->landa->array_orderby($det, 'nm_barang', SORT_ASC);
 
-            echo json_encode(array('status' => 1, 'data' => $sorted));
+            $returnData = Yii::$app->landa->array_orderby($det, 'nm_barang', SORT_ASC);
         } else {
             $query = new Query;
             $query->from('barang')
                     ->select("*")
                     ->orderBy('nm_barang ASC')
                     ->where('nm_barang like "%' . $params['nama'] . '%" or kd_barang like "%' . $params['nama'] . '%" ');
+
+            if (isset($params['id_barang']))
+                $query->andWhere(['IN', 'barang.kd_barang', $idBrg]);
 
             $command = $query->createCommand();
             $models = $command->queryAll();
@@ -475,8 +487,18 @@ class BbkController extends Controller {
 
             $this->setHeader(200);
 
-            echo json_encode(array('status' => 1, 'data' => $det));
+            $returnData = Yii::$app->landa->array_orderby($det, 'nm_barang', SORT_ASC);
         }
+
+        return $returnData;
+    }
+
+    public function actionListbarang2() {
+        $params = json_decode(file_get_contents("php://input"), true);
+
+        $data = $this->detailbarang($params);
+
+        echo json_encode(array('status' => 1, 'data' => $data));
     }
 
     public function actionKode() {
@@ -505,7 +527,6 @@ class BbkController extends Controller {
         $params = json_decode(file_get_contents("php://input"), true);
         $sisa_pengambilan = 0;
         $stok_sekarang = 0;
-        Yii::error($params);
 
         if (!empty($params['kd_barang'])) {
             $stok = Barang::find()->where('kd_barang="' . $params['kd_barang'] . '"')->one();
@@ -661,7 +682,6 @@ class BbkController extends Controller {
                         ->leftJoin('tbl_karyawan as tk', 'trans_bbk.penerima = tk.nik')
                         ->leftJoin('tbl_jabatan as tj', 'tj.id_jabatan  = trans_bbk.kd_jab')
                         ->select("trans_bbk.*, tk.nik, tk.nama")
-//                        ->with(['penerima', 'bagian'])
                         ->where('no_bbk="' . $id . '"')->one();
 
         $query = new Query;
@@ -674,37 +694,48 @@ class BbkController extends Controller {
         $penerima = $command->query()->read();
 
         $model->kd_jab = array('id_jabatan' => isset($model->bagian->id_jabatan) ? $model->bagian->id_jabatan : '-', 'jabatan' => isset($model->bagian->jabatan) ? $model->bagian->jabatan : '-');
-//        $model->penerima = array('nik' => isset($model->nik) ? $model->nik : '-', 'nama' => isset($model->nama) ? $model->nama : '-');
         $model->penerima = $penerima;
         $model->no_wo = array('no_wo' => $model->no_wo);
         $model->no_surat = !empty($model->no_surat) ? $model->no_surat : '-';
 
-        $detail = DetBbk::find()
-                        ->joinWith('barang')
-                        ->where('no_bbk="' . $model->no_bbk . '"')->all();
-
-        $i = 0;
+        $detail = DetBbk::find()->where('no_bbk="' . $model->no_bbk . '"')->all();
         $det = array();
+        $id_barang = array();
         foreach ($detail as $val) {
-            $kd_barang = '';
-            $nm_barang = '';
-            $satuan = '';
+            $det[$val['kd_barang']]['jml'] = $val['jml'];
+            $det[$val['kd_barang']]['ket'] = $val['ket'];
+            $id_barang[] = $val['kd_barang'];
+        }
 
-            if (isset($val->barang->kd_barang)) {
-                $kd_barang = $val->barang->kd_barang;
-                $nm_barang = $val->barang->nm_barang;
-                $satuan = $val->barang->satuan;
+        if (!empty($model->no_wo))
+            $params['no_wo'] = $model->no_wo;
+
+        if (!empty($model->kd_jab))
+            $params['kd_jab'] = $model->kd_jab;
+
+        $params['nama'] = '';
+
+        $params['id_barang'] = $id_barang;
+
+        $barang = $this->detailbarang($params);
+
+        $data = array();
+        foreach ($barang as $key => $val) {
+            if (isset($params['no_wo']['no_wo']) && (!empty($params['no_wo']['no_wo']) && $params['no_wo']['no_wo'] != "-")) {
+                $data[$key] = $barang[$key];
+                $data[$key]['ket'] = isset($det[$val['kd_barang']]['ket']) ? $det[$val['kd_barang']]['ket'] : '';
+                $data[$key]['jml'] = isset($det[$val['kd_barang']]['jml']) ? $det[$val['kd_barang']]['jml'] : '';
+                $data[$key]['satuan'] = $val['satuan'];
+            } else {
+                $data[$key] = $barang[$key];
+                $data[$key]['ket'] = isset($det[$val['kd_barang']]['ket']) ? $det[$val['kd_barang']]['ket'] : '';
+                $data[$key]['jml'] = isset($det[$val['kd_barang']]['jml']) ? $det[$val['kd_barang']]['jml'] : '';
+                $data[$key]['satuan'] = $val['satuan'];
             }
-
-            $det[$i]['jml'] = $val['jml'];
-            $det[$i]['satuan'] = $satuan;
-            $det[$i]['ket'] = $val['ket'];
-            $det[$i]['kd_barang'] = array('kd_barang' => $kd_barang, 'nm_barang' => $nm_barang, 'satuan' => $satuan);
-            $i++;
         }
 
         $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes), 'detail' => $det), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes), 'detail' => $data), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
@@ -757,7 +788,8 @@ class BbkController extends Controller {
         $model->status = 0;
         $model->no_surat = isset($params['bbk']['no_surat']) ? $params['bbk']['no_surat'] : '';
         $model->no_wo = isset($params['bbk']['no_wo']['no_wo']) ? $params['bbk']['no_wo']['no_wo'] : '-';
-        $model->kd_jab = isset($params['bbk']['kd_jab']['id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '-';
+        $model->kd_jab = isset($params['bbk']['kd_jab'][
+                        'id_jabatan']) ? $params['bbk']['kd_jab']['id_jabatan'] : '-';
         $model->penerima = isset($params['bbk']['penerima']['nik']) ? $params['bbk']['penerima']['nik'] : '-';
         $model->lock = 1;
         if ($model->save()) {
@@ -876,6 +908,7 @@ class BbkController extends Controller {
                 ->orderBy($sort)
                 ->select("rvb.*,tbk.nama,tbj.jabatan");
 
+
         //filter
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
@@ -950,5 +983,15 @@ class BbkController extends Controller {
     }
 
 }
-
 ?>
+        
+
+
+
+
+
+
+
+
+
+

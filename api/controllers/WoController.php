@@ -59,7 +59,7 @@ class WoController extends Controller {
                 ->join('LEFT JOIN','delivery','delivery.no_wo = wm.no_wo')
                 ->select("vws.*, tk.nama as sales, tk.lokasi_kntr as wilayah, wm.tgl_keluar as tgl_wo_keluar")
                 ->where(['like', 'vws.no_wo', $params['nama']])
-                ->andWhere('wm.tgl_keluar is not NULL and deliver.no_wo IS NOT NULL')
+                ->andWhere('wm.tgl_keluar is not NULL and delivery.no_wo IS NOT NULL')
                 ->limit(20);
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -77,7 +77,7 @@ class WoController extends Controller {
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
                 ->select("vws.*, tk.nama as sales, tk.lokasi_kntr as wilayah")
                 ->where(['like', 'vws.no_wo', $params['nama']])
-                ->andWhere('wm.tgl_keluar IS NULL or wm.tgl_keluar="" or wm.tgl_keluar = "0000-00-00"')
+//                ->andWhere('wm.tgl_keluar IS NULL or wm.tgl_keluar="" or wm.tgl_keluar = "0000-00-00"')
                 ->orderBy('vws.no_wo DESC')
                 ->limit(20);
         $command = $query->createCommand();

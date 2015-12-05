@@ -219,25 +219,25 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Customer</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="form.customer" ng-disabled="true" placeholder="Customer">
+                                                    <input type="text" class="form-control" ng-model="form.customer" ng-readonly="true" placeholder="Customer">
                                                 </div>
                                             </div> 
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Pemilik</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="form.pemilik" ng-disabled="true" placeholder="Pemilik">
+                                                    <input type="text" class="form-control" ng-model="form.pemilik" ng-readonly="true" placeholder="Pemilik">
                                                 </div>
                                             </div> 
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Sales</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="form.sales" ng-disabled="true" placeholder="Sales">
+                                                    <input type="text" class="form-control" ng-model="form.sales" ng-readonly="true" placeholder="Sales">
                                                 </div>
                                             </div> 
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Warna Chassis</label>
                                                 <div class="col-sm-6">
-                                                    <input type="text" class="form-control" ng-model="form.warna" ng-disabled="true" placeholder="Warna Chassis">
+                                                    <input type="text" class="form-control" ng-model="form.warna" ng-readonly="true" placeholder="Warna Chassis">
                                                 </div>
                                             </div> 
                                         </td>
@@ -245,37 +245,37 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Model Chassis</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="form.model_chassis" ng-disabled="true" placeholder="Model Chassis">
+                                                    <input type="text" class="form-control" ng-model="form.model_chassis" ng-readonly="true" placeholder="Model Chassis">
                                                 </div>
                                             </div> 
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Merk</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="form.merk" ng-disabled="true" placeholder="Merk">
+                                                    <input type="text" class="form-control" ng-model="form.merk" ng-readonly="true" placeholder="Merk">
                                                 </div>
                                             </div> 
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Tipe</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="form.tipe" ng-disabled="true" placeholder="Tipe">
+                                                    <input type="text" class="form-control" ng-model="form.tipe" ng-readonly="true" placeholder="Tipe">
                                                 </div>
                                             </div> 
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Model kendaraan</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="form.model" ng-disabled="true" placeholder="Model Kendaraan">
+                                                    <input type="text" class="form-control" ng-model="form.model" ng-readonly="true" placeholder="Model Kendaraan">
                                                 </div>
                                             </div> 
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">No Rangka</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="form.no_chassis" ng-disabled="true" placeholder="No Rangka">
+                                                    <input type="text" class="form-control" ng-model="form.no_chassis" ng-readonly="true" placeholder="No Rangka">
                                                 </div>
                                             </div> 
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">No Mesin</label>
                                                 <div class="col-sm-8">
-                                                    <input type="text" class="form-control" ng-model="form.no_mesin" ng-disabled="true" placeholder="No Mesin">
+                                                    <input type="text" class="form-control" ng-model="form.no_mesin" ng-readonly="true" placeholder="No Mesin">
                                                 </div>
                                             </div> 
                                             <div class="form-group">
@@ -526,7 +526,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Warna</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransform" ng-disabled="is_view"  tagging-label="false" ng-model="eks.warna" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 300px;" title="Choose a color">
+                                                    <ui-select tagging="tagTransformwarna1" ng-disabled="is_view"  tagging-label="false" ng-model="eks.warna" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 300px;" title="Choose a color">
                                                         <ui-select-match placeholder="Pilih Warna">{{$select.selected.warna}}</ui-select-match>
                                                         <ui-select-choices repeat="warna in list_warna | filter:$select.search" >
                                                             <small>
@@ -539,7 +539,7 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Warna 2</label>
                                                 <div class="col-sm-8">
-                                                    <ui-select tagging="tagTransform" ng-disabled="is_view"  tagging-label="false" ng-model="eks.warna2" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 300px;" title="Choose a color">
+                                                    <ui-select tagging="tagTransformwarnadua" ng-disabled="is_view"  tagging-label="false" ng-model="eks.warna2" theme="bootstrap" sortable="true" ng-disabled="disabled" style="width: 300px;" title="Choose a color">
                                                         <ui-select-match placeholder="Pilih Warna">{{$select.selected.warna}}</ui-select-match>
                                                         <ui-select-choices repeat="warna in list_warna | filter:$select.search" >
                                                             <small>

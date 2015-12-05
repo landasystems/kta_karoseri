@@ -35,6 +35,7 @@ class Delivery extends \yii\db\ActiveRecord
         return [
             [['tgl_delivery','foto'], 'safe'],
             [['status'], 'integer'],
+            [['no_wo'], 'unique'],
             [['no_wo'], 'string', 'max' => 10],
             [['no_delivery'], 'string', 'max' => 20],
             [['tujuan','cabang','kd_cust'], 'string', 'max' => 500],

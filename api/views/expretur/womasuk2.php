@@ -78,6 +78,7 @@ foreach ($models as $key => $val) {
 ?>
 <table style="border-collapse: collapse; font-size: 11px;" width="100%"  border="1">
     <tr>
+        <th class="border-all" style="font-size: 11px"></th>
         <th class="border-all" style="font-size: 11px">UNIT</th>
         <th class="border-all" style="font-size: 11px">WO</th>
         <th class="border-all" style="font-size: 11px">CUSTOMER</th>

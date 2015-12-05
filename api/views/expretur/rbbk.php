@@ -4,8 +4,16 @@ if (!isset($_GET['print'])) {
 header("Content-Disposition: attachment; filename=excel-rekap-Barang_Keluar.xls");
 }
 ?>
+<!--<style>
+    @media print{
+        @page {
+            size: portrait;
+            margin: 25px;
+        }
+    }
+</style>-->
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
-<div style="width:21cm">
+<div style="width:100%">
       <table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
         <tr>
             <td rowspan="2" colspan="3" style="width:30%; border: 1px solid #000000; padding-bottom:5px; padding-top:5px;">
@@ -100,3 +108,4 @@ header("Content-Disposition: attachment; filename=excel-rekap-Barang_Keluar.xls"
         <?php
     }
     ?>
+</div>

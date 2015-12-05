@@ -4,8 +4,16 @@ if (!isset($_GET['print'])) {
     header("Content-Disposition: attachment; filename=excel-serah-terima-bbm.xls");
 }
 ?>
+<!--<style>
+    @media print{
+        @page {
+            size: portrait;
+            margin: 25px;
+        }
+    }
+</style>-->
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
-<div style="width:24cm">
+<div style="width:100%">
     <table class="border-all" style="border-collapse: collapse; font-size: 11px;" width="100%">
         <tr>
             <td rowspan="2">

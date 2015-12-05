@@ -692,7 +692,7 @@ class WomasukController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "wo_masuk.no_wo DESC";
+        $sort = "wo_masuk.in_spk_marketing DESC";
         $offset = 0;
         $limit = 10;
         //        Yii::error($params);

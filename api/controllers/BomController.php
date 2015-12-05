@@ -487,7 +487,7 @@ class BomController extends Controller {
         $queryRetur->from('retur_bbk as rb')
                 ->join('JOIN', 'det_bbk as db', 'rb.no_bbk = db.no_bbk')
                 ->join('JOIN', 'trans_bbk as tb', 'tb.no_bbk = db.no_bbk')
-                ->select('db.kd_barang, db.jml, tb.kd_jab')
+                ->select('db.kd_barang, rb.jml, tb.kd_jab')
                 ->where('tb.no_wo = "' . $no_wo . '"');
 
         $commandRetur = $queryRetur->createCommand();
@@ -625,7 +625,7 @@ class BomController extends Controller {
                 $queryRetur->from('retur_bbk as rb')
                         ->join('JOIN', 'det_bbk as db', 'rb.no_bbk = db.no_bbk')
                         ->join('JOIN', 'trans_bbk as tb', 'tb.no_bbk = db.no_bbk')
-                        ->select('db.kd_barang, db.jml, tb.kd_jab')
+                        ->select('db.kd_barang, rb.jml, tb.kd_jab')
                         ->where('tb.no_wo = "' . $noWo . '"');
 
                 $commandRetur = $queryRetur->createCommand();
@@ -733,7 +733,7 @@ class BomController extends Controller {
                 $queryRetur->from('retur_bbk as rb')
                         ->join('JOIN', 'det_bbk as db', 'rb.no_bbk = db.no_bbk')
                         ->join('JOIN', 'trans_bbk as tb', 'tb.no_bbk = db.no_bbk')
-                        ->select('db.kd_barang, db.jml, tb.kd_jab')
+                        ->select('db.kd_barang, rb.jml, tb.kd_jab')
                         ->where('tb.no_wo = "' . $noWo . '"');
 
                 $commandRetur = $queryRetur->createCommand();

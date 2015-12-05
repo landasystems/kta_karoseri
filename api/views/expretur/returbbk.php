@@ -4,9 +4,16 @@ header("Content-type: application/vnd-ms-excel");
 header("Content-Disposition: attachment; filename=excel-retur-Barang_Masuk.xls");
 }
 ?>
-
+<!--<style>
+    @media print{
+        @page {
+            size: portrait;
+            margin: 25px;
+        }
+    }
+</style>-->
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
-<div style="width:26cm">
+<div style="width:100%">
     <table style="border-collapse: collapse; font-size: 12px;" width="100%"  border="1">
         <tr>
             <td rowspan="4" colspan="2" style="font-size: 16px;width:90px;border: 1px solid #000000">

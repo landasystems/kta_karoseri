@@ -27,6 +27,7 @@ class UjimutuController extends Controller {
                     'kode' => ['get'],
                     'det_nowo' => ['get'],
                     'cari' => ['get'],
+                    'carideliver' => ['get'],
                     'rekap' => ['get'],
                     'excel' => ['get'],
                     'excel2' => ['get'],
@@ -65,6 +66,23 @@ class UjimutuController extends Controller {
                 ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
                 ->join('LEFT JOIN', 'model', 'vws.kd_model = model.kd_model')
+                ->select("vws.*, tk.nama as sales, model.model as model, tk.nama as sales")
+                ->andWhere(['like', 'vws.no_wo', $params['nama']]);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+    public function actionCarideliver() {
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('view_wo_spk as vws')
+                ->join('JOIN', 'delivery as d', 'd.no_wo = vws.no_wo')
+                ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
+                ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
+                ->join('LEFT JOIN', 'model', 'vws.kd_model = model.kd_model')
+                ->where('d.no_wo = "'.$params['nama'].'"')
                 ->select("vws.*, tk.nama as sales, model.model as model, tk.nama as sales")
                 ->andWhere(['like', 'vws.no_wo', $params['nama']]);
 

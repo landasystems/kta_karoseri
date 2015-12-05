@@ -283,6 +283,7 @@
                                     <tbody>
                                         <tr ng-repeat="detail in detailBbk">
                                             <td>
+                                                
                                     <ui-select ng-if="autoSelect == true" 
                                                uiselect-autofocus="open"
                                                on-select="detail.satuan = detail.kd_barang.satuan; detailstok(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang)" 
@@ -294,6 +295,7 @@
                                             <b>{{val.kd_barang}} |- </b>{{val.nm_barang}}
                                         </ui-select-choices>
                                     </ui-select>
+                                    
                                     <ui-select ng-if="autoSelect == false" 
                                                on-select="detail.satuan = detail.kd_barang.satuan; detailstok(detail.kd_barang.sisa_pengambilan, detail.kd_barang.stok_sekarang)" 
                                                ng-disabled="is_view" 
