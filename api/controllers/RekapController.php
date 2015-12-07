@@ -183,11 +183,11 @@ class RekapController extends Controller {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
 
-                if (isset($key) && $key == 'tgl_terima') {
+                if (isset($key) && $key == 'tgl_keluar') {
                     $value = explode(' - ', $val);
                     $start = date("Y-m-d", strtotime($value[0]));
                     $end = date("Y-m-d", strtotime($value[1]));
-                    $query->andFilterWhere(['between', 'sti.tgl_terima', $start, $end]);
+                    $query->andFilterWhere(['between', 'wm.tgl_keluar', $start, $end]);
                 } elseif ($key == 'no_wo') {
                     $query->andFilterWhere(['like', 'vws.' . $key, $val]);
                 } elseif ($key == 'no_spk') {
