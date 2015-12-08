@@ -183,11 +183,11 @@ class RekapController extends Controller {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
 
-                if (isset($key) && $key == 'tgl_terima') {
+                if (isset($key) && $key == 'tgl_keluar') {
                     $value = explode(' - ', $val);
                     $start = date("Y-m-d", strtotime($value[0]));
                     $end = date("Y-m-d", strtotime($value[1]));
-                    $query->andFilterWhere(['between', 'sti.tgl_terima', $start, $end]);
+                    $query->andFilterWhere(['between', 'wm.tgl_keluar', $start, $end]);
                 } elseif ($key == 'no_wo') {
                     $query->andFilterWhere(['like', 'vws.' . $key, $val]);
                 } elseif ($key == 'no_spk') {
@@ -477,7 +477,7 @@ class RekapController extends Controller {
         $sales = $command2->queryAll();
         $asu = array();
         foreach ($sales as $data) {
-            $asu[] = ['name' => $data['nama'].'(10)', 'y' => (int) $data['jumlah']];
+            $asu[] = ['name' => $data['nama'].' - <b>'.$data['jumlah'].'</b>', 'y' => (int) $data['jumlah']];
         }
         // Berdasarkan Merk
         $query->select("chassis.merk,count(*) as jumlah");
@@ -486,7 +486,7 @@ class RekapController extends Controller {
         $merk = $command3->queryAll();
         $aa = array();
         foreach ($merk as $data) {
-            $aa[] = ['name' => $data['merk'], 'y' => (int) $data['jumlah']];
+            $aa[] = ['name' => $data['merk'].' - <b>'.$data['jumlah'].'</b>', 'y' => (int) $data['jumlah']];
         }
         // Berdasarkan Model
         $query->select("model.model,count(*) as jumlah");
@@ -495,7 +495,7 @@ class RekapController extends Controller {
         $model = $command4->queryAll();
         $babi = array();
         foreach ($model as $data) {
-            $babi[] = ['name' => $data['model'], 'y' => (int) $data['jumlah']];
+            $babi[] = ['name' => $data['model'].' - <b>'.$data['jumlah'].'</b>', 'y' => (int) $data['jumlah']];
         }
 
         // Berdasarkan Perhari
@@ -505,7 +505,7 @@ class RekapController extends Controller {
         $hari = $command5->queryAll();
         $kerek = array();
         foreach ($hari as $data) {
-            $kerek[] = ['name' => date('d-m-Y', strtotime($data['tgl'])), 'y' => (int) $data['jumlah']];
+            $kerek[] = ['name' => date('d-m-Y', strtotime($data['tgl'])).' - <b>'.$data['jumlah'].'</b>', 'y' => (int) $data['jumlah']];
         }
         return json_encode(array('merk' => $aa, 'sales' => $asu, 'model' => $babi, 'hari' => $kerek, 'start' => $start, 'end' => $end), JSON_PRETTY_PRINT);
     }
