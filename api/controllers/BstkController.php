@@ -122,12 +122,40 @@ class BstkController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
-    public function actionWarna() {
+    public function actionRekap() {
+        //init variable
+        $params = $_REQUEST;
+        $filter = array();
+        $sort = "b.no_wo DESC";
+        $offset = 0;
+        $limit = 10;
+        //        Yii::error($params);
+        //limit & offset pagination
+        if (isset($params['limit']))
+            $limit = $params['limit'];
+        if (isset($params['offset']))
+            $offset = $params['offset'];
+
+        //sorting
+        if (isset($params['sort'])) {
+            $sort = $params['sort'];
+            if (isset($params['order'])) {
+                if ($params['order'] == "false")
+                    $sort.=" ASC";
+                else
+                    $sort.=" DESC";
+            }
+        }
+
+        //create query
         $query = new Query;
-        $query->from('warna')
-                ->select("*")
-                ->where('kd_warna <> ""')
-                ->orderBy('kd_warna');
+        $query->offset($offset)
+                ->limit($limit)
+                ->from('bstk as b')
+                ->join('JOIN', 'warna as wa', 'wa.kd_warna = b.kd_warna')
+                ->join('JOIN', 'view_wo_spk as vws', 'vws.no_wo = b.no_wo')
+                ->orderBy($sort)
+                ->select("b.*,wa.*,vws.kd_cust,vws.nm_customer");
 
         //filter
         if (isset($params['filter'])) {
@@ -157,7 +185,7 @@ class BstkController extends Controller {
 
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'list_warna' => $models));
+        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
     public function actionView($id) {
