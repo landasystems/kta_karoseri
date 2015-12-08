@@ -10,6 +10,7 @@ app.controller('bstkCtrl', function ($scope, Data, toaster) {
         if ($query.length >= 3) {
             Data.get('womasuk/cariwo', {nama: $query}).then(function (data) {
                 $scope.noWo = data.data;
+                
             });
         }
     };
@@ -20,9 +21,9 @@ app.controller('bstkCtrl', function ($scope, Data, toaster) {
         form.kd_warna = items.kd_warna;
         form.warna = items.warna;
     };
-    Data.get('bstk/warna').then(function (data) {
-        $scope.list_warna = data.list_warna;
-    });
+//    Data.get('bstk/warna').then(function (data) {
+//        $scope.list_warna = data.list_warna;
+//    });
 
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
