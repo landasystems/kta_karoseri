@@ -332,9 +332,11 @@ class WipController extends Controller {
                         $libur2++;
                     }
                 }
-                Yii::error($libur1);
-                $HK2 = $sHK2 - $libur1 - $libur2;
-                $model->hk = $HK2;
+                Yii::error($libur1.'-'.$libur2);
+                $sHKs = $sHK2 - $libur1 - $libur2;
+                $HK = $sHKs + 1;
+                
+                $model->hk = $HK;
             } else {
                 $model->hk = '';
             }
