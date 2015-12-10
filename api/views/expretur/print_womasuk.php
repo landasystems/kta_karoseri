@@ -613,7 +613,7 @@
                     </td>
                     <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: center"><b>DIBUAT</b></td>
                     <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: center"><b>DIPERIKSA</b></td>
-                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: center"><b>DIPERIKSA</b></td>
+                    
                     <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: center"><b>DIKETAHUI</b></td>
                     <td style="border-bottom: 1px solid #000000;text-align: center"><b>DITERIMA</b></td>
                 </tr>
@@ -621,15 +621,7 @@
                     <td style="border-left: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
                     <td style="border-right: 1px solid #000000;">&nbsp;</td>
                     <td style="border-right: 1px solid #000000;">&nbsp;</td>
-                    <td style="border-right: 1px solid #000000;">&nbsp;</td>
-                    <td style="border-right: 1px solid #000000;">&nbsp;</td>
-                    <td>&nbsp;</td>
-                </tr>
-                <tr>
-                    <td style="border-left: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
-                    <td style="border-right: 1px solid #000000;">&nbsp;</td>
-                    <td style="border-right: 1px solid #000000;">&nbsp;</td>
-                    <td style="border-right: 1px solid #000000;">&nbsp;</td>
+                    
                     <td style="border-right: 1px solid #000000;">&nbsp;</td>
                     <td>&nbsp;</td>
                 </tr>
@@ -637,7 +629,15 @@
                     <td style="border-left: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
                     <td style="border-right: 1px solid #000000;">&nbsp;</td>
                     <td style="border-right: 1px solid #000000;">&nbsp;</td>
+                   
                     <td style="border-right: 1px solid #000000;">&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td style="border-left: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
+                    <td style="border-right: 1px solid #000000;">&nbsp;</td>
+                    <td style="border-right: 1px solid #000000;">&nbsp;</td>
+                    
                     <td style="border-right: 1px solid #000000;">&nbsp;</td>
                     <td style="border-right: 1px solid #000000;">&nbsp;</td>
                 </tr>
@@ -645,7 +645,7 @@
                     <td style="border-left: 1px solid #000000;border-right: 1px solid #000000;"></td>
                     <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">PPIC Head</td>
                     <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Engineering Head</td>
-                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Component Head</td>
+                    
                     <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Plan Head</td>
                     <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Production Head</td>
                 </tr>
@@ -653,7 +653,7 @@
                     <td style="border-left: 1px solid #000000;border-right: 1px solid #000000;"></td>
                     <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 10px;">TGL : <?php echo date('d-m-Y') ?></td>
                     <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 10px;">TGL : <?php echo date('d-m-Y') ?></td>
-                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 10px;">TGL : <?php echo date('d-m-Y') ?></td>
+                    
                     <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;font-size: 10px;">TGL : <?php echo date('d-m-Y') ?></td>
                     <td style="border-bottom: 1px solid #000000;font-size: 10px;">TGL : <?php echo date('d-m-Y') ?></td>
                 </tr>

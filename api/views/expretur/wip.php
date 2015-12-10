@@ -66,6 +66,7 @@ foreach ($models as $key => $val) {
     // hitung umur
     // memecah string tanggal awal untuk mendapatkan
     // tanggal, bulan, tahun
+    if(!empty($isips)){
     $pecah1 = explode("-", $isips);
     $date1 = $pecah1[2];
     $month1 = $pecah1[1];
@@ -83,6 +84,9 @@ foreach ($models as $key => $val) {
     $jd2 = GregorianToJD($month2, $date2, $year2);
 
     $umur = $jd2 - $jd1;
+    }else{
+       $umur = '-'; 
+    }
 
     $data[$val['no_wo']]['nowo'] = $val['no_wo'];
     $data[$val['no_wo']]['merk'] = $val['merk'] . $val['tipe'];
@@ -164,7 +168,7 @@ foreach ($models as $key => $val) {
                 <td class="border-all" style="font-size:8px">' . (isset($data[$s['nowo']]['BAG001']) ? $data[$s['nowo']]['BAG001'] . ' %' : '') . '</td>
                  <td class="border-all" style="font-size:8px">' . (isset($data[$s['nowo']]['BAG004']) ? $data[$s['nowo']]['BAG004'] . ' %' : '') . '</td>
                  <td class="border-all" style="font-size:8px">' . (isset($data[$s['nowo']]['BAG002']) ? $data[$s['nowo']]['BAG002'] . ' %' : '') . '</td>
-                 <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($hk[$s['nowo']]['BAG005']) ? $hk[$s['nowo']]['BAG005'] : '') . '</td>
+                 <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($hk[$s['nowo']]['BAG002']) ? $hk[$s['nowo']]['BAG002'] : '') . '</td>
                      
                  <td class="border-all" style="font-size:8px">' . (isset($data[$s['nowo']]['BAG006']) ? $data[$s['nowo']]['BAG006'] . ' %' : '') . '</td>
                  <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($hk[$s['nowo']]['BAG006']) ? $hk[$s['nowo']]['BAG006'] : '') . '</td>
