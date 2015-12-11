@@ -43,7 +43,7 @@ app.controller('rekapwipCtrl', function ($scope, Data, toaster) {
     }
    $scope.print = function () {
         Data.get('wip/rekap', paramRef).then(function (data) {
-            window.open('api/web/wip/excel?print=true', "", "width=500");
+            window.open('api/web/wip/excel?print=true', "");
         });
     }
    

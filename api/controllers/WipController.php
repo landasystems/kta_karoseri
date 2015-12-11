@@ -349,13 +349,13 @@ class WipController extends Controller {
 
     public function actionExcel() {
         session_start();
-        $query = $_SESSION['queryas'];
+        $query = $_SESSION['query'];
         \Yii::error($query);
         $query->limit(null);
         $query->offset(null);
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/wip", ['models' => $models]);
+        return $this->render("/expretur/schedule", ['models' => $models]);
     }
 
     public function actionKaryawan() {
