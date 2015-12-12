@@ -35,9 +35,9 @@
 
                             <div class="form-group">
                                 <div class="control-group">
-                                    <label class="col-sm-2 control-label">Periode Tgl Penanganan</label>
+                                    <label class="col-sm-2 control-label">Periode Claim</label>
                                     <div class="col-sm-3">
-                                        <input placeholder="Periode Tanggal Penanganan" date-range-picker class="form-control" st-search="tgl_periode" type="text"  ng-model="tanggal">
+                                        <input placeholder="Periode Claim Unit" date-range-picker class="form-control" st-search="tgl_periode" type="text"  ng-model="tanggal">
                                     </div>
                                     <label class="col-sm-2 control-label">No WO</label>
                                     <div class="col-sm-3">
@@ -78,6 +78,7 @@
                         <tr>
 
                             <th st-sort="dc.no_wo">NO WO</th>
+                            <th st-sort="dc.tgl">Tgl Penanganan</th>
                             <th st-sort="dc.tgl_pelaksanaan">Tgl Penanganan</th>
                             <th st-sort="ch.jenis">Jenis Kendaraan</th>
                             <th st-sort="ch.model_chassis">Model</th>
@@ -87,6 +88,7 @@
                     </thead>
                     <tbody ng-show="!isLoading">
                         <tr ng-repeat="row in displayed">
+                            <td>{{row.tgl_claim}}</td>
                             <td>{{row.no_wo}}</td>
                             <td>{{row.tgl_pelaksanaan| date:'dd - MMM - yyyy'}}</td>
                             <td>{{row.jenis}}</td>
@@ -98,12 +100,12 @@
                     </tbody>
                     <tbody ng-show="isLoading">
                         <tr>
-                            <td colspan="4" class="text-center">Loading ... </td>
+                            <td colspan="6" class="text-center">Loading ... </td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="12" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html">
+                            <td colspan="6" class="text-center" st-pagination="" st-items-by-page="10" st-template="tpl/blocks/pagination.custom.html">
                             </td>
                         </tr>
                 </table>		
