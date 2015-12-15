@@ -90,7 +90,7 @@ class ClaimunitController extends Controller {
                 ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
                 ->join('LEFT JOIN', 'tbl_karyawan as tbk', 'tbk.nik = spk.nik')
                 ->orderBy($sort)
-                ->select("dc.*,jk.*,ch.*,vws.nm_customer,vws.model,tbk.lokasi_kntr,tbk.nama");
+                ->select("dc.*, dc.tgl as tgl_claim,jk.*,ch.*,vws.nm_customer,vws.model,tbk.lokasi_kntr,tbk.nama");
 
         //filter
         if (isset($params['filter'])) {
@@ -106,7 +106,7 @@ class ClaimunitController extends Controller {
                     $value = explode(' - ', $val);
                     $start = date("Y-m-d", strtotime($value[0]));
                     $end = date("Y-m-d", strtotime($value[1]));
-                    $query->andFilterWhere(['between', 'dc.tgl_pelaksanaan', $start, $end]);
+                    $query->andFilterWhere(['between', 'dc.tgl', $start, $end]);
                 } else {
                     $query->andFilterWhere(['like', $key, $val]);
                 }
