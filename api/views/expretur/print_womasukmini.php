@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="../../../css/print.css" type="text/css" />
 <table style="border-collapse: collapse; font-size: 14px;margin-top: 0px;text-decoration-color: #000000;border: 1px #000000 solid;width: 99%"   >
     <tr>
-        <td colspan="4"><b> <div style="text-transform: uppercase;text-align: right;margin-right: 0px; font-size: 16px">WORK ORDER SMALL BUS</div></b></td>
+        <td colspan="4"><b> <div style="text-transform: uppercase;text-align: right;margin-right: 0px; font-size: 16px">WORK ORDER MINI BUS</div></b></td>
         <td colspan="2" style="text-align: right;font-size: 15px">FR-PPC-003 Rev 03</td>
     </tr>
     <tr>
