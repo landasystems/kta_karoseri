@@ -20,7 +20,6 @@ class BstkController extends Controller {
                     'index' => ['get'],
                     'view' => ['get'],
                     'nowo' => ['get'],
-                    'warna' => ['get'],
                     'rekap' => ['get'],
                     'excel' => ['get'],
                     'selected' => ['post'],

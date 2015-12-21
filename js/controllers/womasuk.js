@@ -56,6 +56,22 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
         $event.stopPropagation();
         $scope.opened4 = true;
     };
+    // PRINT MASTER
+    $scope.small = function () {
+        Data.get('womasuk/small').then(function (data) {
+            window.open('api/web/womasuk/small?print=true', "");
+        });
+            
+        
+    }
+    $scope.mini = function () {
+            Data.get('womasuk/mini').then(function (data) {
+            window.open('api/web/womasuk/mini?print=true', "");
+        });
+        
+    }
+//    TUTUP PRINT MASTER
+    
     Data.post('womasuk/warna').then(function(data) {
         $scope.list_warna = data.warna;
     });

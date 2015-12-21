@@ -349,6 +349,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" style="text-align: left; margin-left: 10px">PPN 10 %</label>
                                 <div class="col-sm-3">
+                                    {{form.status_ppn}}
                                     <select ng-model="form.status_ppn"  class="form-control"  required ng-change="subtotal()">
                                         <option  value="0">Include</option>
                                         <option value="1">Exclude</option>

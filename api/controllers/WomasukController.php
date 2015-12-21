@@ -42,6 +42,8 @@ class WomasukController extends Controller {
                     'proyek' => ['get'],
                     'sqlprint' => ['get'],
                     'print' => ['get'],
+                    'small' => ['get'],
+                    'mini' => ['get'],
                 ],
             ]
         ];
@@ -1755,6 +1757,14 @@ class WomasukController extends Controller {
         $models = $command->query()->read();
        
         return $this->render("/expretur/print_womasuk", ['models' => $models, 'id' => $nowo]);
+    }
+    
+    public function actionMini() {
+     return $this->render("/expretur/print_womasukmini");
+    }
+    
+    public function actionSmall() {
+        return $this->render("/expretur/print_womasuksmall");
     }
 
 }

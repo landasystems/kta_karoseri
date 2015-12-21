@@ -140,7 +140,7 @@ class RekapController extends Controller {
     public function actionRekapwokeluar() {
         $params = $_REQUEST;
         $filter = array();
-        $sort = "sti.tgl_terima DESC";
+        $sort = "wm.tgl_keluar DESC";
         $offset = 0;
         $limit = 10;
 
@@ -166,28 +166,29 @@ class RekapController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('view_wo_spk as vws')
-                ->join('JOIN', 'wo_masuk as wm', 'wm.no_wo = vws.no_wo')
-                ->join('JOIN', 'chassis', 'chassis.kd_chassis = vws.kd_chassis')
-                ->join('JOIN', 'model', 'model.kd_model = vws.kd_model')
+                ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo = vws.no_wo')
+//                ->join('JOIN', 'chassis', 'chassis.kd_chassis = vws.kd_chassis')
+//                ->join('JOIN', 'model', 'model.kd_model = vws.kd_model')
                 ->join('JOIN', 'customer', 'customer.kd_cust = vws.kd_cust')
-                ->join('LEFT JOIN', 'serah_terima_in as sti', 'sti.no_spk = vws.no_spk')
-                ->join('JOIN', 'spk', 'vws.no_spk = spk.no_spk')
+//                ->join('LEFT JOIN', 'serah_terima_in as sti', 'sti.no_spk = vws.no_spk')
+                ->join(' JOIN', 'spk', 'vws.no_spk = spk.no_spk')
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
                 ->where(' wm.tgl_keluar IS NOT NULL')
                 ->orderBy($sort)
-                ->select("sti.tgl_terima, customer.provinsi, customer.nm_customer, chassis.jenis, spk.no_spk, vws.no_wo, sti.kd_titipan, wm.tgl_keluar ,
-                        chassis.merk, chassis.tipe, model.model, tk.nama, spk.jml_unit,vws.no_chassis,vws.no_mesin");
+                ->select("vws.jenis, vws.nm_customer, vws.tgl_terima,vws.no_wo,wm.tgl_keluar,vws.merk, vws.tipe, tk.nama, vws.model, vws.no_mesin, vws.no_chassis,customer.provinsi, customer.nm_customer");
+//                ->select("sti.tgl_terima, customer.provinsi, customer.nm_customer, chassis.jenis, spk.no_spk, vws.no_wo, sti.kd_titipan, wm.tgl_keluar ,
+//                        chassis.merk, chassis.tipe, model.model, tk.nama, spk.jml_unit,vws.no_chassis,vws.no_mesin");
 //filter
 
         if (isset($params['filter'])) {
             $filter = (array) json_decode($params['filter']);
             foreach ($filter as $key => $val) {
 
-                if (isset($key) && $key == 'tgl_terima') {
+                 if (isset($key) && $key == 'tgl') {
                     $value = explode(' - ', $val);
                     $start = date("Y-m-d", strtotime($value[0]));
                     $end = date("Y-m-d", strtotime($value[1]));
-                    $query->andFilterWhere(['between', 'sti.tgl_terima', $start, $end]);
+                    $query->andFilterWhere(['between', 'wm.tgl_keluar', $start, $end]);
                 } elseif ($key == 'no_wo') {
                     $query->andFilterWhere(['like', 'vws.' . $key, $val]);
                 } elseif ($key == 'no_spk') {
@@ -403,6 +404,7 @@ class RekapController extends Controller {
         session_start();
         $query = $_SESSION['query'];
         $filter = $_SESSION['filter'];
+        \Yii::error($filter);
 
         $command = $query->createCommand();
         $models = $command->queryAll();

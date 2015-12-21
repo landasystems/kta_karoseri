@@ -22,15 +22,12 @@ if (!isset($_GET['print'])) {
         </td>
         <td colspan="4" rowspan="4" style="border: 1px solid #000000">
             <table style="font-size:12px;">
-                <tr>
-                    <td>Nomer</td>
-                    <td> : </td>
-                </tr>
+               
                 <tr>
                     <td>Periode</td>
                     <?php
-                    if (!empty($filter['tgl_terima'])) {
-                        $value = explode(' - ', $filter['tgl_terima']);
+                    if (!empty($filter['tgl'])) {
+                        $value = explode(' - ', $filter['tgl']);
                         $start = date("d/m/Y", strtotime($value[0]));
                         $end = date("d/m/Y", strtotime($value[1]));
                     } else {
@@ -74,7 +71,7 @@ if (!isset($_GET['print'])) {
         $data[$val['nm_customer']]['customer'][$val['nm_customer']]['customer'] = $val['nm_customer'];
 
         $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['tgl_terima'] = $val['tgl_terima'];
-        $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['jml_unit'] = $val['jml_unit'];
+//        $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['jml_unit'] = $val['jml_unit'];
         $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['no_wo'] = $val['no_wo'];
         $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['model'] = $val['model'];
         $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['merk'] = $val['merk'];
@@ -132,10 +129,10 @@ if (!isset($_GET['print'])) {
                 echo'<tr>
                 <th class="border-bottom border-right"> Total</th>
                 <th class="border-bottom border-right" style="text-align:center;">' . $total . ' </th>
-                <th class="border-bottom border-right" colspan="7"> </th>
+                <th class="border-bottom border-right" colspan="6"> </th>
                 </tr>';
                 echo'<tr>
-                <th class="border-bottom border-right" colspan="9">&nbsp;</th>
+                <th class="border-bottom border-right" colspan="8">&nbsp;</th>
                 </tr>';
                 $grandtotal += $total;
             }
@@ -143,7 +140,7 @@ if (!isset($_GET['print'])) {
         echo'<tr>
                 <th class="border-bottom border-right">Grand Total</th>
                 <th class="border-bottom border-right" style="text-align:center;">' . $grandtotal . '</th>
-                    <th colspan="7" class="border-bottom border-right"> </th>
+                    <th colspan="6" class="border-bottom border-right"> </th>
                 </tr>';
         ?>
     </table>
