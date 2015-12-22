@@ -259,7 +259,7 @@ class WipController extends Controller {
         }
 
         session_start();
-        $_SESSION['queryas'] = $query;
+        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -355,7 +355,7 @@ class WipController extends Controller {
         $query->offset(null);
         $command = $query->createCommand();
         $models = $command->queryAll();
-        return $this->render("/expretur/schedule", ['models' => $models]);
+        return $this->render("/expretur/wip", ['models' => $models]);
     }
 
     public function actionKaryawan() {
