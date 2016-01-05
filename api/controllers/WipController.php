@@ -283,7 +283,7 @@ class WipController extends Controller {
         }
 
         session_start();
-        $_SESSION['queryas'] = $query;
+        $_SESSION['query'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
