@@ -380,8 +380,8 @@
                     <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: center"><b>DIBUAT</b></td>
                     <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: center"><b>DIPERIKSA</b></td>
                     
-                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: center"><b>DIKETAHUI</b></td>
-                    <td style="border-bottom: 1px solid #000000;text-align: center"><b>DITERIMA</b></td>
+                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;text-align: center"><b>DITERIMA</b></td>
+                    <td style="border-bottom: 1px solid #000000;text-align: center"><b>DIKETAHUI</b></td>
                 </tr>
                 <tr>
                     <td style="border-left: 1px solid #000000;border-right: 1px solid #000000;">&nbsp;</td>
@@ -412,8 +412,8 @@
                     <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">PPIC Head</td>
                     <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Engineering Head</td>
                     
-                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Plan Head</td>
                     <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Production Head</td>
+                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Plan Head</td>
                 </tr>
                 <tr> 
                     <td style="border-left: 1px solid #000000;border-right: 1px solid #000000;"></td>

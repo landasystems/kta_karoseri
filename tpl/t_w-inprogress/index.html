@@ -19,18 +19,14 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">NO WO</label>
                                 <div class="col-sm-6">
-                                    <div class="input-group">
+                                    <div class="input-group" style="width: 100%;">
                                         <ui-select on-select="pilih(form, $item)" ng-model="form.no_wo" theme="bootstrap" style="width: 100%">
                                             <ui-select-match>{{$select.selected.no_wo}}</ui-select-match>
                                             <ui-select-choices refresh="cariWo($select.search)" repeat="val in listWo">
                                                 {{val.no_wo}}
                                             </ui-select-choices>
                                         </ui-select>
-                                        <span class="input-group-btn">
-                                            <button ng-click="form.no_wo = undefined" class="btn btn-default">
-                                                <span class="glyphicon glyphicon-trash"></span>
-                                            </button>
-                                        </span>
+                                        
                                     </div>
                                 </div>
                             </div>
