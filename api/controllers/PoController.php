@@ -505,7 +505,7 @@ class PoController extends Controller {
                 $det = new DetailPo();
                 $det->attributes = $val;
                 $det->kd_barang = $val['data_barang']['kd_barang'];
-                if (!empty($det->tgl_pengiriman)) {
+                if (!empty($val['data_barang']['tgl_pengiriman'])) {
                     $det->tgl_pengiriman = date("Y-m-d", strtotime($val['data_barang']['tgl_pengiriman']));
                 } else {
                     $det->tgl_pengiriman = NULL;
@@ -542,8 +542,10 @@ class PoController extends Controller {
                     $det = new DetailPo();
                     $det->attributes = $val;
                     $det->kd_barang = $val['data_barang']['kd_barang'];
-                    if (empty($det->tgl_pengiriman)) {
+                    if (empty($val['data_barang']['tgl_pengiriman'])) {
                         $det->tgl_pengiriman = NULL;
+                    }else{
+                        $det->tgl_pengiriman = date("Y-m-d", strtotime($val['data_barang']['tgl_pengiriman']));
                     }
                     $det->nota = $model->nota;
                     $det->save();

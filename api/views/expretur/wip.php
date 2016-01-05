@@ -165,26 +165,26 @@ foreach ($models as $key => $val) {
                  <td class="border-all" style="font-size:8px">' . $s['kontrak'] . '</td>
                  <td class="border-all" style="font-size:8px">' . $s['customer'] . '</td>
                  <td class="border-all" style="font-size:8px"></td>
-                <td class="border-all" style="font-size:8px">' . (isset($data[$s['nowo']]['BAG001']) ? $data[$s['nowo']]['BAG001'] . ' %' : '') . '</td>
-                 <td class="border-all" style="font-size:8px">' . (isset($data[$s['nowo']]['BAG004']) ? $data[$s['nowo']]['BAG004'] . ' %' : '') . '</td>
-                 <td class="border-all" style="font-size:8px">' . (isset($data[$s['nowo']]['BAG002']) ? $data[$s['nowo']]['BAG002'] . ' %' : '') . '</td>
+                <td class="border-all" style="font-size:8px;text-align: center">' . (isset($data[$s['nowo']]['BAG001']) ? $data[$s['nowo']]['BAG001'] . ' %' : '') . '</td>
+                 <td class="border-all" style="font-size:8px;text-align: center">' . (isset($data[$s['nowo']]['BAG004']) ? $data[$s['nowo']]['BAG004'] . ' %' : '') . '</td>
+                 <td class="border-all" style="font-size:8px;text-align: center">' . (isset($data[$s['nowo']]['BAG002']) ? $data[$s['nowo']]['BAG002'] . ' %' : '') . '</td>
                  <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($hk[$s['nowo']]['BAG002']) ? $hk[$s['nowo']]['BAG002'] : '') . '</td>
                      
-                 <td class="border-all" style="font-size:8px">' . (isset($data[$s['nowo']]['BAG006']) ? $data[$s['nowo']]['BAG006'] . ' %' : '') . '</td>
-                 <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($hk[$s['nowo']]['BAG006']) ? $hk[$s['nowo']]['BAG006'] : '') . '</td>
+                 <td class="border-all" style="font-size:8px;text-align: center">' . (isset($data[$s['nowo']]['BAG005']) ? $data[$s['nowo']]['BAG005'] . ' %' : '') . '</td>
+                 <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($hk[$s['nowo']]['BAG005']) ? $hk[$s['nowo']]['BAG005'] : '') . '</td>
                      
-                 <td class="border-all" style="font-size:8px">' . (isset($data[$s['nowo']]['BAG007']) ? $data[$s['nowo']]['BAG007'] . ' %' : '') . '</td>
+                 <td class="border-all" style="font-size:8px;text-align: center">' . (isset($data[$s['nowo']]['BAG006']) ? $data[$s['nowo']]['BAG006'] . ' %' : '') . '</td>
+                 <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($hk[$s['nowo']]['BAG006']) ? $hk[$s['nowo']]['BAG006'] : '') . '</td>
+                 
+                 <td class="border-all" style="font-size:8px;text-align: center">' . (isset($data[$s['nowo']]['BAG007']) ? $data[$s['nowo']]['BAG007'] . ' %' : '') . '</td>
                  <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($hk[$s['nowo']]['BAG007']) ? $hk[$s['nowo']]['BAG007'] : '') . '</td>
                  
-                 <td class="border-all" style="font-size:8px">' . (isset($data[$s['nowo']]['BAG009']) ? $data[$s['nowo']]['BAG009'] . ' %' : '') . '</td>
-                 <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($hk[$s['nowo']]['BAG009']) ? $hk[$s['nowo']]['BAG009'] : '') . '</td>
-                 
-                 <td class="border-all" style="font-size:8px">' . (isset($data[$s['nowo']]['BAG0010']) ? $data[$s['nowo']]['BAG0010'] . ' %' : '') . '</td>
-                 <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($hk[$s['nowo']]['BAG010']) ? $hk[$s['nowo']]['BAG010'] : '') . '</td>
-                 <td class="border-all" style="font-size:8px"></td>
-                 <td class="border-all" style="font-size:8px">' . (isset($data[$s['nowo']]['BAG0010']) ? $data[$s['nowo']]['BAG0010'] . ' %' : '') . '</td>
-                 <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($hk[$s['nowo']]['BAG010']) ? $hk[$s['nowo']]['BAG010'] : '') . '</td>
-                     <td class="border-all" style="font-size:8px"></td>
+                 <td class="border-all" style="font-size:8px;text-align: center">' . (isset($data[$s['nowo']]['BAG009']) ? $data[$s['nowo']]['BAG009'] . ' %' : '') . '</td>
+                 <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($hk[$s['nowo']]['BAG09']) ? $hk[$s['nowo']]['BAG09'] : '') . '</td>
+                 <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($data[$s['nowo']]['BAG010']) ? $data[$s['nowo']]['BAG010'] . ' %' : '') . '</td>
+                 <td class="border-all" style="font-size:8px;text-align: center">' . (isset($data[$s['nowo']]['BAG011']) ? $data[$s['nowo']]['BAG011'] . ' %' : '') . '</td>
+                 <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($hk[$s['nowo']]['BAG011']) ? $hk[$s['nowo']]['BAG011'] : '') . '</td>
+                     <td class="border-all" style="font-size:8px;text-align: center;">' . (isset($data[$s['nowo']]['BAG012']) ? $data[$s['nowo']]['BAG012'] . ' %' : '') . '</td>
                  <td class="border-all" style="font-size:8px"></td>';
 
             echo' </tr>
