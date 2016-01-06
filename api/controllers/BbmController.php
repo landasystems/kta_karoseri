@@ -233,16 +233,16 @@ class BbmController extends Controller {
                 ->select('*')
                 ->orderBy('no_bbm DESC')
                 ->limit(1);
+        $command = $query->createCommand();
+        $models = $command->query()->read();
 
-        $cek = TransBbm::findOne('no_bbm = "BM' . date("y") . '0001"');
+        $cek = TransBbm::find()->where('no_bbm = "BM' . date("y") . '00001"')->one();
         if (empty($cek)) {
-            $command = $query->createCommand();
-            $models = $command->query()->read();
-            $urut = substr($models['no_bbm'], 5) + 1;
+            $kode = "BM" . date("y") . "00001";
+        } else {
+            $urut = substr($models['no_bbm'], -5) + 1;
             $kode = substr('00000' . $urut, strlen($urut));
             $kode = "BM" . date("y") . $kode;
-        } else {
-            $kode = "BM" . date("y") . "00001";
         }
         $this->setHeader(200);
 

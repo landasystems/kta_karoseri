@@ -62,10 +62,62 @@ class SiteController extends Controller {
     }
 
     public function actionCoba() {
-        header("Expires: " . gmdate("D, d M Y H:i:s", time()) . " GMT");
-        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-        header("Cache-Control: no-cache, must-revalidate");
-        header("Pragma: no-cache");
+//        header("Content-type: application/vnd-ms-excel");
+//        header("Content-Disposition: attachment; filename=excel-master-barang.xls");
+//        $query = \app\models\TransBbk::find()->where('year(tanggal) = "2016"')->orderBy('no_bbk ASC')->all();
+//        $kode = "BK1600000";
+//        echo '<table>';
+//        echo '<tr><td>KODE BBK LAMA</td><td>KODE BBK BARU</td></tr>';
+//        foreach ($query as $val) {
+//            $urut = substr($kode, -5) + 1;
+//            $kode = substr('00000' . $urut, strlen($urut));
+//            $kode = "BK" . date("y") . $kode;
+//            $val->no_bbk = $kode;
+////            echo '<tr><td>' . $val->no_bbk . '</td><td>' . $kode . '</td></tr>';
+////
+////            $query2 = \app\models\DetBbk::find()->where('no_bbk = "' . $val->no_bbk . '"')->all();
+////            foreach ($query2 as $val2) {
+////                $val2->no_bbk = $kode;
+////                $val2->save();
+////            }
+//            $val->save();
+//        }
+//        echo '</table>';
+//
+//        $query = \app\models\TransBbm::find()->where('year(tgl_nota) = "2016"')->orderBy('no_bbm ASC')->all();
+//        $kode = "BM1600000";
+//        echo '<table>';
+//        echo '<tr>'
+//        . '<td>KODE BBM LAMA</td>'
+//        . '<td>KODE BBM BARU</td>'
+//        . '</tr>';
+//        foreach ($query as $val) {
+//            $urut = substr($kode, -5) + 1;
+//            $kode = substr('00000' . $urut, strlen($urut));
+//            $kode = "BM" . date("y") . $kode;
+//            echo '<tr>'
+//            . '<td>' . $val->no_bbm . '</td>'
+//            . '<td>' . $kode . '</td>'
+//            . '</tr>';
+//
+//            $query2 = \app\models\DetBbm::find()->where('no_bbm = "' . $val->no_bbm . '"')->all();
+//            foreach ($query2 as $val2) {
+//                $val2->no_bbm = $kode;
+//                $val2->save();
+//            }
+//            $val->no_bbm = $kode;
+//            $val->save();
+//        }
+//        echo '</table>';
+
+
+
+
+
+//        header("Expires: " . gmdate("D, d M Y H:i:s", time()) . " GMT");
+//        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
+//        header("Cache-Control: no-cache, must-revalidate");
+//        header("Pragma: no-cache");
 //        $query = new Query;
 //        $query->select("tk.nik, tk.nama, tjb.jabatan")
 //                ->from('purchassing.tbl_karyawan as tk')
