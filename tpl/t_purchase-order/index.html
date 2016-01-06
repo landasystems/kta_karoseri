@@ -157,17 +157,12 @@
                                     <div class="col-sm-6">
                                         <!--{{form.listspp.no_spp}}-->
                                         <div class="input-group">
-                                            <ui-select on-select="cariBarang('',form.listspp.no_spp)"  ng-model="form.listspp" ng-readonly="form.status_po == '0'" theme="bootstrap">
+                                            <ui-select style="width: 300px;" on-select="cariBarang('',form.listspp.no_spp,form.status_po)"  ng-model="form.listspp" ng-readonly="form.status_po == '0'" theme="bootstrap">
                                                 <ui-select-match>{{$select.selected.no_spp}} - {{$select.selected.no_proyek}}</ui-select-match>
                                                 <ui-select-choices refresh="cariSpp($select.search)" repeat="val in resultsspp">
                                                     {{val.no_spp}} - {{val.no_proyek}}
                                                 </ui-select-choices>
                                             </ui-select>
-                                            <span class="input-group-btn">
-                                                <button ng-click="form.listspp = undefined" class="btn btn-default">
-                                                    <span class="glyphicon glyphicon-trash"></span>
-                                                </button>
-                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -177,17 +172,12 @@
                                     <label class="col-sm-3 control-label">&nbsp;Kepada Yth</label>
                                     <div class="col-sm-6">
                                         <div class="input-group">
-                                            <ui-select  ng-model="form.supplier" theme="bootstrap">
+                                            <ui-select style="width: 300px;" ng-model="form.supplier" theme="bootstrap">
                                                 <ui-select-match>{{$select.selected.nama_supplier}}</ui-select-match>
                                                 <ui-select-choices refresh="cariSuppiler($select.search)" repeat="val in resultssupplier">
                                                     {{val.nama_supplier}}
                                                 </ui-select-choices>
                                             </ui-select>
-                                            <span class="input-group-btn">
-                                                <button ng-click="form.supplier = undefined" class="btn btn-default">
-                                                    <span class="glyphicon glyphicon-trash"></span>
-                                                </button>
-                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -234,7 +224,7 @@
                                             <div class="input-group" style="width:{{lebar}};">
                                                 <ui-select on-select="pilih(detail, $item)" ng-model="detail.data_barang" theme="bootstrap">
                                                     <ui-select-match >{{$select.selected.nm_barang}}</ui-select-match>
-                                                    <ui-select-choices refresh="cariBarang($select.search,form.listspp.no_spp)" repeat="val in resultsbrg">
+                                                    <ui-select-choices refresh="cariBarang($select.search,form.listspp.no_spp,form.status_po)" repeat="val in resultsbrg">
                                                         {{val.nm_barang}}
                                                     </ui-select-choices>
                                                 </ui-select>

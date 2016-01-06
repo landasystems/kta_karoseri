@@ -87,7 +87,7 @@ class WipController extends Controller {
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = wip.nik')
                 ->where('wip.no_wo = "' . $params['no_wo'] . '"')
                 ->orderBy("bagian.urutan ASC")
-                ->select('wip.*,bagian.*, tk.*');
+                ->select('wip.*,bagian.*, tk.nik, tk.nama');
         $command2 = $query2->createCommand();
         $detail = $command2->queryAll();
 
@@ -97,24 +97,48 @@ class WipController extends Controller {
                 $coba[$key] = $data;
 
                 if (!empty($data['plan_start']) && $data['plan_start'] != "-" && isset($data['plan_start'])) {
-                    $tgPS = explode('/', $data['plan_start']);
-                    $isips = $tgPS[2] . '-' . $tgPS[1] . '-' . $tgPS[0];
+
+                    if ($data['plan_start'] == '1970-01-01') {
+                        $isips = "";
+                    } else {
+                        $tgPS = explode('/', $data['plan_start']);
+                        $isips = $tgPS[2] . '-' . $tgPS[1] . '-' . $tgPS[0];
+                    }
                 } else {
                     $isips = "";
                 }
 
                 if (!empty($data['plan_finish']) && $data['plan_finish'] != "-" && isset($data['plan_finish'])) {
-                    $tgPF = explode('/', $data['plan_finish']);
-                    $isipf = $tgPF[2] . '-' . $tgPF[1] . '-' . $tgPF[0];
+
+                    if ($data['plan_finish'] == '1970-01-01') {
+                        $isipf = "";
+                    } else {
+                        $tgPF = explode('/', $data['plan_finish']);
+                        $isipf = $tgPF[2] . '-' . $tgPF[1] . '-' . $tgPF[0];
+                    }
                 } else {
                     $isipf = "";
                 }
 
                 if (!empty($data['act_start']) && $data['act_start'] != "-" && isset($data['act_start'])) {
-                    $tgPF = explode('/', $data['act_start']);
-                    $isias = $tgPF[2] . '-' . $tgPF[1] . '-' . $tgPF[0];
+
+                    if ($data['act_start'] == '1970-01-01') {
+                        $isias = "";
+                    } else {
+                        $tgPF = explode('/', $data['act_start']);
+                        $isias = $tgPF[2] . '-' . $tgPF[1] . '-' . $tgPF[0];
+                    }
                 } else {
                     $isias = "";
+                }
+                if (!empty($data['act_finish']) && isset($data['act_finish'])) {
+                    if ($data['act_finish'] == '1970-01-01') {
+                        $isiaf = "";
+                    } else {
+                        $isiaf = $data['act_finish'];
+                    }
+                } else {
+                    $isiaf = "";
                 }
 
 
@@ -123,7 +147,7 @@ class WipController extends Controller {
                 $coba[$key]['plan_finish'] = $isipf;
                 $coba[$key]['act_start'] = $isias;
                 $coba[$key]['ket'] = $data['ket'];
-                $coba[$key]['act_finish'] = $data['act_finish'];
+                $coba[$key]['act_finish'] = $isiaf;
                 $coba[$key]['pemborong'] = ['nama' => $data['nama'], 'nik' => $data['nik']];
                 $coba[$key]['proses'] = ['bagian' => $data['bagian'], 'kd_bag' => $data['kd_bag']];
             }
@@ -203,7 +227,7 @@ class WipController extends Controller {
         }
 
         session_start();
-        $_SESSION['query'] = $query;
+        $_SESSION['queryas'] = $query;
 
         $command = $query->createCommand();
         $models = $command->queryAll();
@@ -272,7 +296,7 @@ class WipController extends Controller {
 
     public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-
+        \Yii::error($params['detWip']);
         $deleteAll = Wip::deleteAll('no_wo="' . $params['wip']['no_wo']['no_wo'] . '"');
         $tglibur = array();
         $libur = \app\models\TblKalender::find()->where('YEAR(tgl)=2015')->all();
@@ -332,10 +356,10 @@ class WipController extends Controller {
                         $libur2++;
                     }
                 }
-                Yii::error($libur1.'-'.$libur2);
+                Yii::error($libur1 . '-' . $libur2);
                 $sHKs = $sHK2 - $libur1 - $libur2;
                 $HK = $sHKs + 1;
-                
+
                 $model->hk = $HK;
             } else {
                 $model->hk = '';
@@ -349,8 +373,7 @@ class WipController extends Controller {
 
     public function actionExcel() {
         session_start();
-        $query = $_SESSION['query'];
-        \Yii::error($query);
+        $query = $_SESSION['queryas'];
         $query->limit(null);
         $query->offset(null);
         $command = $query->createCommand();

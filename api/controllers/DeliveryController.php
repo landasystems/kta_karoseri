@@ -126,8 +126,8 @@ class DeliveryController extends Controller {
         $command = $query->createCommand();
         $models = $command->query()->read();
         $kode_mdl = (substr($models['no_delivery'], 5) + 1);
-//        $kode = $filter_name.substr('0000' . $kode_mdl, strlen($kode_mdl));
-        $kode = $filter_name . $kode_mdl;
+        $kode = $filter_name.substr('000' . $kode_mdl, strlen($kode_mdl));
+//        $kode = $filter_name . $kode_mdl;
         $this->setHeader(200);
 
         echo json_encode(array('status' => 1, 'kode' => $kode));
@@ -245,7 +245,7 @@ class DeliveryController extends Controller {
                 ->from('delivery as dev')
                 ->join('LEFT JOIN', 'customer', 'dev.kd_cust = customer.kd_cust')
                 ->join('LEFT JOIN', 'view_wo_spk as vws', 'dev.no_wo = vws.no_wo')
-                ->join(' left JOIN', 'spk', 'spk.no_spk = vws.no_spk')
+                ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
                 ->join('left JOIN ', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
                 ->join('left JOIN', 'chassis', 'chassis.kd_chassis = spk.kd_chassis')
                 ->join('left JOIN', 'model', 'model.kd_model = spk.kd_model')

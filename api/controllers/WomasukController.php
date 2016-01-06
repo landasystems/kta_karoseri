@@ -1362,8 +1362,8 @@ class WomasukController extends Controller {
                 $cus = $command->query()->read();
 //            }
             $sti = \app\models\Serahterimain::find()->where('kd_titipan="' . $kdtitipan . '"')->one();
-            $sti->kd_cust = (!empty($params['womasuk']['spk']['kd_customer'])) ? $params['womasuk']['spk']['kd_customer'] : $cus['kd_customer'];
-            $sti->no_spk = (!empty($params['womasuk']['spk']['no_spk'])) ? $params['womasuk']['spk']['no_spk'] : $cus['no_spk'];
+            $sti->kd_cust =  $cus['kd_customer'];
+            $sti->no_spk =  $cus['no_spk'];
             $sti->save();
 
 
