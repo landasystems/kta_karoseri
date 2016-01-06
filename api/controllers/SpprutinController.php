@@ -165,19 +165,20 @@ class SpprutinController extends Controller {
     public function actionKode() {
         $query = new Query;
         $query->from('trans_spp')
-                ->select('*')
+                ->select('no_spp')
                 ->orderBy('no_spp DESC')
                 ->where('year(tgl_trans) = "' . date("Y") . '"')
+//                ->where(['year(tgl_trans)' => date("Y")])
                 ->limit(1);
 
         $command = $query->createCommand();
         $models = $command->query()->read();
-
-        if (empty($models)) {
-            $kode = date("y") . '00001';
+        $year = substr($models['no_spp'],0,2);
+        if ($year != date("y")) {
+            $kode = date("y") . '001';
         } else {
             $lastKode = substr($models['no_spp'], -3) + 1;
-            $kode = date("y") . substr('0000' . $lastKode, -3);
+            $kode = date("y") . substr('000' . $lastKode, -3);
         }
         $this->setHeader(200);
 
