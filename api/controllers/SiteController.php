@@ -62,139 +62,17 @@ class SiteController extends Controller {
     }
 
     public function actionCoba() {
-//        header("Content-type: application/vnd-ms-excel");
-//        header("Content-Disposition: attachment; filename=excel-master-barang.xls");
-        $query = \app\models\ReturBbk::find()->where('year(tgl) = "2016"')->orderBy('no_retur_bbk ASC')->all();
-        $kode = "RK1600000";
-        echo '<table>';
-        echo '<tr><td>KODE BBK LAMA</td><td>KODE BBK BARU</td></tr>';
-        foreach ($query as $val) {
-            $urut = substr($kode, -5) + 1;
-            $kode = substr('00000' . $urut, strlen($urut));
-            $kode = "RK" . date("y") . $kode;
-            $val->no_retur_bbk = $kode;
-//            echo '<tr><td>' . $val->no_bbk . '</td><td>' . $kode . '</td></tr>';
-//
-//            $query2 = \app\models\DetBbk::find()->where('no_bbk = "' . $val->no_bbk . '"')->all();
-//            foreach ($query2 as $val2) {
-//                $val2->no_bbk = $kode;
-//                $val2->save();
-//            }
-            $val->save();
-        }
-        echo '</table>';
-//
-//        $query = \app\models\TransBbm::find()->where('year(tgl_nota) = "2016"')->orderBy('no_bbm ASC')->all();
-//        $kode = "BM1600000";
-//        echo '<table>';
-//        echo '<tr>'
-//        . '<td>KODE BBM LAMA</td>'
-//        . '<td>KODE BBM BARU</td>'
-//        . '</tr>';
-//        foreach ($query as $val) {
-//            $urut = substr($kode, -5) + 1;
-//            $kode = substr('00000' . $urut, strlen($urut));
-//            $kode = "BM" . date("y") . $kode;
-//            echo '<tr>'
-//            . '<td>' . $val->no_bbm . '</td>'
-//            . '<td>' . $kode . '</td>'
-//            . '</tr>';
-//
-//            $query2 = \app\models\DetBbm::find()->where('no_bbm = "' . $val->no_bbm . '"')->all();
-//            foreach ($query2 as $val2) {
-//                $val2->no_bbm = $kode;
-//                $val2->save();
-//            }
-//            $val->no_bbm = $kode;
-//            $val->save();
-//        }
-//        echo '</table>';
+        $tanggal = "2015-12-31";
 
+        $query = new Query;
+        $query->from(['barang', 'jenis_brg'])
+                ->where('barang.jenis = jenis_brg.kd_jenis')
+                ->orderBy('barang.nm_barang ASC')
+                ->select("barang.*, jenis_brg.*");
+        $qq = $query->createCommand();
+        $models = $qq->queryAll();
 
-
-
-
-//        header("Expires: " . gmdate("D, d M Y H:i:s", time()) . " GMT");
-//        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-//        header("Cache-Control: no-cache, must-revalidate");
-//        header("Pragma: no-cache");
-//        $query = new Query;
-//        $query->select("tk.nik, tk.nama, tjb.jabatan")
-//                ->from('purchassing.tbl_karyawan as tk')
-//                ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = tk.jabatan')
-//                ->join('JOIN', 'ftm.emp as emp', 'emp.nik = tk.nik')
-//                ->join('JOIN', 'ftm.att_log as att_log', 'att_log.pin = emp.pin')
-////                    ->where('date(att_log.scan_date) = "' . date("Y-m-d") . '"')
-//                ->andWhere('tk.jabatan = "JBTN002"')
-//                ->groupBy('tk.nik')
-//                ->limit(20);
-//
-//        $command = $query->createCommand();
-//        $models = $command->queryAll();
-//
-//        echo json_encode(array('status' => 1, 'data' => $models));
-//        $query = new Query;
-//        $query->select("tk.nik, tk.nama, tjb.jabatan")
-//                ->from('purchassing.tbl_karyawan as tk')
-//                ->join('LEFT JOIN','tbl_jabatan as tjb','tjb.id_jabatan = tk.jabatan')
-//                ->join('JOIN', 'ftm.emp as emp', 'emp.nik = tk.nik')
-//                ->join('JOIN', 'ftm.att_log as att_log', 'att_log.pin = emp.pin')
-//                ->where('date(att_log.scan_date) = "' . date("Y-m-d") . '"');
-//
-//        $command = $query->createCommand();
-//        $models = $command->queryAll();
-//        echo json_encode($models);
-//        $query = new Query;
-//        $query->from('det_standar_bahan as dts')
-//                ->join('JOIN', 'barang as brg', 'dts.kd_barang = brg.kd_barang')
-//                ->join('JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = dts.kd_jab')
-//                ->join('JOIN', 'spk', 'spk.kd_bom = dts.kd_bom')
-//                ->join('JOIN', 'wo_masuk as wm', 'wm.no_spk  = spk.no_spk')
-//                ->join('JOIN', 'trans_standar_bahan as tsb', 'tsb.kd_bom  = spk.kd_bom')
-//                ->orderBy('tjb.urutan_produksi ASC, tjb.jabatan ASC, brg.nm_barang ASC')
-//                ->where('wm.no_wo = "NDP-215133" ')
-//                ->select("brg.kd_barang, brg.nm_barang, brg.satuan, dts.ket, dts.qty, brg.harga, tjb.id_jabatan, tjb.jabatan, wm.no_wo");
-//
-//        $command = $query->createCommand();
-//        $models = $command->queryAll();
-//
-//        $data = array();
-//        foreach ($models as $key => $val) {
-//            $query2 = new Query;
-//            $query2->from('tbl_karyawan')
-//                    ->select('nama, nik')
-//                    ->where('tbl_karyawan.jabatan = "' . $val['id_jabatan'] . '" and status = "Kerja"');
-//            $command2 = $query2->createCommand();
-//            $models2 = $command2->queryAll();
-//
-//            $arr = array();
-//            foreach ($models2 as $vv) {
-//                $arr[] = " (<b>" . $vv['nik'] . "</b>) " . $vv['nama'];
-//            }
-//
-//            $karyawan[$val['id_jabatan']] = join($arr, ",");
-//
-//            $data[$val['id_jabatan']]['id_jabatan'] = $val['id_jabatan'];
-//            $data[$val['id_jabatan']]['bagian'] = $val['jabatan'];
-//            $data[$val['id_jabatan']]['karyawan'] = $karyawan;
-//            $data[$val['id_jabatan']]['body'][$key]['barang'] = $val['nm_barang'];
-//        }
-//
-//        foreach ($data as $val) {
-//            echo '<b>' . $val['bagian'] . '</b><br>';
-//            echo '<table>';
-//            echo '<tr>';
-//            echo '<td style="width: 100px;vertical-align:top"><b>KARYAWAN</b></td>';
-//            echo '<td width=1 style="vertical-align:top">:</td>';
-//            echo '<td>' . $karyawan[$val['id_jabatan']] . '</td>';
-//            echo '</tr>';
-//            echo '</table>';
-//            echo '<b>BARANG</b><br>';
-//            foreach ($val['body'] as $val2) {
-//                echo ' -| ' . $val2['barang'] . '</br>';
-//            }
-//            echo '<hr>';
-//        }
+        return $this->render("/expmaster/lapbarangpertanggal", ['models' => $models, 'tgl' => $tanggal]);
     }
 
     public function actionLogin() {
