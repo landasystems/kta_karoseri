@@ -12,6 +12,7 @@ foreach ($models as $key => $val) {
     $data[$val['kat']]['jenis_brg'][$val['jenis_brg']]['body'][$i]['nm_barang'] = $val['nm_barang'];
     $data[$val['kat']]['jenis_brg'][$val['jenis_brg']]['body'][$i]['jenis_brg'] = $val['jenis_brg'];
     $data[$val['kat']]['jenis_brg'][$val['jenis_brg']]['body'][$i]['satuan'] = $val['satuan'];
+    $data[$val['kat']]['jenis_brg'][$val['jenis_brg']]['body'][$i]['harga'] = $val['harga'];
     $data[$val['kat']]['jenis_brg'][$val['jenis_brg']]['body'][$i]['max'] = $val['max'];
     $data[$val['kat']]['jenis_brg'][$val['jenis_brg']]['body'][$i]['min'] = $val['min'];
     $data[$val['kat']]['jenis_brg'][$val['jenis_brg']]['body'][$i]['saldo'] = $val['saldo'];
@@ -48,6 +49,7 @@ foreach ($models as $key => $val) {
             <th align="center" style="font-size: 14px;">Kode Barang</th>
             <th align="center" style="font-size: 14px;">Nama barang</th>
             <th align="center" style="font-size: 14px;">Satuan</th>
+            <th align="center" style="font-size: 14px;">Harga</th>
             <th align="center" style="font-size: 14px;">Min Stok</th>
             <th align="center" style="font-size: 14px;">Maks Stok</th>
             <th align="center" style="font-size: 14px;">Stok</th>
@@ -64,6 +66,7 @@ foreach ($models as $key => $val) {
                 <td  class="border-all back-grey"></td>
                 <td  class="border-all back-grey"></td>
                 <td  class="border-all back-grey"></td>
+                <td  class="border-all back-grey"></td>
             <tr>
                 <?php
                 foreach ($arr['jenis_brg'] as $keys) {
@@ -73,6 +76,7 @@ foreach ($models as $key => $val) {
                     <td class="border-right"><b><?= $keys['title'] ?></b></td>
                     <td class="border-right"></td>
                     <td class="border-right"></td>
+                     <td class="border-right"></td>
                     <td class="border-right"></td>
                     <td class="border-right"></td>
                     <td class="border-right"></td>
@@ -85,6 +89,7 @@ foreach ($models as $key => $val) {
                         <td class="border-right">&nbsp;<?= $value['kd_barang'] ?></td>
                         <td class="border-right"><?= $value['nm_barang'] ?></td>
                         <td class="border-right" align="center" >&nbsp;<?= $value['satuan'] ?></td>
+                        <td class="border-right" align="center" >&nbsp;<?= $value['harga'] ?></td>
                         <td class="border-right" align="center" >&nbsp;<?= $value['min'] ?></td>
                         <td class="border-right" align="center" >&nbsp;<?= $value['max'] ?></td>
                         <td class="border-right" align="center" >&nbsp;<?= $value['qty'] ?></td>

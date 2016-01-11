@@ -64,25 +64,25 @@ class SiteController extends Controller {
     public function actionCoba() {
 //        header("Content-type: application/vnd-ms-excel");
 //        header("Content-Disposition: attachment; filename=excel-master-barang.xls");
-//        $query = \app\models\TransBbk::find()->where('year(tanggal) = "2016"')->orderBy('no_bbk ASC')->all();
-//        $kode = "BK1600000";
-//        echo '<table>';
-//        echo '<tr><td>KODE BBK LAMA</td><td>KODE BBK BARU</td></tr>';
-//        foreach ($query as $val) {
-//            $urut = substr($kode, -5) + 1;
-//            $kode = substr('00000' . $urut, strlen($urut));
-//            $kode = "BK" . date("y") . $kode;
-//            $val->no_bbk = $kode;
-////            echo '<tr><td>' . $val->no_bbk . '</td><td>' . $kode . '</td></tr>';
-////
-////            $query2 = \app\models\DetBbk::find()->where('no_bbk = "' . $val->no_bbk . '"')->all();
-////            foreach ($query2 as $val2) {
-////                $val2->no_bbk = $kode;
-////                $val2->save();
-////            }
-//            $val->save();
-//        }
-//        echo '</table>';
+        $query = \app\models\ReturBbk::find()->where('year(tgl) = "2016"')->orderBy('no_retur_bbk ASC')->all();
+        $kode = "RK1600000";
+        echo '<table>';
+        echo '<tr><td>KODE BBK LAMA</td><td>KODE BBK BARU</td></tr>';
+        foreach ($query as $val) {
+            $urut = substr($kode, -5) + 1;
+            $kode = substr('00000' . $urut, strlen($urut));
+            $kode = "RK" . date("y") . $kode;
+            $val->no_retur_bbk = $kode;
+//            echo '<tr><td>' . $val->no_bbk . '</td><td>' . $kode . '</td></tr>';
+//
+//            $query2 = \app\models\DetBbk::find()->where('no_bbk = "' . $val->no_bbk . '"')->all();
+//            foreach ($query2 as $val2) {
+//                $val2->no_bbk = $kode;
+//                $val2->save();
+//            }
+            $val->save();
+        }
+        echo '</table>';
 //
 //        $query = \app\models\TransBbm::find()->where('year(tgl_nota) = "2016"')->orderBy('no_bbm ASC')->all();
 //        $kode = "BM1600000";

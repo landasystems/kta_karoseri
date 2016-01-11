@@ -101,17 +101,17 @@ class ReturbbkController extends Controller {
         $query->from('retur_bbk')
                 ->select('*')
                 ->orderBy('no_retur_bbk DESC')
+                ->where('year(tgl) = "' . date("Y") . '"')
                 ->limit(1);
+
         $command = $query->createCommand();
         $models = $command->query()->read();
 
-        $cek = ReturBbk::findOne('no_retur_bbk = "BK' . date("y") . '000001"');
-        if (empty($cek)) {
-            $urut = substr($models['no_retur_bbk'], -5) + 1;
-            $kode = substr('00000' . $urut, strlen($urut));
-            $kode = "RK" . date("y") . $kode;
+        if (empty($models)) {
+            $kode = 'RM' . date("y") . '00001';
         } else {
-            $kode = "RK" . date("y") . "000001";
+            $lastKode = substr($models['no_retur_bbk'], -5) + 1;
+            $kode = 'RM' . date("y") . substr('0000' . $lastKode, -5);
         }
         $this->setHeader(200);
 
@@ -122,7 +122,7 @@ class ReturbbkController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "tgl DESC";
+        $sort = "no_retur_bbk DESC";
         $offset = 0;
         $limit = 10;
 
@@ -278,7 +278,7 @@ class ReturbbkController extends Controller {
             $barang->saldo += $model->jml;
             $barang->save();
         }
-        
+
 //        echo json_encode($barang);
 
         if ($model->save()) {
