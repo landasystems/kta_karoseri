@@ -21,7 +21,7 @@ class PoController extends Controller {
                     'index' => ['get'],
                     'rekap' => ['get'],
                     'fluktuasi' => ['post'],
-                    'view' => ['get'],
+                    'view' => ['post'],
                     'listsupplier' => ['get'],
                     'listspp' => ['get'],
                     'kode' => ['get'],
@@ -105,28 +105,74 @@ class PoController extends Controller {
     }
 
     public function actionKode() {
+        $params = $_REQUEST;
+        $nama = $params['nama'];
         $query = new Query;
         $query->from('trans_po')
                 ->select('*')
+                ->where(['dikirim_ke' => $nama])
                 ->orderBy('nota DESC')
                 ->limit(1);
 
         $command = $query->createCommand();
         $models = $command->query()->read();
 
-        $cek = TransPo::find()
-                ->where('nota = "PCH' . date("y") . '0001"')
-                ->One();
+        if ($nama == 'PT KARYA TUGAS ANDA') {
+            $cek = TransPo::find()
+                    ->where('nota = "PCH' . date("y") . '0001"')
+                    ->One();
+        } else if ($nama == 'PT KARYA KELOLA SEMESTA') {
+            $cek = TransPo::find()
+                    ->where('nota = "KKS' . date("y") . '0001"')
+                    ->One();
+        } else if ($nama == 'PT SUMBER SEJAHTERA SEMESTA') {
+            $cek = TransPo::find()
+                    ->where('nota = "SSS' . date("y") . '0001"')
+                    ->One();
+        }else if ($nama == 'PT TUGASANDA BERSAMA JAYA') {
+            $cek = TransPo::find()
+                    ->where('nota = "TABJ' . date("y") . '0001"')
+                    ->One();
+        }else if ($nama == 'PT TUGASANDA CONSTRUCTION INDONESIA') {
+            $cek = TransPo::find()
+                    ->where('nota = "TCI' . date("y") . '0001"')
+                    ->One();
+        }
+
+//        Yii::error($cek);
+
         if (!empty($cek)) {
+
             $kode_mdl = (substr($models['nota'], -4) + 1);
             $kode = substr('0000' . $kode_mdl, strlen($kode_mdl));
-            $kode = "PCH" . date("y") . $kode;
+
+            if ($nama == 'PT KARYA TUGAS ANDA') {
+                $kode_s = "PCH" . date("y") . $kode;
+            } else if ($nama == 'PT KARYA KELOLA SEMESTA') {
+                $kode_s = "KKS" . date("y") . $kode;
+            } else if ($nama == 'PT SUMBER SEJAHTERA SEMESTA') {
+                $kode_s = "SSS" . date("y") . $kode;
+            } else if ($nama == 'PT TUGASANDA BERSAMA JAYA') {
+                $kode_s = "TABJ" . date("y") . $kode;
+            } else if ($nama == 'PT TUGASANDA CONSTRUCTION INDONESIA') {
+                $kode_s = "TCI" . date("y") . $kode;
+            }
         } else {
-            $kode = "PCH" . date("y") . '0001';
+            if ($nama == 'PT KARYA TUGAS ANDA') {
+                $kode_s = "PCH" . date("y") . '0001';
+            } else if ($nama == 'PT KARYA KELOLA SEMESTA') {
+                $kode_s = "KKS" . date("y") . '0001';
+            } else if ($nama == 'PT SUMBER SEJAHTERA SEMESTA') {
+                $kode_s = "SSS" . date("y") . '0001';
+            } else if ($nama == 'PT TUGASANDA BERSAMA JAYA') {
+                $kode_s = "TABJ" . date("y") . '0001';
+            } else if ($nama == 'PT TUGASANDA CONSTRUCTION INDONESIA') {
+                $kode_s = "TCI" . date("y") . '0001';
+            }
         }
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'kode' => $kode));
+        echo json_encode(array('status' => 1, 'kode' => $kode_s));
     }
 
     public function actionIndex() {
@@ -415,8 +461,9 @@ class PoController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $models));
     }
 
-    public function actionView($id) {
-
+    public function actionView() {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $id = $params['id'];
         $model = $this->findModel($id);
         $data = $model->attributes;
         //supplier
@@ -521,10 +568,12 @@ class PoController extends Controller {
         }
     }
 
-    public function actionUpdate($id) {
+    public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = $this->findModel($id);
+//        Yii::error($params);
+        $model = $this->findModel($params['formpo']['nota']);
         $model->attributes = $params['formpo'];
+        $model->suplier = $params['formpo']['supplier']['kd_supplier'];
         $model->lock = 1;
         if (!empty($model->tanggal)) {
             $model->tanggal = date("Y-m-d", strtotime($params['formpo']['tanggal']));
@@ -544,7 +593,7 @@ class PoController extends Controller {
                     $det->kd_barang = $val['data_barang']['kd_barang'];
                     if (empty($val['data_barang']['tgl_pengiriman'])) {
                         $det->tgl_pengiriman = NULL;
-                    }else{
+                    } else {
                         $det->tgl_pengiriman = date("Y-m-d", strtotime($val['data_barang']['tgl_pengiriman']));
                     }
                     $det->nota = $model->nota;

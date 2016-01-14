@@ -69,12 +69,12 @@ foreach ($models as $key => $val) {
             <td class="border-bottom border-right" valign="top"><?php echo $key['title']['nota'] ?></td>
             <td class="border-bottom border-right" valign="top"><?php echo $key['title']['suplier'] ?></td>
             <td class="border-bottom border-right" valign="top"><?php echo $key['title']['no_bbm'] ?></td>
-            <td class="border-bottom border-right" style="text-align: center">&nbsp;<?php echo $key['body']['kd_barang'] ?></td>
+            <td class="border-bottom border-right" style="text-align: center">&nbsp;<?php echo $key['body']['kode_barang'] ?></td>
             <td class="border-bottom border-right"><?php echo $key['body']['nm_barang'] ?></td>
             <td class="border-bottom border-right" style="text-align: center"><?php echo $key['body']['jml'] ?>&nbsp;</td>
-            <td class="border-bottom border-right" style="text-align: right"><?=$key['body']['harga']?>&nbsp;</td>
+            <td class="border-bottom border-right" style="text-align: right"><?php echo $key['body']['harga']?>&nbsp;</td>
             <td class="border-bottom border-right" style="text-align: right"><?php echo  $key['body']['total'] ?>&nbsp;</td>
-            <td class="border-bottom border-right" style="width: 60px;text-align: right"><?=$key['body']['tgl_pengiriman']?><?php //echo date("d/m/y",  strtotime($key['body']['tgl_pengiriman'])) ?></td>
+            <td class="border-bottom border-right" style="width: 60px;text-align: right"><?php echo $key['body']['tgl_pengiriman']?><?php //echo date("d/m/y",  strtotime($key['body']['tgl_pengiriman'])) ?></td>
             <td class="border-bottom border-right" align="center"><?php echo $key['body']['bayar'] ?></td>
             <td class="border-bottom border-right"><?php echo $key['body']['ket'] ?></td>
         </tr>
