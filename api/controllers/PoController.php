@@ -568,10 +568,12 @@ class PoController extends Controller {
         }
     }
 
-    public function actionUpdate($id) {
+    public function actionUpdate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        $model = $this->findModel($id);
+//        Yii::error($params);
+        $model = $this->findModel($params['formpo']['nota']);
         $model->attributes = $params['formpo'];
+        $model->suplier = $params['formpo']['supplier']['kd_supplier'];
         $model->lock = 1;
         if (!empty($model->tanggal)) {
             $model->tanggal = date("Y-m-d", strtotime($params['formpo']['tanggal']));

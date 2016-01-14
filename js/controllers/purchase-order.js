@@ -344,7 +344,13 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         return nilai;
     }
 
-
+    $scope.getcode = function (dat){
+        if($scope.is_edit == true){
+            Data.get('po/kode', {nama: dat}).then(function (data) {
+            $scope.form.nota = data.kode;
+        });
+        }
+    }
 
 //button
     $scope.create = function (form) {
@@ -366,7 +372,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
         $scope.form.status_po = '1';
         $scope.form.status_ppn = '0';
         $scope.form.ppn = '0';
-        $scope.form.dikirim_ke = 'PT KARYA TUGAS ANDA';
+//        $scope.form.dikirim_ke = 'PT KARYA TUGAS ANDA';
 
     };
 
@@ -431,7 +437,7 @@ app.controller('poCtrl', function ($scope, Data, toaster) {
     };
 
     $scope.selected = function (id) {
-        Data.get('po/view/' + id).then(function (data) {
+        Data.post('po/view/',{id: id}).then(function (data) {
             $scope.form = data.data;
             $scope.status = data.print;
             $scope.msg = data.msg;

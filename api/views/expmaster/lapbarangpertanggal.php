@@ -129,14 +129,14 @@ foreach ($mrbbm as $val) {
                     $rbbm = isset($rbm[$value['kd_barang']]) ? $rbm[$value['kd_barang']] : 0;
                     ?>
                     <tr>
-                        <td class="border-right">&nbsp;<?= $value['kd_barang'] ?></td>
+                        <td class="border-right"><?= $value['kd_barang'] ?></td>
                         <td class="border-right"><?= $value['nm_barang'] ?></td>
-                        <td class="border-right" align="center" >&nbsp;<?= $value['satuan'] ?></td>
-                        <td class="border-right" align="center" >&nbsp;<?= $value['harga'] ?></td>
-                        <td class="border-right" align="center" >&nbsp;<?= $value['min'] ?></td>
-                        <td class="border-right" align="center" >&nbsp;<?= $value['max'] ?></td>
-                        <!--<td class="border-right" align="center" >&nbsp;<?= $value['qty'] ?></td>-->
-                        <td class="border-right" align="center" >&nbsp;<?= (0 - $bbk + $bbm - $rbbm + $rbbk) ?></td>
+                        <td class="border-right" align="center" ><?= $value['satuan'] ?>&nbsp;</td>
+                        <td class="border-right" align="center" ><?= $value['harga'] ?></td>
+                        <td class="border-right" align="center" ><?= $value['min'] ?></td>
+                        <td class="border-right" align="center" ><?= $value['max'] ?></td>
+                        <!--<td class="border-right" align="center" >&nbsp;</td>-->
+                        <td class="border-right" align="center" ><?= (0 - $bbk + $bbm - $rbbm + $rbbk) ?></td>
                     </tr>
                     <?php
                 }
