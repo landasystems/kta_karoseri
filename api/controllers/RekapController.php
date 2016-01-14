@@ -264,7 +264,7 @@ class RekapController extends Controller {
                 ->where('tk.department="DPRT005" and wm.tgl_keluar IS NULL')
                 ->orderBy($sort)
                 ->select("sti.kd_titipan, spk.tgl, customer.provinsi, customer.nm_customer, spk.jml_unit, spk.no_spk, wm.no_wo, sti.no_chassis, sti.no_mesin, 
-                            tk.nama, customer.market, model.model, chassis.merk, chassis.tipe, chassis.jenis");
+                            tk.nama, customer.market, model.model, chassis.merk, chassis.tipe, chassis.jenis, vws.tgl_terima");
 //filter
 
         if (isset($params['filter'])) {
