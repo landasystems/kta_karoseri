@@ -25,6 +25,7 @@ class WipController extends Controller {
                     'index' => ['get'],
                     'view' => ['get'],
                     'excel' => ['get'],
+                    'excel2' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['post'],
@@ -373,12 +374,21 @@ class WipController extends Controller {
 
     public function actionExcel() {
         session_start();
-        $query = $_SESSION['queryas'];
+        $query = $_SESSION['query'];
         $query->limit(null);
         $query->offset(null);
         $command = $query->createCommand();
         $models = $command->queryAll();
         return $this->render("/expretur/wip", ['models' => $models]);
+    }
+    public function actionExcel2() {
+        session_start();
+        $query = $_SESSION['queryas'];
+        $query->limit(null);
+        $query->offset(null);
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("/expretur/schedule", ['models' => $models]);
     }
 
     public function actionKaryawan() {

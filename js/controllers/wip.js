@@ -79,6 +79,11 @@ app.controller('wipCtrl', function ($scope, Data, toaster, $modal) {
             window.open('api/web/wip/excel?print=true', "", "width=500");
         });
     }
+    $scope.print2 = function () {
+        Data.get('wip', paramRef).then(function (data) {
+            window.open('api/web/wip/excel2?print=true', "", "width=500");
+        });
+    }
     $scope.create = function (form) {
         $scope.is_edit = true;
         $scope.is_view = false;
