@@ -510,13 +510,13 @@ class BbkController extends Controller {
         $command = $query->createCommand();
         $models = $command->query()->read();
 
-        $cek = TransBbk::findOne('no_bbk = "BK' . date("y") . '00001"');
+        $cek = TransBbk::find()->where('no_bbk = "BK' . date("y") . '00001"')->one();
         if (empty($cek)) {
+            $kode = "BK" . date("y") . "00001";
+        } else {
             $urut = substr($models['no_bbk'], -5) + 1;
             $kode = substr('00000' . $urut, strlen($urut));
             $kode = "BK" . date("y") . $kode;
-        } else {
-            $kode = "BK" . date("y") . "00001";
         }
         $this->setHeader(200);
 

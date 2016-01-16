@@ -193,7 +193,14 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Dikirim Ke</label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control" ng-model="form.dikirim_ke" ng-disabled="is_view" required/>
+                                        <!--<input type="text" class="form-control" ng-model="form.dikirim_ke" ng-disabled="is_view" required/>-->
+                                    <select ng-disabled="is_create==false" ng-model="form.dikirim_ke"  class="form-control"  required ng-change="getcode(form.dikirim_ke)">
+                                        <option  value="PT KARYA TUGAS ANDA">PT KARYA TUGAS ANDA</option>
+                                        <option value="PT KARYA KELOLA SEMESTA">PT KARYA KELOLA SEMESTA</option>
+                                        <option value="PT SUMBER SEJAHTERA SEMESTA">PT SUMBER SEJAHTERA SEMESTA</option>
+                                        <option value="PT TUGASANDA BERSAMA JAYA">PT TUGASANDA BERSAMA JAYA</option>
+                                        <option value="PT TUGASANDA CONSTRUCTION INDONESIA">PT TUGASANDA CONSTRUCTION INDONESIA</option>
+                                    </select>
                                     </div>
                                 </div>
                             </div>
@@ -339,7 +346,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" style="text-align: left; margin-left: 10px">PPN 10 %</label>
                                 <div class="col-sm-3">
-                                    {{form.status_ppn}}
+                                    <!--{{form.status_ppn}}-->
                                     <select ng-model="form.status_ppn"  class="form-control"  required ng-change="subtotal()">
                                         <option  value="0">Include</option>
                                         <option value="1">Exclude</option>

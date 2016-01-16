@@ -90,6 +90,7 @@
                             <th st-sort="customer.nm_customer">Customer</th>
                             <th st-sort="wm.no_wo">NO WO</th>
                             <th st-sort="spk.no_spk">No SPK</th>
+                            <th st-sort="spk.no_spk">Tgl Masuk</th>
                             <th st-sort="sti.kd_titipan">Kode Titipan</th>
                             <th st-sort="chassis.merk">Merk/Type</th>
                             <th st-sort="tk.nama">Sales</th>
@@ -103,6 +104,7 @@
                             <td>{{row.nm_customer}}</td>
                             <td>{{row.no_wo}}</td>
                             <td>{{row.no_spk}}</td>
+                            <td>{{row.tgl_terima | date:'dd - MMM - yyyy'}}</td>
                             <td>{{row.kd_titipan}}</td>
                             <td>{{row.merk}} {{row.tipe}}</td>
                             <td>{{row.nama}}</td>

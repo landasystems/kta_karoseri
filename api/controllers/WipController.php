@@ -25,7 +25,7 @@ class WipController extends Controller {
                     'index' => ['get'],
                     'view' => ['get'],
                     'excel' => ['get'],
-                    'excel2' => ['get'],
+                    'excelschedule' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['post'],
@@ -216,7 +216,7 @@ class WipController extends Controller {
                 ->from('det_wip as dw')
                 ->join('JOIN', 'view_wo_spk as vws', 'dw.no_wo = vws.no_wo')
                 ->join('JOIN', 'bagian', 'bagian.kd_bag = dw.kd_kerja')
-                ->orderBy($sort)
+                ->orderBy("bagian.urutan ASC")
                 ->select("*");
 
         //filter
@@ -381,7 +381,7 @@ class WipController extends Controller {
         $models = $command->queryAll();
         return $this->render("/expretur/wip", ['models' => $models]);
     }
-    public function actionExcel2() {
+    public function actionExcelschedule() {
         session_start();
         $query = $_SESSION['queryas'];
         $query->limit(null);
