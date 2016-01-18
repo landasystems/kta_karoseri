@@ -15,7 +15,7 @@
         <td colspan="4"><b> <div style="text-transform: uppercase;text-align: right;margin-right: 0px; font-size: 16px">WORK ORDER <?php echo $models['jenis'] ?></div></b></td>
         <td colspan="2" style="text-align: right;font-size: 15px">FR-PPC-003 Rev 03</td>
     </tr>
-    <tr>
+    <tr>p
         <td style=" border-right: 1px #000 solid;border-left: 1px #000 solid;border-bottom: 1px #000 solid;border-top: 1px #000 solid;" colspan="6"><b>I. DATA UNIT</b></td>
     </tr>
     <tr>
@@ -591,8 +591,8 @@
                     <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">PPIC</td>
                     <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Engineering</td>
                  
-                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Production</td>
-                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Plant </td>
+                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Production Head</td>
+                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Plant Head</td>
                 </tr>
                 <tr> 
                     <td style="border-left: 1px solid #000000;border-right: 1px solid #000000;"></td>
@@ -646,8 +646,8 @@
                     <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">PPIC</td>
                     <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Engineering</td>
                     
-                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Production</td>
-                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Plant</td>
+                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Production Head</td>
+                    <td style="border-bottom: 1px solid #000000;border-right: 1px solid #000000;border-top: 1px solid #000000;text-align: center">Plant Head</td>
                 </tr>
                 <tr> 
                     <td style="border-left: 1px solid #000000;border-right: 1px solid #000000;"></td>
