@@ -476,19 +476,19 @@ angular.module('app')
                                             }]
                                     }})
                                 //
-                                .state('transaksi.bktbarangkeluar', {
-                                    url: '/bkt-barangkeluar',
-                                    templateUrl: 'tpl/t_bkt-barangkeluar/index.html',
-                                    resolve: {
-                                        deps: ['$ocLazyLoad',
-                                            function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['daterangepicker', 'frAngular']).then(
-                                                        function () {
-                                                            return $ocLazyLoad.load('js/controllers/bkt-barangkeluar.js');
-                                                        }
-                                                );
-                                            }]
-                                    }})
+//                                .state('transaksi.bktbarangkeluar', {
+//                                    url: '/bkt-barangkeluar',
+//                                    templateUrl: 'tpl/t_bkt-barangkeluar/index.html',
+//                                    resolve: {
+//                                        deps: ['$ocLazyLoad',
+//                                            function ($ocLazyLoad) {
+//                                                return $ocLazyLoad.load(['daterangepicker', 'frAngular']).then(
+//                                                        function () {
+//                                                            return $ocLazyLoad.load('js/controllers/bkt-barangkeluar.js');
+//                                                        }
+//                                                );
+//                                            }]
+//                                    }})
                                 //
                                 .state('transaksi.bktbarangkeluar2', {
                                     url: '/bkt-barangkeluar2',
