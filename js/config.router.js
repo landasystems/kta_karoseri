@@ -517,6 +517,20 @@ angular.module('app')
                                                 );
                                             }]
                                     }})
+                                //barcode Generator
+                                .state('transaksi.barcodegenerator', {
+                                    url: '/barcodegenerator',
+                                    templateUrl: 'tpl/t_barcodegenerator/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['frAngular']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/barcodegenerator.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
                                 //
                                 .state('transaksi.buktiterima', {
                                     url: '/bukti-terima',
