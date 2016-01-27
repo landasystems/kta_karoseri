@@ -15,7 +15,7 @@
         <td colspan="4"><b> <div style="text-transform: uppercase;text-align: right;margin-right: 0px; font-size: 16px">WORK ORDER <?php echo $models['jenis'] ?></div></b></td>
         <td colspan="2" style="text-align: right;font-size: 15px">FR-PPC-003 Rev 03</td>
     </tr>
-    <tr>p
+    <tr>
         <td style=" border-right: 1px #000 solid;border-left: 1px #000 solid;border-bottom: 1px #000 solid;border-top: 1px #000 solid;" colspan="6"><b>I. DATA UNIT</b></td>
     </tr>
     <tr>
