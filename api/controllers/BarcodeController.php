@@ -87,8 +87,6 @@ class BarcodeController extends Controller
         $kode = $session['kode'];
         $jumlah = $session['jumlah'];
         
-        Yii::error($kode);
-        Yii::error($jumlah);
         return $this->render("barcode", ['kode' => $kode,'jumlah' => $jumlah]);
     }
 

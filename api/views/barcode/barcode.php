@@ -32,7 +32,7 @@ for ($i = 0; $i < 8; $i++) {
         'value' => ((string) $kode) . '0', /* value for EAN 13 be careful to set right values for each barcode type */
         'type' => 'ean8', /* supported types  ean8, ean13, upc, std25, int25, code11, code39, code93, code128, codabar, msi, datamatrix */
         'settings' => array(
-            'barWidth' => 1,
+            'barWidth' => 2,
             'barHeight' => 40,)
     );
 
@@ -41,7 +41,7 @@ for ($i = 0; $i < 8; $i++) {
         'value' => ((string) $kode) . '0', /* value for EAN 13 be careful to set right values for each barcode type */
         'type' => 'ean8', /* supported types  ean8, ean13, upc, std25, int25, code11, code39, code93, code128, codabar, msi, datamatrix */
         'settings' => array(
-            'barWidth' => 1,
+            'barWidth' => 2,
             'barHeight' => 40,)
     );
 
@@ -50,7 +50,7 @@ for ($i = 0; $i < 8; $i++) {
         'value' => ((string) $kode) . '0', /* value for EAN 13 be careful to set right values for each barcode type */
         'type' => 'ean8', /* supported types  ean8, ean13, upc, std25, int25, code11, code39, code93, code128, codabar, msi, datamatrix */
         'settings' => array(
-            'barWidth' => 1,
+            'barWidth' => 2,
             'barHeight' => 40,)
     );
 
