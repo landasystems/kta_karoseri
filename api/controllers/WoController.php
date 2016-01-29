@@ -73,8 +73,10 @@ class WoController extends Controller {
         $query = new Query;
         $query->from('wo_masuk as wo')
                 ->join('LEFT JOIN', 'spk', 'spk.no_spk = wo.no_spk')
+                ->join('LEFT JOIN', 'serah_terima_in as sti', 'wo.kd_titipan = sti.kd_titipan')
+                ->join('LEFT JOIN', 'customer as cus', 'sti.kd_cust = cus.kd_cust')
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                ->select("wo.*, tk.nama as sales, tk.lokasi_kntr as wilayah, spk.*")
+                ->select("wo.*, tk.nama as sales, tk.lokasi_kntr as wilayah, spk.*, sti.no_chassis, sti.no_mesin, cus.nm_customer")
                 ->where(['like', 'wo.no_wo', $params['nama']])
 //                ->andWhere('wm.tgl_keluar IS NULL or wm.tgl_keluar="" or wm.tgl_keluar = "0000-00-00"')
                 ->orderBy('wo.no_wo DESC')
