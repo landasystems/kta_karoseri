@@ -243,9 +243,10 @@ class DeliveryController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('delivery as dev')
-                ->join('LEFT JOIN', 'customer', 'dev.kd_cust = customer.kd_cust')
+                
                 ->join('LEFT JOIN', 'view_wo_spk as vws', 'dev.no_wo = vws.no_wo')
                 ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
+                ->join('LEFT JOIN', 'customer', 'spk.kd_customer = customer.kd_cust')
                 ->join('left JOIN ', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
                 ->join('left JOIN', 'chassis', 'chassis.kd_chassis = spk.kd_chassis')
                 ->join('left JOIN', 'model', 'model.kd_model = spk.kd_model')
