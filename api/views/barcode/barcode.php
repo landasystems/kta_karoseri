@@ -1,9 +1,9 @@
 
 <!--This element id should be passed on to options-->
-<style>
+<style media="print">
     .table-barcode td {
-        padding-left: 40px;
-        padding-right: 40px;
+        padding-left: 20px;
+        padding-right: 20px;
     }
 </style>
 
@@ -58,6 +58,10 @@ for ($i = 0; $i < 8; $i++) {
     echo BarcodeGenerator::widget($optionsArray2);
     echo BarcodeGenerator::widget($optionsArray3);
 }
-
-
-
+?>
+<script type="text/javascript">
+    window.print();
+    setTimeout(function () {
+        window.close();
+    }, 1);
+</script>
