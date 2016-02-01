@@ -369,27 +369,27 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     $scope.addDetail = function (kat_bbk, item) {
         if (kat_bbk == 'umum') {
             var ada = false;
-            if ($scope.detBbk.length > 0) {
-                angular.forEach($scope.detBbk, function (val, key) {
+            if ($scope.detailBbk.length > 0) {
+                angular.forEach($scope.detailBbk, function (val, key) {
                     if (val.kd_barang == item.kd_barang) {
-                        $scope.detBbk[key].jumlah++;
+                        $scope.detailBbk[key].jumlah++;
                         ada = true;
                     }
                 });
                 if (ada == false) {
                     item.jumlah = 1;
-                    $scope.detBbk.push(item);
+                    $scope.detailBbk.push(item);
                 }
 
             }
             else {
-                $scope.detBbk[0] = item;
-                $scope.detBbk[0].jumlah = 1;
+                $scope.detailBbk[0] = item;
+                $scope.detailBbk[0].jumlah = 1;
             }
             $scope.form.Barang = undefined;
             ada = false;
         } else {
-            angular.forEach($scope.detBbk, function (val, key) {
+            angular.forEach($scope.detailBbk, function (val, key) {
                 if (item.kd_barang == val.kd_barang) {
                     val.jml++;
                     console.log(val.jml);
