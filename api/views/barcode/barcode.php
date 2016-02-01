@@ -59,9 +59,9 @@ for ($i = 0; $i < 8; $i++) {
     echo BarcodeGenerator::widget($optionsArray3);
 }
 ?>
-<script type="text/javascript">
+<!--<script type="text/javascript">
     window.print();
     setTimeout(function () {
         window.close();
     }, 1);
-</script>
+</script>-->
