@@ -21,6 +21,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
         $scope.displayed = [];
         $scope.gantiStatus = {};
         $scope.form = {};
+        $scope.focus  = false;
         $scope.form.kat_bbk = 'produksi';
         $scope.err_pengambilan = false;
         $scope.sisa_pengambilan = 0;
@@ -367,37 +368,50 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     };
 
     $scope.addDetail = function (kat_bbk, item) {
+//        var lastIndex = 0;
+        var datas = {kd_barang: item.kd_barang, nm_barang: item.nm_barang, stok_sekarang: item.saldo};
+        var ada = false;
         if (kat_bbk == 'umum') {
-            var ada = false;
+
             if ($scope.detailBbk.length > 0) {
                 angular.forEach($scope.detailBbk, function (val, key) {
-                    if (val.kd_barang == item.kd_barang) {
-                        $scope.detailBbk[key].jumlah++;
+                    if (val.kd_barang.kd_barang == item.kd_barang) {
+                        $scope.detailBbk[key].jml++;
+
+                        $scope.detailBbk[key].kd_barang = datas;
                         ada = true;
                     }
                 });
                 if (ada == false) {
-                    item.jumlah = 1;
+                    item.jml = 1;
+                    item.kd_barang = datas;
                     $scope.detailBbk.push(item);
                 }
 
             }
             else {
                 $scope.detailBbk[0] = item;
-                $scope.detailBbk[0].jumlah = 1;
+                $scope.detailBbk[0].jml = 1;
+                $scope.detailBbk[0].kd_barang = datas;
             }
-            $scope.form.Barang = undefined;
+
             ada = false;
         } else {
+            ada = false
             angular.forEach($scope.detailBbk, function (val, key) {
-                if (item.kd_barang == val.kd_barang) {
+                if (item.kd_barang == val.kd_barang.kd_barang) {
                     val.jml++;
-                    console.log(val.jml);
+                    ada = true;
                 }
             });
+            if (ada == false) {
+                toaster.pop('error', "Terjadi Kesalahan", 'Kode Barang: ' + item.kd_barang + ', bukan merupakan detail dari WO dan Bagian ini!');
+            }
+            ada = false;
         }
-
-
+        $scope.form.Barang = undefined;
+        $scope.resultsbarang = undefined;
+        $scope.focus = true;
     };
 
 //    $scope.removeRow = function (paramindex) {
@@ -555,7 +569,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     $scope.umum = function () {
         $scope.create();
         $scope.form.kat_bbk = 'umum';
-
+        $scope.detailBbk = [];
     };
 
     $scope.produksi = function () {

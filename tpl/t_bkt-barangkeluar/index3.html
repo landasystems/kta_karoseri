@@ -295,7 +295,7 @@
                                 <label class="col-sm-2 control-label">Cari Barang</label>
                                 <div class="col-sm-4">
                                     <div class="input-group">
-                                        <ui-select focus-on="enter" on-select="addDetail(form.kat_bbk,$item)" ng-disabled="is_view" ng-model="form.Barang" theme="bootstrap">
+                                        <ui-select focus="{{focus}}" on-select="addDetail(form.kat_bbk,$item)" ng-disabled="is_view" ng-model="form.Barang" theme="bootstrap">
                                             <ui-select-match>{{$select.selected.nota}}</ui-select-match>
                                             <ui-select-choices refresh="cariBarang(form,$select.search)" repeat="val in resultsbarang">
                                                 {{val.kd_barang}}<br/>

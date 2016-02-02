@@ -621,10 +621,18 @@ class BarangController extends Controller
     {
         $params = $_REQUEST;
         $query = new Query;
+        $barang = $params['barang'];
+        
+        if (strlen($barang) > 6) {
+            $barang = substr($barang, 0, 6);
+        } else {
+            $barang = $barang;
+        }
+        
         $query->from('barang')
                 ->select("*")
-                ->where(['like', 'nm_barang', $params['barang']])
-                ->orWhere(['like', 'kd_barang', $params['barang']])
+                ->where(['like', 'nm_barang', $barang])
+                ->orWhere(['like', 'kd_barang', $barang])
                 ->andWhere("nm_barang != '-' && kd_barang != '-'");
 
         $command = $query->createCommand();
