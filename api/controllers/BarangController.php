@@ -10,9 +10,11 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class BarangController extends Controller {
+class BarangController extends Controller
+{
 
-    public function behaviors() {
+    public function behaviors()
+    {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -26,6 +28,7 @@ class BarangController extends Controller {
                     'jenis' => ['get'],
                     'kode' => ['post'],
                     'cari' => ['get'],
+                    'cari-barcode' => ['get'],
                     'rekappergerakan' => ['post'],
                     'excelpergerakan' => ['get'],
                     'excelpergerakan2' => ['get'],
@@ -38,7 +41,8 @@ class BarangController extends Controller {
         ];
     }
 
-    public function actionUpload() {
+    public function actionUpload()
+    {
         if (!empty($_FILES)) {
             $tempPath = $_FILES['file']['tmp_name'];
             $newName = \Yii::$app->landa->urlParsing($_FILES['file']['name']);
@@ -63,7 +67,8 @@ class BarangController extends Controller {
         }
     }
 
-    public function actionRemovegambar() {
+    public function actionRemovegambar()
+    {
         $params = json_decode(file_get_contents("php://input"), true);
         $barang = Barang::findOne($params['kode']);
         $foto = json_decode($barang->foto, true);
@@ -79,7 +84,8 @@ class BarangController extends Controller {
         echo json_encode($foto);
     }
 
-    public function beforeAction($event) {
+    public function beforeAction($event)
+    {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
@@ -101,7 +107,8 @@ class BarangController extends Controller {
         return true;
     }
 
-    public function actionRekappergerakan() {
+    public function actionRekappergerakan()
+    {
         $params = json_decode(file_get_contents("php://input"), true);
 
         $tglStart = '';
@@ -190,7 +197,8 @@ class BarangController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $sorted));
     }
 
-    public function stokakhirmingguan($kd_barang, $tanggal, $saldoSaatIni) {
+    public function stokakhirmingguan($kd_barang, $tanggal, $saldoSaatIni)
+    {
         $end = $start = explode('-', $tanggal);
         $tglAfter = mktime(0, 0, 0, $end[1], $end[2] + 1, $end[0]);
         $tglAfter = date("Y-m-d", $tglAfter);
@@ -214,7 +222,8 @@ class BarangController extends Controller {
         return $stok;
     }
 
-    public function actionExcelpergerakan2() {
+    public function actionExcelpergerakan2()
+    {
         session_start();
 
         $tgl = isset($_SESSION['tanggal']) ? $_SESSION['tanggal'] : array();
@@ -265,7 +274,8 @@ class BarangController extends Controller {
         return $this->render("/expretur/pergerakanbarang2", ['models' => $data, 'tgl' => $tgl, 'periode' => $periode]);
     }
 
-    public function actionExcelpergerakan() {
+    public function actionExcelpergerakan()
+    {
         session_start();
 
         $tgl = isset($_SESSION['tanggal']) ? $_SESSION['tanggal'] : '';
@@ -313,7 +323,8 @@ class BarangController extends Controller {
         return $this->render("/expretur/pergerakanbarang", ['models' => $data, 'tgl' => $tgl, 'periode' => $periode]);
     }
 
-    public function actionRekapbbmbbk() {
+    public function actionRekapbbmbbk()
+    {
         $params = json_decode(file_get_contents("php://input"), true);
         $tglStart = date("Y-m-d", strtotime($params['tanggal']['startDate']));
         $tglEnd = date("Y-m-d", strtotime($params['tanggal']['endDate']));
@@ -351,7 +362,8 @@ class BarangController extends Controller {
         $_SESSION['periode'] = date("d/m/Y", strtotime($tglStart)) . ' - ' . date("d/m/Y", strtotime($tglEnd));
     }
 
-    public function actionExcelbbmbbk() {
+    public function actionExcelbbmbbk()
+    {
         session_start();
 
         $bbm = $_SESSION['queryBbm'];
@@ -387,7 +399,8 @@ class BarangController extends Controller {
         return $this->render("/expretur/laporanbbmbbk", ['models' => $data, 'periode' => $periode]);
     }
 
-    public function actionJenis() {
+    public function actionJenis()
+    {
         $query = new Query;
         $query->from('jenis_brg')
                 ->select("*");
@@ -400,7 +413,8 @@ class BarangController extends Controller {
         echo json_encode(array('status' => 1, 'jenis_brg' => $models));
     }
 
-    public function actionKode() {
+    public function actionKode()
+    {
         $params = json_decode(file_get_contents("php://input"), true);
         $query = new Query;
         $query->from('barang')
@@ -422,7 +436,8 @@ class BarangController extends Controller {
         echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
-    public function actionIndex() {
+    public function actionIndex()
+    {
         //init variable
         $params = $_REQUEST;
         $filter = array();
@@ -485,7 +500,8 @@ class BarangController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
-    public function actionView($id) {
+    public function actionView($id)
+    {
 
         $model = $this->findModel($id);
 
@@ -493,7 +509,8 @@ class BarangController extends Controller {
         echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
     }
 
-    public function actionCreate() {
+    public function actionCreate()
+    {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new Barang();
         $model->attributes = $params;
@@ -510,7 +527,8 @@ class BarangController extends Controller {
         }
     }
 
-    public function actionUpdate($id) {
+    public function actionUpdate($id)
+    {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = $this->findModel($id);
         $model->attributes = $params;
@@ -528,7 +546,8 @@ class BarangController extends Controller {
         }
     }
 
-    public function actionDelete($id) {
+    public function actionDelete($id)
+    {
         $model = $this->findModel($id);
 
         session_start();
@@ -549,7 +568,8 @@ class BarangController extends Controller {
         }
     }
 
-    protected function findModel($id) {
+    protected function findModel($id)
+    {
         if (($model = Barang::findOne($id)) !== null) {
             return $model;
         } else {
@@ -560,7 +580,8 @@ class BarangController extends Controller {
         }
     }
 
-    private function setHeader($status) {
+    private function setHeader($status)
+    {
 
         $status_header = 'HTTP/1.1 ' . $status . ' ' . $this->_getStatusCodeMessage($status);
         $content_type = "application/json; charset=utf-8";
@@ -570,7 +591,8 @@ class BarangController extends Controller {
         header('X-Powered-By: ' . "Nintriva <nintriva.com>");
     }
 
-    private function _getStatusCodeMessage($status) {
+    private function _getStatusCodeMessage($status)
+    {
         $codes = Array(
             200 => 'OK',
             400 => 'Bad Request',
@@ -584,7 +606,8 @@ class BarangController extends Controller {
         return (isset($codes[$status])) ? $codes[$status] : '';
     }
 
-    public function actionExcel() {
+    public function actionExcel()
+    {
         session_start();
         $query = $_SESSION['query'];
         $query->offset("");
@@ -594,7 +617,32 @@ class BarangController extends Controller {
         return $this->render("/expmaster/barang", ['models' => $models]);
     }
 
-    public function actionCari() {
+    public function actionCari()
+    {
+        $params = $_REQUEST;
+        $query = new Query;
+        $barang = $params['barang'];
+        
+        if (strlen($barang) > 6) {
+            $barang = substr($barang, 0, 6);
+        } else {
+            $barang = $barang;
+        }
+        
+        $query->from('barang')
+                ->select("*")
+                ->where(['like', 'nm_barang', $barang])
+                ->orWhere(['like', 'kd_barang', $barang])
+                ->andWhere("nm_barang != '-' && kd_barang != '-'");
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+
+    public function actionCariBarcode()
+    {
         $params = $_REQUEST;
         $query = new Query;
         $query->from('barang')
