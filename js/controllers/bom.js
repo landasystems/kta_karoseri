@@ -181,7 +181,7 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
         $scope.selected(bom.kd_bom, kd_bom);
     };
     $scope.save = function (form, detail) {
-//        if (typeof form.foto != 'undefined' && form.foto.length > 0) {
+        if (typeof form.foto != 'undefined' && form.foto.length > 0) {
             var data = {
                 bom: form,
                 detailBom: detail,
@@ -199,9 +199,9 @@ app.controller('bomCtrl', function ($scope, Data, toaster, FileUploader, $stateP
                     toaster.pop('success', "Berhasil", "Data berhasil tersimpan");
                 }
             });
-//        } else {
-//            toaster.pop('error', "Mohon upload gambar unit terlebih dahulu.");
-//        }
+        } else {
+            toaster.pop('error', "Mohon upload gambar unit terlebih dahulu.");
+        }
     };
     $scope.cancel = function () {
         if (!$scope.is_view) { //hanya waktu edit cancel, di load table lagi

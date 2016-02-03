@@ -114,15 +114,15 @@ class WomasukController extends Controller {
         $command = $query->createCommand();
         $models = $command->query()->read();
         $kode_mdl = (substr($models['no_wo'], $jml) + 1);
-        $kode = $filter_name . substr('000' . $kode_mdl, strlen($kode_mdl));
-//        $kode = $filter_name . $kode_mdl;
+//        $kode = $filter_name.substr('0000' . $kode_mdl, strlen($kode_mdl));
+        $kode = $filter_name . $kode_mdl;
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $kode, 'hasil' => $models));
     }
 
     public function actionGetspk() {
         $params = json_decode(file_get_contents("php://input"), true);
-
+       
         if (!empty($params['spk']['no_spk'])) {
             $spk = $params['spk']['no_spk'];
         } else {
@@ -142,19 +142,18 @@ class WomasukController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->queryOne();
-
+        
         $query2 = new Query;
         $query2->from('view_wo_spk')
                 ->where('no_spk = "' . $spk . '"')
                 ->select("jenis");
         $command2 = $query2->createCommand();
         $models2 = $command->query()->read();
-
+        
         $jenis = (!empty($models2['jenis'])) ? $models2['jenis'] : $params['jenis'];
-
+        
         // jenis kendaaraan
         if (!empty($params['spk']['no_spk'])) {
-            
         } else {
             $query2 = new Query;
             $query2->from('view_wo_spk')
@@ -200,6 +199,7 @@ class WomasukController extends Controller {
             $table = 'small';
         }
 //============================= EKSTERIOR ================================ 
+            
         // PLAT BODY
         $queryplat = new Query;
         $queryplat->from($table . '_eks')
@@ -912,7 +912,7 @@ class WomasukController extends Controller {
 
     public function actionSelect() {
         $params = json_decode(file_get_contents("php://input"), true);
-
+        
         $model = $this->findModel($params['no_wo']);
         $data = $model->attributes;
         $query = new Query;
@@ -956,9 +956,9 @@ class WomasukController extends Controller {
                 ->select("jenis");
         $command2 = $query2->createCommand();
         $models2 = $command->query()->read();
-
+        
         $jenis = (!empty($models2['jenis'])) ? $models2['jenis'] : $params['jenis'];
-
+        
         if ($jenis == "Small Bus") {
             // eksterior
             $eksterior = new Query;
@@ -1353,17 +1353,17 @@ class WomasukController extends Controller {
             // UPDATE STI CUSTOMER
             $kdtitipan = (!empty($params['womasuk']['titipan']['kd_titipan'])) ? $params['womasuk']['titipan']['kd_titipan'] : $params['kd_titipan'];
 //            if (!empty($params['kd_titipan'])) {
-            $cus = '';
-            $query = new Query;
-            $query->from('spk')
-                    ->where("no_spk='" . $model->no_spk . "'")
-                    ->select("*");
-            $command = $query->createCommand();
-            $cus = $command->query()->read();
+                $cus = '';
+                $query = new Query;
+                $query->from('spk')
+                        ->where("no_spk='" . $model->no_spk . "'")
+                        ->select("*");
+                $command = $query->createCommand();
+                $cus = $command->query()->read();
 //            }
             $sti = \app\models\Serahterimain::find()->where('kd_titipan="' . $kdtitipan . '"')->one();
-            $sti->kd_cust = $cus['kd_customer'];
-            $sti->no_spk = $cus['no_spk'];
+            $sti->kd_cust =  $cus['kd_customer'];
+            $sti->no_spk =  $cus['no_spk'];
             $sti->save();
 
 
@@ -1383,9 +1383,8 @@ class WomasukController extends Controller {
         $model->kode = $params['womasuk']['kode'];
 
 
-
         if ($model->save()) {
-            // EKTERIOR
+// EKTERIOR
             if ($params['womasuk']['jenis'] == "Small Bus") {
                 $eks = Smalleks::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
                 if (empty($eks)) {
@@ -1475,24 +1474,6 @@ class WomasukController extends Controller {
                 $eks->lain2 = $params['eksterior']['lain2'];
             }
             $eks->save();
-            // JIKA GANTI NO WO
-            if (!empty($params['womasuk']['no_wo_baru'])) {
-                if ($params['womasuk']['no_wo'] != $params['womasuk']['no_wo_baru']) {
-                    $eks = Minieks::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
-
-                    if (!empty($eks)) {
-                        $eks->no_wo = $params['womasuk']['no_wo_baru'];
-                        $eks->save();
-                    }
-
-                    $eks2 = Smalleks::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
-                    if (!empty($eks2)) {
-                        $eks2->no_wo = $params['womasuk']['no_wo_baru'];
-                        $eks2->save();
-                    }
-                }
-            }
-
 
 // INTERIOR
             if ($params['womasuk']['jenis'] == "Mini Bus") {
@@ -1551,15 +1532,6 @@ class WomasukController extends Controller {
                     $int->lain2 = $params['interior']['lain2'];
                 }
                 $int->save();
-                if (!empty($params['womasuk']['no_wo_baru'])) {
-                    if ($params['womasuk']['no_wo'] != $params['womasuk']['no_wo_baru']) {
-                        $int = Miniint::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
-                        if (!empty($int)) {
-                            $int->no_wo = $params['womasuk']['no_wo_baru'];
-                            $int->save();
-                        }
-                    }
-                }
             } else {
                 $int = Smallint::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
                 if (empty($int)) {
@@ -1636,16 +1608,6 @@ class WomasukController extends Controller {
                     $int->lain2 = $params['interior']['lain2'];
                 }
                 $int->save();
-                if (!empty($params['womasuk']['no_wo_baru'])) {
-                    if ($params['womasuk']['no_wo'] != $params['womasuk']['no_wo_baru']) {
-                        $int = Smallint::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
-
-                        if (!empty($int)) {
-                            $int->no_wo = $params['womasuk']['no_wo_baru'];
-                            $int->save();
-                        }
-                    }
-                }
             }
 
 // UPDATE STI CUSTOMER
@@ -1654,39 +1616,7 @@ class WomasukController extends Controller {
             $sti = \app\models\Serahterimain::find()->where('kd_titipan="' . $params['womasuk']['titipan']['kd_titipan'] . '"')->one();
             $sti->kd_cust = $spk->kd_customer;
             $sti->no_spk = $spk->no_spk;
-
             $sti->save();
-            if (!empty($params['womasuk']['no_wo_baru'])) {
-                if ($params['womasuk']['no_wo'] != $params['womasuk']['no_wo_baru']) {
-                    $cari = \app\models\DetSpp::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->all();
-                    if (!empty($cari)) {
-                        foreach ($cari as $val) {
-                            $sti = \app\models\DetSpp::find()->where('no_wo="' . $val->no_wo . '"')->one();
-                            $sti->no_wo = $params['womasuk']['no_wo_baru'];
-                            $sti->save();
-                        }
-                    }
-
-
-                    $dev = \app\models\Delivery::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
-                    if (!empty($dev)) {
-                        $dev->no_wo = $params['womasuk']['no_wo_baru'];
-                        $dev->save();
-                    }
-
-
-                    $kpb = \app\models\Kpb::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
-                    if (!empty($kpb)) {
-                        $kpb->no_wo = $params['womasuk']['no_wo_baru'];
-                        $kpb->save();
-                    }
-
-
-                    $wo = \app\models\Womasuk::find()->where('no_wo="' . $params['womasuk']['no_wo'] . '"')->one();
-                    $wo->no_wo = $params['womasuk']['no_wo_baru'];
-                    $wo->save();
-                }
-            }
 
 
             $this->setHeader(200);
@@ -1808,7 +1738,6 @@ class WomasukController extends Controller {
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' => $data), JSON_PRETTY_PRINT);
     }
-
     public function actionSqlprint() {
         $params = $_REQUEST;
         $query = new Query;
@@ -1820,21 +1749,20 @@ class WomasukController extends Controller {
         $_SESSION['queryprint'] = $query;
         $_SESSION['no_wo'] = $params['kd'];
     }
-
     public function actionPrint() {
         session_start();
         $query = $_SESSION['queryprint'];
         $nowo = $_SESSION['no_wo'];
         $command = $query->createCommand();
         $models = $command->query()->read();
-
+       
         return $this->render("/expretur/print_womasuk", ['models' => $models, 'id' => $nowo]);
     }
-
+    
     public function actionMini() {
-        return $this->render("/expretur/print_womasukmini");
+     return $this->render("/expretur/print_womasukmini");
     }
-
+    
     public function actionSmall() {
         return $this->render("/expretur/print_womasuksmall");
     }

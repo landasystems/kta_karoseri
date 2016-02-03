@@ -71,13 +71,14 @@ class WoController extends Controller {
     public function actionWospk() {
         $params = $_REQUEST;
         $query = new Query;
-        $query->from('wo_masuk as wo')
-                ->join('LEFT JOIN', 'spk', 'spk.no_spk = wo.no_spk')
+        $query->from('view_wo_spk as vws')
+                ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo = vws.no_wo')
+                ->join('LEFT JOIN', 'spk', 'spk.no_spk = vws.no_spk')
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                ->select("wo.*, tk.nama as sales, tk.lokasi_kntr as wilayah, spk.*")
-                ->where(['like', 'wo.no_wo', $params['nama']])
+                ->select("vws.*, tk.nama as sales, tk.lokasi_kntr as wilayah")
+                ->where(['like', 'vws.no_wo', $params['nama']])
 //                ->andWhere('wm.tgl_keluar IS NULL or wm.tgl_keluar="" or wm.tgl_keluar = "0000-00-00"')
-                ->orderBy('wo.no_wo DESC')
+                ->orderBy('vws.no_wo DESC')
                 ->limit(20);
         $command = $query->createCommand();
         $models = $command->queryAll();

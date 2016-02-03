@@ -476,19 +476,19 @@ angular.module('app')
                                             }]
                                     }})
                                 //
-//                                .state('transaksi.bktbarangkeluar', {
-//                                    url: '/bkt-barangkeluar',
-//                                    templateUrl: 'tpl/t_bkt-barangkeluar/index.html',
-//                                    resolve: {
-//                                        deps: ['$ocLazyLoad',
-//                                            function ($ocLazyLoad) {
-//                                                return $ocLazyLoad.load(['daterangepicker', 'frAngular']).then(
-//                                                        function () {
-//                                                            return $ocLazyLoad.load('js/controllers/bkt-barangkeluar.js');
-//                                                        }
-//                                                );
-//                                            }]
-//                                    }})
+                                .state('transaksi.bktbarangkeluar', {
+                                    url: '/bkt-barangkeluar',
+                                    templateUrl: 'tpl/t_bkt-barangkeluar/index.html',
+                                    resolve: {
+                                        deps: ['$ocLazyLoad',
+                                            function ($ocLazyLoad) {
+                                                return $ocLazyLoad.load(['daterangepicker', 'frAngular']).then(
+                                                        function () {
+                                                            return $ocLazyLoad.load('js/controllers/bkt-barangkeluar.js');
+                                                        }
+                                                );
+                                            }]
+                                    }})
                                 //
                                 .state('transaksi.bktbarangkeluar2', {
                                     url: '/bkt-barangkeluar2',
@@ -503,20 +503,6 @@ angular.module('app')
                                                 );
                                             }]
                                     }})
-                                //bkt barang keluar 3
-                                .state('transaksi.bktbarangkeluar3', {
-                                    url: '/bkt-barangkeluar3',
-                                    templateUrl: 'tpl/t_bkt-barangkeluar/index3.html',
-                                    resolve: {
-                                        deps: ['$ocLazyLoad',
-                                            function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['daterangepicker', 'frAngular']).then(
-                                                        function () {
-                                                            return $ocLazyLoad.load('js/controllers/bkt-barangkeluar_3.js');
-                                                        }
-                                                );
-                                            }]
-                                    }})
                                 //
                                 .state('transaksi.bktbarangmasuk', {
                                     url: '/bkt-barangmasuk',
@@ -527,33 +513,6 @@ angular.module('app')
                                                 return $ocLazyLoad.load(['frAngular']).then(
                                                         function () {
                                                             return $ocLazyLoad.load('js/controllers/bkt-barangmasuk.js');
-                                                        }
-                                                );
-                                            }]
-                                    }})
-                                .state('transaksi.bktbarangmasuk2', {
-                                    url: '/bkt-barangmasuk2',
-                                    templateUrl: 'tpl/t_bkt-barangmasuk/index2.html',
-                                    resolve: {
-                                        deps: ['$ocLazyLoad',
-                                            function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['frAngular']).then(
-                                                        function () {
-                                                            return $ocLazyLoad.load('js/controllers/bkt_barangmasuk_2.js');
-                                                        }
-                                                );
-                                            }]
-                                    }})
-                                //barcode Generator
-                                .state('transaksi.barcodegenerator', {
-                                    url: '/barcodegenerator',
-                                    templateUrl: 'tpl/t_barcodegenerator/index.html',
-                                    resolve: {
-                                        deps: ['$ocLazyLoad',
-                                            function ($ocLazyLoad) {
-                                                return $ocLazyLoad.load(['frAngular']).then(
-                                                        function () {
-                                                            return $ocLazyLoad.load('js/controllers/barcodegenerator.js');
                                                         }
                                                 );
                                             }]

@@ -8,7 +8,7 @@ app.controller('pergerakanBrgCtrl', function ($scope, Data, toaster) {
     $scope.print = function (form) {
         if ('tanggal' in form && form.tanggal.startDate != null) {
             Data.post('barang/rekappergerakan', form).then(function (data) {
-                window.open('api/web/barang/excelpergerakan?print=true', "");
+                window.open('api/web/barang/excelpergerakan?print=true', "", "width=500");
             });
         } else {
             toaster.pop('error', "Terjadi Kesalahan", "Masukkan periode terlebih dahulu");

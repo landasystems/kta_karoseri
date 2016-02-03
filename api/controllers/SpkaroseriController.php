@@ -4,8 +4,6 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Spkaroseri;
-use app\models\Womasuk;
-use app\models\Serahterimain;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -182,13 +180,13 @@ class SpkaroseriController extends Controller {
         $query->offset($offset)
                 ->limit($limit)
                 ->from('spk')
-                ->join('LEFT JOIN', 'customer', 'customer.kd_cust = spk.kd_customer')
-                ->join('LEFT JOIN', 'chassis', 'chassis.kd_chassis = spk.kd_chassis')
-                ->join('LEFT JOIN', 'model', 'model.kd_model = spk.kd_model')
+                ->join('LEFT JOIN','customer','customer.kd_cust = spk.kd_customer')
+                ->join('LEFT JOIN','chassis','chassis.kd_chassis = spk.kd_chassis')
+                ->join('LEFT JOIN','model','model.kd_model = spk.kd_model')
 //                ->join('JOIN', 'view_wo_spk as vws', 'spk.no_spk = vws.no_spk')
                 ->join('LEFT JOIN', 'serah_terima_in as sti', 'sti.no_spk = spk.no_spk')
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                ->join('LEFT JOIN', 'wo_masuk', ' wo_masuk.no_spk = spk.no_spk')
+                ->join('LEFT JOIN', 'wo_masuk',' wo_masuk.no_spk = spk.no_spk')
                 ->select("customer.nm_customer, sti.kd_titipan, wo_masuk.no_wo, tk.nama as sales, chassis.*, model.*, spk.no_spk, spk.tgl, sti.tgl_terima as tgl_chassis")
                 ->orderBy($sort);
 
@@ -274,37 +272,12 @@ class SpkaroseriController extends Controller {
 
     public function actionUpdate($id) {
         $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($params);
         $model = $this->findModel($id);
         $model->attributes = $params;
         $model->kd_customer = $params['kd_customer']['kd_cust'];
         $model->nik = $params['nik']['nik'];
         $model->kd_bom = $params['kd_bom']['kd_bom'];
         $model->kd_model = $params['kd_model']['kd_model'];
-        if ($params['no_spk'] != $params['no_spk_baru']) {
-            $model->no_spk = $params['no_spk_baru'];
-            // SERAH TERIMA INTERNAL
-            $cari = Serahterimain::find()->where('no_spk="' . $params['no_spk'] . '"')->all();
-            if(!empty($cari)){
-                foreach ($cari as $val) {
-                $sti = Serahterimain::find()->where('no_spk="' . $val->no_spk . '"')->one();
-                $sti->no_spk = $params['no_spk_baru'];
-                $sti->save();
-            }
-            }
-            
-            
-//            WO MASUK
-             $cari2 = Womasuk::find()->where('no_spk="' . $params['no_spk'] . '"')->all();
-             if(!empty($cari2)){
-                 foreach ($cari2 as $val) {
-                $sti = Womasuk::find()->where('no_spk="' . $val->no_spk . '"')->one();
-                $sti->no_spk = $params['no_spk_baru'];
-                $sti->save();
-            }
-             }
-            
-        }
 
         if ($model->save()) {
             $this->setHeader(200);
