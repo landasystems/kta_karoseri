@@ -32,8 +32,8 @@ for ($i = 0; $i < 8; $i++) {
         'value' => ((string) $kode) . '0', /* value for EAN 13 be careful to set right values for each barcode type */
         'type' => 'ean8', /* supported types  ean8, ean13, upc, std25, int25, code11, code39, code93, code128, codabar, msi, datamatrix */
         'settings' => array(
-            'barWidth' => 2,
-            'barHeight' => 40,)
+            'barWidth' => 1,
+            'barHeight' => 35,)
     );
 
     $optionsArray2 = array(
@@ -41,8 +41,8 @@ for ($i = 0; $i < 8; $i++) {
         'value' => ((string) $kode) . '0', /* value for EAN 13 be careful to set right values for each barcode type */
         'type' => 'ean8', /* supported types  ean8, ean13, upc, std25, int25, code11, code39, code93, code128, codabar, msi, datamatrix */
         'settings' => array(
-            'barWidth' => 2,
-            'barHeight' => 40,)
+            'barWidth' => 1,
+            'barHeight' => 35,)
     );
 
     $optionsArray3 = array(
@@ -50,8 +50,8 @@ for ($i = 0; $i < 8; $i++) {
         'value' => ((string) $kode) . '0', /* value for EAN 13 be careful to set right values for each barcode type */
         'type' => 'ean8', /* supported types  ean8, ean13, upc, std25, int25, code11, code39, code93, code128, codabar, msi, datamatrix */
         'settings' => array(
-            'barWidth' => 2,
-            'barHeight' => 40,)
+            'barWidth' => 1,
+            'barHeight' => 35,)
     );
 
     echo BarcodeGenerator::widget($optionsArray1);
@@ -59,9 +59,9 @@ for ($i = 0; $i < 8; $i++) {
     echo BarcodeGenerator::widget($optionsArray3);
 }
 ?>
-<!--<script type="text/javascript">
+<script type="text/javascript">
     window.print();
     setTimeout(function () {
         window.close();
-    }, 1);
-</script>-->
+    }, 3);
+</script>

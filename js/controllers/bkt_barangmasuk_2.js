@@ -103,7 +103,15 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
                         $scope.results[$key]['sisa_ambil'] = $value
                     });
                 } else {
-                    $scope.results = data.data;
+                    if ($query.length >= 6) {
+                        $scope.form.Barang = '';
+                        $scope.form.Barang = data.data[0];
+                        $scope.addDetail(data.data[0]);
+                        $scope.results = undefined;
+                        $scope.$select.search = undefined;
+                    } else {
+                        $scope.results = data.data;
+                    }
                 }
             });
         } else if ($query.length >= 3) {
@@ -114,16 +122,28 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
                         $scope.results[$key]['sisa_ambil'] = $value
                     });
                 } else {
-                    $scope.results = data.data;
+                    if ($query.length >= 6) {
+                        $scope.form.Barang = '';
+                        $scope.form.Barang = data.data[0];
+                        $scope.addDetail(data.data[0]);
+                        $scope.results = undefined;
+                        $scope.$select.search = undefined;
+                    } else {
+                        $scope.results = data.data;
+                    }
                 }
+
             });
         }
+
     };
+    
     $scope.getPo = function (form) {
         $scope.form.nm_supplier = form.nama_supplier;
         $scope.form.kd_supplier = form.kd_supplier;
         $scope.cariBarang('', form.nota);
     };
+    
     $scope.cariSupplier = function ($query) {
         if ($query.length >= 3) {
             Data.get('supplier/cari', {nama: $query}).then(function (data) {
@@ -131,6 +151,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
             });
         }
     };
+    
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;
@@ -229,15 +250,15 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
                     ada = true;
                 }
             });
-            if(ada == false){
+            if (ada == false) {
                 item.jumlah = 1;
                 $scope.detBbm.push(item);
             }
-            
+
         }
         else {
-            $scope.detBbm[0]= item;
-            $scope.detBbm[0].jumlah= 1;
+            $scope.detBbm[0] = item;
+            $scope.detBbm[0].jumlah = 1;
         }
         $scope.form.Barang = undefined;
         ada = false;
@@ -260,7 +281,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
     $scope.removeRow = function (paramindex) {
         if ($scope.err_jml == false) {
             var comArr = eval($scope.detBbm);
-            if (comArr.length > 1) {
+            if (comArr.length > 0) {
                 $scope.detBbm.splice(paramindex, 1);
             } else {
                 alert("Something gone wrong");
