@@ -64,9 +64,9 @@ class SerahterimainController extends Controller {
                 ->limit(1);
         $command = $query->createCommand();
         $models = $command->query()->read();
-        $kode_mdl = (substr($models['kd_titipan'], 6) + 1);
-//        $kode = $filter_name.substr('0000' . $kode_mdl, strlen($kode_mdl));
-        $kode = $filter_name.$kode_mdl;
+        $kode_mdl = (substr($models['kd_titipan'], 7) + 1);
+        $kode = $filter_name.substr('000' . $kode_mdl, strlen($kode_mdl));
+//        $kode = $filter_name.$kode_mdl;
         $this->setHeader(200);
         echo json_encode(array('status' => 1, 'data' =>$kode,'hasil' => $models));
     }

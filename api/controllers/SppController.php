@@ -3,14 +3,15 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\Validasibom;
+use app\models\TransSpp;
+use app\models\DetSpp;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class ValidasibomController extends Controller {
+class SppController extends Controller {
 
     public function behaviors() {
         return [
@@ -18,15 +19,35 @@ class ValidasibomController extends Controller {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'index' => ['get'],
+                    'cari' => ['get'],
                     'view' => ['get'],
+                    'excel' => ['get'],
+                    'detail' => ['get'],
                     'create' => ['post'],
                     'update' => ['post'],
                     'delete' => ['delete'],
+                    'listbarang' => ['get'],
                 ],
             ]
         ];
     }
+    
+    public function actionCari() {
+        
+        $params = $_REQUEST;
+        $query = new Query;
+        $query->from('trans_spp')
+                ->select("no_spp,no_proyek")
+                ->andWhere(['like', 'no_spp', $params['nama']]);
 
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+    
     public function beforeAction($event) {
         $action = $event->id;
         if (isset($this->actions[$action])) {
@@ -38,6 +59,7 @@ class ValidasibomController extends Controller {
         }
         $verb = Yii::$app->getRequest()->getMethod();
         $allowed = array_map('strtoupper', $verbs);
+//        Yii::error($allowed);
 
         if (!in_array($verb, $allowed)) {
 
@@ -53,9 +75,9 @@ class ValidasibomController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "trans_standar_bahan.tgl_buat DESC";
+        $sort = "tgl_trans DESC";
         $offset = 0;
-        $limit = 20;
+        $limit = 10;
         //        Yii::error($params);
         //limit & offset pagination
         if (isset($params['limit']))
@@ -75,67 +97,64 @@ class ValidasibomController extends Controller {
         }
 
         //create query
-
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('trans_standar_bahan')
-                ->join('LEFT JOIN', 'chassis', 'trans_standar_bahan.kd_chassis = chassis.kd_chassis')
-                ->join('LEFT JOIN', 'model', 'trans_standar_bahan.kd_model=model.kd_model')
+                ->from('trans_spp')
+//                ->where('no_proyek')
                 ->orderBy($sort)
-                ->where('trans_standar_bahan.status = 0')
                 ->select("*");
 
         //filter
-        if (isset($params['filter'])) {
-            $filter = (array) json_decode($params['filter']);
-            foreach ($filter as $key => $val) {
-                if ($key == 'model') {
-                    $query->andFilterWhere(['like', 'model.' . $key, $val]);
-                } elseif ($key == 'merk') {
-                    $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
-                } elseif ($key == 'tipe') {
-                    $query->andFilterWhere(['like', 'chassis.' . $key, $val]);
-                } else {
-                    $query->andFilterWhere(['like', $key, $val]);
-                }
-            }
-        }
-
         $command = $query->createCommand();
         $models = $command->queryAll();
         $totalItems = $query->count();
 
-        $data = array();
-        foreach ($models as $key => $val) {
-            $data[$key] = $val;
-            $data[$key]['foto'] = json_decode($val['foto'], true);
-        }
-
         $this->setHeader(200);
 
-        echo json_encode(array('status' => 1, 'data' => $data, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+        echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
+    }
+
+    public function actionView($id) {
+
+        $model = $this->findModel($id);
+
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
     }
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        Yii::error($params);
-//        if (isset($params['bom'])) {
-//            $status = Validasibom::findOne($params['bom']);
-//            $status->status = 1;
-//            $status->save();
-//        } else {
-            $centang = $params['kd_bom'];
-            foreach ($centang as $key => $val) {
-                $status = \app\models\Bom::find()->where('kd_bom="' . $key . '"')->one();
-                $status->status = 1;
-                $status->save();
+        $model = new TransSpp();
+        $model->attributes = $params;
+//        Yii::error($params);
+        if ($model->save()) {
+            foreach($params['details'] as $val){
+                
             }
-//        }
+            $this->setHeader(200);
+            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        } else {
+            $this->setHeader(400);
+            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+        }
+    }
+    public function actionUpdate($id) {
+        $params = json_decode(file_get_contents("php://input"), true);
+        $model = $this->findModel($id);
+        $model->attributes = $params;
+//        Yii::error($params);
+        if ($model->save()) {
+            $this->setHeader(200);
+            echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes)), JSON_PRETTY_PRINT);
+        } else {
+            $this->setHeader(400);
+            echo json_encode(array('status' => 0, 'error_code' => 400, 'errors' => $model->errors), JSON_PRETTY_PRINT);
+        }
     }
 
     protected function findModel($id) {
-        if (($model = Validasibom::findOne($id)) !== null) {
+        if (($model = TransSpp::findOne($id)) !== null) {
             return $model;
         } else {
 
@@ -167,6 +186,38 @@ class ValidasibomController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+
+    public function actionExcel() {
+        session_start();
+        $query = $_SESSION['query'];
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        return $this->render("excel", ['models' => $models]);
+    }
+
+    public function actionListbarang() {
+        $query = new Query();
+        $query->from('barang')
+                ->select("kd_barang,nm_barang");
+
+        //filter
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+
+        echo json_encode(array('status' => 1, 'data' => $models), JSON_PRETTY_PRINT);
+    }
+    public function actionDetail($id){
+        $query = new Query();
+        $query->select('*')
+                ->from('det_spp')
+//                ->join('LEFT JOIN', 'barnag', $on)
+                ->where('no_spp='.$id);
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+        echo json_encode(['status'=> 1,'details'=> $models]);
     }
 
 }

@@ -19,6 +19,12 @@ app.factory("Data", ['$http', '$location',
                 return results.data;
             });
         };
+        obj.postJson = function (q, object) {
+            $http.defaults.headers.post["Content-Type"] = "application/json";
+            return $http.post(serviceBase + q, object).then(function (results) {
+                return results.data;
+            });
+        };
         obj.put = function (q, object) {
             return $http.put(serviceBase + q, object).then(function (results) {
                 return results.data;

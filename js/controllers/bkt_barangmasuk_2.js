@@ -137,13 +137,11 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
         }
 
     };
-    
     $scope.getPo = function (form) {
         $scope.form.nm_supplier = form.nama_supplier;
         $scope.form.kd_supplier = form.kd_supplier;
         $scope.cariBarang('', form.nota);
     };
-    
     $scope.cariSupplier = function ($query) {
         if ($query.length >= 3) {
             Data.get('supplier/cari', {nama: $query}).then(function (data) {
@@ -151,7 +149,6 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
             });
         }
     };
-    
     $scope.callServer = function callServer(tableState) {
         tableStateRef = tableState;
         $scope.isLoading = true;

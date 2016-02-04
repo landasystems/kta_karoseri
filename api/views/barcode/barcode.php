@@ -2,8 +2,8 @@
 <!--This element id should be passed on to options-->
 <style media="print">
     .table-barcode td {
-        padding-left: 20px;
-        padding-right: 20px;
+/*        padding-left: 15px;
+        padding-right: 15px;*/
     }
 </style>
 
@@ -15,14 +15,14 @@ use barcode\barcode\BarcodeGenerator as BarcodeGenerator;
 $optionsArray = [];
 
 
-for ($i = 0; $i < 8; $i++) {
+for ($i = 0; $i < 1; $i++) {
 
-    echo '<table class="table-barcode">
+    echo '<table class="table-barcode" style="width:100%; margin-left:12px;">
             <tbody>
                 <tr>
-                    <td><div class="tinggi" id="showBarcode1' . $i . '"></div></td>
-                    <td><div class="tinggi" id="showBarcode2' . $i . '"></div></td>
-                    <td><div class="tinggi" id="showBarcode3' . $i . '"></div></td>
+                    <td style="width:33%; padding-left:15px; padding-right:15px;" align="center"><div class="tinggi" id="showBarcode1' . $i . '" ></div></td>
+                    <td style="width:33%; padding-left:15px; padding-right:15px;" align="center"><div class="tinggi" id="showBarcode2' . $i . '"></div></td>
+                    <td style="width:33%; padding-left:15px; padding-right:15px;"><div class="tinggi" id="showBarcode3' . $i . '" ></div></td>
                 </tr>
             </tbody>
         </table>';
@@ -32,8 +32,8 @@ for ($i = 0; $i < 8; $i++) {
         'value' => ((string) $kode) . '0', /* value for EAN 13 be careful to set right values for each barcode type */
         'type' => 'ean8', /* supported types  ean8, ean13, upc, std25, int25, code11, code39, code93, code128, codabar, msi, datamatrix */
         'settings' => array(
-            'barWidth' => 1,
-            'barHeight' => 35,)
+            'barWidth' => 2,
+            'barHeight' => 40,)
     );
 
     $optionsArray2 = array(
@@ -41,8 +41,8 @@ for ($i = 0; $i < 8; $i++) {
         'value' => ((string) $kode) . '0', /* value for EAN 13 be careful to set right values for each barcode type */
         'type' => 'ean8', /* supported types  ean8, ean13, upc, std25, int25, code11, code39, code93, code128, codabar, msi, datamatrix */
         'settings' => array(
-            'barWidth' => 1,
-            'barHeight' => 35,)
+            'barWidth' => 2,
+            'barHeight' => 40,)
     );
 
     $optionsArray3 = array(
@@ -50,8 +50,9 @@ for ($i = 0; $i < 8; $i++) {
         'value' => ((string) $kode) . '0', /* value for EAN 13 be careful to set right values for each barcode type */
         'type' => 'ean8', /* supported types  ean8, ean13, upc, std25, int25, code11, code39, code93, code128, codabar, msi, datamatrix */
         'settings' => array(
-            'barWidth' => 1,
-            'barHeight' => 35,)
+            'barWidth' => 2,
+            'barHeight' => 40,
+            )
     );
 
     echo BarcodeGenerator::widget($optionsArray1);
@@ -61,7 +62,7 @@ for ($i = 0; $i < 8; $i++) {
 ?>
 <script type="text/javascript">
     window.print();
-    setTimeout(function () {
-        window.close();
-    }, 3);
+//    setTimeout(function () {
+//        window.close();
+//    }, 3);
 </script>
