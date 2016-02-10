@@ -119,18 +119,19 @@ class ValidasibomController extends Controller {
 
     public function actionCreate() {
         $params = json_decode(file_get_contents("php://input"), true);
-        if (isset($params['bom'])) {
-            $status = Validasibom::findOne($params['bom']);
-            $status->status = 1;
-            $status->save();
-        } else {
+        Yii::error($params);
+//        if (isset($params['bom'])) {
+//            $status = Validasibom::findOne($params['bom']);
+//            $status->status = 1;
+//            $status->save();
+//        } else {
             $centang = $params['kd_bom'];
             foreach ($centang as $key => $val) {
-                $status = Validasibom::findOne($key);
+                $status = \app\models\Bom::find()->where('kd_bom="' . $key . '"')->one();
                 $status->status = 1;
                 $status->save();
             }
-        }
+//        }
     }
 
     protected function findModel($id) {

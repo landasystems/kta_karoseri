@@ -87,14 +87,16 @@ app.controller('womasukCtrl', function($scope, Data, toaster, FileUploader) {
 //    };
     $scope.getnw = function (kode) {
 //        var kods = $scope.form.kd_titipan;
-//        var buat = $scope.is_create;
-//        if (buat == true) {
+        var buat = $scope.is_create;
+        if (buat == true) {
             Data.get('womasuk/proyek', {kd: kode}).then(function (data) {
                 $scope.form.no_wo = data.data;
             });
-//        } else {
-//            $scope.form.kd_titipan = kods;
-//        }
+        } else {
+             Data.get('womasuk/proyek', {kd: kode}).then(function (data) {
+                $scope.form.no_wo_baru = data.data;
+            });
+        }
     }
 
     $scope.cariSpk = function($query) {
