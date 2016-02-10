@@ -36,7 +36,6 @@ class BbmController extends Controller {
                     'excelserahterima' => ['get'],
                     'caribarang' => ['post'],
                     'caribarang2' => ['post'],
-                    'caribarang3' => ['post'],
                     'lock' => ['post'],
                     'unlock' => ['post'],
                 ],
@@ -179,81 +178,6 @@ class BbmController extends Controller {
             $retur = isset($detRetur[$val['kd_barang']]['jml_retur']) ? $detRetur[$val['kd_barang']]['jml_retur'] : 0;
 
             $models[$key] = $val;
-            $models[$i]['jml_po'] = $val['jml_po'];
-            $models[$i]['telah_diambil'] = $bbm - $retur;
-            $models[$i]['sisa_ambil'] = $val['jml_po'] - $bbm + $retur;
-            $i++;
-        }
-
-        $this->setHeader(200);
-        echo json_encode(array('status' => 1, 'data' => $models));
-    }
-    public function actionCaribarang3() {
-        $params = json_decode(file_get_contents("php://input"), true);
-
-        $models = array();
-        $barang = isset($params['barang']) ? $params['barang'] : '';
-        $po = isset($params['no_po']) ? $params['no_po'] : '';
-        
-        if(strlen($barang) > 6){
-            $barang = substr($barang, 0, 6);
-        }else {
-            $barang = $barang;
-        }
-        
-        //=================== AMBIL BARANG PO =====================//
-        $query = new Query;
-        $query->from('detail_po')
-                ->join('JOIN', 'barang', 'barang.kd_barang = detail_po.kd_barang')
-                ->select("barang.kd_barang, barang.nm_barang, barang.satuan, detail_po.jml as jml_po, detail_po.nota")
-                ->where(['like', 'barang.nm_barang', $barang])
-                ->orWhere(['like', 'barang.kd_barang', $barang])
-                ->andWhere(['like', 'detail_po.nota', $po])
-//                ->andWhere(['NOT IN', 'barang.kd_barang', $kdBrg])
-                ->andWhere("barang.nm_barang != '-' && barang.kd_barang != '-'");
-
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-
-        //===================== AMBIL JUMLAH BBM PER BARANG ==================//
-        $query = new Query;
-        $query->from('det_bbm')
-                ->join('JOIN', 'trans_bbm', 'det_bbm.no_bbm = trans_bbm.no_bbm')
-                ->select('*')
-                ->where('trans_bbm.no_po = "' . $po . '"');
-        $command = $query->createCommand();
-        $bbm = $command->queryAll();
-
-        $detBbm = array();
-        foreach ($bbm as $valBbm) {
-            $detBbm[$valBbm['kd_barang']]['jml_bbm'] = isset($detBbm[$valBbm['kd_barang']]['jml_bbm']) ? $detBbm[$valBbm['kd_barang']]['jml_bbm'] + $valBbm['jumlah'] : $valBbm['jumlah'];
-        }
-
-        //===================== JUMLAH RETUR ======================//
-        $queryRetur = new Query;
-        $queryRetur->from('retur_bbm as rb')
-                ->join('JOIN', 'det_bbm as db', 'rb.no_bbm = db.no_bbm')
-                ->join('JOIN', 'trans_bbm as tb', 'tb.no_bbm = db.no_bbm')
-                ->select('db.kd_barang, rb.jml')
-                ->where('tb.no_po = "' . $po . '"');
-
-        $commandRetur = $queryRetur->createCommand();
-        $modelsRetur = $commandRetur->queryAll();
-
-        $detRetur = array();
-        foreach ($modelsRetur as $valRetur) {
-            $detRetur[$valRetur['kd_barang']]['jml_retur'] = isset($detRetur[$valRetur['kd_barang']]['jml']) ? $detRetur[$valRetur['kd_barang']]['jml'] + $valRetur['jml'] : $valRetur['jml'];
-        }
-
-
-        $data = array();
-        $i = 0;
-        foreach ($models as $key => $val) {
-            $bbm = isset($detBbm[$val['kd_barang']]['jml_bbm']) ? $detBbm[$val['kd_barang']]['jml_bbm'] : 0;
-            $retur = isset($detRetur[$val['kd_barang']]['jml_retur']) ? $detRetur[$val['kd_barang']]['jml_retur'] : 0;
-            
-            $models[$key] = $val;
-            $models[$key]['barang']['satuan'] = $val['satuan'];
             $models[$i]['jml_po'] = $val['jml_po'];
             $models[$i]['telah_diambil'] = $bbm - $retur;
             $models[$i]['sisa_ambil'] = $val['jml_po'] - $bbm + $retur;
@@ -522,7 +446,6 @@ class BbmController extends Controller {
 
             $detail[$key] = $val->attributes;
             $namaBarang = (isset($val->barang->nm_barang)) ? $val->barang->nm_barang : '';
-            $detail[$key]['nm_barang'] = $namaBarang;
             $satuan = (isset($val->barang->satuan)) ? $val->barang->satuan : '';
 
             $detail[$key]['barang'] = [
@@ -549,7 +472,7 @@ class BbmController extends Controller {
 //        $findNumber = TransBbm::find()->orderBy('no_bbm DESC')->one();
 //        $lastNumber = (int) substr($findNumber->no_bbm, -5);
 //        $model->no_bbm = 'BM' . date('y', strtotime($model->tgl_nota)) . substr('00000' . ($lastNumber + 1), -5);
-        $model->kd_suplier = (isset($params['form']['kd_supplier'])) ? $params['form']['kd_supplier'] : '-';
+        $model->kd_suplier = $params['form']['kd_supplier'];
         $model->no_wo = (isset($params['form']['wo']['no_wo']) ? $params['form']['wo']['no_wo'] : '-');
         $model->no_po = (isset($params['form']['po']['nota'])) ? $params['form']['po']['nota'] : NULL;
         $model->lock = 1;
