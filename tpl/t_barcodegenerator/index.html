@@ -27,8 +27,13 @@
                                             <span class="glyphicon glyphicon-trash"></span>
                                         </button>
                                     </span>
-                                    <!--<input type="text" class="form-control" ng-model="detail.data_barang.nm_barang" ng-disabled="is_view" ng-readonly="true">-->
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Kode Rak</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="form-control" ng-pattern="/^[0-9]+$/" maxlength="3" ng-model="form.kode_rak" ng-disabled="is_view" required >
                             </div>
                         </div>
                         <div class="form-group">
@@ -50,7 +55,8 @@
                                 <div class="form-group">
                                     <ul>
                                         <li>Cari Barang</li>
-                                        <li>Isikan Jumlah Lembar</li>
+                                        <li>Isikan tiga digit Kode Rak</li>
+                                        <li>Isikan jumlah lembar yang dicetak</li>
                                         <li>Cetak</li>
                                     </ul>
                                 </div>

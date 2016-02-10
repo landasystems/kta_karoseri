@@ -73,6 +73,7 @@ class BarcodeController extends Controller
 
         $session['kode'] = $post->form->kode;
         $session['jumlah'] = $post->form->jumlah;
+        $session['kode_rak'] = (empty($post->form->kode_rak) || !isset($post->form->kode_rak)) ? '000' : $post->form->kode_rak;
         
         
         echo json_encode(array('status' => 1), JSON_PRETTY_PRINT);
@@ -83,9 +84,11 @@ class BarcodeController extends Controller
         $this->layout = 'content';
         $session = new \yii\web\Session();
         $session->open();
+//        $kodeRak = (!empty($session['kode_rak']));
         
-        $kode = $session['kode'];
+        $kode = ((string) $session['kode']).((string) $session['kode_rak']);
         $jumlah = $session['jumlah'];
+//        $kodeRak = $session['kode_rak'];
         
         return $this->render("barcode", ['kode' => $kode,'jumlah' => $jumlah]);
     }
