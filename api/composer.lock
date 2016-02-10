@@ -1,11 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d86d1edda107d34defb12c14b9bbeb9f",
-    "content-hash": "3faf63b8e4785b6c608f331ac2b43231",
+    "hash": "b1cc6c8c161c72bb689cfba0d4e1fd86",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -371,46 +370,6 @@
                 "mailer"
             ],
             "time": "2015-03-14 06:06:39"
-        },
-        {
-            "name": "vilochane/yii2-barcode-generator",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Vilochane/yii2-barcode-generator-8-types.git",
-                "reference": "61dc3424bf54c8b4521d8c40cb590c732890f5bb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Vilochane/yii2-barcode-generator-8-types/zipball/61dc3424bf54c8b4521d8c40cb590c732890f5bb",
-                "reference": "61dc3424bf54c8b4521d8c40cb590c732890f5bb",
-                "shasum": ""
-            },
-            "type": "yii2-extension",
-            "autoload": {
-                "psr-4": {
-                    "barcode\\barcode\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Vilochane",
-                    "email": "vilochane@gmail.com"
-                }
-            ],
-            "description": "This extension based on Simple jQuery Based Barcode Generator Wrapper for BarCode Coder Library (BCC Library Version 2.0) by DEMONTE Jean-Baptiste, HOUREZ Jonathan.",
-            "homepage": "https://github.com/Vilochane/yii2-barcode-generator-8-types.git",
-            "keywords": [
-                " barcode-generator",
-                " barcode-generator-8-types",
-                "extension",
-                "yii2"
-            ],
-            "time": "2015-04-30 07:23:23"
         },
         {
             "name": "yiisoft/yii2",
@@ -953,9 +912,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "vilochane/yii2-barcode-generator": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
