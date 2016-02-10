@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @link http://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -11,7 +10,6 @@ namespace yii\behaviors;
 use Yii;
 use yii\base\Event;
 use yii\db\BaseActiveRecord;
-use yii\web\Session;
 
 /**
  * BlameableBehavior automatically fills the specified attributes with the current user ID.
@@ -52,20 +50,18 @@ use yii\web\Session;
  * @author Alexander Kochetov <creocoder@gmail.com>
  * @since 2.0
  */
-class BlameableBehavior extends AttributeBehavior {
-
+class BlameableBehavior extends AttributeBehavior
+{
     /**
      * @var string the attribute that will receive current user ID value
      * Set this property to false if you do not want to record the creator ID.
      */
     public $createdByAttribute = 'created_by';
-
     /**
      * @var string the attribute that will receive current user ID value
      * Set this property to false if you do not want to record the updater ID.
      */
     public $updatedByAttribute = 'updated_by';
-
     /**
      * @var callable the value that will be assigned to the attributes. This should be a valid
      * PHP callable whose return value will be assigned to the current attribute(s).
@@ -81,10 +77,12 @@ class BlameableBehavior extends AttributeBehavior {
      */
     public $value;
 
+
     /**
      * @inheritdoc
      */
-    public function init() {
+    public function init()
+    {
         parent::init();
 
         if (empty($this->attributes)) {
@@ -101,19 +99,13 @@ class BlameableBehavior extends AttributeBehavior {
      * @param Event $event
      * @return mixed the value of the user.
      */
-    protected function getValue($event) {
-//        session_start();
+    protected function getValue($event)
+    {
         if ($this->value === null) {
-//            $user = $_SESSION['user']['id'];
-//            $user = Yii::$app->session->get('id');
-            $session = new Session;
-            $session->open();
-            $user = $session['user']['id'];
-            return !empty($user) ? $user : 0;
-            $session->close();
+            $user = Yii::$app->get('user', false);
+            return $user && !$user->isGuest ? $user->id : null;
         } else {
             return call_user_func($this->value, $event);
         }
     }
-
 }
