@@ -594,7 +594,36 @@ class BarangController extends Controller {
         return $this->render("/expmaster/barang", ['models' => $models]);
     }
 
+<<<<<<< HEAD
     public function actionCari() {
+=======
+    public function actionCari()
+    {
+        $params = $_REQUEST;
+        $query = new Query;
+        $barang = $params['barang'];
+        
+        if (strlen($barang) > 6) {
+            $barang = substr($barang, 0, 6);
+        } else {
+            $barang = $barang;
+        }
+        
+        $query->from('barang')
+                ->select("*")
+                ->where(['like', 'nm_barang', $barang])
+                ->orWhere(['like', 'kd_barang', $barang])
+                ->andWhere("nm_barang != '-' && kd_barang != '-'");
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $this->setHeader(200);
+        echo json_encode(array('status' => 1, 'data' => $models));
+    }
+
+    public function actionCariBarcode()
+    {
+>>>>>>> branch 'master' of https://github.com/landasystems/kta_karoseri.git
         $params = $_REQUEST;
         $query = new Query;
         $query->from('barang')
