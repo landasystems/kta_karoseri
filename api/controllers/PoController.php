@@ -106,17 +106,8 @@ class PoController extends Controller {
 
     public function actionKode() {
         $params = $_REQUEST;
-        $nama = $params['nama'];
-        $query = new Query;
-        $query->from('trans_po')
-                ->select('*')
-                ->where(['dikirim_ke' => $nama])
-                ->orderBy('nota DESC')
-                ->limit(1);
-
-        $command = $query->createCommand();
-        $models = $command->query()->read();
-        
+         $nama = $params['nama'];
+         
         if ($nama == 'PT KARYA TUGAS ANDA') {
             $kd = "PCH";
         } else if ($nama == 'PT KARYA KELOLA SEMESTA') {
@@ -128,11 +119,22 @@ class PoController extends Controller {
         }else if ($nama == 'PT TUGASANDA CONSTRUCTION INDONESIA') {
             $kd = "TCI";
         }
+        $kodes = $kd.date("y");
+        
+        
+        $query = new Query;
+        $query->from('trans_po')
+                ->select('*')
+                ->where(['like','nota',$kodes])
+                ->limit(10)
+                ->orderBy('nota DESC');
+
+        $command = $query->createCommand();
+        $models = $command->queryOne();
+        
          $cek = TransPo::find()
                     ->where(['nota' => $kd.date("y")."0001"])
                     ->One();
-
-//        Yii::error($cek);
 
         if (!empty($cek)) {
 
