@@ -356,7 +356,7 @@
                                             <input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control angka" ng-change="kalkulasi2($index);" ng-readonly="detail.error_kalkulasi == true">
                                         </td>
                                         <td ng-if="form.kat_bbk == 'umum'">
-                                            <input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control angka" ng-keyup="kalkulasi2($index);" ng-enter="addDetail('');">
+                                            <input type="text" ng-disabled="is_view" ng-model="detail.jml" class="form-control angka" ng-keyup="kalkulasi2($index);"/>
                                         </td>
                                         <td style="text-align: center">{{detail.satuan}}</td>
                                         <td ng-if="form.kat_bbk == 'produksi'"><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control"></td>

@@ -146,6 +146,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                 }
             });
         } else {
+            console.log();
             var jml = ($scope.detailBbk[indek]['jml']) ? $scope.detailBbk[indek]['jml'] : 0;
 
             var tmpStok = $scope.detailBbk[indek]['kd_barang']['stok_barang'];
@@ -167,7 +168,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                 $scope.err_pengambilan = true;
             }
         }
-    }
+    };
 
 //    $scope.kalkulasi = function (sisa, stok, jml_keluar) {
 //        if (jml_keluar > 0) {
@@ -369,7 +370,8 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
 
     $scope.addDetail = function (kat_bbk, item) {
 //        var lastIndex = 0;
-        var datas = {kd_barang: item.kd_barang, nm_barang: item.nm_barang, stok_sekarang: item.saldo};
+        console.log(item);
+        var datas = {kd_barang: item.kd_barang, nm_barang: item.nm_barang,sisa : item.sisa, stok_sekarang: item.saldo};
         var ada = false;
         if (kat_bbk == 'umum') {
 
@@ -379,6 +381,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                         $scope.detailBbk[key].jml++;
 
                         $scope.detailBbk[key].kd_barang = datas;
+                        
                         ada = true;
                     }
                 });
@@ -396,6 +399,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
             }
 
             ada = false;
+            console.log(datas);
         } else {
             ada = false
             angular.forEach($scope.detailBbk, function (val, key) {
