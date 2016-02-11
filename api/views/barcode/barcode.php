@@ -2,8 +2,8 @@
 <!--This element id should be passed on to options-->
 <style media="print">
     .table-barcode td {
-/*        padding-left: 15px;
-        padding-right: 15px;*/
+        /*        padding-left: 15px;
+                padding-right: 15px;*/
     }
 </style>
 
@@ -52,7 +52,7 @@ for ($i = 0; $i < $jumlah; $i++) {
         'settings' => array(
             'barWidth' => 1,
             'barHeight' => 30,
-            )
+        )
     );
 
     echo BarcodeGenerator::widget($optionsArray1);
