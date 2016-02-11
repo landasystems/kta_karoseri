@@ -107,19 +107,11 @@ class FileCache extends Cache
     protected function getValue($key)
     {
         $cacheFile = $this->getCacheFile($key);
-
         if (@filemtime($cacheFile) > time()) {
-            $fp = @fopen($cacheFile, 'r');
-            if ($fp !== false) {
-                @flock($fp, LOCK_SH);
-                $cacheValue = @stream_get_contents($fp);
-                @flock($fp, LOCK_UN);
-                @fclose($fp);
-                return $cacheValue;
-            }
+            return @file_get_contents($cacheFile);
+        } else {
+            return false;
         }
-
-        return false;
     }
 
     /**
@@ -133,7 +125,6 @@ class FileCache extends Cache
      */
     protected function setValue($key, $value, $duration)
     {
-        $this->gc();
         $cacheFile = $this->getCacheFile($key);
         if ($this->directoryLevel > 0) {
             @FileHelper::createDirectory(dirname($cacheFile), $this->dirMode, true);
@@ -148,8 +139,6 @@ class FileCache extends Cache
 
             return @touch($cacheFile, $duration + time());
         } else {
-            $error = error_get_last();
-            Yii::warning("Unable to write cache file '{$cacheFile}': {$error['message']}", __METHOD__);
             return false;
         }
     }

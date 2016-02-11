@@ -5,9 +5,11 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-use yii\web\View;
 
-echo Html::tag('h1', $panel->getName() . ' Queries');
+?>
+<h1><?= $panel->getName(); ?> Queries</h1>
+
+<?php
 
 echo GridView::widget([
     'dataProvider' => $dataProvider,
@@ -45,13 +47,13 @@ echo GridView::widget([
         [
             'attribute' => 'type',
             'value' => function ($data) {
-                return Html::encode($data['type']);
+                return Html::encode(mb_strtoupper($data['type'], 'utf8'));
             },
             'filter' => $panel->getTypes(),
         ],
         [
             'attribute' => 'query',
-            'value' => function ($data) use ($hasExplain, $panel) {
+            'value' => function ($data) {
                 $query = Html::encode($data['query']);
 
                 if (!empty($data['trace'])) {
@@ -63,16 +65,6 @@ echo GridView::widget([
                     ]);
                 }
 
-                if ($hasExplain && $panel::canBeExplained($data['type'])) {
-                    $query .= Html::tag('p', '', ['class' => 'db-explain-text']);
-
-                    $query .= Html::tag(
-                        'div',
-                        Html::a('[+] Explain', (['db-explain', 'seq' => $data['seq'], 'tag' => Yii::$app->controller->summary['tag']])),
-                        ['class' => 'db-explain']
-                    );
-                }
-
                 return $query;
             },
             'format' => 'html',
@@ -82,38 +74,3 @@ echo GridView::widget([
         ]
     ],
 ]);
-
-if ($hasExplain) {
-    echo Html::tag(
-        'div',
-        Html::a('[+] Explain all', '#'),
-        ['id' => 'db-explain-all']
-    );
-}
-
-$this->registerJs('debug_db_detail();', View::POS_READY);
-?>
-
-<script>
-function debug_db_detail() {
-    $('.db-explain a').on('click', function(e) {
-        e.preventDefault();
-        
-        var $explain = $('.db-explain-text', $(this).parent().parent());
-
-        if ($explain.is(':visible')) {
-            $explain.hide();
-            $(this).text('[+] Explain');
-        } else {
-            $explain.load($(this).attr('href')).show();
-            $(this).text('[-] Explain');
-        }
-    });
-
-    $('#db-explain-all a').on('click', function(e) {
-        e.preventDefault();
-        
-        $('.db-explain a').click();
-    });
-}
-</script>

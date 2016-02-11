@@ -11,7 +11,6 @@ use yii\db\Connection;
 use yii\db\Exception;
 use yii\base\InvalidParamException;
 use yii\base\NotSupportedException;
-use yii\db\Query;
 
 /**
  * QueryBuilder is the query builder for SQLite databases.
@@ -300,7 +299,7 @@ class QueryBuilder extends \yii\db\QueryBuilder
      *
      * @param string $operator
      * @param array $columns
-     * @param Query $values
+     * @param array $values
      * @param array $params
      * @return string SQL
      */

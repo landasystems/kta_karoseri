@@ -105,7 +105,7 @@ class BaseStringHelper
     public static function truncate($string, $length, $suffix = '...', $encoding = null, $asHtml = false)
     {
         if ($asHtml) {
-            return static::truncateHtml($string, $length, $suffix, $encoding ?: Yii::$app->charset);
+            return self::truncateHtml($string, $length, $suffix, $encoding ?: Yii::$app->charset);
         }
         
         if (mb_strlen($string, $encoding ?: Yii::$app->charset) > $length) {
@@ -128,7 +128,7 @@ class BaseStringHelper
     public static function truncateWords($string, $count, $suffix = '...', $asHtml = false)
     {
         if ($asHtml) {
-            return static::truncateHtml($string, $count, $suffix);
+            return self::truncateHtml($string, $count, $suffix);
         }
 
         $words = preg_split('/(\s+)/u', trim($string), null, PREG_SPLIT_DELIM_CAPTURE);
@@ -141,7 +141,7 @@ class BaseStringHelper
     
     /**
      * Truncate a string while preserving the HTML.
-     *
+     * 
      * @param string $string The string to truncate
      * @param integer $count
      * @param string $suffix String to append to the end of the truncated string.
@@ -152,7 +152,6 @@ class BaseStringHelper
     protected static function truncateHtml($string, $count, $suffix, $encoding = false)
     {
         $config = \HTMLPurifier_Config::create(null);
-        $config->set('Cache.SerializerPath', \Yii::$app->getRuntimePath());
         $lexer = \HTMLPurifier_Lexer::create($config);
         $tokens = $lexer->tokenizeHTML($string, $config, null);
         $openTokens = 0;
@@ -162,7 +161,7 @@ class BaseStringHelper
             if ($token instanceof \HTMLPurifier_Token_Start) { //Tag begins
                 $openTokens++;
                 $truncated[] = $token;
-            } elseif ($token instanceof \HTMLPurifier_Token_Text && $totalCount <= $count) { //Text
+            } else if ($token instanceof \HTMLPurifier_Token_Text && $totalCount <= $count) { //Text
                 if (false === $encoding) {
                     $token->data = self::truncateWords($token->data, $count - $totalCount, '');
                     $currentCount = str_word_count($token->data);
@@ -175,10 +174,10 @@ class BaseStringHelper
                     $token->data = ' ' . $token->data;
                 }
                 $truncated[] = $token;
-            } elseif ($token instanceof \HTMLPurifier_Token_End) { //Tag ends
+            } else if ($token instanceof \HTMLPurifier_Token_End) { //Tag ends
                 $openTokens--;
                 $truncated[] = $token;
-            } elseif ($token instanceof \HTMLPurifier_Token_Empty) { //Self contained tags, i.e. <img/> etc.
+            } else if ($token instanceof \HTMLPurifier_Token_Empty) { //Self contained tags, i.e. <img/> etc.
                 $truncated[] = $token;
             }
             if (0 === $openTokens && $totalCount >= $count) {
@@ -249,14 +248,13 @@ class BaseStringHelper
      * @return array
      * @since 2.0.4
      */
-    public static function explode($string, $delimiter = ',', $trim = true, $skipEmpty = false)
-    {
+    public static function explode($string, $delimiter = ',', $trim = true, $skipEmpty = false) {
         $result = explode($delimiter, $string);
         if ($trim) {
             if ($trim === true) {
                 $trim = 'trim';
             } elseif (!is_callable($trim)) {
-                $trim = function ($v) use ($trim) {
+                $trim = function($v) use ($trim) {
                     return trim($v, $trim);
                 };
             }

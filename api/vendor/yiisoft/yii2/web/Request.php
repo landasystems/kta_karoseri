@@ -165,7 +165,7 @@ class Request extends \yii\base\Request
      */
     private $_cookies;
     /**
-     * @var HeaderCollection Collection of request headers.
+     * @var array the headers in this collection (indexed by the header names)
      */
     private $_headers;
 
@@ -180,12 +180,9 @@ class Request extends \yii\base\Request
         $result = Yii::$app->getUrlManager()->parseRequest($this);
         if ($result !== false) {
             list ($route, $params) = $result;
-            if ($this->_queryParams === null) {
-                $_GET = $params + $_GET; // preserve numeric keys
-            } else {
-                $this->_queryParams = $params + $this->_queryParams;
-            }
-            return [$route, $this->getQueryParams()];
+            $_GET = $params + $_GET; // preserve numeric keys
+
+            return [$route, $_GET];
         } else {
             throw new NotFoundHttpException(Yii::t('yii', 'Page not found.'));
         }
@@ -303,10 +300,6 @@ class Request extends \yii\base\Request
 
     /**
      * Returns whether this is an AJAX (XMLHttpRequest) request.
-     *
-     * Note that jQuery doesn't set the header in case of cross domain
-     * requests: https://stackoverflow.com/questions/8163703/cross-domain-ajax-doesnt-send-x-requested-with-header
-     *
      * @return boolean whether this is an AJAX (XMLHttpRequest) request.
      */
     public function getIsAjax()
@@ -1231,7 +1224,7 @@ class Request extends \yii\base\Request
                     $cookies[$name] = new Cookie([
                         'name' => $name,
                         'value' => $data[1],
-                        'expire' => null,
+                        'expire'=> null
                     ]);
                 }
             }
@@ -1240,7 +1233,7 @@ class Request extends \yii\base\Request
                 $cookies[$name] = new Cookie([
                     'name' => $name,
                     'value' => $value,
-                    'expire' => null,
+                    'expire'=> null
                 ]);
             }
         }

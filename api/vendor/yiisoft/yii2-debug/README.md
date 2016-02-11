@@ -7,8 +7,6 @@ a set of standalone pages to display more detailed debug information.
 
 For license information check the [LICENSE](LICENSE.md)-file.
 
-Documentation is at [docs/guide/README.md](docs/guide/README.md).
-
 [![Latest Stable Version](https://poser.pugx.org/yiisoft/yii2-debug/v/stable.png)](https://packagist.org/packages/yiisoft/yii2-debug)
 [![Total Downloads](https://poser.pugx.org/yiisoft/yii2-debug/downloads.png)](https://packagist.org/packages/yiisoft/yii2-debug)
 
@@ -42,9 +40,7 @@ Once the extension is installed, simply modify your application configuration as
 return [
     'bootstrap' => ['debug'],
     'modules' => [
-        'debug' => [
-            'class' => 'yii\debug\Module',
-        ],
+        'debug' => 'yii\debug\Module',
         // ...
     ],
     ...

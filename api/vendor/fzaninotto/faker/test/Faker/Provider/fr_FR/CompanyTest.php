@@ -2,65 +2,73 @@
 
 namespace Faker\Test\Provider\fr_FR;
 
-use Faker\Calculator\Luhn;
-use Faker\Generator;
 use Faker\Provider\fr_FR\Company;
+use Faker\PHPUnit\Framework\Constraint as Constraint;
 
 class CompanyTest extends \PHPUnit_Framework_TestCase
 {
-    private $faker;
-
-    public function setUp()
+    private static function isValidSiret()
     {
-        $faker = new Generator();
-        $faker->addProvider(new Company($faker));
-        $this->faker = $faker;
+        return new Constraint\IsValidSiret();
     }
 
-    public function testSiretReturnsAValidSiret()
+    private static function isValidSiren()
     {
-        $siret = $this->faker->siret(false);
-        $this->assertRegExp("/^\d{14}$/", $siret);
-        $this->assertTrue(Luhn::isValid($siret));
+        return new Constraint\IsValidSiren();
     }
 
-    public function testSiretReturnsAWellFormattedSiret()
+    public function testParagraphWithNegativeNbDigitsReturnsAWellFormattedSiret()
     {
-        $siret = $this->faker->siret();
-        $this->assertRegExp("/^\d{3}\s\d{3}\s\d{3}\s\d{5}$/", $siret);
-        $siret = str_replace(' ', '', $siret);
-        $this->assertTrue(Luhn::isValid($siret));
+        $siret = Company::siret(-1);
+
+        $this->assertThat($siret, self::isValidSiret());
+        $this->assertRegExp("/[\d]{3} [\d]{3} [\d]{3} 00[\d]{3}/", $siret);
     }
 
-    public function testSirenReturnsAValidSiren()
+    public function testParagraphWithInvalidNbDigitsReturnsAWellFormattedSiret()
     {
-        $siren = $this->faker->siren(false);
-        $this->assertRegExp("/^\d{9}$/", $siren);
-        $this->assertTrue(Luhn::isValid($siren));
+        $siret = Company::siret(6);
+
+        $this->assertThat($siret, self::isValidSiret());
+        $this->assertRegExp("/[\d]{3} [\d]{3} [\d]{3} 00[\d]{3}/", $siret);
     }
 
-    public function testSirenReturnsAWellFormattedSiren()
+    public function testParagraphWithValidNbDigitsReturnsAWellFormattedSiret()
     {
-        $siren = $this->faker->siren();
-        $this->assertRegExp("/^\d{3}\s\d{3}\s\d{3}$/", $siren);
-        $siren = str_replace(' ', '', $siren);
-        $this->assertTrue(Luhn::isValid($siren));
+        $siret1 = Company::siret(1);
+        $siret2 = Company::siret(2);
+        $siret3 = Company::siret(3);
+        $siret4 = Company::siret(4);
+
+        $this->assertThat($siret1, self :: isValidSiret());
+        $this->assertRegExp("/[\d]{3} [\d]{3} [\d]{3} 000[\d]{2}/", $siret1);
+        $this->assertThat($siret2, self :: isValidSiret());
+        $this->assertRegExp("/[\d]{3} [\d]{3} [\d]{3} 00[\d]{3}/", $siret2);
+        $this->assertThat($siret3, self :: isValidSiret());
+        $this->assertRegExp("/[\d]{3} [\d]{3} [\d]{3} 0[\d]{4}/", $siret3);
+        $this->assertThat($siret4, self :: isValidSiret());
+        $this->assertRegExp("/[\d]{3} [\d]{3} [\d]{3} [\d]{5}/", $siret4);
     }
 
-    public function testCatchPhraseReturnsValidCatchPhrase()
+    public function testSirenReturnsAValidAndWellFormattedSiren()
     {
-        $this->assertTrue(TestableCompany::isCatchPhraseValid($this->faker->catchPhrase()));
+        $siret = Company::siren();
+
+        $this->assertThat($siret, self :: isValidSiren());
+        $this->assertRegExp("/[\d]{3} [\d]{3} [\d]{3}/", $siret);
     }
 
-    public function testIsCatchPhraseValidReturnsFalseWhenAWordsAppearsTwice()
+    public function testCatchPhraseValidationReturnsFalse()
     {
         $isCatchPhraseValid = TestableCompany::isCatchPhraseValid('La sécurité de rouler en toute sécurité');
+
         $this->assertFalse($isCatchPhraseValid);
     }
 
-    public function testIsCatchPhraseValidReturnsTrueWhenNoWordAppearsTwice()
+    public function testCatchPhraseValidationReturnsTrue()
     {
         $isCatchPhraseValid = TestableCompany::isCatchPhraseValid('La sécurité de rouler en toute simplicité');
+
         $this->assertTrue($isCatchPhraseValid);
     }
 }

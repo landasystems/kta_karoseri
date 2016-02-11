@@ -52,11 +52,8 @@ h1,h2,h3,p,img,ul li{
     font-family: Arial,sans-serif;
     color: #505050;
 }
-/*corresponds to min-width of 860px for some elements (.header .footer .element ...)*/
-@media screen and (min-width: 960px) {
-    html,body{
-        overflow-x: hidden;
-    }
+html,body{
+    overflow-x: hidden;
 }
 
 /* header */
@@ -155,7 +152,6 @@ h1,h2,h3,p,img,ul li{
 .call-stack ul li .element-wrap{
     cursor: pointer;
     padding: 15px 0;
-    background-color: #fdfdfd;
 }
 .call-stack ul li.application .element-wrap{
     background-color: #fafafa;
@@ -168,6 +164,7 @@ h1,h2,h3,p,img,ul li{
     margin: 0 auto;
     padding: 0 50px;
     position: relative;
+    white-space: nowrap;
 }
 .call-stack ul li a{
     color: #505050;
@@ -186,19 +183,17 @@ h1,h2,h3,p,img,ul li{
     color: #505050;
 }
 .call-stack ul li .at{
-    float: right;
-    display: inline-block;
-    width: 7em;
-    padding-left: 1em;
-    text-align: left;
+    position: absolute;
+    right: 110px; /* 50px + 60px */
     color: #aaa;
 }
 .call-stack ul li.application .at{
     color: #505050;
 }
 .call-stack ul li .line{
-    display: inline-block;
-    width: 3em;
+    position: absolute;
+    right: 50px;
+    width: 60px;
     text-align: right;
 }
 .call-stack ul li .code-wrap{
@@ -214,7 +209,7 @@ h1,h2,h3,p,img,ul li{
     position: absolute;
     width: 100%;
     z-index: 100;
-    margin-top: 0;
+    margin-top: -61px;
 }
 .call-stack ul li .hover-line{
     background: none;
@@ -238,7 +233,7 @@ h1,h2,h3,p,img,ul li{
     color: #aaa;
     line-height: 20px;
     font-size: 12px;
-    margin-top: 1px;
+    margin-top: -63px;
     font-family: Consolas, Courier New, monospace;
 }
 .call-stack ul li .code pre{
@@ -375,7 +370,7 @@ h1,h2,h3,p,img,ul li{
             <?= $handler->renderCallStackItem($exception->getFile(), $exception->getLine(), null, null, [], 1) ?>
             <?php for ($i = 0, $trace = $exception->getTrace(), $length = count($trace); $i < $length; ++$i): ?>
                 <?= $handler->renderCallStackItem(@$trace[$i]['file'] ?: null, @$trace[$i]['line'] ?: null,
-                    @$trace[$i]['class'] ?: null, @$trace[$i]['function'] ?: null, @$trace[$i]['args'] ?: [], $i + 2) ?>
+                    @$trace[$i]['class'] ?: null, @$trace[$i]['function'] ?: null, $trace[$i]['args'], $i + 2) ?>
             <?php endfor; ?>
         </ul>
     </div>
@@ -448,7 +443,7 @@ window.onload = function() {
         if (!Sizzle('pre', callStackItem)[0]) {
             return;
         }
-        var top = Sizzle('.code-wrap', callStackItem)[0].offsetTop - window.pageYOffset + 3,
+        var top = callStackItem.offsetTop - window.pageYOffset,
             lines = Sizzle('pre', callStackItem)[0].getClientRects(),
             lineNumbers = Sizzle('.lines-item', callStackItem),
             errorLine = Sizzle('.error-line', callStackItem)[0],
@@ -458,10 +453,10 @@ window.onload = function() {
                 continue;
             }
             lineNumbers[i].style.top = parseInt(lines[i].top - top) + 'px';
-            hoverLines[i].style.top = parseInt(lines[i].top - top) + 'px';
+            hoverLines[i].style.top = parseInt(lines[i].top - top - 3) + 'px';
             hoverLines[i].style.height = parseInt(lines[i].bottom - lines[i].top + 6) + 'px';
             if (parseInt(callStackItem.getAttribute('data-line')) == i) {
-                errorLine.style.top = parseInt(lines[i].top - top) + 'px';
+                errorLine.style.top = parseInt(lines[i].top - top - 3) + 'px';
                 errorLine.style.height = parseInt(lines[i].bottom - lines[i].top + 6) + 'px';
             }
         }

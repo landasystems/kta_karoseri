@@ -8,6 +8,7 @@
 namespace yii\bootstrap;
 
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 /**
  * ButtonGroup renders a button group bootstrap component.
@@ -65,7 +66,7 @@ class ButtonGroup extends Widget
     public function init()
     {
         parent::init();
-        Html::addCssClass($this->options, ['widget' => 'btn-group']);
+        Html::addCssClass($this->options, 'btn-group');
     }
 
     /**

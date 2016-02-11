@@ -10,12 +10,6 @@ namespace yii\console;
 use Yii;
 use yii\base\InvalidRouteException;
 
-// define STDIN, STDOUT and STDERR if the PHP SAPI did not define them (e.g. creating console application in web env)
-// http://php.net/manual/en/features.commandline.io-streams.php
-defined('STDIN') or define('STDIN', fopen('php://stdin', 'r'));
-defined('STDOUT') or define('STDOUT', fopen('php://stdout', 'w'));
-defined('STDERR') or define('STDERR', fopen('php://stderr', 'w'));
-
 /**
  * Application represents a console application.
  *
@@ -103,7 +97,7 @@ class Application extends \yii\base\Application
                     if (!empty($path) && is_file($file = Yii::getAlias($path))) {
                         return require($file);
                     } else {
-                        exit("The configuration file does not exist: $path\n");
+                        die("The configuration file does not exist: $path\n");
                     }
                 }
             }
