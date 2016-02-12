@@ -1,5 +1,5 @@
 vendor/autoload.php:
-	composer install --no-interaction --prefer-source --dev
+	composer install
 
 .PHONY: sniff
 sniff: vendor/autoload.php
@@ -7,4 +7,4 @@ sniff: vendor/autoload.php
 
 .PHONY: test
 test: vendor/autoload.php
-	vendor/bin/phpunit --verbose
+	vendor/bin/phpunit

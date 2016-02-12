@@ -25,7 +25,7 @@ use yii\helpers\Json;
 class ActiveForm extends Widget
 {
     /**
-     * @var array|string $action the form action URL. This parameter will be processed by [[\yii\helpers\Url::to()]].
+     * @param array|string $action the form action URL. This parameter will be processed by [[\yii\helpers\Url::to()]].
      * @see method for specifying the HTTP method for this form.
      */
     public $action = '';
@@ -152,11 +152,6 @@ class ActiveForm extends Widget
      */
     public $ajaxDataType = 'json';
     /**
-     * @var boolean whether to scroll to the first error after validation.
-     * @since 2.0.6
-     */
-    public $scrollToError = true;
-    /**
      * @var array the client validation options for individual attributes. Each element of the array
      * represents the validation options for a particular attribute.
      * @internal
@@ -219,7 +214,6 @@ class ActiveForm extends Widget
             'validatingCssClass' => $this->validatingCssClass,
             'ajaxParam' => $this->ajaxParam,
             'ajaxDataType' => $this->ajaxDataType,
-            'scrollToError' => $this->scrollToError,
         ];
         if ($this->validationUrl !== null) {
             $options['validationUrl'] = Url::to($this->validationUrl);
@@ -235,7 +229,6 @@ class ActiveForm extends Widget
             'validatingCssClass' => 'validating',
             'ajaxParam' => 'ajax',
             'ajaxDataType' => 'json',
-            'scrollToError' => true,
         ]);
     }
 

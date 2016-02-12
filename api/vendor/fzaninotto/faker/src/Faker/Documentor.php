@@ -6,7 +6,7 @@ class Documentor
 {
     protected $generator;
 
-    public function __construct(Generator $generator)
+    public function __construct($generator)
     {
         $this->generator = $generator;
     }
@@ -37,11 +37,7 @@ class Documentor
                     $parameters []= $parameter;
                 }
                 $parameters = $parameters ? '('. join(', ', $parameters) . ')' : '';
-                try {
-                    $example = $this->generator->format($methodName);
-                } catch (\InvalidArgumentException $e) {
-                    $example = '';
-                }
+                $example = $this->generator->format($methodName);
                 if (is_array($example)) {
                     $example = "array('". join("', '", $example) . "')";
                 } elseif ($example instanceof \DateTime) {

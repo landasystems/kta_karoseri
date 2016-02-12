@@ -67,12 +67,7 @@ class DbTarget extends Target
         foreach ($this->messages as $message) {
             list($text, $level, $category, $timestamp) = $message;
             if (!is_string($text)) {
-                // exceptions may not be serializable if in the call stack somewhere is a Closure
-                if ($text instanceof \Exception) {
-                    $text = (string) $text;
-                } else {
-                    $text = VarDumper::export($text);
-                }
+                $text = VarDumper::export($text);
             }
             $command->bindValues([
                 ':level' => $level,

@@ -7,7 +7,6 @@
 
 namespace yii\behaviors;
 
-use yii\base\InvalidCallException;
 use yii\db\BaseActiveRecord;
 use yii\db\Expression;
 
@@ -120,15 +119,9 @@ class TimestampBehavior extends AttributeBehavior
      * $model->touch('lastVisit');
      * ```
      * @param string $attribute the name of the attribute to update.
-     * @throws InvalidCallException if owner is a new record (since version 2.0.6).
      */
     public function touch($attribute)
     {
-        /* @var $owner BaseActiveRecord */
-        $owner = $this->owner;
-        if ($owner->getIsNewRecord()) {
-            throw new InvalidCallException('Updating the timestamp is not possible on a new record.');
-        }
-        $owner->updateAttributes(array_fill_keys((array) $attribute, $this->getValue(null)));
+        $this->owner->updateAttributes(array_fill_keys((array) $attribute, $this->getValue(null)));
     }
 }

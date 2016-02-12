@@ -116,28 +116,21 @@ class PoController extends Controller {
 
         $command = $query->createCommand();
         $models = $command->query()->read();
-
+        
         if ($nama == 'PT KARYA TUGAS ANDA') {
-            $cek = TransPo::find()
-                    ->where('nota = "PCH' . date("y") . '0001"')
-                    ->One();
+            $kd = "PCH";
         } else if ($nama == 'PT KARYA KELOLA SEMESTA') {
-            $cek = TransPo::find()
-                    ->where('nota = "KKS' . date("y") . '0001"')
-                    ->One();
+            $kd = "KKS";
         } else if ($nama == 'PT SUMBER SEJAHTERA SEMESTA') {
-            $cek = TransPo::find()
-                    ->where('nota = "SSS' . date("y") . '0001"')
-                    ->One();
-        }else if ($nama == 'PT TUGASANDA BERSAMA JAYA') {
-            $cek = TransPo::find()
-                    ->where('nota = "TABJ' . date("y") . '0001"')
-                    ->One();
+            $kd = "SSS";
+        }else if ($nama == 'PT WILMAR NABATI GRESIK') {
+            $kd = "TABJ";
         }else if ($nama == 'PT TUGASANDA CONSTRUCTION INDONESIA') {
-            $cek = TransPo::find()
-                    ->where('nota = "TCI' . date("y") . '0001"')
-                    ->One();
+            $kd = "TCI";
         }
+         $cek = TransPo::find()
+                    ->where(['nota' => $kd.date("y")."0001"])
+                    ->One();
 
 //        Yii::error($cek);
 
@@ -145,30 +138,12 @@ class PoController extends Controller {
 
             $kode_mdl = (substr($models['nota'], -4) + 1);
             $kode = substr('0000' . $kode_mdl, strlen($kode_mdl));
-
-            if ($nama == 'PT KARYA TUGAS ANDA') {
-                $kode_s = "PCH" . date("y") . $kode;
-            } else if ($nama == 'PT KARYA KELOLA SEMESTA') {
-                $kode_s = "KKS" . date("y") . $kode;
-            } else if ($nama == 'PT SUMBER SEJAHTERA SEMESTA') {
-                $kode_s = "SSS" . date("y") . $kode;
-            } else if ($nama == 'PT TUGASANDA BERSAMA JAYA') {
-                $kode_s = "TABJ" . date("y") . $kode;
-            } else if ($nama == 'PT TUGASANDA CONSTRUCTION INDONESIA') {
-                $kode_s = "TCI" . date("y") . $kode;
-            }
+            
+            $kode_s = $kd . date("y") . $kode;
+//            
         } else {
-            if ($nama == 'PT KARYA TUGAS ANDA') {
-                $kode_s = "PCH" . date("y") . '0001';
-            } else if ($nama == 'PT KARYA KELOLA SEMESTA') {
-                $kode_s = "KKS" . date("y") . '0001';
-            } else if ($nama == 'PT SUMBER SEJAHTERA SEMESTA') {
-                $kode_s = "SSS" . date("y") . '0001';
-            } else if ($nama == 'PT TUGASANDA BERSAMA JAYA') {
-                $kode_s = "TABJ" . date("y") . '0001';
-            } else if ($nama == 'PT TUGASANDA CONSTRUCTION INDONESIA') {
-                $kode_s = "TCI" . date("y") . '0001';
-            }
+            $kode_s = $kd . date("y") . '0001';
+//            
         }
         $this->setHeader(200);
 

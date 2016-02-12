@@ -17,6 +17,7 @@ $this->title = 'Yii Debugger';
         <div class="yii-debug-toolbar-block title">
             <a href="#">
                 <img width="29" height="30" alt="" src="<?= \yii\debug\Module::getYiiLogo() ?>">
+                Yii Debugger
             </a>
         </div>
         <?php foreach ($panels as $panel): ?>
@@ -65,7 +66,7 @@ if (isset($this->context->module->panels['db']) && isset($this->context->module-
             [
                 'attribute' => 'time',
                 'value' => function ($data) {
-                    return '<span class="nowrap">' . Yii::$app->formatter->asDatetime($data['time'], 'yyyy-MM-dd HH:mm:ss') . '</span>';
+                    return '<span class="nowrap">' . Yii::$app->formatter->asDatetime($data['time'], 'short') . '</span>';
                 },
                 'format' => 'html',
             ],
@@ -111,21 +112,6 @@ if (isset($this->context->module->panels['db']) && isset($this->context->module-
             ],
             [
                 'attribute' => 'statusCode',
-                'value' => function ($data) {
-                    $statusCode = $data['statusCode'];
-                    if ($statusCode === null) {
-                        $statusCode = 200;
-                    }
-                    if ($statusCode >= 200 && $statusCode < 300) {
-                        $class = 'label-success';
-                    } elseif ($statusCode >= 300 && $statusCode < 400) {
-                        $class = 'label-info';
-                    } else {
-                        $class = 'label-danger';
-                    }
-                    return "<span class=\"label {$class}\">$statusCode</span>";
-                },
-                'format' => 'raw',
                 'filter' => $statusCodes,
                 'label' => 'Status code'
             ],

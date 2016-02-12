@@ -96,7 +96,7 @@ class MemCache extends Cache
     /**
      * @var \Memcache|\Memcached the Memcache instance
      */
-    private $_cache;
+    private $_cache = null;
     /**
      * @var array list of memcache server configurations
      */
@@ -114,10 +114,8 @@ class MemCache extends Cache
     }
 
     /**
-     * Add servers to the server pool of the cache specified
-     *
      * @param \Memcache|\Memcached $cache
-     * @param MemCacheServer[] $servers
+     * @param array $servers
      * @throws InvalidConfigException
      */
     protected function addServers($cache, $servers)
@@ -142,11 +140,8 @@ class MemCache extends Cache
     }
 
     /**
-     * Add servers to the server pool of the cache specified
-     * Used for memcached PECL extension.
-     *
      * @param \Memcached $cache
-     * @param MemCacheServer[] $servers
+     * @param array $servers
      */
     protected function addMemcachedServers($cache, $servers)
     {
@@ -164,11 +159,8 @@ class MemCache extends Cache
     }
 
     /**
-     * Add servers to the server pool of the cache specified
-     * Used for memcache PECL extension.
-     *
      * @param \Memcache $cache
-     * @param MemCacheServer[] $servers
+     * @param array $servers
      */
     protected function addMemcacheServers($cache, $servers)
     {

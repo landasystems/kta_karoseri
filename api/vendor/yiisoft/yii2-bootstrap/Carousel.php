@@ -9,6 +9,7 @@ namespace yii\bootstrap;
 
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 
 /**
  * Carousel renders a carousel bootstrap javascript component.
@@ -72,7 +73,7 @@ class Carousel extends Widget
     public function init()
     {
         parent::init();
-        Html::addCssClass($this->options, ['widget' => 'carousel']);
+        Html::addCssClass($this->options, 'carousel');
     }
 
     /**
@@ -149,7 +150,7 @@ class Carousel extends Widget
             throw new InvalidConfigException('The "content" option is required.');
         }
 
-        Html::addCssClass($options, ['widget' => 'item']);
+        Html::addCssClass($options, 'item');
         if ($index === 0) {
             Html::addCssClass($options, 'active');
         }
