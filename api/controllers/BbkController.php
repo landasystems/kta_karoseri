@@ -13,9 +13,11 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\db\Query;
 
-class BbkController extends Controller {
+class BbkController extends Controller
+{
 
-    public function behaviors() {
+    public function behaviors()
+    {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -45,7 +47,8 @@ class BbkController extends Controller {
         ];
     }
 
-    public function actionLock() {
+    public function actionLock()
+    {
         $params = json_decode(file_get_contents("php://input"), true);
         $centang = $params['id'];
 
@@ -56,7 +59,8 @@ class BbkController extends Controller {
         }
     }
 
-    public function actionUnlock() {
+    public function actionUnlock()
+    {
         $params = json_decode(file_get_contents("php://input"), true);
         $centang = $params['id'];
 
@@ -67,7 +71,8 @@ class BbkController extends Controller {
         }
     }
 
-    public function actionRiwayatambil() {
+    public function actionRiwayatambil()
+    {
         $params = json_decode(file_get_contents("php://input"), true);
         if (!empty($params['no_wo']) and ! empty($params['kd_jab']) and $params['no_wo']['no_wo'] != '-') {
             $query = new Query;
@@ -86,7 +91,8 @@ class BbkController extends Controller {
         }
     }
 
-    public function beforeAction($event) {
+    public function beforeAction($event)
+    {
         $action = $event->id;
         if (isset($this->actions[$action])) {
             $verbs = $this->actions[$action];
@@ -108,7 +114,8 @@ class BbkController extends Controller {
         return true;
     }
 
-    public function actionBukaprint() {
+    public function actionBukaprint()
+    {
         $params = json_decode(file_get_contents("php://input"), true);
         $centang = $params['no_bbk'];
 
@@ -119,7 +126,8 @@ class BbkController extends Controller {
         }
     }
 
-    public function actionPengecualian() {
+    public function actionPengecualian()
+    {
         $params = json_decode(file_get_contents("php://input"), true);
         if (isset($params['no_wo'])) {
             $optional = \app\models\TransAdditionalBomWo::find()
@@ -184,14 +192,16 @@ class BbkController extends Controller {
         }
     }
 
-    public function actionPrint() {
+    public function actionPrint()
+    {
         $params = json_decode(file_get_contents("php://input"), true);
         $update = TransBbk::findOne($_GET['no_bbk']);
         $update->status = 1;
         $update->save();
     }
 
-    public function actionListbarang() {
+    public function actionListbarang()
+    {
         $params = json_decode(file_get_contents("php://input"), true);
 
         if (!empty($params['no_wo']) and ! empty($params['kd_jab'])) {
@@ -335,7 +345,8 @@ class BbkController extends Controller {
         }
     }
 
-    public function detailbarang($params) {
+    public function detailbarang($params)
+    {
         //cek apakah barang sudah ada di list waktu update dan tambah            
         $kdBrg = array();
         if (isset($params['listBarang'])) {
@@ -493,7 +504,8 @@ class BbkController extends Controller {
         return $returnData;
     }
 
-    public function actionListbarang2() {
+    public function actionListbarang2()
+    {
         $params = json_decode(file_get_contents("php://input"), true);
 
         $data = $this->detailbarang($params);
@@ -501,7 +513,8 @@ class BbkController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $data));
     }
 
-    public function actionKode() {
+    public function actionKode()
+    {
         $query = new Query;
         $query->from('trans_bbk')
                 ->select('*')
@@ -523,7 +536,8 @@ class BbkController extends Controller {
         echo json_encode(array('status' => 1, 'kode' => $kode));
     }
 
-    public function actionDetailstok() {
+    public function actionDetailstok()
+    {
         $params = json_decode(file_get_contents("php://input"), true);
         $sisa_pengambilan = 0;
         $stok_sekarang = 0;
@@ -557,7 +571,8 @@ class BbkController extends Controller {
         echo json_encode(array('data' => $data));
     }
 
-    public function actionListbbk() {
+    public function actionListbbk()
+    {
         $param = $_REQUEST;
         $query = new Query;
         $query->from('trans_bbk')
@@ -574,7 +589,8 @@ class BbkController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $models));
     }
 
-    public function actionIndex() {
+    public function actionIndex()
+    {
         //init variable
         $params = $_REQUEST;
         $filter = array();
@@ -639,7 +655,8 @@ class BbkController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
-    public function searchKet($id) {
+    public function searchKet($id)
+    {
         $patern = $id;
         $query = new Query;
         $query->from('det_bbk')
@@ -657,7 +674,8 @@ class BbkController extends Controller {
         return $data;
     }
 
-    public function searchBrg($id) {
+    public function searchBrg($id)
+    {
         $patern = $id;
         $query = new Query;
         $query->from('det_bbk')
@@ -677,7 +695,8 @@ class BbkController extends Controller {
         return $data;
     }
 
-    public function actionView($id) {
+    public function actionView($id)
+    {
         $model = TransBbk::find()
                         ->leftJoin('tbl_karyawan as tk', 'trans_bbk.penerima = tk.nik')
                         ->leftJoin('tbl_jabatan as tj', 'tj.id_jabatan  = trans_bbk.kd_jab')
@@ -738,7 +757,8 @@ class BbkController extends Controller {
         echo json_encode(array('status' => 1, 'data' => array_filter($model->attributes), 'detail' => $data), JSON_PRETTY_PRINT);
     }
 
-    public function actionCreate() {
+    public function actionCreate()
+    {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = new TransBbk();
         $model->attributes = $params['bbk'];
@@ -780,7 +800,8 @@ class BbkController extends Controller {
         }
     }
 
-    public function actionUpdate($id) {
+    public function actionUpdate($id)
+    {
         $params = json_decode(file_get_contents("php://input"), true);
         $model = TransBbk::find()->where('no_bbk="' . $id . '"')->one();
         $model->attributes = $params['bbk'];
@@ -829,7 +850,8 @@ class BbkController extends Controller {
         }
     }
 
-    public function actionDelete($id) {
+    public function actionDelete($id)
+    {
         $model = TransBbk::find()->where('no_bbk="' . $id . '"')->one();
         if ($model->delete()) {
             // mengembalikan stok barang
@@ -851,7 +873,8 @@ class BbkController extends Controller {
         }
     }
 
-    protected function findModel($id) {
+    protected function findModel($id)
+    {
         if (($model = TransBbk::findOne($id)) !== null) {
             return $model;
         } else {
@@ -862,7 +885,8 @@ class BbkController extends Controller {
         }
     }
 
-    private function setHeader($status) {
+    private function setHeader($status)
+    {
 
         $status_header = 'HTTP/1.1 ' . $status . ' ' . $this->_getStatusCodeMessage($status);
         $content_type = "application/json; charset=utf-8";
@@ -872,7 +896,8 @@ class BbkController extends Controller {
         header('X-Powered-By: ' . "Nintriva <nintriva.com>");
     }
 
-    public function actionRekap() {
+    public function actionRekap()
+    {
         //init variable
         $params = $_REQUEST;
         $filter = array();
@@ -940,7 +965,8 @@ class BbkController extends Controller {
         echo json_encode(array('status' => 1, 'data' => $models, 'totalItems' => $totalItems), JSON_PRETTY_PRINT);
     }
 
-    public function actionExcel() {
+    public function actionExcel()
+    {
         session_start();
         $query = $_SESSION['query'];
         $filter = $_SESSION['filter'];
@@ -949,7 +975,8 @@ class BbkController extends Controller {
         return $this->render("/expretur/rbbk", ['models' => $models, 'filter' => $filter]);
     }
 
-    public function actionExcelbkm() {
+    public function actionExcelbkm()
+    {
         session_start();
         $query = $_SESSION['query'];
         $filter = $_SESSION['filter'];
@@ -958,7 +985,8 @@ class BbkController extends Controller {
         return $this->render("/expretur/rbbkm", ['models' => $models, 'filter' => $filter]);
     }
 
-    public function actionExcelbk() {
+    public function actionExcelbk()
+    {
         session_start();
         $query = $_SESSION['query'];
         $filter = $_SESSION['filter'];
@@ -968,7 +996,8 @@ class BbkController extends Controller {
         return $this->render("/expretur/laporanbk", ['models' => $models, 'filter' => $filter]);
     }
 
-    private function _getStatusCodeMessage($status) {
+    private function _getStatusCodeMessage($status)
+    {
         $codes = Array(
             200 => 'OK',
             400 => 'Bad Request',
@@ -980,6 +1009,16 @@ class BbkController extends Controller {
             501 => 'Not Implemented',
         );
         return (isset($codes[$status])) ? $codes[$status] : '';
+    }
+
+    protected function jsonOutput($data)
+    {
+        header("Cache-Control: max-age =0, no-cache, no-store, must-revalidate");
+        header("Pragma: no-cache");
+        header("Expires: Thu, 01 Jan 1970 00:00:00 GMT");
+        header('Content-type: application/json');
+        echo json_encode($data);
+        exit;
     }
 
 }
