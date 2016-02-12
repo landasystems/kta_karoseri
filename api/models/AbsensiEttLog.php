@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "att_log".
@@ -65,6 +66,23 @@ class AbsensiEttLog extends \yii\db\ActiveRecord {
             'rowguid' => 'Rowguid',
             'io_mode_update' => 'Io Mode Update',
         ];
+    }
+    
+    public static function absen($date_start = '', $date_end = '') {
+        $query = new Query;
+        $query->from('ftm.att_log AS abs')
+                ->select('emp.nik, date(abs.scan_date) AS tanggal, min(abs.scan_date) AS masuk, max(abs.scan_date) AS keluar')
+                ->join('INNER JOIN', 'ftm.emp', 'emp.pin = abs.pin')
+                ->where('date(abs.scan_date)>="'.$date_start.'" AND date(abs.scan_date)<="'.$date_end.'"')
+                ->groupBy('tanggal, nik');
+        
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+        $result = [];
+        foreach ($models as $r) {
+            $result[$r['nik']][$r['tanggal']] = ['masuk' => $r['masuk'], 'keluar' => $r['keluar']];
+        }
+        return $result;
     }
 
     public function getEmp() {
