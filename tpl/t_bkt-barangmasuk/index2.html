@@ -296,9 +296,9 @@
         <div style="margin: 10px; width:33cm">
             <table width="100%" class="no-border">
                 <tr>
-                    <td width="50%" id="print_bbm" style="text-align:center;">
+                    <td width="50%" id="print_bbm">
                         {{form.judul}}<br/>
-                        <div ng-show="form.adaNggak == true">Jl. Raya Sukorejo No. 01<br/>
+                        <div ng-if="form.adaNggak == true">Jl. Raya Sukorejo No. 01<br/>
                             Sukorejo - Pasuruan </div>
                     </td>
                 </tr>
