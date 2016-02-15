@@ -13,6 +13,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
         $scope.jml_po = 0;
         $scope.pilih = {};
         $scope.form = {};
+        $scope.focus = false;
         $scope.autoSelect = false;
         $scope.errorDetail = '';
         $scope.detBbm = [];
@@ -84,23 +85,20 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
         }
     };
 
-//    $scope.findInventory = function ($query) {
-//
-//        if ($query.length >= 3) {
-//            Data.get('po/cari', {nama: $query}).then(function (data) {
-//                $scope.listBarang = data.data;
-//            });
-//        }
-//    };
+    $scope.getPo = function (form) {
+        $scope.form.nm_supplier = form.nama_supplier;
+        $scope.form.kd_supplier = form.kd_supplier;
+        $scope.cariBarang('', form.nota);
+    };
 
-    $scope.cariBarang = function ($query, $po) {
+    $scope.cariBarang = function ($query, $po, $select) {
         $scope.results = [];
         if (typeof $scope.form.po != "undefined" && $scope.is_create == true) {
             Data.post('bbm/caribarang3', {barang: $query, no_po: $po, listBarang: $scope.detBbm}).then(function (data) {
                 if ($scope.is_create == false) {
                     angular.forEach(data.data, function ($value, $key) {
                         $scope.results.push($value);
-                        $scope.results[$key]['sisa_ambil'] = $value
+                        $scope.results[$key]['sisa_ambil'] = $value;
                     });
                 } else {
                     if ($query.length >= 6) {
@@ -108,7 +106,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
                         $scope.form.Barang = data.data[0];
                         $scope.addDetail(data.data[0]);
                         $scope.results = undefined;
-                        $scope.$select.search = undefined;
+                        $select.search = "";
                     } else {
                         $scope.results = data.data;
                     }
@@ -119,7 +117,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
                 if ($scope.is_create == false) {
                     angular.forEach(data.data, function ($value, $key) {
                         $scope.results.push($value);
-                        $scope.results[$key]['sisa_ambil'] = $value
+                        $scope.results[$key]['sisa_ambil'] = $value;
                     });
                 } else {
                     if ($query.length >= 6) {
@@ -127,7 +125,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
                         $scope.form.Barang = data.data[0];
                         $scope.addDetail(data.data[0]);
                         $scope.results = undefined;
-                        $scope.$select.search = undefined;
+                        $select.search = "";
                     } else {
                         $scope.results = data.data;
                     }
@@ -137,11 +135,7 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
         }
 
     };
-    $scope.getPo = function (form) {
-        $scope.form.nm_supplier = form.nama_supplier;
-        $scope.form.kd_supplier = form.kd_supplier;
-        $scope.cariBarang('', form.nota);
-    };
+
     $scope.cariSupplier = function ($query) {
         if ($query.length >= 3) {
             Data.get('supplier/cari', {nama: $query}).then(function (data) {
@@ -192,12 +186,17 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
         $scope.getDetail(form.no_bbm);
     };
     $scope.view = function (form) {
+        var judul = '';
         $scope.is_edit = true;
         $scope.is_false = true;
         $scope.is_view = true;
         $scope.formtitle = "Lihat Data : " + form.no_bbm;
         $scope.form = form;
         $scope.getDetail(form.no_bbm);
+
+//        $scope.form.header = '';
+//        $scope.form.adaNggak = false;
+
     };
     $scope.save = function (form, detBbm) {
         if ($scope.err_jml == false) {
@@ -252,10 +251,10 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
                 $scope.detBbm.push(item);
             }
 
-        }
-        else {
+        } else {
+            $scope.detBbm[0] = {};
             $scope.detBbm[0] = item;
-            $scope.detBbm[0].jumlah = 1;
+            $scope.detBbm[0]['jumlah'] = 1;
         }
         $scope.form.Barang = undefined;
         ada = false;
@@ -288,10 +287,25 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
         }
     };
     $scope.getDetail = function (id) {
+        var judul = '';
         Data.get('bbm/view/' + id).then(function (data) {
             $scope.form = data.data;
             $scope.form.nm_supplier = data.sup.nama_supplier;
             $scope.form.alamat_supplier = data.sup.alamat;
+            if ($scope.form.po.nota.substr(0, 3) == 'PCH') {
+                judul = 'PT. KARYA TUGAS ANDA';
+                $scope.form.adaNggak = true;
+            } else if ($scope.form.po.nota.substr(0, 3) == 'TCI') {
+                judul = 'TUGASANDA CONSTRUCTION INDONESIA';
+                $scope.form.adaNggak = true;
+            } else if ($scope.form.po.nota.substr(0, 3) == 'SSS') {
+                judul = 'PT. SUMBER SEJAHTERA INDONESIA';
+                $scope.form.adaNggak = false;
+            } else if ($scope.form.po.nota.substr(0, 3) == 'KKS') {
+                judul = 'KARYA KELOLA SEMESTA';
+                $scope.form.adaNggak = false;
+            }
+            $scope.form.judul = judul;
             $scope.detBbm = [];
             angular.forEach(data.details, function ($value, $key) {
                 $scope.detBbm.push($value);
@@ -300,6 +314,11 @@ app.controller('bbmCtrl', function ($scope, Data, toaster, keyboardManager) {
         });
 
     };
+
+    $scope.setFocus = function () {
+        $scope.$broadcast('SetFocus');
+    };
+
     $scope.excel = function (id) {
         window.location = 'api/web/bbm/exceldet/' + id;
     };

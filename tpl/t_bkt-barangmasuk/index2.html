@@ -212,9 +212,9 @@
                             <label class="col-sm-2 control-label">Cari Barang</label>
                             <div class="col-sm-4">
                                 <div class="input-group">
-                                    <ui-select id="selections" focus-on="enter" ng-change="addDetail($item)" on-select="addDetail($item)" ng-disabled="is_view" ng-model="form.Barang" theme="bootstrap">
+                                    <ui-select id="selections" focus-on="SetFocus" on-select="addDetail($item)" ng-disabled="is_view" ng-model="form.Barang" theme="bootstrap">
                                         <ui-select-match>{{$select.selected.nota}}</ui-select-match>
-                                        <ui-select-choices refresh="cariBarang($select.search,form.po.nota)" repeat="val in results">
+                                        <ui-select-choices refresh="cariBarang($select.search,form.po.nota,$select)" repeat="val in results">
                                             {{val.kd_barang}}<br/>
                                             <small>{{val.nm_barang}}</small>
                                         </ui-select-choices>
@@ -258,6 +258,7 @@
                                 <td>
                                     <input type="text" 
                                            ng-disabled="is_view"
+                                           ng-enter="setFocus()"
                                            ng-model="detail.keterangan"  
                                            class="form-control"/>
                                 </td>
@@ -296,9 +297,9 @@
             <table width="100%" class="no-border">
                 <tr>
                     <td width="50%" id="print_bbm">
-                        PT. KARYA TUGAS ANDA <br>
-                        Jl. Raya Sukorejo No. 01<br>
-                        Sukorejo - Pasuruan 
+                        {{form.judul}}<br/>
+                        <div ng-if="form.adaNggak == true">Jl. Raya Sukorejo No. 01<br/>
+                            Sukorejo - Pasuruan </div>
                     </td>
                 </tr>
             </table>

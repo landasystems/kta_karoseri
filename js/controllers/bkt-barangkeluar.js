@@ -100,6 +100,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
 //    }
 
     $scope.kalkulasi2 = function (indek) {
+        console.log($scope.detailBbk[indek]);
         if ($scope.form.kat_bbk == 'produksi') {
             var jml = ($scope.detailBbk[indek]['jml']) ? $scope.detailBbk[indek]['jml'] : 0;
 
@@ -378,6 +379,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
         } else {
             toaster.pop('error', "Pastikan semua detail bbk terisi dengan benar");
         }
+        console.log($scope.detailBbk);
     };
     $scope.removeRow = function (paramindex) {
         var comArr = eval($scope.detailBbk);
