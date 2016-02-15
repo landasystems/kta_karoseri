@@ -295,16 +295,16 @@
                                 <label class="col-sm-2 control-label">Cari Barang</label>
                                 <div class="col-sm-4">
                                     <div class="input-group">
-                                        <ui-select ng-if="form.kat_bbk == 'umum'" focus="{{focus}}" on-select="addDetail(form.kat_bbk,$item)" ng-disabled="is_view" ng-model="form.Barang" theme="bootstrap">
+                                        <ui-select ng-if="form.kat_bbk == 'umum'" focus-on="SetFocus" on-select="addDetail(form.kat_bbk,$item)" ng-disabled="is_view" ng-model="form.Barang" theme="bootstrap" reset-search-input="true">
                                             <ui-select-match>{{$select.selected.nota}}</ui-select-match>
-                                            <ui-select-choices refresh="listBarang($select.search, form.no_wo, form.kd_jab)" repeat="val in resultsbarang">
+                                            <ui-select-choices refresh="listBarang($select.search, form.no_wo, form.kd_jab,$select)" repeat="val in resultsbarang">
                                                 {{val.kd_barang}}<br/>
                                                 <small>{{val.nm_barang}}</small>
                                             </ui-select-choices>
                                         </ui-select>
-                                        <ui-select ng-if="form.kat_bbk == 'produksi'" focus="{{focus}}" on-select="addDetail(form.kat_bbk,$item)" ng-disabled="is_view" ng-model="form.Barang" theme="bootstrap">
+                                        <ui-select ng-if="form.kat_bbk == 'produksi'" focus-on="SetFocus" on-select="addDetail(form.kat_bbk,$item)" ng-disabled="is_view" ng-model="form.Barang" theme="bootstrap" reset-search-input="true">
                                             <ui-select-match>{{$select.selected.nota}}</ui-select-match>
-                                            <ui-select-choices refresh="cariBarang(form,$select.search)" repeat="val in resultsbarang">
+                                            <ui-select-choices refresh="cariBarang(form,$select.search,$select)" repeat="val in resultsbarang">
                                                 {{val.kd_barang}}<br/>
                                                 <small>{{val.nm_barang}}</small>
                                             </ui-select-choices>
@@ -367,7 +367,7 @@
                                         </td>
                                         <td style="text-align: center">{{detail.satuan}}</td>
                                         <td ng-if="form.kat_bbk == 'produksi'"><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control"></td>
-                                        <td ng-if="form.kat_bbk == 'umum'"><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control" ng-enter="addDetail('');"></td>
+                                        <td ng-if="form.kat_bbk == 'umum'"><input type="text" ng-disabled="is_view" ng-model="detail.ket" class="form-control" ng-enter="setFocus();"></td>
                                         <td ng-if="form.kat_bbk == 'umum'">
                                             <button  ng-show="is_view != true" ng-click="removeRow($index)" class="btn btn-danger"  ng-disabled="is_view" style="width:50px;" title="Hapus Detail"><i class="fa fa-trash-o"></i></button>
                                         </td>    

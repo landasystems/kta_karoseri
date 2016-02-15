@@ -695,7 +695,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                 $scope.kalkulasi2($key);
             });
         }
-    }
+    };
 
     $scope.detPrint = function (detail) {
         $scope.halamanPrint = Math.ceil(detail.length / 8);
@@ -714,7 +714,11 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
                 index++;
             }
         }
-    }
+    };
+    
+    $scope.setFocus = function(){
+        $scope.$broadcast('SetFocus');
+    };
 
     keyboardManager.bind('ctrl+s', function () {
         if ($scope.is_create == true) {
