@@ -128,7 +128,9 @@ class PoController extends Controller {
                 ->where(['like','nota',$kodes])
                 ->limit(10)
                 ->orderBy('nota DESC');
-
+        if($nama == 'PT KARYA TUGAS ANDA'){
+            $query->andWhere(['dikirim_ke' => $nama]);
+        }
         $command = $query->createCommand();
         $models = $command->queryOne();
         
