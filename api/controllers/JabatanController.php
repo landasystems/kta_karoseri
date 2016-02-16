@@ -236,7 +236,7 @@ class JabatanController extends Controller {
         $query->from('tbl_karyawan')
                 ->select("nik, nama")
                 ->where('nama like "%' . $param['nama'] . '%"')
-                ->andWhere(['department' => 'DPRT005']);
+                ->andWhere(['department' => 'DPRT014']);
 
         $command = $query->createCommand();
         $models = $command->queryAll();
