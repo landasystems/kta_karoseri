@@ -72,7 +72,7 @@ class WipController extends Controller {
                 ->join('LEFT JOIN', 'view_wo_spk', 'view_wo_spk.no_wo = wo_masuk.no_wo')
                 ->select("*")
                 ->where(['like', 'wo_masuk.no_wo', $params['no_wo']])
-                ->andWhere('wo_masuk.tgl_keluar IS NULL or wo_masuk.tgl_keluar=""')
+//                ->andWhere('wo_masuk.tgl_keluar IS NULL or wo_masuk.tgl_keluar=""')
                 ->limit(10);
         $command = $query->createCommand();
         $models = $command->queryAll();
