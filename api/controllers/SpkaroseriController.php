@@ -281,29 +281,30 @@ class SpkaroseriController extends Controller {
         $model->nik = $params['nik']['nik'];
         $model->kd_bom = $params['kd_bom']['kd_bom'];
         $model->kd_model = $params['kd_model']['kd_model'];
-        if ($params['no_spk'] != $params['no_spk_baru']) {
-            $model->no_spk = $params['no_spk_baru'];
-            // SERAH TERIMA INTERNAL
-            $cari = Serahterimain::find()->where('no_spk="' . $params['no_spk'] . '"')->all();
-            if(!empty($cari)){
-                foreach ($cari as $val) {
-                $sti = Serahterimain::find()->where('no_spk="' . $val->no_spk . '"')->one();
-                $sti->no_spk = $params['no_spk_baru'];
-                $sti->save();
-            }
-            }
-            
-            
+        if (!empty($params['no_spk_baru'])) {
+            if ($params['no_spk'] != $params['no_spk_baru']) {
+                $model->no_spk = $params['no_spk_baru'];
+                // SERAH TERIMA INTERNAL
+                $cari = Serahterimain::find()->where('no_spk="' . $params['no_spk'] . '"')->all();
+                if (!empty($cari)) {
+                    foreach ($cari as $val) {
+                        $sti = Serahterimain::find()->where('no_spk="' . $val->no_spk . '"')->one();
+                        $sti->no_spk = $params['no_spk_baru'];
+                        $sti->save();
+                    }
+                }
+
+
 //            WO MASUK
-             $cari2 = Womasuk::find()->where('no_spk="' . $params['no_spk'] . '"')->all();
-             if(!empty($cari2)){
-                 foreach ($cari2 as $val) {
-                $sti = Womasuk::find()->where('no_spk="' . $val->no_spk . '"')->one();
-                $sti->no_spk = $params['no_spk_baru'];
-                $sti->save();
+                $cari2 = Womasuk::find()->where('no_spk="' . $params['no_spk'] . '"')->all();
+                if (!empty($cari2)) {
+                    foreach ($cari2 as $val) {
+                        $sti = Womasuk::find()->where('no_spk="' . $val->no_spk . '"')->one();
+                        $sti->no_spk = $params['no_spk_baru'];
+                        $sti->save();
+                    }
+                }
             }
-             }
-            
         }
 
         if ($model->save()) {
