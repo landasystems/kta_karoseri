@@ -100,6 +100,7 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
 //    }
 
     $scope.kalkulasi2 = function (indek) {
+        console.log($scope.detailBbk[indek]);
         if ($scope.form.kat_bbk == 'produksi') {
             var jml = ($scope.detailBbk[indek]['jml']) ? $scope.detailBbk[indek]['jml'] : 0;
 
@@ -169,43 +170,43 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
         }
     }
 
-//    $scope.kalkulasi = function (sisa, stok, jml_keluar) {
-//        if (jml_keluar > 0) {
-//            $scope.err_pengambilan = false;
-//            if (typeof $scope.form.no_wo != "undefined") {
-//                var sSisa = sisa - jml_keluar;
-//                var sStok = stok - jml_keluar;
-//                if (sisa == 0) {
-//                    $scope.err_pengambilan = true;
-//                    toaster.pop('error', "Sisa pengambilan bahan telah habis");
-//                } else if (stok == 0) {
-//                    $scope.err_pengambilan = true;
-//                    toaster.pop('error', "Stok bahan telah habis");
-//                } else if (sSisa >= 0 && sStok >= 0) {
-//                    $scope.err_pengambilan = false;
-//                    $scope.sisa_pengambilan = sisa - jml_keluar;
-//                    $scope.stok_sekarang = stok - jml_keluar;
-//                    ($scope.sisa_pengambilan > 0) ? $scope.detailBbk.jml = $scope.detailBbk.jml : $scope.detailBbk.jml = 0;
-//                    ($scope.sisa_pengambilan >= 0) ? $scope.sisa_pengambilan = $scope.sisa_pengambilan : $scope.sisa_pengambilan = 0;
-//                } else {
-//                    $scope.err_pengambilan = true;
-//                    toaster.pop('error', "Jumlah tidak boleh melebihi sisa pengambilan bahan");
-//                }
-//            } else {
-//                $scope.sisa_pengambilan = 0;
-//                $scope.stok_sekarang = stok - jml_keluar;
-//                if ($scope.stok_sekarang < 0) {
-//                    toaster.pop('error', "Jumlah tidak boleh melebihi stok sekarang");
-//                    $scope.err_pengambilan = true;
-//                } else {
-//                    $scope.err_pengambilan = false;
-//                }
-//            }
-//        } else {
-//            toaster.pop('error', "Jumlah tidak boleh ada yang kosong");
-//            $scope.err_pengambilan = true;
-//        }
-//    }
+    $scope.kalkulasi = function (sisa, stok, jml_keluar) {
+        if (jml_keluar > 0) {
+            $scope.err_pengambilan = false;
+            if (typeof $scope.form.no_wo != "undefined") {
+                var sSisa = sisa - jml_keluar;
+                var sStok = stok - jml_keluar;
+                if (sisa == 0) {
+                    $scope.err_pengambilan = true;
+                    toaster.pop('error', "Sisa pengambilan bahan telah habis");
+                } else if (stok == 0) {
+                    $scope.err_pengambilan = true;
+                    toaster.pop('error', "Stok bahan telah habis");
+                } else if (sSisa >= 0 && sStok >= 0) {
+                    $scope.err_pengambilan = false;
+                    $scope.sisa_pengambilan = sisa - jml_keluar;
+                    $scope.stok_sekarang = stok - jml_keluar;
+                    ($scope.sisa_pengambilan > 0) ? $scope.detailBbk.jml = $scope.detailBbk.jml : $scope.detailBbk.jml = 0;
+                    ($scope.sisa_pengambilan >= 0) ? $scope.sisa_pengambilan = $scope.sisa_pengambilan : $scope.sisa_pengambilan = 0;
+                } else {
+                    $scope.err_pengambilan = true;
+                    toaster.pop('error', "Jumlah tidak boleh melebihi sisa pengambilan bahan");
+                }
+            } else {
+                $scope.sisa_pengambilan = 0;
+                $scope.stok_sekarang = stok - jml_keluar;
+                if ($scope.stok_sekarang < 0) {
+                    toaster.pop('error', "Jumlah tidak boleh melebihi stok sekarang");
+                    $scope.err_pengambilan = true;
+                } else {
+                    $scope.err_pengambilan = false;
+                }
+            }
+        } else {
+            toaster.pop('error', "Jumlah tidak boleh ada yang kosong");
+            $scope.err_pengambilan = true;
+        }
+    }
 
     $scope.cariWo = function ($query) {
         Data.get('wo/wospk', {nama: $query}).then(function (data) {
@@ -213,20 +214,20 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
         });
     }
 
-//    $scope.cariJabatan = function ($query) {
-//        Data.get('jabatan/cari', {nama: $query}).then(function (data) {
-//            $scope.resultsjabatan = data.data;
-//        });
-//    }
+    $scope.cariJabatan = function ($query) {
+        Data.get('jabatan/cari', {nama: $query}).then(function (data) {
+            $scope.resultsjabatan = data.data;
+        });
+    }
 
     $scope.cariJabatan2 = function (no_wo, nama) {
         Data.get('jabatan/cari2', {no_wo: no_wo, nama: nama, kat_bbk: $scope.form.kat_bbk}).then(function (data) {
             $scope.resultsjabatan = data.data;
         });
 
-//        if ($scope.is_create == true && $scope.form.no_wo != '') {
-//            $scope.kalkulasiCopy();
-//        }
+        if ($scope.is_create == true && $scope.form.no_wo != '') {
+            $scope.kalkulasiCopy();
+        }
     }
 
     $scope.cariKaryawan = function ($query) {
@@ -250,49 +251,49 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
         }
     }
 
-//    $scope.listBarang = function ($query, no_wo, kd_jab) {
-//        if (typeof no_wo != "undefined" && ($scope.noWoasli == no_wo.no_wo) && $scope.is_create == true) {
-//            toaster.pop('error', "Masukkan nomor wo yang lain");
-//            $scope.form.no_wo = '';
-//        } else {
-//            //============== jika tambah =============//
-//            if (typeof $scope.form.no_wo != "undefined" && typeof $scope.form.kd_jab != "undefined" && $scope.is_create == true && $scope.is_copy == false) {
-//                Data.post('bbk/listbarang', {nama: $query, no_wo: no_wo, kd_jab: kd_jab, listBarang: $scope.detailBbk}).then(function (data) {
-//                    $scope.resultsbarang = data.data;
-//                    $scope.resultsbarang.stok = data.data.stok_sekarang;
-//                });
-//                if ($scope.is_create == true) {
-//                    $scope.riwayatAmbil(no_wo, kd_jab);
-//                }
-//            }
-//            //=============== jika copy bbk ================//
-//            else if (typeof $scope.form.no_wo != "undefined" && $scope.form.no_wo != '' && typeof $scope.form.kd_jab != "undefined" && $scope.is_create == true && $scope.is_copy == true) {
-//                Data.post('bbk/listbarang', {nama: $query, no_wo: no_wo, kd_jab: kd_jab, listBarang: [{}]}).then(function (data) {
-//                    angular.forEach(data.data, function ($value, $key) {
-//                        $scope.resultsbarang.push($value);
-//                        angular.forEach($scope.detailBbk, function ($value2, $key2) {
-//                            if ($value2.kd_barang.kd_barang == $value.kd_barang) {
-//                                $scope.detailBbk[$key2]['kd_barang'] = $value;
-//                                $scope.kalkulasi($value.sisa_pengambilan, $value.stok_sekarang, $value2.jml);
-//                                if ($scope.err_pengambilan == true) {
-//                                    $value2.jml = 0;
-//                                }
-//                            }
-//                        });
-//                    });
-//                });
-//                if ($scope.is_create == true) {
-//                    $scope.riwayatAmbil(no_wo, kd_jab);
-//                }
-//            }
-//            //================ jika no wo kosong ===============//
-//            else if ($query.length >= 2) {
-//                Data.post('bbk/listbarang', {nama: $query, no_wo: no_wo, kd_jab: kd_jab, listBarang: $scope.detailBbk}).then(function (data) {
-//                    $scope.resultsbarang = data.data;
-//                });
-//            }
-//        }
-//    }
+    $scope.listBarang = function ($query, no_wo, kd_jab) {
+        if (typeof no_wo != "undefined" && ($scope.noWoasli == no_wo.no_wo) && $scope.is_create == true) {
+            toaster.pop('error', "Masukkan nomor wo yang lain");
+            $scope.form.no_wo = '';
+        } else {
+            //============== jika tambah =============//
+            if (typeof $scope.form.no_wo != "undefined" && typeof $scope.form.kd_jab != "undefined" && $scope.is_create == true && $scope.is_copy == false) {
+                Data.post('bbk/listbarang', {nama: $query, no_wo: no_wo, kd_jab: kd_jab, listBarang: $scope.detailBbk}).then(function (data) {
+                    $scope.resultsbarang = data.data;
+                    $scope.resultsbarang.stok = data.data.stok_sekarang;
+                });
+                if ($scope.is_create == true) {
+                    $scope.riwayatAmbil(no_wo, kd_jab);
+                }
+            }
+            //=============== jika copy bbk ================//
+            else if (typeof $scope.form.no_wo != "undefined" && $scope.form.no_wo != '' && typeof $scope.form.kd_jab != "undefined" && $scope.is_create == true && $scope.is_copy == true) {
+                Data.post('bbk/listbarang', {nama: $query, no_wo: no_wo, kd_jab: kd_jab, listBarang: [{}]}).then(function (data) {
+                    angular.forEach(data.data, function ($value, $key) {
+                        $scope.resultsbarang.push($value);
+                        angular.forEach($scope.detailBbk, function ($value2, $key2) {
+                            if ($value2.kd_barang.kd_barang == $value.kd_barang) {
+                                $scope.detailBbk[$key2]['kd_barang'] = $value;
+                                $scope.kalkulasi($value.sisa_pengambilan, $value.stok_sekarang, $value2.jml);
+                                if ($scope.err_pengambilan == true) {
+                                    $value2.jml = 0;
+                                }
+                            }
+                        });
+                    });
+                });
+                if ($scope.is_create == true) {
+                    $scope.riwayatAmbil(no_wo, kd_jab);
+                }
+            }
+            //================ jika no wo kosong ===============//
+            else if ($query.length >= 2) {
+                Data.post('bbk/listbarang', {nama: $query, no_wo: no_wo, kd_jab: kd_jab, listBarang: $scope.detailBbk}).then(function (data) {
+                    $scope.resultsbarang = data.data;
+                });
+            }
+        }
+    }
 
     $scope.listBarang2 = function ($query, no_wo, kd_jab) {
         if (typeof no_wo != "undefined" && ($scope.noWoasli == no_wo.no_wo)) {
@@ -367,25 +368,26 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
         }
     }
 
-//    $scope.addDetail = function () {
-//        $scope.autoSelect = true;
-//        if ($scope.err_pengambilan == false || $scope.detailBbk.length == 0) {
-//            $scope.detailBbk.unshift({
-//                kd_barang: '',
-//                jml: '',
-//                ket: '',
-//            });
-//        } else {
-//            toaster.pop('error', "Pastikan semua detail bbk terisi dengan benar");
-//        }
-//    };
-//    $scope.removeRow = function (paramindex) {
-//        var comArr = eval($scope.detailBbk);
-//        $scope.detailBbk.splice(paramindex, 1);
-//        angular.forEach($scope.detailBbk, function ($value, $key) {
-//            $scope.kalkulasi($value.kd_barang.sisa_pengambilan, $value.kd_barang.stok_sekarang, $value.jml);
-//        });
-//    };
+    $scope.addDetail = function () {
+        $scope.autoSelect = true;
+        if ($scope.err_pengambilan == false || $scope.detailBbk.length == 0) {
+            $scope.detailBbk.unshift({
+                kd_barang: '',
+                jml: '',
+                ket: '',
+            });
+        } else {
+            toaster.pop('error', "Pastikan semua detail bbk terisi dengan benar");
+        }
+        console.log($scope.detailBbk);
+    };
+    $scope.removeRow = function (paramindex) {
+        var comArr = eval($scope.detailBbk);
+        $scope.detailBbk.splice(paramindex, 1);
+        angular.forEach($scope.detailBbk, function ($value, $key) {
+            $scope.kalkulasi($value.kd_barang.sisa_pengambilan, $value.kd_barang.stok_sekarang, $value.jml);
+        });
+    };
 
     $scope.open1 = function ($event) {
         $event.preventDefault();
@@ -534,6 +536,10 @@ app.controller('bbkCtrl', function ($scope, Data, toaster, $modal, keyboardManag
     $scope.umum = function () {
         $scope.create();
         $scope.form.kat_bbk = 'umum';
+    };
+    $scope.produksi = function () {
+        $scope.create();
+        $scope.form.kat_bbk = 'produksi';
     };
     $scope.cancel = function () {
         $scope.callServer(tableStateRef); //reload grid ulang

@@ -127,6 +127,20 @@
                         <div class="col-md-12 col-sm-12">
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">
+                                    <label class="col-sm-3 control-label">Dikirim Ke</label>
+                                    <div class="col-sm-6">
+                                        <!--<input type="text" class="form-control" ng-model="form.dikirim_ke" ng-disabled="is_view" required/>-->
+                                    <select ng-disabled="is_create==false" ng-model="form.dikirim_ke"  class="form-control"  required ng-change="getcode(form.dikirim_ke)">
+                                        <option  value="">.::Pilih Dikirim Ke::.</option>
+                                        <option  value="PT KARYA TUGAS ANDA">PT KARYA TUGAS ANDA</option>
+                                        <option value="PT KARYA KELOLA SEMESTA">PT KARYA KELOLA SEMESTA</option>
+                                        <option value="PT SUMBER SEJAHTERA SEMESTA">PT SUMBER SEJAHTERA SEMESTA</option>
+                                        <option value="PT WILMAR NABATI GRESIK">PT WILMAR NABATI GRESIK</option>
+                                        <option value="PT TUGASANDA CONSTRUCTION INDONESIA">PT TUGASANDA CONSTRUCTION INDONESIA</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label class="col-sm-3 control-label">Nomor PO</label>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control" ng-model="form.nota" ng-disabled="is_view" ng-readonly="is_create == false"/>
@@ -140,15 +154,6 @@
                                             <span class="input-group-addon">
                                                 <i class="glyphicon glyphicon-calendar"></i>
                                             </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">Pilihan</label>
-                                    <div class="col-sm-6">
-                                        <div class="btn-group">
-                                            <label class="btn btn-default"  ng-model="form.status_po" btn-radio="'1'"  required> PO Produksi</label>
-                                            <label class="btn btn-default"  ng-model="form.status_po" btn-radio="'0'"  required> PO Non Produksi</label>
                                         </div>
                                     </div>
                                 </div>
@@ -168,6 +173,15 @@
                                 </div>
                             </div>
                             <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Pilihan</label>
+                                    <div class="col-sm-6">
+                                        <div class="btn-group">
+                                            <label class="btn btn-default"  ng-model="form.status_po" btn-radio="'1'"  required> PO Produksi</label>
+                                            <label class="btn btn-default"  ng-model="form.status_po" btn-radio="'0'"  required> PO Non Produksi</label>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">&nbsp;Kepada Yth</label>
                                     <div class="col-sm-6">
@@ -190,19 +204,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-sm-3 control-label">Dikirim Ke</label>
-                                    <div class="col-sm-6">
-                                        <!--<input type="text" class="form-control" ng-model="form.dikirim_ke" ng-disabled="is_view" required/>-->
-                                    <select ng-disabled="is_create==false" ng-model="form.dikirim_ke"  class="form-control"  required ng-change="getcode(form.dikirim_ke)">
-                                        <option  value="PT KARYA TUGAS ANDA">PT KARYA TUGAS ANDA</option>
-                                        <option value="PT KARYA KELOLA SEMESTA">PT KARYA KELOLA SEMESTA</option>
-                                        <option value="PT SUMBER SEJAHTERA SEMESTA">PT SUMBER SEJAHTERA SEMESTA</option>
-                                        <option value="PT TUGASANDA BERSAMA JAYA">PT TUGASANDA BERSAMA JAYA</option>
-                                        <option value="PT TUGASANDA CONSTRUCTION INDONESIA">PT TUGASANDA CONSTRUCTION INDONESIA</option>
-                                    </select>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -468,7 +470,7 @@
                                 <tr>
                                     <td style="font-size: 9pt;width:28%;font-weight: bold;" id="print_po">Kepada Yth.</td>
                                     <td style="font-size: 9pt;font-weight: bold;" width="2" id="print_po">:</td>
-                                    <td style="font-size: 9pt;" id="print_po"><b>{{form.supplier.nama_supplier}}</b></td>
+                                    <td style="font-size: 8pt;" id="print_po"><b>{{form.supplier.nama_supplier}}</b></td>
                                 </tr>
                             </table>
                         </td>
@@ -566,7 +568,7 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td colspan="2" id="print_po" style="font-size: 9pt;font-weight: bold;">{{form.terbilang| uppercase}}</td>
+                                <td colspan="2" id="print_po" style="font-size: 8pt;font-weight: bold;">{{form.terbilang| uppercase}}</td>
                             </tr>
                         </table>
                     </td>

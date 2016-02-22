@@ -106,69 +106,48 @@ class PoController extends Controller {
 
     public function actionKode() {
         $params = $_REQUEST;
-        $nama = $params['nama'];
+         $nama = $params['nama'];
+         
+        if ($nama == 'PT KARYA TUGAS ANDA') {
+            $kd = "PCH";
+        } else if ($nama == 'PT KARYA KELOLA SEMESTA') {
+            $kd = "KKS";
+        } else if ($nama == 'PT SUMBER SEJAHTERA SEMESTA') {
+            $kd = "SSS";
+        }else if ($nama == 'PT WILMAR NABATI GRESIK') {
+            $kd = "TABJ";
+        }else if ($nama == 'PT TUGASANDA CONSTRUCTION INDONESIA') {
+            $kd = "TCI";
+        }
+        $kodes = $kd.date("y");
+        
+        
         $query = new Query;
         $query->from('trans_po')
                 ->select('*')
-                ->where(['dikirim_ke' => $nama])
-                ->orderBy('nota DESC')
-                ->limit(1);
-
-        $command = $query->createCommand();
-        $models = $command->query()->read();
-
-        if ($nama == 'PT KARYA TUGAS ANDA') {
-            $cek = TransPo::find()
-                    ->where('nota = "PCH' . date("y") . '0001"')
-                    ->One();
-        } else if ($nama == 'PT KARYA KELOLA SEMESTA') {
-            $cek = TransPo::find()
-                    ->where('nota = "KKS' . date("y") . '0001"')
-                    ->One();
-        } else if ($nama == 'PT SUMBER SEJAHTERA SEMESTA') {
-            $cek = TransPo::find()
-                    ->where('nota = "SSS' . date("y") . '0001"')
-                    ->One();
-        }else if ($nama == 'PT TUGASANDA BERSAMA JAYA') {
-            $cek = TransPo::find()
-                    ->where('nota = "TABJ' . date("y") . '0001"')
-                    ->One();
-        }else if ($nama == 'PT TUGASANDA CONSTRUCTION INDONESIA') {
-            $cek = TransPo::find()
-                    ->where('nota = "TCI' . date("y") . '0001"')
-                    ->One();
+                ->where(['like','nota',$kodes])
+                ->limit(10)
+                ->orderBy('nota DESC');
+        if($nama == 'PT KARYA TUGAS ANDA'){
+            $query->andWhere(['dikirim_ke' => $nama]);
         }
-
-//        Yii::error($cek);
+        $command = $query->createCommand();
+        $models = $command->queryOne();
+        
+         $cek = TransPo::find()
+                    ->where(['nota' => $kd.date("y")."0001"])
+                    ->One();
 
         if (!empty($cek)) {
 
             $kode_mdl = (substr($models['nota'], -4) + 1);
             $kode = substr('0000' . $kode_mdl, strlen($kode_mdl));
-
-            if ($nama == 'PT KARYA TUGAS ANDA') {
-                $kode_s = "PCH" . date("y") . $kode;
-            } else if ($nama == 'PT KARYA KELOLA SEMESTA') {
-                $kode_s = "KKS" . date("y") . $kode;
-            } else if ($nama == 'PT SUMBER SEJAHTERA SEMESTA') {
-                $kode_s = "SSS" . date("y") . $kode;
-            } else if ($nama == 'PT TUGASANDA BERSAMA JAYA') {
-                $kode_s = "TABJ" . date("y") . $kode;
-            } else if ($nama == 'PT TUGASANDA CONSTRUCTION INDONESIA') {
-                $kode_s = "TCI" . date("y") . $kode;
-            }
+            
+            $kode_s = $kd . date("y") . $kode;
+//            
         } else {
-            if ($nama == 'PT KARYA TUGAS ANDA') {
-                $kode_s = "PCH" . date("y") . '0001';
-            } else if ($nama == 'PT KARYA KELOLA SEMESTA') {
-                $kode_s = "KKS" . date("y") . '0001';
-            } else if ($nama == 'PT SUMBER SEJAHTERA SEMESTA') {
-                $kode_s = "SSS" . date("y") . '0001';
-            } else if ($nama == 'PT TUGASANDA BERSAMA JAYA') {
-                $kode_s = "TABJ" . date("y") . '0001';
-            } else if ($nama == 'PT TUGASANDA CONSTRUCTION INDONESIA') {
-                $kode_s = "TCI" . date("y") . '0001';
-            }
+            $kode_s = $kd . date("y") . '0001';
+//            
         }
         $this->setHeader(200);
 
