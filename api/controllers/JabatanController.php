@@ -128,23 +128,6 @@ class JabatanController extends Controller {
     public function actionListkaryawanabsent() {
         $param = $_REQUEST;
 
-        $abs = AbsensiEttLog::absen(date("Y-m-d"), date("Y-m-d"));
-
-        $query = new Query;
-        $query->select("tk.nik, tk.nama, tjb.jabatan")
-                ->from("tbl_karyawan as tk")
-                ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = tk.jabatan')
-                ->where('nama like "%' . $param['nama'] . '%"')
-                ->limit(20);
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-        $data = array();
-        foreach ($models as $val) {
-            if (isset($abs[$val['nik']])) {
-                $data[] = $val;
-            }
-        }
-
 //        $absen = AbsensiEttLog::find()
 //                ->joinWith('emp')
 //                ->join('RIGHT JOIN', 'purchassing.tbl_karyawan', 'purchassing.tbl_karyawan.nik = emp.nik')
@@ -155,19 +138,21 @@ class JabatanController extends Controller {
 //                ->andWhere('emp.nik != "-"')
 //                ->limit(100)
 //                ->all();
-//        $query = new Query;
-//        $query->select("tk.nik, tk.nama, tjb.jabatana")
-//                ->from('purchassing.tbl_karyawan as tk')
-//                ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = tk.jabatan')
-//                ->join('JOIN', 'ftm.emp as emp', 'emp.nik = tk.nik')
-//                ->join('JOIN', 'ftm.att_log as att_log', 'att_log.pin = emp.pin')
-//                ->where('date(att_log.scan_date) = "' . date("Y-m-d") . '"')
-//                ->andWhere('tk.nama like "%' . $param['nama'] . '%"')
-//                ->groupBy('tk.nik')
-//                ->limit(20);
-//
-//        $command = $query->createCommand();
-//        $models = $command->queryAll();
+
+        $query = new Query;
+        $query->select("tk.nik, tk.nama, tjb.jabatan")
+                ->from('purchassing.tbl_karyawan as tk')
+                ->join('LEFT JOIN', 'tbl_jabatan as tjb', 'tjb.id_jabatan = tk.jabatan')
+                ->join('JOIN', 'ftm.emp as emp', 'emp.nik = tk.nik')
+                ->join('JOIN', 'ftm.att_log as att_log', 'att_log.pin = emp.pin')
+                ->where('date(att_log.scan_date) = "' . date("Y-m-d") . '"')
+                ->andWhere('tk.nama like "%' . $param['nama'] . '%"')
+                ->groupBy('tk.nik')
+                ->limit(20);
+
+        $command = $query->createCommand();
+        $models = $command->queryAll();
+
 //        $data = array();
 //        foreach ($absen as $key => $val) {
 //            $data[$key]['nik'] = $val->emp->nik;
@@ -175,7 +160,7 @@ class JabatanController extends Controller {
 //        }
 //        }
 
-        echo json_encode(array('status' => 1, 'data' => $data));
+        echo json_encode(array('status' => 1, 'data' => $models));
     }
 
     public function actionListkaryawanabsentjabatan() {
@@ -236,7 +221,7 @@ class JabatanController extends Controller {
         $query->from('tbl_karyawan')
                 ->select("nik, nama")
                 ->where('nama like "%' . $param['nama'] . '%"')
-                ->andWhere(['department' => 'DPRT014']);
+                ->andWhere(['department' => 'DPRT005']);
 
         $command = $query->createCommand();
         $models = $command->queryAll();

@@ -253,18 +253,18 @@ class RekapController extends Controller {
         $query = new Query;
         $query->offset($offset)
                 ->limit($limit)
-                ->from('view_wo_spk as vws')
-                ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo = vws.no_wo')
-                ->join('LEFT JOIN', 'chassis', 'chassis.kd_chassis = vws.kd_chassis')
-                ->join('LEFT JOIN', 'model', 'model.kd_model = vws.kd_model')
-                ->join('LEFT JOIN', 'customer', 'customer.kd_cust = vws.kd_cust')
-                ->join('LEFT JOIN', 'serah_terima_in as sti', 'sti.kd_titipan = vws.kd_titipan')
-                ->join('LEFT JOIN', 'spk', 'vws.no_spk = spk.no_spk')
+                ->from('wo_masuk as wm')
+//                ->join('LEFT JOIN', 'wo_masuk as wm', 'wm.no_wo = vws.no_wo')
+                ->join('LEFT JOIN', 'spk', 'wm.no_spk = spk.no_spk')
+                ->join('LEFT JOIN', 'chassis', 'chassis.kd_chassis = spk.kd_chassis')
+                ->join('LEFT JOIN', 'model', 'model.kd_model = spk.kd_model')
+                ->join('LEFT JOIN', 'customer', 'customer.kd_cust = spk.kd_customer')
+                ->join('LEFT JOIN', 'serah_terima_in as sti', 'sti.kd_titipan = wm.kd_titipan')
                 ->join('LEFT JOIN', 'tbl_karyawan as tk', 'tk.nik = spk.nik')
-                ->where('tk.department="DPRT005" and wm.tgl_keluar IS NULL')
+                ->where('wm.tgl_keluar IS NULL')
                 ->orderBy($sort)
-                ->select("sti.kd_titipan, spk.tgl, customer.provinsi, customer.nm_customer, spk.jml_unit, spk.no_spk, wm.no_wo, sti.no_chassis, sti.no_mesin, 
-                            tk.nama, customer.market, model.model, chassis.merk, chassis.tipe, chassis.jenis, vws.tgl_terima");
+                ->select("sti.kd_titipan, customer.provinsi, customer.nm_customer, spk.jml_unit, spk.no_spk, wm.no_wo, sti.no_chassis, sti.no_mesin, 
+                            tk.nama, customer.market, model.model, chassis.merk, chassis.tipe, chassis.jenis, sti.tgl_terima");
 //filter
 
         if (isset($params['filter'])) {
@@ -275,9 +275,9 @@ class RekapController extends Controller {
                     $value = explode(' - ', $val);
                     $start = date("Y-m-d", strtotime($value[0]));
                     $end = date("Y-m-d", strtotime($value[1]));
-                    $query->andFilterWhere(['between', 'spk.tgl', $start, $end]);
+                    $query->andFilterWhere(['between', 'sti.tgl_terima', $start, $end]);
                 } elseif ($key == 'no_wo') {
-                    $query->andFilterWhere(['like', 'vws.' . $key, $val]);
+                    $query->andFilterWhere(['like', 'wm.' . $key, $val]);
                 } elseif ($key == 'no_spk') {
                     $query->andFilterWhere(['like', 'spk.' . $key, $val]);
                 } elseif ($key == 'model') {

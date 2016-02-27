@@ -62,28 +62,17 @@ class SiteController extends Controller {
     }
 
     public function actionCoba() {
-        $date_start = '2016-02-12';
-        $date_end = '2016-02-12';
+        $tanggal = "2015-12-31";
+
         $query = new Query;
-        $query->from('ftm.att_log AS absa')
-                ->select('emp.nik, date(abs.scan_date) AS tanggal, min(abs.scan_date) AS masuk, max(abs.scan_date) AS keluar')
-                ->join('INNER JOIN', 'ftm.emp', 'emp.pin = abs.pin')
-                ->where('date(abs.scan_date)>="'.$date_start.'" AND date(abs.scan_date)<="'.$date_end.'"')
-                ->groupBy('tanggal, nik');
-        
-        $command = $query->createCommand();
-        $models = $command->queryAll();
-//        $tanggal = "2015-12-31";
-//
-//        $query = new Query;
-//        $query->from(['barang', 'jenis_brg'])
-//                ->where('barang.jenis = jenis_brg.kd_jenis')
-//                ->orderBy('barang.nm_barang ASC')
-//                ->select("barang.*, jenis_brg.*");
-//        $qq = $query->createCommand();
-//        $models = $qq->queryAll();
-//
-//        return $this->render("/expmaster/lapbarangpertanggal", ['models' => $models, 'tgl' => $tanggal]);
+        $query->from(['barang', 'jenis_brg'])
+                ->where('barang.jenis = jenis_brg.kd_jenis')
+                ->orderBy('barang.nm_barang ASC')
+                ->select("barang.*, jenis_brg.*");
+        $qq = $query->createCommand();
+        $models = $qq->queryAll();
+
+        return $this->render("/expmaster/lapbarangpertanggal", ['models' => $models, 'tgl' => $tanggal]);
     }
 
     public function actionLogin() {

@@ -243,7 +243,7 @@ class WipController extends Controller {
         //init variable
         $params = $_REQUEST;
         $filter = array();
-        $sort = "dw.no_wo DESC";
+        $sort = "dw.no_wo ASC";
         $offset = 0;
         $limit = 10;
 

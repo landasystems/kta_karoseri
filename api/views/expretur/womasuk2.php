@@ -71,7 +71,7 @@ foreach ($models as $key => $val) {
     $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['no_chassis'] = $val['no_chassis'];
     $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['no_mesin'] = $val['no_mesin'];
     $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['market'] = $val['market'];
-    $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['tgl'] = $val['tgl'];
+    $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['tgl'] = $val['tgl_terima'];
     $data[$val['nm_customer']]['customer'][$val['nm_customer']]['body'][$i]['nm_customer'] = $val['nm_customer'];
     $i++;
 }
